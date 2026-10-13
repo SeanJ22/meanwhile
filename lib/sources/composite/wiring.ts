@@ -6,6 +6,7 @@ import {
 } from "../../registry/source-wiring.ts";
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
+import { makeMunicodeSource } from "../municode/index.ts";
 import { makeBoardDocsSource } from "../boarddocs/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeClerksBoardsSource } from "../clerksboards/index.ts";
@@ -33,13 +34,6 @@ import type { ReportingMeetingSource } from "../types.ts";
 import { feedKindWiringType, installedFeedKinds, makeFeedKindSource } from "../feed-kinds.ts";
 import { CompositeSource } from "./index.ts";
 
-/**
- * Which adapter serves which `AgendaSourceType`: the capability registry. Registering a new adapter is
- * one entry here; adding a body is a row in `lib/registry/source-wiring.ts`, never code.
- *
- * `DILIGENT` and `CIVICWEB` both dispatch to the Diligent adapter (one wire format,
- * `MeetingsService.svc`) but stay distinct types on the body rows so the portal a body runs is not erased.
- */
 type ChildFactory = (rows: BodySourceWiring[], fetchImpl?: typeof fetch) => ReportingMeetingSource<unknown>;
 
 /** Add the composite accounting shape without adding a membership registry. */
@@ -47,12 +41,7 @@ function legistarReporting(rows: BodySourceWiring[], fetchImpl?: typeof fetch): 
   const clients = legistarClientsFromWiring(rows);
   return {
   ...makeLegistarSource(clients, fetchImpl),
-  /**
-   * `@accounting-delegated-to lib/sources/legistar/index.ts`
-   *
-   * Declared rather than inferred: `tests/zero-row-contract.test.ts` reads this marker and checks that the
-   * module it names is itself a branding implementor.
-   */
+  /* @accounting-delegated-to lib/sources/legistar/index.ts` */
   normalizeWithDrops(raw, now) {
     // Returned as the adapter branded it. A second branding here would judge the same pass twice and could
     // disagree with the first (it would not pass the adapter's `countedButProduced` for kept placeless
@@ -74,15 +63,7 @@ export const CAPABILITIES: Array<{
     make: (rows, fetchImpl) => legistarReporting(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
-    /**
-     * The same product, an independent route: `legistar` reads `webapi.legistar.com`, which returns only
-     * sittings whose InSite detail page is publicly viewable; this child reads the tenant's own
-     * `Calendar.aspx` grid, which returns all of them. The meeting doors select each route's body membership,
-     * and each route/body pair owns its own contract, pointer and clock.
-     *
-     * Registration order is load-bearing: `collapseDuplicateSittings` keeps the first-seen row on a tie, so
-     * `legistar` sits above this entry and the WebAPI record wins the presentation-only collapse.
-     */
+
     name: "legistar-insite",
     types: ["LEGISTAR"],
     make: (rows) => makeLegistarInSiteSource({ tenants: inSiteTenantsFromWiring(rows) }) as ReportingMeetingSource<unknown>,
@@ -112,6 +93,10 @@ export const CAPABILITIES: Array<{
     types: ["CIVICCLERK"],
     make: (rows) =>
       makeCivicClerkSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "municode", types: ["MUNICODE"],
+    make: (rows, fetchImpl) => makeMunicodeSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "boarddocs", types: ["BOARDDOCS"],
@@ -183,10 +168,6 @@ export const CAPABILITIES: Array<{
   },
 ];
 
-/**
- * The built-in adapters, then the feed kinds an engineer built and installed for this pass. Built-in
- * names come first and can never be taken; with no feed kind installed this is `CAPABILITIES` exactly.
- */
 export function allCapabilities(): typeof CAPABILITIES {
   const feeds = installedFeedKinds();
   if (feeds.length === 0) return CAPABILITIES;
@@ -200,29 +181,12 @@ export function allCapabilities(): typeof CAPABILITIES {
   ];
 }
 
-/**
- * The wiring rows a named adapter serves — how a snapshot's "this source
- * failed at the last refresh" becomes "these are the bodies you can't see
- * because of it". An unknown name returns no rows rather than throwing: a
- * snapshot can legitimately name a source this build no longer has.
- */
 export function wiringForSourceName(name: string): BodySourceWiring[] {
   return allCapabilities().some((capability) => capability.name === name)
     ? wiringForMeetingSource(name)
     : [];
 }
 
-/**
- * Build the composite from the wiring rows. A capability with no wired body
- * contributes no child; a body whose type has no capability is invisible here
- * and stays whatever its coverage audit says — the composite serves sources,
- * it does not invent them.
- */
-/**
- * The per-source/body budget a standing-runner child gets. The composite's 20s default was written for
- * interactive diagnostics; a standing acquisition has nobody waiting. This changes no request rate or
- * politeness.
- */
 export const STANDING_PARTITION_ACQUISITION_TIMEOUT_MS = 120_000;
 
 export interface MeetingPartitionSelection {
@@ -254,11 +218,7 @@ export function buildCompositeSource(
     fetchImpl?: typeof fetch;
     sourceNames?: readonly string[];
     meetingPartitions?: readonly MeetingPartitionSelection[];
-    /**
-     * A derived meeting family's member rows (C16), read from the promoted meeting-source wiring by the family's
-     * own child and authorized at its promotion door. Exclusive of `meetingPartitions`: a family never reads a
-     * hand-wired door, and a hand-wired door's partition never reads a derived one.
-     */
+
     derivedRows?: readonly BodySourceWiring[];
     /** Already held official pages establish external calendar-host authority. */
     officialPages?: readonly {canonicalUrl:string;text:string}[];

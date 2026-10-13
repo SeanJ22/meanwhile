@@ -2,20 +2,10 @@ import { feedKindForWiringType } from "../sources/feed-kind-registry.ts";
 import type { OcdId } from "../sources/types.ts";
 import type { AgendaSourceType } from "./types.ts";
 
-/**
- * One hand-wired meeting door as the adapters read it: which body the composite meeting source serves, and how.
- * Doors live in the door registry; a door is added or changed there, never here. The composite dispatches on
- * `agendaSourceType`, and each adapter reads the rows declaring its type and carries no hardcoded body list.
- * `config` keys are documented by the adapter that reads them; URLs in `config` were verified live on the date
- * in `verifiedAt`.
- */
 export interface BodySourceWiring {
   /** Matches `Body.id` in the registry exactly. */
   bodyId: string;
-  /**
-   * The division whose government meets; the join key on every Meeting. Null for a body with no Census
-   * division, whose meetings are then local-tier by construction.
-   */
+
   ocdId: OcdId | null;
   agendaSourceType: AgendaSourceType;
   /** Display only — never joined on. */
@@ -26,16 +16,9 @@ export interface BodySourceWiring {
   timeZone: string;
   /** Per-adapter settings. Keys are documented by the adapter. */
   config: Record<string, string>;
-  /**
-   * The body's own meeting-notice page, where one exists ahead of the vendor portal. Retrieved as a
-   * document for this body's meetings that have no published agenda yet.
-   */
+
   noticeUrl?: string;
-  /**
-   * Whether this row's route serves concluded meetings. Absent means yes. Set to `false` only when the
-   * published route genuinely carries no past sitting. Not a coverage status. Sent with the body (`historyGapFor()`)
-   * so the Concluded filter can say why a jurisdiction is empty.
-   */
+
   publishesHistory?: false;
   /** Why, in the reader's own language. Required when the flag is set. */
   historyGapReason?: string;
@@ -54,6 +37,7 @@ const MEETING_ROUTE_BY_TYPE: Partial<Record<AgendaSourceType, string>> = {
   CLERKSBOARDS: "clerksboards",
   BOARDBOOK: "boardbook",
   BOARDDOCS: "boarddocs",
+  MUNICODE: "municode",
   IQM2: "iqm2",
   REVIZE: "revize",
   SCHEDULEPAGE: "schedulepage",
@@ -70,15 +54,6 @@ export function meetingRouteKinds(): readonly string[] {
   return [...new Set([...LEGISTAR_ROUTES, ...Object.values(MEETING_ROUTE_BY_TYPE)])];
 }
 
-/**
- * The adapter routes a wiring row actually belongs to.  Most agenda-source
- * types have one implementation.  LEGISTAR is deliberately explicit because
- * WebAPI and InSite are independent publication routes and therefore require
- * independent candidates, clocks, and LKG pointers.
- *
- * This is the production membership boundary: adapter-owned client/tenant
- * arrays may be derived from these rows, but may not add another body.
- */
 export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly string[] {
   if (row.agendaSourceType === "LEGISTAR") {
     const routes = row.config.sourceRoutes?.split(",").map((route) => route.trim()).filter(Boolean) ?? [];
@@ -103,32 +78,13 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
   return feed ? [feed.kind] : [];
 }
 
-/**
- * A retired meetings route. A proved source cutover disables its old writer. Naming the (route, body)
- * pair here makes `meetingSourceNamesForWiring` throw for a row that would re-open it and makes agenda
- * retrieval refuse its `hosts` unless `hostsReadable`; `tests/retired-meeting-routes.test.ts` holds that
- * every retired pair has a wired successor. robots.txt alone retires nothing and closes no host.
- *
- * What the retired route already holds stays: its promoted partition version is HELD in the successor's
- * place until the successor's first promotion (`HELD_MEETING_PARTITIONS`,
- * lib/civic-data/meeting-partitions.ts). A route whose host is gone retires the same way, and its host is
- * not readable.
- */
 export interface RetiredMeetingRoute {
   /** The adapter route (partition `meetings:<meetingSource>:<bodyId>`) that no longer runs. */
   readonly meetingSource: string;
   readonly bodyId: string;
-  /**
-   * Hosts the retired route read. No clock or partition reads them for this
-   * body. Agenda retrieval refuses them too, unless `hostsReadable` is set.
-   */
+
   readonly hosts: readonly string[];
-  /**
-   * The retirement closes the route's clock only: its hosts stay readable, so
-   * a link into them (the body's own agenda link) is read like any public
-   * document. Set for a route superseded by a better one while its host still
-   * serves the body's documents — never for a host that is gone.
-   */
+
   readonly hostsReadable?: true;
   /** ISO date of the cutover (`pnpm stamp`). */
   readonly retiredOn: string;
@@ -137,14 +93,7 @@ export interface RetiredMeetingRoute {
   readonly replacedBy: string;
   /** What happens to the rows and documents the retired route already holds. */
   readonly held: string;
-  /**
-   * The successor was already a wired, promoting route for this body before
-   * this one retired — two routes for one body, one of them retired — so the
-   * successor has its own pointer from the start. Nothing is HELD in its place
-   * (`HELD_MEETING_PARTITIONS` omits the pair), and the Reader proof drops the
-   * retired identity's import disposition instead of handing it to a successor
-   * that already carries its own.
-   */
+
   readonly successorAlreadyWired?: true;
 }
 
@@ -194,11 +143,6 @@ export function retiredMeetingRoute(meetingSource: string, bodyId: string): Reti
   );
 }
 
-/**
- * Is this URL on a retired route's host that nothing may fetch? Agenda retrieval refuses these; the
- * link stays a link a reader can follow. A retired route whose hosts stay readable (`hostsReadable`) is
- * not one.
- */
 export function isUnreadableRetiredMeetingHost(url: string): boolean {
   let host: string;
   try {
@@ -213,11 +157,6 @@ export function wiringForMeetingSource(sourceName: string): BodySourceWiring[] {
   return activeWiring().filter((row) => meetingSourceNamesForWiring(row).includes(sourceName));
 }
 
-/**
- * The hand-wired meeting doors this process reads: the door registry's, put here by the runner from the registry and
- * by every other process from the registry's promoted projection (`lib/doors/meeting-doors.ts`). Empty until then:
- * there is no other list.
- */
 let installedDoors: readonly BodySourceWiring[] = [];
 
 export function installMeetingDoors(rows: readonly BodySourceWiring[]): void {

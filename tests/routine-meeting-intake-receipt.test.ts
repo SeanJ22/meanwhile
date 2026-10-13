@@ -12,7 +12,7 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { PIMA_LEGISTAR_CONTRACT } from "../lib/control-plane/workers/held-meeting-contract.ts";
 import { retainRecentRoutineMeetingEvidence, retainRoutineMeetingForWorkers } from "../lib/control-plane/workers/routine-meeting-intake.ts";
-import type { RetainedMeetingCandidate, RetainedSourceResponse } from "../lib/civic-data/meeting-research-evidence.ts";
+import type { RetainedMeetingCandidate, RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { methodFixture } from "./method-store-fixture.ts";
 

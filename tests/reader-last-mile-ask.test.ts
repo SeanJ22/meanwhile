@@ -319,8 +319,8 @@ test("Ask retains Positions' exact page passages in AZ, NJ, and NH without inven
     const quoted = body.records.filter((r) => r.kind === "SOURCE_PASSAGE" && r.canonicalSubjectId === control.key);
     assert.ok(quoted.length, control.name);
     assert.ok(quoted.every(record => record.verifiedStatement === undefined), "the fixtures establish captured pages, not verified speakers");
-    assert.equal(body.answer, null);
-    assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
+    assert.equal(body.trace.synthesis?.why, "no-key", "the stance question goes to the writer with its held passages, like any other");
+    assert.ok(body.gaps.every((gap) => !/personal stance/.test(gap.statement)), JSON.stringify(body.gaps));
     for (const passage of expected.passages) {
       assert.ok(quoted.some((r) => r.text.includes(passage.quote) && r.sourceUrl === passage.url), passage.snapshotId);
     }

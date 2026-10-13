@@ -425,8 +425,6 @@ disagree about what a cycle did.
 ## Where the state lives
 
 ```
-.runtime/control-plane/staging/manifest.json  disposable research staging — every entry, dated
-.runtime/control-plane/staging/*.staged.json  disposable research snapshots
 .runtime/freshness-shadow-runs/*.json         host diagnostics; canonical outcome is in the control-plane store
 .runtime/autonomous-advancement/*.json        host diagnostics
 .runtime/control-plane/vault/                 retrieved research bytes, content-addressed

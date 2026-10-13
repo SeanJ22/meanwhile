@@ -186,10 +186,10 @@ Code: `evidence/durable-store.ts`
 
 ### Structured records and their evidence
 
-Code: `promotion/fact-chain.ts`
+Code: `promotion/pipeline.ts`
 
 - **Purpose:** Every extracted record with the complete history of what it has satisfied, each stage pointing at the exact result and passage that earned it.
-- **Takes in:** Extractions from parsers, and stage outcomes from verifiers and auditors.
+- **Takes in:** Extractions from parsers, and stage outcomes from verifiers.
 - **Hands on:** Records eligible to publish, and records reopened with a named reason.
 - **Depends on:** A stage cannot be claimed without the stage beneath it. Currency, attribution and completeness are tracked separately rather than collapsed into one flag.
 - **When it fails:** An offer that does not satisfy its stage is refused and the refusal is kept on the record. Uncertainty is carried forward, not rounded away.

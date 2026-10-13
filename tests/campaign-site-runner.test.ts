@@ -14,7 +14,7 @@ import {
   CAMPAIGN_SITE_MAX_READS,
   campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
-  heldMarginaliaFromManifest,
+  heldMarginaliaAnswers,
   runCampaignSiteCycle,
   withinWallTime,
   type CampaignSiteCycleInput,
@@ -27,7 +27,7 @@ import { campaignSiteReadRecorder } from "../lib/control-plane/promotion/campaig
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
-import type { StagingManifest } from "../lib/control-plane/scheduler/promotion-tail.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 import { heldPageRead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -190,6 +190,30 @@ async function captureProfile(p: Plane, body = PROFILE_HTML, now = T1, sourceUrl
   return artifact;
 }
 
+test("a campaign page another job already saved is verified once from its bytes and approved, with no second acquisition", async t => {
+  const p = await plane(t);
+  const page = "<title>Lily Tang Williams for Congress</title><h1>Lily Tang Williams</h1>" +
+    "<p>Lily Tang Williams is running for Representative in Congress, District 2, in the 2026 election.</p><p>Paid for by Lily Tang Williams.</p>";
+  const artifact = await captureProfile(p, page, T1, LILY);
+  const scout: ScoutResult = { formatVersion: 1, attemptId: "at-profile", obligationId: "ob-site", routeTaskId: "rt-site",
+    workItemId: "wi-profile", subjectId: TANG_WILLIAMS, routeId: "candidate-campaign-site", recordClass: "candidate-enrichment",
+    providerId: "candidate-enrichment", reason: "novelty", outcome: "EVIDENCE_FOUND", stoppedBy: "MODEL", rungs: [],
+    distinctEvidenceRungs: 1, candidates: [], findings: [{ kind: "RECORD", field: "candidate.campaignSite", value: LILY,
+      exactQuote: "Paid for by Lily Tang Williams.", sourceUrl: LILY, artifactIds: [artifact.id], summary: "Campaign site" }],
+    nextRungs: [], unverified: [], narrative: "Saved campaign page",
+    worker: { provider: "anthropic", model: "fixture", modelReported: null }, usage: { inputTokens: null, outputTokens: null,
+      cacheReadInputTokens: null, cacheCreationInputTokens: null, turns: 1, toolCalls: 1 }, usd: null, elapsedMs: 1,
+    artifactIds: [artifact.id], methodCandidateIds: [], refusal: null, startedAt: T1, recordedAt: T1 };
+  await p.repos.scoutResults.append(scout.obligationId, scout.attemptId, scout, T1);
+  const { report } = await cycle(p, T1, { marginalia: [] });
+  assert.ok(!p.requests.includes(LILY), "the saved page is judged from its bytes, never fetched a second time");
+  const approval = report.chain.approved.find((a) => a.campaignSite.candidacyId === TANG_WILLIAMS);
+  assert.ok(approval, JSON.stringify(report.chain.leads));
+  assert.equal(approval.campaignSite.evidence.artifactId, artifact.id);
+  const state = (await readPipelineStates(p.repos)).find((s) => s.itemId === approval.itemId)!;
+  assert.deepEqual(state.records.map((r) => r.stage), ["SCOUTED", "VERIFIED", "APPROVED_FOR_PROMOTION"]);
+});
+
 test("conflicting supplemental profiles cannot hold a campaign page that independently identifies its own candidate", async t => {
   for (const { body, sourceUrl = PROFILE, at = T1 } of [
     { body: PROFILE_HTML.replaceAll("Lily Tang Williams", "Someone Else") },
@@ -224,7 +248,6 @@ function served() {
 interface Plane {
   readonly repos: ControlPlaneRepositories;
   readonly vaultRoot: string;
-  readonly manifest: StagingManifest;
   readonly requests: string[];
 }
 
@@ -233,21 +256,15 @@ async function plane(t: { after: (fn: () => void) => void }): Promise<Plane> {
   const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-campaign-site-runner-"));
   t.after(() => rmSync(vaultRoot, { recursive: true, force: true, maxRetries: 3 }));
   const body = fixture("marginalia-tang-williams-lily.json");
+  const work = createWorkItem({ project: "freshness", subject: TANG_WILLIAMS,
+    obligation: `freshness:candidate-enrichment:${TANG_WILLIAMS}#candidate-marginalia-index`, why: "the Marginalia answer", now: T0 });
+  await repos.workItems.put(work.id, work, T0);
   const { artifact } = recordAcquisition({
     canonicalUrl: MARGINALIA_URL, retrievedAt: "2026-09-24T12:00:00.000Z", httpStatus: 200, contentType: "application/json",
-    sourceId: "api.marginalia.nu", methodRouteId: "candidate-marginalia-index", workItemId: "wi-marginalia-tang-williams",
+    sourceId: "api.marginalia.nu", methodRouteId: "candidate-marginalia-index", workItemId: work.id,
     attemptId: "at-marginalia-tang-williams", permission: "ALLOWED", transport: "REACHABLE",
   }, body);
   await putArtifact(new DurableEvidenceStore(vaultRoot), "freshness", artifact, Buffer.from(body, "utf8"));
-  const manifest: StagingManifest = {
-    stagedOn: "2026-09-24", promotionEnabled: false,
-    entries: [{
-      obligationId: `freshness:candidate-enrichment:${TANG_WILLIAMS}#candidate-marginalia-index`, providerId: "candidate-enrichment",
-      recordClass: "candidate-enrichment", subjectId: TANG_WILLIAMS, routeId: "candidate-marginalia-index", state: "STAGED_GAP",
-      stagedOn: "2026-09-24", nextDueAt: null, disposition: "INGESTED", rowCount: 0, declaredTotal: null, complete: false, snapshotPath: null,
-      readerSentence: "held", unresolved: ["NORMALIZER MISSING for route candidate-marginalia-index.", `artifact(s): ${artifact.id}`],
-    }],
-  };
   const ctx = await contextFromRepositories(repos);
   const kapner = scoutedSite({ attemptId: "at-scout-kapner", obligationId: `freshness:candidate-enrichment:${KAPNER}#candidate-marginalia-index`, subjectId: KAPNER,
     outcome: "ROUTE_CANDIDATE", routeId: "kapner-campaign-site", canonicalUrl: KAPNER_ROOT, artifactIds: [], recordedAt: "2026-09-21T02:23:09.992Z", summary: "Kapner campaign site" });
@@ -255,14 +272,14 @@ async function plane(t: { after: (fn: () => void) => void }): Promise<Plane> {
     outcome: "ROUTE_CANDIDATE", routeId: "kapner-news", canonicalUrl: "https://patch.com/new-jersey/mendham/kapner-runs", artifactIds: [], recordedAt: "2026-09-21T02:24:00.000Z", summary: "a news story" });
   await appendTransition(repos, kapner, ctx, T0);
   await appendTransition(repos, news, ctx, T0);
-  return { repos, vaultRoot, manifest, requests: [] };
+  return { repos, vaultRoot, requests: [] };
 }
 
 async function cycle(p: Plane, now: string, extra: Partial<CampaignSiteCycleInput> = {}, pages: Record<string, { status: number; body: string }> = served()) {
   let ms = Date.parse(now);
   const runtime = servedRuntime(pages, now);
   const vault = await indexVault(p.vaultRoot);
-  const held = await heldMarginaliaFromManifest(p.vaultRoot, p.manifest, vault, now);
+  const held = await heldMarginaliaAnswers(p.repos, vault, now);
   const report = await runCampaignSiteCycle({
     repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, now,
     clock: () => (ms += 5), sleep: async (wait) => { ms += wait; },
@@ -331,7 +348,7 @@ test("a runner cycle over held results publishes a verified site through the der
   await captureProfile(p);
 
   const first = await cycle(p, T1);
-  assert.equal(first.held.responses.length, 1, "the held answer is found through the manifest and read back from the vault");
+  assert.equal(first.held.responses.length, 1, "the held answer is found in the vault, its candidacy named by its work item");
   const pointer = discoveryPointerItemId(TANG_WILLIAMS, LILY);
   let state = (await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)!;
   assert.equal(state.stage, "APPROVED_FOR_PROMOTION");
@@ -644,7 +661,7 @@ test("a refused lead publishes nothing and keeps its typed reason where Admin re
   assert.match(campaignSiteCycleLine(report), /NEWS_OUTLET \d+/);
 
   const kapner = (await readPipelineStates(p.repos)).find((s) => s.byStage.SCOUTED?.canonicalUrl === KAPNER_ROOT)!;
-  assert.equal(kapner.refused?.atStage, "CONFIRMED");
+  assert.equal(kapner.refused?.atStage, "VERIFIED");
   assert.match(kapner.refused!.reasons[0]!.detail, /CYCLE_NOT_EVIDENCED/);
 
   const { store, profiles } = await profilesStore();
@@ -666,7 +683,7 @@ test("a year-less site stays refused however often it is read: judged again from
   const judged = again.report.chain.leads.find((l) => l.lead.url === KAPNER_ROOT)!;
   assert.deepEqual([judged.outcome, judged.via], ["REFUSED", "VAULT"]);
   assert.ok(judged.refusals.some((r) => r.code === "CYCLE_NOT_EVIDENCED"));
-  assert.equal(again.report.chain.offers.filter((o) => o.itemId === (judged.itemId ?? "") && o.stage === "CONFIRMED").every((o) => !o.accepted), true);
+  assert.equal(again.report.chain.offers.filter((o) => o.itemId === (judged.itemId ?? "") && o.stage === "VERIFIED").every((o) => !o.accepted), true);
   const later = await cycle(p, "2026-10-03T21:00:00.000Z");
   assert.equal(kapnerReads(), 2, "past the recheck window it is read again");
   assert.equal(later.report.chain.leads.find((l) => l.lead.url === KAPNER_ROOT)?.outcome, "REFUSED");
@@ -789,7 +806,7 @@ test("held independent evidence advances before new leads and slow backlog reads
   let ms = Date.parse(T2);
   const runtime = servedRuntime(pages, T2);
   const vault = await indexVault(p.vaultRoot);
-  const held = await heldMarginaliaFromManifest(p.vaultRoot, p.manifest, vault, T2);
+  const held = await heldMarginaliaAnswers(p.repos, vault, T2);
   const requests: string[] = [];
   const report = await runCampaignSiteCycle({
     repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, now: T2,
@@ -984,7 +1001,7 @@ function approvalFor(url: string, body: string, readAt: string, candidacyId = TA
   return {
     formatVersion: 1, recordId: `pp-${sha.slice(0, 8)}:approved:x`, itemId: `pp-${sha.slice(0, 8)}`, at: readAt,
     actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: "campaign-site-approver/1@test" }, stage: "APPROVED_FOR_PROMOTION",
-    chain: { scouted: "s", confirmed: "c", verified: "v", audited: "a" }, recordClass: "candidate-enrichment", field: "campaignSite",
+    chain: { scouted: "s", verified: "v" }, recordClass: "candidate-enrichment", field: "campaignSite",
     campaignSite: {
       field: "campaignSite", candidacyId: s.candidacyId, candidateName: `${s.givenName} ${s.familyName}`,
       identity: { candidacyId: s.candidacyId, givenName: s.givenName, familyName: s.familyName, officeTitle: s.officeTitle, ocdId: s.ocdId, stateCode: s.stateCode, cycle: s.cycle },

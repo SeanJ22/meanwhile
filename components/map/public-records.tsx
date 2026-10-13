@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { PublicRecord } from "@/lib/civic-data/types";
 import { publicRecordIssue } from "@/lib/civic-data/public-record-contract";
 import { RecordCard } from "@/components/ui/record-card";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 
 export function PublicRecords({ divisionId, records, bodyId }: { divisionId: string; records: readonly PublicRecord[]; bodyId?: string }) {
   const held = records.filter(record => record.ocdId === divisionId && (!bodyId || record.bodyId === bodyId));
@@ -36,5 +36,5 @@ export function PlacePublicRecords({ divisionId, bodyId }: { divisionId: string;
   if (state?.division !== divisionId) return <p role="status" className="t-body text-muted">Loading public records…</p>;
   if (state.failed) return <p role="status" className="t-body text-muted">Couldn’t load public records just now.</p>;
   const held = state.records.filter(record => record.ocdId === divisionId && (!bodyId || record.bodyId === bodyId));
-  return held.length ? <PublicRecords divisionId={divisionId} bodyId={bodyId} records={held} /> : <WorkingOnIt />;
+  return held.length ? <PublicRecords divisionId={divisionId} bodyId={bodyId} records={held} /> : <CardGapContribution id={`public-records:${bodyId ?? divisionId}`} label="public records" subject={bodyId ? { type: "BODY", id: bodyId } : undefined} />;
 }

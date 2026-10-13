@@ -159,6 +159,10 @@ export function makeCivicClerkSource(
         );
 
         const bodyName = bodyNameFor(e);
+        if (wiring.config.bodyMatch && bodyName?.trim().toLowerCase() !== wiring.config.bodyMatch.trim().toLowerCase()) {
+          drops.notConfigured++;
+          continue;
+        }
         if (!bodyName) {
           drops.notConfigured++;
           continue;

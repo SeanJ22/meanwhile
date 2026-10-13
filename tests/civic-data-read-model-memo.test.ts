@@ -69,7 +69,7 @@ function version(scope: string, versionId: string, payload: unknown): Version {
       },
       normalization: {
         succeeded: true,
-        parserVersion: "fec-funding/3",
+        parserVersion: "fec-funding/4",
         schemaVersion: "2",
         normalizedHash: payloadHash,
         normalizedPayloadHash: payloadHash,

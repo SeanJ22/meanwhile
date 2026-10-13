@@ -54,6 +54,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   LEGISTAR: ["legistar-api"],
   CIVICPLUS: ["civicplus-agendacenter"],
   BOARDBOOK: ["boardbook"],
+  BOARDDOCS: ["boarddocs"],
   CIVICCLERK: ["civicclerk-api"],
   IQM2: ["iqm2"],
   REVIZE: ["revize"],
@@ -92,7 +93,11 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
   if (find.vendor === "iqm2" && url.hostname.endsWith(".iqm2.com")) return { kind: "IQM2", endpoint: { base: url.origin } };
   if (find.vendor === "legistar-insite" && url.hostname.endsWith(".legistar.com")) return { kind: "LEGISTAR_INSITE", endpoint: { insiteHost: url.host } };
   if (find.vendor === "civicplus-agendacenter") {
-    return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: "CIVICPLUS wiring reads the site's iCal feed (icalUrl); an AgendaCenter page alone cannot be wired" };
+    return { kind: "CIVICPLUS", endpoint: { agendaCenterUrl: url.toString() } };
+  }
+  if (find.vendor === "boarddocs" && /(^|\.)boarddocs\.com$/i.test(url.hostname)) {
+    const path = /^(\/[^/]+\/[^/]+\/Board\.nsf)(?:\/|$)/i.exec(url.pathname)?.[1];
+    if (path) return { kind: "BOARDDOCS", endpoint: { portalUrl: `${url.origin}${path}/Public` } };
   }
   return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `no reviewed-filter wiring kind takes a ${find.vendor} route yet` };
 }

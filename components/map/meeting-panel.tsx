@@ -3,18 +3,13 @@
 import { MeetingRow } from "@/components/ui/meeting-row";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { meetingCardSources, type CardSource } from "@/lib/officials/card-sources";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { fieldSourceLabel, meetingCardSources, type CardSource } from "@/lib/officials/card-sources";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 
 import { ExternalLink, X } from "lucide-react";
 import { useState } from "react";
 
 import { locationLine, venueBodyTitle } from "@/lib/map/format";
-import {
-  sourceCreditFor,
-  type SourceCredit,
-} from "@/lib/meetings/list-attribution";
-
 import { groupMeetingsForReading } from "@/lib/meetings/ordering";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { useMeetingBadge } from "@/hooks/use-meeting-badge";
@@ -27,7 +22,7 @@ import type { Venue } from "@/lib/meetings/venues";
 import { projectedCommentAccessFor } from "@/lib/registry/comment-access-client";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
-import { isOnlineOnly, isPlaceUnrecorded, statedVenueText, venueGapOf } from "@/lib/meetings/online";
+import { isOnlineOnly, statedVenueText, venueGapOf } from "@/lib/meetings/online";
 
 import { MeetingStatusPill } from "./meeting-status-pill";
 
@@ -68,23 +63,12 @@ export function MeetingPanel({
   // The building's sittings, then the same bodies' placeless ones, ordered together.
   const rows = [...venue.meetings, ...placeless];
   const onlineCount = placeless.filter(isOnlineOnly).length;
-  const unrecordedCount = placeless.filter(isPlaceUnrecorded).length;
-  // A named venue gap: a physical sitting with no pin, place stated in words
-  // or not at all. With the two counts above, the four partition the
-  // building-less rows exactly.
+  // A place held in words remains visible even when it has no map coordinates.
   const statedPlaceCount = placeless.filter((meeting) => {
     const gap = venueGapOf(meeting);
     return gap !== null && statedVenueText(gap) !== null;
   }).length;
-  const notStatedCount = placeless.filter((meeting) => {
-    const gap = venueGapOf(meeting);
-    return gap !== null && statedVenueText(gap) === null;
-  }).length;
   const groups = groupMeetingsForReading(rows, now);
-  // Markers and the credit line follow render order, so groups are flattened first.
-  const credit = sourceCreditFor(
-    groups.flatMap((group) => group.meetings),
-  );
 
   // An ONLINE_ONLY venue orients the reader at the body's office. It has
   // no physical directions action; joining online is the primary action.
@@ -99,8 +83,6 @@ export function MeetingPanel({
     statedPlaceCount > 0
       ? `${statedPlaceCount} at ${statedPlaceCount === 1 ? "a place" : "places"} named below`
       : null,
-    notStatedCount > 0 ? `${notStatedCount} with no place stated by the publisher` : null,
-    unrecordedCount > 0 ? `${unrecordedCount} with no place recorded yet` : null,
   ].filter((part): part is string => part !== null);
   const eyebrow = listingCount.unresolved
     ? `${listingCount.count} ${listingCount.unit}`
@@ -214,22 +196,20 @@ export function MeetingPanel({
           </section>
         ))}
 
-        <MeetingSourceCredit credit={credit} sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : [])]} />
+        <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : [])]} />
       </div>
     </aside>
   );
 }
 
 /** The attribution, once per distinct body, at the foot of the list. */
-export function MeetingSourceCredit({ credit, sources = [], className = "border-t border-rule-soft px-5 py-3" }: { credit: SourceCredit; sources?: readonly CardSource[]; className?: string }) {
-  if (credit.kind === "none" && sources.length === 0) return null;
-  return <div className={className}><CardSourcesContribution id="meeting-calendar" sources={sources} /></div>;
+export function MeetingSourceCredit({ sources }: { sources: readonly CardSource[] }) {
+  return <CardSourcesContribution id="meeting-calendar" sources={sources} />;
 }
 
 /**
- * How to be heard: the body's curated standing rule with its citation, or
- * "unknown" with a link to the body's page. A comment period is never
- * inferred from a meeting being public.
+ * The body's held participation instructions and their citations. Unknown
+ * fields contribute to the card's gap line without hiding held instructions.
  */
 export function HowToBeHeard({
   ocdId,
@@ -246,14 +226,17 @@ export function HowToBeHeard({
     bodyId,
     useShellData().commentAccess ?? [],
   );
-  if (!access) return null;
+  const subject = bodyId ? { type: "BODY" as const, id: bodyId } : null;
+  const gap = (!access || access.commentPeriod === "UNKNOWN")
+    ? <CardGapContribution id={`comment-rules:${bodyId ?? ocdId ?? bodyName}`} label="public-comment rules" subject={subject} />
+    : null;
+  if (!access) return gap;
 
   const sources: CardSource[] = [{ what: "Public-comment rules", provenance: { sourceUrl: access.sourceUrl, sourceOrg: bodyName, collectedAt: access.collectedAt, verifiedAt: access.verifiedAt } },
-    ...Object.entries(access.fieldSources ?? {}).map(([field, source]) => ({ what: `Public-comment ${field}`, provenance: { sourceUrl: source!.sourceUrl, sourceOrg: bodyName, collectedAt: source!.collectedAt, verifiedAt: source!.verifiedAt } }))];
-  if (access.commentPeriod === "UNKNOWN") return <div className="mt-3 pl-4"><WorkingOnIt subject={bodyId ? { type: "BODY", id: bodyId } : null} /><CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} /></div>;
+    ...Object.entries(access.fieldSources ?? {}).map(([field, source]) => ({ what: fieldSourceLabel(field), provenance: { sourceUrl: source!.sourceUrl, sourceOrg: bodyName, collectedAt: source!.collectedAt, verifiedAt: source!.verifiedAt } }))];
 
   const lines = [
-    access.commentPeriodDetail,
+    access.commentPeriodDetail ?? (access.commentPeriod === "YES" ? "Public comment is allowed." : access.commentPeriod === "NO" ? "No public-comment period." : null),
     access.timeLimit,
     access.signup,
     access.writtenComment,
@@ -262,7 +245,10 @@ export function HowToBeHeard({
 
   /* `<details>` so it works before hydration and is keyboard and screen-reader operable without script. */
   return (
-    <details className="how-to-be-heard mt-3 pl-4">
+    <>
+    {gap}
+    <CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} />
+    {lines.length > 0 && <details className="how-to-be-heard mt-3 pl-4">
       <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
@@ -271,7 +257,7 @@ export function HowToBeHeard({
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} />
-    </details>
+    </details>}
+    </>
   );
 }

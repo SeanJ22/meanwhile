@@ -98,7 +98,7 @@ function candidate(id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceI
     },
     normalization: {
       succeeded: true,
-      parserVersion: "fec-funding/3",
+      parserVersion: "fec-funding/4",
       schemaVersion: "2",
       normalizedHash: normalizedHash(readModel),
       normalizedPayloadHash: normalizedHash(normalizedPayload),

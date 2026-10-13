@@ -46,7 +46,7 @@ export async function heldDivisionsForZip(zip: string, published?: PublishedLook
   for (const membership of result.memberships) {
     const type = types[membership.geography.type];
     if (["cd", "sldu", "sldl"].includes(type)) {
-      const selected = selectGeographyVersion(versions, membership.geography.type, selection);
+      const selected = selectGeographyVersion(versions, membership.geography.type, selection, membership.geography.stateAbbr);
       if (!selected || membership.geography.version !== selected.key) continue;
     }
     const base = stateBase(membership.geography.stateFips);

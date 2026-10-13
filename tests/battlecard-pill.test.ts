@@ -1,11 +1,9 @@
 import assert from "node:assert/strict";
-import { claimsInText } from "../lib/text/absence-claims.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import {
   BATTLECARD_SECTIONS,
-  votingRecordEmptyLine,
 } from "../lib/ballot/battlecard-sections.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -42,15 +40,14 @@ test("12: the long sections render inside the battlecard, not on the row", () =>
   }
 });
 
-test("BC-1: every card carries the same seven sections, always", () => {
-  /* The section set is fixed and every section renders whether or not it holds content, so a card's height never tracks how much we hold. */
+test("person cards use one reading order for the sections they hold", () => {
   const candidate = read("components", "ballot", "candidate-battlecard.tsx");
   assert.match(candidate, /<PersonCard/);
   const card = read("components", "ui", "person-card.tsx");
   assert.match(
     card,
     /PERSON_CARD_SECTIONS\.filter[\s\S]*?\.map/,
-    "the card must render the fixed set, not whatever it was handed",
+    "the card must preserve the shared reading order",
   );
   assert.equal(BATTLECARD_SECTIONS.length, 7, "the seven the author named");
   assert.deepEqual(
@@ -66,35 +63,6 @@ test("BC-1: every card carries the same seven sections, always", () => {
     ],
     "the titles and the order are his, verbatim",
   );
-  // No branch may skip a section for want of content.
-  assert.ok(
-    !/sections\?\.\[spec\.id\][^\n]*&&/.test(card),
-    "a section must never be conditional on having content",
-  );
-});
-
-test("FE-30: all missing voting records use the same collection state", () => {
-  for (const held of [true, false]) {
-    const line = votingRecordEmptyLine(held);
-    assert.equal(line, "We’re working on getting this info");
-    assert.deepEqual(claimsInText(line), []);
-  }
-});
-
-test("BC-2: an empty section is never a per-card completeness statement", () => {
-  /* An empty drop-down saying why it is empty carries no count, no digit and no sentence about what the card lacks. */
-  const specs = BATTLECARD_SECTIONS.map((s) => s.emptyLine).concat([
-    votingRecordEmptyLine(true),
-    votingRecordEmptyLine(false),
-  ]);
-  for (const line of specs) {
-    assert.doesNotMatch(line, /\d/, `an empty line carries a number: ${line}`);
-    assert.doesNotMatch(
-      line,
-      /\b(less|fewer|thin|incomplete|compared|than other|other candidates)\b/i,
-      `an empty line compares this card to another: ${line}`,
-    );
-  }
 });
 
 test("12: the pill is full width and reads as an invitation", () => {

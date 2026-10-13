@@ -2228,31 +2228,6 @@ a.ballot-pill-main:focus {
   color: var(--text);
 }
 
-/* The compact form for the small popup; still at the 40px tap floor. */
-.contact-pill-row[data-compact] .contact-pill {
-  min-height: 40px;
-  padding: 0 11px;
-  font-size: 0.75rem;
-  gap: 6px;
-}
-
-.contact-pill-row[data-layout="column"] {
-  flex-direction: column;
-  flex-wrap: nowrap;
-  gap: 6px;
-}
-
-.contact-pill-row[data-layout="column"] .contact-pill {
-  width: 100%;
-  justify-content: flex-start;
-  /* A long label — an email address, a campaign host — wraps inside the pill
-     rather than pushing the card wider. */
-  white-space: normal;
-  overflow-wrap: anywhere;
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
 .person-row {
   display: flex;
   flex-direction: row;
@@ -3834,51 +3809,6 @@ button.jurisdiction-badge-action:focus-visible {
   }
 }
 
-.popup-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  max-width: calc(100vw - 2rem);
-  max-height: 55vh;
-  overflow: hidden;
-  padding: 16px 18px;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-popup);
-}
-
-.popup-card-head,
-.popup-card-more {
-  flex-shrink: 0;
-}
-
-.popup-card-body {
-  flex: 0 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-}
-
-/* 5px thin scrollbar, matching the sidebar's treatment. */
-.popup-card-body::-webkit-scrollbar {
-  width: 5px;
-}
-
-.popup-card-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.popup-card-body::-webkit-scrollbar-thumb {
-  background: var(--panel-border);
-  border-radius: 3px;
-}
-
-.popup-card-body {
-  scrollbar-width: thin;
-  scrollbar-color: var(--panel-border) transparent;
-}
-
 .popup-expand-btn {
   position: absolute;
   top: 10px;
@@ -3931,14 +3861,6 @@ button.jurisdiction-badge-action:focus-visible {
 .popup-badge[data-status="CONCLUDED"] {
   color: var(--concluded);
   background: color-mix(in srgb, var(--concluded) 15%, transparent);
-}
-
-.popup-card h3 {
-  margin-top: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--text);
 }
 
 .popup-row {
@@ -5414,7 +5336,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 .district-picker,
 .welcome-card,
 .voting-panel,
-.popup-card-body,
 .coverage-notice-body,
 .picks-phone,
 .account-modal-body,
@@ -5477,8 +5398,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   outline: 2px solid var(--link);
   outline-offset: 3px;
 }
-.popup-minimize-btn { right: 38px; }
-.popup-card:has(.popup-minimize-btn) .popup-card-head { padding-right: calc(var(--space-8) + var(--space-3)); }
 @media (max-width: 1023px) {
   main[data-compact-boundary="true"] .rail-floaters { justify-content: flex-start; }
   .boundary-details-corner { bottom: calc(var(--map-legend-bottom) + var(--map-legend-height) + 12px); }

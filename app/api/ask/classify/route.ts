@@ -1,3 +1,4 @@
+import { withPublishedAskSettings } from "@/lib/ask/runtime-settings.ts";
 import type { AskClassifyReply } from "@/lib/ask/answer";
 import { classifyQuestion } from "@/lib/routing/classifier";
 import { ripcordPulled } from "@/lib/ripcords";
@@ -21,6 +22,10 @@ function getIpLimiter() {
 }
 
 export async function POST(request: Request) {
+  return withPublishedAskSettings(() => answerWithSettings(request));
+}
+
+async function answerWithSettings(request: Request) {
   // The rung's own switch. Pulled, the ask box is keyword-only — which is
   // the whole product it shipped as.
   if (ripcordPulled("ripcord.askClassifier")) {

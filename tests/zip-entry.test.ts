@@ -13,7 +13,7 @@ import type { Feature } from "../lib/geo/shapefile.ts";
 import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
 import { zipCertainty } from "../lib/geo/zip-certainty.ts";
 import { publishedDivisionsForZip } from "../lib/geo/zip-census-districts.ts";
-import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
+import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "../lib/ballot/zip-divisions.ts";
 import { locateAddressInZip, parseCensusPoint, sampleStreetPoints } from "../lib/geo/census-geocoder.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/zip-entry/${name}`, import.meta.url), "utf8");
@@ -79,6 +79,10 @@ test("ZIP-01: mail-only ZIPs cannot acquire residential legislative or school di
     assert.deepEqual(await publishedDivisionsForZip(zip), []);
     const point = ["ocd-division/country:us/state:tx/cd:13", "ocd-division/country:us/state:tx/sldu:31", "ocd-division/country:us/state:tx/school_district:texhoma"];
     assert.ok((await divisionIdsForZipArea(zip, point)).every(id => !point.includes(id)));
+    const withQualifiedPoint = await divisionIdsForZipArea(zip, point, {
+      purpose: "representation", asOf: "2026-10-13",
+    }, POINT_GEOMETRY_PLANS);
+    assert.ok(withQualifiedPoint.every(id => !point.includes(id)), "a valid point plan still cannot assign districts from a mail-only ZIP");
   }
 });
 

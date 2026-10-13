@@ -1,3 +1,6 @@
+import { rolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { playbookRows } from "./helpers/playbooks.ts";
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /**
  * For every model call site, two requests built from the same inputs produce byte-identical prefix bytes up to the
  * last static breakpoint, and per-request values (attempt id, obligation id, the reader's question) never appear in
@@ -13,9 +16,9 @@
 
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { scoutExecutor, scoutStaticPrefix, type ModelRequest, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { SCOUT_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
@@ -39,7 +42,7 @@ function scoutRequestFor(attemptId: string, obligationId: string): Promise<Model
   return new Promise((resolve) => {
     const capture: ModelTransport = async (request) => { resolve(request); throw new Error("captured"); };
     const toolkit: ScoutToolkit = { specs: SCOUT_TOOL_SPECS, vaultedArtifactIds: new Set(), requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } };
-    const exec = scoutExecutor({
+    const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook,
       transport: capture,
       toolkitFor: (_ctx: ScoutToolContext) => toolkit,
       contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
@@ -58,11 +61,11 @@ test("PC-3 Scout: tools + system are byte-identical across Attempts and carry no
   const prefixA = { tools: a.tools, system: a.system };
   const prefixB = { tools: b.tools, system: b.system };
   assert.equal(sha(prefixA), sha(prefixB), "the static prefix hash is identical across Attempts");
-  const built = scoutStaticPrefix({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const built = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.equal(sha(prefixA), sha({ tools: built.tools, system: built.system }), "the executor sends exactly what scoutStaticPrefix builds — the pre-warm's bytes");
   const text = JSON.stringify(prefixA);
   for (const volatile of ["at-aaaaaaaa", "#one", NOW, "2026-09", "warmup"]) assert.ok(!text.includes(volatile), `${volatile} must not appear before the static breakpoint`);
-  assert.match(JSON.stringify(a.messages[0]), /#one/, "the obligation lives in the brief, after the static prefix");
+  assert.match(JSON.stringify(a.messages[0]), /Place: az:county:pima/, "the place lives in the brief, after the static prefix");
   assert.equal(a.tools.at(-1)?.cache_control?.type, "ephemeral");
   assert.equal(a.system.at(-1)?.cache_control?.type, "ephemeral");
 });

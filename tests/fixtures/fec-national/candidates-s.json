@@ -1,0 +1,3311 @@
+{
+  "api_version": "1.0",
+  "pagination": {
+    "count": 659,
+    "is_count_exact": true,
+    "page": 1,
+    "pages": 7,
+    "per_page": 100
+  },
+  "results": [
+    {
+      "active_through": 2026,
+      "candidate_id": "S6ID00146",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-27",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-27",
+      "last_file_date": "2025-06-27",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "ACHILLES, TODD BAKER",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "ID"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TX00578",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-12",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-12",
+      "last_file_date": "2026-01-12",
+      "load_date": "2026-01-13T21:02:51",
+      "name": "ADEFOPE, JOHN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MS00109",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-03-28",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-03-28",
+      "last_file_date": "2025-03-28",
+      "load_date": "2025-07-16T21:02:06",
+      "name": "ADLAKHA, SARAH ANNE DR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MS"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NC00365",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-01-15",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-01-15",
+      "last_file_date": "2025-01-15",
+      "load_date": "2025-06-30T20:58:43",
+      "name": "AGNEW, BROOKS ALEXANDER",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6LA00706",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-04-20",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-04-20",
+      "last_file_date": "2026-04-20",
+      "load_date": "2026-05-01T21:18:54",
+      "name": "ALBARES, NICHOLAS S.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "LA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6ME00308",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-02-20",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-02-20",
+      "last_file_date": "2025-02-20",
+      "load_date": "2025-03-13T20:59:32",
+      "name": "ALCALA, NATASHA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "ME"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6ME00423",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-05",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-05",
+      "last_file_date": "2026-03-05",
+      "load_date": "2026-03-06T21:23:49",
+      "name": "ALCORN, ETHAN WELD MR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "UN",
+      "party_full": "UNAFFILIATED",
+      "state": "ME"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TX00305",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2024-08-12",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-08-12",
+      "last_file_date": "2024-08-12",
+      "load_date": "2025-01-10T21:01:11",
+      "name": "ALLEN, KEITH",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4TX00722",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-05-03",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-08-15",
+      "last_file_date": "2025-08-15",
+      "load_date": "2026-05-01T21:18:54",
+      "name": "ALLRED, COLIN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MT00295",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-05",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-03-05",
+      "last_file_date": "2026-03-05",
+      "load_date": "2026-04-18T21:13:41",
+      "name": "ALME, KURT",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MT"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TX00370",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-03",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-04-03",
+      "last_file_date": "2025-04-03",
+      "load_date": "2025-04-25T21:00:17",
+      "name": "ALVAREZ, ANDREW",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6SC04239",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-22",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-22",
+      "last_file_date": "2025-05-22",
+      "load_date": "2025-07-15T21:00:48",
+      "name": "ANDREWS, ANNIE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "SC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6DE00263",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-07-15",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-07-15",
+      "last_file_date": "2026-07-15",
+      "load_date": "2026-09-16T20:57:01",
+      "name": "APPELHANS, JEFFERY RYAN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "DE"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IA00314",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-09-06",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-09-23",
+      "last_file_date": "2026-09-23",
+      "load_date": "2026-09-23T20:56:35",
+      "name": "ARENHOLZ, ASHLEY HINSON",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "IA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6UT00287",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-05-14",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-08-16",
+      "last_file_date": "2026-08-16",
+      "load_date": "2026-08-16T20:56:15",
+      "name": "ARRINGTON, BRYAN LAMONT SGT.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "UN",
+      "party_full": "UNAFFILIATED",
+      "state": "UT"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6LA00516",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2024-12-17",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-12-17",
+      "last_file_date": "2024-12-17",
+      "load_date": "2025-01-10T21:01:11",
+      "name": "ARRINGTON, RANDALL STEVEN PHD",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "LA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6LA00524",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-01-27",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-01-27",
+      "last_file_date": "2025-01-27",
+      "load_date": "2025-02-07T21:00:11",
+      "name": "ARRINGTON, RANDALL STEVEN PHD",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "LA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6AR00207",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-09-15",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-10-31",
+      "last_file_date": "2025-10-31",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "ASHBY, MICAH",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "AR"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6FL00749",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-13",
+      "last_file_date": "2025-06-13",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "ATKINS, JOEY MENDOZA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MT00261",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-06",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-01-06",
+      "last_file_date": "2026-01-06",
+      "load_date": "2026-04-09T21:14:22",
+      "name": "AUSTIN, KYLE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "LIB",
+      "party_full": "LIBERTARIAN PARTY",
+      "state": "MT"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NE00178",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-04-29",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-04-29",
+      "last_file_date": "2026-04-29",
+      "load_date": "2026-05-01T21:18:54",
+      "name": "AXTELL SCHULTZ, DEBRA LEANNE MS",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NE"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4TX00441",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2014,
+        2026
+      ],
+      "district": null,
+      "district_number": null,
+      "election_districts": [
+        "00",
+        null
+      ],
+      "election_years": [
+        2014,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2013-10-24",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": null,
+      "incumbent_challenge_full": null,
+      "last_f2_date": "2013-10-24",
+      "last_file_date": "2013-10-24",
+      "load_date": "2026-09-16T20:57:01",
+      "name": "AYERS, AVERY L",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "W",
+      "party_full": "WRITE-IN",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S8MA00268",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2018,
+        2020,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2017-03-17",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-30",
+      "last_file_date": "2026-01-30",
+      "load_date": "2026-04-14T21:14:42",
+      "name": "AYYADURAI, SHIVA DR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "MA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6RI00288",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-04-16",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-04-16",
+      "last_file_date": "2026-04-16",
+      "load_date": "2026-07-15T21:00:09",
+      "name": "BAHRY, MICHAEL",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "RI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6CO00507",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-05",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-05",
+      "last_file_date": "2026-01-05",
+      "load_date": "2026-04-18T21:13:41",
+      "name": "BAISLEY, MARK",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "CO"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MT00253",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-12-10",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-12-10",
+      "last_file_date": "2025-12-10",
+      "load_date": "2026-03-06T21:23:49",
+      "name": "BANKHEAD, ALANI INES",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "MT"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S8FL00323",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-14",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-10-04",
+      "last_file_date": "2026-10-04",
+      "load_date": "2026-10-04T20:55:49",
+      "name": "BAPTISTE, ASHLEY JEAN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "FL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6KY00286",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-23",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-05-29",
+      "last_file_date": "2026-05-29",
+      "load_date": "2026-05-29T20:56:51",
+      "name": "BARR, GARLAND ANDY",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "KY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6GA00317",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2024-11-20",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-11-20",
+      "last_file_date": "2024-11-20",
+      "load_date": "2025-01-10T21:01:11",
+      "name": "BARTELL, ELBERT",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IL00532",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-29",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-05-29",
+      "last_file_date": "2025-05-29",
+      "load_date": "2025-06-09T20:59:02",
+      "name": "BARTZIS, PANAGIOTI JOHN MR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6SC04262",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-01",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-07-01",
+      "last_file_date": "2025-07-01",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "BAUER, ANDRE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "SC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6DE00156",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-23",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-27",
+      "last_file_date": "2026-01-27",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "BEARDSLEY, CHRISTOPHER MR.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "DE"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6SD01125",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-30",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-04-30",
+      "last_file_date": "2025-04-30",
+      "load_date": "2025-07-19T20:58:36",
+      "name": "BEAUDION, JULIAN C",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "SD"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MA00270",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-08-20",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-08-20",
+      "last_file_date": "2025-08-20",
+      "load_date": "2025-10-16T21:01:04",
+      "name": "BECH, NATHAN ALEXANDER",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6OK04155",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-03-09",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-03-09",
+      "last_file_date": "2025-03-09",
+      "load_date": "2025-03-13T20:59:32",
+      "name": "BECK, WILLIAM EVAN SCOTT",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "OK"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6ME00456",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-07-09",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-07-09",
+      "last_file_date": "2026-07-09",
+      "load_date": "2026-09-01T20:57:25",
+      "name": "BELLOWS, SHENNA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "ME"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6WY00258",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": null,
+      "district_number": null,
+      "election_districts": [
+        null
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-08-03",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": null,
+      "incumbent_challenge_full": null,
+      "last_f2_date": "2026-08-03",
+      "last_file_date": "2026-08-03",
+      "load_date": "2026-08-03T20:59:17",
+      "name": "BENAVIDEZ, BILLY ARTHUR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "WY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TX00560",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-12-10",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-12-10",
+      "last_file_date": "2025-12-10",
+      "load_date": "2026-01-06T21:00:44",
+      "name": "BENDER, ANNA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6SD01117",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-28",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-04-28",
+      "last_file_date": "2025-04-28",
+      "load_date": "2025-07-16T21:02:06",
+      "name": "BENGS, BRIAN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "SD"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MI00400",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-07",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-04-07",
+      "last_file_date": "2025-04-07",
+      "load_date": "2025-04-25T21:00:17",
+      "name": "BENHAM, KENT",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IL00391",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-11-09",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2023-11-09",
+      "last_file_date": "2023-11-09",
+      "load_date": "2025-04-25T21:00:17",
+      "name": "BENNETT, DOUGLAS",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IA00199",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2024-08-25",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2024-08-25",
+      "last_file_date": "2024-08-25",
+      "load_date": "2025-09-03T21:03:11",
+      "name": "BERMAN, JOHN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "IA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6OH00312",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-01-22",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-01-22",
+      "last_file_date": "2025-02-19",
+      "load_date": "2025-02-07T21:00:11",
+      "name": "BIBLER, BRIAN CHRISTOPHER MR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "OH"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S0TX00365",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2020,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2020,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2019-11-24",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-19",
+      "last_file_date": "2025-06-19",
+      "load_date": "2025-07-16T21:02:06",
+      "name": "BIERSCHWALE, VIRGIL",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MT00246",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-09-11",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-09-11",
+      "last_file_date": "2025-09-11",
+      "load_date": "2026-03-06T21:23:49",
+      "name": "BLACKWOLF, MICHAEL JAMES MR.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "MT"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6DE00164",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-05",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-05",
+      "last_file_date": "2026-01-05",
+      "load_date": "2026-01-13T21:02:51",
+      "name": "BLAND, DEXTER",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "DE"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MT00287",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-04",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-03-04",
+      "last_file_date": "2026-03-04",
+      "load_date": "2026-04-18T21:13:41",
+      "name": "BODNAR, SETH",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "MT"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6ID00179",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-24",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-24",
+      "last_file_date": "2026-03-24",
+      "load_date": "2026-03-29T21:12:30",
+      "name": "BONDS, NICKOLAS",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "ID"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6KY00385",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-12-03",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-12-03",
+      "last_file_date": "2025-12-03",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "BOOKER, CHARLES",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "KY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4NJ00185",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2014,
+        2020,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2013-05-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2026-08-26",
+      "last_file_date": "2026-08-26",
+      "load_date": "2026-08-26T20:57:27",
+      "name": "BOOKER, CORY A.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IL00656",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": null,
+      "district_number": null,
+      "election_districts": [
+        null
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-09-10",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-09-10",
+      "last_file_date": "2025-09-10",
+      "load_date": "2026-01-29T21:02:11",
+      "name": "BOTSFORD, STEVE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6GA00267",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2022-06-22",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-02-21",
+      "last_file_date": "2024-02-21",
+      "load_date": "2025-01-10T21:01:11",
+      "name": "BOX, REAGAN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4TN00542",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2023-10-30",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-06-16",
+      "last_file_date": "2026-06-16",
+      "load_date": "2026-07-21T20:58:46",
+      "name": "BRADSHAW, MARQUITA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "TN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MI00558",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-07-01",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-07-01",
+      "last_file_date": "2026-07-01",
+      "load_date": "2026-07-21T20:58:46",
+      "name": "BRAGGS, MARNISHA BRECHE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S0NC00335",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": null,
+      "district_number": null,
+      "election_districts": [
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2020,
+        2022,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2019-07-16",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": null,
+      "incumbent_challenge_full": null,
+      "last_f2_date": "2025-12-15",
+      "last_file_date": "2026-01-23",
+      "load_date": "2026-03-10T21:23:39",
+      "name": "BRAY, SHANNON",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "LIB",
+      "party_full": "LIBERTARIAN PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6SC04338",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-12-02",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-14",
+      "last_file_date": "2026-03-14",
+      "load_date": "2026-03-16T21:15:59",
+      "name": "BRENKUS, JASON ELLIOT",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "LIB",
+      "party_full": "LIBERTARIAN PARTY",
+      "state": "SC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6PA00357",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-12",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-12",
+      "last_file_date": "2025-06-12",
+      "load_date": "2025-06-30T20:58:43",
+      "name": "BRENNER, GARY DAVID MR JR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "PA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6CO00408",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-02-07",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-02-07",
+      "last_file_date": "2025-02-07",
+      "load_date": "2025-07-16T21:02:06",
+      "name": "BRESLIN, KAREN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "CO"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TN00380",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-05",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-05",
+      "last_file_date": "2026-03-05",
+      "load_date": "2026-07-16T20:57:38",
+      "name": "BREWER, MARIA A",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "TN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6OH00411",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-19",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-11-19",
+      "last_file_date": "2025-11-19",
+      "load_date": "2025-12-30T21:00:52",
+      "name": "BREWER, M SUSANNA MRS.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "OH"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6GA00465",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-31",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-31",
+      "last_file_date": "2026-03-31",
+      "load_date": "2026-04-10T21:13:55",
+      "name": "BRIGMAN, BRADLEY",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6WA00461",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-02",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-02",
+      "last_file_date": "2026-03-12",
+      "load_date": "2026-03-03T21:23:02",
+      "name": "BRISCO, DELBERT EUGENE MR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "CON",
+      "party_full": "CONSTITUTION PARTY",
+      "state": "WA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MN00523",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-07",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-11-07",
+      "last_file_date": "2025-11-07",
+      "load_date": "2025-11-13T21:02:32",
+      "name": "BROOKS, CHRISTOPHER JARRED",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MN"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6SC04270",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-09",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-10-15",
+      "last_file_date": "2025-10-15",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "BROWN, BRANDON",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "SC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NC00373",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-03-08",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-06-09",
+      "last_file_date": "2025-06-09",
+      "load_date": "2025-06-30T20:58:43",
+      "name": "BROWN, DON",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TX00594",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-22",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-08-15",
+      "last_file_date": "2026-08-15",
+      "load_date": "2026-08-15T20:56:12",
+      "name": "BROWN GAINES, JENNIFER TAWANDA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "LBL",
+      "party_full": "LIBERAL PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NH00166",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-07-01",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-07-01",
+      "last_file_date": "2025-07-01",
+      "load_date": "2025-10-18T21:00:34",
+      "name": "BROWN, SCOTT P.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "NH"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IL00730",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": null,
+      "district_number": null,
+      "election_districts": [
+        null
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": null,
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": null,
+      "incumbent_challenge_full": null,
+      "last_f2_date": null,
+      "last_file_date": null,
+      "load_date": "2026-09-16T20:57:01",
+      "name": "BROWN, SEAN AMEDEE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6OH00163",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2006,
+        2008,
+        2010,
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00",
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2006,
+        2012,
+        2018,
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2005-10-18",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-04-15",
+      "last_file_date": "2026-04-15",
+      "load_date": "2026-04-15T21:16:15",
+      "name": "BROWN, SHERROD",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "OH"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4TX00888",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2024-03-06",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-12-04",
+      "last_file_date": "2025-12-04",
+      "load_date": "2026-02-09T20:58:28",
+      "name": "BROWN, THEODORE E. JR.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "LIB",
+      "party_full": "LIBERTARIAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S2SC00145",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2022,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2022-03-08",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2022-07-05",
+      "last_file_date": "2022-07-05",
+      "load_date": "2025-01-10T21:01:11",
+      "name": "BRUCE, CATHERINE FLEMING MS.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "SC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6SC04395",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-07-15",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-07-15",
+      "last_file_date": "2026-07-15",
+      "load_date": "2026-07-28T20:58:01",
+      "name": "BUCKNER, DUKE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "SC"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6OK04254",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-16",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-16",
+      "last_file_date": "2026-03-16",
+      "load_date": "2026-03-29T21:12:30",
+      "name": "BUCKNER, WILLIAM SEAN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "OK"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NE00145",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-03",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-03",
+      "last_file_date": "2026-03-03",
+      "load_date": "2026-07-16T20:57:38",
+      "name": "BURBANK, CINDY",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DE",
+      "party_full": null,
+      "state": "NE"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6RI00270",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-23",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-04-23",
+      "last_file_date": "2025-04-23",
+      "load_date": "2025-10-15T21:01:51",
+      "name": "BURBRIDGE, CONNOR",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "RI"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6LA00607",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-08",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-04-09",
+      "last_file_date": "2026-04-09",
+      "load_date": "2025-11-13T21:02:32",
+      "name": "BURKE, TRACIE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "LA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6GA00457",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-03-02",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-03-02",
+      "last_file_date": "2026-03-02",
+      "load_date": "2026-03-06T21:23:49",
+      "name": "BURTON, MARQUETT DAVON",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6AL00500",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-20",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-01-20",
+      "last_file_date": "2026-01-20",
+      "load_date": "2026-04-08T21:14:48",
+      "name": "BURTON, MATTHEW SETH",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "AL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IL00565",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-10",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-06-10",
+      "last_file_date": "2025-06-10",
+      "load_date": "2026-03-21T21:13:21",
+      "name": "BUSTOS, AWISI",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6WY00217",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-02-11",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-02-11",
+      "last_file_date": "2026-02-11",
+      "load_date": "2026-04-18T21:13:41",
+      "name": "BYRD, JAMES WILLARD MR.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "WY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TX00420",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-06-23",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-06-23",
+      "last_file_date": "2025-06-23",
+      "load_date": "2025-06-30T20:58:43",
+      "name": "CAIN, JOSHUA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6ME00316",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-03-10",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-03-10",
+      "last_file_date": "2025-03-10",
+      "load_date": "2026-01-30T21:02:20",
+      "name": "CALABRESE, CARMEM VINCENT MR.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "ME"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6ME00324",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-03-13",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-03-13",
+      "last_file_date": "2025-03-13",
+      "load_date": "2026-01-30T21:02:20",
+      "name": "CALABRESE, CARMEN VINCENT MR.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "ME"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6CO00523",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-07",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-01-07",
+      "last_file_date": "2026-01-07",
+      "load_date": "2026-01-13T21:02:51",
+      "name": "CALDERON, AMANDA J JILLIAN MRS",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "CO"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6MT00329",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": null,
+      "district_number": null,
+      "election_districts": [
+        null
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-04-29",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": null,
+      "incumbent_challenge_full": null,
+      "last_f2_date": "2026-04-29",
+      "last_file_date": "2026-04-29",
+      "load_date": "2026-06-16T20:57:22",
+      "name": "CALHOUN, LEE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "MT"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NJ00354",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-05",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-11-05",
+      "last_file_date": "2025-11-05",
+      "load_date": "2025-11-13T21:02:32",
+      "name": "CALLAHAN, SAXON",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6KY00237",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-02-21",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-02-21",
+      "last_file_date": "2025-02-21",
+      "load_date": "2025-04-16T21:03:05",
+      "name": "CAMERON, DANIEL",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "KY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6KY00377",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-11-19",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-11-19",
+      "last_file_date": "2025-11-19",
+      "load_date": "2026-07-22T21:02:57",
+      "name": "CAMPBELL, CHRISTOPHER TODD",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "OTH",
+      "party_full": "OTHER",
+      "state": "KY"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6TX00545",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-12-01",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-12-01",
+      "last_file_date": "2025-12-01",
+      "load_date": "2026-01-30T21:02:20",
+      "name": "CANADY, SARA LARUE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "TX"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4WV00159",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2012,
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2014,
+        2020,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2012-12-06",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2026-07-07",
+      "last_file_date": "2026-07-07",
+      "load_date": "2026-07-07T21:17:22",
+      "name": "CAPITO, SHELLEY MOORE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "WV"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6GA00358",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-04-09",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-04-09",
+      "last_file_date": "2025-04-23",
+      "load_date": "2025-04-25T21:00:17",
+      "name": "CAPPARELL, CHRISTOPHER PAUL",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IL00490",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": null,
+      "district_number": null,
+      "election_districts": [
+        null
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-17",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-05-17",
+      "last_file_date": "2025-07-11",
+      "load_date": "2026-01-29T21:02:11",
+      "name": "CAPPARELLI, R CARY",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "IL"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4NJ00342",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2024,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2022-06-22",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2024-06-17",
+      "last_file_date": "2024-06-17",
+      "load_date": "2025-01-10T21:01:11",
+      "name": "CARDUCCI, NICHOLAS MATTHEW",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6IA00249",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-02-20",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2025-02-20",
+      "last_file_date": "2025-02-20",
+      "load_date": "2025-09-03T21:03:11",
+      "name": "CARLIN, JAMES",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "IA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NM01194",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-06-10",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2026-06-10",
+      "last_file_date": "2026-06-10",
+      "load_date": "2026-07-21T20:58:46",
+      "name": "CARRARO, JOSEPH JOHN",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "IND",
+      "party_full": "INDEPENDENT",
+      "state": "NM"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6GA00374",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2025-05-09",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2025-05-09",
+      "last_file_date": "2025-05-09",
+      "load_date": "2025-06-09T20:59:02",
+      "name": "CARTER, EARL LEROY",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "GA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S4LA00107",
+      "candidate_inactive": false,
+      "candidate_status": "C",
+      "cycles": [
+        2014,
+        2016,
+        2018,
+        2020,
+        2022,
+        2024,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2014,
+        2020,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2013-04-16",
+      "has_raised_funds": true,
+      "inactive_election_years": null,
+      "incumbent_challenge": "I",
+      "incumbent_challenge_full": "Incumbent",
+      "last_f2_date": "2026-07-01",
+      "last_file_date": "2026-07-01",
+      "load_date": "2026-07-01T20:58:18",
+      "name": "CASSIDY, WILLIAM M.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "LA"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S0OK00420",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2020,
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00",
+        "00"
+      ],
+      "election_years": [
+        2020,
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2020-04-17",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "C",
+      "incumbent_challenge_full": "Challenger",
+      "last_f2_date": "2020-04-17",
+      "last_file_date": "2020-05-07",
+      "load_date": "2026-04-17T21:14:14",
+      "name": "CASSITY, R.O.",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "DEM",
+      "party_full": "DEMOCRATIC PARTY",
+      "state": "OK"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6NJ00495",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-09-10",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": null,
+      "incumbent_challenge_full": null,
+      "last_f2_date": "2026-09-10",
+      "last_file_date": "2026-09-10",
+      "load_date": "2026-09-10T21:04:18",
+      "name": "CASTILLO NICASIO, EDUARDO JOSE",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "W",
+      "party_full": "WRITE-IN",
+      "state": "NJ"
+    },
+    {
+      "active_through": 2026,
+      "candidate_id": "S6KY00401",
+      "candidate_inactive": false,
+      "candidate_status": "N",
+      "cycles": [
+        2026
+      ],
+      "district": "00",
+      "district_number": 0,
+      "election_districts": [
+        "00"
+      ],
+      "election_years": [
+        2026
+      ],
+      "federal_funds_flag": false,
+      "first_file_date": "2026-01-06",
+      "has_raised_funds": false,
+      "inactive_election_years": null,
+      "incumbent_challenge": "O",
+      "incumbent_challenge_full": "Open seat",
+      "last_f2_date": "2026-01-07",
+      "last_file_date": "2026-01-07",
+      "load_date": "2026-01-13T21:02:51",
+      "name": "CATLETT, ANISSA",
+      "office": "S",
+      "office_full": "Senate",
+      "party": "REP",
+      "party_full": "REPUBLICAN PARTY",
+      "state": "KY"
+    }
+  ]
+}

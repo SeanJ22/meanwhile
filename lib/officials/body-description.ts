@@ -2,7 +2,7 @@ import HOLDINGS from "../../data/states/az/reference/body-blurbs.json" with { ty
 
 /**
  * What a governing body does: plain-language paraphrases of a cited statute or charter, each read before it was
- * written. A body with no entry gets the honest absence line, never a paraphrase of what such bodies generally do.
+ * written. A body with no entry returns null; its card collects the missing description.
  */
 
 export interface BodyBlurb {
@@ -33,10 +33,6 @@ export const DIVISION_BODY_BLURBS: ReadonlyArray<{
   divisionOcdId: string;
   blurb: BodyBlurb;
 }> = HOLDINGS.records.DIVISION_BODY_BLURBS;
-
-/** The honest absence line: one sentence about our research, never the body. */
-export const NO_BODY_BLURB_LINE =
-  "We haven't yet read the law that says what this body decides. What we do hold about it is below.";
 
 /**
  * The blurb for a division's own government, or null; the division override wins. Keyed on the division, so the only

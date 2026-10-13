@@ -88,7 +88,7 @@ export function scoutFieldManualProjection(
   const full = projectFieldManual(store, { ...scoutFieldManualQuery(opts), limit: store.entries.length }, read.evidence);
   const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
   const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, tier: full.tiers[index]!, entry: byId.get(id)! }))
-    .filter(row => row.entry.kind !== "EXHAUSTED_RUNGS" || !opts.recordClass || row.entry.recordClasses.includes(opts.recordClass.toLowerCase()));
+    .filter(row => row.entry.kind !== "PLAYBOOK" && (row.entry.kind !== "EXHAUSTED_RUNGS" || !opts.recordClass || row.entry.recordClasses.includes(opts.recordClass.toLowerCase())));
   // Within each rank, the record class's own fields first.
   const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
   indexed.sort((a, b) => a.tier - b.tier || affinity(a.entry) - affinity(b.entry));
@@ -105,7 +105,7 @@ export function scoutFieldManualCatalog(
   opts: ScoutManualOptions,
 ): readonly FieldManualEntry[] {
   const applicable = new Set(projectFieldManual(read.store, { ...scoutFieldManualQuery(opts), limit: read.store.entries.length }, read.evidence).entryIds);
-  return read.store.entries.filter(entry => applicable.has(entry.id) || (entry.kind === "PLAYBOOK" && entry.role === "DETECTIVE"));
+  return read.store.entries.filter(entry => entry.kind !== "PLAYBOOK" && applicable.has(entry.id));
 }
 
 /** A projected door recorded as dead (BLOCKED or FAILED), from its rendered line (`<role>/<kind> <outcome> (...)`). */

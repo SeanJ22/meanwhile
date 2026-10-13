@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import {
-  ASK_EFFORT_ENV,
+  ASK_EFFORT_SETTING,
   ASK_EFFORT_LEVELS,
-  ASK_MODEL_ENV,
+  ASK_MODEL_SETTING,
   ASK_SYNTHESIS_EFFORT,
   ASK_SYNTHESIS_MODEL,
   askModelOverrides,
@@ -49,7 +49,7 @@ test("an empty or whitespace override is treated as unset, never as an empty mod
      `"model": ""` on every reader question and take Ask down; the reader would
      meet a configuration error dressed as an unavailable answer. */
   for (const value of ["", "   ", "\t"]) {
-    assert.equal(resolveAskModel({ [ASK_MODEL_ENV]: value }), ASK_SYNTHESIS_MODEL);
+    assert.equal(resolveAskModel({ [ASK_MODEL_SETTING]: value }), ASK_SYNTHESIS_MODEL);
   }
 });
 
@@ -57,16 +57,16 @@ test("a set override is honoured, and is REPORTED as an override", () => {
   /* Widened to string: the constant narrows to a literal type, and a literal comparison is a TS2367 error. */
   const current: string = ASK_SYNTHESIS_MODEL;
   const other = current === MODELS.sonnet.model ? MODELS.opus.model : MODELS.sonnet.model;
-  const env = { [ASK_MODEL_ENV]: other };
+  const env = { [ASK_MODEL_SETTING]: other };
   assert.notEqual(other, ASK_SYNTHESIS_MODEL, "the override must differ from the default");
   assert.equal(resolveAskModel(env), other);
   assert.equal(askModelOverrides(env).model, true);
   assert.match(askModelStartupLine(env), new RegExp(other));
-  assert.match(askModelStartupLine(env), new RegExp(`overridden by ${ASK_MODEL_ENV}`));
+  assert.match(askModelStartupLine(env), new RegExp(`overridden by ${ASK_MODEL_SETTING}`));
 });
 
 test("an effort override off the closed set is REFUSED, not passed through to a 400", () => {
-  const env = { [ASK_EFFORT_ENV]: "extreme" };
+  const env = { [ASK_EFFORT_SETTING]: "extreme" };
   assert.equal(resolveAskEffort(env), ASK_SYNTHESIS_EFFORT);
   assert.equal(askModelOverrides(env).effortRefused, "extreme");
   assert.match(askModelStartupLine(env), /REFUSED/);
@@ -74,7 +74,7 @@ test("an effort override off the closed set is REFUSED, not passed through to a 
 
 test("every effort level in the closed set resolves to itself", () => {
   for (const level of ASK_EFFORT_LEVELS) {
-    assert.equal(resolveAskEffort({ [ASK_EFFORT_ENV]: level }), level);
+    assert.equal(resolveAskEffort({ [ASK_EFFORT_SETTING]: level }), level);
   }
 });
 
@@ -160,7 +160,7 @@ test("every Ask rung imports the RESOLVER, so the override cannot miss one", () 
     "lib/ask/synthesize.ts",
   ]) {
     const src = readFileSync(join(process.cwd(), rung), "utf8");
-    /* Each rung resolves its role (lib/ask/model.ts), whose override list carries WTP_ASK_MODEL as an alias. */
+    /* Each rung resolves its role (lib/ask/model.ts), whose override list carries ask.escalationWriterModel as an alias. */
     assert.match(
       src,
       /import\s*\{[^}]*\b(resolveAskModel|resolveAskRoleModel)\b[^}]*\}\s*from/,

@@ -34,6 +34,11 @@ export const FIELD_MANUAL_ROLES = [
   "VALIDATOR",
   "AUDITOR",
   "ENGINEER",
+  "MEASURE_WRITER",
+  "MEASURE_CHECKER",
+  "ASK_READER",
+  "ASK_WRITER",
+  "ASK_FALLBACK",
   "SHARED",
 ] as const;
 export type FieldManualRole = (typeof FIELD_MANUAL_ROLES)[number];

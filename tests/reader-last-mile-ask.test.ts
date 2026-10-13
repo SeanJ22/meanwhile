@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
 import {
   installAzBallot,

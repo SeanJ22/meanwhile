@@ -1,7 +1,6 @@
-import { readFileSync } from "node:fs";
 import { canonicalModelId } from "../models.ts";
-import { WORKER_SAFETY_FRAME } from "../control-plane/playbooks.ts";
-import { newFieldManualEntry, readFieldManual, writeFieldManual, type FieldManualQuery, type FieldManualRepos, type FieldManualEntry } from "../control-plane/field-manual.ts";
+import { WORKER_SAFETY_FRAME, rolePlaybook, readRolePlaybookRow, type RolePlaybookEntry } from "../control-plane/playbooks.ts";
+import { type FieldManualRepos } from "../control-plane/field-manual.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { assertStepMayInvokeModel } from "../control-plane/scheduler/model-routing.ts";
 import { scoutThinkingOptions, type ModelRequest, type ModelResponse, type ModelTransport } from "../control-plane/scheduler/scout-executor.ts";
@@ -15,43 +14,33 @@ export type MeasureTranslationRepos = FieldManualRepos & Pick<ControlPlaneReposi
 import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 
 export interface TranslationPlaybook {
-  readonly text: string;
+  readonly writerText: string;
+  readonly checkerText: string;
   readonly writerModel: string;
   readonly checkerModel: string;
   readonly version: string;
 }
 
-/** Live Bank entries override the seed; no deploy or worker restart is needed. */
-export function translationPlaybook(entries: readonly FieldManualEntry[]): TranslationPlaybook {
-  const held = entries.filter(entry => entry.kind === "PLAYBOOK" && (entry.payload as { translator?: unknown })?.translator === true)
-    .sort((a, b) => Number(a.source === "translator-seed") - Number(b.source === "translator-seed") ||
-      (b.observedAt ?? "").localeCompare(a.observedAt ?? "") || a.id.localeCompare(b.id));
-  const payload = held[0]?.payload as { text?: unknown; writerModel?: unknown; checkerModel?: unknown } | undefined;
+/** The same canonical rows used by every other model role. */
+export function translationPlaybook(entries: readonly RolePlaybookEntry[]): TranslationPlaybook {
+  const writerBook = rolePlaybook(entries, "MEASURE_WRITER"), checkerBook = rolePlaybook(entries, "MEASURE_CHECKER");
+  if (writerBook.error || checkerBook.error) throw new Error(writerBook.error ?? checkerBook.error);
   const writer = assertStepMayInvokeModel("summarization"), checker = assertStepMayInvokeModel("adversarial-audit");
-  const text = typeof payload?.text === "string" ? payload.text : readFileSync(new URL("./playbook.md", import.meta.url), "utf8");
-  const writerModel = typeof payload?.writerModel === "string" ? payload.writerModel : writer.model;
-  const checkerModel = typeof payload?.checkerModel === "string" ? payload.checkerModel : checker.model;
-  if (!text.trim() || ![writer.model, assertStepMayInvokeModel("summarization", true).model].includes(writerModel) ||
-      ![checker.model, assertStepMayInvokeModel("adversarial-audit", true).model].includes(checkerModel) || canonicalModelId(writerModel) === canonicalModelId(checkerModel)) throw new Error("Translation playbook has no distinct supported writer and checker models.");
-  return { text, writerModel, checkerModel, version: translationHash(JSON.stringify([text, writerModel, checkerModel])) };
+  const modelFor = (role: "MEASURE_WRITER" | "MEASURE_CHECKER", fallback: string) => {
+    const id = rolePlaybook(entries, role).entryIds[0];
+    const model = (entries.find(entry => entry.id === id)?.payload as { model?: unknown })?.model;
+    return typeof model === "string" ? model : fallback;
+  };
+  const writerModel = modelFor("MEASURE_WRITER", writer.model), checkerModel = modelFor("MEASURE_CHECKER", checker.model);
+  if (![writer.model, assertStepMayInvokeModel("summarization", true).model].includes(writerModel) ||
+      ![checker.model, assertStepMayInvokeModel("adversarial-audit", true).model].includes(checkerModel) || canonicalModelId(writerModel) === canonicalModelId(checkerModel)) throw new Error("Translation instructions have no distinct supported writer and checker models.");
+  return { writerText: writerBook.text, checkerText: checkerBook.text, writerModel, checkerModel,
+    version: translationHash(JSON.stringify([writerBook.version, checkerBook.version, writerModel, checkerModel])) };
 }
 
-/** The translator's rows: its written playbook, whichever place wrote it. */
-export const TRANSLATION_PLAYBOOK_QUERY: FieldManualQuery = { role: "SHARED", recordClass: "BALLOT_MEASURE", kinds: ["PLAYBOOK"], everywhere: true };
-
-async function loadTranslationPlaybook(repos: FieldManualRepos, now: string) {
-  const manual = await readFieldManual(repos, TRANSLATION_PLAYBOOK_QUERY);
-  if (manual.error) throw new Error(manual.error);
-  const playbook = translationPlaybook(manual.store.entries);
-  if (!manual.store.entries.some(entry => entry.kind === "PLAYBOOK" && (entry.payload as { translator?: unknown })?.translator === true)) {
-    const saved = await writeFieldManual(repos, [newFieldManualEntry("translator-seed", "measures", {
-      role: "SHARED", kind: "PLAYBOOK", title: "Plain-English translator", summary: "Source-only writer with an independent sentence checker.",
-      outcome: "REFERENCE", observedAt: now, recordClasses: ["BALLOT_MEASURE"], portable: true,
-      payload: { translator: true, text: playbook.text, writerModel: playbook.writerModel, checkerModel: playbook.checkerModel },
-    })], now);
-    if (saved.error) throw new Error(saved.error);
-  }
-  return playbook;
+async function loadTranslationPlaybook(repos: FieldManualRepos) {
+  const rows = await Promise.all([readRolePlaybookRow(repos, "MEASURE_WRITER"), readRolePlaybookRow(repos, "MEASURE_CHECKER")]);
+  return translationPlaybook(rows.flatMap(row => row ? [row.value] : []));
 }
 
 function toolResult(response: ModelResponse, name: string, model: string): unknown {
@@ -106,7 +95,7 @@ export async function translateText(input: {
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Text translation lacks its exact source-named subject.");
   // Read the same live translator playbook as measures; the task-specific tool
   // supplies the output shape. Existing Bank edits and model routing apply here.
-  const playbook = await loadTranslationPlaybook(input.repos, now);
+  const playbook = await loadTranslationPlaybook(input.repos);
   const instruction = subject.kind === "BODY_CLASS"
     ? "Describe only what this class of body is under the supplied creating law. Do not assert that a named body possesses those powers."
     : subject.kind === "BODY" ? "Describe only this named body's powers under its own charter or creating law. Do not import powers from its general class."
@@ -123,7 +112,7 @@ export async function translateText(input: {
   const send = input.transportFor({ subjectId: subject.subjectId, state: subject.state });
   const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
     model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
-    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${playbook.text}\n\n${instruction}\n${preservation}\nUse the supplied text-translation tool for this non-measure task. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral" } }],
+    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${model === playbook.writerModel ? playbook.writerText : playbook.checkerText}\n\n${instruction}\n${preservation}\nUse the supplied text-translation tool for this non-measure task. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
   const written = await send(request(playbook.writerModel, writer, { source: evidence.text, subject, ...(input.preservedText ? { curatedText: input.preservedText.text } : {}) }));
@@ -156,11 +145,11 @@ export async function translateMeasure(input: {
   if (!evidence.text.trim() || evidence.contentHash !== `sha256-${translationHash(evidence.text)}` ||
       !/^https:\/\//.test(evidence.canonicalUrl) || !subject.title.trim() || !evidence.text.includes(subject.title) ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Translation source is incomplete or does not name this measure.");
-  const playbook = await loadTranslationPlaybook(input.repos, now);
+  const playbook = await loadTranslationPlaybook(input.repos);
   const send = input.transportFor({ subjectId: subject.contestId, state: subject.state });
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
-    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${playbook.text}`, cache_control: { type: "ephemeral" } }],
+    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${model === playbook.writerModel ? playbook.writerText : playbook.checkerText}`, cache_control: { type: "ephemeral" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
   const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");

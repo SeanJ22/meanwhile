@@ -1,7 +1,8 @@
+import { askSettings } from "../lib/ask/runtime-settings.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS } from "../lib/routing/ask.ts";
@@ -405,7 +406,8 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
   assert.equal(RIPCORDS["ripcord.askClassifier"].pulled, false);
 
   const priorKey = process.env.ANTHROPIC_API_KEY;
-  const priorMax = process.env.WTP_ASK_CLASSIFIER_DAILY_MAX;
+  const settings = askSettings() as Record<string, string | number>;
+  const priorMax = settings["ask.classifierDailyCap"];
   try {
     // No key is not a guess — it is the rung declaring itself unavailable,
     // which the caller renders as the keyword refusal.
@@ -419,7 +421,7 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
     // The ceiling REFUSES rather than degrading. An over-ceiling ask gets
     // the answer it would have had, never a worse one dressed as an answer.
     process.env.ANTHROPIC_API_KEY = "test-key-not-used";
-    process.env.WTP_ASK_CLASSIFIER_DAILY_MAX = "1";
+    settings["ask.classifierDailyCap"] = 1;
     resetClassifierState();
     let calls = 0;
     const fetchImpl = (async () => {
@@ -454,7 +456,7 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
     assert.equal(cacheKey("First Question!"), cacheKey("first question"));
 
     // A model answer off the list is NONE, not a route.
-    process.env.WTP_ASK_CLASSIFIER_DAILY_MAX = "50";
+    settings["ask.classifierDailyCap"] = 50;
     resetClassifierState();
     const rogue = (async () =>
       new Response(
@@ -476,8 +478,8 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
   } finally {
     if (priorKey === undefined) delete process.env.ANTHROPIC_API_KEY;
     else process.env.ANTHROPIC_API_KEY = priorKey;
-    if (priorMax === undefined) delete process.env.WTP_ASK_CLASSIFIER_DAILY_MAX;
-    else process.env.WTP_ASK_CLASSIFIER_DAILY_MAX = priorMax;
+    if (priorMax === undefined) delete settings["ask.classifierDailyCap"];
+    else settings["ask.classifierDailyCap"] = priorMax;
     resetClassifierState();
   }
 });

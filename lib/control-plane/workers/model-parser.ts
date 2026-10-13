@@ -1,4 +1,4 @@
-import { rolePlaybook, workerSystemPrompt } from "../playbooks.ts";
+import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
 /**
  * The parser's fallback when no parsing rule exists: a model pulls each field with its exact quote, and code keeps
  * only fields whose quote occurs character for character in the saved document and contains the value, on a
@@ -260,6 +260,7 @@ export function modelParseReasoner(
     const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
+    const playbook = await readRolePlaybook(repos, "PARSER");
     const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass });
     const route = routeParse(manual.store, { recordClass: contract.recordClass, host });
     const { windows, unreadFrom } = documentWindows(input.evidence.text);
@@ -287,7 +288,7 @@ export function modelParseReasoner(
         if (index === 0 && firstBody === "") firstBody = body;
         const request: ModelRequest = { model, max_tokens: PARSE_RESPONSE_MAX_TOKENS,
           output_config: { effort: step.effort },
-          system: [{ type: "text", text: workerSystemPrompt("PARSER", rolePlaybook(manual.store.entries, "PARSER").text), cache_control: { type: "ephemeral" } }], tools: [RECORD_EXTRACTION],
+          system: [{ type: "text", text: workerSystemPrompt("PARSER", playbook.text), cache_control: { type: "ephemeral" } }], tools: [RECORD_EXTRACTION],
           tool_choice: { type: "auto" }, messages: [{ role: "user", content: body }] };
         const response = await send(request).catch((error) => {
           if (error instanceof SendBudgetRefusal) throw new Error(`DENIED_BY_POLICY:${error.code}; ${error.why}`);

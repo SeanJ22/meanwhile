@@ -1,0 +1,26 @@
+{
+  "n": 27,
+  "branch": "release/27",
+  "river_sha": "cc9589c05915a48d50a3af1b9247f59067c6d35e",
+  "tested_sha": "cc9589c05915a48d50a3af1b9247f59067c6d35e",
+  "steps": [
+    "CG-2",
+    "ZIP-01",
+    "NL-01",
+    "DS-01",
+    "DS-02"
+  ],
+  "lanes": [
+    "src-congress",
+    "zip-entry",
+    "national-listings",
+    "office-pins"
+  ],
+  "integration_from": 143,
+  "integration_count": 147,
+  "pr": {
+    "number": 735,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/735"
+  },
+  "at": "2026-10-13T07:57:26Z"
+}

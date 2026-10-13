@@ -93,6 +93,13 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass === "MEETING_OUTCOME" && member.key.startsWith("sitting:")) {
+    const row = object(member.record), document = object(row?.minutesDocument);
+    if (row && document) {
+      const { readAt: _readAt, ...facts } = document;
+      return { ...row, minutesDocument: facts };
+    }
+  }
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
@@ -144,7 +151,10 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
   const root = object(payload) ?? {};
   switch (recordClass) {
     case "FEC_FUNDING":
-      return keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]);
+      return [
+        ...keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]),
+        ...keyed("second-hop", array(root.secondHop), ["committeeId"]),
+      ];
     case "STATE_LEGISLATOR":
       return (array(root.members).length > 0
         ? array(root.members)
@@ -498,11 +508,6 @@ export function canonicalCivicDataJson(value: unknown): string {
     .join(",")}}`;
 }
 
-/**
- * The member projection and fact comparison a durable delta was derived under.
- * A delta is re-derived only to verify evidence, and evidence is verified
- * against the contract that wrote it.
- */
 export interface CivicChangeContract {
   readonly members: (recordClass: RoutineRecordClass, payload: unknown) => readonly CivicRecordMember[];
   readonly facts: (recordClass: RoutineRecordClass, member: CivicRecordMember) => unknown;

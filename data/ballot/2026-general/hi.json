@@ -1,7 +1,4 @@
 {
-  "contractId": "ballot-contests",
-  "version": "bl-12-hi-36fed610a190d994",
-  "sourceThrough": "2026-10-14T06:29:16.382743+00:00",
   "sourceReceipt": {
     "contractVersion": 1,
     "reviewedAt": "2026-10-14T06:29:16.382743+00:00",
@@ -141,9 +138,8 @@
       }
     ]
   },
-  "payload": {
-    "kind": "ballot-contests",
-    "ballots": {
+  "kind": "ballot-contests",
+  "ballots": {
       "HI:hi-2026-11-03": {
         "election": {
           "id": "hi-2026-11-03",
@@ -3179,5 +3175,4 @@
         ]
       }
     }
-  }
 }

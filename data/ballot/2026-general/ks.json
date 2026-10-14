@@ -1,7 +1,4 @@
 {
-  "contractId": "ballot-contests",
-  "version": "bl-12-ks-2026-general-2026-10-14T05:43:24Z",
-  "sourceThrough": "2026-10-14T05:43:24Z",
   "sourceReceipt": {
     "contractVersion": 1,
     "reviewedAt": "2026-10-14T05:43:24Z",
@@ -64,9 +61,8 @@
       }
     ]
   },
-  "payload": {
-    "kind": "ballot-contests",
-    "ballots": {
+  "kind": "ballot-contests",
+  "ballots": {
       "KS:ks-2026-11-03": {
         "election": {
           "id": "ks-2026-11-03",
@@ -7605,5 +7601,4 @@
         ]
       }
     }
-  }
 }

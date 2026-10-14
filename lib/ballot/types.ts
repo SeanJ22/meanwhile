@@ -84,6 +84,7 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  heldContests?: readonly HeldBallotContest[];
   measureRecords?: readonly MeasureRecord[];
   election: Election;
   contests: Contest[];
@@ -95,6 +96,10 @@ export interface BallotSet {
   /** Source notes with explicit applicability; never widened from a county
    * or one measured ZIP to every reader of a statewide source. */
   scopedCoverageNotes?: readonly ScopedBallotCoverageNote[];
+}
+
+export interface HeldBallotContest extends Pick<Contest, "id" | "electionId" | "ocdId" | "title" | "provenance"> {
+  readonly reason: string;
 }
 
 export interface ScopedBallotCoverageNote {

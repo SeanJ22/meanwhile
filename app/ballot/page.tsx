@@ -134,7 +134,6 @@ import {
 } from "@/lib/ballot/dated-events";
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
-  BallotAbsence,
   BallotSet,
   Candidacy,
   Contest,
@@ -477,10 +476,7 @@ export default async function BallotPage({
   const resolution = zip ? resolveZip(zip) : null;
   const centroid = resolution?.ok ? resolution.centroid : null;
   let set: BallotSet | null = null;
-  let matched: {
-    contests: Contest[];
-    absences: BallotAbsence[];
-  } | null = null;
+  let matched: ReturnType<typeof contestsForDivisions> | null = null;
   let coverageNotes: string[] = [];
   let attempted = false;
   let divisionHoldingUnavailable = false;
@@ -513,7 +509,7 @@ export default async function BallotPage({
         const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
         const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection, POINT_GEOMETRY_PLANS);
         const hit = contestsForDivisions(candidate, electionIds);
-        if (hit.contests.length > 0 || hit.absences.length > 0) {
+        if (hit.contests.length > 0 || hit.absences.length > 0 || hit.heldContests?.length) {
           set = candidate;
           matched = hit;
           askOcdIds = electionIds;
@@ -1646,6 +1642,18 @@ export default async function BallotPage({
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
           <p className="mt-2 t-body text-muted">We do not have county, city or school-board races for this ballot yet.</p>
+        </section>
+      )}
+
+      {matched && Boolean(matched.heldContests?.length) && (
+        <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl" data-ballot-held-contests>
+          <h2 className="t-structure text-paper-dim">Contests we don&apos;t hold yet</h2>
+          <p className="mt-2 t-body text-muted">We&apos;re working on getting complete candidate lists for these contests.</p>
+          <ul className="mt-2 space-y-2 t-body text-paper-dim">
+            {matched.heldContests?.map(contest => <li key={contest.id} data-contest-id={contest.id}>
+              <strong>{contest.title}</strong>: {contest.reason}
+            </li>)}
+          </ul>
         </section>
       )}
 

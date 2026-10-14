@@ -1,7 +1,4 @@
 {
-  "contractId": "ballot-contests",
-  "version": "2026-11-03",
-  "sourceThrough": "2026-10-14",
   "sourceReceipt": {
     "contractVersion": 1,
     "reviewedAt": "2026-10-14T05:07:28.982Z",
@@ -79,9 +76,8 @@
       }
     ]
   },
-  "payload": {
-    "kind": "ballot-contests",
-    "ballots": {
+  "kind": "ballot-contests",
+  "ballots": {
       "MO:mo-2026-11-03": {
         "election": {
           "id": "mo-2026-11-03",
@@ -9548,5 +9544,4 @@
         ]
       }
     }
-  }
 }

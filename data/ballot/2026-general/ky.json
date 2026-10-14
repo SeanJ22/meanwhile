@@ -1,7 +1,4 @@
 {
-  "contractId": "ballot-contests",
-  "version": "BL-12:KY:2026-11-03",
-  "sourceThrough": "2026-10-14",
   "sourceReceipt": {
     "contractVersion": 1,
     "reviewedAt": "2026-10-14T05:12:02.223807Z",
@@ -59,9 +56,8 @@
       }
     ]
   },
-  "payload": {
-    "kind": "ballot-contests",
-    "ballots": {
+  "kind": "ballot-contests",
+  "ballots": {
       "KY:ky-2026-11-03": {
         "election": {
           "id": "ky-2026-11-03",
@@ -6217,5 +6213,4 @@
         ]
       }
     }
-  }
 }

@@ -1,0 +1,29 @@
+{
+  "n": 32,
+  "branch": "release/32",
+  "river_sha": "bb3a0d5d2e22ebefe84143958baa65e999f15b1b",
+  "tested_sha": "bb3a0d5d2e22ebefe84143958baa65e999f15b1b",
+  "steps": [
+    "BL-11",
+    "BL-12",
+    "BL-13",
+    "BL-16",
+    "BL-10",
+    "BL-20"
+  ],
+  "lanes": [
+    "ballot-bl-11",
+    "ballot-bl-12",
+    "ballot-bl-13",
+    "ballot-bl-16",
+    "ballot-national",
+    "ballot-parity"
+  ],
+  "integration_from": 172,
+  "integration_count": 178,
+  "pr": {
+    "number": 741,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/741"
+  },
+  "at": "2026-10-14T07:46:52Z"
+}

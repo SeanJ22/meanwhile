@@ -22,7 +22,7 @@ test("a projection never exceeds its limit — a worker inherits a page, not the
   assert.equal(projection.total, 200);
 });
 
-test("notes on the blanks' record classes rank ahead of generic state notes, even ones about the place itself", () => {
+test("notes on the blanks' record classes rank ahead of generic notes, even ones about the place itself", () => {
   const make = (id: string, classes: string[], ocdIds?: string[]) => ({
     id, role: "SCOUT" as const, kind: "ROUTE", title: id, summary: id, states: ["az"], recordClasses: classes, platforms: [],
     outcome: "YIELDED" as const, url: `https://example.gov/${id}`, source: "method", observedAt: null, tier: null, payload: {}, ...(ocdIds ? { ocdIds } : {}),
@@ -32,7 +32,6 @@ test("notes on the blanks' record classes rank ahead of generic state notes, eve
   const blanks = ["CAN-05", "CAN-06", "CAN-17"].map(blankRecordClass).filter((value): value is string => value !== null);
   assert.deepEqual([...new Set(blanks)], ["candidate-enrichment"]);
   const projection = scoutFieldManualProjection({ store }, { subjectId: county, divisions: [county], recordClasses: blanks, limit: 4 });
-  assert.deepEqual(projection.entryIds.slice(0, 3), ["campaign", "contact", "generic"]);
-  assert.ok(!projection.entryIds.slice(0, 3).includes("robots"));
+  assert.deepEqual(projection.entryIds.slice(0, 2), ["campaign", "contact"]);
   assert.equal(blankRecordClass("meetingSchedule"), null);
 });

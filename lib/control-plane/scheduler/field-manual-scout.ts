@@ -89,9 +89,10 @@ export function scoutFieldManualProjection(
   const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
   const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, tier: full.tiers[index]!, entry: byId.get(id)! }))
     .filter(row => row.entry.kind !== "PLAYBOOK" && (row.entry.kind !== "EXHAUSTED_RUNGS" || classes.size === 0 || row.entry.recordClasses.some(value => classes.has(value))));
-  // Notes on the blanks' own record classes first, then notes for any class, then the rest; each by rank.
-  const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
-  indexed.sort((a, b) => affinity(a.entry) - affinity(b.entry) || a.tier - b.tier);
+  // Notes on the blanks' own record classes first; then by rank, notes for any class ahead of other classes.
+  const helps = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : 1;
+  const anyClass = (entry: FieldManualEntry) => entry.recordClasses.length === 0 ? 0 : 1;
+  indexed.sort((a, b) => helps(a.entry) - helps(b.entry) || a.tier - b.tier || anyClass(a.entry) - anyClass(b.entry));
   const chosen = indexed.slice(0, opts.limit ?? 30);
   return { lines: chosen.map(row => row.line), entryIds: chosen.map(row => row.id), tiers: chosen.map(row => row.tier),
     leftOutFailingHere: full.leftOutFailingHere, matched: full.matched, total: full.total };

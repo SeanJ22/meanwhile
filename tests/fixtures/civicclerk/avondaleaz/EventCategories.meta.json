@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://avondaleaz.api.civicclerk.com/v1/EventCategories?$top=200&$orderby=id%20desc",
+  "state": "AZ",
+  "retrievedAt": "2026-10-13T19:21:39.712436+00:00",
+  "sha256": "d5bb2f0bfbddac27db35812b5847722d4a7833a818e748fd0d0ddfbb75a798c2",
+  "records": 21
+}

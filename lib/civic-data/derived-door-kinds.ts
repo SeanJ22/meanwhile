@@ -56,7 +56,7 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
   CIVICCLERK: {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",
     route: { key: "apiBase", as: "origin" },
-    allowed: ["portalBase", "bodyMatch"], required: ["portalBase", "bodyMatch"],
+    allowed: ["portalBase", "bodyMatch", "categoryId", "titleMatch"], required: ["portalBase", "categoryId"],
   },
   IQM2: {
     sourceName: "iqm2", agendaSourceType: "IQM2", entry: "lib/sources/iqm2/index.ts",

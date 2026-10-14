@@ -64,12 +64,11 @@ test("unplacedVenueGap: words are the stated place, verbatim; blank is the publi
 });
 
 test("civicclerk: an unreviewed room and a blank one are published with the gap, a reviewed room still placed", () => {
-  const wiring = row(["CIVICCLERK"], (w) => w.config.slug === "capaz");
-  // The OData Events row shape the adapter reads (the fact-bridge test pins the
-  // same shape on recorded bytes); three sittings, one placed, two planted.
+  const held = row(["CIVICCLERK"], (w) => w.config.slug === "capaz");
+  const wiring = { ...held, config: { ...held.config, categoryId: "1" } };
   const base: CivicClerkEvent = {
     id: 0, eventName: "Board Meeting", eventDate: "2026-10-01T10:00:00", startDateTime: "2026-10-01T10:00:00",
-    eventCategoryName: "Board Meeting", hasAgenda: false, isDeleted: false, isPublished: true,
+    categoryId: 1, eventCategoryName: "Board Meeting", hasAgenda: false, isDeleted: false, isPublished: true,
   };
   const events: CivicClerkEvent[] = [
     { ...base, id: 1, eventLocation: { locationName: "Musical Instrument Museum", address1: "4725 E Mayo Blvd", city: "Phoenix", state: "AZ", zipCode: "85050" } },

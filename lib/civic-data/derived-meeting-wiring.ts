@@ -123,7 +123,7 @@ export function derivedWiringProjectionIssue(value: unknown): string | null {
     ids.add(record.id);
     if (record.status !== "ACTIVE" && record.status !== "SUSPENDED") return `${record.id} has no status`;
     if ((record.status === "SUSPENDED") !== (record.suspension !== undefined)) return `${record.id}: only a suspended record carries a suspension`;
-    if (!row || !["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"].includes(row.kind) ||
+    if (!row || (!["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"].includes(row.kind) && !isDataDoorKind(row.kind)) ||
       (record.id !== derivedWiringKey(row.kind, row.bodyId) && record.id !== derivedWiringKey(row.kind, row.bodyId, row.route))) {
       return `${record.id} is not keyed by its own route and body`;
     }

@@ -477,7 +477,10 @@
     "publisher": "Division of Elections, Office of the Secretary of State, Tallahassee, FL",
     "url": "https://dos.myflorida.com/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "FL",
       "ocdId": "ocd-division/country:us/state:fl",
@@ -500,7 +503,22 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://dos.myflorida.com/elections/\">https://dos.myflorida.com/elections/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+      "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+      "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+      "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List"
+    ],
+    "ballotMeasuresUrls": [
+      "https://constitutionalinitiatives.dos.fl.gov/",
+      "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+      "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+      "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+      "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+      "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+      "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf"
+    ]
   },
   {
     "id": "fec-ga-chief",

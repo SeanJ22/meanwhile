@@ -1353,7 +1353,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Legacy DOS root redirects to pa.gov. Philadelphia official November 3 candidate list, York unofficial general-election PDF, and Allegheny unofficial general-election XLSX fetched HTTP 200. Statewide Candidate Database returns a bot wall; remaining statewide district coverage and measures remain gaps.",
+      "detail": "Official full November 3 candidate lists for Philadelphia, York, and Allegheny fetched HTTP 200. York candidates match every choice across all 162 official precinct ballots. Allegheny identifies its linked file as a full candidate list. The statewide Candidate Database remains unavailable through public routes; unheld districts and statewide measures remain gaps.",
       "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1365,11 +1365,17 @@
     "candidateDatabaseUrl": "https://www.pavoterservices.pa.gov/ElectionInfo/ElectionInfo.aspx",
     "ballotMeasuresUrl": "https://vote.phila.gov/media/2026G_Ballot_Questions.pdf",
     "electionAssociationVerified": true,
-    "publicationMessage": "Philadelphia, York, and Allegheny county candidate coverage; the two latter lists are explicitly unofficial. Statewide ballot acquisition and measures remain incomplete.",
+    "publicationMessage": "All 68 held contests have full official candidate-list evidence. Other Pennsylvania districts and statewide measures remain incomplete.",
     "candidateListUrls": [
       "https://vote.phila.gov/voting/candidates-for-office/",
       "https://yorkcountypa.gov/DocumentCenter/View/9014",
-      "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx"
+      "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
+      "https://yorkcountypa.gov/DocumentCenter/View/9195"
+    ],
+    "candidateListCompletenessUrls": [
+      "https://www.alleghenycounty.us/Government/Elections/Sample-Ballots",
+      "https://www.alleghenycounty.us/Government/Elections/Candidate-and-Municipality-Resources",
+      "https://yorkcountypa.gov/971/Sample-Ballots"
     ]
   },
   {

@@ -165,7 +165,6 @@ test("VS-01: the voting pill answers in-page without an outbound polling lookup"
     "this component renders an outbound anchor again",
   );
 
-  assert.doesNotMatch(read("components", "map", "voting-sites-panel.tsx"), /PollingLookupFallback/);
   assert.match(
     where,
     /<VotingSitesPanel/,

@@ -154,6 +154,8 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     /* `list()` filtered, so the two can never disagree on rows or order. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
+    listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
+      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
     listChangedSince: async (since: string | null, held?: HeldSlots) => {
       const through = changeIso(changeClock.now());

@@ -230,3 +230,9 @@ One line per batch folded into river.
 - 2026-10-14T06:42:17Z · road · R0 · ready e9468c4a5ed8 · river 0a0daac9af64 · pnpm gates pass on 0a0daac9af64
 - 2026-10-14T06:42:17Z · src-census · SRC-AC · ready aa3747f3c160 · river 0a0daac9af64 · pnpm gates pass on 0a0daac9af64
 - 2026-10-14T06:42:17Z · src-civic · VS-01 · ready d1db579d958d · river 0a0daac9af64 · pnpm gates pass on 0a0daac9af64
+- 2026-10-14T07:46:42Z · ballot-bl-11 · BL-11 · ready 5bb5ef16aa11 · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
+- 2026-10-14T07:46:42Z · ballot-bl-12 · BL-12 · ready 04a8324eb58d · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
+- 2026-10-14T07:46:42Z · ballot-bl-13 · BL-13 · ready 9d944a150961 · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
+- 2026-10-14T07:46:42Z · ballot-bl-16 · BL-16 · ready 2ed73460ceac · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
+- 2026-10-14T07:46:42Z · ballot-national · BL-10 · ready 78cbc5a56318 · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
+- 2026-10-14T07:46:42Z · ballot-parity · BL-20 · ready 1e530950acc2 · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22

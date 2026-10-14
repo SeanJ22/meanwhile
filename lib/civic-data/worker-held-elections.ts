@@ -160,7 +160,8 @@ export async function publishHeldElectionOffices(input: {
   for (const item of owed) {
     const plan = item.autonomousPlan!;
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
-    const division = body?.ocdId ? registry!.payload.registry.divisions.find(row => row.ocdId === body.ocdId) : undefined;
+    const divisionId = body?.ocdId ?? null;
+    const division = divisionId ? registry!.payload.registry.divisions.find(row => row.ocdId === divisionId) : undefined;
     if (!division || !plan.contract) { fieldsByItem.set(item.id, -1); continue; }
     const key = `${plan.contract.subjectId}\n${division.ocdId}`;
     places.set(key, { subjectId: plan.contract.subjectId, ocdId: division.ocdId, label: division.label });

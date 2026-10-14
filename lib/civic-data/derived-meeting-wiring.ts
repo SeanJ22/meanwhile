@@ -1,3 +1,4 @@
+import { meetingRouteIdentity } from "./meeting-body-crosswalk.ts";
 import { createHash } from "node:crypto";
 
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
@@ -62,7 +63,7 @@ export interface DerivedWiringProjection {
 
 /** The store key of a row: one route of one body, as its meetings' source names it. */
 export function derivedWiringKey(kind: DerivedWiringKind, bodyId: string, route?: string): string {
-  return `${DERIVED_WIRING_SOURCE_NAMES[kind]}:${bodyId}${typeof route === "string" && route ? `:${createHash("sha256").update(route).digest("hex").slice(0, 16)}` : ""}`;
+  return `${DERIVED_WIRING_SOURCE_NAMES[kind]}:${bodyId}${typeof route === "string" && route ? `:${createHash("sha256").update(meetingRouteIdentity(kind, route)).digest("hex").slice(0, 16)}` : ""}`;
 }
 
 /** A body's slug for meeting ids, from its id alone: stable, and never another body's. */

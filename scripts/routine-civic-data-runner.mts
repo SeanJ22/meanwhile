@@ -248,7 +248,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     if (!PUBLISH_NOW) {
-      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, { scoutResults: doorRepos.scoutResults }))}`);
+      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
       const [published] = await runBoundedChildPass([{
         id: MEETING_DOORS_CONTRACT_ID,
         failureDomain: "derived:meeting-doors",

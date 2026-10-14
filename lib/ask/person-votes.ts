@@ -39,7 +39,7 @@ function voteQuestionShape(question: string, officePronouns: boolean): PersonVot
   return null;
 }
 
-export interface ReaderPersonVotesQuestion {
+interface ReaderPersonVotesQuestion {
   office: ReaderOfficialsAsk;
   topic: string | null;
 }

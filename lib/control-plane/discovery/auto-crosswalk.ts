@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { granicusBodyLabel, parseGranicusPublisher } from "../../sources/granicus/index.ts";
 import { parseDiligentMeetings } from "../../sources/diligent/index.ts";
 
 import type { DerivedInputRef } from "../../civic-data/derived-authority.ts";
@@ -28,10 +29,10 @@ import { parseOrganizationPage } from "../../sources/boardbook/index.ts";
 import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
 import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
-import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
-import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 import { parseSwagitMeetings, swagitMatchesBody } from "../../sources/swagit/index.ts";
-import { BODY_NOUNS, LEADING_NOISE, ownNameWords, printedNames, tokenize } from "../../meetings/printed-body-names.ts";
+import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
+import { parseNovusMeetings } from "../../sources/novusagenda/index.ts";
+import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
@@ -71,9 +72,8 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS",
-  swagit: "SWAGIT",
-  escribe: "ESCRIBE",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", granicus: "GRANICUS", swagit: "SWAGIT", escribe: "ESCRIBE",
+  novusagenda: "NOVUSAGENDA",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -126,6 +126,109 @@ const OWN_CLASS_WORD: Readonly<Record<GovernmentKind, readonly string[]>> = {
 
 /** Words that make a printed name another government's body, not a sub-body of this one. */
 const SEPARATE_GOVERNMENT_WORDS = ["county", "city", "town", "township", "village", "borough", "school", "district", "authority", "state", "regional", "federal", "tribal", "nation", "university", "college"];
+
+/** The government's own name words, from its jurisdiction id: `oh:city:city-of-testville` gives `testville`. */
+function ownNameWords(jurisdictionId: string): ReadonlySet<string> {
+  const slug = jurisdictionId.split(":")[2] ?? "";
+  return new Set(slug.split("-").filter((w) => w !== "" && !/^\d+$/.test(w) && !["city", "town", "village", "township", "borough", "county", "of", "the", "school", "district", "sch", "dist"].includes(w)));
+}
+
+/* -------------------------------------------------------- printed names */
+
+const BODY_NOUNS: ReadonlySet<string> = new Set([
+  "commission", "committee", "subcommittee", "board", "council", "authority", "trustees", "commissioners", "supervisors", "selectmen",
+  "aldermen", "panel", "corporation", "agency", "legislature", "court", "selectboard", "jury", "freeholders", "selectpersons",
+]);
+const CONNECTORS: ReadonlySet<string> = new Set(["of", "and", "&", "for", "on", "the", "to"]);
+/** Words a title puts before a body's name that are not part of it. */
+const LEADING_NOISE: ReadonlySet<string> = new Set([
+  "regular", "special", "joint", "emergency", "adjourned", "rescheduled", "cancelled", "canceled", "annual", "monthly", "organizational",
+  "reorganization", "work", "study", "public", "virtual", "hybrid", "quarterly", "continued", "recessed", "postponed", "amended", "revised",
+  "updated", "tentative", "draft", "the", "notice", "agenda", "meeting", "of", "and", "&", "for", "on", "to",
+]);
+/** Words that end a noun-first name ("Board of Zoning Appeals Meeting", "Board of Commissioners General Session"). */
+const RIGHT_STOPS: ReadonlySet<string> = new Set([
+  "meeting", "meetings", "session", "sessions", "hearing", "hearings", "workshop", "agenda", "minutes", "retreat", "orientation", "training",
+  "tour", "canceled", "cancelled", "postponed", "rescheduled", "regular", "special", "work", "study", "general", "budget", "business",
+  "executive", "closed", "annual", "monthly", "quarterly", "emergency", "organizational", "reorganization", "public", "virtual", "hybrid",
+  "briefing", "joint", "workshops", "forum", "open", "house",
+]);
+/** The most words after "of" a noun-first name carries ("Board of County Commissioners", "Board of Parks and Recreation"). */
+const MAX_OF_WORDS = 4;
+
+interface Token { readonly text: string; readonly start: number; readonly end: number }
+
+function tokenize(s: string): Token[] {
+  return [...s.matchAll(/[A-Za-z0-9][A-Za-z0-9'’]*(?:[.-][A-Za-z0-9'’]+)*|&/g)].map((m) => ({ text: m[0], start: m.index!, end: m.index! + m[0].length }));
+}
+
+/** One body name a title prints, with its span. */
+export interface PrintedName {
+  /** The words as printed, the title's noise, own name and own class word left off the front. */
+  readonly text: string;
+  /** The words as printed, whole: what an exclusion names. */
+  readonly whole: string;
+  readonly start: number;
+  readonly end: number;
+}
+
+export function printedNames(title: string, jurisdictionId: string): readonly PrintedName[] {
+  const t = tokenize(title);
+  const cap = (i: number): boolean => /^[A-Z]/.test(t[i]!.text);
+  const lowAt = (i: number): string => t[i]!.text.toLowerCase();
+  /* A separator between two tokens (a dash, a colon, a slash, a comma, parentheses) ends a name. */
+  const joined = (i: number): boolean => i > 0 && /^\s*$/.test(title.slice(t[i - 1]!.end, t[i]!.start));
+  const spans: { a: number; b: number }[] = [];
+  for (let i = 0; i < t.length; i++) {
+    const w = lowAt(i);
+    const noun = BODY_NOUNS.has(w) || (w === "force" && i > 0 && lowAt(i - 1) === "task" && joined(i));
+    if (!noun || !cap(i)) continue;
+    let a = i;
+    while (a > 0 && joined(a)) {
+      const pw = lowAt(a - 1);
+      if (cap(a - 1) && pw !== "and") {
+        a -= 1;
+        continue;
+      }
+      if (CONNECTORS.has(pw) && a - 2 >= 0 && joined(a - 1) && cap(a - 2)) {
+        /* "Council and Planning Commission" is two bodies; "Parks and Recreation Commission" is one. */
+        if ((pw === "and" || pw === "&") && BODY_NOUNS.has(lowAt(a - 2))) break;
+        a -= 2;
+        continue;
+      }
+      break;
+    }
+    let b = i;
+    if (b + 1 < t.length && lowAt(b + 1) === "of" && joined(b + 1)) {
+      let c = b + 2;
+      if (c < t.length && lowAt(c) === "the" && joined(c)) c += 1;
+      let last = -1;
+      let words = 0;
+      while (c < t.length && joined(c) && cap(c) && !RIGHT_STOPS.has(lowAt(c)) && words < MAX_OF_WORDS) {
+        last = c;
+        words += 1;
+        /* A body noun ends the name: "Board of County Commissioners", "Board of Trustees". */
+        if (BODY_NOUNS.has(lowAt(c))) break;
+        c += 1;
+        if (c + 1 < t.length && (lowAt(c) === "and" || lowAt(c) === "&") && joined(c) && joined(c + 1) && cap(c + 1) && !RIGHT_STOPS.has(lowAt(c + 1))) c += 1;
+      }
+      if (last >= 0) b = last;
+    }
+    spans.push({ a, b });
+  }
+  const kept = spans
+    .sort((x, y) => (y.b - y.a) - (x.b - x.a) || x.a - y.a)
+    .filter((s, index, all) => !all.slice(0, index).some((k) => k.a <= s.a && s.b <= k.b))
+    .sort((x, y) => x.a - y.a);
+  const own = ownNameWords(jurisdictionId);
+  return kept.map(({ a, b }): PrintedName => {
+    let from = a;
+    while (from < b && (LEADING_NOISE.has(lowAt(from)) || own.has(lowAt(from)))) from += 1;
+    /* The government's own class word stays printed ("County Commission" of a county); `canonical` sets it aside. */
+    const words = flat(title.slice(t[from]!.start, t[b]!.end));
+    return { text: words, whole: words, start: t[from]!.start, end: t[b]!.end };
+  });
+}
 
 function namesAnotherGovernment(words: readonly string[], kind: GovernmentKind): boolean {
   const localBoard = words.some(word => /^(?:board|commission|committee|subcommittee)$/.test(word));
@@ -361,18 +464,26 @@ function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly Cal
     if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
     return { filter: { bodyMatch }, selected };
   }
-  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE"].includes(kind)) {
+  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
     const matches = (event: CalendarEvent) => namesIn(event).some(name => canonical(name.text, jurisdictionId) === proposal.key) ||
       event.categories.some(name => canonical(name, jurisdictionId) === proposal.key);
-    const selected = events.filter(matches);
+    const selected = events.filter(event => matches(event) && (kind !== "GRANICUS" || namesIn(event).every(name => canonical(name.text, jurisdictionId) === proposal.key)));
     if (selected.length === 0) return { held: "SELECTS_NOTHING", detail: `no ${kind} event names the reviewed body` };
     const other = selected.find(event => namesIn(event).some(name => canonical(name.text, jurisdictionId) !== proposal.key));
     if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
+    if (kind === "GRANICUS") return { filter: { bodyMatch: [...new Set(selected.map(event => granicusBodyLabel(event.title)))].join("|") }, selected };
     if (kind === "BOARDBOOK") {
       if (selected.length !== events.length) return { held: "AMBIGUOUS_TITLE", detail: "the BoardBook organization feed also carries another body's events; a whole-organization reader cannot select this body alone" };
       return { filter: {}, selected };
+    }
+    if (kind === "NOVUSAGENDA") {
+      const labels = [...new Set(selected.flatMap(event => event.categories))];
+      if (!labels.length || labels.some(label => label.includes("|")) || events.some(event => event.categories.some(label => labels.includes(label)) && !selected.includes(event))) {
+        return { held: "AMBIGUOUS_TITLE", detail: "the NovusAgenda body labels also select another body" };
+      }
+      return { filter: { bodyMatch: labels.join("|") }, selected };
     }
     if (kind === "CIVICCLERK" || kind === "IQM2") {
       const labels = [...new Set(selected.flatMap(event => event.categories))];
@@ -581,7 +692,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE", "SWAGIT"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -627,6 +738,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const rows = parseDiligentMeetings(calendar.text);
       if (!rows?.length) { hold(route, "CALENDAR_UNREADABLE", "the held public Diligent response has no dated meetings"); continue; }
       events = rows.map(m => ({ title: flat(m.Name ?? ""), context: "", categories: [flat(m.MeetingTypeName ?? "")], identity: `${m.Id}|${m.MeetingDateTime}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Portal/MeetingInformation.aspx?Id=${m.Id}` }));
+    } else if (kind === "GRANICUS") {
+      let rows: ReturnType<typeof parseGranicusPublisher> = [];
+      try { rows = parseGranicusPublisher(calendar.text, route); } catch { /* An invalid public list names no meeting. */ }
+      events = rows.map(row => ({ title: flat(granicusBodyLabel(row.title)), context: "", categories: [flat(granicusBodyLabel(row.title))],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.agendaUrl ?? row.videoUrl ?? route }));
     } else if (kind === "BOARDBOOK") {
       events = parseOrganizationPage(calendar.text).rows.map(row => ({ title: flat(row.title), context: "", categories: [],
         identity: `${row.meetingId ?? ""}|${row.y}-${row.mo}-${row.d}|${row.h}:${row.mi}`, tzid: stateZone, utc: false, floating: true, url: route }));
@@ -638,6 +754,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         return { title: flat(row.eventName || body), context: body, categories: [body], scopeId: row.categoryId === undefined ? undefined : String(row.categoryId), identity: `${row.id}|${row.startDateTime ?? row.eventDate}`,
           tzid: stateZone, utc: false, floating: true, url: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}/event/${row.id}` };
       });
+    } else if (kind === "NOVUSAGENDA") {
+      let rows: ReturnType<typeof parseNovusMeetings> = [];
+      try { rows = parseNovusMeetings(calendar.text, route); } catch { /* Unreadable public lists name no meetings. */ }
+      events = rows.map(row => ({ title: flat(row.body), context: "", categories: [flat(row.body)],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: false, url: row.agendaUrl ?? route }));
     } else if (kind === "IQM2") {
       events = parseCalendarRows(calendar.text).filter(row => row.board && row.when).map(row => ({ title: flat(row.board), context: "", categories: [flat(row.board)],
         identity: `${row.detailId}|${row.when}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Citizens/Detail_Meeting.aspx?ID=${row.detailId}` }));

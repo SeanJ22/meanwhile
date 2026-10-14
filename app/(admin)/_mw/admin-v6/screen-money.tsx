@@ -23,7 +23,7 @@ const percent = (n: number | null) => n === null ? DASH : `${(n * 100).toFixed(1
 const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "Page reader", MEASURE_WRITER: "Translator", MEASURE_CHECKER: "Translation checker", ASK: "Ask" }[role]
   ?? role.toLowerCase().replaceAll("_", " ").replace(/^./, char => char.toUpperCase()));
 
-export function ModelSpendPanel({ view, days }: { view: ModelSpendView | null; days: readonly string[] }) {
+function ModelSpendPanel({ view, days }: { view: ModelSpendView | null; days: readonly string[] }) {
   const [comparison, setComparison] = useState(false);
   const [all, setAll] = useState(false);
   const rows = view === null ? [] : comparison

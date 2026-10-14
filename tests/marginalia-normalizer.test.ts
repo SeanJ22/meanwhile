@@ -19,7 +19,7 @@ const ROUTE: RouteDescriptor = {
   executorClass: "DETERMINISTIC",
   executorReason: "a documented public endpoint",
   open: { kind: "HTTP_GET", url: "https://api.marginalia.nu/public/search/x", headers: {} },
-  citation: "docs/sources.md",
+  citation: "source registry",
 };
 
 function stage(root: string, body: string) {
@@ -54,7 +54,7 @@ test("the tail stages pointers for the verifier, where it used to stage NORMALIZ
 test("an empty answer is a NAMED NO-HIT, not a failed normalization and never a statement about the candidate", (t) => {
   const root = mkdtempSync(join(tmpdir(), "wtp-marginalia-nohit-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  /* The documented control: an impossible term answers a licence and an empty results array (docs/sources.md). */
+  /* The documented control: an impossible term answers a licence and an empty results array. */
   const empty = JSON.stringify({ license: "CC-BY-NC-SA 4.0", page: 1, pages: 0, query: "zzqxv impossible term", results: [] });
   const n = normalizeMarginaliaSearch(empty);
   assert.equal(n.rows.length, 0);

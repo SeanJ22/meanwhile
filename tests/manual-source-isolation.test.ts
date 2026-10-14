@@ -8,6 +8,7 @@ import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-da
 
 import {
   manualProjectionCandidate,
+  readManualProjectionPrior,
   type CuratedReaderProjection,
   type ManualProjectionPackage,
   type ManualProjectionPrior,
@@ -21,7 +22,6 @@ const T0 = "2026-09-09T01:00:00.000Z";
 const T1 = "2026-09-09T02:00:00.000Z";
 const T2 = "2026-09-09T03:00:00.000Z";
 
-/** Synthetic retained history only; the retired import driver is never re-enabled. */
 function importedVenueFixture() {
   const {record, projection} = JSON.parse(readFileSync(new URL("./fixtures/retained-venue-import.json", import.meta.url), "utf8")) as {
     record: CandidateVersionRecord; projection: PromotedProjection;
@@ -32,24 +32,21 @@ function importedVenueFixture() {
   return { store, record, projection };
 }
 
-test("first source-reviewed venue successor preserves imported members without inventing a source review", async () => {
-  const { store, record } = importedVenueFixture();
+test("a source-reviewed venue successor preserves unchanged sourced members", async () => {
+  const store = new MemoryRoutineDataStore();
+  const { candidate: record } = await processRegisteredManualCandidate(store, "venue-resolutions",
+    manualProjectionCandidate(packageFor("venue-resolutions", T0, "old")), T0);
   const input = packageFor("venue-resolutions", T1, "new", false, true);
   const { candidate: next, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, T1);
   const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", next, T1, expectedBaseVersionId);
   assert.equal(outcome.candidate.receipt?.decision, "GOOD", JSON.stringify(outcome.candidate.receipt));
   assert.ok(outcome.promoted);
-  assert.equal(next.bootstrapImport, undefined, "a source successor cannot reactivate the retired import door");
-  assert.equal(next.retrieval.manualSourceReceipt?.sources.length, 1, "only the current real source review is carried");
+  assert.equal(next.retrieval.manualSourceReceipt?.sources.filter(source => source.retrievedAt === T1).length, 1);
   assert.equal(next.manualPriorAuthority?.retainedMembers.length, 1);
   const priorRows = (record.candidate.readModel as CuratedReaderProjection).records;
   const nextRows = (next.readModel as CuratedReaderProjection).records;
   assert.deepEqual(nextRows.find((row) => row.id === priorRows[1].id), priorRows[1]);
   assert.match(outcome.candidate.receipt!.checks[0].detail, /no fresh HTTP retrieval is asserted/);
-  assert.deepEqual((await store.readCandidate(record.candidate.id))?.candidate.bootstrapImport, record.candidate.bootstrapImport);
-
-  // The second successor must still carry the old member's authority through
-  // its immediate GOOD base; omission cannot silently drop that provenance.
   const { candidate: second, expectedBaseVersionId: secondBase } = await prepareManualProjectionSuccessor(packageFor("venue-resolutions", T2, "newer", false, true), store, T2);
   const secondOutcome = await processRegisteredManualCandidate(store, "venue-resolutions", second, T2, secondBase);
   assert.ok(secondOutcome.promoted, JSON.stringify(secondOutcome.candidate.receipt));
@@ -57,7 +54,7 @@ test("first source-reviewed venue successor preserves imported members without i
   assert.deepEqual((second.readModel as CuratedReaderProjection).records[1], priorRows[1]);
 });
 
-test("corrupt imported base proof and an ordinary base with no source receipt are refused", async () => {
+test("corrupt imported proof and tampered inherited authority are refused", async () => {
   const { store, record, projection } = importedVenueFixture();
   const corruptStore = { readPromotion: store.readPromotion.bind(store), readCandidate: async () => ({
     ...record, candidate: { ...record.candidate, bootstrapImport: { ...record.candidate.bootstrapImport!, candidateEnvelopeSha256: "0".repeat(64) } },
@@ -65,24 +62,65 @@ test("corrupt imported base proof and an ordinary base with no source receipt ar
   await assert.rejects(prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), corruptStore, T1), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
   const corruptPointer = { readCandidate: store.readCandidate.bind(store), readPromotion: async <T>() => ({ ...projection, payload: { kind: "venue-resolutions", records: [] } as T }) };
   await assert.rejects(prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), corruptPointer, T1), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
-  const { candidate: next } = await prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), store, T1);
+  const ordinaryStore = new MemoryRoutineDataStore();
+  const ordinary = await processRegisteredManualCandidate(ordinaryStore, "venue-resolutions", manualProjectionCandidate(packageFor("venue-resolutions", T0, "ordinary")), T0);
+  const { candidate: next } = await prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), ordinaryStore, T1);
   const badWitness = { ...next, manualPriorAuthority: { ...next.manualPriorAuthority!, versionId: "unrelated" } };
-  assert.equal(validateRoutineCandidate(badWitness, record, T1).receipt.checks[0].code, "MANUAL_PRIOR_AUTHORITY_INVALID");
+  assert.equal(validateRoutineCandidate(badWitness, ordinary.candidate, T1).receipt.checks[0].code, "MANUAL_PRIOR_AUTHORITY_INVALID");
   const changed = structuredClone(next) as RoutineCandidate & { readModel: CuratedReaderProjection };
   (changed.readModel.records[1] as Record<string, unknown>).name = "Unreviewed changed venue";
-  assert.equal(validateRoutineCandidate(changed, record, T1).receipt.checks[0].code, "MANUAL_PRIOR_AUTHORITY_INVALID");
+  assert.equal(validateRoutineCandidate(changed, ordinary.candidate, T1).receipt.checks[0].code, "MANUAL_PRIOR_AUTHORITY_INVALID");
   assert.equal(validateRoutineCandidate(next, null, T1).receipt.checks[0].code, "MANUAL_PRIOR_AUTHORITY_INVALID");
   const corruptedBase = await corruptStore.readCandidate();
   assert.equal(validateRoutineCandidate(next, corruptedBase, T1).receipt.checks[0].code, "MANUAL_PRIOR_AUTHORITY_INVALID",
     "the validator independently checks inherited import integrity, even without the read adapter");
-  const ordinaryStore = new MemoryRoutineDataStore();
-  const ordinary = await processRegisteredManualCandidate(ordinaryStore, "venue-resolutions", manualProjectionCandidate(packageFor("venue-resolutions", T0, "ordinary")), T0);
-  const missingSourceProof = {
-    readPromotion: ordinaryStore.readPromotion.bind(ordinaryStore),
-    readCandidate: async () => ({ ...ordinary.candidate, candidate: { ...ordinary.candidate.candidate,
-      retrieval: { ...ordinary.candidate.candidate.retrieval, manualSourceReceipt: undefined } } }),
-  };
-  await assert.rejects(prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), missingSourceProof, T1), /MANUAL_PROMOTION_BASE_PROOF_INVALID/);
+});
+
+test("receiptless bases contribute no inherited members to a fresh sourced publication", async () => {
+  for (const contractId of ["comment-access", "ballot-navigation", "campaign-sites", "venue-resolutions"] as const) {
+    const store = new MemoryRoutineDataStore();
+    const base = await processRegisteredManualCandidate(store, contractId, manualProjectionCandidate(packageFor(contractId, T0, "old")), T0);
+    const record = { ...base.candidate, candidate: { ...base.candidate.candidate,
+      retrieval: { ...base.candidate.candidate.retrieval, manualSourceReceipt: undefined } } };
+    Object.assign(store, { candidates: new Map([[record.candidate.id, record]]) });
+    assert.equal(await readManualProjectionPrior(contractId, store, T1), null);
+    const input = packageFor(contractId, T1, "new", false, true);
+    const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, T1);
+    assert.equal(expectedBaseVersionId, record.candidate.id);
+    assert.equal(candidate.manualPriorAuthority, undefined);
+    assert.deepEqual(candidate.readModel, input.payload);
+    const outcome = await processRegisteredManualCandidate(store, contractId, candidate, T1, expectedBaseVersionId);
+    assert.ok(outcome.promoted, `${contractId}: ${JSON.stringify(outcome.candidate.receipt)}`);
+    assert.equal(outcome.candidate.candidate.changeSet?.removed.length, 0);
+    assert.deepEqual(outcome.promoted.payload, input.payload);
+  }
+});
+
+test("a receiptless trusted bootstrap is fully replaced by fresh source-reviewed records", async () => {
+  const { store, record } = importedVenueFixture();
+  assert.equal(await readManualProjectionPrior("venue-resolutions", store, T1), null);
+  const input = packageFor("venue-resolutions", T1, "new", false, true);
+  const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, T1);
+  assert.equal(expectedBaseVersionId, record.candidate.id);
+  assert.equal(candidate.manualPriorAuthority, undefined);
+  assert.deepEqual(candidate.readModel, input.payload);
+  const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", candidate, T1, expectedBaseVersionId);
+  assert.ok(outcome.promoted, JSON.stringify(outcome.candidate.receipt));
+  assert.deepEqual(outcome.promoted.payload, input.payload);
+});
+
+test("an existing malformed source receipt still refuses inherited records", async () => {
+  const store = new MemoryRoutineDataStore();
+  const base = await processRegisteredManualCandidate(store, "ballot-navigation",
+    manualProjectionCandidate(packageFor("ballot-navigation", T0, "old")), T0);
+  const sourceReceipt = base.candidate.candidate.retrieval.manualSourceReceipt!;
+  const badReceipt = { ...sourceReceipt, sources: [{ ...sourceReceipt.sources[0], rawHash: "invalid" }] };
+  const record = { ...base.candidate, candidate: { ...base.candidate.candidate,
+    retrieval: { ...base.candidate.candidate.retrieval, manualSourceReceipt: badReceipt } } };
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]) });
+  await assert.rejects(readManualProjectionPrior("ballot-navigation", store, T1), /MANUAL_PROMOTION_BASE_PROOF_INVALID/);
+  await assert.rejects(prepareManualProjectionSuccessor(packageFor("ballot-navigation", T1, "new", false, true), store, T1),
+    /MANUAL_(?:PROMOTION_BASE_PROOF_INVALID|SOURCE_RECEIPT_MALFORMED)/);
 });
 
 test("the producer preserves source-isolated omitted members across every independent curated family", async () => {
@@ -300,7 +338,9 @@ test("a stale source-scoped merge base is durably refused before it can roll bac
 });
 
 test("a member an auditor pulled leaves the next version instead of being inherited from its base (DP-15)", async () => {
-  const { store, record } = importedVenueFixture();
+  const store = new MemoryRoutineDataStore();
+  const { candidate: record } = await processRegisteredManualCandidate(store, "venue-resolutions",
+    manualProjectionCandidate(packageFor("venue-resolutions", T0, "old")), T0);
   const priorRows = (record.candidate.readModel as CuratedReaderProjection).records;
   const { candidate: first, expectedBaseVersionId } = await prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), store, T1);
   assert.ok((first.readModel as CuratedReaderProjection).records.some((row) => row.id === priorRows[1].id), "unpulled, the old member is retained");

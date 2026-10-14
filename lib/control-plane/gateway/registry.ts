@@ -1,4 +1,5 @@
 import "../../ask/model.ts";
+import { requestRoutineDue } from "../../civic-data/routine-due-request.ts";
 import { playbookUpdateAction } from "./playbook-action.ts";
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
@@ -200,6 +201,27 @@ const READBACK_SUBJECTS: Readonly<Record<string, { readonly name: string; readon
 
 const REGISTRY: readonly RegisteredAction[] = [
   playbookUpdateAction,
+  {
+    definition: {
+      type: "ballot.publish", label: "Publish ballots",
+      does: "Asks the runner to merge the reviewed state ballots and publish every state that passes.",
+      doesNot: "Keeps spending limits and pauses as they are.",
+      authority: "OWNER_DECISION_REQUIRED", subjectKind: "national ballots", requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      return Object.keys(input).length ? bad("publish ballots takes no additional fields") : { ok: true, value: {} };
+    },
+    async execute(deps, context) {
+      try {
+        const request = await requestRoutineDue(deps.repos,
+          ["--contract=ballot-contests", "--reason=Publish ballots requested from Admin"], context.at);
+        return { ok: true, outcome: "QUEUED", subject: request.id,
+          says: "Ballot publication is queued for the runner’s next pass. Merged states and skipped states appear in Workers.",
+          readBackAt: "/admin?view=workers", undo: null };
+      } catch (error) { return storeRefusal("ballot publication", error); }
+    },
+  },
   {
     definition: {
       type: "config.setSetting", label: "Change a setting",

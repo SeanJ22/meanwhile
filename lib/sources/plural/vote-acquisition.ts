@@ -5,7 +5,7 @@ import { parsePluralBulkSession } from "./vote-bulk.ts";
 export const PLURAL_SESSION_CATALOG = "https://openstates.org/data/session-csv/";
 const DAY = 86_400_000;
 type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now">;
-export type PluralBillResult = ReturnType<typeof parsePluralBill> & { evidence: PluralBillEvidence };
+type PluralBillResult = ReturnType<typeof parsePluralBill> & { evidence: PluralBillEvidence };
 const object = (value: unknown): Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 const decode = (bytes: Uint8Array) => new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 const nativeBillId = (value: unknown): value is string => typeof value === "string" && /^ocd-bill\/[0-9a-f-]{36}$/.test(value);

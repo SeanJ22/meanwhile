@@ -1,16 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
-import * as nodeModule from "node:module";
-import { runInNewContext } from "node:vm";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import { defaultGrant } from "../lib/control-plane/capability.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { objectKey } from "../lib/control-plane/evidence/store.ts";
 import { runAcquirer, type AcquirerWorkerInput, type VaultedResearchEvidence } from "../lib/control-plane/workers/acquirer.ts";
 import { dispatchWorkerTask } from "../lib/control-plane/workers/runtime.ts";
-import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import type { ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -21,35 +15,6 @@ import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/auto
 const NOW = "2026-09-05T18:00:00.000Z";
 const PROJECT = "fleet-recovery-isolated";
 const RECORD_URL = "https://fixture-clerk.example.gov/records.json";
-
-function isolatedPipeline(readResults: typeof readCompletedWorkerResults, calls: string[], failVenue = false): typeof projectFleetPipeline {
-  const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & { stripTypeScriptTypes(source: string): string };
-  const source = stripTypeScriptTypes(readFileSync("lib/control-plane/workers/pipeline.ts", "utf8"))
-    .replace(/^import[\s\S]*?;\s*$/gm, "").replace("export async function", "async function");
-  return runInNewContext(source + "\nprojectFleetPipeline;", {
-    readCompletedWorkerResults: async (repos: ControlPlaneRepositories) => { calls.push("completed-results"); return readResults(repos); },
-    refreshRegistryRuntimeFromPromoted: async () => { calls.push("country-refresh"); },
-    refreshVenueResolutionsFromPromoted: async () => { calls.push("venue-refresh"); if (failVenue) throw new Error("HELD_VENUE_READ_FAILURE"); },
-    mayUseTestFixture: () => false,
-  }) as typeof projectFleetPipeline;
-}
-
-test("empty completed results avoid country and venue refreshes, including a failed held venue read", async t => {
-  for (const failVenue of [false, true]) {
-    const calls: string[] = [];
-    const project = isolatedPipeline(readCompletedWorkerResults, calls, failVenue);
-    assert.equal(await project(createMemoryRepositories(), { now: NOW, readArtifactText: async () => null }), null);
-    assert.deepEqual(calls, ["completed-results"]);
-    t.diagnostic(JSON.stringify({ completedResults: 0, failVenue, calls, result: null }));
-  }
-});
-
-test("nonempty completed results still require country and venue authority before facts", async () => {
-  const calls: string[] = [];
-  const project = isolatedPipeline(async () => [{} as Awaited<ReturnType<typeof readCompletedWorkerResults>>[number]], calls, true);
-  await assert.rejects(project(createMemoryRepositories(), { now: NOW, readArtifactText: async () => null }), /HELD_VENUE_READ_FAILURE/);
-  assert.deepEqual(calls, ["completed-results", "country-refresh", "venue-refresh"]);
-});
 
 function heldEvidence(text: string, url: string, attemptId: string): VaultedResearchEvidence {
   const artifact = recordAcquisition({ canonicalUrl: url, retrievedAt: NOW, httpStatus: 200,

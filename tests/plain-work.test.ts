@@ -153,7 +153,7 @@ const METRICS: ResearchMetrics = {
   funnel: {
     stages: [
       { stage: "SCOUTED", count: 22, source: "distinct obligations with a non-refused Scout result in repos.scoutResults" },
-      { stage: "CONFIRMED", count: 0, source: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here (none recorded for CONFIRMED)" },
+      { stage: "VERIFIED", count: 0, source: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here (none recorded for VERIFIED)" },
       { stage: "VALIDATED", count: 7, source: "cp_method_candidates/live lifecycle counts" },
       { stage: "ADMITTED", count: 0, source: "cp_method_candidates/live lifecycle counts" },
       { stage: "DETERMINISTIC_REPLAYS", count: 0, source: "deterministic dispatches on routes an ADMITTED candidate learned, from the run records read" },
@@ -193,10 +193,10 @@ test("SEEDED: a zero share says WHY, and the two reasons for a zero are told apa
 test("SEEDED: a funnel zero says which kind of zero it is, and no row prints a code path (ADM-46)", () => {
   const rows = researchDigestRows(METRICS).funnel;
   const byLabel = new Map(rows.map((r) => [r.label, r]));
-  assert.deepEqual([...byLabel.keys()], ["Found by a hunter", "Confirmed a second time", "Methods that passed validation", "Methods admitted to the toolbox", "Repeat runs without a model"]);
+  assert.deepEqual([...byLabel.keys()], ["Found by a hunter", "Checked against the source", "Methods that passed validation", "Methods admitted to the toolbox", "Repeat runs without a model"]);
   // A disconnected stage says it is disconnected, not empty.
-  assert.match(byLabel.get("Confirmed a second time")?.meaning ?? "", /Not counted yet — this stage's data is not connected to this view/);
-  assert.equal(byLabel.get("Confirmed a second time")?.denominator, "counted by the promotion pipeline once it is connected to this view");
+  assert.match(byLabel.get("Checked against the source")?.meaning ?? "", /Not counted yet — this stage's data is not connected to this view/);
+  assert.equal(byLabel.get("Checked against the source")?.denominator, "counted by the promotion pipeline once it is connected to this view");
   // A real zero says why it is really zero.
   assert.match(byLabel.get("Methods admitted to the toolbox")?.meaning ?? "", /a work session's decision, and none of the 7 that passed validation has been admitted yet/);
   assert.match(byLabel.get("Repeat runs without a model")?.meaning ?? "", /no method has been admitted, so there is nothing for ordinary code to replay/);

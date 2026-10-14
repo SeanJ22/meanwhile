@@ -112,7 +112,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "pima-legistar-outcomes": return "lib/outcomes/store.ts#readOutcomeProjection";
     case "mesa-legistar-minutes-outcomes": return "lib/outcomes/store.ts#readMesaOutcomeProjection";
     case "official-filings":
-    case "comment-access":
     case "ballot-navigation":
     case "stances":
     case "campaign-sites":
@@ -389,7 +388,6 @@ export async function verifyRoutineReaderProjection(
         return verifyExactVersion(verifierId, await readDoorOutcomeProjection(MESA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
       }
       case "official-filings":
-    case "comment-access":
       case "ballot-navigation":
       case "stances":
       case "campaign-sites":

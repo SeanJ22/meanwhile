@@ -108,7 +108,7 @@ test("each stage comes from what the pipeline recorded, and a stage nothing reco
   const rs = pipelineResults(read([
     pending("local-jurisdiction", "SCOUTED", "az", 570),
     pending("candidate-enrichment", "SCOUTED", "az", 371),
-    pending("candidate-enrichment", "CONFIRMED", "az", 15),
+    pending("candidate-enrichment", "VERIFIED", "az", 15),
     pending("agendas", "VERIFIED", "ocd-division/country", 15),
   ], [approved("az", "CONFIRMED_FRESH", 4), approved("az", "NOT_OBSERVED", 6)]), "us", { kind: "country" });
   const local = byTitle(rs, "Local jurisdiction");
@@ -118,8 +118,8 @@ test("each stage comes from what the pipeline recorded, and a stage nothing reco
   const cand = byTitle(rs, "Candidate enrichment");
   assert.equal(cand.trail[0].what, "396 items");
   assert.deepEqual(cand.stages, ["done", "partial", "partial", "partial", "partial", "partial"]);
-  assert.equal(cand.trail[1].what, "25 of 396 with a saved copy", "only items that reached CONFIRMED are known to have one");
-  assert.equal(cand.trail[3].what, "10 of 396");
+  assert.equal(cand.trail[1].what, "25 of 396 with a saved copy", "only items that reached VERIFIED are known to have one");
+  assert.equal(cand.trail[3].what, "25 of 396");
   assert.equal(cand.trail[4].what, "10 of 396");
   assert.equal(cand.trail[5].what, "4 of 10 seen on the page · 6 not found there");
   assert.equal(cand.readerSees, "10 of 396 published · 4 of 10 checked on the page");

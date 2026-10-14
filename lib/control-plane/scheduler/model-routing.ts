@@ -57,7 +57,7 @@ export const SCOUT_STEPS = {
   /** HTML/JSON/PDF -> title, visible text, links, extracted text. Code, in scout-tools.ts. */
   "page-to-representation": {
     kind: "DETERMINISTIC",
-    implementedIn: "lib/control-plane/scheduler/scout-tools.ts (visibleText, extractLinks, htmlTitle, extractPdf, JSON pretty-print)",
+    implementedIn: "lib/control-plane/scheduler/scout-tools.ts and lib/extract/visible-text.ts (visibleText, extractLinks, htmlTitle, extractPdf, JSON pretty-print)",
     why: "deriving the sanitized representation from vaulted bytes is string work; no model runs and none may",
   },
   /** robots.txt -> ALLOWED / DISALLOWED / NO_ROBOTS / CANNOT_TELL. Code, in robots.ts. */

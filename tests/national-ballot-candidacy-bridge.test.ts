@@ -103,7 +103,7 @@ test("published national ballot rows are written to the promoted registry bridge
   const urls = new Set(divisions.map(row => row.provenance!.sourceUrl!));
   const prepared = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: now, sourceThrough: now,
     sourceReceipt: { ...sourceReceipt, sources: [...urls].map(url => ({ ...sourceReceipt.sources[0], requestedUrl: url, finalUrl: url })) },
-    payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [],
+    payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions, bodies: [] }, statewideExecutives: [],
       officialCandidacies: { ...prior.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior });
   const base = await processRegisteredManualCandidate(store, "registry-runtime-bindings", prepared, now, prior.versionId);
   assert.ok(base.promoted, base.candidate.failureDetail ?? undefined);

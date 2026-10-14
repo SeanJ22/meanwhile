@@ -2,7 +2,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 import test from "node:test";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { ensureFactEntities } from "../lib/facts/entities.ts";
+import { readFactRosters } from "../lib/facts/roster-read.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import sharp from "sharp";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -22,6 +27,13 @@ function capture(text: string, url: string, observedAt = "2026-09-29T19:00:00.00
     retrievedAt: observedAt, sourceId: new URL(url).hostname, methodRouteId: "place:census" }, observedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
 }
 
+const clocks = factClocks(null);
+async function seeded() {
+  const facts = await factDb();
+  await ensureFactEntities(facts, join(import.meta.dirname, ".."), ["oh"]);
+  return facts;
+}
+
 /** The recorded registry, with the deployed Census placeholder correction replayed (as the roster tests do). */
 async function store() {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
@@ -31,7 +43,7 @@ async function store() {
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
     sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
   assert.ok((await processRegisteredManualCandidate(s, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
   return s;
 }
@@ -53,18 +65,18 @@ const governor = capture("<html><head><title>Governor Mike DeWine | Governor of 
 const profile = capture(`<html><head><title>Representative Allison Russo | Ohio House</title></head><body><h1>Representative Allison Russo</h1><p>District 7</p></body></html>`, profileUrl);
 
 test("national place publication keeps legislative people on their single state authority",async()=>{
-  const s=await store();
-  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"russo",divisionId:`${OH}/sldl:7`,name:"Allison Russo",officeTitle:"Representative",officialUrl:profileUrl,document:{url:profileUrl,capture:profile}}]}});
+  const s=await store(),facts=await seeded();
+  const result=await publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"russo",divisionId:`${OH}/sldl:7`,name:"Allison Russo",officeTitle:"Representative",officialUrl:profileUrl,document:{url:profileUrl,capture:profile}}]}});
   assert.ok(result.divisions.includes(`${OH}/sldl:7`));
   assert.equal(result.bodies.some(id=>id.endsWith("#seat")),false);
   assert.ok(result.gaps.some(row=>row.detail==="STATE_PEOPLE_SOURCE_REFRESH_OWNS_LEGISLATIVE_MEMBERS"));
-  assert.equal((await readRegistryRuntimePrior(s,NOW))!.payload.bodyRosters.some(row=>row.bodyId===`${OH}/sldl:7#seat`),false);
+  assert.deepEqual((await readFactRosters(facts.query,[`${OH}/sldl:7#seat`])).rosters,[]);
 });
 
 test("statewide successor identities and candidacy checks cannot inherit the prior actor",async()=>{
-  const s=await store();
+  const s=await store(),facts=await seeded();
   const official=(name:string)=>({discoveryId:"governor",divisionId:OH,name,officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:capture(`<h1>Governor ${name}</h1><p>Governor of Ohio</p>`,governorUrl)}});
-  const run=(name:string)=>publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[official(name)]}});
+  const run=(name:string)=>publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[official(name)]}});
   const first=await run("Mike DeWine");assert.deepEqual(first.gaps,[]);
   const old=(await readRegistryRuntimePrior(s,NOW))!.payload.statewideExecutives.find(row=>row.stateOcdId===OH)!;
   const same=await run("Mike DeWine");assert.equal(same.candidateId,null);
@@ -78,14 +90,14 @@ test("statewide successor identities and candidacy checks cannot inherit the pri
 });
 
 test("saved own-page portraits publish by the exact accepted roster identity and actual normalized pixels",async()=>{
-  const s=await store(),name="Jane Doe",url="https://www.columbus.gov/council/jane-doe",imageUrl="https://www.columbus.gov/photos/jane-doe.jpg";
+  const s=await store(),facts=await seeded(),name="Jane Doe",url="https://www.columbus.gov/council/jane-doe",imageUrl="https://www.columbus.gov/photos/jane-doe.jpg";
   const page=capture(`<title>Columbus City Council</title><h1>Columbus City Council</h1><h2>Councilmember Jane Doe</h2><img alt="Jane Doe" src="${imageUrl}">`,url);
   const original=await sharp({create:{width:200,height:240,channels:3,background:"#336699"}}).withMetadata({orientation:1}).jpeg().toBuffer();
   const stored=new Map<string,Uint8Array>();
-  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"jane-native",divisionId:`${OH}/place:columbus`,name,officeTitle:"Councilmember",officialUrl:url,document:{url,capture:page},portrait:{imageUrl,captures:[page]}}]},portraitRuntime:{read:async()=>original,put:async(key,bytes)=>{stored.set(key,bytes);}}});
+  const result=await publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"jane-native",divisionId:`${OH}/place:columbus`,name,officeTitle:"Councilmember",officialUrl:url,document:{url,capture:page},portrait:{imageUrl,captures:[page]}}]},portraitRuntime:{read:async()=>original,put:async(key,bytes)=>{stored.set(key,bytes);}}});
   assert.deepEqual(result.gaps,[]);
   const after=(await readRegistryRuntimePrior(s,NOW))!.payload;
-  const member=after.bodyRosters.find(row=>row.bodyId===`${OH}/place:columbus#governing`)!.members[0];
+  const member=(await readFactRosters(facts.query,[`${OH}/place:columbus#governing`])).rosters[0]!.members[0]!;
   const photo=after.officialPhotos.photos.find(row=>row.officeholderId===member.id)!;
   assert.ok(photo);assert.equal(photo.verification?.personId,member.personId ?? member.id);assert.match(photo.url,/\.webp$/);
   assert.equal(stored.size,1);const bytes=[...stored.values()][0];
@@ -94,9 +106,9 @@ test("saved own-page portraits publish by the exact accepted roster identity and
 });
 
 test("a corrupted saved source cannot replace the independently held official",async()=>{
-  const s=await store();
+  const s=await store(),facts=await seeded();
   const altered={...governor,evidence:{...governor.evidence,text:governor.evidence.text+" corruption"}};
-  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"dewine",divisionId:OH,name:"Mike DeWine",officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:altered}}]}});
+  const result=await publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"dewine",divisionId:OH,name:"Mike DeWine",officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:altered}}]}});
   assert.ok(result.gaps.some(row=>row.detail.includes("CONTENT_HASH_MISMATCH")));
   assert.equal(nationalDelivery([result]).records,0);
 });

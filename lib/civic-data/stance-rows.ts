@@ -4,7 +4,7 @@ import { SOURCE_KINDS } from "../corpus/source-kinds.ts";
 import { requirePublication } from "./worker-publication-evidence.ts";
 import type { FieldValue } from "../control-plane/workers/types.ts";
 
-export const STANCE_FIELDS = ["personId", "personName", "quote", "date", "topicId", "sourceKind"] as const;
+const STANCE_FIELDS = ["personId", "personName", "quote", "date", "topicId", "sourceKind", "statementSummary", "positionSummary"] as const;
 export const MAX_STANCE_QUOTE_CHARS = 600;
 
 export type StanceRow = {
@@ -13,6 +13,8 @@ export type StanceRow = {
   readonly personName: string | null;
   readonly topicId: string;
   readonly quote: string;
+  /** The AI's summary of the quote; Sources links the statement it summarizes (`sourceUrl`). */
+  readonly summary: string | null;
   /** The day it was said (YYYY-MM-DD), as the page states it. */
   readonly date: string;
   readonly sourceKind: string;
@@ -37,8 +39,7 @@ export function stanceRowFrom(input: {
   readonly ownSiteHosts: (personId: string) => readonly string[];
 }): StanceRow {
   const f = input.fields;
-  requirePublication(Object.keys(f).every(field => (STANCE_FIELDS as readonly string[]).includes(field)),
-    Object.keys(f).some(field => ["statementSummary", "positionSummary"].includes(field)) ? "STANCE_PARAPHRASE_NEEDS_SECOND_SOURCE" : "STANCE_FIELD_UNSUPPORTED");
+  requirePublication(Object.keys(f).every(field => (STANCE_FIELDS as readonly string[]).includes(field)), "STANCE_FIELD_UNSUPPORTED");
   const personId = text(f.personId), quote = text(f.quote), date = text(f.date), topicId = text(f.topicId), sourceKind = text(f.sourceKind);
   requirePublication(personId && quote && quote.length <= MAX_STANCE_QUOTE_CHARS, "STANCE_QUOTE_INVALID");
   requirePublication(isoDay(date) && date <= input.now.slice(0, 10), "STANCE_DATE_INVALID");
@@ -49,7 +50,8 @@ export function stanceRowFrom(input: {
     const host = hostOf(input.pageUrl);
     requirePublication(host !== null && input.ownSiteHosts(personId).some(own => own === host), "STANCE_CAMPAIGN_PAGE_NOT_OWN");
   }
-  return { id: stanceId(personId, topicId, quote), personId, personName: text(f.personName) || null, topicId, quote, date, sourceKind,
+  return { id: stanceId(personId, topicId, quote), personId, personName: text(f.personName) || null, topicId, quote,
+    summary: text(f.statementSummary) || text(f.positionSummary) || null, date, sourceKind,
     sourceUrl: input.pageUrl, collectedAt: input.collectedAt, verifiedAt: input.now };
 }
 

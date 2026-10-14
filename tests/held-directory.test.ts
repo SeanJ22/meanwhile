@@ -5,10 +5,13 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeCarton, type RegistryRuntimePrior, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { readHeldDirectory } from "../lib/civic-data/worker-held-directory.ts";
-import { heldDirectoryReading, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
+import { heldDirectoryReading, publishBodyOffice, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
 import { jurisdictionDiscoveryPlan, type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { Jurisdiction } from "../lib/hunt/jurisdiction-universe.ts";
@@ -100,11 +103,11 @@ test("the runner offers a directory with no extraction yet, hourly, so its saved
   const [task] = workerPublicationTasks([item], [], NOW);
   assert.equal(task?.id, "worker-publication:registry-runtime-bindings:wi-directory");
   assert.equal(task?.registeredContractId, "registry-runtime-bindings");
-  assert.match(task.command.at(-1)!, /--worker-rosters=wi-directory$/);
+  assert.match(task.command.at(-1)!, /--worker-directories=wi-directory$/);
   const siblings = workerPublicationTasks([item, { ...item, id: "wi-other-body" }], [], NOW);
   assert.equal(siblings.length, 2, "independent body work cannot share one publisher command");
   assert.equal(new Set(siblings.map(job => job.acquisitionFailureDomain)).size, 2);
-  assert.deepEqual(siblings.map(job => job.command.at(-1)), ["--worker-rosters=wi-directory", "--worker-rosters=wi-other-body"]);
+  assert.deepEqual(siblings.map(job => job.command.at(-1)), ["--worker-directories=wi-directory", "--worker-directories=wi-other-body"]);
   assert.deepEqual(workerPublicationTasks([{ ...item, publicationOutcome: { at: "2026-09-29T19:30:00.000Z" } } as unknown as WorkItem], [], NOW), [], "not again within the hour");
 });
 
@@ -133,7 +136,7 @@ test("a board's schedule publishes through the registry door itself, not only in
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
     sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
   assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
   const base = (await readRegistryRuntimePrior(store, NOW))!;
   const html = page("Commissions", section("Neighborhoods Commission").replace("<p>Members are appointed",
@@ -148,7 +151,7 @@ test("a board's schedule publishes through the registry door itself, not only in
     "The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.");
 });
 
-test("a board's office address and phone attach from its own section, with the page as source; another board's never crosses over", async () => {
+test("a board's office address and phone become facts from its own section, with the page as source; another board's never crosses over", async () => {
   const contact = (name: string, text: string) => section(name).replace("<p>Members are appointed", `<p>${text}</p><p>Members are appointed`);
   const html = page("Commissions", contact("Neighborhoods Commission", "Office: 120 W Main Street, Benson, AZ 85602. Phone: (520) 555-0142.") +
     section("Tourism Commission"));
@@ -157,9 +160,15 @@ test("a board's office address and phone attach from its own section, with the p
   const base = await prior();
   const saved = capture(html, URL_);
   const reading = await heldDirectoryReading({ plan, prior: base, now: NOW, artifacts: [artifact(saved)], readHeld: async () => saved });
-  const model = registryRuntimeCandidate(workerBodyDirectoryPackage({ plan, held: reading!, prior: base, now: NOW }).prepared, { prior: base }).readModel as RegistryRuntimeReadModel;
+  const directory = workerBodyDirectoryPackage({ plan, held: reading!, prior: base, now: NOW });
+  const facts = await factDb();
+  for (const contact of directory.contacts) {
+    await publishBodyOffice(facts, directory.prepared.payload.registry.bodies.find(body => body.id === contact.bodyId)!, contact, reading!.id, factClocks(null), new Date(NOW));
+  }
+  const model = await withFactRegistry(registryRuntimeCandidate(directory.prepared, { prior: base }).readModel as RegistryRuntimeCarton, facts.query);
   const neighborhoods = model.registry.bodies.find(body => body.name === "Neighborhoods Commission")!;
-  assert.deepEqual([neighborhoods.officeAddress, neighborhoods.officePhone, neighborhoods.provenance.sourceUrl], ["120 W Main Street, Benson, AZ 85602", "(520) 555-0142", URL_]);
+  assert.deepEqual([neighborhoods.officeAddress, neighborhoods.officePhone, neighborhoods.fieldSources?.officeAddress?.sourceUrl, neighborhoods.fieldSources?.officePhone?.sourceUrl],
+    ["120 W Main Street, Benson, AZ 85602", "(520) 555-0142", URL_, URL_]);
   const tourism = model.registry.bodies.find(body => body.name === "Tourism Commission")!;
   assert.equal(tourism.officeAddress, undefined);
   assert.equal(tourism.officePhone, undefined);

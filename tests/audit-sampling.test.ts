@@ -78,11 +78,11 @@ test("an escalation is always reviewed, and the sampler counts its own decisions
 });
 
 test("a judgment call is always model-reviewed, even in a settled stratum; an ordinary record is only sampled", () => {
-  const settled = new Map([[stratumOf(contractFor("www.a.gov", "POSITION_SUMMARY")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }],
+  const settled = new Map([[stratumOf(contractFor("www.a.gov", "CROSS_SOURCE_IDENTITY")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }],
     [stratumOf(contractFor("www.a.gov")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }]]);
   let judgment = 0; let ordinary = 0;
   for (let i = 0; i < 200; i++) {
-    const call = sampleDecision(spec("www.a.gov", `j-${i}`, { contract: contractFor("www.a.gov", "POSITION_SUMMARY") }), settled, false);
+    const call = sampleDecision(spec("www.a.gov", `j-${i}`, { contract: contractFor("www.a.gov", "CROSS_SOURCE_IDENTITY") }), settled, false);
     if (call.sample) judgment += 1; else assert.fail("a judgment call was not reviewed");
     assert.equal(call.reason, "JUDGMENT_CALL");
     if (sampleDecision(spec("www.a.gov", `o-${i}`), settled, false).sample) ordinary += 1;

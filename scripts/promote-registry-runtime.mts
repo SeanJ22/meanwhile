@@ -6,9 +6,8 @@
  */
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
-import { publicationVaultReaders } from "../lib/civic-data/publication-vault.ts";
 import { readFileSync } from "node:fs";
-import { resolve, join } from "node:path";
+import { resolve } from "node:path";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -20,11 +19,9 @@ import {
   type RegistryRuntimePackage,
 } from "../lib/registry/runtime-data-plane.ts";
 import { assignment } from "./cli-args.mts";
-import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
-import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
-import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
-import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 import { runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
 import { orderNationalPlaceWork } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { publishElectionFields } from "../lib/civic-data/election-field-publication.ts";
@@ -35,19 +32,18 @@ async function main(): Promise<void> {
   if (!process.argv.includes("--promote")) {
     throw new Error("Refusing a non-promoting registry operation. Pass --promote; tracked registry runtime files are first-seed/test evidence only.");
   }
-  const workerRosters = assignment(process.argv, "worker-rosters");
+  const workerDirectories = assignment(process.argv, "worker-directories");
   const nationalZips = assignment(process.argv, "national-zips");
-  if (workerRosters || nationalZips) {
+  if (workerDirectories || nationalZips) {
     prepareProductionCivicDataWrite();
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("ROSTER_CONTROL_PLANE_UNAVAILABLE");
     const now = new Date().toISOString();
     const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
-    const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
     const store = new PostgresRoutineDataStore();
-    if (workerRosters && !nationalZips) {
+    if (workerDirectories && !nationalZips) {
       const { report, receipt, exitCode } = await runWorkerPublicationJob({ repos, store,
-        contractId: "registry-runtime-bindings", workItemIds: workerRosters.split(",").filter(Boolean), now });
+        contractId: "registry-runtime-bindings", workItemIds: workerDirectories.split(",").filter(Boolean), now });
       const published = report.filter(row => row.outcome.status === "PUBLISHED" || row.outcome.status === "PARTIALLY_PUBLISHED");
       console.log(JSON.stringify({ contractId: "registry-runtime-bindings",
         candidateId: published.at(-1)?.outcome.candidateId ?? null,
@@ -62,12 +58,13 @@ async function main(): Promise<void> {
       inherited: unknown; electionPublications: unknown } | { zip: string; deferred: string })[] = [];
     const failures: string[] = [];
     if (nationalZips) {
+      const facts = readerFactDb(), clocks = factClocks((await repos.adminConfig.read("current"))?.value ?? null);
       try {
         const zips = [...new Set(nationalZips.split(",").filter(Boolean))];
         await runNationalPlaceWorkerProcesses({ root: process.cwd(), store, zips,
           orderPending: ready => orderNationalPlaceWork(repos, ready, new Date().toISOString()),
           capacity: () => zips.length, publish: async input => {
-            const publication = await publishNationalPlaceSources({ ...input,
+            const publication = await publishNationalPlaceSources({ ...input, facts, clocks,
               divisions: input.divisions.filter(row => row.sourceDataset).map(row => ({ ...row, sourceDataset: row.sourceDataset! })) });
             nationalPublications.push(publication);
             return publication;
@@ -80,25 +77,9 @@ async function main(): Promise<void> {
         });
       } catch (error) { failures.push(error instanceof Error ? error.message : String(error)); }
     }
-    const { readObject, readEvidence } = publicationVaultReaders(repos, vault);
-    const report = await publishWorkerRosterResults({ repos, store,
-      workItemIds: workerRosters?.split(",").filter(Boolean) ?? [], now: new Date().toISOString(), readCapture: async (id, records) => {
-        const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);
-        const evidence = evidenceProjection(input);
-        const observations = records.flatMap(record => {
-          const result = record.result;
-          return result.role === "ACQUIRER" && result.verdict === "ACQUIRED"
-            ? result.walk.filter(step => step.rung === result.source.retrieval && step.target === evidence.canonicalUrl &&
-              step.transport === "REACHABLE" && step.outcome === "WALKED_AND_FOUND" && step.artifactIds.includes(id)).map(step => step.at) : [];
-        });
-        return { evidence, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!,
-          httpStatus: artifact.httpStatus, transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" };
-      } });
-    const published = report.filter(row => row.outcome.status === "PUBLISHED" || row.outcome.status === "PARTIALLY_PUBLISHED");
     const nationalVersion = nationalPublications.map(row => row.promotedVersionId ?? row.members.at(-1)?.versionId).findLast(Boolean);
-    console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? nationalVersion ?? null,
-      promotedVersionId: published.at(-1)?.outcome.versionId ?? nationalVersion ?? null,
-      workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
+    console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: nationalVersion ?? null, promotedVersionId: nationalVersion ?? null,
+      workerPublications: [], nationalPlaces, nationalPublications, failures }, null, 2));
     const delivery = nationalDelivery(nationalPublications);
     delivery.gaps.push(...nationalPlaces.flatMap(place => "deferred" in place ? [{ key: `zip:${place.zip}`, detail: place.deferred }] : []));
     // The worker also completes when its lease's due check finds that another
@@ -110,8 +91,8 @@ async function main(): Promise<void> {
       delivery.versionId = pointer?.versionId ?? null;
       delivery.candidateId = pointer?.versionId ?? null;
     }
-    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, delivery, now);
-    if (failures.length && !published.length && !nationalVersion) throw new Error(failures.join("; "));
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", [], delivery, now);
+    if (failures.length && !nationalVersion) throw new Error(failures.join("; "));
     return;
   }
   const packagePath = assignment(process.argv, "package");

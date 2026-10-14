@@ -1987,14 +1987,17 @@
     "publisher": "Office of the Secretary of State, Montpelier, VT",
     "url": "https://sos.vermont.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "VT",
       "ocdId": "ocd-division/country:us/state:vt",
       "name": "Vermont"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.vermont.gov/elections/",
+    "electionPageUrl": "https://sos.vermont.gov/elections/election-info-resources/candidates",
     "title": "Vermont chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Montpelier, VT",
@@ -2003,14 +2006,28 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "State elections page and robots.txt return HTTP 403, including the permitted browser-UA rung. Later network-enabled captures resolved the initial workspace proxy limitation.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "The Secretary of State HTML root returns HTTP 403. The official outside.vermont.gov qualified-candidates workbook and Fair Haven official sample ballot were acquired HTTP 200; all requested contests, candidates and statewide questions converted with scripts."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.vermont.gov/elections/\">https://sos.vermont.gov/elections/</a>"
-    }
+    },
+    "discoveredSources": [
+      {
+        "url": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      }
+    ]
   },
   {
     "id": "fec-va-chief",

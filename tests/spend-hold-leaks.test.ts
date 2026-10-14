@@ -96,7 +96,7 @@ test("the round wires the release (and the sweep) on its normal end and on its c
   assert.match(round, /new DurableSpendHolds\(\{ budget: repos\.budget, table: repos\.spendHolds,/, "the round's holds are the table's");
   assert.match(round, /async function recordCrash[\s\S]*?releaseRoundHolds[\s\S]*?crash:record/);
   assert.match(round, /const notReleased = await releaseRoundHolds!\(\);[\s\S]*?const runRecord = \{/);
-  assert.match(round, /readLiveSpendHolds\(repos, NOW\)/);
+  assert.match(round, /readSpendWindow\(repos, NOW\)/, "the round's rolling spend is the running counter, never re-read ledger rows");
   assert.doesNotMatch(round, /value\.spendHolds/, "the round never reads holds off the ledger row");
   const snapshot = readFileSync(new URL("../scripts/publish-owner-snapshot.mts", import.meta.url), "utf8");
   assert.match(snapshot, /readLiveSpendHolds\(repos, /);

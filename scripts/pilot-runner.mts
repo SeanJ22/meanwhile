@@ -22,7 +22,7 @@ import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignm
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { continuingDirectedHunt, originalLifetimeHuntContinuation } from "../lib/control-plane/scheduler/hunt-continuation.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -75,7 +75,7 @@ import {
 import {
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
-import { childFatalLine, childStderrCause } from "../lib/ops/fatal-line.ts";
+import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
@@ -784,7 +784,9 @@ async function persistOuterRoutineChildFailure(
   try {
     const repos = await ownerRepositories();
     if (repos === null) throw new Error("production control plane is not configured");
-    const existing = (await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["digestId"], cycleId)).find(
+    /* The child writes its outcome after this pass started; only those rows' kinds cross the wire. */
+    const existing = (await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["digestId"], cycleId, 20,
+      { runtimeOutcome: ["kind"] }, startedAt) as readonly Pick<OwnerDigestRecord, "runtimeOutcome">[]).find(
       (row) => row.runtimeOutcome?.kind === "ROUTINE_CIVIC_DATA_SUPERVISOR",
     );
     if (existing) {
@@ -1071,7 +1073,10 @@ vitalSignsTimer.unref();
 
 async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | null; signal: string | null }): Promise<void> {
   if (provider !== "postgres") return;
-  let lastError = currentCycleErrors.split("\n").filter(Boolean).slice(-8).join("\n").slice(-2000) || null;
+  /* A native abort's stack and its workers' disconnects follow the line that says why, so that line leads. */
+  const abort = nativeAbortLine(currentCycleErrors);
+  const tail = currentCycleErrors.split("\n").filter(line => line && line.trim() !== abort).slice(-8).join("\n");
+  let lastError = [abort?.slice(0, 400), tail.slice(-1600)].filter(Boolean).join("\n") || null;
   if (lastError) {
     for (const [name, value] of Object.entries(process.env)) {
       if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) lastError = lastError.split(value).join("[private]");

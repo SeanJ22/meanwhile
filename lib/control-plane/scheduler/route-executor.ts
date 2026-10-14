@@ -1,7 +1,7 @@
 /**
  * The route-aware executor: opens what each `RouteDescriptor` says (GET, POST, or nothing), reusing
  * `http-executor.ts`'s disposition mapping. A response that misses the declared yield contract is ABORTED; a
- * zero row count is a failed extraction, never WALKED_NO_YIELD; a route with no client is written
+ * zero row count is a failed extraction, never WALKED_NO_YIELD, except a search query's miss; a route with no client is written
  * REQUIRES_NEW_ADAPTER, which keeps the record owed. No credential value is read or recorded.
  */
 
@@ -89,6 +89,8 @@ export interface ContractReading {
   readonly satisfied: boolean;
   /** Rows the response carried, when the contract names where to count them. */
   readonly rows: number | null;
+  /** A search query answered with zero results. */
+  readonly miss?: true;
   readonly detail: string;
 }
 
@@ -156,6 +158,9 @@ export function checkYield(contract: YieldContract, body: string): ContractReadi
     rows = rows === null ? found : Math.max(rows, found);
   }
 
+  if (rows === 0 && contract.zeroRowsIsMiss) {
+    return { satisfied: false, rows: 0, miss: true, detail: `the response carries ${contract.describe} and no result for this query` };
+  }
   if (rows !== null && rows === 0) {
     return {
       satisfied: false,
@@ -305,6 +310,22 @@ export function routeExecutor(input: {
     if (status >= 200 && status < 300) {
       if (route.yieldContract !== undefined) {
         const reading = checkYield(route.yieldContract, got.body);
+        if (reading.miss) {
+          return {
+            ranAs: RAN_AS,
+            kind: "DISPOSED",
+            disposition: {
+              disposition: "WALKED_NO_YIELD",
+              observation: { rawCount: 0, normalizedCount: 0, routeOnlyCount: null, earliest: null, latest: null },
+              permission: "ALLOWED",
+              transport: "REACHABLE",
+              note: `${route.label}: HTTP ${status} from ${url.host}, ${got.bytes} bytes; ${reading.detail}. A miss for this query, not a fact about any government.`,
+            },
+            artifacts: [],
+            cost: cost(got),
+            detail: `${route.label}: no result for this query`,
+          };
+        }
         if (!reading.satisfied) {
           return {
             ranAs: RAN_AS,

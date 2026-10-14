@@ -48,8 +48,8 @@ export interface HeldCopies {
   readonly dir: string;
   /** `list()` for one aggregate table: rows in id order, each mapped by `out` as the copy streams. */
   aggregateList<T, O>(table: string, changedSince: ChangedSince<ChangedRows<T>>, out: (row: Persisted<T>) => O): Promise<O[]>;
-  /** `readAll()` for one log table: records in key then position order. */
-  logReadAll<T>(table: string, changedSince: ChangedSince<ChangedRecords<T>>): Promise<T[]>;
+  /** `readAll()` for one log table: records in key then position order, each mapped by `out` as the copy streams. */
+  logReadAll<T, O>(table: string, changedSince: ChangedSince<ChangedRecords<T>>, out: (record: T) => O): Promise<O[]>;
   /**
    * `readRecentWhere` for one query of one log key: the copy keeps that query's newest `limit` records, newest first,
    * and a later read asks only for matches the database stamped at or after the copy's clock less the slack.
@@ -87,11 +87,11 @@ export function openHeldCopies(dir: string, options: { readonly log?: (line: str
     dir,
     aggregateList: <T, O>(table: string, changedSince: ChangedSince<ChangedRows<T>>, out: (row: Persisted<T>) => O) =>
       withCallerSite(() => readHeld(copyDir, table, aggregateLayout<T>(), slackMs, changedSince, out)),
-    logReadAll: <T>(table: string, changedSince: ChangedSince<ChangedRecords<T>>) => withCallerSite(() =>
+    logReadAll: <T, O>(table: string, changedSince: ChangedSince<ChangedRecords<T>>, out: (record: T) => O) => withCallerSite(() =>
       readHeld(copyDir, table, logLayout<T>(), slackMs, async (since, held) => {
         const changed = await changedSince(since, held);
         return { rows: changed.records, through: changed.through };
-      }, entry => entry.record)),
+      }, entry => out(entry.record))),
     recentWhere: (table, query, limit, newer) => withCallerSite(() => readRecent(copyDir, table, query, limit, slackMs, newer)),
   };
 }

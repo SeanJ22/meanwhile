@@ -1,0 +1,188 @@
+{
+  "capturedAt": "2026-10-14T01:04:53.504Z",
+  "root": {
+    "id": "fec-vt-chief",
+    "publisher": "Office of the Secretary of State, Montpelier, VT",
+    "url": "https://sos.vermont.gov/elections/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "VT",
+      "ocdId": "ocd-division/country:us/state:vt",
+      "name": "Vermont"
+    },
+    "electionDate": "2026-11-03"
+  },
+  "baselineRevision": "25ef70542f9bf5cffd93368ce29dcb11576e46cf",
+  "currentRiverRevision": "5bb464f06e345165d6302377d20418f29d392409",
+  "reportedPass": {
+    "doors": 2744,
+    "blanks": 1144,
+    "reproduced": false,
+    "reason": "The live root returned HTTP 403 through direct, browser-UA, Chromium and the web tool; its candidate graph is not available."
+  },
+  "before": {
+    "doors": 1,
+    "evidence": 0,
+    "skips": 0,
+    "linkBlanks": 1,
+    "placeBlanks": 1,
+    "blanks": 2
+  },
+  "currentRiver": {
+    "doors": 0,
+    "evidence": 0,
+    "skips": 1,
+    "linkBlanks": 0,
+    "placeBlanks": 1,
+    "blanks": 1
+  },
+  "after": {
+    "doors": 0,
+    "evidence": 0,
+    "skips": 1,
+    "linkBlanks": 0,
+    "placeBlanks": 1,
+    "blanks": 1
+  },
+  "placeObligations": [
+    {
+      "id": "voting-sites:2026-11-03:ocd-division/country:us/state:vt",
+      "doorId": "fec-vt-chief",
+      "scope": {
+        "state": "VT",
+        "ocdId": "ocd-division/country:us/state:vt",
+        "name": "Vermont"
+      },
+      "owed": "Find Election Day polling places or vote centers for Vermont, or the office's published rule explaining how to vote without them; Find early voting sites for Vermont, or the office's published rule explaining their absence; Find satellite offices for Vermont, or the office's published rule explaining their absence; Find ballot drop boxes and return rules for Vermont, or the office's published rule explaining their absence",
+      "tried": [],
+      "next": [
+        "https://sos.vermont.gov/elections/",
+        "Follow the chief election office's directory to Vermont's local election office; read its files, lists and public map data",
+        "Start with the chief election office and follow its official links; never use a search engine or Google Civic for a background hunt",
+        "Record what robots.txt says as evidence and read the public page anyway (rulings \u00a72); use the existing browser-UA rung only if it passes without a challenge; never log in, solve a CAPTCHA, or ask for identity details"
+      ],
+      "status": "open",
+      "reason": "missing-sites"
+    }
+  ],
+  "candidates": [
+    {
+      "url": "https://sos.vermont.gov/elections/",
+      "normalizedUrl": "https://sos.vermont.gov/elections",
+      "host": "sos.vermont.gov",
+      "whatHeld": "HTTP 403 CloudFront error; target contents could not be acquired",
+      "captureFile": "vt-live-2-direct-original.html",
+      "before": "DOOR",
+      "after": "SKIP"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://sos.vermont.gov/robots.txt",
+      "route": "direct",
+      "httpStatus": 403,
+      "contentType": "text/html",
+      "file": "vt-live-0-direct-original.html",
+      "byteLength": 919,
+      "sha256": "f8f987cad7da38c008d0811567501296085d86224b7934e4aea028ecf11d0d89"
+    },
+    {
+      "url": "https://sos.vermont.gov/robots.txt",
+      "route": "browser-ua",
+      "httpStatus": 403,
+      "contentType": "text/html",
+      "file": "vt-live-1-browser-ua-original.html",
+      "byteLength": 919,
+      "sha256": "830ad4cb2ff89781e3c351ef52af455334e6393eb0e4d644b44a86ddc5faa1b5"
+    },
+    {
+      "url": "https://sos.vermont.gov/elections/",
+      "route": "direct",
+      "httpStatus": 403,
+      "contentType": "text/html",
+      "file": "vt-live-2-direct-original.html",
+      "byteLength": 919,
+      "sha256": "3d00f175d7bafbaf5689992530bdbc6aacd15c944a1687771ba8f38b33fff944"
+    },
+    {
+      "url": "https://sos.vermont.gov/elections/",
+      "route": "browser-ua",
+      "httpStatus": 403,
+      "contentType": "text/html",
+      "file": "vt-live-3-browser-ua-original.html",
+      "byteLength": 919,
+      "sha256": "a0988c3c161fbbe44cb90750a3857aa2409ca12f7baaf2e79c338963cb85c7e0"
+    }
+  ],
+  "alternatives": [
+    {
+      "route": "browser",
+      "url": "https://sos.vermont.gov/elections/",
+      "status": 403,
+      "contentType": "text/html",
+      "bytes": 919,
+      "title": "ERROR: The request could not be satisfied",
+      "file": "vt-live-browser-original.html",
+      "sha256": "da68e6f7a201485cd29e484f14d4db917683ff77901a42f4085e1130a5237e0f"
+    },
+    {
+      "route": "web-tool",
+      "url": "https://sos.vermont.gov/elections/",
+      "status": 403
+    },
+    {
+      "route": "direct-no-trailing-slash",
+      "url": "https://sos.vermont.gov/elections",
+      "status": 403
+    },
+    {
+      "route": "direct-http-redirect",
+      "url": "http://sos.vermont.gov/elections/",
+      "finalUrl": "https://sos.vermont.gov/elections/",
+      "status": 403
+    },
+    {
+      "route": "direct-public-query",
+      "url": "https://sos.vermont.gov/elections/?read=public",
+      "status": 403
+    },
+    {
+      "route": "direct-home",
+      "url": "https://sos.vermont.gov/",
+      "status": 403
+    },
+    {
+      "route": "www-host",
+      "url": "https://www.sos.vermont.gov/elections/",
+      "outcome": "CONNECT tunnel failed; no response"
+    }
+  ],
+  "attempts": [
+    {
+      "url": "https://sos.vermont.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://sos.vermont.gov/robots.txt",
+      "route": "browser-ua",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://sos.vermont.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /elections/: robots.txt answered HTTP 403 to this client \u2014 a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides \u2014 recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://sos.vermont.gov/elections/",
+      "route": "direct",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://sos.vermont.gov/elections/",
+      "route": "browser-ua",
+      "outcome": "HTTP 403"
+    }
+  ]
+}

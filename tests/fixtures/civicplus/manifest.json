@@ -1,0 +1,41 @@
+[
+  {
+    "tenant": "cochise",
+    "state": "AZ",
+    "sourceUrl": "https://www.cochise.az.gov/AgendaCenter",
+    "capturedAt": "2026-10-13T19:41:54.531973+00:00",
+    "responseSha256": "dbce04b623a80d7ce9e300283fb30e45851aa4b25bb9c3da0b99a6e97014826d",
+    "fixture": "cochise-agendacenter.html",
+    "excerpt": "All category divs, unchanged from the response",
+    "rssUrl": "https://www.cochise.az.gov/RSSFeed.aspx?CID=All-0&ModID=65",
+    "rssFixture": "cochise-rss.xml"
+  },
+  {
+    "tenant": "rockaway",
+    "state": "NJ",
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter",
+    "capturedAt": "2026-10-13T19:41:55.833037+00:00",
+    "responseSha256": "327bfc553293d40ad45693339cd9037ef1d9c91680855cc15883fb9b179ac0d5",
+    "fixture": "rockaway-agendacenter.html",
+    "excerpt": "All category divs, unchanged from the response",
+    "rssUrl": "https://www.rockawaytownship.org/RSSFeed.aspx?CID=All-0&ModID=65",
+    "rssFixture": "rockaway-rss.xml"
+  },
+  {
+    "tenant": "alameda",
+    "state": "CA",
+    "sourceUrl": "https://www.acwd.org/AgendaCenter",
+    "capturedAt": "2026-10-13T19:41:58.059997+00:00",
+    "responseSha256": "6b34216dbe4494e378db053fd77e0734e70a5b1b45386540b0b435697d8ffc67",
+    "fixture": "alameda-agendacenter.html",
+    "excerpt": "All category divs, unchanged from the response",
+    "rssUrl": "https://www.acwd.org/RSSFeed.aspx?CID=All-0&ModID=65",
+    "rssFixture": "alameda-rss.xml"
+  },
+  {
+    "sourceUrl": "https://www.rockawaytownship.org/AgendaCenter/Search/?CIDs=4&startDate=01%2F01%2F2025&endDate=12%2F31%2F2025",
+    "responseSha256": "79022c8e5ad1608e4d5a97f243df15ddc337f85d8a33b001326730e34a719ff7",
+    "fixture": "rockaway-planning-2025.html",
+    "excerpt": "Complete category 4 div, unchanged from the response"
+  }
+]

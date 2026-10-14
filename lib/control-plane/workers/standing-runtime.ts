@@ -47,7 +47,7 @@ import { consumePlanRepairs, planRepairBrief, planRepairFailureBrief, type PlanR
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 import { promotedRegistries } from "../scheduler/provider-inputs.ts";
-import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-lineage.ts";
+import { brokeredSiblingCaptures, LINEAGE_ARTIFACT_FIELDS, LINEAGE_ATTEMPT_FIELDS, selectStandingLineages, type LineageArtifact, type LineageAttempt } from "./standing-lineage.ts";
 import { readLineageHistory } from "./scoped-history.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
@@ -170,11 +170,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   };
   const brokerWholeStore=async()=>{
     const [allWorkRows,allOccurrenceRows,allArtifactRows,allAttemptRows,scouts,workers] = await Promise.all([
-      input.repos.workItems.list(),input.repos.occurrences.list(),input.repos.artifacts.readAll(),input.repos.attempts.list(),
+      input.repos.workItems.list(),input.repos.occurrences.list(),
+      input.repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS) as Promise<readonly LineageArtifact[]>,input.repos.attempts.listNarrowed(LINEAGE_ATTEMPT_FIELDS),
       scoped ? input.repos.scoutResults.readAll() : prior, scoped ? readCompletedWorkerResults(input.repos) : priorWorkers,
     ]);
     brokerLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWorkRows.map(row=>row.value),
-      artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:workers,scouts});
+      artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value as LineageAttempt),workerResults:workers,scouts});
   };
   if (!scoped) await brokerWholeStore();
 

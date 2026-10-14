@@ -34,6 +34,7 @@ import type { CandidateStore } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -98,6 +99,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   projectAggregate,
+  projectRecord,
   reconcileIdempotentPut,
   type AggregateRepository,
   type AppendOnlyRepository,
@@ -345,6 +347,45 @@ export function pgAggregateRepository<T>(
     ? listChangedSince(null).then(changed => changed.rows.map(out))
     : copies.aggregateList(table, listChangedSince, out);
 
+  /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered; `selected` is the value or its projection. */
+  async function listWhereAs<O>(path: readonly string[], value: string, selected: string, caller: string): Promise<Persisted<O>[]> {
+    const jsonPath = jsonPathLiteral(table, path);
+    const out: Persisted<O>[] = [];
+    let afterId: string | null = null;
+    for (;;) {
+      const rows = (afterId === null
+        ? await run(
+            caller,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
+             WHERE value #>> '${jsonPath}' = $1
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            [value],
+          )
+        : await run(
+            caller,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
+             WHERE value #>> '${jsonPath}' = $1 AND id > $2
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            [value, afterId],
+          )) as Record<string, unknown>[];
+      for (const row of rows) {
+        out.push({
+          id: String(row.id),
+          revision: Number(row.revision),
+          updatedAt: new Date(row.updated_at as string).toISOString(),
+          value: parseValue<O>(row.value, `${where} id ${String(row.id)}`),
+        });
+      }
+      if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+      afterId = String(rows[rows.length - 1].id);
+    }
+    return out;
+  }
+
   return callerPinned({
     read,
 
@@ -470,44 +511,9 @@ export function pgAggregateRepository<T>(
     listNarrowed: projection => held(row => ({ ...row, value: projectAggregate(row.value, projection) })),
     listChangedSince,
 
-    async listWhere(path, value) {
-      /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered. */
-      const jsonPath = jsonPathLiteral(table, path);
-      const out: Persisted<T>[] = [];
-      let afterId: string | null = null;
-      for (;;) {
-        const rows = (afterId === null
-          ? await run(
-              "listWhere",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               WHERE value #>> '${jsonPath}' = $1
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-              [value],
-            )
-          : await run(
-              "listWhere",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               WHERE value #>> '${jsonPath}' = $1 AND id > $2
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-              [value, afterId],
-            )) as Record<string, unknown>[];
-        for (const row of rows) {
-          out.push({
-            id: String(row.id),
-            revision: Number(row.revision),
-            updatedAt: new Date(row.updated_at as string).toISOString(),
-            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-          });
-        }
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-        afterId = String(rows[rows.length - 1].id);
-      }
-      return out;
-    },
+    listWhere: (path, value) => listWhereAs<T>(path, value, "value", "listWhere"),
+    listWhereNarrowed: (path, value, projection) => listWhereAs<unknown>(path, value,
+      Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value"), "listWhereNarrowed"),
   });
 }
 
@@ -556,9 +562,9 @@ export function pgAppendOnlyRepository<T>(
   }
 
   const copies = options.copies ?? null;
-  const heldAll = (): Promise<T[]> => copies === null
-    ? readChangedSince(null).then(changed => changed.records.map(entry => entry.record))
-    : copies.logReadAll(table, readChangedSince);
+  const heldAll = <O>(out: (record: T) => O): Promise<O[]> => copies === null
+    ? readChangedSince(null).then(changed => changed.records.map(entry => out(entry.record)))
+    : copies.logReadAll(table, readChangedSince, out);
 
   return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
@@ -746,7 +752,8 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    readAll: () => heldAll(),
+    readAll: () => heldAll(record => record),
+    readAllNarrowed: projection => heldAll(record => projectRecord(record, projection)),
     readChangedSince,
 
     async readRecent(key, limit) {
@@ -1301,6 +1308,7 @@ export async function createPgRepositories(
     ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests", bounded),
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions", bounded),
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
+    spendWindow: pgAggregateRepository<SpendWindow>(sql, "SpendWindow", "cp_spend_window", bounded),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
     boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),

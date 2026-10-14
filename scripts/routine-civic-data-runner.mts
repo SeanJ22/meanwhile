@@ -5,6 +5,7 @@ import { cartonComments, cartonOffices, cartonRosters, importCartonComments, imp
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
+import { readHeldBallotInputs } from "../lib/civic-data/worker-held-elections.ts";
 /* @freshness-reads-here */
 import { hostname } from "node:os";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
@@ -41,7 +42,7 @@ import {
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
-  routinePreSpawnMemoryDeferral,
+  routinePreSpawnDeferral,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -100,7 +101,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
@@ -174,6 +175,8 @@ const ROOT = process.cwd();
 // Admit the supervisor before opening hosts or changing durable source state.
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
+/* A publish-now pass launches no child after its budget, so the runner can hand off a release between passes; what was not started stays owed. */
+const PASS_LAUNCH_DEADLINE_MS = PUBLISH_NOW ? Date.now() + PUBLISH_NOW_PASS_BUDGET_MS : Number.POSITIVE_INFINITY;
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 // The door registry is the only door list. Every routine pass first brings the doors the system holds into the
@@ -283,7 +286,7 @@ const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
 async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
-  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Date.now() + ROUTINE_CHILD_TIMEOUT_MS);
+  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, PASS_LAUNCH_DEADLINE_MS));
   childMemoryReleases.set(command.id, release);
   (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
     startedSourceChildren.add(command.id);
@@ -461,7 +464,13 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     } catch (error) {
       failures.push({ taskId: "fact-publication", code: "FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
-    const publication = await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
+    const pointers = new PostgresRoutineDataStore();
+    const heldInputs = await readHeldBallotInputs((query, params) => sql.query(query, [...params]),
+      async (recordClass, scope) => (await pointers.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null, items).catch((error: unknown) => {
+      console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held ballot routes are read again hourly`);
+      return null;
+    });
+    const publication = await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
     if (!PUBLISH_NOW) return publication;
     // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
     // the door and read below at once. A look that cannot be made never stops a known-changed door's read.
@@ -999,6 +1008,7 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChild
     // Two reads of one host in this pass start at least a minute apart.
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
+      if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
       await acquireChildMemory(command);
       await recordHuntSourceProgress(runs[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
@@ -1023,11 +1033,11 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     console.error(`RCD_TASK ${pending.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
     return;
   }
-  const memoryDeferral = routinePreSpawnMemoryDeferral(run, startedSourceChildren.has(run.id));
-  if (memoryDeferral !== null) {
+  const deferral = routinePreSpawnDeferral(run, startedSourceChildren.has(run.id));
+  if (deferral !== null) {
     attempted -= 1;
-    const detail = safeFailure(memoryDeferral);
-    await recordHuntSourceProgress(pending.task, "QUEUED", detail);
+    // Admission already wrote this pass's QUEUED progress row, and append-only history refuses a second one.
+    const detail = safeFailure(deferral);
     console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
     return;
   }

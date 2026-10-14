@@ -1,7 +1,7 @@
 import { formatEastern } from "../eastern-time.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
-import { billingStale, REPORTING_PROVIDERS, type ProviderReading, type ReportingProvider } from "../provider-billing.ts";
+import { BILLED_PROVIDERS, BILLING_SECRET_NAMES, billingStale, REPORTING_PROVIDERS, type BilledProvider, type ProviderDay, type ProviderReading, type ReportingProvider } from "../provider-billing.ts";
 import type { V6ReadSources } from "./v6-money-hunts-route.ts";
 import { dollars, exactHuntAccounting, huntName, rollingWords, scopedHunts, sectionRevision,
   type AdminV6SectionEnvelope, type V6Period, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
@@ -25,6 +25,12 @@ export interface AdminV6MoneyView {
     readonly error: string | null; readonly detail: string; readonly credits: string | null; readonly accounts: readonly string[]; readonly limits: readonly string[];
     readonly units: readonly { readonly label: string; readonly value: number; readonly unit: string }[] }[];
   readonly otherServices: string;
+  /** Each billed provider's own UTC days, in BILLED_PROVIDERS order; a cell is null when that number is not held. */
+  readonly byDay: {
+    readonly providers: readonly { readonly provider: string; readonly note: string | null }[];
+    readonly days: readonly { readonly day: string; readonly cells: readonly ({ readonly usd: number | null; readonly usage: string | null } | null)[] }[];
+    readonly technical: readonly string[];
+  };
 }
 
 const PROVIDER_NAMES: Readonly<Record<ReportingProvider, string>> = {
@@ -76,6 +82,52 @@ function accountPeriodWords(all: readonly ProviderReading[], period: V6Period): 
   if (readings.length === 0) return "Whole account · no provider reading saved";
   if (spans.size === 1) return `Whole account · ${billingDate(readings[0].periodStart)} to ${billingDate(readings[0].periodEnd)}`;
   return "Whole account · each provider's own billing period";
+}
+
+const FAILURE_WORDS: readonly (readonly [RegExp, string])[] = [
+  [/^REPORT_HTTP_40[13]$/, "the provider refused the key"],
+  [/^REPORT_HTTP_404$/, "the provider found no bill this key can read"],
+  [/^REPORT_HTTP_429$/, "the provider asked us to slow down"],
+  [/^REPORT_HTTP_5\d\d$/, "the provider had an error"],
+  [/^REPORT_NETWORK_OR_TIMEOUT$/, "the provider did not answer in time"],
+  [/^REPORT_(SCHEMA|PAGINATION|INCOMPLETE)$/, "the provider's answer was incomplete"],
+  [/^REPORT_CURRENCY$/, "the bill was not in US dollars"],
+  [/^REPORT_(ORGANIZATION|ACCOUNT)_ACCESS$/, "the key cannot see the account"],
+  [/^REPORT_ENV_FILE_UNREADABLE$/, "the runner's private settings file could not be read"],
+];
+
+/** Numbers are shown only from a reading whose last read worked. */
+function billedStatus(provider: BilledProvider, reading: ProviderReading | undefined, now: string): { readonly note: string | null; readonly technical: string | null; readonly shown: boolean } {
+  const name = PROVIDER_NAMES[provider];
+  const missing = reading?.error ? /^MISSING_([A-Z_]+)$/.exec(reading.error)?.[1] : undefined;
+  if (missing) return { note: `${name}: ${(BILLING_SECRET_NAMES as readonly string[]).includes(missing) ? "billing key" : "setting"} not set (${missing})`, technical: null, shown: false };
+  if (reading?.error) return { note: `${name}: the last read failed because ${FAILURE_WORDS.find(([code]) => code.test(reading.error!))?.[1] ?? "of an unexpected problem"}`,
+    technical: `${name}: ${reading.error}`, shown: false };
+  if (!reading?.syncedAt) return { note: `${name}: not read yet`, technical: null, shown: false };
+  return { note: billingStale(reading, now) ? `${name}: last read ${formatEastern(reading.syncedAt)}` : null, technical: null, shown: true };
+}
+
+function usageWords(usage: ProviderDay["usage"]): string | null {
+  const words = usage.map(u => u.unit === "CU-hours" ? `${u.value.toFixed(1)} compute hours`
+    : u.unit === "bytes" ? `${(u.value / 1e9).toFixed(2)} GB sent`
+      : u.unit === "credits" ? `${u.value.toLocaleString("en-US")} credits, estimated`
+        : `${u.value.toLocaleString("en-US")} ${u.unit}`);
+  return words.length === 0 ? null : words.join(" · ");
+}
+
+function billedByDay(readings: readonly ProviderReading[], period: V6Period, now: string): AdminV6MoneyView["byDay"] {
+  const rows = BILLED_PROVIDERS.map(provider => {
+    const reading = readings.find(r => r.provider === provider);
+    const status = billedStatus(provider, reading, now);
+    const days = status.shown ? (reading?.days ?? []).filter(d => period.kind !== "month" || d.day.startsWith(period.month)) : [];
+    return { provider: PROVIDER_NAMES[provider], status, days: new Map(days.map(d => [d.day, d] as const)) };
+  });
+  const days = [...new Set(rows.flatMap(r => [...r.days.keys()]))].sort().reverse();
+  return {
+    providers: rows.map(r => ({ provider: r.provider, note: r.status.note })),
+    days: days.map(day => ({ day, cells: rows.map(r => { const d = r.days.get(day); return d ? { usd: d.usd, usage: d.usd === null ? usageWords(d.usage) : null } : null; }) })),
+    technical: rows.flatMap(r => r.status.technical === null ? [] : [r.status.technical]),
+  };
 }
 
 function fleetLimit(sources: V6ReadSources) {
@@ -137,7 +189,8 @@ export function v6MoneySection(input: { readonly scopeKey: string; readonly scop
     periodStart: r.periodStart, periodEnd: r.periodEnd, reportedUsd: r.reportedUsd, estimatedUsd: r.estimatedUsd, error: r.error, detail: r.detail,
     credits: r.credits ? `${r.credits.kind.replaceAll("_", " ").toLowerCase()}: ${r.credits.amount.toLocaleString("en-US")} ${r.credits.unit}` : null,
     accounts: r.accountIds, limits: r.existingLimits, units: r.units }));
-  const data: AdminV6MoneyView = { account, accountMonth: accountPeriodWords(inPeriod, period), monthlyPlans: [], limits, reconciliation, readings: detail, otherServices };
+  const data: AdminV6MoneyView = { account, accountMonth: accountPeriodWords(inPeriod, period), monthlyPlans: [], limits, reconciliation, readings: detail, otherServices,
+    byDay: billedByDay(readings, period, sources.readAt) };
   const missing = account.filter(a => a.amountUsd === null).length;
   const missingParts = [
     ...(missing > 0 ? [`${missing} of ${account.length} providers have no dollar reading${period.kind === "month" ? ` for ${monthWords(period.month)}` : ""}. The account total is unknown, not the sum of the others.`] : []),

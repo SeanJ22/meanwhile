@@ -14,7 +14,7 @@ import type { AttemptCost } from "../attempt.ts";
 import { workerSystemPrompt, type WorkerPlaybook } from "../playbooks.ts";
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
-import type { CostModelShare } from "../cost.ts";
+import { modelRequestBoundFor, type CostModelShare, type ModelRequestBound } from "../cost.ts";
 import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } from "../cache-defects.ts";
 import {
   CACHE_RATE_MULTIPLIERS,
@@ -156,6 +156,14 @@ export interface ModelRequest {
 }
 
 export type ModelTransport = (request: ModelRequest) => Promise<ModelResponse>;
+
+/** The transport never handed the request to the provider, so it cost nothing. */
+export class ModelRequestNotSent extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ModelRequestNotSent";
+  }
+}
 
 export function modelRequestAccounting(response: ModelResponse) {
   return { modelRequestCount: 1, batchRequestCount: response.batch === true ? 1 : 0,
@@ -1022,7 +1030,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       let turns = 0;
       let transportInvocations = 0;
       const transportInvocationsByModel = new Map<string, number>();
-      let unpricedTransport = false;
+      /* A request sent whose usage never came back: its send limit, or null when its model has no listed rate. */
+      let unanswered = null as { readonly bound: ModelRequestBound | null } | null;
       /*
        * The loop state below is assigned inside `runModelAttempt` (a closure)
        * and read after it returns, so each is initialised through `as` with its
@@ -1123,6 +1132,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           const step = current.consult();
           let response: ModelResponse;
           let enteredTransport = false;
+          let sentBound: ModelRequestBound | null = null;
           try {
             const request: ModelRequest = {
               batchContext: { job: "BLANK", priority: { now: clock(), meetingStartsAt: row.obligation.meetingStartsAt,
@@ -1144,6 +1154,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             enteredTransport = true;
             transportInvocations += 1;
             transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 0) + 1);
+            sentBound = modelRequestBoundFor(current.model, Buffer.byteLength(JSON.stringify(request)), request.max_tokens);
             response = await send(request);
           } catch (error) {
             transportFailure = error instanceof Error ? error.message : String(error);
@@ -1152,14 +1163,17 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             // timeout, unrecognized status or lost response may follow billing.
             const rejectedRequest = error instanceof ModelTransportError && error.status !== null
               && [400, 401, 402, 403, 404, 413, 429].includes(error.status);
-            const refusedBeforeSending = enteredTransport && deps.refusedBeforeSending?.(error) === true;
+            const notSent = enteredTransport && error instanceof ModelRequestNotSent;
+            const refusedBeforeSending = enteredTransport && !notSent && deps.refusedBeforeSending?.(error) === true;
             if (refusedBeforeSending) {
               policyRefusedBeforeSending = true;
               stoppedBy = "BOUND";
+            }
+            if (notSent || refusedBeforeSending) {
               transportInvocations -= 1;
               transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 1) - 1);
             }
-            if (enteredTransport && !rejectedRequest && !refusedBeforeSending) unpricedTransport = true;
+            if (enteredTransport && !rejectedRequest && !refusedBeforeSending && !notSent) unanswered = { bound: sentBound };
             break;
           }
           turns += 1;
@@ -1401,7 +1415,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           modelClass: ran.modelClass,
           model: ran.model,
           turns: own.length,
-          usd: unpricedTransport ? null : own.length === 0 ? 0 : own.some((s) => s.usd === null) ? null : own.reduce((n, s) => n + (s.usd ?? 0), 0),
+          usd: unanswered !== null ? null : own.length === 0 ? 0 : own.some((s) => s.usd === null) ? null : own.reduce((n, s) => n + (s.usd ?? 0), 0),
           accepted: finish !== null,
         });
         attemptFirstTurns.push(firstTurn);
@@ -1560,13 +1574,15 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           count: d.count,
         });
       }
-      /* Only a local pre-send refusal or a recognized request rejection establishes zero; otherwise the aggregate is null and the whole hold is retained. */
-      const refusedBeforeAnyUsage = !unpricedTransport && (transportFailure !== null || turns === 0) && !usage.reported;
-      const inputTokens = unpricedTransport ? null : usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
-      const outputTokens = unpricedTransport ? null : usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
+      /* The answered requests' tokens are measured; the bill stays unknown (holds keep their reservation) and the ledger
+         prices an unanswered request at its send limit. Only one with no listed rate leaves the tokens unknown too. */
+      const unknownCost = unanswered !== null && unanswered.bound === null;
+      const refusedBeforeAnyUsage = !unknownCost && (transportFailure !== null || turns === 0) && !usage.reported;
+      const inputTokens = unknownCost ? null : usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
+      const outputTokens = unknownCost ? null : usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
       /* The cost is the sum of the steps, each priced at its model's rate; `modelAttempts` splits it. */
       const modelSteps = steps.filter((s) => s.kind === "MODEL");
-      const usd = unpricedTransport ? null : usage.reported
+      const usd = unanswered !== null ? null : usage.reported
         ? modelSteps.some((s) => s.usd === null)
           ? null
           : modelSteps.reduce((n, s) => n + (s.usd ?? 0), 0)
@@ -1575,27 +1591,27 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           : null;
       /* The five billed quantities: the turns' metered usage summed, unknown under unknown transport exposure. */
       const summed = sumMeteredUsage(meteredTurns);
-      const metering = usage.reported && !unpricedTransport
+      const metering = usage.reported && !unknownCost
         ? meteredCostFields(summed)
         : refusedBeforeAnyUsage
           ? { cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0, batch: false }
           : { cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false };
       const cost: AttemptCost = {
-        listPriceUsd: unpricedTransport || requestAccounting.some(row => row.listPriceUsd === null) ? null : requestAccounting.reduce((n, row) => n + row.listPriceUsd!, 0),
+        listPriceUsd: unanswered !== null || requestAccounting.some(row => row.listPriceUsd === null) ? null : requestAccounting.reduce((n, row) => n + row.listPriceUsd!, 0),
         modelRequestCount: transportInvocations,
-        batchEligibleRequestCount: requestAccounting.some(row => row.eligible === undefined) || unpricedTransport ? null : requestAccounting.filter(row => row.eligible).length,
-        batchRequestCount: unpricedTransport ? null : requestAccounting.filter(row => row.batch).length,
+        batchEligibleRequestCount: requestAccounting.some(row => row.eligible === undefined) || unanswered !== null ? null : requestAccounting.filter(row => row.eligible).length,
+        batchRequestCount: unanswered !== null ? null : requestAccounting.filter(row => row.batch).length,
         inputTokens,
         outputTokens,
         usd,
         durationMs: elapsedMs,
         bytesFetched: toolkit.bytesFetched,
-        requestCount: unpricedTransport ? null : transportInvocations + toolkit.requestCount,
+        requestCount: unknownCost ? null : transportInvocations + toolkit.requestCount,
         ...metering,
       };
-      /* The charge by model, emitted only when no request has unknown transport exposure; the parts sum to `cost`. */
+      /* The charge by model, emitted only when the bill is known; the parts sum to `cost`. */
       const costByModel: CostModelShare[] | null =
-        modelAttempts.length > 1 && usage.reported && !unpricedTransport
+        modelAttempts.length > 1 && usage.reported && !unknownCost
           ? modelAttempts.map((a, i) => {
               const first = attemptFirstTurns[i] ?? 1;
               if (a.turns === 0) {
@@ -1778,6 +1794,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         cost,
         ...(persisted.spendHoldJobId === undefined ? {} : { spendHoldJobId: persisted.spendHoldJobId }),
         ...(costByModel !== null ? { costByModel } : {}),
+        ...(unanswered?.bound ? { unansweredRequest: unanswered.bound } : {}),
         endedAt: clock(),
       };
       if (persisted.refusal !== null) {

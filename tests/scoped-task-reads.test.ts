@@ -4,7 +4,7 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { keysWhere, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dispatchAutonomousTask, nextAutonomousOperation, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
-import { readAuditHistory, readSpendWindowCosts, readSubjectScoutHistoryScoped, readScoutResultsForSubjects, SPEND_WINDOW_READ_SLACK_HOURS } from "../lib/control-plane/workers/scoped-history.ts";
+import { readAuditHistory, readSubjectScoutHistoryScoped, readScoutResultsForSubjects } from "../lib/control-plane/workers/scoped-history.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { readSubjectScoutHistory } from "../lib/control-plane/workers/detective.ts";
@@ -124,14 +124,6 @@ test("CH-26: with the switch off, the old whole-table reads still run", async ()
 
 test("CH-26: scoped reads return what the whole-table reads returned, after the caller's own filter", async () => {
   const repos = createMemoryRepositories();
-  const now = "2026-10-05T18:00:00.000Z";
-  await repos.costs.append("in-window", "w", cost("w", "2026-10-05T10:00:00.000Z", 2), "2026-10-05T10:00:00.000Z");
-  await repos.costs.append("written-late", "late", cost("late", "2026-10-04T19:00:00.000Z", 3), "2026-10-04T20:00:00.000Z");
-  await repos.costs.append("old", "o", cost("o", "2026-09-01T00:00:00.000Z", 7), "2026-09-01T00:00:00.000Z");
-  const scopedCosts = await readSpendWindowCosts(repos, now, true);
-  assert.deepEqual(scopedCosts.map(row => row.attemptId).sort(), ["late", "w"]);
-  assert.equal((await readSpendWindowCosts(repos, now, false)).length, 3);
-  assert.ok(SPEND_WINDOW_READ_SLACK_HOURS > 0);
 
   for (const [key, subject, at] of [["a", "s:1", "2026-10-01T00:00:00.000Z"], ["b", "s:2", "2026-10-01T00:00:01.000Z"],
     ["c", "s:1", "2026-10-01T00:00:02.000Z"], ["c", "s:3", "2026-10-01T00:00:03.000Z"]] as const) {

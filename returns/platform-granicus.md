@@ -5,16 +5,16 @@ owner: platform-granicus
 writer: the platform-granicus lane
 check: fold-conflict
 ready: no step ids unknown
-river: 691c01dd0ff44041930828ead156c968fc269f8a
-at: 2026-10-14T00:20:57Z
+river: dc5cddd3834ac04588782f84b6becc81fe6a5e25
+at: 2026-10-14T17:07:47Z
 state: returned
-fix_subject: fix:7a30e49d
-fix: River · stream/platform-granicus — fold-conflict failed for platform-granicus: platform-granicus READY 5cff50d6efb4 conflicts with river 25ef70542f9b (releases 25 to 29 plus src-legiscan) when merged alone. Conflicting files: lib/civic-data/derived-door-kinds.ts lib/control-plane/discovery/auto-crosswalk.ts lib/contro
+fix_subject: fix:b61decc9
+fix: River · stream/platform-granicus — fold-conflict failed for platform-granicus: platform-granicus READY 5cff50d6e conflicts with river dc5cddd3834a (checked 2026-10-14 Eastern) in 12 files. Ten are additive registry lists (GRANICUS beside NOVUSAGENDA/ESCRIBE: derived-door-kinds.ts, meeting-body-crosswalk.ts, meeting-pa
 
 ## Failure
 
 ```
-platform-granicus READY 5cff50d6efb4 conflicts with river 25ef70542f9b (releases 25 to 29 plus src-legiscan) when merged alone. Conflicting files: lib/civic-data/derived-door-kinds.ts lib/control-plane/discovery/auto-crosswalk.ts lib/control-plane/discovery/derived-wiring-reading.ts lib/control-plane/discovery/derived-wiring.ts lib/hunt/meetings-recipes.ts lib/hunt/meetings-site-discovery.ts lib/registry/source-wiring.ts lib/sources/composite/wiring.ts tests/door-kinds-data-rows.test.ts   Merge river into stream/platform-granicus, resolve, and mark READY again.
+platform-granicus READY 5cff50d6e conflicts with river dc5cddd3834a (checked 2026-10-14 Eastern) in 12 files. Ten are additive registry lists (GRANICUS beside NOVUSAGENDA/ESCRIBE: derived-door-kinds.ts, meeting-body-crosswalk.ts, meeting-partitions.ts, registry/source-wiring.ts, sources/composite/wiring.ts, derived-wiring.ts, derived-wiring-reading.ts, meetings-recipes.ts, meetings-site-discovery.ts, tests/door-kinds-data-rows.test.ts) and River will resolve those on the next fold. Two are real logic conflicts, named here: (1) lib/control-plane/discovery/auto-crosswalk.ts, the governing-body proposal near 'const listed = [...named.get(governing[0]!)!.spellings][0]': river proposes spellings: [listed], this lane's own commit proposes the deduplicated observedSpellings list; pick one rule and delete the other. (2) lib/sources/known-release.ts, the DurableEvidenceStore vault path: river joins the segments 'data', 'control-plane', 'vault'; this lane writes the literal 'data/control-plane/vault'; keep one and delete the other comment. Merge river into stream/platform-granicus, resolve those two, and mark READY again.
 ```
 
 ## Repair

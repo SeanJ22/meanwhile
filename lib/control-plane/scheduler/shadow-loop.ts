@@ -218,7 +218,7 @@ export function huntRoundComparator<T>(items: readonly T[], huntFor: (item: T) =
 }
 
 /** A pool key and how many of its items may run at once. */
-export interface PoolLimit { readonly key: string; readonly limit: number }
+interface PoolLimit { readonly key: string; readonly limit: number }
 
 export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>,
   comparator?: () => Promise<(left: T, right: T) => number>,

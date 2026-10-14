@@ -74,7 +74,7 @@ export interface V6WorkerStatus {
   readonly unread: readonly string[];
 }
 /** The database bytes the runner's processes read in its last full hour, largest callers first, from its check-in. */
-export interface V6DatabaseReads {
+interface V6DatabaseReads {
   readonly hour: string;
   readonly controlPlaneBytes: number;
   readonly readerBytes: number;

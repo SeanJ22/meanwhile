@@ -6,7 +6,7 @@ const ROSTER_FACTS_SQL = `WITH members AS (
     FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
     WHERE f.status = 'live' AND f.field LIKE 'member:%' AND ($1::text[] IS NULL OR f.entity_id = ANY($1::text[])))
   SELECT m.body_id, b.name AS body_name, m.person_id, m.value, m.quote, m.checked_at, m.provenance_kind, m.url,
-    coalesce((SELECT value FROM entity_external_id x WHERE x.entity_id = m.person_id AND x.scheme = 'roster-member' LIMIT 1), '') AS legacy_id,
+    coalesce((SELECT value FROM entity_external_id x WHERE x.entity_id = m.person_id AND x.scheme = 'roster-member' LIMIT 1), '') AS shown_id,
     coalesce((SELECT jsonb_object_agg(p.field, jsonb_build_object('value', p.value, 'quote', p.quote, 'url', ps.url, 'checked', p.checked_at))
       FROM fact p JOIN source_copy ps ON ps.id = p.source_copy_id
       WHERE p.entity_id = m.person_id AND p.status = 'live'
@@ -37,7 +37,7 @@ export async function readFactRosters(query: Query, bodyIds: readonly string[] |
         ...(row.provenance_kind === "OFFICIAL" ? { kind: "OFFICIAL" as const } : {}) };
     };
     const own = { quote: String(row.quote), url: String(row.url), checked: String(row.checked_at) };
-    const id = rosterMemberId(bodyId, String(row.person_id), String(row.legacy_id));
+    const id = rosterMemberId(bodyId, String(row.person_id), String(row.shown_id));
     const fields = ["name", "office", "email", "phone", "website", "term_note", "term_start", "term_end"].filter(field => at(field));
     const roster = byBody.get(bodyId) ?? { bodyId, bodyName: String(row.body_name), members: [], sourceUrl: own.url,
       sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked), partisanship: "UNDETERMINED" as const };
@@ -61,4 +61,4 @@ export async function readFactRosters(query: Query, bodyIds: readonly string[] |
 }
 
 /** The id readers see for a seated person: the id already shown to readers, or one minted from the body and person. */
-export const rosterMemberId = (bodyId: string, personId: string, legacyId?: string | null) => legacyId || `roster:${bodyId}#${personId}`;
+export const rosterMemberId = (bodyId: string, personId: string, shownId?: string | null) => shownId || `roster:${bodyId}#${personId}`;

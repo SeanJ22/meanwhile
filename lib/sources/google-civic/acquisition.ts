@@ -1,4 +1,4 @@
-import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_ELECTION_DAY, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_RECORD_CLASS } from "./targets.ts";
+import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import { civicElectionRows, civicLookupFromRaw, unavailableCivicLookup, type CivicLookup } from "./model.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../../civic-data/source-acquisition-failure.ts";
@@ -64,5 +64,3 @@ export async function recordCivicCatalogFailure(store: import("../../civic-data/
   return recordRegisteredSourceAcquisitionFailure({ store, contractId: GOOGLE_CIVIC_CONTRACT_ID, attemptedAt: at,
     requestedUrl: `${GOOGLE_CIVIC_API}elections`, failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", reason) });
 }
-// Keep these source constants available to tooling without a second contract registry.
-export const civicCatalogIdentity = { recordClass: GOOGLE_CIVIC_RECORD_CLASS, scope: GOOGLE_CIVIC_SCOPE };

@@ -3,18 +3,27 @@
 lane: platform-granicus
 owner: platform-granicus
 writer: the platform-granicus lane
-check: fold-conflict
-ready: no step ids unknown
-river: dc5cddd3834ac04588782f84b6becc81fe6a5e25
-at: 2026-10-14T17:07:47Z
+check: cleanliness
+ready: R3-GRANICUS df57db75a01bf27b9e9d41c7911b9b585417aec2
+river: 8db8c14b07390a7846d873118915d93ef10cc41d
+at: 2026-10-14T17:58:56Z
 state: returned
-fix_subject: fix:b61decc9
-fix: River · stream/platform-granicus — fold-conflict failed for platform-granicus: platform-granicus READY 5cff50d6e conflicts with river dc5cddd3834a (checked 2026-10-14 Eastern) in 12 files. Ten are additive registry lists (GRANICUS beside NOVUSAGENDA/ESCRIBE: derived-door-kinds.ts, meeting-body-crosswalk.ts, meeting-pa
+fix_subject: fix:df3feeec
+fix: River · stream/platform-granicus — cleanliness failed for platform-granicus: ## platform-granicus — cleanup list (River's review at fold; delete in stream/platform-granicus, then mark READY again)
 
 ## Failure
 
 ```
-platform-granicus READY 5cff50d6e conflicts with river dc5cddd3834a (checked 2026-10-14 Eastern) in 12 files. Ten are additive registry lists (GRANICUS beside NOVUSAGENDA/ESCRIBE: derived-door-kinds.ts, meeting-body-crosswalk.ts, meeting-partitions.ts, registry/source-wiring.ts, sources/composite/wiring.ts, derived-wiring.ts, derived-wiring-reading.ts, meetings-recipes.ts, meetings-site-discovery.ts, tests/door-kinds-data-rows.test.ts) and River will resolve those on the next fold. Two are real logic conflicts, named here: (1) lib/control-plane/discovery/auto-crosswalk.ts, the governing-body proposal near 'const listed = [...named.get(governing[0]!)!.spellings][0]': river proposes spellings: [listed], this lane's own commit proposes the deduplicated observedSpellings list; pick one rule and delete the other. (2) lib/sources/known-release.ts, the DurableEvidenceStore vault path: river joins the segments 'data', 'control-plane', 'vault'; this lane writes the literal 'data/control-plane/vault'; keep one and delete the other comment. Merge river into stream/platform-granicus, resolve those two, and mark READY again.
+## platform-granicus — cleanup list (River's review at fold; delete in stream/platform-granicus, then mark READY again)
+
+Lane platform-granicus (R3-GRANICUS), READY df57db75a, folded into river-next. Measured effect against river 8db8c14b0739: +6,495 / −170 lines across 34 files (15 added, 0 deleted, 19 modified); code and tests +455 / −170 in 21 files. The READY commit gives no line or file counts; state them when marking READY again.
+
+Delete:
+1. Remove the unused `export` keyword (nothing outside the file imports them, tests included): lib/sources/granicus/index.ts:11 (GranicusRow) and :23 (GranicusRaw).
+
+Test-only exports left alone: lib/sources/granicus/index.ts (granicusFeedUrls, granicusArchiveSearchUrl, parseGranicusFeed, granicusRows).
+
+Checked and clean otherwise: the granicus fixtures are loaded by name in tests/granicus-source.test.ts; no commented-out code.
 ```
 
 ## Repair

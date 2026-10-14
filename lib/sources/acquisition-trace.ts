@@ -12,7 +12,7 @@ export interface SourceAcquisitionEvidence {
 
 type RunForSource = <T>(source: string, operation: () => Promise<T>) => Promise<T>;
 
-export interface AcquiredResponse {
+interface AcquiredResponse {
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly httpStatus: number;

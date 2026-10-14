@@ -7,7 +7,7 @@ import { countyIdentity, placeIdentity, schoolIdentity, subdivisionIdentity } fr
 import type { Sample } from "./address-resolution.ts";
 
 export type AddressGeographies = Readonly<Record<string, readonly Readonly<Record<string, unknown>>[]>>;
-export type AddressGeographyLookup =
+type AddressGeographyLookup =
   | { kind: "MATCHED"; geographies: AddressGeographies | null; zip?: string }
   | { kind: "OTHER_ZIP"; zip: string };
 const ENDPOINT = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress";

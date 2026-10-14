@@ -186,7 +186,7 @@ export function prepareSearchLogEvent(event: SearchLogEvent): typeof searchLog.$
  * reserved detail field; the migration moves it to the column and removes
  * that field. River removes this bridge after applying the migration.
  */
-export function searchLogInsertSql(row: typeof searchLog.$inferInsert): SQL {
+function searchLogInsertSql(row: typeof searchLog.$inferInsert): SQL {
   const payload = JSON.stringify({
     id: row.id ?? randomUUID(),
     occurred_at: row.occurredAt,

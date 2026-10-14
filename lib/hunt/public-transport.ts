@@ -12,7 +12,7 @@ const DEFAULT_TIMEOUT_MS = 30_000;
 const REDIRECTS = new Set([301, 302, 303, 307, 308]);
 const HOP_HEADERS = ["connection", "keep-alive", "proxy-authenticate", "proxy-authorization", "te", "trailer", "transfer-encoding", "upgrade"];
 type ProxyEnvironment = Readonly<Record<string, string | undefined>>;
-export type PinnedRequest = (target: PublicTarget, request: { method: string; headers: Headers; body: Uint8Array | undefined; signal: AbortSignal }, proxy: URL | null) => Promise<Response>;
+type PinnedRequest = (target: PublicTarget, request: { method: string; headers: Headers; body: Uint8Array | undefined; signal: AbortSignal }, proxy: URL | null) => Promise<Response>;
 
 /** Proxy configuration is operator-owned. CONNECT still names the checked destination IP. */
 export function publicProxyFor(url: URL, env: ProxyEnvironment = process.env): URL | null {

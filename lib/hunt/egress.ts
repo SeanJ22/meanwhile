@@ -3,7 +3,7 @@ import { isIP } from "node:net";
 
 export class EgressRefusal extends Error {}
 export const MAX_PUBLIC_REDIRECTS = 10;
-export type PublicAddress = { address: string; family: 4 | 6 };
+type PublicAddress = { address: string; family: 4 | 6 };
 export type PublicLookup = (hostname: string) => Promise<readonly PublicAddress[]>;
 export type PublicTarget = { url: URL; addresses: readonly PublicAddress[] };
 

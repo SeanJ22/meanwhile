@@ -12,12 +12,12 @@ import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
 
 const RETIRED_TEST_STATE_ID = /^plural:[0-9a-f-]{36}$/i;
 
-export interface FederalVoteSupportingReaders {
+interface FederalVoteSupportingReaders {
   readonly parties: () => Promise<ReadonlyMap<string, string | null>>;
   readonly keyVotes: (member: string) => Promise<MemberKeyVotes>;
 }
 
-export interface FederalVoteSupportingHoldings {
+interface FederalVoteSupportingHoldings {
   readonly parties: ReadonlyMap<string, string | null>;
   readonly partyBreakdownHoldingStatus: "HELD" | "HOLDING_UNAVAILABLE";
   readonly curated: MemberKeyVotes;
@@ -31,11 +31,11 @@ export interface HeldStateVoteScope {
   readonly authorityKind: "PROMOTED_OFFICIAL" | "RESEARCH_TEST_FIXTURE";
 }
 
-export interface StateVoteScopeReaders {
+interface StateVoteScopeReaders {
   readonly read: (scope: OfficialStateVoteScope) => Promise<HeldStateVoteScope>;
 }
 
-export type StateVoteMemberHolding =
+type StateVoteMemberHolding =
   | {
       readonly kind: "HELD";
       readonly holding: HeldStateVoteScope;

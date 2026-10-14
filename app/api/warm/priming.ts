@@ -30,9 +30,9 @@ export const KEEP_WARM_MARKER = "keep-warm";
 /** The longest a marked call holds its instance. */
 export const MAX_HOLD_MS = 1000;
 /** The longest a marked call spends resolving places before it answers. */
-export const PRIME_PLACES_BUDGET_MS = 4000;
+const PRIME_PLACES_BUDGET_MS = 4000;
 /** The longest a marked call spends loading the Ask's code and sources before it answers; the rest goes on in the background. */
-export const PRIME_ASK_BUDGET_MS = 4000;
+const PRIME_ASK_BUDGET_MS = 4000;
 
 /**
  * The Ask's own source preloads, under the names its trace times them by (`essentialPreloads` and
@@ -56,7 +56,7 @@ export const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>
 };
 
 /** What a marked call loaded, on its instance, for a cold Ask. */
-export interface AskPrimed {
+interface AskPrimed {
   /** Milliseconds to load the Ask route's module graph here (near 0 once loaded); null when the import failed or outran the budget. */
   readonly graphMs: number | null;
   /** Ask sources that settled from the edge. */
@@ -69,7 +69,7 @@ export interface AskPrimed {
   readonly sourcesMs: number | null;
 }
 
-export interface ReaderEdgePrimed {
+interface ReaderEdgePrimed {
   readonly manifest: boolean;
   readonly authorityFamilies: number;
   readonly meetings: boolean;

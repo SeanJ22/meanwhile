@@ -103,11 +103,7 @@ export function laneTotals(lanes: WorkerStatus["lanes"]): { readonly running: nu
 
 export type WorkerCard = "progress" | "jobs" | "waiting" | "events" | "other";
 
-/**
- * Put each of the section's `missingParts` beside the card it affects. The
- * wording is the backend's (`v6-workers-read.ts`); a part this does not
- * recognise is still shown, under "other", never dropped.
- */
+/** Puts each missing part beside the card it affects; an unrecognised part still shows under "other". */
 export function missingByCard(parts: readonly string[] | undefined): Readonly<Record<WorkerCard, readonly string[]>> {
   const out: Record<WorkerCard, string[]> = { progress: [], jobs: [], waiting: [], events: [], other: [] };
   for (const m of parts ?? []) {
@@ -128,11 +124,7 @@ export function workersSectionArrived(src: AdminV6Data["workers"]): boolean {
   return src.state === "sample" || src.state === "live" && !(src.missingParts ?? []).includes(SECTION_DEP.workers.need);
 }
 
-/**
- * The Workers page in a few plain sentences, read before any tile or table: whether the workers are current, when
- * they last checked in, the round, the work, the last useful progress and anything refused. An unknown is said as
- * not reported, never guessed.
- */
+/** The Workers page in a few plain sentences, read before any tile or table; an unknown is said as not reported. */
 export function workersInWords(input: {
   readonly update: { readonly status?: string; readonly title: string } | null | undefined;
   readonly status: WorkerStatus | null | undefined;

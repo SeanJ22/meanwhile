@@ -92,10 +92,7 @@ export interface AdminV6HuntView {
   readonly heldUsd: number;
   /** Anthropic requests charged to this allowance with no price. Unknown, never zero dollars. */
   readonly unpricedEntries: number;
-  /**
-   * "paused" when the hunt's budget is $0 (how a hunt pause is saved, so Resume can offer itself) or when the owner
-   * has paused all paid work or the runner; otherwise the run state is not reported.
-   */
+  /** "paused" when the hunt's budget is $0 or the owner has paused paid work or the runner; otherwise not reported. */
   readonly status: "unreported" | "paused";
   /** Why a paused hunt is paused, and since when: the owner's own pause wins over a $0 budget. Null when not paused. */
   readonly pause: HuntPause | null;
@@ -105,7 +102,7 @@ export interface AdminV6HuntView {
 }
 
 /** A pause the owner set: all paid work, the whole runner, or this hunt's own budget set to $0. */
-export interface HuntPause {
+interface HuntPause {
   readonly kind: "paid-work" | "runner" | "budget";
   readonly since: string | null;
   /** The owner's own words with the pause, when they gave any. */

@@ -1,5 +1,6 @@
-import { mkdir, readFile, readdir, realpath, writeFile } from "node:fs/promises";
-import { dirname, isAbsolute, relative, resolve } from "node:path";
+import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { ballotElectionKey, genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import type { BallotSet, Contest } from "../lib/ballot/types.ts";
@@ -7,11 +8,15 @@ import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { completeOfficialBallotContests, manualProjectionCandidate, readManualProjectionPrior,
   type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
-import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { authorityForManualReceipt } from "../lib/civic-data/source-authority.ts";
 import { mergeBallotContests } from "../lib/civic-data/worker-ballot-contests.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
-import { assignment, flag } from "./cli-args.mts";
+import { ballotInputHash, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 export interface BallotStateFile {
   readonly ballots: GenericBallotProjection["ballots"];
@@ -19,10 +24,14 @@ export interface BallotStateFile {
 }
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const outside = (base: string, path: string) => {
-  const from = relative(base, path);
-  return isAbsolute(from) || from === ".." || from.startsWith("../");
-};
+const stateDirectory = resolve(root, "data/ballot/2026-general");
+class BallotAssemblyError extends Error {
+  readonly merged: string[];
+  readonly skipped: { file: string; reason: string }[];
+  constructor(message: string, merged: string[], skipped: { file: string; reason: string }[]) {
+    super(message); this.merged = merged; this.skipped = skipped;
+  }
+}
 const authority = (contest: Contest, receipt: ManualSourceSetReceipt) => receipt.sources.find(source =>
   source.reviewOutcome !== "BLOCKED" && ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass) &&
   [source.requestedUrl, source.finalUrl].includes(contest.provenance.sourceUrl ?? ""))?.publisher;
@@ -63,26 +72,17 @@ function validate(input: ManualProjectionPackage): GenericBallotProjection {
 }
 
 export async function assembleBallotPackage(options: {
-  out: string;
   directory?: string;
-  store?: CivicDataReadStore;
+  store: CivicDataReadStore;
   now?: string;
 }) {
-  const out = resolve(options.out);
-  if (!outside(root, out)) throw new Error("Ballot package --out must be outside the repository.");
-  await mkdir(dirname(out), { recursive: true });
-  const destination = resolve(await realpath(dirname(out)), out.split(/[\\/]/).at(-1)!);
-  if (!outside(await realpath(root), destination)) throw new Error("Ballot package --out must be outside the repository.");
-  try {
-    if (!outside(await realpath(root), await realpath(out))) throw new Error("Ballot package --out must be outside the repository.");
-  } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
   const now = options.now ?? new Date().toISOString();
-  const store = options.store ?? new PostgresRoutineDataStore();
+  const store = options.store;
   const prior = await readManualProjectionPrior("ballot-contests", store, now);
   const temporal = prior ? (await store.readCandidate(prior.versionId))!.candidate.temporal : null;
   let ballots = { ...(prior?.payload as GenericBallotProjection | undefined)?.ballots };
   let sources = [...prior?.sourceReceipt.sources ?? []];
-  const directory = options.directory ?? resolve(root, "data/ballot/2026-general");
+  const directory = options.directory ?? stateDirectory;
   const files = await readdir(directory).catch((error: NodeJS.ErrnoException) => { if (error.code === "ENOENT") return []; throw error; });
   const skipped: { file: string; reason: string }[] = [], merged: string[] = [];
   const packageFor = (value: GenericBallotProjection, receipt: ManualSourceSetReceipt): ManualProjectionPackage => ({
@@ -94,6 +94,7 @@ export async function assembleBallotPackage(options: {
   for (const file of files.filter(file => file.endsWith(".json")).sort()) {
     try {
       const state = JSON.parse(await readFile(resolve(directory, file), "utf8")) as BallotStateFile;
+      if (!state.ballots || !state.sourceReceipt) throw new Error("A state file needs ballots and sourceReceipt at its top level.");
       const fresh = validate(packageFor({ kind: "ballot-contests", ballots: state.ballots }, state.sourceReceipt));
       const entries = Object.entries(fresh.ballots);
       if (!/^[a-z]{2}\.json$/i.test(file) || entries.length !== 1 || entries[0][1].election.state !== file.slice(0, 2).toUpperCase()) {
@@ -115,19 +116,43 @@ export async function assembleBallotPackage(options: {
   }
   const input = packageFor({ kind: "ballot-contests", ballots },
     { contractVersion: 1, reviewedAt: now, reviewedBy: "assemble-ballot-package", sources });
-  validate(input);
-  await writeFile(out, JSON.stringify(input, null, 2) + "\n");
-  const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
-  const promoteCommand = `pnpm exec tsx scripts/promote-manual-civic-projection.mts --contract=ballot-contests --package=${quote(out)}`;
-  return { package: input, out, merged, skipped, promoteCommand };
+  try { validate(input); }
+  catch (error) { throw new BallotAssemblyError(error instanceof Error ? error.message : String(error), merged, skipped); }
+  return { package: input, merged, skipped, prior };
+}
+
+export async function runBallotPublication(options: { directory?: string; store?: RoutineDataStore; now?: string } = {}) {
+  prepareProductionCivicDataWrite();
+  const directory = options.directory ?? stateDirectory;
+  const at = options.now ?? new Date().toISOString();
+  const inputHash = await ballotInputHash(directory);
+  const scratch = await mkdtemp(resolve(tmpdir(), "ballot-publication-"));
+  let merged: string[] = [], skipped: { file: string; reason: string }[] = [];
+  let receipt: RoutineRunnerReceipt | null = null;
+  let report: BallotPublicationResult;
+  try {
+    const store = options.store ?? new PostgresRoutineDataStore();
+    const result = await assembleBallotPackage({ directory, store, now: at });
+    ({ merged, skipped } = result);
+    const packagePath = resolve(scratch, "package.json");
+    await writeFile(packagePath, JSON.stringify(result.package, null, 2) + "\n");
+    const candidate = manualProjectionCandidate(result.package, { prior: result.prior });
+    const outcome = await processRegisteredManualCandidate(store, "ballot-contests", candidate, at, result.prior?.versionId ?? null);
+    receipt = { source: "ballot-contests", ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+    report = { kind: "BALLOT_PUBLICATION", inputHash, at, merged, skipped,
+      status: outcome.promoted || outcome.confirmed ? "PUBLISHED" : "HELD", versionId: receipt.promotedVersion,
+      reason: outcome.promoted || outcome.confirmed ? null : outcome.candidate.failureDetail ?? "Ballot validation held the published prior." };
+  } catch (error) {
+    if (error instanceof BallotAssemblyError) ({ merged, skipped } = error);
+    report = { kind: "BALLOT_PUBLICATION", inputHash, at, merged, skipped, status: "HELD", versionId: null,
+      reason: error instanceof Error ? error.message : String(error) };
+  } finally { await rm(scratch, { recursive: true, force: true }); }
+  return { report, receipt, exitCode: report.status === "PUBLISHED" ? 0 : 2 };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  const out = assignment(process.argv, "out") ?? flag(process.argv, "out");
-  if (!out) throw new Error("usage: pnpm exec tsx scripts/assemble-ballot-package.mts --out <absolute path outside repository>");
-  const result = await assembleBallotPackage({ out });
-  console.log(`Package: ${result.out}; ${Object.keys((result.package.payload as GenericBallotProjection).ballots).length} state/election ballots`);
-  console.log(`Merged: ${result.merged.join(", ") || "none"}`);
-  for (const skipped of result.skipped) console.log(`Skipped ${skipped.file}: ${skipped.reason}`);
-  console.log(result.promoteCommand);
+  const result = await runBallotPublication();
+  console.log("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(result.report));
+  if (result.receipt) console.log("RCD_RECEIPT=" + JSON.stringify(result.receipt));
+  process.exitCode = result.exitCode;
 }

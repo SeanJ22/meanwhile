@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import test from "node:test";
@@ -40,7 +40,7 @@ function changeSource(state: BallotStateFile, stateCode: string, at: string, pub
 test("assembles a two-contest state with a published prior, skips bad states, and preserves states on rerun", async () => {
   const scratch = await mkdtemp(resolve(tmpdir(), "ballot-national-"));
   try {
-    const directory = resolve(scratch, "states"), out = resolve(scratch, "ballot package's.json");
+    const directory = resolve(scratch, "states");
     await mkdir(directory);
     const store = new MemoryRoutineDataStore();
     const prior = changeSource(await fixture(), "NH", "2026-10-12T00:00:00.000Z");
@@ -50,7 +50,7 @@ test("assembles a two-contest state with a published prior, skips bad states, an
     ballotOf(bad).contests[0].candidateListComplete = false;
     await writeFile(resolve(directory, "oh.json"), JSON.stringify(bad));
     await writeFile(resolve(directory, "az.json"), "{");
-    const result = await assembleBallotPackage({ directory, out, store, now });
+    const result = await assembleBallotPackage({ directory, store, now });
     assert.deepEqual(result.merged, ["tx.json"]);
     assert.deepEqual(result.skipped.map(row => row.file), ["az.json", "oh.json"]);
     assert.match(result.skipped[1].reason, /complete official/);
@@ -58,21 +58,34 @@ test("assembles a two-contest state with a published prior, skips bad states, an
     assert.deepEqual(payloadOf(result.package).ballots["NH:fixture-2026-general"], ballotOf(prior));
     assert.equal(payloadOf(result.package).ballots["TX:fixture-2026-general"].contests.length, 2);
     assert.equal(result.package.sourceReceipt.sources.length, 2);
-    assert.deepEqual(JSON.parse(await readFile(out, "utf8")), result.package);
-    assert.equal(result.promoteCommand, `pnpm exec tsx scripts/promote-manual-civic-projection.mts --contract=ballot-contests --package='${out.replaceAll("'", "'\\''")}'`);
     await publish(store, result.package);
     const read = await readGenericBallotProjection({ store, now, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind === "PROMOTED") {
       for (const state of ["nh", "tx"]) assert.equal(genericSourcesForDivisions(read.value, [`ocd-division/country:us/state:${state}`]).length, 1);
     }
-    const rerun = await assembleBallotPackage({ directory, out, store, now });
+    const rerun = await assembleBallotPackage({ directory, store, now });
     assert.deepEqual(rerun.package.payload, result.package.payload);
     assert.deepEqual(rerun.package.sourceReceipt.sources, result.package.sourceReceipt.sources);
     await rm(resolve(directory, "tx.json"));
-    const retained = await assembleBallotPackage({ directory, out, store, now });
+    const retained = await assembleBallotPackage({ directory, store, now });
     assert.deepEqual(retained.package.payload, result.package.payload);
   } finally { await rm(scratch, { recursive: true, force: true }); }
+});
+
+test("candidate websites and measure links are values on the cited official record; every provenance URL still needs a receipt", async () => {
+  const state = await fixture();
+  ballotOf(state).candidacies[0].websiteUrl = "https://ALICE.Example.org/";
+  ballotOf(state).candidacies[1].websiteUrl = "https://www.facebook.com/fixture-candidate";
+  const ballot = ballotOf(state);
+  ballot.contests.push({ ...ballot.contests[0], id: "fixture-measure", type: "MEASURE", measureTextUrl: "https://records.example.gov/measure.pdf" });
+  ballot.measures.push({ id: "fixture-measure-text", contestId: "fixture-measure", questionText: "Fixture measure wording.",
+    officialStatement: null, provenance: ballot.contests[0].provenance });
+  const input = packageFor(state);
+  assert.deepEqual(manualProjectionCandidate(input).semantics.violations, []);
+  await publish(new MemoryRoutineDataStore(), input);
+  ballotOf(state).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
+  assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("unreceipted.example.gov")));
 });
 
 test("only a newer complete list from the same authority replaces candidates and keeps unrelated contests", async () => {
@@ -94,7 +107,7 @@ test("only a newer complete list from the same authority replaces candidates and
     const store = new MemoryRoutineDataStore();
     await publish(store, packageFor({ ...old, sourceReceipt: receipt }));
     await writeFile(resolve(scratch, "tx.json"), JSON.stringify(next));
-    const result = await assembleBallotPackage({ directory: scratch, out: resolve(scratch, "package.out"), store, now });
+    const result = await assembleBallotPackage({ directory: scratch, store, now });
     const merged = payloadOf(result.package).ballots[ballotElectionKey(ballot)];
     assert.deepEqual(result.skipped, []);
     assert.deepEqual(merged.contests.map(row => row.id).sort(), ["county-contest", "fixture-tx-governor", "fixture-tx-senate", "omitted-contest"]);
@@ -102,24 +115,18 @@ test("only a newer complete list from the same authority replaces candidates and
     assert.equal(result.package.sourceReceipt.sources.length, 3);
     await publish(store, result.package);
     await writeFile(resolve(scratch, "tx.json"), JSON.stringify(old));
-    const stale = await assembleBallotPackage({ directory: scratch, out: resolve(scratch, "package.out"), store, now });
+    const stale = await assembleBallotPackage({ directory: scratch, store, now });
     assert.deepEqual(stale.package.payload, result.package.payload);
     const conflict = changeSource(await fixture(), "TX", now, "Different election authority");
     await writeFile(resolve(scratch, "tx.json"), JSON.stringify(conflict));
-    const refused = await assembleBallotPackage({ directory: scratch, out: resolve(scratch, "package.out"), store, now });
+    const refused = await assembleBallotPackage({ directory: scratch, store, now });
     assert.match(refused.skipped[0].reason, /authority conflicts/);
     assert.deepEqual(refused.package.payload, result.package.payload);
   } finally { await rm(scratch, { recursive: true, force: true }); }
 });
 
-test("refuses an unavailable prior and repository output including symlinks", async () => {
-  const scratch = await mkdtemp(resolve(tmpdir(), "ballot-national-"));
-  try {
-    const store = new MemoryRoutineDataStore();
-    await assert.rejects(assembleBallotPackage({ out: resolve("ballot-package.json"), store, now }), /outside the repository/);
-    await symlink(process.cwd(), resolve(scratch, "repo"));
-    await assert.rejects(assembleBallotPackage({ out: resolve(scratch, "repo/ballot-package.json"), store, now }), /outside the repository/);
-    const broken = { readPromotion: async () => { throw new Error("unavailable"); }, readCandidate: store.readCandidate.bind(store) };
-    await assert.rejects(assembleBallotPackage({ out: resolve(scratch, "package.out"), store: broken, now }), /BASE_UNAVAILABLE/);
-  } finally { await rm(scratch, { recursive: true, force: true }); }
+test("refuses an unavailable published prior", async () => {
+  const store = new MemoryRoutineDataStore();
+  const broken = { readPromotion: async () => { throw new Error("unavailable"); }, readCandidate: store.readCandidate.bind(store) };
+  await assert.rejects(assembleBallotPackage({ store: broken, now }), /BASE_UNAVAILABLE/);
 });

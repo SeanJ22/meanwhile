@@ -16,6 +16,7 @@ const NOT_VISIBLE: readonly PublicationVerdict[] = ["READBACK_FAILED", "PUBLISHE
 
 /** Structurally `PublicationView` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface AdminV6Publication {
+  readonly ballotPublication?: import("../../civic-data/ballot-publication.ts").BallotPublicationResult | null;
   readonly total: number;
   readonly counts: readonly { readonly verdict: PublicationVerdict; readonly words: string; readonly count: number }[];
   readonly latestAttemptFailing: number;

@@ -57,9 +57,9 @@ test("a due request names one registered meeting partition with a sitting window
   });
   const refused: readonly [readonly string[], RegExp][] = [
     [[], /EXACT_ARGUMENTS_REQUIRED/],
-    [["--contract=census-geography-overlaps"], /MEETING_PARTITION_REQUIRED/],
-    [["--contract=pima-legistar-outcomes"], /MEETING_PARTITION_REQUIRED/],
-    [["--contract=meetings:nowhere"], /MEETING_PARTITION_REQUIRED/],
+    [["--contract=census-geography-overlaps"], /REGISTERED_CONTRACT_REQUIRED/],
+    [["--contract=pima-legistar-outcomes"], /REGISTERED_CONTRACT_REQUIRED/],
+    [["--contract=meetings:nowhere"], /REGISTERED_CONTRACT_REQUIRED/],
     [[`--contract=${NEWBURY_ENERGY}`, `--contract=${NEWBURY_ENERGY}`], /ONE_CONTRACT_REQUIRED/],
     [[`--contract=${NEWBURY_ENERGY}`, "--force"], /EXACT_ARGUMENTS_REQUIRED/],
     [[`--contract=${NEWBURY_ENERGY}`, "--only=x"], /EXACT_ARGUMENTS_REQUIRED/],

@@ -11,7 +11,7 @@ export interface PopulationFact extends AcsPopulationRow {
   readonly geography: NonNullable<AcsPopulationRow["geography"]>;
   readonly attribution: NonNullable<AcsPopulationRow["attribution"]>;
 }
-export interface PopulationFactsRead { readonly kind: "HELD" | "NOT_PUBLISHED" | "UNREAD"; readonly rows: readonly PopulationFact[] }
+interface PopulationFactsRead { readonly kind: "HELD" | "NOT_PUBLISHED" | "UNREAD"; readonly rows: readonly PopulationFact[] }
 export const statePopulationId = (state: string): string | null => {
   const entry = Object.entries(FIPS_TO_STATE).find(([, value]) => value.postal.toLowerCase() === state.toLowerCase());
   return entry ? `state:${entry[0]}` : null;

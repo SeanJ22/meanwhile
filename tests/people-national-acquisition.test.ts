@@ -114,7 +114,7 @@ test("an official visible member roster discovers people absent from held aggreg
 
 test("Wikidata keeps each current term and all native identities as portrait leads",()=>{
   const binding=(value:string)=>({value}),rows=["P1157","P3344"].map((property,index)=>({person:binding("http://www.wikidata.org/entity/Q123"),personLabel:binding("Jane Doe"),position:binding("http://www.wikidata.org/entity/Q456"),positionLabel:binding("United States Senator"),start:binding("2025-01-03T00:00:00Z"),identifierProperty:binding(`http://www.wikidata.org/entity/${property}`),identifier:binding(index?"1234":"A000001"),image:binding("https://commons.wikimedia.org/wiki/Special:FilePath/Jane_Doe.jpg")}));
-  const parsed=normalizeWikidataPeople({results:{bindings:rows}},options("wikidata-people",async()=>json({})),{bioguide:"P1157",votesmart:"P3344"},"https://query.wikidata.org/sparql",NOW);
+  const parsed=normalizeWikidataPeople({results:{bindings:rows}},options("wikidata-people",async()=>json({})),{bioguide:"P1157",votesmart:"P3344"},NOW);
   assertScoped(parsed,"wikidata");assert.equal(parsed.officeholders[0].personId,"wikidata:Q123");
   assert.equal(parsed.officeholders.length,1);assert.deepEqual(parsed.officeholders[0].nativeIds?.bioguide,["A000001"]);assert.deepEqual(parsed.officeholders[0].nativeIds?.votesmart,["1234"]);
   assert.equal(parsed.officeholders[0].termStart,"2025-01-03");

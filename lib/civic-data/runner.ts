@@ -16,7 +16,6 @@ import {
   successfulRoutineRunnerReceiptIssue,
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
-import { childFatalLine, childStderrCause, nativeAbortLine } from "../ops/fatal-line.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
 
 /** A command never spawned because memory stayed full or the pass's time ran out: still owed, not failed. */
@@ -24,17 +23,6 @@ export function routinePreSpawnDeferral(run: BoundedChildResult, childStarted: b
   return !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
     run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET):/.test(run.errorMessage ?? "")
     ? run.errorMessage : null;
-}
-
-/**
- * Why a started source child died without a receipt from a signal or a native abort (out of memory), or null.
- * Its work stays owed for the task's next turn; the pass is not failed by it.
- */
-export function routineChildCrash(run: BoundedChildResult): string | null {
-  if (run.termination === "TIMED_OUT" || run.termination === "OUTPUT_LIMIT_EXCEEDED" || run.status === 0 || /^RCD_RECEIPT=/m.test(run.stdout)) return null;
-  const abort = nativeAbortLine(run.stderr);
-  if (run.signal === null && abort === null) return null;
-  return `${run.signal ?? `exit ${run.status ?? "unknown"}`} — ${abort ?? childFatalLine(run.stdout) ?? childStderrCause(run.stderr) ?? "no fatal line"}`;
 }
 
 /** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane. */

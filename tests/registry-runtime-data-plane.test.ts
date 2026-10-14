@@ -166,7 +166,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
       assert.ok(held.seats.every(seat => !seat.name.startsWith("Superseded seat member")), "registry seat rows are no longer a competing legislative authority");
     });
     const sample = syntheticStateLegislators("US-NJ").roster.officeholders[0]!;
-    const people = districts.map((division, index) => ({
+    const people = districts.map((_division, index) => ({
       ...sample, id: `plural:oh:00000000-0000-4000-8000-00000000000${index + 1}`,
       personId: `plural:00000000-0000-4000-8000-00000000000${index + 1}`,
       name: index ? "Hearcel F. Craig" : "Dontavius L. Jarrells", state: "OH", chamber: index ? "upper" : "lower",

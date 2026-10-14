@@ -246,7 +246,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -281,7 +281,7 @@ export async function processRegisteredMeetingHistoryCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -385,7 +385,7 @@ export async function processRegisteredManualCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
   const boundedCandidate = durableCandidateSnapshot(candidate);

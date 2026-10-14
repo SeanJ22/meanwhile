@@ -45,7 +45,7 @@ export async function publishPollingDoor(input: {
 
 export async function publishWorkerPollingResults(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
-  readonly workItemIds: readonly string[]; readonly now: string; readonly vault?: EvidenceStore;
+  readonly workItemIds: readonly string[]; readonly now: string;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
 }) {
   const [{ results, readCapture }, doors, registry] = await Promise.all([jobWorkerResults(input.repos, input.workItemIds, input.readCapture),

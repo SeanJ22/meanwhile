@@ -38,7 +38,7 @@ test("the federal directory candidate holds roster references, and the LDA roste
   const promoted = await store.readCandidate(roster.versionId);
   const [held] = (promoted!.candidate.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions;
   const body = readFileSync(new URL("./fixtures/src-cg/federal-roster.yaml", import.meta.url), "utf8");
-  assert.equal("body" in held, false); assert.equal(held.rawHash, held.raw.rawHash); assert.equal(held.byteCount, Buffer.byteLength(body));
+  assert.equal("body" in held, false); assert.equal(held.raw.byteLength, Buffer.byteLength(body));
   assert.equal(await readRawCaptureText(own, held.raw), body);
   assert.ok(roster.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
 });

@@ -739,7 +739,7 @@ export async function promoteDerivedMeetingFamily(
   const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<void> => {
     const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
     const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, failed, generatedAt);
-    printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
+    printMeetingPartitionReceipt(partition, outcome, detail, kind);
   };
   const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
   if (wiring.kind !== "PROMOTED") {
@@ -825,7 +825,7 @@ export async function promoteDerivedMeetingFamily(
   const candidate = derivedFamilyCandidate(partition, finalBuild);
   // An unchanged family pass is receipted on the pointed version.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
-  printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
+  printMeetingPartitionReceipt(partition, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   if (outcome.promoted || outcome.confirmed) await publishVenuePins(store, partition.id, census.package);
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
@@ -1563,7 +1563,6 @@ export async function promoteMeetingPartition(
 
 export function printMeetingPartitionReceipt(
   partition: MeetingPartitionContract,
-  candidate: RoutineCandidate,
   outcome: PromotionOutcome,
   failureDetail: string | null = null,
   failureKind: "WALL" | "JOB" | null = null,
@@ -1641,7 +1640,7 @@ export async function promoteMeetingPartitions(input: {
       const candidate: RoutineCandidate = { ...base, id: `${base.id}-research-${sha256(receipt).slice(0, 16)}`,
         dependentChecks: [...base.dependentChecks, { consumer: research.activationReceipt.kind, passed: true, detail: receipt }] };
       const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, candidate, input.generatedAt);
-      printMeetingPartitionReceipt(partition, candidate, outcome, outcome.candidate.failureDetail);
+      printMeetingPartitionReceipt(partition, outcome, outcome.candidate.failureDetail);
       return { partition, candidate, outcome };
     } catch (error) {
       console.error(`Research meeting intake refused for ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
@@ -1670,7 +1669,7 @@ export async function promoteMeetingPartitions(input: {
         parserVersion: "meetings-composite/2",
       });
       const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, failed, input.generatedAt);
-      printMeetingPartitionReceipt(partition, failed, outcome, failureDetail, failureKind);
+      printMeetingPartitionReceipt(partition, outcome, failureDetail, failureKind);
       results.push({ partition, candidate: failed, outcome });
       continue;
     }
@@ -1768,7 +1767,6 @@ export async function promoteMeetingPartitions(input: {
     const { snapshot, candidate, outcome } = attempted;
     printMeetingPartitionReceipt(
       partition,
-      candidate,
       outcome,
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );

@@ -10,9 +10,9 @@ import { statewideRoster, verifyStatewideOfficialPage } from "../lib/sources/sta
 const T1 = "2026-10-14T10:00:00.000Z", T2 = "2026-10-14T11:00:00.000Z";
 /* A real member page carries kilobytes of site chrome around the few facts read from it. */
 const chrome = `<footer>${"<p>Site navigation, accessibility notices and agency links.</p>".repeat(4000)}</footer>`;
-const page = (name: string, url: string) => `<html><body><h1>${name}, Secretary of State</h1><p>New Jersey Secretary of State ${name} was appointed by the Governor.</p>${chrome}</body></html>`;
+const page = (name: string) => `<html><body><h1>${name}, Secretary of State</h1><p>New Jersey Secretary of State ${name} was appointed by the Governor.</p>${chrome}</body></html>`;
 
-function release(name: string, url: string, at: string, html = page(name, url)) {
+function release(name: string, url: string, at: string, html = page(name)) {
   const verified = verifyStatewideOfficialPage({ sourceId: "association", sourceOrg: "Association fixture", sourceUrl: "https://association.example/members",
     collectedAt: at, state: "nj", name, officeTitle: "Secretary of State", profileUrls: [url] }, { url, html, retrievedAt: at });
   assert.ok("person" in verified);
@@ -39,7 +39,7 @@ test("a people candidate holds vault references and the extracted people, never 
 test("a newer read orders after the promoted version, including one versioned by a content hash", async () => {
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), url = "https://office.example.gov/about-jordan";
   const first = await publish(store, vault, release("Jordan Reader", url, T1), T1);
-  const second = await publish(store, vault, release("Jordan Reader", url, T2, page("Jordan Reader", url).replace("appointed", "appointed in 2025")), T2);
+  const second = await publish(store, vault, release("Jordan Reader", url, T2, page("Jordan Reader").replace("appointed", "appointed in 2025")), T2);
   assert.ok(second.outcome.promoted, JSON.stringify(second.outcome.candidate.receipt));
   assert.ok(second.candidate.temporal.version > first.candidate.temporal.version);
   assert.ok(second.candidate.temporal.version > "f".repeat(64), "sorts after any earlier hash version");

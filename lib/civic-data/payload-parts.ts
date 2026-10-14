@@ -87,7 +87,7 @@ function refsIn(value: unknown, into: Set<string>): Set<string> {
   return into;
 }
 
-/* Parts are immutable by hash, so recently read ones are kept, up to a fixed size, instead of for the process's life. */
+/* Parts are immutable by hash, so the most recently read are kept, up to a fixed size. */
 const CACHED_PART_BYTES = 64 * 1024 * 1024;
 
 export class CivicPayloadParts {

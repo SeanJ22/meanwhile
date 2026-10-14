@@ -40,7 +40,6 @@ import {
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
   routinePreSpawnDeferral,
-  routineChildCrash,
   routineSerialLane,
   ROUTINE_SERIAL_LANE_LAUNCH_MS,
   sittingWindowSignals,
@@ -153,7 +152,7 @@ import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.
 import { sharedScoutBrowser } from "./scout-browse.mts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
-import { childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
+import { childCrash, childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
@@ -999,7 +998,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
     return;
   }
-  const crash = routineChildCrash(run);
+  const crash = childCrash(run);
   if (crash !== null) {
     // Recorded in the outcome as this task's attempt, so its work waits the task's own retry clock.
     const detail = `(${pending.command[0]?.split("/").at(-1)}): ${safeFailure(crash)}`;

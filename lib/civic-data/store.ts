@@ -201,7 +201,7 @@ type RegisteredMutationContract = {
   readonly readerProjectionId: string | null;
 };
 
-export interface LatestCandidate {
+interface LatestCandidate {
   readonly id: string;
   readonly state: CandidateState;
   readonly normalizedHash: string | null;

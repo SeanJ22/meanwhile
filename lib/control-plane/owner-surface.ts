@@ -448,7 +448,7 @@ export interface RoutineCivicDataSupervisorOutcome {
     readonly code: string;
     readonly detail: string;
   }[];
-  /** Started source children that died without a receipt; each task's work waits its own retry clock. Older rows have none. */
+  /** Started source children that died without a receipt; each task's work waits its own retry clock. */
   readonly crashedTasks?: readonly { readonly taskId: string; readonly detail: string }[];
   readonly attributionBoundary: {
     readonly sourceReceiptAuthority: "SOURCE_ACQUISITION_CHILD_ONLY";

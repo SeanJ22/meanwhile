@@ -1,6 +1,7 @@
 import { writeSync } from "node:fs";
 
 import { redactDiagnosticText, sanitizedErrorDiagnostic } from "./error-diagnostic.ts";
+import type { BoundedChildResult } from "../civic-data/bounded-child-pass.ts";
 
 /** A child that dies says why, in one redacted `RCD_FATAL` line its parent may quote; raw stderr is never quoted. */
 export const FATAL_LINE_PREFIX = "RCD_FATAL ";
@@ -67,4 +68,15 @@ export function childStderrCause(stderr: string, maxChars: number = FATAL_QUOTE_
 export function nativeAbortLine(stderr: string): string | null {
   return stderr.split(/\r?\n/).map((line) => line.trim())
     .filter((line) => /^(?:FATAL ERROR:|# Fatal error|Fatal process out of memory|Assertion failed|.*: Assertion `)/.test(line)).at(-1) ?? null;
+}
+
+/**
+ * Why a started source child died without a receipt from a signal or a native abort (out of memory), or null.
+ * Its work stays owed for the task's next turn; the pass is not failed by it.
+ */
+export function childCrash(run: BoundedChildResult): string | null {
+  if (run.termination === "TIMED_OUT" || run.termination === "OUTPUT_LIMIT_EXCEEDED" || run.status === 0 || /^RCD_RECEIPT=/m.test(run.stdout)) return null;
+  const abort = nativeAbortLine(run.stderr);
+  if (run.signal === null && abort === null) return null;
+  return `${run.signal ?? `exit ${run.status ?? "unknown"}`} — ${abort ?? childFatalLine(run.stdout) ?? childStderrCause(run.stderr) ?? "no fatal line"}`;
 }

@@ -46,7 +46,7 @@ export async function refreshCongressDirectory(input: {
         const held = await acquire({sourceId:"congress-directory-project",releaseId:`${sourceSha}/${name}`,url,parserVersion:FEDERAL_DIRECTORY_PARSER_VERSION,maxBytes:16*1024*1024,checkAfterMs:365*86400000,signal:AbortSignal.timeout(30000),headers:{accept:"text/plain"},validate:bytes=>{decode(bytes);}});
         const parsed = decode(held.bytes);
         raw[name] = parsed.value; dates[name] = held.retrievedAt;
-        acquisitions.push({requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:parsed.text,retrievedAt:held.retrievedAt,vaultKey:held.vaultKey,sourceCheck});
+        acquisitions.push({requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:parsed.text,retrievedAt:held.retrievedAt,sourceCheck});
       } catch (error) {
         if (name === "legislators-current") throw error;
         console.error(`${name}: optional facts retained from last good holding (${error instanceof Error ? error.message : String(error)})`);

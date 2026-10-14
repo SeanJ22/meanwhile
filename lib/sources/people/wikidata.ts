@@ -50,7 +50,7 @@ export function wikidataPeopleQuery(options: PeopleAcquisitionOptions, propertie
   }`;
 }
 function value(row:Record<string,unknown>,key:string):string|null { return string(record(row[key]).value); }
-export function normalizeWikidataPeople(data: unknown, options: PeopleAcquisitionOptions, properties: Readonly<Record<string,string>>, sourceUrl: string, collectedAt: string): OfficeholderSet {
+export function normalizeWikidataPeople(data: unknown, options: PeopleAcquisitionOptions, properties: Readonly<Record<string,string>>, collectedAt: string): OfficeholderSet {
   const rows = array(record(record(data).results).bindings).map(record), roster = emptyRoster(options.state,options.asOf), state = stateIdentity(options.state);
   const reverse = new Map(Object.entries(properties).map(([provider,property])=>[property,provider]));
   for (const row of rows) {
@@ -101,7 +101,7 @@ export async function acquireWikidataPeople(options: PeopleAcquisitionOptions): 
   try {
     const release = await savedRead(options,sourceUrl,`${options.state}:current-people`,bytes=>{
       const data = JSON.parse(new TextDecoder().decode(bytes)); if (!Array.isArray(data.results?.bindings)) throw new Error("WIKIDATA_PEOPLE_RESULT_INVALID");
-    }); acquisitions.push(acquisition(release)); roster = normalizeWikidataPeople(json(release),options,properties,sourceUrl,release.retrievedAt);
+    }); acquisitions.push(acquisition(release)); roster = normalizeWikidataPeople(json(release),options,properties,release.retrievedAt);
     const statewideIds=new Set<string>();
     roster.officeholders=roster.officeholders.filter(holder=>{
       if(holder.level!=="STATE"||holder.chamber)return true;

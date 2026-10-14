@@ -2,6 +2,7 @@ import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { childCrash } from "../lib/ops/fatal-line.ts";
 import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 
@@ -26,7 +27,6 @@ import {
   routineTaskFromContract,
   routineTaskSelection,
   routinePreSpawnDeferral,
-  routineChildCrash,
   routineSerialLane,
   routineFailureDomainFrontier,
   routineAdmissionClock,
@@ -132,16 +132,16 @@ const HEAP_OOM_STDERR = [
 test("a source child killed by a heap abort is a crash; timeouts, receipts and ordinary exits are not", () => {
   const run = { id: "people-wikidata-people-ca", termination: "SPAWN_FAILED" as const, status: null, signal: "SIGABRT" as const,
     stdout: "", stderr: HEAP_OOM_STDERR, errorMessage: "Command failed" };
-  assert.equal(routineChildCrash(run), "SIGABRT — FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory");
-  assert.match(routineChildCrash({ ...run, termination: "EXITED", status: 134, signal: null })!, /^exit 134 — FATAL ERROR: Reached heap limit/);
-  assert.match(routineChildCrash({ ...run, stderr: "" })!, /^SIGABRT — no fatal line$/);
+  assert.equal(childCrash(run), "SIGABRT — FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory");
+  assert.match(childCrash({ ...run, termination: "EXITED", status: 134, signal: null })!, /^exit 134 — FATAL ERROR: Reached heap limit/);
+  assert.match(childCrash({ ...run, stderr: "" })!, /^SIGABRT — no fatal line$/);
   for (const notCrash of [
     { ...run, termination: "TIMED_OUT" as const, signal: "SIGTERM" as const },
     { ...run, termination: "OUTPUT_LIMIT_EXCEEDED" as const },
     { ...run, stdout: "RCD_RECEIPT={}" },
     { ...run, termination: "EXITED" as const, status: 2, signal: null, stderr: "Error: HTTP status 503" },
     { ...run, termination: "EXITED" as const, status: 0, signal: null, stderr: "" },
-  ]) assert.equal(routineChildCrash(notCrash), null);
+  ]) assert.equal(childCrash(notCrash), null);
 });
 
 test("a crashed source child is logged by name, leaves its work owed and does not fail the pass", async () => {
@@ -160,7 +160,7 @@ test("a crashed source child is logged by name, leaves its work owed and does no
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]), attempted: 1,
     supervisorFailures: failures, crashedTasks,
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
-    safeFailure: (message: string) => message, routinePreSpawnDeferral, routineChildCrash,
+    safeFailure: (message: string) => message, routinePreSpawnDeferral, childCrash,
     recordTaskDoorOutcome: async (...args: unknown[]) => { doorOutcomes.push(args); },
     controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
     RUN_STARTED_AT: "2026-10-14T13:00:00.000Z", SUPERVISOR_CYCLE_ID: "routine-civic-data-supervisor:host:2026-10-14T13:00:00.000Z",

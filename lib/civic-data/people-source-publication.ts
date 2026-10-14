@@ -1,15 +1,13 @@
 import { createHash } from "node:crypto";
 import type { OfficeholderSet } from "../officials/types.ts";
-import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
-import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { processRegisteredRoutineCandidate } from "./promotion.ts";
 import { sourceAuthority, isOfficialSource } from "./source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { capturedText, holdPeopleCaptures, priorPeopleCaptures, type StatePeopleAcquisition, type StatePeopleCapture } from "./state-people-publication.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import { isPeopleSource, peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
+import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
@@ -83,7 +81,7 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts}));
   const rawHash = hash(payload), normalizedHash = hash(readModel);
   const derived = input.derivedInputs?.length ? derivedRetrieval(input.derivedInputs) : null;
-  // The read's own instant orders versions; "read:" sorts after the content hashes earlier versions used.
+  // The read's own instant orders versions; the "read:" prefix sorts after any content-hash version.
   const version = `read:${input.now}`;
   return {id:`cv-${hash([input.sourceId, scope, rawHash, normalizedHash]).slice(0,32)}`, sourceId:input.sourceId,recordClass,scope,
     retrieval: derived ? {succeeded:true,requestedUrl:derivedRequestedUrl(input.sourceId,scope),finalUrl:null,httpStatus:null,retrievedAt:derived.retrievedAt!,rawHash:derived.rawHash,derived:{inputs:input.derivedInputs!}}

@@ -654,7 +654,10 @@
     "publisher": "Illinois State Board of Elections, Springfield, IL",
     "url": "https://www.elections.il.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "IL",
       "ocdId": "ocd-division/country:us/state:il",
@@ -670,14 +673,41 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "Failed to fetch https://www.elections.il.gov/: (403) Forbidden",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "The Illinois State Board of Elections public root and general-election candidate-list pages returned HTTP 403 with the statement: Please contact the site owner for access. The statewide certified candidate file and statewide measure list remain unacquired; this is an access gap, not a statement that certification has not occurred."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.il.gov/\">https://www.elections.il.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
+      "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+      "https://shelbycounty-il.gov/documents/CountyClerk/Election%20information/2026%20General%20Election%2011.3.2026/2026%20Nov%203%20countywide%20sample%20ballot.pdf",
+      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+      "https://applications.kanecountyil.gov/ElectionWebsite/en-US/Candidates/List/31/NP",
+      "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List?bidId=",
+      "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+      "https://mcleancountyil.gov/DocumentCenter/View/32912/2026-General-McLean-County-Specimen-Ballot",
+      "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+      "https://www.co.st-clair.il.us/webdocuments/departments/countyclerk/elections/2026%20General%20Election%20Voters%20Guide.pdf",
+      "https://cms3.revize.com/revize/grundycounty/County%20Clerk/Elections/2026%20General/ALLCONTESTBALLOT_Style1_English_8.5x14_Paper.pdf?t=202609141300590",
+      "https://effinghamcountyil.gov/wp-content/uploads/2026/09/FULL-SPECIMEN-General-Election-November-3-2026.pdf",
+      "https://www.pikecountyil.org/wp-content/uploads/2026/09/2026-General-Election-Publication-Ballot-1.pdf",
+      "https://www.williamsoncountyil.gov/wp-content/uploads/2026/09/sample-ballot-001.pdf",
+      "https://maconcounty.illinois.gov/download/specimen-ballot/?wpdmdl=14661&ind=1789592172553&refresh=19e0973f&filename=2026-General-Specimen-Ballot.pdf",
+      "https://www.lasallecountyil.gov/DocumentCenter/View/4565/Specimen-Ballot-PDF",
+      "https://cms4files.revize.com/madisoncountyilus/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
+      "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-08/Candidate%20List_20260819-1_0.pdf",
+      "https://douglas.wp.webfoot.io/wp-content/uploads/2026/09/Publication.pdf",
+      "https://douglascountyil.gov/clerk-recorder/elections"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.lakecountyil.gov//DocumentCenter/View/21161/Referenda",
+      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Proposition%20Listing.pdf?t=202609300917350"
+    ],
+    "publicationMessage": "County and city sources cover part of the statewide ballot; statewide candidate and measure inventories remain an access gap."
   },
   {
     "id": "fec-in-chief",
@@ -1396,7 +1426,10 @@
     "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
     "url": "https://www.ncsbe.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NC",
       "ocdId": "ocd-division/country:us/state:nc",
@@ -1419,14 +1452,27 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.ncsbe.gov/\">https://www.ncsbe.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/2026_general_candidate_list_by_contest_federal_and_state.pdf",
+      "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv"
+    ],
+    "ballotMeasureUrls": [
+      "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/statewide_referendums_20261103.pdf",
+      "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+      "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+      "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html"
+    ]
   },
   {
     "id": "fec-nd-chief",
     "publisher": "Office of the Secretary of State, Bismarck, ND",
     "url": "http://sos.nd.gov/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "ND",
       "ocdId": "ocd-division/country:us/state:nd",
@@ -1449,7 +1495,17 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"http://sos.nd.gov/elections\">http://sos.nd.gov/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://vip.sos.nd.gov/candidatelist.aspx?eid=348"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.sos.nd.gov/elections/voter/ballot-measures/measures-ballot",
+      "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+      "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+      "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+      "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf"
+    ]
   },
   {
     "id": "fec-oh-chief",
@@ -1534,14 +1590,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Salem, OR",
     "url": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "OR",
       "ocdId": "ocd-division/country:us/state:or",
       "name": "Oregon"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
+    "electionPageUrl": "https://sos.oregon.gov/elections/Pages/current-election.aspx",
     "title": "Oregon chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Salem, OR",
@@ -1550,14 +1609,17 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official general-election Candidate Ballot Statement recovered from Directive 2026-09. Complete certified federal, gubernatorial and legislative candidate list; the directive explicitly states no statewide measures are on the November 3, 2026 ballot.",
+      "checkedAt": "2026-10-14T05:05:51.507Z"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.oregon.gov/voting-elections/Pages/default.aspx\">https://sos.oregon.gov/voting-elections/Pages/default.aspx</a>"
-    }
+    },
+    "candidateListUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+    "ballotMeasuresUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-pa-chief",
@@ -1717,7 +1779,10 @@
     "publisher": "State Election Commission, Columbia, SC",
     "url": "https://www.scvotes.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "SC",
       "ocdId": "ocd-division/country:us/state:sc",
@@ -1733,21 +1798,28 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official root and public statewide Candidate Tracking and Referendum Tracking reached with HTTP 200. General-election candidate and referendum searches use electionId=22596; the November 3 state Senate District 15 special-election candidate search uses electionId=22758. Identity-locked voter sample-ballot lookup is not used."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.scvotes.gov/\">https://www.scvotes.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://vrems.scvotes.sc.gov/Candidate/CandidateSearch?electionId=22596",
+    "candidateListExportUrl": "https://vrems.scvotes.sc.gov/Candidate/ExportSearchResults",
+    "specialCandidateListUrl": "https://vrems.scvotes.sc.gov/Candidate/CandidateSearch?electionId=22758",
+    "ballotMeasuresUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch?electionId=22596"
   },
   {
     "id": "fec-sd-chief",
     "publisher": "Office of the Secretary of State, Pierre, SD",
     "url": "https://sdsos.gov/elections-voting/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "SD",
       "ocdId": "ocd-division/country:us/state:sd",
@@ -1763,21 +1835,37 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official public general-election candidate export and statewide ballot-question pamphlet fetched as raw bytes. Candidate export contains all federal, statewide and legislative contest divisions. Voter identity lookup was not used.",
+      "checkedAt": "2026-10-14T05:39:43.802756+00:00"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sdsos.gov/elections-voting/default.aspx\">https://sdsos.gov/elections-voting/default.aspx</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://vip.sdsos.gov/candidatelist.aspx?eid=774"
+    ],
+    "ballotMeasuresUrls": [
+      "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026-ballot-questions.aspx",
+      "https://charlesmixcounty.gov/files/2026/10/GE-General.pdf",
+      "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-tn-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Nashville, TN",
     "url": "https://sos.tn.gov/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "TN",
       "ocdId": "ocd-division/country:us/state:tn",
@@ -1792,15 +1880,34 @@
       "url": "https://sos.tn.gov/elections"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "detail": "Official November general-election candidate lists and statewide amendment questions retrieved with HTTP 200.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.tn.gov/elections\">https://sos.tn.gov/elections</a>"
-    }
+    },
+    "candidateListUrl": "https://sos.tn.gov/elections/2026-candidate-lists",
+    "candidateListUrls": [
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.pdf"
+    ],
+    "ballotMeasuresUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+    "ballotMeasuresUrls": [
+      "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
+      "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
+      "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf"
+    ]
   },
   {
     "id": "fec-tx-chief",

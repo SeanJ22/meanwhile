@@ -1,6 +1,3 @@
-/** Known releases reuse the existing evidence vault and repository lock.
- * Source bytes are immutable; only the small source/release index changes.
- * No parser or reader owns a second download for the same release. */
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
@@ -10,8 +7,7 @@ import type { ControlPlaneRepositories, LockManager } from "../control-plane/rep
 import { RepositoryLockHeld } from "../control-plane/repository/types.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories, readPlaceArtifacts } from "../control-plane/repository/pg-store.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
-import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
-import { readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
+import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
 
@@ -34,6 +30,15 @@ export interface KnownRelease {
   readonly reused: boolean;
   /** Exact immutable vault object, when this source has entered the shared store. */
   readonly vaultKey?: string;
+  readonly outage?: string;
+}
+
+export class KnownReleaseUnavailable extends SourceAcquisitionFailure {
+  readonly held: KnownRelease;
+  constructor(failure: SourceAcquisitionFailure, held: KnownRelease) {
+    super(failure.code, failure.message);
+    this.held = held;
+  }
 }
 /** A real provider observation is separate from the original response bytes. */
 export function knownReleaseSourceCheck(release: Pick<KnownRelease, "requestedUrl" | "finalUrl" | "lastCheckStatus" | "sha256" | "checkedAt">): {
@@ -77,7 +82,8 @@ function runtimeContext() {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("KNOWN_SOURCE_CONTROL_PLANE_UNAVAILABLE");
     const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
-    return { store: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), locks: repos.locks, repos };
+    // Static segments keep the server trace inside the vault.
+    return { store: new DurableEvidenceStore(join(process.cwd(), "data", "control-plane", "vault")), locks: repos.locks, repos };
   })().catch(error => { runtime = undefined; throw error; });
 }
 /** Large file sources share the same vault and repository locks as byte releases. */
@@ -240,6 +246,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
         return replay;
       }
     }
+    try {
     const headers = new Headers(options.headers);
     headers.set("user-agent", sourceUserAgent());
     if (heldBytes && prior?.etag) headers.set("if-none-match", prior.etag);
@@ -297,6 +304,12 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
       return { ...release, finalUrl: prior.finalUrl, contentType: prior.contentType, vaultKey: prior.key };
     }
     return await save(release, [options.parserVersion]);
+    } catch (error) {
+      if (!isSourceAcquisitionFailure(error) || !prior || !heldBytes || options.signal.aborted) throw error;
+      const release = { ...prior, bytes: heldBytes, reused: true, outage: error.message };
+      await options.validate?.(heldBytes, release);
+      throw new KnownReleaseUnavailable(error, release);
+    }
   });
   inflight.set(identity, work);
   try { return await work; } finally { inflight.delete(identity); }

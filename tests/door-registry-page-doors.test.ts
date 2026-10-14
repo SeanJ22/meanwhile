@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { FRESHNESS_WINDOW_HOURS } from "@/lib/control-plane/promotion/section3.ts";
@@ -10,7 +11,7 @@ import { recordPublishedPageDoor } from "@/lib/civic-data/worker-page-doors.ts";
 const READ = "2026-10-04T10:00:00.000Z";
 const NOW = "2026-10-04T12:00:00.000Z";
 const page = (over: Record<string, unknown> = {}) => ({
-  url: "https://www.example.gov/council/members#top?utm_source=x", retrievedAt: READ, recordClass: "OFFICIAL_ROSTER", bodyId: "body-1", foundBy: "SCOUT" as const, ...over,
+  url: "https://www.example.gov/council/members#top?utm_source=x", retrievedAt: READ, recordClass: "OFFICIAL_ROSTER", bodyId: "body-1", content: { text: readFileSync("tests/fixtures/voting-sources/vt-bennington-elections-original.html", "utf8"), contentType: "text/html", names: ["Bennington"] }, foundBy: "SCOUT" as const, ...over,
 });
 
 test("a published roster page becomes a page door: host, what it holds, due every freshness window, who found it", async () => {
@@ -44,8 +45,8 @@ test("tracking noise and fragments do not make a second door, but a different pa
   const a = pageAddress("https://WWW.Example.gov/council/members/?utm_campaign=y&b=2&a=1#x")!;
   const b = pageAddress("https://www.example.gov/council/members?a=1&b=2")!;
   assert.equal(a.url, b.url);
-  assert.notEqual(pageDoorId("OFFICIAL_ROSTER", a), pageDoorId("OFFICIAL_ROSTER", pageAddress("https://www.example.gov/council/staff")!));
-  assert.notEqual(pageDoorId("OFFICIAL_ROSTER", a), pageDoorId("SERVICE_CONTACT", a));
+  assert.notEqual(pageDoorId(a), pageDoorId(pageAddress("https://www.example.gov/council/staff")!));
+  assert.equal(pageDoorId(a), pageDoorId(pageAddress("https://www.example.gov/council/members?a=1&b=2")!));
 });
 
 test("a hand edit newer than the reading stands", async () => {
@@ -72,7 +73,7 @@ test("an unknown record class falls back to the default window; addresses that a
 
 test("the publisher call adds a door only when a fact went live, and names a detective from the attempt that read the page", async () => {
   const repos = createMemoryRepositories();
-  const capture = { evidence: { artifactId: "a1", contentHash: "h", text: "", acquiredByAttemptId: "att-1", canonicalUrl: "https://city.example.gov/clerk/contact", retrievedAt: READ, sourceId: "s", methodRouteId: "m" },
+  const capture = { evidence: { artifactId: "a1", contentHash: "h", text: readFileSync("tests/fixtures/voting-sources/vt-arlington-clerk-original.html", "utf8"), acquiredByAttemptId: "att-1", canonicalUrl: "https://city.example.gov/clerk/contact", retrievedAt: READ, sourceId: "s", methodRouteId: "m" },
     observedAt: READ, httpStatus: 200, transport: "HTTP", partial: false };
   await recordPublishedPageDoor({ repos, page: capture, recordClass: "SERVICE_CONTACT", published: 0, now: NOW });
   assert.equal((await listDoors(repos.doors)).doors.length, 0, "a held reading adds no door");

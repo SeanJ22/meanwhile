@@ -42,11 +42,9 @@ function legistarReporting(rows: BodySourceWiring[], fetchImpl?: typeof fetch): 
   const clients = legistarClientsFromWiring(rows);
   return {
   ...makeLegistarSource(clients, fetchImpl),
-  /* @accounting-delegated-to lib/sources/legistar/index.ts` */
+  /** @accounting-delegated-to lib/sources/legistar/index.ts */
   normalizeWithDrops(raw, now) {
-    // Returned as the adapter branded it. A second branding here would judge the same pass twice and could
-    // disagree with the first (it would not pass the adapter's `countedButProduced` for kept placeless
-    // meetings); the drop shapes already agree, so nothing needs translating.
+    // Preserve the adapter's accounting, including kept placeless meetings, instead of counting the pass twice.
     return legistarNormalizeWithDrops(raw, now ?? new Date(), clients);
   },
   };
@@ -92,8 +90,8 @@ export const CAPABILITIES: Array<{
   {
     name: "civicclerk",
     types: ["CIVICCLERK"],
-    make: (rows) =>
-      makeCivicClerkSource(rows) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) =>
+      makeCivicClerkSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "escribe", types: ["ESCRIBE"],

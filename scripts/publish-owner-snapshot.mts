@@ -75,6 +75,12 @@ function log(line: string): void {
   console.log(`owner-snapshot · ${line}`);
 }
 
+/* The runner ends a child that prints no new line for ten minutes (RUNTIME_NO_PROGRESS_MS),
+   so every finished collection step prints one. */
+function stepDone(what: string): void {
+  log(`${what} (${Math.round((Date.now() - NOW.getTime()) / 1000)}s into this publish)`);
+}
+
 const publisherRepos = await repositories();
 const canonicalCycle = publisherRepos === null ? null : await readLatestFreshnessCycleOutcome(publisherRepos);
 const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
@@ -412,6 +418,7 @@ async function main(): Promise<void> {
   const repos = publisherRepos;
   if (repos) log(repos.describe());
   const reads = repos ? await readControlPlane(repos) : null;
+  stepDone("control plane read");
   const existing = repos ? await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, CARRIED_FORWARD) as Persisted<CarriedForward> | null : null;
   const maptilerCandidate = await collectMapTilerUsage({ nowIso: NOW_ISO });
   const maptiler = retainMapTilerLastKnownGood({
@@ -438,10 +445,13 @@ async function main(): Promise<void> {
       ],
     });
   }
+  stepDone("map usage collected");
   const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling, costs: reads?.costs ?? null });
+  stepDone("provider bills collected");
   const scopeMembers = reads?.assignmentSources.ok && reads.billingScopes ? exactScopeMembers(reads.billingScopes, reads.assignmentSources.value) : undefined;
   const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, scopeMembers, readings: providerBilling.readings }) : null;
   let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
+  stepDone("campaign page readback collected");
   if (!DRY_RUN && reads?.assignmentSources.ok) {
     const [workerReadback, manualReadback] = await Promise.all([
       collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
@@ -452,9 +462,10 @@ async function main(): Promise<void> {
     const joined = new Map([...(existing?.value.servedReaderReadback?.witnesses ?? []), ...(servedReader?.witnesses ?? []), ...workerReadback.witnesses, ...manualReadback.witnesses]
       .map(w => [`${w.itemId}:${w.approvalId}`, w]));
     servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
+    stepDone("worker and help page readbacks collected");
   }
   const placeHistory = DRY_RUN ? existing?.value.placeHistory
-    : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key) })
+    : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key).finally(() => stepDone(`place history read for ${key}`)) })
       .catch(() => existing?.value.placeHistory);
   const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, ...(placeHistory ? { placeHistory } : {}) };
 

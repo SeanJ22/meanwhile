@@ -100,7 +100,7 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       if (row.kind === "ESCRIBE") {
         meetings = makeEscribeSource([wiring]).normalizeWithDrops([{ wiring, text, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "CIVICPLUS") {
-        meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaCenter: text, collectedAt }], new Date(now)).meetings;
+        meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaPages: [{ url: wiring.config.agendaCenterUrl, text, collectedAt }], collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "CIVICCLERK") {
         const events = JSON.parse(text)?.value;
         if (!Array.isArray(events)) return { changed: "The CivicClerk route no longer returns a list of events" };
@@ -128,7 +128,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
     return adapterThrowVerification(error, row.route);
   }
   const own = meetings.filter((m) => m.bodyId === row.bodyId);
-  if (own.length === 0) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
+  const emptyBody = total === 0 && ((row.kind === "LEGISTAR" && /^\d+$/.test(row.config.eventBodyId)) || (row.kind === "BOARDDOCS" && row.config.committeeId) || (row.kind === "CIVICCLERK" && row.config.bodyMatch && /eventCategoryId eq \d+/.test(new URL(row.route).searchParams.get("$filter") ?? "")));
+  if (own.length === 0 && !emptyBody) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
   const name = row.bodyName.toLowerCase();
   const foreign = own.find((m) => !m.title.toLowerCase().includes(name) && reading.others.some((o) => m.title.toLowerCase().includes(o.toLowerCase())));
   if (foreign !== undefined) {

@@ -116,6 +116,7 @@ export function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
       describe: "a Wikimedia REST search response carrying a pages array",
       requireAll: ["pages"],
       rowsAt: "pages",
+      zeroRowsIsMiss: true,
     },
     citation:
       "api.wikimedia.org/core/v1/wikipedia/en/search/page, permission read + walked 2026-09-17: " +
@@ -145,6 +146,7 @@ function marginaliaRoute(c: CanonicalCandidacy): RouteDescriptor {
       describe: "a Marginalia response carrying its licence declaration and a results array",
       requireAll: ["license", "results"],
       rowsAt: "results",
+      zeroRowsIsMiss: true,
     },
     citation:
       "docs/sources.md — api.marginalia.nu/public/search, walked 2026-08-24, control: an impossible " +

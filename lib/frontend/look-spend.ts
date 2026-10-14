@@ -20,7 +20,7 @@ import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMetered
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { ceilingPermits, readIntents, RESEARCH_INTENT_LOG_KEY, researchSpendInWindow } from "../control-plane/scheduler/research-policy.ts";
-import { readSpendWindowCosts } from "../control-plane/workers/scoped-history.ts";
+import { readSpendWindow } from "../control-plane/spend-window.ts";
 import { canonicalModelId, MODELS } from "../models.ts";
 import type { LookReviewDeps, LookScreenshot } from "./look-review.ts";
 
@@ -61,8 +61,8 @@ type Repos = Pick<ControlPlaneRepositories, "adminConfig" | "researchIntents" | 
 export async function reserveLookSpend(repos: Repos, now: string, screens: number): Promise<{ readonly ok: boolean; readonly why: string }> {
   const adminConfigRow = await repos.adminConfig.read(ADMIN_CONFIG_ID).then((row) => row ?? null, (error: unknown) => ({ unreadable: error instanceof Error ? error.name : "unreadable" }));
   const intentLog = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY).then((rows) => [...rows], () => null);
-  const windowUsd = await readSpendWindowCosts(repos as ControlPlaneRepositories, now, true)
-    .then((costs) => researchSpendInWindow(costs, now).windowUsd, () => null);
+  const windowUsd = await readSpendWindow(repos as ControlPlaneRepositories, now)
+    .then((charges) => researchSpendInWindow(charges, now).windowUsd, () => null);
   return lookSpendDecision({ adminConfigRow, intentLog, windowUsd }, screens);
 }
 
@@ -153,15 +153,16 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
       const model = served ?? LOOK_MODEL;
       const recordedAt = new Date().toISOString();
       const bound = modelRequestBoundFor(LOOK_MODEL, images.length * TOKENS_PER_SCREEN + PROMPT_TOKENS, LOOK_MAX_TOKENS);
+      const usd = priceMeteredUsage(canonicalModelId(model), metering, "1h").usd;
       const entry = costEntryWithModel({
         attemptId, workItemId: "look-review", routeTaskId: null, routeId: "look-review", source: "api.anthropic.com",
         jurisdiction: null, project: "pilot-health", role: "VALIDATOR", requestedModel: LOOK_MODEL, servedModel: served,
-        ...(bound ? { modelRequestBound: bound } : {}),
+        ...(bound && usd === null ? { modelRequestBound: bound } : {}),
         resultKind: resultKind ?? (status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`), recordedAt,
         cost: { ...ZERO_COST, ...meteredCostFields(metering),
           inputTokens: metering.uncachedInputTokens === null ? null
             : metering.uncachedInputTokens + (metering.cacheReadInputTokens ?? 0) + (metering.cacheCreationInputTokens ?? 0),
-          outputTokens: metering.outputTokens, usd: priceMeteredUsage(canonicalModelId(model), metering, "1h").usd,
+          outputTokens: metering.outputTokens, usd,
           durationMs: Math.round(performance.now() - started), requestCount: 1,
           listPriceUsd: listPriceUsdForUsage(model, metering),
           modelRequestCount: 1, batchEligibleRequestCount: 1, batchRequestCount: batched ? 1 : 0 },

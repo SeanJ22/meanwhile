@@ -28,6 +28,7 @@ import {
   type DurableRowFacts,
 } from "@/lib/control-plane/expansion/dispatch-work.ts";
 import { SCOPE_BUDGET_CODE, armExpansionBudget } from "@/lib/control-plane/expansion/membership.ts";
+import { pricedModelCharge } from "@/lib/control-plane/fleet-safety.ts";
 import { loadExpansionPlan } from "@/lib/control-plane/expansion/runner-load.ts";
 import { expansionScopesOf, isExpansionScopeDecision, withScopeSet, type ExpansionScopeDecision } from "@/lib/control-plane/expansion/scopes.ts";
 import { isProofRecord } from "@/lib/control-plane/assignment-view.ts";
@@ -363,8 +364,10 @@ function charge(over: Partial<CostEntry> & { readonly usd: number | null; readon
     ...(over.obligationId !== undefined ? { obligationId: over.obligationId } : {}),
   };
 }
+const priced = (rows: readonly CostEntry[]) => rows.flatMap(row => pricedModelCharge(row, row.attemptId) ?? []);
+
 function gate(specs: readonly AssignmentBudgetSpec[], rows: ReturnType<typeof row>[], costs: CostEntry[] | null, over: { intentsReadable?: boolean } = {}): AssignmentBudgetGate {
-  return armAssignmentBudget({ now: T0, specs, membership: assignmentMembership(rows), costs, worstCaseUsd: 0.6, intentsReadable: over.intentsReadable ?? true });
+  return armAssignmentBudget({ now: T0, specs, membership: assignmentMembership(rows), charges: costs === null ? null : priced(costs), worstCaseUsd: 0.6, intentsReadable: over.intentsReadable ?? true });
 }
 
 test("a Scout on a spent assignment is refused by the assignment's own name, with spent and held", () => {
@@ -400,13 +403,13 @@ test("an admitted Scout holds its worst case until it settles, and the next is r
 test("an assignment's spend is its members' charges since they joined; a charge naming no obligation counts by its body", () => {
   const members = assignmentMembership([row("ob-a", "az:city:city-of-tucson", [A.key])]).byKey.get(A.key)!;
   const spend = assignmentSpend(
-    [
+    priced([
       charge({ obligationId: "ob-a", usd: 1, at: "2026-09-25T01:00:00.000Z" }),
       charge({ obligationId: "ob-a", usd: 7, at: "2026-09-24T23:00:00.000Z" }), // before it joined
       charge({ obligationId: "ob-other", usd: 9, jurisdiction: "az:city:city-of-tucson" }), // another obligation, same body
       charge({ usd: 0.5, jurisdiction: "az:city:city-of-tucson", at: "2026-09-25T02:00:00.000Z" }), // names no obligation
       charge({ usd: 2, jurisdiction: "az:city:city-of-phoenix" }),
-    ],
+    ]),
     members,
     "2026-09-24T15:00:00.000Z",
     T0,
@@ -469,10 +472,10 @@ test("the runner's reading names what each Send reached and its budget — spent
   const rows = [row("ob-c", "s1", []), row("ob-r", "s2", [A.key])];
   rows[0] = { id: "ob-c", subjectId: "s1", assignments: [{ assignmentKey: A.key, ref: A.ref, relation: "CREATED", at: JOINED }] };
   const membership = assignmentMembership(rows, [{ obligationId: "ob-new", subjectId: "s3", entry: { assignmentKey: "dispatch:i-q", ref: "i-q", relation: "CREATED", at: T0 } }]);
-  const costs = [charge({ obligationId: "ob-c", usd: 1.25 })];
-  const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs, worstCaseUsd: 0.6, intentsReadable: true });
+  const charges = priced([charge({ obligationId: "ob-c", usd: 1.25 })]);
+  const g = armAssignmentBudget({ now: T0, specs: [A], membership, charges, worstCaseUsd: 0.6, intentsReadable: true });
   g.admit("ob-r");
-  const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs, intentsReadable: true, labels: new Map([["dispatch:i-q", "Tucson"]]) });
+  const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, charges, intentsReadable: true, labels: new Map([["dispatch:i-q", "Tucson"]]) });
   assert.equal(isAssignmentCycleReading(reading), true);
   const a = reading.assignments.find((x) => x.key === A.key)!;
   assert.deepEqual(a.members, { created: 1, reordered: 1, createdSample: ["ob-c"], reorderedSample: ["ob-r"] });
@@ -513,7 +516,7 @@ test("a policy row that is not a policy holds paid work, by name, instead of rea
   assert.notEqual(load.plan, null, "the owner's budgets did not silently disappear");
   assert.equal(load.plan?.malformedScopes, 1);
   assert.match(load.conditions.join(" "), /the owner's policy row is on record and is not a readable policy/);
-  const { gate: g } = armExpansionBudget(load.plan!, { now: T0, costs: [], worstCaseUsd: 0.6 });
+  const { gate: g } = armExpansionBudget(load.plan!, { now: T0, charges: [], worstCaseUsd: 0.6 });
   const v = g.admit("ob-1", "az:city:city-of-tucson");
   assert.equal(v.admit, false);
   if (!v.admit) {

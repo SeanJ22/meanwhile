@@ -1,6 +1,3 @@
-/** Campaign sites publish after their saved page verifies the candidate,
- * office and cycle. Live auditors sample afterward; no planted-control stage
- * or independent second signal holds a verified site. */
 import { contentHash, fingerprint } from "../ids.ts";
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -66,6 +63,7 @@ export interface CampaignSiteSubject extends CampaignSiteIdentity {
   readonly readerKeys: readonly string[];
   /** Registrable domains the candidate's own 2026 filing names (website, or contact address domain). Never an address. */
   readonly filingDomains: readonly string[];
+  readonly filingWebsites?: readonly { readonly url: string; readonly sourceUrl: string }[];
 }
 
 /** One held Marginalia answer for one candidacy, as the runner vaulted it. */
@@ -330,7 +328,9 @@ export function campaignSiteChecks(input: {
    */
   const form = m?.name?.form ?? null;
   const sharing = form === null ? [] : [...input.subjects.values()].filter((other) => campaignNameForms(other).some((f) => f.form === form));
+  const filedHost = subject.filingWebsites?.some(website => siteHost(website.url) === siteHost(artifact.canonicalUrl));
   const placed = sharing.filter((other) => {
+    if (filedHost && !other.filingWebsites?.some(website => siteHost(website.url) === siteHost(artifact.canonicalUrl))) return false;
     const probe = verifyCampaignSitePage(other, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: "identity-probe" }, input.read);
     return probe.measurement !== null && probe.measurement.name !== null && (probe.measurement.office !== null || probe.measurement.district !== null);
   });
@@ -428,6 +428,19 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     heldStates.set(record.itemId, out.state);
     return out.state;
   };
+
+  for (const subject of options.subjects.values()) for (const website of subject.filingWebsites ?? []) {
+    const itemId = discoveryPointerItemId(subject.candidacyId, website.url);
+    if (heldStates.get(itemId)?.byStage.SCOUTED) continue;
+    const instance = `campaign-site-ballot:${subject.candidacyId}`;
+    await offer({
+      formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:scouted`, itemId, at: options.now,
+      actor: { role: "ACQUIRER", lane: "DETERMINISTIC", instance }, stage: "SCOUTED",
+      source: { kind: "PROMOTED_CANDIDACY", candidacyId: subject.candidacyId, sourceUrl: website.sourceUrl, websiteUrl: website.url },
+      recordClass: CAMPAIGN_SITE_RECORD_CLASS, subjectId: subject.candidacyId, canonicalUrl: website.url,
+      artifactIds: [], scoutAttemptId: instance, summary: `The election authority lists ${website.url} for ${displayName(subject)}.`,
+    });
+  }
 
   // Paid Scout findings can precede every parser result. Their existing
   // SCOUTED representation must reach this plain-code pass independently.
@@ -602,7 +615,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   const pending: { state: PipelineItemState; subject: CampaignSiteSubject; verdicts: { lead: CampaignSiteLead; verdict: CampaignSiteVerdict; artifact: ArtifactRecord }[] }[] = [];
   for (const state of inReadOrder([...heldStates.values()].filter((s) =>
     s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.byStage.SCOUTED !== undefined &&
-    (s.byStage.SCOUTED.source.kind === "SCOUT_RESULT" || s.byStage.SCOUTED.source.kind === "DISCOVERY_POINTER")))) {
+    (s.byStage.SCOUTED.source.kind === "SCOUT_RESULT" || s.byStage.SCOUTED.source.kind === "DISCOVERY_POINTER" || s.byStage.SCOUTED.source.kind === "PROMOTED_CANDIDACY")))) {
     const subject = options.subjects.get(state.subjectId ?? "");
     if (subject === undefined) { unjoined.push({ itemId: state.itemId, subjectId: state.subjectId ?? "" }); continue; }
     if (state.stage !== "SCOUTED") continue;

@@ -13,10 +13,6 @@ export const NCES_SCHOOL_CATALOG = {
 } as const;
 export type SchoolReleaseKind = "lea-directory" | "f33";
 
-/** The page renders archive links from its JSON catalog, not its static HTML.
- * Follow only official data-file links; fiscal SAS and Excel variants are not
- * mistaken for the flat file. School year and publisher revision order choose
- * the release, rather than alphabetic URL order. */
 export function schoolReleaseLinks(json: string, kind: SchoolReleaseKind): string[] {
   const catalog = JSON.parse(json) as { selectionGroupModels?: unknown[] };
   if (!Array.isArray(catalog?.selectionGroupModels)) throw new Error("NCES_CATALOG_INVALID");
@@ -31,7 +27,7 @@ export function schoolReleaseLinks(json: string, kind: SchoolReleaseKind): strin
       try { url = new URL(row.fileURL, NCES_DIRECTORY); } catch { /* Invalid source link supplies no target. */ }
       if (url && url.protocol === "https:" && !url.username && !url.password &&
           (url.hostname === "nces.ed.gov" && url.pathname.startsWith("/ccd/") || url.hostname === "ies.ed.gov" && url.pathname.startsWith("/sites/default/files/")) &&
-          (kind === "lea-directory" ? /\/ccd_lea_029_\d{4}[^/]*\.zip$/i.test(url.pathname) : /\/(?:sdf|f33)[^/]*\.zip$/i.test(url.pathname) && !/(?:xlsx|xlxs|sas|spss)/i.test(url.pathname))) {
+          (kind === "lea-directory" ? /\/ccd_lea_029_\d{4}[^/]*\.zip$/i.test(url.pathname) : /\/(?:sdf|f33)[^/]*\.(?:txt|zip)$/i.test(url.pathname) && !/(?:xlsx|xlxs|sas|spss)/i.test(url.pathname))) {
         const year = Number(/\d{4}/.exec(String(row.schoolYear))?.[0]);
         if (Number.isFinite(year)) files.push({ url: url.href, year, order: Number(row.versionOrder) || 0 });
       }
@@ -44,10 +40,14 @@ export function schoolReleaseLinks(json: string, kind: SchoolReleaseKind): strin
 }
 
 function table(release: Pick<KnownRelease, "bytes">): { header: string[]; rows: string[][] } {
-  const entries = readZipEntries(release.bytes, { maxEntries: 64, maxMemberBytes: 96 * 1024 * 1024, maxTotalBytes: 192 * 1024 * 1024 });
-  const csvs = entries.filter(entry => /\.(?:csv|txt)$/i.test(entry.name));
-  if (csvs.length !== 1) throw new Error("NCES_RELEASE_TABLE_AMBIGUOUS");
-  const text = new TextDecoder("utf-8", { fatal: true }).decode(csvs[0].data);
+  let bytes = release.bytes;
+  if (bytes[0] === 0x50 && bytes[1] === 0x4b) {
+    const entries = readZipEntries(bytes, { maxEntries: 64, maxMemberBytes: 96 * 1024 * 1024, maxTotalBytes: 192 * 1024 * 1024 });
+    const tables = entries.filter(entry => /\.(?:csv|txt)$/i.test(entry.name));
+    if (tables.length !== 1) throw new Error("NCES_RELEASE_TABLE_AMBIGUOUS");
+    bytes = tables[0].data;
+  }
+  const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   const [header = [], ...rows] = text.split(/\r?\n/, 1)[0].includes("\t") ? text.trimEnd().split(/\r?\n/).map(line => line.split("\t")) : parseCsv(text);
   return { header: header.map(value => value.replace(/^\uFEFF/, "").trim().toUpperCase()), rows };
 }
@@ -115,13 +115,13 @@ export async function acquireSchoolRelease(kind: SchoolReleaseKind, options: Pic
   const catalogUrl = NCES_SCHOOL_CATALOG[kind];
   options.onSourceUrl?.(catalogUrl);
   const directory = await acquireKnownRelease({ ...options, sourceId: "nces-ccd", releaseId: `${kind}-catalog`, url: catalogUrl,
-    parserVersion: "nces-catalog/1", maxBytes: 4 * 1024 * 1024, checkAfterMs: 24 * 60 * 60 * 1000,
+    parserVersion: "nces-catalog/2", allowedHosts: ["nces.ed.gov", "ies.ed.gov"], maxBytes: 4 * 1024 * 1024, checkAfterMs: 24 * 60 * 60 * 1000,
     validate: bytes => { if (!schoolReleaseLinks(new TextDecoder("utf-8", { fatal: true }).decode(bytes), kind).length) throw new Error("NCES_CATALOG_DATA_FILE_UNAVAILABLE"); } });
   const links = schoolReleaseLinks(new TextDecoder("utf-8", { fatal: true }).decode(directory.bytes), kind);
   if (!links.length) throw new Error(`NCES_${kind.toUpperCase()}_DOWNLOAD_LINK_UNAVAILABLE:${catalogUrl}`);
   const url = links[0];
   options.onSourceUrl?.(url);
   return acquireKnownRelease({ ...options, sourceId: "nces-ccd", releaseId: url.split("/").at(-1)!, url,
-    parserVersion: kind === "f33" ? "nces-f33/1" : "nces-lea/2", allowedHosts: ["nces.ed.gov", "ies.ed.gov"], maxBytes: 64 * 1024 * 1024, checkAfterMs: 30 * 24 * 60 * 60 * 1000,
+    parserVersion: kind === "f33" ? "nces-f33/2" : "nces-lea/2", allowedHosts: ["nces.ed.gov", "ies.ed.gov"], maxBytes: 64 * 1024 * 1024, checkAfterMs: 30 * 24 * 60 * 60 * 1000,
     validate: bytes => { const parsed = table({ bytes }); if (!parsed.rows.length || !parsed.header.includes("LEAID")) throw new Error("NCES_RELEASE_INVALID"); } });
 }

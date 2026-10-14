@@ -99,17 +99,17 @@ test("one running worker runtime saves a new observed route and hands it to its 
   t.after(() => rm(root, { recursive: true, force: true }));
   const empty = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [methodVersionEntry(empty)], h.now());
-  const discovered = "https://fixture-clerk.example.gov/alternate-roster.json";
+  const discovered = "https://arlingtonvermont.org/town-clerk/";
   const requests: ModelRequest[] = [];
   const runtime = await withReaderAuthorityEdge(REGISTRY_EDGE, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, spaceOut: async () => {},
-    openBytes: async ({ url }) => ({ status: 200, bytes: Buffer.from(url.endsWith("robots.txt") ? "User-agent: *\nDisallow:\n" : '[{"id":"clerk","name":"Clerk"}]'), contentType: "text/plain", finalUrl: url, durationMs: 1, transportError: null }),
+    openBytes: async ({ url }) => ({ status: 200, bytes: url.endsWith("robots.txt") ? Buffer.from("User-agent: *\nDisallow:\n") : readFileSync("tests/fixtures/voting-sources/vt-arlington-clerk-original.html"), contentType: url.endsWith("robots.txt") ? "text/plain" : "text/html", finalUrl: url, durationMs: 1, transportError: null }),
     transport: async request => {
       requests.push(request);
       if (requests.length > 3) throw new Error("SECOND_WALK_CAPTURED_OFFLINE");
-      const observed = JSON.stringify(request.messages).match(/ARTIFACT (ar-[a-f0-9]+) \| url https:\/\/fixture-clerk.example.gov\/alternate-roster.json/);
+      const observed = JSON.stringify(request.messages).match(/ARTIFACT (ar-[a-f0-9]+) \| url https:\/\/arlingtonvermont\.org\/town-clerk\//);
       const content: ModelResponse["content"] = !observed
         ? [{ type: "tool_use", id: "open", name: "fetch_public", input: { url: discovered, rung: "primary-site-navigation", why: "Read the alternative official roster" } }]
-        : [{ type: "tool_use", id: "done", name: "finish", input: { outcome: "ROUTE_CANDIDATE", rungsWalked: [{ index: 0, note: "Observed alternate roster" }], candidates: [{ routeId: "new-official-roster", title: "Alternative official roster", url: discovered, procedure: "GET the public roster and parse its JSON records", relevance: "official roster", permission: "ALLOWED", permissionReading: "Recorded public response", evidenceArtifactIds: [observed[1]], observedOn: "2026-09-03", recordClass: "OFFICIAL_ROSTER", deterministic: true, unverified: [] }], findings: [], nextRungs: [], unverified: [], narrative: "Observed a source route; publication remains independently verified." } }];
+        : [{ type: "tool_use", id: "done", name: "finish", input: { outcome: "ROUTE_CANDIDATE", rungsWalked: [{ index: 0, note: "Observed alternate roster" }], candidates: [{ routeId: "new-official-roster", title: "Alternative official roster", url: discovered, procedure: "GET the public clerk page and parse its HTML records", relevance: "official roster", permission: "ALLOWED", permissionReading: "Recorded public response", evidenceArtifactIds: [observed[1]], observedOn: "2026-09-03", recordClass: "OFFICIAL_ROSTER", deterministic: true, unverified: [] }], findings: [], nextRungs: [], unverified: [], narrative: "Observed a source route; publication remains independently verified." } }];
       return { model: request.model, stop_reason: "tool_use", content, usage: { input_tokens: 100, output_tokens: 50, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } };
     } }));
   await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1, maxScoutDispatches: 1 });
@@ -118,7 +118,7 @@ test("one running worker runtime saves a new observed route and hands it to its 
   assert.equal(first.candidates.length, 1);
   assert.deepEqual(first.rebuiltExistingRoutes, []);
   const stored = (await h.repos.fieldManual.list()).map(row => row.value);
-  const entry = stored.find(e => e.url === discovered)!;
+  const entry = stored.find(e => e.url === discovered && e.kind === "SCOUT_DISCOVERY")!;
   assert.ok(entry, "real runtime write-back persisted the discovered route");
   const item = (await h.repos.workItems.mustRead(h.item.id)).value;
   const task = createRouteTask({ workItemId: item.id, routeId: "reuse-check", routeLabel: "Follow-up route check", target: discovered, inherited: true, now: h.now() });

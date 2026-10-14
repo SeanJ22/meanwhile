@@ -11,10 +11,6 @@ import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-po
 const progressModule = JSON.stringify(new URL("../lib/control-plane/scheduler/round-progress.ts", import.meta.url).href);
 const stallModule = JSON.stringify(new URL("../lib/control-plane/scheduler/cycle-stall.ts", import.meta.url).href);
 
-/*
- * A worker wave that finishes task after task but prints nothing until it ends must not be ended as
- * RESEARCH_CHILD_NO_PROGRESS. Here the wave lasts three quiet allowances.
- */
 const waveChild = (report: boolean) => `
   import { roundProgressReporter } from ${progressModule};
   const progress = roundProgressReporter({ everyMs: 100 });
@@ -113,7 +109,10 @@ test("a worker process ended by its timer says so", async () => {
 test("the round wires its long phases to the reporter and ends a hung worker before the runner's limit", () => {
   const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /answerStallProbes\(\{ describe: \(\) => describePending\(pending\.snapshot\(\)\) \}\)/);
-  for (const label of ["dispatch", "worker wave", "meetings walks"]) assert.ok(round.includes(`roundProgress.note("${label}")`), label);
+  for (const label of ["dispatch", "worker wave"]) assert.ok(round.includes(`roundProgress.note("${label}")`), label);
+  assert.ok(!round.includes('roundProgress.note("meetings walks")'));
+  const census = readFileSync(new URL("../scripts/platform-census-runner.mts", import.meta.url), "utf8");
+  assert.match(census, /CENSUS_PROGRESS/);
   assert.match(round, /childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000/);
   assert.ok(RUNTIME_NO_PROGRESS_MS - 60_000 > 8 * 60_000, "a hunter's own 8-minute wall still ends it first");
 });

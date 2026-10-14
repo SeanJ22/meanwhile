@@ -1,0 +1,494 @@
+[
+  {
+    "scope": "county",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=county%3A%2A&in=state%3A04",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:49.498Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "county"
+      ],
+      [
+        "Apache County, Arizona",
+        "0500000US04001",
+        "65341",
+        "-555555555",
+        "04",
+        "001"
+      ],
+      [
+        "Cochise County, Arizona",
+        "0500000US04003",
+        "125566",
+        "-555555555",
+        "04",
+        "003"
+      ],
+      [
+        "Coconino County, Arizona",
+        "0500000US04005",
+        "144508",
+        "-555555555",
+        "04",
+        "005"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=county%3A%2A&in=state%3A04",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "4ae2dfa61736a5ee07fc8ae5a6b829a726c1e5b0a71ff9eb0a5899c25406b0c7",
+    "sourceResponseRows": 15,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "place",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=place%3A%2A&in=state%3A34",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:50.373Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "place"
+      ],
+      [
+        "Absecon city, New Jersey",
+        "1600000US3400100",
+        "9170",
+        "27",
+        "34",
+        "00100"
+      ],
+      [
+        "Absecon Highlands CDP, New Jersey",
+        "1600000US3400160",
+        "1288",
+        "386",
+        "34",
+        "00160"
+      ],
+      [
+        "Allamuchy CDP, New Jersey",
+        "1600000US3400640",
+        "91",
+        "145",
+        "34",
+        "00640"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=place%3A%2A&in=state%3A34",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "53d51ba0444edec59d1e765274f2348a1c2a239637a04eee64087630bb6dce06",
+    "sourceResponseRows": 700,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "county_subdivision",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=county+subdivision%3A%2A&in=state%3A33+county%3A%2A",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:51.259Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "county",
+        "county subdivision"
+      ],
+      [
+        "Alton town, Belknap County, New Hampshire",
+        "0600000US3300101060",
+        "5994",
+        "28",
+        "33",
+        "001",
+        "01060"
+      ],
+      [
+        "Barnstead town, Belknap County, New Hampshire",
+        "0600000US3300103220",
+        "4994",
+        "19",
+        "33",
+        "001",
+        "03220"
+      ],
+      [
+        "Belmont town, Belknap County, New Hampshire",
+        "0600000US3300104740",
+        "7392",
+        "17",
+        "33",
+        "001",
+        "04740"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=county+subdivision%3A%2A&in=state%3A33+county%3A%2A",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "6c056e94e7b9c68de4605bb929804b789492bb3faed1d43daf5ed0a65548dbc1",
+    "sourceResponseRows": 260,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "congressional_district",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=congressional+district%3A%2A&in=state%3A04",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:51.972Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "congressional district"
+      ],
+      [
+        "Congressional District 1 (119th Congress), Arizona",
+        "5001900US0401",
+        "804578",
+        "7021",
+        "04",
+        "01"
+      ],
+      [
+        "Congressional District 2 (119th Congress), Arizona",
+        "5001900US0402",
+        "826257",
+        "3110",
+        "04",
+        "02"
+      ],
+      [
+        "Congressional District 3 (119th Congress), Arizona",
+        "5001900US0403",
+        "815927",
+        "9161",
+        "04",
+        "03"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=congressional+district%3A%2A&in=state%3A04",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "a84aaa9f7e57fa867130b6ae5cd603b776c5d1d2f58262e614ccd064c137d6de",
+    "sourceResponseRows": 9,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "state_leg_upper",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=state+legislative+district+%28upper+chamber%29%3A%2A&in=state%3A04",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:52.629Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "state legislative district (upper chamber)"
+      ],
+      [
+        "State Senate District 1 (2024); Arizona",
+        "610U900US04001",
+        "246671",
+        "302",
+        "04",
+        "001"
+      ],
+      [
+        "State Senate District 2 (2024); Arizona",
+        "610U900US04002",
+        "253802",
+        "5226",
+        "04",
+        "002"
+      ],
+      [
+        "State Senate District 3 (2024); Arizona",
+        "610U900US04003",
+        "240816",
+        "4285",
+        "04",
+        "003"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=state+legislative+district+%28upper+chamber%29%3A%2A&in=state%3A04",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "fd8b4c779257fd79176ff23a23e969611113226d2ae592201342cc072dcc344a",
+    "sourceResponseRows": 30,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "state_leg_lower",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=state+legislative+district+%28lower+chamber%29%3A%2A&in=state%3A34",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:53.299Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "state legislative district (lower chamber)"
+      ],
+      [
+        "Assembly District 01 (2024); New Jersey",
+        "620L900US34001",
+        "235532",
+        "412",
+        "34",
+        "001"
+      ],
+      [
+        "Assembly District 02 (2024); New Jersey",
+        "620L900US34002",
+        "232900",
+        "307",
+        "34",
+        "002"
+      ],
+      [
+        "Assembly District 03 (2024); New Jersey",
+        "620L900US34003",
+        "239221",
+        "282",
+        "34",
+        "003"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=state+legislative+district+%28lower+chamber%29%3A%2A&in=state%3A34",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "bfaf85ceeaed23d801754df576766a7e06be6a2f7deac17ce41077a78597f2b6",
+    "sourceResponseRows": 40,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "school_unified",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=school+district+%28unified%29%3A%2A&in=state%3A04",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:53.913Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "school district (unified)"
+      ],
+      [
+        "Cave Creek Unified District, Arizona",
+        "9700000US0400001",
+        "66114",
+        "2609",
+        "04",
+        "00001"
+      ],
+      [
+        "Chino Valley Unified District, Arizona",
+        "9700000US0400003",
+        "25119",
+        "1470",
+        "04",
+        "00003"
+      ],
+      [
+        "Colorado City Unified District, Arizona",
+        "9700000US0400021",
+        "4541",
+        "441",
+        "04",
+        "00021"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=school+district+%28unified%29%3A%2A&in=state%3A04",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "6eda33db7e2868312bff5ca458191da2b984ea2b4985f2c3a2bb93efac038120",
+    "sourceResponseRows": 98,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "school_elementary",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=school+district+%28elementary%29%3A%2A&in=state%3A34",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:54.604Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "school district (elementary)"
+      ],
+      [
+        "Alexandria Township School District, New Jersey",
+        "9500000US3400690",
+        "4824",
+        "24",
+        "34",
+        "00690"
+      ],
+      [
+        "Allendale Borough School District, New Jersey",
+        "9500000US3400750",
+        "6865",
+        "44",
+        "34",
+        "00750"
+      ],
+      [
+        "Atlantic Highlands Borough School District, New Jersey",
+        "9500000US3401020",
+        "4410",
+        "15",
+        "34",
+        "01020"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=school+district+%28elementary%29%3A%2A&in=state%3A34",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "fea849c4792494006ea18560bd2d85d770f06bf930ae6f5895e18740b4377eb0",
+    "sourceResponseRows": 172,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "school_secondary",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=school+district+%28secondary%29%3A%2A&in=state%3A33",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:55.301Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "school district (secondary)"
+      ],
+      [
+        "John Stark Regional School District, New Hampshire",
+        "9600000US3300003",
+        "15367",
+        "34",
+        "33",
+        "00003"
+      ],
+      [
+        "Exeter Regional Cooperative School District, New Hampshire",
+        "9600000US3300017",
+        "34889",
+        "405",
+        "33",
+        "00017"
+      ],
+      [
+        "Prospect Mountain High School Joint Maintenance Agreement District, New Hampshire",
+        "9600000US3300049",
+        "10988",
+        "37",
+        "33",
+        "00049"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=school+district+%28secondary%29%3A%2A&in=state%3A33",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "e1d2e7a3e01e82d32b13b883ffee1e38c2737ec82dc0273c38adab44f249533b",
+    "sourceResponseRows": 10,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "nation",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=us%3A%2A",
+    "status": 200,
+    "fetchedAt": "2026-10-12T23:31:55.924Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "us"
+      ],
+      [
+        "United States",
+        "0100000US",
+        "334922499",
+        "-555555555",
+        "1"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=us%3A%2A",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "sourceResponseHash": "0122bdccf3571c01294e4abe6dd5be6a10fa9d432d92de7c9eb54069109fafad",
+    "sourceResponseRows": 1,
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  {
+    "scope": "state_leg_lower",
+    "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=state+legislative+district+%28lower+chamber%29%3A*&in=state%3A50",
+    "status": 200,
+    "fetchedAt": "2026-10-13T00:20:03.040Z",
+    "rows": [
+      [
+        "NAME",
+        "GEO_ID",
+        "B01003_001E",
+        "B01003_001M",
+        "state",
+        "state legislative district (lower chamber)"
+      ],
+      [
+        "Addison-1 State House District (2024); Vermont",
+        "620L900US50A-1",
+        "8320",
+        "220",
+        "50",
+        "A-1"
+      ],
+      [
+        "Addison-2 State House District (2024); Vermont",
+        "620L900US50A-2",
+        "4084",
+        "293",
+        "50",
+        "A-2"
+      ],
+      [
+        "Addison-3 State House District (2024); Vermont",
+        "620L900US50A-3",
+        "8047",
+        "232",
+        "50",
+        "A-3"
+      ]
+    ],
+    "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CGEO_ID%2CB01003_001E%2CB01003_001M&for=state+legislative+district+%28lower+chamber%29%3A*&in=state%3A50",
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html",
+    "sourceResponseRows": 109,
+    "sourceResponseHash": "8376c600afaaca864920c9af2136fa19ff61da9215e25cbd88b08cd7e6da9990"
+  }
+]

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { SiteKind, VotingOfficeContact, VotingSite, VotingSource } from "./voting-sites.ts";
 import type { VotingChangeNotice, VotingDoorScope, VotingColumn, VotingExtraction, VotingPlatform, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "./voting-source-types.ts";
+import { isVotingSiteKind } from "./voting-source-types.ts";
 import { decodeVotingBytes, delimitedVotingRows, htmlVotingTables, pdfVotingTables, sourceText, tableFromRows, xlsxVotingTables, type VotingTable } from "./voting-source-tables.ts";
 import { readVotingPages } from "./voting-source-pages.ts";
 import { votingFetchSession, type VotingCapture, type VotingFetchSession } from "./voting-source-fetch.ts";
@@ -44,7 +45,7 @@ function publishedElectionDatesIn(text: string): string[] {
   for (const match of text.matchAll(/\b(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,\s*|\s+)(20\d{2})\b/gi)) add(match[3]!, months.indexOf(match[1]!.slice(0, 3).toLowerCase()) + 1, Number(match[2]));
   return [...new Set(dates)];
 }
-export function officialElectionLinkMatches(html: string, pageUrl: string, door: VotingSourceDoor): boolean {
+function officialElectionLinkMatches(html: string, pageUrl: string, door: VotingSourceDoor): boolean {
   if (!electionDateNamed(sourceText(html), door.electionDate)) return false;
   if (pageUrl === door.url) return true;
   return [...html.matchAll(/\b(?:href|src)=["']([^"']+)["']/gi)].some(match => {
@@ -78,7 +79,7 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
     if (rowOffice) officeRows.push({ label: get("town") || get("countyName") || door.scope.name, countyName: get("countyName"), office: rowOffice });
     const name = get("name"), address = get("address");
     if (!name || !address) { if (name || address || phone || email) recordMissing(`${get("town") || get("countyName") || name || address || door.scope.name}: ${!name ? "site name" : ""}${!name && !address ? " and " : ""}${!address ? "site address" : ""}`); continue; }
-    const kind = kindFrom(get("kind") || String(row.__tableTitle ?? ""), config.kind ?? door.covers[0] ?? "ELECTION_DAY");
+    const kind = kindFrom(get("kind") || String(row.__tableTitle ?? ""), config.kind ?? door.covers.find(isVotingSiteKind) ?? "ELECTION_DAY");
     const id = `${door.id}-${createHash("sha256").update([kind, get("id"), name, address, get("precinct")].join("\0")).digest("hex").slice(0, 16)}`;
     const site: VotingSite = { id, name, address, room: get("room") || null, lat: null, lng: null, kind, election: get("election") || door.title || null, electionDate: door.electionAssociationVerified === true || (electionDateNamed(get("election"), door.electionDate) || /general/i.test(get("election")) && get("election").includes(door.electionDate.slice(0, 4))) ? door.electionDate : undefined, serves: get("precinct") || get("ward") || null, sources: [source] };
     const stringFields = ["days", "hours", "precinct", "town", "countyName", "countyFips", "countySubdivisionGeoid", "ward", "tribalNation", "reservation", "aiannhGeoid", "locationNotes", "accessibilityNotes", "lastUpdated"] as const;
@@ -99,7 +100,7 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
   return { sites, office, missingRows, missingRowPlaces, officeRows };
 }
 /** Decode the public querydata response used by embedded Power BI maps. */
-export function powerBiVotingRows(value: unknown): Record<string, unknown>[] {
+function powerBiVotingRows(value: unknown): Record<string, unknown>[] {
   if (!value || typeof value !== "object") return [];
   const envelope = value as Record<string, unknown>;
   if (Array.isArray(envelope.results)) return envelope.results.flatMap(powerBiVotingRows);
@@ -263,6 +264,11 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
   if (door.scopeUnresolved || door.covers.length === 0 && !door.rules?.length && !door.publication) return result;
   let readStage: "access" | "extraction" = "access";
   try {
+    if (door.covers.length && !door.covers.some(isVotingSiteKind)) {
+      await session.get(door.url);
+      result.sources.push(source);
+      return result;
+    }
     let rows: Record<string, unknown>[];
     let effectiveDoor = door;
     if (door.electionAssociationVerified && door.electionPageUrl !== door.url && door.shape !== "address-lookup") {

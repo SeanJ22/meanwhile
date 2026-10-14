@@ -1,11 +1,13 @@
+import { verifiedCommonsPortrait, type CommonsCandidacyIdentity } from "./commons.ts";
 import { portraitPublisher, type PortraitVerification } from "./binding.ts";
 import { createHash } from "node:crypto";
 import { imagesIn, pickPortraits } from "../hunt/portrait-pick.ts";
 import { parseCsv } from "../sources/plural/index.ts";
 import { parse as parseYaml } from "yaml";
-import { pageWords, linkingPageFrom, pageLinksTo, section3Page, type Section3Page } from "../control-plane/promotion/section3.ts";
+import { pageWords, linkingPageFrom, pageLinksTo } from "../control-plane/promotion/section3.ts";
 import { captureProblem } from "../civic-data/worker-publication-evidence.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { heldPageRead, verifyCampaignSitePage, type CampaignSiteIdentity, type CampaignSiteSupportingRead } from "../candidates/campaign-site-verifier.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 
 /** A portrait can cite either a worker artifact or an immutable known-source vault object. */
@@ -32,9 +34,10 @@ export interface PortraitSubject {
 export interface PortraitSources {
   readonly subject: PortraitSubject;
   readonly imageUrl: string;
+  readonly commons?: CommonsCandidacyIdentity;
   readonly captures: readonly PortraitCapture[];
   /** Canonical identity and URL of the candidate's verified campaign page. */
-  readonly campaign?: NonNullable<Section3Page["campaign"]> & { readonly url: string };
+  readonly campaign?: { readonly identity: CampaignSiteIdentity; readonly url: string; readonly cycleSource?: CampaignSiteSupportingRead };
 }
 
 const sameName = (a: string, b: string) => pageWords(a).normalize("NFKD").replace(/\p{M}/gu, "") === pageWords(b).normalize("NFKD").replace(/\p{M}/gu, "");
@@ -73,19 +76,23 @@ function ownPortraitPage(name: string, input: PortraitSources, capture: Portrait
     return !social || Boolean(linked && pageLinksTo({ url: linked.url, text: linked.html, retrievedAt: now }, url));
   }
   const identity = input.campaign;
-  return Boolean(identity && identity.url === url && sameName(identity.name, name) && section3Page({ url,
-    text: capture.evidence.text, retrievedAt: capture.observedAt, campaign: identity }, "OFFICIAL_PORTRAIT", now).ok);
+  return Boolean(identity && identity.url === url && sameName(`${identity.identity.givenName} ${identity.identity.familyName}`, name) &&
+    verifyCampaignSitePage(identity.identity, { url, origin: "RECORDED_SITE", ref: capture.evidence.artifactId ?? capture.evidence.vaultKey ?? "" },
+      heldPageRead({ requestedUrl: url, finalUrl: url, httpStatus: capture.httpStatus!, contentType: "text/html",
+        body: capture.evidence.text, retrievedAt: capture.observedAt }), identity.cycleSource).verdict === "VERIFIED");
 }
 
-/** Official and own-campaign portraits need only their own named image; other images need two independent sources. */
 export function verifyPortraitSources(personId: string, input: PortraitSources, now: string): Omit<PortraitVerification, "imageHash" | "sourceImageHash"> {
   if (!personId || personId !== input.subject.personId) throw Error("PORTRAIT_PERSON_ID_MISMATCH");
   const name = input.subject.name;
-  const valid = input.captures.filter(c => {
+  const intact = input.captures.filter(c => {
     const age = Date.parse(now) - Date.parse(c.observedAt);
     return !captureProblem(c) && Boolean(c.evidence.artifactId || c.evidence.vaultKey?.startsWith("project/freshness/source/")) &&
-      age >= 0 && age <= 7 * 86_400_000 && namesImage(input.subject, input.imageUrl, c);
+      age >= 0 && age <= 7 * 86_400_000;
   });
+  const commons = verifiedCommonsPortrait(input, intact, now);
+  if (commons) return commons;
+  const valid = intact.filter(c => namesImage(input.subject, input.imageUrl, c));
   let sources = [...new Map(valid.map(c => [portraitPublisher(c.evidence.canonicalUrl), c])).values()];
   const own = valid.find(c => ownPortraitPage(name, input, c, now));
   if (own) sources = [own, ...sources.filter(c => portraitPublisher(c.evidence.canonicalUrl) !== portraitPublisher(own.evidence.canonicalUrl))];

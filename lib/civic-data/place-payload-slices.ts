@@ -4,9 +4,6 @@ import { CivicPayloadParts } from "./payload-parts.ts";
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
 const serves = `(${division}) OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
 
-/** The manifest may still serve an earlier accepted version after its mutable
- * pointer advances. Its immutable candidate and payload parts remain the same
- * promoted evidence; no current pointer or whole-country payload is substituted. */
 export function placeProjectionSourceSql(acceptedVersionsParameter?: number): string {
   return acceptedVersionsParameter === undefined
     ? "SELECT record_class,scope,current_version_id,payload FROM civic_data_promotions"
@@ -17,6 +14,10 @@ export function placeProjectionSourceSql(acceptedVersionsParameter?: number): st
 }
 
 function collections(recordClass: string): Record<string, string> {
+  if (recordClass === "CENSUS_REFERENCE") {
+    const population = "(x->>'geography' || ':' || x->>'code')=ANY($3::text[]) OR x->'divisionIds' ?| $3::text[]";
+    return { state: population, zcta: population, geographies: population };
+  }
   if (recordClass === "REGISTRY_RUNTIME_BINDING") return {
     "registry.divisions": division, "registry.bodies": serves,
     bodyRosters: `x->>'bodyId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='registry.bodies' AND (${serves.replaceAll("x->", "b.x->")}))`,
@@ -48,7 +49,7 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   ids: readonly string[], bodies: readonly string[], targets: readonly string[], versions: ReadonlyMap<string, string> = new Map(),
   acceptedVersions?: ReadonlyMap<string, string>): Promise<Map<string, unknown>> {
   const derived = recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived");
-  const fields = derived ? { records: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", kind: "TRUE", formatVersion: "TRUE" } : collections(recordClass);
+  const fields = derived ? { records: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", portraits: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", kind: "TRUE", formatVersion: "TRUE" } : collections(recordClass);
   const maps = recordClass === "CANDIDATE_PROFILE" ? ["cards.cards", "links.links"] : [];
   const single = ["ballot.election", ...(derived ? ["kind", "formatVersion"] : [])];
   const paths = Object.keys(fields);

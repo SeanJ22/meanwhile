@@ -10,8 +10,8 @@ import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import {
   parseAgendaCenter,
   makeCivicPlusSource,
-  parseIcalEvents,
 } from "../lib/sources/civicplus/index.ts";
+import { parseIcs } from "../lib/sources/ical/index.ts";
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 import {
   makeOnBaseSource,
@@ -84,12 +84,12 @@ test("civicplus: iCal parses and council sittings normalize with venues", () => 
   assert.equal(aug25.status, "SCHEDULED");
 });
 
-test("civicplus: the iCal parser unfolds and keys DTSTART params", () => {
-  const events = parseIcalEvents(fixture("civicplus-rockaway.ics"));
+test("civicplus: the shared iCal parser unfolds and keys DTSTART params", () => {
+  const events = parseIcs(fixture("civicplus-rockaway.ics"));
   assert.equal(events.length, 11);
   const first = events.find((e) => e.uid === "1830");
   assert.ok(first);
-  assert.equal(first.tzid, "America/New_York");
+  assert.equal(first.dtstart, ";TZID=America/New_York:20261222T190000");
   assert.equal(first.summary, "Township Council Regular Meeting");
 });
 
@@ -164,13 +164,13 @@ test("civicplus: two bodies on one division do not suppress each other's archive
       {
         wiring: council,
         ical: fixture("civicplus-rockaway.ics"),
-        agendaCenter: html,
+        agendaPages: [{ url: council.config.agendaCenterUrl, text: html, collectedAt: NOW.toISOString() }],
         collectedAt: NOW.toISOString(),
       },
       {
         wiring: planning,
         ical: fixture("civicplus-rockaway-boards.ics"),
-        agendaCenter: html,
+        agendaPages: [{ url: planning.config.agendaCenterUrl, text: html, collectedAt: NOW.toISOString() }],
         collectedAt: NOW.toISOString(),
       },
     ],
@@ -206,7 +206,7 @@ test("civicplus: the archive's agenda link is kept on the feed's own row for the
     `LOCATION:${location}`, "END:VEVENT", "END:VCALENDAR",
   ].join("\r\n");
   const { meetings } = makeCivicPlusSource([council]).normalizeWithDrops(
-    [{ wiring: council, ical, agendaCenter: html, collectedAt: NOW.toISOString() }],
+    [{ wiring: council, ical, agendaPages: [{ url: council.config.agendaCenterUrl, text: html, collectedAt: NOW.toISOString() }], collectedAt: NOW.toISOString() }],
     NOW,
   );
   const sameDay = meetings.filter((m) => m.startsAt.slice(0, 10) === archived.date);

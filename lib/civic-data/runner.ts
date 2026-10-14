@@ -18,9 +18,10 @@ import {
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
 
-export function routinePreSpawnMemoryDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
+/** A command never spawned because memory stayed full or the pass's time ran out: still owed, not failed. */
+export function routinePreSpawnDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
   return !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
-    run.stdout === "" && run.stderr === "" && run.errorMessage?.startsWith("WORKER_MEMORY_DEADLINE:")
+    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET):/.test(run.errorMessage ?? "")
     ? run.errorMessage : null;
 }
 

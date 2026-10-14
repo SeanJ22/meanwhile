@@ -18,7 +18,7 @@ import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export { peopleJurisdiction, readPeopleSourceProjection, type PeopleSourceReadModel } from "./people-source-read.ts";
 import { peopleJurisdiction, readPeopleSourceProjection, type PeopleSourceReadModel } from "./people-source-read.ts";
-export interface PublishPeopleSourceInput {
+interface PublishPeopleSourceInput {
   readonly store: RoutineDataStore;
   readonly state: string;
   readonly sourceId: string;
@@ -32,7 +32,7 @@ export interface PublishPeopleSourceInput {
   readonly derivedInputs?: readonly DerivedInputRef[];
   readonly confirmUnchanged?: boolean;
 }
-export function peopleSourceCandidate(input: Omit<PublishPeopleSourceInput,"store">): RoutineCandidate {
+function peopleSourceCandidate(input: Omit<PublishPeopleSourceInput,"store">): RoutineCandidate {
   const jurisdiction = peopleJurisdiction(input.state), scope = peopleSourceScope(jurisdiction, input.sourceId);
   const recordClass = peopleSourceRecordClass(jurisdiction, input.sourceId), parserVersion = sourceAuthority(input.sourceId)?.parserVersion ?? "people-sources/1";
   const acquiredAt = input.acquisitions.map(row=>row.retrievedAt).sort().at(-1) ?? input.now;

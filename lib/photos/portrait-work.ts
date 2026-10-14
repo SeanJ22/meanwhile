@@ -20,10 +20,9 @@ function sharedRepositories() {
   })().catch(error => { repositories = undefined; throw error; });
 }
 
-/** Standing source readers use the same website holds and spacing as the fleet.
- * The host lock includes the response body, so portrait children never multiply
- * requests to one publisher. Held releases do not spend a website request. */
-export interface PortraitPacingRuntime {
+/** Standing source readers share the fleet's website holds; the host lock covers the body,
+ * so portrait children never multiply requests to one publisher. */
+interface PortraitPacingRuntime {
   readonly repositories?: () => Promise<Pick<ControlPlaneRepositories,"locks"|"websitePacing">>;
   readonly clock?: () => number;
   readonly sleep?: typeof sourceAcquisitionSleep;

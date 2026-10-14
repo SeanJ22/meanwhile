@@ -3,7 +3,7 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { doorPartitionIds } from "../doors/mission-refresh.ts";
-import { workerPublicationTasks, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
+import { owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldBallotInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -11,6 +11,8 @@ import type { WorkItem } from "../control-plane/work-item.ts";
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
+/** A publish-now pass starts no new child after this long; children already running finish. */
+export const PUBLISH_NOW_PASS_BUDGET_MS = 10 * 60_000;
 export const PUBLISH_NOW_SINGLETON_PORT = 49_373;
 export function publishNowLane(run: () => Promise<void>): IndependentRuntimeLane {
   return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, run };
@@ -75,7 +77,7 @@ export async function readWorkerPublicationItems(
   const items: WorkerPublicationItem[] = [];
   let afterId: string | null = null;
   for (;;) {
-    const rows = await query(`SELECT id,
+    const rows = await query(`SELECT id, value #>> '{subject}' AS subject,
       value #>> '{autonomousPlan,publication,contractId}' AS contract_id,
       value #>> '{autonomousPlan,contract,recordClass}' AS record_class,
       CASE WHEN jsonb_typeof(value->'publicationOutcome') = 'object' THEN jsonb_strip_nulls(jsonb_build_object(
@@ -83,7 +85,8 @@ export async function readWorkerPublicationItems(
         'status', value #> '{publicationOutcome,status}',
         'at', value #> '{publicationOutcome,at}',
         'recovery', value #> '{publicationOutcome,recovery}',
-        'sourceObservedAt', value #> '{publicationOutcome,sourceObservedAt}'
+        'sourceObservedAt', value #> '{publicationOutcome,sourceObservedAt}',
+        'code', value #> '{publicationOutcome,code}'
       )) ELSE NULL END AS publication_outcome
       FROM cp_work_items
       WHERE value #>> '{autonomousPlan,publication,contractId}' = ANY($1::text[])
@@ -92,7 +95,7 @@ export async function readWorkerPublicationItems(
     for (const row of rows) {
       if (typeof row.id !== "string" || typeof row.contract_id !== "string" || !contractIds.includes(row.contract_id) ||
           typeof row.record_class !== "string" || !row.record_class.trim()) throw new Error("PUBLICATION_WORK_ITEM_METADATA_INVALID");
-      items.push({ id: row.id, autonomousPlan: {
+      items.push({ id: row.id, ...(typeof row.subject === "string" ? { subject: row.subject } : {}), autonomousPlan: {
         publication: { contractId: row.contract_id as NonNullable<NonNullable<WorkerPublicationItem["autonomousPlan"]>["publication"]>["contractId"] },
         contract: { recordClass: row.record_class },
       }, ...(row.publication_outcome === null || row.publication_outcome === undefined ? {}
@@ -128,13 +131,14 @@ export async function readPublishNowWorkerTasks(
   items: readonly WorkerPublicationItem[],
   readCompleted: (workItemIds: readonly string[]) => Promise<readonly WorkerResultRecord[]>,
   now: string,
+  heldInputs: HeldBallotInputs | null = null,
 ): Promise<RoutineSourceTask[]> {
-  const tasks: RoutineSourceTask[] = [];
+  const owed: OwedWorkerPublication[] = [];
   for (let at = 0; at < items.length; at += AGGREGATE_LIST_READ_PAGE) {
     const page = items.slice(at, at + AGGREGATE_LIST_READ_PAGE);
-    tasks.push(...publishNowWorkerTasks(page, await readCompleted(page.map(item => item.id)), now));
+    owed.push(...owedWorkerPublications(page, await readCompleted(page.map(item => item.id)), now, heldInputs));
   }
-  return tasks;
+  return workerPublicationTasksFor(owed, now);
 }
 
 export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {

@@ -29,6 +29,13 @@ export async function receiptCapture(input: {
     const capture = await readHeld(record);
     if (capture) return { capture };
   }
+  return fetchCapture(input);
+}
+
+/** One fetch of the page by code, saved to the vault and listed with every job's artifacts. */
+export async function fetchCapture(input: {
+  readonly url: string; readonly repos: Pick<ControlPlaneRepositories, "artifacts">; readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
+}): Promise<{ readonly capture: WorkerPublicationCapture } | { readonly error: string }> {
   let response;
   try { response = await input.fetch(input.url, {}); } catch (error) { return { error: `FETCH_FAILED:${error instanceof Error ? error.message : String(error)}` }; }
   if (response.status < 200 || response.status >= 300) return { error: `HTTP_${response.status}` };

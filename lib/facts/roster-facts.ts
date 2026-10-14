@@ -32,6 +32,8 @@ export interface RosterFactsReport {
   readonly departed: number;
   /** The permanent person id each read member row resolved to. */
   readonly people: ReadonlyMap<string, string>;
+  /** Each member row's first outcome for each of its fields (`name` is the seat itself). */
+  readonly outcomes: ReadonlyMap<string, ReadonlyMap<string, PublishOutcome>>;
 }
 
 const text = (value: unknown): string | null => (typeof value === "string" && value.trim() ? value.trim() : null);
@@ -52,8 +54,13 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
   const bodyEntity = (await readCheckEntity(db.query, body.id))!;
   const copy = await db.transaction(query => saveCaptureCopy(query, capture));
   const provenance = captureProvenance(capture, bodyEntity.hosts);
-  const tally = { live: 0, confirmed: 0, held: 0, blanks: 0, departed: 0, people: new Map<string, string>() };
-  const count = (outcome: PublishOutcome) => {
+  const tally = { live: 0, confirmed: 0, held: 0, blanks: 0, departed: 0, people: new Map<string, string>(), outcomes: new Map<string, Map<string, PublishOutcome>>() };
+  const count = (outcome: PublishOutcome, recordId?: string, field?: string) => {
+    if (recordId && field) {
+      const own = tally.outcomes.get(recordId) ?? new Map<string, PublishOutcome>();
+      if (!own.has(field)) own.set(field, outcome);
+      tally.outcomes.set(recordId, own);
+    }
     if ("blank" in outcome) tally.blanks++;
     else if (outcome.decision === "PUBLISH") tally.live++;
     else if (outcome.decision === "CONFIRM") tally.confirmed++;
@@ -64,9 +71,10 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
   for (const member of input.members) {
     const name = text(member.fields.name), written = text(member.fields.nameAsWritten) ?? name, office = text(member.fields.office);
     if (!name || !written || !personName(name)) {
-      await openBlank(db.query, { entityId: body.id, field: `member-row:${member.recordId}`, stage: "READ", reason: name ? "NAME_NOT_A_PERSON" : "NAME_NOT_READ",
+      const reason = name ? "NAME_NOT_A_PERSON" : "NAME_NOT_READ";
+      await openBlank(db.query, { entityId: body.id, field: `member-row:${member.recordId}`, stage: "READ", reason,
         detail: capture.evidence.canonicalUrl, retryMinutes: clocks.retryMinutes("officeholder") });
-      tally.blanks++;
+      count({ blank: reason }, member.recordId, "name");
       continue;
     }
     const personId = await resolvePerson(db, { name, state: body.state, placeId: place ?? body.parentId,
@@ -75,16 +83,17 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
     seated.add(personId);
     tally.people.set(member.recordId, personId);
     const person: CheckEntity = { id: personId, fullName: written, stateName: null, hosts: bodyEntity.hosts, externalIds: [] };
-    const claim = (entity: CheckEntity, field: string, fieldKind: FieldKind, value: unknown, valueText: string, sourceField: string) => {
+    const claim = async (entity: CheckEntity, field: string, fieldKind: FieldKind, value: unknown, valueText: string, sourceField: string) => {
       const quote = member.fieldSources?.[sourceField]?.quote ?? valueText;
-      return publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now);
+      count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now),
+        member.recordId, sourceField);
     };
-    count(await claim(bodyEntity, `member:${personId}`, "officeholder", { name, office }, written, "name"));
-    count(await claim(person, "name", "officeholder", name, written, "name"));
-    if (office) count(await claim(person, `office:${body.id}`, "officeholder", office, office, "office"));
+    await claim(bodyEntity, `member:${personId}`, "officeholder", { name, office }, written, "name");
+    await claim(person, "name", "officeholder", name, written, "name");
+    if (office) await claim(person, `office:${body.id}`, "officeholder", office, office, "office");
     if (member.fields.contactKind !== "PERSONAL") for (const [from, field] of CONTACTS) {
       const value = text(member.fields[from]);
-      if (value) count(await claim(person, field, "contact", value, value, from));
+      if (value) await claim(person, field, "contact", value, value, from);
     }
     for (const [from, field] of TERMS) {
       const value = text(member.fields[from]);
@@ -93,10 +102,10 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
       if (from !== "termNote" && boundedIndexOf(normalizeText(quote!).toLowerCase(), normalizeText(written).toLowerCase()) === -1) {
         await openBlank(db.query, { entityId: personId, field: `${field}:${body.id}`, stage: "CHECK", reason: "TERM_QUOTE_NOT_ABOUT_MEMBER",
           detail: quote!, retryMinutes: clocks.retryMinutes("officeholder") });
-        tally.blanks++;
+        count({ blank: "TERM_QUOTE_NOT_ABOUT_MEMBER" }, member.recordId, from);
         continue;
       }
-      count(await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" ? value : quote!, from));
+      await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" ? value : quote!, from);
     }
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {

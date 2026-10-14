@@ -1,6 +1,3 @@
-import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
-import { indexScoutFindings } from "../lib/control-plane/box.ts";
-import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
@@ -31,7 +28,7 @@ import { collectWorkerRosterReadback, type PublishedWorkerRead } from "../lib/co
 
 const ROOT = join(import.meta.dirname, "..");
 
-async function proveRosterPublication(partial = false, box = false) {
+async function proveRosterPublication(partial = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -49,7 +46,7 @@ async function proveRosterPublication(partial = false, box = false) {
   const body = prior.payload.registry.bodies.find(body => body.id === existing.bodyId)!;
   assert.ok(body.name);
   const rows = existing.members.map(member => ({ id: member.id, name: member.name, office: member.officeTitle }));
-  rows.push({ id: "fixture-new-holder", name: "Morgan Example", office: "Fixture Board Member", ...(box ? { email: "morgan@example.gov" } : {}) });
+  rows.push({ id: "fixture-new-holder", name: "Morgan Example", office: "Fixture Board Member" });
   if (partial) {
     rows.shift(); // An incomplete update must not erase this prior verified person.
     rows.push({ id: "fixture-unresolved-holder", name: "Contact us", office: "Contact information" });
@@ -76,47 +73,14 @@ async function proveRosterPublication(partial = false, box = false) {
   const runtime = { ...h.runtime,
     independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
   // The Validator is the last stage for a roster; no auditor is dispatched.
-  for (const role of (box ? ["ACQUIRER"] : ["ACQUIRER", "PARSER", "VALIDATOR"])) {
+  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
     const dispatch = await dispatchWorkerTask(runtime, next.task!);
     assert.equal(dispatch.outcome, "WORKED", JSON.stringify(dispatch));
   }
-  if (box) {
-    const acquired = (await h.repos.artifacts.read(h.item.id)).find(row => row.canonicalUrl === FIXTURE_URL)!;
-    const source: ScoutResult = { formatVersion: 1, attemptId: acquired.attemptId, obligationId: "fixture-box", routeTaskId: acquired.routeTaskId!,
-      workItemId: h.item.id, subjectId: h.item.subject, routeId: "official-roster", recordClass: "OFFICIAL_ROSTER", providerId: "fixture",
-      reason: "Recorded hunter findings", outcome: "EVIDENCE_FOUND", stoppedBy: "MODEL", rungs: [], distinctEvidenceRungs: 1,
-      candidates: [], findings: rows.flatMap(row => Object.entries(row).filter(([field]) => !("email" in row) || field === "email").map(([field, value]) => ({ subjectId: row.id, field, value,
-        exactQuote: JSON.stringify(row), sourceUrl: FIXTURE_URL, artifactIds: [acquired.artifactId], kind: "RECORD" as const, summary: field }))),
-      nextRungs: [], unverified: [], narrative: "Saved fields", worker: { provider: "fixture", model: "fixture", modelReported: "fixture" },
-      usage: { inputTokens: 1, outputTokens: 1, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, turns: 1, toolCalls: 1 },
-      usd: 0.01, elapsedMs: 1, artifactIds: [acquired.artifactId], methodCandidateIds: [], refusal: null, startedAt: h.now(), recordedAt: h.now() };
-    await h.repos.scoutResults.append(source.obligationId, source.attemptId, source, source.recordedAt);
-    await indexScoutFindings(h.repos.boxFindings, source, h.now());
-    const calls = h.calls.length;
-    let crashAfterCommit = true;
-    const consumingRepos = { ...h.repos, boxFindings: { ...h.repos.boxFindings,
-      compareAndSet: async (...args: Parameters<typeof h.repos.boxFindings.compareAndSet>) => {
-        if (crashAfterCommit && args[2].state === "built") { crashAfterCommit = false; throw Error("fixture crash after extraction commit"); }
-        return h.repos.boxFindings.compareAndSet(...args);
-      } } };
-    const consume = async () => buildBoxFindings({ repos: consumingRepos, items: [(await h.repos.workItems.mustRead(h.item.id)).value], now: h.now, leaseMs: 120000, readCapture: async id => {
-      const evidence = evidenceProjection(await runtime.readEvidence(id));
-      return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
-    } });
-    await assert.rejects(consume(), /fixture crash after extraction commit/);
-    assert.equal((await h.repos.workerResults.read(h.item.id)).filter(row => row.result.role === "PARSER").length, 1);
-    const built = await consume();
-    assert.equal(built.built.length, rows.length, JSON.stringify(built));
-    assert.equal(h.calls.length, calls, "Box consumption performs no acquisition or model turn");
-    assert.equal((await consume()).built.length, 0, "restart does not duplicate built findings");
-    const parser = (await h.repos.workerResults.read(h.item.id)).find(row => row.result.role === "PARSER")!;
-    assert.equal(parser.executionMode, "DETERMINISTIC");
-    assert.equal(parser.cost.usd, 0);
-  }
   const results = await h.repos.workerResults.read(h.item.id);
-  assert.deepEqual(results.map(row => row.result.verdict), box ? ["ACQUIRED", "EXTRACTED"] : ["ACQUIRED", "EXTRACTED", "PASS"]);
+  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS"]);
   const facts = await factDb();
   await ensureFactEntities(facts, ROOT, ["az"]);
   installFactReader(facts.query);
@@ -140,11 +104,6 @@ async function proveRosterPublication(partial = false, box = false) {
   assert.equal(delivered.sourceUrl, FIXTURE_URL);
   assert.deepEqual(delivered.members.map(member => member.name).sort(), rows.filter(row => row.name !== "Contact us").map(row => row.name).sort());
   for (const member of delivered.members) assert.equal(member.fieldSources?.name?.sourceUrl, FIXTURE_URL, "every seat cites the saved page it was read from");
-  const added = delivered.members.find(member => member.name === "Morgan Example")!;
-  if (box) {
-    assert.equal(added.email, "morgan@example.gov");
-    assert.equal(added.fieldSources?.email?.sourceUrl, FIXTURE_URL, "Sources carries the exact saved page for the email");
-  }
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0]!.outcome.records);
   let observations = 0;
@@ -192,8 +151,6 @@ async function proveRosterPublication(partial = false, box = false) {
   assert.match(assignment.waiting.nextAction, /automatically/);
   assert.ok(assignment.delivery.blockers.some(reason => reason.includes("ROSTER_AUTHORITY_REPLAY_FAILED")));
 }
-
-test("Box findings reach the member card with email Sources in one publication pass, without another paid turn", () => proveRosterPublication(false, true));
 
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));

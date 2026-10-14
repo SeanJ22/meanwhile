@@ -6,8 +6,6 @@ import { doorPartitionIds } from "../doors/mission-refresh.ts";
 import { owedFactItems, workerPublicationTasks, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
-import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import type { WorkItem } from "../control-plane/work-item.ts";
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
@@ -103,24 +101,6 @@ export async function readWorkerPublicationItems(
     if (afterId !== null && next <= afterId) throw new Error("PUBLICATION_WORK_ITEM_PAGE_NOT_ADVANCING");
     afterId = next;
   }
-}
-
-/** Full work instructions are needed only for findings currently waiting to be built. */
-export async function readPublicationBoxItems(repos: ControlPlaneRepositories, items: readonly WorkerPublicationItem[], now: string): Promise<WorkItem[]> {
-  const [waiting, taken] = await Promise.all([
-    repos.boxFindings.listWhere(["state"], "waiting"),
-    repos.boxFindings.listWhere(["state"], "taken"),
-  ]);
-  const allowed = new Set(items.map(item => item.id));
-  const ids = [...new Set([...waiting, ...taken.filter(row => row.value.claim && row.value.claim.expiresAt <= now)]
-    .flatMap(row => row.value.origins.map(origin => origin.workItemId)).filter(id => allowed.has(id)))];
-  if (repos.workItems.readMany) return (await repos.workItems.readMany(ids)).map(row => row.value);
-  const full: WorkItem[] = [];
-  for (const id of ids) {
-    const row = await repos.workItems.read(id);
-    if (row) full.push(row.value);
-  }
-  return full;
 }
 
 /** Keep only task descriptors across pages; source documents and completion evidence stay with each existing repository page. */

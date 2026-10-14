@@ -46,6 +46,8 @@ export interface BoxFinding {
   /** Durable extraction; built is not a claim of reader delivery. */
   readonly buildResultId?: string;
   readonly refusal: string | null;
+  /** Why a waiting finding has no slot yet, under the slot map it was read with; a newer map looks at it again. */
+  readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string };
 }
 
 /** Missing old evidence is retained by origin; it must not collapse into one empty finding. */
@@ -105,6 +107,18 @@ export async function takeBoxFinding(repo: AggregateRepository<BoxFinding>, id: 
 export type BoxOutcome = { readonly state: "built"; readonly publicationId: string } |
   { readonly state: "built"; readonly buildResultId: string } |
   { readonly state: "refused"; readonly reason: string } | { readonly state: "failed"; readonly reason: string };
+
+/** A finding with nowhere to go yet stays in the Box, saying what it waits for. */
+export async function holdBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, waitingFor: NonNullable<BoxFinding["waitingFor"]>, now: string): Promise<void> {
+  for (;;) {
+    const held = await repo.mustRead(id), value = held.value;
+    const lapsed = value.state === "taken" && value.claim !== null && instant(value.claim.expiresAt) <= instant(now);
+    if (value.state !== "waiting" && !lapsed) return;
+    const attempts = lapsed ? [...value.attempts, { ...value.claim!, outcome: "expired" as const, endedAt: now, detail: "Builder lease expired; finding remains available." }] : value.attempts;
+    try { await repo.compareAndSet(id, held.revision, { ...value, state: "waiting", claim: null, attempts, waitingFor }, now); return; }
+    catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
+  }
+}
 
 /** Record the durable extraction or publication before finishing its fenced claim. */
 export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, token: string, outcome: BoxOutcome, now: string): Promise<boolean> {

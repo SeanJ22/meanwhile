@@ -2,11 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublicationBoxItems, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../lib/control-plane/repository/pg-store.ts";
 import { owedFactItems, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { indexBoxFinding, takeBoxFinding } from "../lib/control-plane/box.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { DoorRecord } from "../lib/doors/registry.ts";
@@ -121,21 +119,6 @@ test("publication admission filters and projects work-item metadata in the datab
   assert.equal(parameters.length, 2);
   assert.equal(parameters[1][1], rows[AGGREGATE_LIST_READ_PAGE - 1].id);
   assert.deepEqual(items[0], { id: rows[0].id, autonomousPlan: { publication: { contractId: "registry-runtime-bindings" }, contract: { recordClass: "OFFICIAL_ROSTER" } } });
-});
-
-test("the Box builder loads full instructions only for pending findings in selected publication items", async () => {
-  const repos = createMemoryRepositories();
-  const items: WorkerPublicationItem[] = ["waiting", "expired", "active", "no-finding"].map(id => ({ id,
-    autonomousPlan: { contract: { recordClass: "OFFICIAL_ROSTER" }, publication: { contractId: "registry-runtime-bindings" } } }));
-  for (const item of items) await repos.workItems.put(item.id, item as WorkItem, NOW);
-  for (const id of ["waiting", "expired", "active", "not-selected"]) {
-    const finding = await indexBoxFinding(repos.boxFindings, { subjectId: id, sourceUrl: `https://example.gov/${id}`, exactQuote: id,
-      origin: { kind: "SCOUT", resultId: id, workItemId: id, findingIndex: 0, artifactIds: [`artifact:${id}`], recordedAt: NOW } }, NOW);
-    if (id === "expired" || id === "active") await takeBoxFinding(repos.boxFindings, finding.id, "builder", "2026-10-05T17:00:00.000Z",
-      id === "expired" ? "2026-10-05T17:59:59.000Z" : "2026-10-05T19:00:00.000Z");
-  }
-  repos.workItems.list = async () => { throw new Error("Whole-history read is forbidden during publication admission."); };
-  assert.deepEqual((await readPublicationBoxItems(repos, items, NOW)).map(item => item.id).sort(), ["expired", "waiting"]);
 });
 
 test("BX-12: the executable selects only publication work and never holds the routine singleton", () => {

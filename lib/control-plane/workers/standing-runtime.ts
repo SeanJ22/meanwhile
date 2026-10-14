@@ -1,9 +1,6 @@
 import { parseShutDoorId, shutDoorForWork } from "../scheduler/providers/shut-doors.ts";
 import { useDetectiveFind as applyDetectiveFind } from "../../doors/detective-repair.ts";
 import { readRolePlaybook } from "../playbooks.ts";
-import { buildBoxFindings } from "./scout-extraction.ts";
-import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
-import { readPublicationSourcePolicy } from "../promotion/source-settings.ts";
 import { backfillBox, indexReportedFinding, indexScoutFindings } from "../box.ts";
 import { MISSION_BRIEF_LINE_CAP, missionBriefLines, SCOUT_BRIEF_LINE_BUDGET, type MissionBlank } from "./mission-brief.ts";
 import { missionPartOfPlan } from "../expansion/mission-parts.ts";
@@ -116,25 +113,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
     catch { return null; }
   };
-  // The round owns Box replay/build upkeep; scoped lease runtimes skip it.
+  // The round indexes every Scout and Detective result into the Box; scoped lease runtimes skip it.
   if (!scoped) {
-    const [allWorkRows, allArtifactRows] = await Promise.all([
-      input.repos.workItems.list(), input.repos.artifacts.readAll(),
-    ]);
+    const allArtifactRows = await input.repos.artifacts.readAll();
     await backfillBox(input.repos.boxFindings, { scouts: prior,
       detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
       artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
-    if (!readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
-      const sourcePolicy = await readPublicationSourcePolicy(input.repos);
-      const built = await buildBoxFindings({ repos: input.repos, items: allWorkRows.map(row => row.value), now, leaseMs: 120_000,
-        readCapture: async id => {
-          const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
-          return { evidence: evidenceProjection(evidence), sourcePolicy, observedAt: artifact.retrievedAt,
-            httpStatus: artifact.httpStatus, transport: artifact.transport,
-            partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
-        } });
-      if (built.built.length) priorWorkers = await readCompletedWorkerResults(input.repos);
-    }
   }
   // Build saved findings before any paid adapter work; include freshly installed routes in the Scout brief.
   if (!scoped) await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),

@@ -154,7 +154,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Denver, CO",
     "url": "https://www.sos.state.co.us/pubs/elections/main.html",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "CO",
       "ocdId": "ocd-division/country:us/state:co",
@@ -177,7 +180,27 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.co.us/pubs/elections/main.html\">https://www.sos.state.co.us/pubs/elections/main.html</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/95Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/177Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/302Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/362Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/234Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/256Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/195Final.pdf",
+      "https://leg.colorado.gov/bill_files/116503/download",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/85Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/108Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/109Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/110Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/232FinalCorrected.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/308Final.pdf"
+    ]
   },
   {
     "id": "fec-ct-chief",

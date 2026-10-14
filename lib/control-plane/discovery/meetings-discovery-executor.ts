@@ -1,4 +1,5 @@
 import { escribeCalendarRequest } from "../../sources/escribe/index.ts";
+import { readCivicClerkPages, type CivicClerkPage, type CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sources/official-page-events/index.ts";
 import { observePlatformCensus, platformCensusEntry, type PlatformCensusObservation } from "./platform-census.ts";
 import { createHash } from "node:crypto";
@@ -44,8 +45,8 @@ import { deriveSanitized, recordAcquisition, type Artifact } from "../evidence/a
 import { fieldManualEntryId, type FieldManualEntry } from "../field-manual.ts";
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts";
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
-import { categoryBodyOf } from "./auto-crosswalk.ts";
 import { boardDocsListUrl, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
+import { categoryBodyOf } from "./auto-crosswalk.ts";
 import type { OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 /** One HTTP hop. It never follows a redirect: the executor asks permission of every new host first. */
@@ -534,26 +535,64 @@ export async function walkMeetingsDiscoveryNeed(
     const parsed = new URL(candidate.url);
     if (!parsed.hostname.endsWith(".api.civicclerk.com") || enumeratedTenants.has(parsed.hostname)) return;
     enumeratedTenants.add(parsed.hostname);
-    const listUrl = `${parsed.origin}/v1/Categories`;
-    const list = await get(listUrl, "endpoint", "application/json");
-    let categories: { id: number; name?: string; categoryName?: string }[] = [];
-    try { categories = list ? JSON.parse(list.body).value : []; } catch { categories = []; }
-    if (!Array.isArray(categories)) categories = [];
+    const listUrl = `${parsed.origin}/v1/EventCategories`;
+    type Category = { id: number; categoryDesc: string; isPublic?: boolean };
+    const namingPages = new Map<number, { url: string; artifactId: string | null }>();
+    let unread = listUrl;
+    let categories: Category[];
+    try {
+      categories = await readCivicClerkPages<Category>(listUrl, async url => {
+        unread = url;
+        const list = await get(url, "endpoint", "application/json");
+        if (!list) throw new Error("CIVICCLERK_CATEGORY_UNREAD");
+        const page: CivicClerkPage<Category> = JSON.parse(list.body);
+        if (!Array.isArray(page.value) || page.value.some(category => typeof category.categoryDesc !== "string")) throw new Error("CIVICCLERK_CATEGORY_SHAPE_CHANGED");
+        for (const category of page.value) namingPages.set(category.id, { url, artifactId: list.artifactId });
+        return page;
+      });
+    } catch {
+      leads.push({ vendor: "civicclerk-api", url: unread, basis: "LINKED", evidence: candidate.evidence,
+        detail: "The public category list remains owed; its pages could not be read completely", via });
+      return;
+    }
     leads.push({ vendor: "civicclerk-api", url: listUrl, basis: "LINKED", evidence: candidate.evidence,
       detail: `${categories.length} published CivicClerk categories`, via });
-    for (const category of categories) {
-      const name = category.categoryName ?? category.name;
-      if (!Number.isInteger(category.id) || !name || "unmatched" in categoryBodyOf(name, need.jurisdictionId)) continue;
+    const lastRead = new Map<string, string>();
+    for (const prior of runtime.priorAttempts ?? []) for (const step of prior.steps) {
+      if (step.purpose === "endpoint" && step.status !== null && (lastRead.get(step.url) ?? "") < prior.finishedAt) lastRead.set(step.url, prior.finishedAt);
+    }
+    const categoryRoute = (category: Category) => {
       const route = new URL(`${parsed.origin}/v1/Events`);
-      route.searchParams.set("$filter", `eventCategoryId eq ${category.id}`);
-      const calendar = await get(route.href, "endpoint", "application/json");
-      const check = calendar ? verifyEndpointBody(candidate, { status: calendar.status, body: calendar.body, finalUrl: calendar.finalUrl })
-        : { verdict: "NOT_CONFIRMED", count: null, detail: "the category calendar could not be read" };
-      const result = { vendor: "civicclerk-api", url: route.href, basis: "LINKED" as const,
-        evidence: `CivicClerk category ${category.id}: ${name}`, detail: check.detail,
-        via: { page: listUrl, artifactId: list?.artifactId ?? null } };
-      if (check.verdict === "YIELDED" || check.verdict === "EMPTY") found.push({ ...result, count: check.count, artifactId: calendar?.artifactId ?? null });
-      else leads.push(result);
+      route.searchParams.set("$filter", `categoryId eq ${category.id}`);
+      route.searchParams.set("$top", "200");
+      route.searchParams.set("$orderby", "id desc");
+      return route.href;
+    };
+    categories.sort((a, b) => (lastRead.get(categoryRoute(a)) ?? "").localeCompare(lastRead.get(categoryRoute(b)) ?? ""));
+    for (const category of categories) {
+      const name = category.categoryDesc;
+      if (category.isPublic === false || typeof name !== "string" || !name.trim()) continue;
+      const naming = namingPages.get(category.id)!;
+      unread = categoryRoute(category);
+      try {
+        await readCivicClerkPages<CivicClerkEvent>(unread, async url => {
+          unread = url;
+          const calendar = await get(url, "endpoint", "application/json");
+          if (!calendar) throw new Error("CIVICCLERK_CALENDAR_UNREAD");
+          const page: CivicClerkPage<CivicClerkEvent> = JSON.parse(calendar.body);
+          if (!Array.isArray(page.value) || page.value.some(event => event.categoryId !== category.id)) throw new Error("CIVICCLERK_CATEGORY_MISMATCH");
+          const check = verifyEndpointBody(candidate, { status: calendar.status, body: calendar.body, finalUrl: calendar.finalUrl });
+          const result = { vendor: "civicclerk-api", url, basis: "LINKED" as const,
+            evidence: `CivicClerk category ${category.id}: ${name}`, detail: check.detail,
+            via: { page: naming.url, artifactId: naming.artifactId } };
+          if (check.verdict === "YIELDED" || check.verdict === "EMPTY") found.push({ ...result, count: check.count, artifactId: calendar.artifactId });
+          else leads.push(result);
+          return page;
+        });
+      } catch {
+        leads.push({ vendor: "civicclerk-api", url: unread, basis: "LINKED", evidence: `CivicClerk category ${category.id}: ${name}`,
+          detail: "The public category calendar remains owed; its pages could not be read completely", via: { page: naming.url, artifactId: naming.artifactId } });
+      }
     }
   }
   let proposals: readonly RecipeCandidate[] = [];

@@ -1,0 +1,21 @@
+{
+  "n": 39,
+  "branch": "release/39",
+  "river_sha": "ab2f2cce6489dc307c3810b6cbb6ea71df8e42cb",
+  "tested_sha": "ab2f2cce6489dc307c3810b6cbb6ea71df8e42cb",
+  "steps": [
+    "R3-SWAGIT",
+    "R1"
+  ],
+  "lanes": [
+    "platform-swagit",
+    "fact-store"
+  ],
+  "integration_from": 211,
+  "integration_count": 213,
+  "pr": {
+    "number": 748,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/748"
+  },
+  "at": "2026-10-14T22:53:52Z"
+}

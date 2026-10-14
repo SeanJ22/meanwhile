@@ -1,15 +1,9 @@
-/**
- * What each office does, in plain words, written once per office type and never per person: second person, present
- * tense, a fifteen-year-old's register. Neutral: the office, never the holder.
- */
+import { officeBlurbType } from "./office-identity.ts";
 
-/** Runtime kinds validate source-backed office records; legacy blurbs remain the way back. */
 export type OfficeType = string;
 
 export interface OfficeBlurb {
-  /** The plain-words explanation. */
   text: string;
-  /** Where this office's powers are defined — the checkable source. */
   basis: string;
   basisUrl: string | null;
 }
@@ -61,9 +55,6 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basis: "The city's charter and state municipal statutes",
     basisUrl: null,
   },
-  // The substitute-for-a-mayor case, explained rather than left as a gap.
-  // New Jersey's municipal governing bodies: not mapped to a city council, since a township committee is also the
-  // heads of the town's departments.
   "nj-municipal-governing-body": {
     text: "Your council or committee is the town's own elected lawmaking body. They pass local ordinances, adopt the municipal budget, set the local tax rate, decide zoning, and oversee the people who run town services. New Jersey towns use several different forms of government — borough, township committee, township council, town council — so how much sits with this body rather than with a mayor or an administrator depends on your town's charter. Call them about local roads, zoning, rubbish collection, the police budget, and anything else the town itself runs.",
     basis: "New Jersey Revised Statutes Title 40A, and the municipality's own charter",
@@ -74,8 +65,6 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
     basis: "New Hampshire RSA 41 (town officers)",
     basisUrl: "https://www.gencourt.state.nh.us/rsa/html/NHTOC/NHTOC-III-41.htm",
   },
-  // Every office type on a covered ballot gets its explainer.
-  // explainer. Same register, same neutrality: the office, never the holder.
   governor: {
     text: "Your governor runs the state government — they propose the state budget, sign or veto laws the legislature passes, appoint agency heads and judges, and command the National Guard in a state emergency. They can't pass laws alone or change what your town does. Call their office when a state agency has failed you and nothing else has worked.",
     basis: "The state constitution's executive article",
@@ -201,7 +190,7 @@ function stateOf(divisionOcdId: string | null | undefined): string | null {
 function resolveBlurb(
   type: OfficeType,
   divisionOcdId?: string | null,
-): OfficeBlurb {
+): OfficeBlurb | null {
   if (divisionOcdId) {
     const specific = DIVISION_OFFICE_BLURBS.find(
       (entry) => entry.officeType === type && entry.divisionOcdId === divisionOcdId,
@@ -213,113 +202,14 @@ function resolveBlurb(
       : undefined;
     if (statewide) return statewide.blurb;
   }
-  return OFFICE_BLURBS[type];
+  return OFFICE_BLURBS[type] ?? null;
 }
 
-/** Map an officeholder's published title to a blurb key; an unmapped title gets no blurb. */
-export function officeTypeForTitle(title: string): OfficeType | null {
-  const t = title.toLowerCase();
-  if (t === "u.s. senator") return "us-senator";
-  if (t === "u.s. representative") return "us-representative";
-  if (t === "state senator") return "state-senator";
-  if (t === "state representative" || t === "assemblymember") {
-    return "state-representative";
-  }
-  // Local elected offices from the curated rosters, matched exactly on the titles those rosters use.
-  if (t === "mayor") return "mayor";
-  if (t.includes("council member") || t === "councilwoman" || t === "councilman") {
-    return "city-council";
-  }
-  if (t.includes("supervisor")) return "county-commissioner";
-  if (t.includes("governing board")) return "school-board";
-  if (t.includes("school board")) return "school-board";
-  // 2e: the Selectboard maps to its own explainer, never a borrowed one.
-  if (t.includes("selectboard") || t.includes("select board")) {
-    return "select-board";
-  }
-  if (t === "governor") return "governor";
-  if (t.includes("executive council")) return "executive-councilor";
-  if (t === "secretary of state") return "secretary-of-state";
-  if (t === "attorney general") return "attorney-general";
-  if (t === "state treasurer" || t === "treasurer") return "state-treasurer";
-  if (t.includes("superintendent of public instruction")) {
-    return "superintendent-public-instruction";
-  }
-  if (t.includes("mine inspector")) return "mine-inspector";
-  if (t.includes("corporation commissioner")) return "corporation-commissioner";
-  if (t.includes("sheriff")) return "county-sheriff";
-  if (t.includes("county attorney")) return "county-attorney";
-  if (t.includes("county treasurer")) return "county-treasurer";
-  if (t.includes("register of deeds")) return "register-of-deeds";
-  if (t.includes("register of probate")) return "register-of-probate";
-  if (t.includes("surrogate")) return "county-surrogate";
-  if (t.includes("county clerk")) return "county-clerk";
-  if (t.includes("county commissioner")) return "county-commissioner";
-  return null;
+export function officeTypeForTitle(title: string, divisionOcdId?: string | null): OfficeType | null {
+  return officeBlurbType(title, divisionOcdId);
 }
 
-export function blurbForTitle(
-  title: string,
-  divisionOcdId?: string | null,
-): OfficeBlurb | null {
-  const type = officeTypeForTitle(title);
-  return type ? resolveBlurb(type, divisionOcdId) : null;
-}
-
-/** Map a ballot contest's title to an office type; county offices check before state-level cousins. Unmatched: no blurb. */
-export function officeTypeForContestTitle(title: string): OfficeType | null {
-  const t = title.toLowerCase();
-  if (t.includes("united states senate") || t.includes("united states senator")) {
-    return "us-senator";
-  }
-  if (
-    t.includes("house of representatives") ||
-    t.includes("representative in congress") ||
-    t.includes("u.s. representative")
-  ) {
-    return "us-representative";
-  }
-  if (t.includes("county commissioner")) return "county-commissioner";
-  if (t.includes("board of education")) return "school-board";
-  if (
-    t.includes("borough council") ||
-    t.includes("township committee") ||
-    t.includes("township council") ||
-    t.includes("town council")
-  ) {
-    return "nj-municipal-governing-body";
-  }
-  if (t.includes("state senator")) return "state-senator";
-  if (t.includes("state representative")) return "state-representative";
-  if (t.includes("executive councilor")) return "executive-councilor";
-  if (t === "governor") return "governor";
-  if (t.includes("secretary of state")) return "secretary-of-state";
-  if (t.includes("attorney general")) return "attorney-general";
-  if (t.includes("county attorney")) return "county-attorney";
-  if (t.includes("county treasurer")) return "county-treasurer";
-  if (t.includes("state treasurer")) return "state-treasurer";
-  if (t.includes("superintendent of public instruction")) {
-    return "superintendent-public-instruction";
-  }
-  if (t.includes("mine inspector")) return "mine-inspector";
-  if (t.includes("corporation commissioner")) return "corporation-commissioner";
-  if (t.includes("sheriff")) return "county-sheriff";
-  if (t.includes("register of deeds")) return "register-of-deeds";
-  if (t.includes("register of probate")) return "register-of-probate";
-  if (t.includes("surrogate")) return "county-surrogate";
-  if (t.includes("county clerk")) return "county-clerk";
-  if (t.includes("select board") || t.includes("selectboard")) {
-    return "select-board";
-  }
-  // Last, and matched on the whole title: a bare "Mayor" heading must not catch council titles that mention a mayor.
-  if (t.trim() === "mayor") return "mayor";
-  return null;
-}
-
-export function blurbForContestTitle(
-  title: string,
-  divisionOcdId?: string | null,
-): OfficeBlurb | null {
-  const type = officeTypeForContestTitle(title);
+export function blurbForTitle(title: string, divisionOcdId?: string | null): OfficeBlurb | null {
+  const type = officeTypeForTitle(title, divisionOcdId);
   return type ? resolveBlurb(type, divisionOcdId) : null;
 }

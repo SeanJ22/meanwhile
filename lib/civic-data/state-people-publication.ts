@@ -7,6 +7,9 @@ import { processRegisteredRoutineCandidate } from "./promotion.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { readManualProjectionPrior } from "./manual-projections.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
+import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
 
 export interface StatePeopleAcquisition {
   readonly requestedUrl:string; readonly finalUrl:string; readonly httpStatus:number; readonly body:string; readonly retrievedAt:string;
@@ -100,6 +103,13 @@ export async function publishStatePeople(input: {store:RoutineDataStore;state:st
   const candidate = statePeopleCandidate({...input,roster,acquisitions,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
     prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged});
+  if (outcome.promoted) {
+    const ballotPrior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
+    const ballots = Object.values((ballotPrior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})
+      .filter(ballot => ballot.election.state === input.state.toUpperCase());
+    if (ballots.length && ballotPrior) await publishOfficialBallotCandidacies({ store: input.store, now: input.now, ballots,
+      sourceReceipt: ballotPrior.sourceReceipt, statePeople: new Map([[jurisdiction, roster]]) });
+  }
   return {candidate,outcome};
 }
 

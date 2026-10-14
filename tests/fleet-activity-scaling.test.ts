@@ -53,7 +53,7 @@ test("fleet lease attribution preserves ownership and order without rescanning e
     assert.deepEqual(activity.facts.leases, leases.filter(lease => owned.has(lease.routeTaskId)));
     assert.equal(activity.facts.leases.length, 2, "both released and current leases remain attributed");
     const ownedAttempts = new Set(attempts.filter(attempt => attempt.workItemId === activity.workItem.id).map(attempt => attempt.id));
-    assert.deepEqual(activity.facts.promotion, promotion.filter(record => ownedAttempts.has(record.source.attemptId)),
+    assert.deepEqual(activity.facts.promotion, promotion.filter(record => record.source.kind !== "PROMOTED_CANDIDACY" && ownedAttempts.has(record.source.attemptId)),
       "pipeline attribution retains original order and duplicate records");
   }
   // Count work, not wall-clock time: this fails deterministically on the cubic join.

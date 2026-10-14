@@ -1,0 +1,1355 @@
+{
+  "contractId": "ballot-contests",
+  "version": "2026-11-03",
+  "sourceThrough": "2026-10-14",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T05:23:06.166Z",
+    "reviewedBy": "Codex BL-13",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+        "finalUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+        "httpStatus": 200,
+        "rawHash": "0ebdfdacb4897bafb194baace498a0b4aaaaf702e09838e531fed4d45996abbf",
+        "retrievedAt": "2026-10-14T05:23:06.166Z",
+        "publisher": "Louisiana Secretary of State",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+        "finalUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+        "httpStatus": 200,
+        "rawHash": "cc60d4aac717bb761819109191482625168d78333abf27d69a95f9a8e68d954e",
+        "retrievedAt": "2026-10-14T05:06:22.400Z",
+        "publisher": "Louisiana Secretary of State",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+        "httpStatus": 200,
+        "rawHash": "40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d",
+        "retrievedAt": "2026-10-14T05:11:41.754Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+        "httpStatus": 200,
+        "rawHash": "8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb",
+        "retrievedAt": "2026-10-14T05:11:41.796Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+        "httpStatus": 200,
+        "rawHash": "a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458",
+        "retrievedAt": "2026-10-14T05:11:41.753Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+        "httpStatus": 200,
+        "rawHash": "f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696",
+        "retrievedAt": "2026-10-14T05:11:41.765Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+        "httpStatus": 200,
+        "rawHash": "233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832",
+        "retrievedAt": "2026-10-14T05:11:41.765Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+        "httpStatus": 200,
+        "rawHash": "61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808",
+        "retrievedAt": "2026-10-14T05:11:41.898Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+        "httpStatus": 200,
+        "rawHash": "585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462",
+        "retrievedAt": "2026-10-14T05:11:41.901Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+        "httpStatus": 200,
+        "rawHash": "4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32",
+        "retrievedAt": "2026-10-14T05:11:41.935Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+        "httpStatus": 200,
+        "rawHash": "1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f",
+        "retrievedAt": "2026-10-14T05:11:41.898Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+        "httpStatus": 200,
+        "rawHash": "9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138",
+        "retrievedAt": "2026-10-14T05:11:41.857Z",
+        "publisher": "Louisiana Legislature",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.la.gov/elections-voting",
+        "finalUrl": "https://www.sos.la.gov/elections-voting",
+        "httpStatus": 200,
+        "rawHash": "07041e1736fd70992e4755c82bc6a38a959f57c4a72288883f45d98e2122e186",
+        "retrievedAt": "2026-10-14T05:05:23.266Z",
+        "publisher": "Louisiana Secretary of State",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.la.gov/elections-voting/types-of-elections",
+        "finalUrl": "https://www.sos.la.gov/elections-voting/types-of-elections",
+        "httpStatus": 200,
+        "rawHash": "01e61690ebd6636f6e7b0cf532ed3da949d02ab2067afb1388913530b4be3cf4",
+        "retrievedAt": "2026-10-14T05:05:42.885Z",
+        "publisher": "Louisiana Secretary of State",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/OfficeList?electionId=344",
+        "finalUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/OfficeList?electionId=344",
+        "httpStatus": 200,
+        "rawHash": "a52e688617d8fdd31ea8dbacc1038ba39a137b559c51a7446fb88a82d552006e",
+        "retrievedAt": "2026-10-14T05:07:14.421Z",
+        "publisher": "Louisiana Secretary of State",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.la.gov/elections-voting/election-dates",
+        "finalUrl": "https://www.sos.la.gov/elections-voting/election-dates",
+        "httpStatus": 200,
+        "rawHash": "dbbb29ad8a9e5f449bb05f20c51f4b2f0ed832bcf59f7f5d0819f30ffb3ed708",
+        "retrievedAt": "2026-10-14T05:11:42.158Z",
+        "publisher": "Louisiana Secretary of State",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-contests",
+    "ballots": {
+      "LA:la-2026-11-03": {
+        "election": {
+          "id": "la-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 U.S. Senate General / Open U.S. Representative Primary / Open Primary Election",
+          "state": "LA"
+        },
+        "contests": [
+          {
+            "id": "la-sos-2026-us-senate",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "U. S. Senator",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-us-house-1",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la/cd:1",
+            "divisionVintage": "2026",
+            "title": "U. S. Representative 1st Congressional District",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": "Open primary on November 3; general election, if necessary, December 12, 2026.",
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-us-house-2",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la/cd:2",
+            "divisionVintage": "2026",
+            "title": "U. S. Representative 2nd Congressional District",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": "Open primary on November 3; general election, if necessary, December 12, 2026.",
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-us-house-3",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la/cd:3",
+            "divisionVintage": "2026",
+            "title": "U. S. Representative 3rd Congressional District",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": "Open primary on November 3; general election, if necessary, December 12, 2026.",
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-us-house-4",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la/cd:4",
+            "divisionVintage": "2026",
+            "title": "U. S. Representative 4th Congressional District",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": "Open primary on November 3; general election, if necessary, December 12, 2026.",
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-us-house-5",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la/cd:5",
+            "divisionVintage": "2026",
+            "title": "U. S. Representative 5th Congressional District",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": "Open primary on November 3; general election, if necessary, December 12, 2026.",
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-us-house-6",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la/cd:6",
+            "divisionVintage": "2026",
+            "title": "U. S. Representative 6th Congressional District",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": "Open primary on November 3; general election, if necessary, December 12, 2026.",
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-state-house-92",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la/sldl:92",
+            "divisionVintage": "2026",
+            "title": "State Representative  92nd Representative District",
+            "type": "CANDIDACY",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            },
+            "candidateListComplete": false
+          },
+          {
+            "id": "la-sos-2026-amendment-1",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 1",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006"
+          },
+          {
+            "id": "la-sos-2026-amendment-2",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 2",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811"
+          },
+          {
+            "id": "la-sos-2026-amendment-3",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 3",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809"
+          },
+          {
+            "id": "la-sos-2026-amendment-4",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 4",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667"
+          },
+          {
+            "id": "la-sos-2026-amendment-5",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 5",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365"
+          },
+          {
+            "id": "la-sos-2026-amendment-6",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 6",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071"
+          },
+          {
+            "id": "la-sos-2026-amendment-7",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 7",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189"
+          },
+          {
+            "id": "la-sos-2026-amendment-8",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 8",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539"
+          },
+          {
+            "id": "la-sos-2026-amendment-9",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 9",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422"
+          },
+          {
+            "id": "la-sos-2026-amendment-10",
+            "electionId": "la-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:la",
+            "divisionVintage": "2026",
+            "title": "Proposed Amendment No. 10",
+            "type": "MEASURE",
+            "voteFor": null,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            },
+            "measureTextUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810"
+          }
+        ],
+        "candidacies": [
+          {
+            "id": "la-sos-2026-us-senate:1",
+            "contestId": "la-sos-2026-us-senate",
+            "givenName": "\"Jamie\"",
+            "familyName": "Davis",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-senate:2",
+            "contestId": "la-sos-2026-us-senate",
+            "givenName": "Julia",
+            "familyName": "Letlow",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-1:1",
+            "contestId": "la-sos-2026-us-house-1",
+            "givenName": "Randall",
+            "familyName": "Arrington",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-1:2",
+            "contestId": "la-sos-2026-us-house-1",
+            "givenName": "E. \"Liddy\"",
+            "familyName": "Glass",
+            "partyLabel": "No Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-1:3",
+            "contestId": "la-sos-2026-us-house-1",
+            "givenName": "Lauren",
+            "familyName": "Jewett",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-1:4",
+            "contestId": "la-sos-2026-us-house-1",
+            "givenName": "Steve",
+            "familyName": "Scalise",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-2:1",
+            "contestId": "la-sos-2026-us-house-2",
+            "givenName": "Lisa",
+            "familyName": "Ballay",
+            "partyLabel": "Libertarian",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-2:2",
+            "contestId": "la-sos-2026-us-house-2",
+            "givenName": "Walter \"Rocky\"",
+            "familyName": "Beach",
+            "partyLabel": "No Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-2:3",
+            "contestId": "la-sos-2026-us-house-2",
+            "givenName": "Troy A. Carter",
+            "familyName": "Sr.",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-2:4",
+            "contestId": "la-sos-2026-us-house-2",
+            "givenName": "Renada \"Honey\"",
+            "familyName": "Collins",
+            "partyLabel": "No Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-2:5",
+            "contestId": "la-sos-2026-us-house-2",
+            "givenName": "Peter",
+            "familyName": "Williams",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-3:1",
+            "contestId": "la-sos-2026-us-house-3",
+            "givenName": "\"Kate\"",
+            "familyName": "Cotten",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-3:2",
+            "contestId": "la-sos-2026-us-house-3",
+            "givenName": "John",
+            "familyName": "Day",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-3:3",
+            "contestId": "la-sos-2026-us-house-3",
+            "givenName": "Priscilla",
+            "familyName": "Gonzalez",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-3:4",
+            "contestId": "la-sos-2026-us-house-3",
+            "givenName": "\"Clay\"",
+            "familyName": "Higgins",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-3:5",
+            "contestId": "la-sos-2026-us-house-3",
+            "givenName": "Tia",
+            "familyName": "LeBrun",
+            "partyLabel": "No Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-3:6",
+            "contestId": "la-sos-2026-us-house-3",
+            "givenName": "Caleb \"With a C\"",
+            "familyName": "Walker",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-4:1",
+            "contestId": "la-sos-2026-us-house-4",
+            "givenName": "Conrad",
+            "familyName": "Cable",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-4:2",
+            "contestId": "la-sos-2026-us-house-4",
+            "givenName": "\"Matt\"",
+            "familyName": "Gromlich",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-4:3",
+            "contestId": "la-sos-2026-us-house-4",
+            "givenName": "Gordon",
+            "familyName": "Heslop",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-4:4",
+            "contestId": "la-sos-2026-us-house-4",
+            "givenName": "\"Mike\"",
+            "familyName": "Johnson",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-4:5",
+            "contestId": "la-sos-2026-us-house-4",
+            "givenName": "\"Mike\"",
+            "familyName": "Nichols",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:1",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Stewart Cathey",
+            "familyName": "Jr.",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:2",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Misti",
+            "familyName": "Cordell",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:3",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Oscar \"Omar\"",
+            "familyName": "Dantzler",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:4",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Michael",
+            "familyName": "Echols",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:5",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "\"Gabe\"",
+            "familyName": "Firment",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:6",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Austin",
+            "familyName": "Magee",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:7",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Dan",
+            "familyName": "McKay",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:8",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Patricia \"Pat\"",
+            "familyName": "Moore",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-5:9",
+            "contestId": "la-sos-2026-us-house-5",
+            "givenName": "Antonio",
+            "familyName": "Wilson",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:1",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Monique",
+            "familyName": "Appeaning",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:2",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Chauna",
+            "familyName": "Banks",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:3",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Rufus",
+            "familyName": "Craig",
+            "partyLabel": "Libertarian",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:4",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Larry Davis",
+            "familyName": "III",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:5",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "\"Rick\"",
+            "familyName": "Edmonds",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:6",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Patrick \"Pat\"",
+            "familyName": "Forbes",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:7",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Lindsay \"Rubia\"",
+            "familyName": "Garcia",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:8",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Michael",
+            "familyName": "Mebruer",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:9",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Blake",
+            "familyName": "Miguez",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-us-house-6:10",
+            "contestId": "la-sos-2026-us-house-6",
+            "givenName": "Stephen",
+            "familyName": "Wagley",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-state-house-92:1",
+            "contestId": "la-sos-2026-state-house-92",
+            "givenName": "Gregory",
+            "familyName": "Carroll",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-state-house-92:2",
+            "contestId": "la-sos-2026-state-house-92",
+            "givenName": "Alex",
+            "familyName": "Perdomo",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-state-house-92:3",
+            "contestId": "la-sos-2026-state-house-92",
+            "givenName": "Michael \"Mike\"",
+            "familyName": "Sigur",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:23:06.166Z",
+              "verifiedAt": "2026-10-14T05:23:06.166Z"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "id": "la-sos-2026-amendment-1:measure",
+            "contestId": "la-sos-2026-amendment-1",
+            "officialNumber": "1",
+            "questionText": "Do you support an amendment to allow the surviving spouse of a deceased veteran with a service-connected disability, who receives the additional property tax exemption, to make a one-time transfer of the additional property tax exemption to a subsequent qualifying property? (Effective January 1, 2027) (Amends Article VII, Section 21(K)(1))",
+            "officialStatement": "Act 39 (2026 Regular Session) - Proposing to amend Article VII, Section 21(K)(1) of the Constitution of Louisiana, relative to ad valorem tax exemptions; to provide relative to the ad valorem tax exemption for certain disabled veterans and their surviving spouses; to allow for the transfer of certain exemptions by a surviving spouse; to provide for limitations; to provide for effectiveness; and to specify an election for submission of the proposition to electors and provide a ballot proposition.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-2:measure",
+            "contestId": "la-sos-2026-amendment-2",
+            "officialNumber": "2",
+            "questionText": "Do you support an amendment to allow a local taxing authority to continue to levy a lower millage rate without losing its ability to adjust to the maximum authorized millage rate from a prior year's reassessment? (Effective January 1, 2027) (Amends Article VII, Section 23(C))",
+            "officialStatement": "Act 273 (2026 Regular Session) - Proposing to amend Article VII, Section 23(C) of the Constitution of Louisiana, relative to ad valorem property tax millage rate adjustments; to provide for maximum authorized millage rates; to provide for applicability; to provide for an effective date; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-3:measure",
+            "contestId": "la-sos-2026-amendment-3",
+            "officialNumber": "3",
+            "questionText": "Do you support an amendment to prohibit a defendant from being released on any post-conviction bail if the defendant is convicted of an aggravated offense against a minor child? (Adds Article I, Section 18(C))",
+            "officialStatement": "Act 271 (2026 Regular Session) - Proposing to add Article I, Section 18(C) of the Constitution of Louisiana, relative to the right to bail; to prohibit bail for offenders who have been convicted of certain offenses; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-4:measure",
+            "contestId": "la-sos-2026-amendment-4",
+            "officialNumber": "4",
+            "questionText": "Do you support an amendment to prohibit a person who has served more than one and one-half terms as governor from being elected as governor for any future term? (Amends Article IV, Section 3(B))",
+            "officialStatement": "Act 414 (2026 Regular Session) - Proposing to amend Article IV, Section 3(B) of the Constitution of Louisiana, to provide for the term limit for the office of the governor; to provide for a lifetime term limit; to provide that the limit is not limited to service in successive terms; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-5:measure",
+            "contestId": "la-sos-2026-amendment-5",
+            "officialNumber": "5",
+            "questionText": "Do you support an amendment to authorize a state retirement system to apply any nonrecurring state monies it receives to any of its unfunded accrued liability rather than requiring application to its oldest unfunded accrued liability? (Amends Article VII, Section 10(D)(2)(b)(iii))",
+            "officialStatement": "Act 606 (2026 Regular Session) - Proposing to amend Article VII, Section 10(D)(2)(b)(iii) of the Constitution of Louisiana, relative to application of certain state monies to state retirement system unfunded accrued liability; to remove requirement that such monies be applied to the oldest system liabilities first; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-6:measure",
+            "contestId": "la-sos-2026-amendment-6",
+            "officialNumber": "6",
+            "questionText": "Do you support an amendment to authorize parishes and municipalities to extend an additional property tax exemption for property subject to the homestead exemption that is owned and occupied by a person who is at least sixty-five years of age and who qualifies for the special assessment level? (Effective January 1, 2028) (Adds Article VII, Section 21(P))",
+            "officialStatement": "Act 274 (2026 Regular Session) - Proposing to add Article VII, Section 21(P) of the Constitution of Louisiana, relative to ad valorem taxation; to extend an ad valorem tax exemption for property owners who are sixty-five years of age or older; to provide for the amount of the exemption; to provide for requirements and limitations; to provide for implementation of the exemption by parishes and municipalities; to prohibit the reappraisal and valuation of property for purposes of millage adjustments under certain circumstances; to provide for applicability; to provide for an effective date; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-7:measure",
+            "contestId": "la-sos-2026-amendment-7",
+            "officialNumber": "7",
+            "questionText": "Do you support an amendment to allow for the use of public funds by a political subdivision for the purpose of identifying, inventorying, removing or replacing drinking water utility service lines made of or affected by materials as specified or prescribed by the Lead and Copper Rule Improvements of the United States Environmental Protection Agency, promulgated October 30, 2024, or subsequent promulgation, on property owned by utility customers? (Amends Article VII, Section 14)",
+            "officialStatement": "Act 607 (2026 Regular Session) - Proposing to amend Article VII, Section 14(B) of the Constitution of Louisiana, relative to water utility service lines; to provide for the use of public funds to remove or replace drinking water utility service lines located on property owned by utility customers; to provide relative to identifying, inventorying water utility service lines made of or affected by certain hazardous materials; to specify an election for submission of the proposition to electors and provide a ballot proposition.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-8:measure",
+            "contestId": "la-sos-2026-amendment-8",
+            "officialNumber": "8",
+            "questionText": "Do you support an amendment to prohibit expropriation of property by a foreign adversary or an agent of a foreign adversary? (Amends Article I, Section 4(B)(4))",
+            "officialStatement": "Act 277 (2026 Regular Session) - Proposing to amend Article I, Section 4(B)(4) of the Constitution of Louisiana, relative to the right to property; to prohibit expropriation by foreign adversaries; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-9:measure",
+            "contestId": "la-sos-2026-amendment-9",
+            "officialNumber": "9",
+            "questionText": "Do you support an amendment to increase the maximum amount of income a person may receive and still qualify for the special assessment level for residential property receiving the homestead exemption? (Effective January 1, 2027) (Amends Article VII, Section 18(G)(1)(a)(ii))",
+            "officialStatement": "Act 220 (2025 Regular Session) - Proposing to amend Article VII, Section 18(G)(1)(a)(ii) of the Constitution of Louisiana, relative to ad valorem taxation; to provide for assessment of property for ad valorem tax purposes; to provide with respect to the special assessment level; to provide with respect to the income limit associated with qualifying for the special assessment level; to provide for an effective date; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          },
+          {
+            "id": "la-sos-2026-amendment-10:measure",
+            "contestId": "la-sos-2026-amendment-10",
+            "officialNumber": "10",
+            "questionText": "Do you support an amendment to allow property tax exemptions for blighted or derelict properties that have been rehabilitated, and to require the legislature to enact laws providing for administration of these exemptions? (Effective January 1, 2027) (Adds Article VII, Section 21(P))",
+            "officialStatement": "Act 272 (2026 Regular Session) - Proposing to add Article VII, Section 21(P) of the Constitution of Louisiana, relative to ad valorem taxes; to authorize the exemption of certain property from ad valorem taxes subject to conditions provided in law; to require the legislature to enact laws relative to implementation of the exemption; to provide for applicability; to provide for an effective date; to provide for submission of the proposed amendment to the electors; and to provide for related matters.",
+            "provenance": {
+              "sourceUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf",
+              "sourceOrg": "Louisiana Secretary of State",
+              "collectedAt": "2026-10-14T05:06:22.400Z",
+              "verifiedAt": "2026-10-14T05:06:22.400Z"
+            }
+          }
+        ],
+        "absences": [],
+        "coverageNotes": [
+          "The Secretary of State labels November 3 as U.S. Senate General/Open U.S. Representative Primary/Open Primary Election. U.S. House races are open primaries, with a December 12 general election if necessary.",
+          "The public November 3 candidate inquiry lists U.S. Senate, all six U.S. House districts and State Representative District 92. The captured inquiry does not state that this is a certified candidate list; certification status remains unconfirmed.",
+          "Regional Supreme Court, Public Service Commission, BESE and local judicial offices listed by the office selector are outside this statewide/federal/legislative projection."
+        ]
+      }
+    }
+  }
+}

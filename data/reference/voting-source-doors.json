@@ -4,14 +4,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Montgomery, AL",
     "url": "https://www.sos.alabama.gov/alabama-votes",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "AL",
       "ocdId": "ocd-division/country:us/state:al",
       "name": "Alabama"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.alabama.gov/alabama-votes",
+    "electionPageUrl": "https://www.sos.alabama.gov/alabama-votes/voter/election-information/2026",
     "title": "Alabama chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Montgomery, AL",
@@ -27,7 +30,22 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.alabama.gov/alabama-votes\">https://www.sos.alabama.gov/alabama-votes</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofDemocraticCandidates.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofRepublicanCandidates.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElection-StateCertificationofIndependentCandidate.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/Amended_2026_Republican_Certification.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+      "https://www.sos.alabama.gov/alabama-votes/voter/ballot-measures/statewide",
+      "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+      "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+      "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+      "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf"
+    ]
   },
   {
     "id": "fec-ak-chief",
@@ -327,14 +345,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Atlanta, GA",
     "url": "https://sos.ga.gov/index.php/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "GA",
       "ocdId": "ocd-division/country:us/state:ga",
       "name": "Georgia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.ga.gov/index.php/elections",
+    "electionPageUrl": "https://sos.ga.gov/november-3-2026-general-election",
     "title": "Georgia chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Atlanta, GA",
@@ -342,15 +363,23 @@
       "url": "https://sos.ga.gov/index.php/elections"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "detail": "Official general-election candidate archive, final certified write-in list and all three full constitutional amendments acquired as exact HTTP 200 bytes.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.ga.gov/index.php/elections\">https://sos.ga.gov/index.php/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://sos.ga.gov/november-3-2026-general-election",
+      "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+      "https://sos.ga.gov/sites/default/files/forms/2026%20Certified%20Write-In%20Candidates_3.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf"
+    ]
   },
   {
     "id": "fec-hi-chief",
@@ -605,16 +634,19 @@
   {
     "id": "fec-la-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Baton Rouge, LA",
-    "url": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx",
+    "url": "https://www.sos.la.gov/elections-voting",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "LA",
       "ocdId": "ocd-division/country:us/state:la",
       "name": "Louisiana"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx",
+    "electionPageUrl": "https://www.sos.la.gov/elections-voting/election-dates",
     "title": "Louisiana chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Baton Rouge, LA",
@@ -622,15 +654,13 @@
       "url": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Failed to fetch https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx: (404) Not Found",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "checkedAt": "2026-10-14",
+      "detail": "Current official election root and public statewide candidate inquiry reached; the legacy root returns 404."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
-    "officialLinkingPage": {
-      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx\">https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx</a>"
-    }
+    "candidateListUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+    "ballotMeasuresUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf"
   },
   {
     "id": "fec-me-chief",
@@ -817,7 +847,10 @@
     "publisher": "Office of the Secretary of State, Jefferson City, MO",
     "url": "https://www.sos.mo.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MO",
       "ocdId": "ocd-division/country:us/state:mo",
@@ -833,14 +866,17 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official election root links the certified November 3, 2026 candidate list. The official 2026 Ballot Measures page lists the measures certified for that general election."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.mo.gov/elections/\">https://www.sos.mo.gov/elections/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+    "ballotMeasuresUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mt-chief",

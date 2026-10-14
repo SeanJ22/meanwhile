@@ -33,13 +33,35 @@ interface BoxPublicationReport {
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone" } as const;
 const KIND: Readonly<Record<string, FieldKind>> = { rosters: "officeholder", contacts: "contact", "office contacts": "contact", schedules: "meeting", "comment rules": "comment_rule" };
 
-/** The body a hunter's subject stands for: the body itself, or a government's own governing board. */
-async function bodyForSubject(query: Query, subjectId: string): Promise<{ id: string; name: string; state: string | null; parentId: string | null } | null> {
-  const [row] = await query(`SELECT b.id, b.name, b.state, b.parent_id FROM entity s JOIN entity b ON b.id = s.id AND s.kind = 'body' WHERE s.id = $1
-    UNION ALL SELECT b.id, b.name, b.state, b.parent_id FROM entity s JOIN entity b ON b.parent_id = s.id AND b.kind = 'body'
-      AND (b.id LIKE '%#governing' OR b.id LIKE '%#board') WHERE s.id = $1 AND s.kind = 'government' LIMIT 1`, [subjectId]);
-  return row ? { id: String(row.id), name: String(row.name), state: row.state as string | null, parentId: row.parent_id as string | null } : null;
+interface Target { readonly body: { id: string; name: string; state: string | null; parentId: string | null }; readonly holder: string | null }
+
+const BODY_SQL = "SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND id = $1";
+const GOVERNING_SQL = `SELECT b.id, b.name, b.state, b.parent_id FROM entity b LEFT JOIN entity g ON g.id = b.parent_id AND g.kind = 'government'
+  WHERE b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board') AND (b.parent_id = $1 OR g.parent_id = $1 OR b.id LIKE $1 || '#%')
+  ORDER BY b.parent_id = $1 DESC, b.id LIMIT 1`;
+const SEAT_SQL = `SELECT f.entity_id AS body_id, f.value->>'name' AS holder FROM fact f
+  LEFT JOIN entity_external_id x ON x.scheme = 'roster-member' AND x.value = $1 AND f.field = 'member:' || x.entity_id
+  WHERE f.status = 'live' AND f.field LIKE 'member:%' AND (x.entity_id IS NOT NULL OR 'roster:' || f.entity_id || '#' || substr(f.field, 8) = $1) LIMIT 1`;
+
+const bodyRow = (row: Record<string, unknown> | undefined) =>
+  row ? { id: String(row.id), name: String(row.name), state: row.state as string | null, parentId: row.parent_id as string | null } : null;
+
+/** What a finding's subject stands for: a body, a body's calendar, a seat's body and holder, or a place's or government's governing board. */
+async function targetOf(query: Query, subjectId: string): Promise<Target | null> {
+  if (subjectId.includes("#inventory:")) return null;
+  const own = bodyRow((await query(BODY_SQL, [subjectId.replace(/#calendar$/, "")]))[0]);
+  if (own) return { body: own, holder: null };
+  const [seat] = subjectId.startsWith("roster:") ? await query(SEAT_SQL, [subjectId]) : [];
+  if (seat) {
+    const body = bodyRow((await query(BODY_SQL, [String(seat.body_id)]))[0]);
+    return body ? { body, holder: seat.holder === null ? null : String(seat.holder) } : null;
+  }
+  const governing = bodyRow((await query(GOVERNING_SQL, [subjectId]))[0]);
+  return governing ? { body: governing, holder: null } : null;
 }
+
+const PACKET = "hunt:packet:";
+const placeOf = (row: BoxFinding) => row.origins.find(origin => origin.resultKey?.startsWith(PACKET))?.resultKey!.slice(PACKET.length) ?? row.subjectId;
 
 /** Live member names on a body, so an office or contact finding can join the person its quote names. */
 async function memberNames(query: Query, bodyId: string): Promise<readonly string[]> {
@@ -58,7 +80,8 @@ export async function publishBoxFindings(input: {
   const now = new Date(input.now), since = now.getTime() - HUNTER_FINDING_DAYS * 86_400_000;
   const report = { looked: 0, published: 0, refused: 0, waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
-  const place = (subjectId: string) => report.byPlace[subjectId] ??= { published: 0, refused: 0, waiting: 0 };
+  // A packet's findings count toward its government; any other finding toward its own subject.
+  const place = (row: BoxFinding) => report.byPlace[placeOf(row)] ??= { published: 0, refused: 0, waiting: 0 };
   const [waiting, taken] = await Promise.all([repos.boxFindings.listWhere(["state"], "waiting"), repos.boxFindings.listWhere(["state"], "taken")]);
   const rows = [...waiting, ...taken].map(row => row.value).filter(row =>
     (row.state === "waiting" && row.waitingFor?.slots !== FINDING_SLOTS_VERSION || row.state === "taken" && row.claim !== null && row.claim.expiresAt <= input.now) &&
@@ -72,22 +95,22 @@ export async function publishBoxFindings(input: {
   const hold = async (row: BoxFinding, slotClass: string, reason: string) => {
     await holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION }, input.now);
     report.waitingByClass[slotClass] = (report.waitingByClass[slotClass] ?? 0) + 1;
-    place(row.subjectId).waiting++;
+    place(row).waiting++;
   };
   const settle = async (row: BoxFinding, outcome: PublishOutcome) => {
     const claim = await takeBoxFinding(repos.boxFindings, row.id, "fact-publisher", input.now, new Date(now.getTime() + 120_000).toISOString());
     if (!claim) return;
     if ("blank" in outcome) {
       await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank }, input.now);
-      report.refused++; place(row.subjectId).refused++;
+      report.refused++; place(row).refused++;
       report.failuresByReason[outcome.blank] = (report.failuresByReason[outcome.blank] ?? 0) + 1;
     } else {
       await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "built", publicationId: `${outcome.decision}:${outcome.factId ?? "current"}` }, input.now);
-      report.published++; place(row.subjectId).published++;
+      report.published++; place(row).published++;
     }
   };
 
-  const ready: { finding: Finding; slot: Exclude<FindingSlot, { waiting: string }>; body: NonNullable<Awaited<ReturnType<typeof bodyForSubject>>> }[] = [];
+  const ready: { finding: Finding; slot: Exclude<FindingSlot, { waiting: string }>; body: Target["body"]; holder: string | null }[] = [];
   for (const row of rows) {
     report.looked++;
     const origin = row.origins.find(o => o.kind === "SCOUT" && (o.reported || o.resultKey) && Date.parse(o.recordedAt) >= since);
@@ -97,9 +120,9 @@ export async function publishBoxFindings(input: {
     if (!raw.field || raw.value === undefined || raw.value === null || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
     const slot = slotFor(raw.field, raw.value, result?.recordClass ?? null);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
-    const body = await bodyForSubject(facts.query, row.subjectId);
-    if (!body) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
-    ready.push({ finding: { row, origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: result?.recordClass ?? null }, slot, body });
+    const target = await targetOf(facts.query, row.subjectId);
+    if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
+    ready.push({ finding: { row, origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: result?.recordClass ?? null }, slot, body: target.body, holder: target.holder });
   }
 
   const captures = new Map<string, Promise<{ capture: WorkerPublicationCapture } | { error: string }>>();
@@ -140,8 +163,8 @@ export async function publishBoxFindings(input: {
       const members = new Map<string, RosterMember & { fields: Record<string, unknown>; fieldSources: Record<string, { quote: string; sourceUrl: string; sourceOrg: string; collectedAt: string; verifiedAt: null }> }>();
       const sourceFieldOf = new Map<BoxFinding, { recordId: string; field: string }>();
       const quoteOf = (quote: string) => ({ quote, sourceUrl: read.capture.evidence.canonicalUrl, sourceOrg: "", collectedAt: read.capture.observedAt, verifiedAt: null });
-      for (const { finding, slot: own } of people) {
-        const name = own.slot === "member_name" ? String(finding.value) : known.find(candidate => named(finding.exactQuote, candidate));
+      for (const { finding, slot: own, holder } of people) {
+        const name = own.slot === "member_name" ? String(finding.value) : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
         if (!name) { await settle(finding.row, { blank: "NO_PERSON_NAMED_IN_QUOTE" }); continue; }
         const recordId = `box:${nameKey(name)}`;
         const member = members.get(recordId) ?? { recordId, fields: {}, fieldSources: {} };

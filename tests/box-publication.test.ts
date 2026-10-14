@@ -23,6 +23,25 @@ const AGENDA = `${TUCSON}#agenda-committee`;
 const TCCC_URL = "https://clerksboards.tucsonaz.gov/boards/15";
 const AGENDA_URL = "https://clerksboards.tucsonaz.gov/boards/?board=136";
 
+/** Arizona's fact entities, memory repositories and a vault holding each page a hunter cited, as `wi-hunt` saved it. */
+async function setup() {
+  const facts = await factDb();
+  await ensureFactEntities(facts, ROOT, ["az"]);
+  const repos = createMemoryRepositories();
+  const vault = new MemoryEvidenceStore();
+  const hold = async (url: string, html: string, savedAt: string) => {
+    const { artifact } = recordAcquisition({ canonicalUrl: url, retrievedAt: savedAt, httpStatus: 200, contentType: "text/html", sourceId: new URL(url).hostname,
+      methodRouteId: "scout:fetch_public", workItemId: "wi-hunt", attemptId: "at-hunt", permission: "ALLOWED", transport: "REACHABLE" }, html);
+    await putArtifact(vault, "freshness", artifact, Buffer.from(html));
+    await repos.artifacts.append("wi-hunt", artifact.id, { artifactId: artifact.id, workItemId: "wi-hunt", routeTaskId: null, attemptId: artifact.attemptId,
+      tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType, canonicalUrl: url, partial: false, recordedAt: savedAt }, savedAt);
+    return artifact.id;
+  };
+  return { facts, repos, vault, hold };
+}
+
+const B15 = readFileSync(join(ROOT, "tests", "fixtures", "clerksboards", "b15.html"), "utf8");
+
 test("hunter field names map to fact-store slots; a field with no slot names the class it waits for", () => {
   const slot = (field: string, value: unknown = "x", recordClass: string | null = null) => slotFor(field, value, recordClass);
   assert.deepEqual(slot("officeholder.name"), { class: "rosters", slot: "member_name" });
@@ -46,23 +65,21 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("meeting.location"), { class: "meetings", waiting: "FINDING_NAMES_NO_SITTING" });
   assert.deepEqual(slot("officeholder.name", "x", "candidate-enrichment"), { class: "candidates", waiting: "CANDIDATE_CLASS_NOT_MOVED" });
   assert.deepEqual(slot("population"), { class: "other", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("OFF-04", "Rex Scott"), { class: "rosters", slot: "member_name" });
+  assert.deepEqual(slot("OFF-09", "clerk@tucsonaz.gov"), { class: "contacts", slot: "email" });
+  assert.deepEqual(slot("OFF-09", "(520) 791-4213"), { class: "contacts", slot: "phone" });
+  assert.deepEqual(slot("GOV-08", "520-791-4213"), { class: "office contacts", slot: "office_phone" });
+  assert.deepEqual(slot("GOV-08", "255 W. Alameda St., Tucson, AZ 85701"), { class: "office contacts", slot: "office_address" });
+  assert.deepEqual(slot("GOV-08", "https://www.tucsonaz.gov"), { class: "directory", waiting: "DIRECTORY_CLASS_NOT_MOVED" });
+  assert.deepEqual(slot("MTG-04", "first Tuesday"), { class: "schedules", slot: "meeting_cadence" });
+  assert.deepEqual(slot("PAR-03", "3 minutes"), { class: "comment rules", slot: "comment:time_limit" });
+  assert.deepEqual(slot("ELE-04", "x"), { class: "elections", waiting: "CHECKLIST_ITEM_HAS_NO_SLOT" });
 });
 
 test("Box findings publish on their own page with no model turn: a held copy inside the clock, otherwise one fetch; the rest wait or refuse with reasons, once", async () => {
-  const facts = await factDb();
-  await ensureFactEntities(facts, ROOT, ["az"]);
-  const repos = createMemoryRepositories();
-  const vault = new MemoryEvidenceStore();
-  const hold = async (url: string, html: string, savedAt: string) => {
-    const { artifact } = recordAcquisition({ canonicalUrl: url, retrievedAt: savedAt, httpStatus: 200, contentType: "text/html", sourceId: new URL(url).hostname,
-      methodRouteId: "scout:fetch_public", workItemId: "wi-hunt", attemptId: "at-hunt", permission: "ALLOWED", transport: "REACHABLE" }, html);
-    await putArtifact(vault, "freshness", artifact, Buffer.from(html));
-    await repos.artifacts.append("wi-hunt", artifact.id, { artifactId: artifact.id, workItemId: "wi-hunt", routeTaskId: null, attemptId: artifact.attemptId,
-      tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType, canonicalUrl: url, partial: false, recordedAt: savedAt }, savedAt);
-    return artifact.id;
-  };
+  const { facts, repos, vault, hold } = await setup();
   const agendaPage = "<html><head><title>Agenda Committee | City of Tucson</title></head><body><h1>Agenda Committee</h1><table><tr><td>Dana Example</td><td>Chair</td></tr></table></body></html>";
-  const tccc = await hold(TCCC_URL, readFileSync(join(ROOT, "tests", "fixtures", "clerksboards", "b15.html"), "utf8"), "2026-09-01T15:00:00.000Z");
+  const tccc = await hold(TCCC_URL, B15, "2026-09-01T15:00:00.000Z");
   const staleAgenda = await hold(AGENDA_URL, agendaPage.replace("Dana Example", "Former Member"), "2026-06-01T15:00:00.000Z");
   const fetched: string[] = [];
   const fetch: ProbeFetch = async url => {
@@ -113,4 +130,41 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
   assert.deepEqual(waiting, ["CANDIDATE_CLASS_NOT_MOVED", "DETECTIVE_SPAN_NAMES_NO_FIELD", "DIRECTORY_CLASS_NOT_MOVED", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
   assert.equal((await publishBoxFindings(input)).looked, 0, "a held finding is looked at again only when the slot map moves");
+});
+
+test("a packet hunter's findings publish for the subject each names, not the job's government, and count toward that government", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const page = await hold(TCCC_URL, B15, "2026-09-01T15:00:00.000Z");
+  const fetch: ProbeFetch = async () => { throw new Error("every cited page is held inside its clock"); };
+  let index = 0;
+  // As H-01's report_finding writes them: the brief's subject id, a checklist id as the field, the page's own sentence.
+  const report = (subjectId: string, field: string, value: string, sentence: string) =>
+    indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-packet", obligationId: `hunt:packet:${TUCSON}`, missionPart: null,
+      finding: { subjectId, field, value, exactQuote: sentence, sourceUrl: TCCC_URL, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  await report(TCCC, "OFF-04", "Ned Beman", "Ned Beman Chairperson Ward 2");
+  await report(`${TCCC}#calendar`, "MTG-04", "January 22, April 16, 2026 and July and October 2026 TBD @ 9:30 a.m.",
+    "Meeting Time January 22, April 16, 2026 and July and October 2026 TBD @ 9:30 a.m.");
+  await report(TUCSON, "GOV-08", "(520)791-4213", "For further information please contact the City Clerk's Office at (520)791-4213.");
+  await report(TUCSON, "ELE-04", "November 3, 2026", "The general election is November 3, 2026.");
+  await report(`${TUCSON}#inventory:body`, "OFF-04", "Jose Jimenez", "Jose Jimenez Vice Chairperson Mayor");
+  await report(TCCC, "OFF-04", "Pat Nobody", "Pat Nobody Chairperson");
+
+  const input = { repos, facts, vault, fetch, clocks: factClocks(null), now: NOW, limit: 100 };
+  const first = await publishBoxFindings(input);
+  assert.deepEqual(Object.keys(first.byPlace), [TUCSON], "every finding counts toward the packet's government");
+  assert.deepEqual({ published: first.published, refused: first.refused, waitingByClass: first.waitingByClass, failuresByReason: first.failuresByReason },
+    { published: 3, refused: 1, waitingByClass: { elections: 1, rosters: 1 }, failuresByReason: { QUOTE_NOT_ON_SAVED_COPY: 1 } }, JSON.stringify(first));
+  const live = async (entityId: string, field: string) => (await facts.query("SELECT value FROM fact WHERE entity_id = $1 AND field = $2 AND status = 'live'", [entityId, field]))
+    .map(row => row.value);
+  assert.deepEqual(await live(TCCC, "meeting_cadence"), ["January 22, April 16, 2026 and July and October 2026 TBD @ 9:30 a.m."]);
+  assert.deepEqual(await live(`${TUCSON}#governing`, "office_phone"), ["(520)791-4213"], "a place's finding lands on its governing body");
+
+  const ned = (await readFactRosters(facts.query, [TCCC])).rosters[0]!.members.find(member => member.name === "Ned Beman")!;
+  await report(ned.id, "OFF-09", "(520)791-4213", "please contact the City Clerk's Office at (520)791-4213");
+  const second = await publishBoxFindings(input);
+  assert.equal(second.published, 1, JSON.stringify(second));
+  assert.equal((await readFactRosters(facts.query, [TCCC])).rosters[0]!.members.find(member => member.name === "Ned Beman")!.phone, "(520)791-4213",
+    "a seat's contact joins its holder without the sentence naming them");
+  const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
+  assert.deepEqual(waiting, ["CHECKLIST_ITEM_HAS_NO_SLOT", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
 });

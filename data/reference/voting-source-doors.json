@@ -304,14 +304,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Atlanta, GA",
     "url": "https://sos.ga.gov/index.php/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "GA",
       "ocdId": "ocd-division/country:us/state:ga",
       "name": "Georgia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.ga.gov/index.php/elections",
+    "electionPageUrl": "https://sos.ga.gov/november-3-2026-general-election",
     "title": "Georgia chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Atlanta, GA",
@@ -319,15 +322,23 @@
       "url": "https://sos.ga.gov/index.php/elections"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "detail": "Official general-election candidate archive, final certified write-in list and all three full constitutional amendments acquired as exact HTTP 200 bytes.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.ga.gov/index.php/elections\">https://sos.ga.gov/index.php/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://sos.ga.gov/november-3-2026-general-election",
+      "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+      "https://sos.ga.gov/sites/default/files/forms/2026%20Certified%20Write-In%20Candidates_3.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf"
+    ]
   },
   {
     "id": "fec-hi-chief",

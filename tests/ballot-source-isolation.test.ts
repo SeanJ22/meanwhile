@@ -25,7 +25,11 @@ import {
 } from "../lib/ballot/auxiliary-preloads.ts";
 import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
-import { installAbsent, installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installAzBallot, installManualValue, installRegistryAuthority, promotedFixtureBundle, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { POST as ballotScope } from "../app/api/ballot/scope/route.ts";
+import { resolveZip } from "../lib/geo/zcta.ts";
 
 // The AZ and NH ballots' promoted pointers, each a small synthetic ballot
 // holding one statewide governor contest with one candidacy.
@@ -121,6 +125,22 @@ test("a planted NJ authority failure cannot take down AZ or NH Readers and stays
     );
   } finally {
     nj.source.fetch = original;
+  }
+});
+
+test("ballot scope skips a failed national source and returns the requested state's independently held ballot", async () => {
+  await installRegistryAuthority();
+  const failed = manualEdgeEntry("ballot-contests", { kind: "malformed-ballot-fixture", ballots: {} }, "test:failed-national-ballot");
+  const edge = promotedFixtureBundle({ promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, failed]]) });
+  for (const [zip, expected] of [["85701", "ballot-az-pima:governor"], ["03255", "ballot-nh-merrimack:governor"]]) {
+    const location = resolveZip(zip);
+    assert.ok(location.ok);
+    const response = await withReaderAuthorityEdge(edge, () => ballotScope(new Request("https://fixture.test/api/ballot/scope", {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(location.centroid),
+    })));
+    assert.equal(response.status, 200, `${zip}'s state ballot survives the failed national source`);
+    assert.deepEqual(await response.json(), { ok: true, contestIds: [expected] });
+    assert.match(response.headers.get("cache-control") ?? "", /no-store/);
   }
 });
 

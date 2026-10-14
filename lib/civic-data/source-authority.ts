@@ -551,10 +551,7 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-    /*
-     * Neither authority below has a route of its own; each is authentic only as the exact inputs its candidate names.
-     * The `authorization` strings are stored text, kept byte-identical.
-     */
+
   "meeting-source-wiring": {
     id: "meeting-source-wiring",
     publisher: "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and its vaulted evidence",
@@ -654,10 +651,11 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: [
       "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
       "literal candidate-authored text from those same identity-verified captured pages, with distinct source-byte and transcription hashes; no inferred positions",
+      "portraits from the candidate’s own verified campaign site or freely licensed Wikimedia Commons images bound to the candidacy through Wikidata identity, office or district and state",
     ],
     expectedIdentifierKeys: ["record_id", "candidacy_id"],
     expectedTemporalFields: ["read_at", "approved_at"],
-    horizonSemantics: "Each row is one approved site for one canonical candidacy, keyed by the Reader's own key. It never says a candidate has no site, and a candidate the version does not name is simply not yet verified.",
+    horizonSemantics: "Each row carries a verified campaign site, publication or portrait for one canonical candidacy, keyed by the Reader’s own key. Missing records carry no absence claim.",
     parserVersion: "candidate-campaign-site-chain/1",
     freshnessExpectation: "Recomputed by the standing runner as the campaign-site chain approves sites; no tracked writer.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
@@ -1093,10 +1091,6 @@ export function authorityForManualReceipt(
   return { ok: true, contract };
 }
 
-/**
- * Null means only the contract's own routes are registered. A door's host admits any HTTPS path on that host, unless
- * the contract already names routes on that host: then only those routes are read there.
- */
 let doorHosts: ReadonlySet<string> | null = null;
 const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 

@@ -1,3 +1,5 @@
+import { factReader } from "../facts/db.ts";
+import { withMeetingFacts } from "../facts/meeting-read.ts";
 import { carriedFromAnswer } from "./carry-forward.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
 import type { Meeting, NormalizeDropCounts } from "../sources/types.ts";
@@ -692,7 +694,7 @@ export async function readMeetingsProjection(
       counts: snapshotCounts(collapsed.rows, accounted.freshCollapsed +
         promoted.reduce((sum, { value }) => sum + (value.counts.duplicatesCollapsed ?? 0), 0)),
       sources,
-      meetings: collapsed.rows,
+      meetings: await withMeetingFacts(collapsed.rows, factReader()),
       agendaDocuments: retainedDocuments,
     };
     validateSnapshot(value, {

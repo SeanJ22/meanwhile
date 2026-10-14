@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { topOfficesFor } from "../lib/officials/top-offices.ts";
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 
 const h = (id: string, name: string, officeTitle: string) =>
   ({ id, name, officeTitle }) as never;

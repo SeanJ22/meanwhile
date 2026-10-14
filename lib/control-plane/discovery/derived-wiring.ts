@@ -33,6 +33,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   BOARDDOCS: ["boarddocs"],
   GRANICUS: ["granicus"],
   NOVUSAGENDA: ["novusagenda"],
+  SWAGIT: ["swagit"],
   ESCRIBE: ["escribe"],
   CIVICCLERK: ["civicclerk-api"],
   IQM2: ["iqm2"],
@@ -76,6 +77,7 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
   if (find.vendor === "civicplus-agendacenter") {
     return { kind: "CIVICPLUS", endpoint: { agendaCenterUrl: url.toString() } };
   }
+  if (find.vendor === "swagit" && /(^|\.)swagit\.com$/i.test(url.hostname)) return { kind: "SWAGIT", endpoint: { portalUrl: url.toString() } };
   if (find.vendor === "novusagenda" && /(^|\.)novusagenda\.com$/i.test(url.hostname)) return { kind: "NOVUSAGENDA", endpoint: { portalUrl: url.toString() } };
   if (find.vendor === "boarddocs" && /(^|\.)boarddocs\.com$/i.test(url.hostname)) {
     const path = /^(\/[^/]+\/[^/]+\/Board\.nsf)(?:\/|$)/i.exec(url.pathname)?.[1];

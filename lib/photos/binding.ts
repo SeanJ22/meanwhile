@@ -52,11 +52,12 @@ export function portraitVerificationMatches(personId: string, verification?: Por
     if (!validSources || !attributed) return false;
     if (verification.basis === "COMMONS") {
       const identity = verification.commons;
-      return Boolean(identity && identity.candidacyId === personId && /^Q\d+$/.test(identity.wikidataId) &&
+      return Boolean(identity && identity.candidacyId === personId &&
         /\/state:([^/]+)/.exec(identity.ocdId)?.[1].toUpperCase() === identity.stateCode.toUpperCase() && identity.officeTitle &&
         verification.attribution?.author && verification.license && freelyLicensedPortrait(verification.license.value) &&
         new URL(verification.license.sourceUrl).hostname === "commons.wikimedia.org" &&
-        new URL(identity.identitySourceUrl).hostname === "query.wikidata.org" &&
+        (/^Q\d+$/.test(identity.wikidataId) ? new URL(identity.identitySourceUrl).hostname === "query.wikidata.org"
+          : identity.wikidataId === "" && new URL(identity.identitySourceUrl).hostname === "commons.wikimedia.org") &&
         verification.sources.some(source => source.url === identity.identitySourceUrl));
     }
     if (verification.basis === "OWN_PAGE") return verification.sources.some(s => s.url === verification.ownPageUrl);

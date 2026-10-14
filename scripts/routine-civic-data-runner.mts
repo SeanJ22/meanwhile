@@ -1,6 +1,9 @@
-import { boxIndexEnabled } from "../lib/control-plane/box.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
-import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
+import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
+import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { readHeldBallotInputs } from "../lib/civic-data/worker-held-elections.ts";
 /* @freshness-reads-here */
@@ -69,7 +72,7 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
 import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civic-data/attested-promotion.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
 import {
   ROUTINE_CHILD_MAX_BUFFER_BYTES,
   ROUTINE_CHILD_TIMEOUT_MS,
@@ -100,12 +103,17 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationBoxItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
+import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
+import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import { join } from "node:path";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import { readCompletedWorkerResultsOf } from "../lib/control-plane/repository/worker-completion.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -419,9 +427,12 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   return parseRoutineDueRequests(row?.value.routineDueRequests);
 }
 
+/** Box findings carried to facts each minute; a backlog drains over the next passes. */
+const BOX_FINDINGS_PER_PASS = 300;
+
 /** Resolve the actual Admin Send for hunt work. Publication of already-verified work needs no Send;
  * a paused runner or an unreadable control still admits nothing. */
-async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
+async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
   // An explicit selection of a publication door (`--only=registry-runtime-bindings`) still reads its owed work.
   if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
   const connection = controlPlaneUrlFromEnv();
@@ -435,12 +446,25 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
     const sql = neon(connection);
     const selected = ONLY ? WORKER_PUBLICATION_TASK_IDS.filter(id => ONLY.has(id)) : WORKER_PUBLICATION_TASK_IDS;
     const items = await readWorkerPublicationItems((query, params) => sql.query(query, [...params]), selected);
-    if (boxIndexEnabled()) {
-      const pending = await readPublicationBoxItems(repos, items, new Date().toISOString());
-      if (pending.length) {
-        const context = await workerPublicationContext(RUN_STARTED_AT, repos);
-        await buildBoxFindings({ repos, items: pending, now: () => new Date().toISOString(), leaseMs: 120_000, readCapture: context.readCapture });
+    try {
+      const box = await publishBoxFindings({ repos, store, facts: readerFactDb(), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
+        fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
+        now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS });
+      if (box.looked) console.log(`RCD_BOX_FACTS=${JSON.stringify(box)}`);
+    } catch (error) {
+      failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+    }
+    const owed = await readOwedFactItems(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
+    if (owed.rosters.length || owed.comments.length) try {
+      const context = await workerPublicationContext(RUN_STARTED_AT, repos);
+      const facts = readerFactDb();
+      for (const [label, publish, ids] of [["rosters", publishOwedRosterFacts, owed.rosters], ["comment rules", publishOwedCommentFacts, owed.comments]] as const) {
+        if (!ids.length) continue;
+        const report = await publish({ repos, store, facts, workItemIds: ids, now: RUN_STARTED_AT, readCapture: context.readCapture });
+        console.log(`RCD_FACTS ${label}: ${report.filter(row => row.outcome.status !== "HELD").length} of ${report.length} published as facts`);
       }
+    } catch (error) {
+      failures.push({ taskId: "fact-publication", code: "FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
     const pointers = new PostgresRoutineDataStore();
     const heldInputs = await readHeldBallotInputs((query, params) => sql.query(query, [...params]),
@@ -638,6 +662,35 @@ if (publishNowEdgeChecks) {
   step = "publishing changed source pointers before worker admission";
   await publishNowEdgeChecks.run();
 }
+if (!PUBLISH_NOW) {
+  step = "loading fact store entities";
+  try {
+    const loaded = await ensureFactEntities(readerFactDb(), ROOT, registeredStates(ROOT));
+    if (loaded.length) console.log(`fact store entities: loaded ${loaded.join(", ")}`);
+  } catch (error) {
+    supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+  step = "carrying the rosters, office contacts and comment rules readers already see onto facts";
+  try {
+    const facts = readerFactDb();
+    const rosters = await cartonRosters(facts.query, id => store.readCandidate(id), REGISTRY_RUNTIME_SCOPE);
+    const comments = await cartonComments(facts.query, id => store.readCandidate(id));
+    const offices = await cartonOffices(facts.query, await readRegistryRuntimePrior(store, RUN_STARTED_AT));
+    const connection = controlPlaneUrlFromEnv();
+    if ((rosters || comments || offices) && connection) {
+      const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+      const common = { facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
+        vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT };
+      for (const [label, report] of [["rosters", rosters && await importCartonRosters({ ...rosters, ...common })],
+        ["comment rules", comments && await importCartonComments({ ...comments, ...common })],
+        ["office contacts", offices && await importCartonOffices({ ...offices, ...common })]] as const) {
+        if (report) console.log(`fact store ${label}: ${report.live} facts live, ${report.confirmed} confirmed, ${report.blanks} blanks, ${report.unreadable.length} pages unreadable`);
+      }
+    }
+  } catch (error) {
+    supervisorFailures.push({ taskId: "fact-store-import", code: "FACT_IMPORT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+}
 
 // Resolve every due scope at one frozen instant before launching. The provider frontier below
 // admits one least-recently-considered partition per upstream, so a host with many partitions
@@ -645,7 +698,7 @@ if (publishNowEdgeChecks) {
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
 try {
-  huntTasks = await readHuntSourceTasks();
+  huntTasks = await readHuntSourceTasks(store, supervisorFailures);
 } catch (error) {
   const detail = safeFailure(sanitizedErrorDiagnostic(error));
   supervisorFailures.push({ taskId: "hunt-source-admission", code: "HUNT_SCOPE_UNREAD", detail });

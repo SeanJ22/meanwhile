@@ -7,7 +7,8 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
-import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { seatHolderById } from "../lib/registry/server.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 

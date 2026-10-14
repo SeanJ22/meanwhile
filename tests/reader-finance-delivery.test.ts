@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity, currentOfficialIdentityStatus, resolvedCandidacyForOfficial, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
-import { ROSTER_READER_DISPOSITIONS } from "../lib/registry/body-rosters.ts";
+import { ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
 import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";

@@ -6,6 +6,7 @@ export const DATA_DOOR_KINDS = [
   "BOARDDOCS",
   "GRANICUS",
   "NOVUSAGENDA",
+  "SWAGIT",
   "ESCRIBE",
   "CIVICCLERK",
   "IQM2",
@@ -61,6 +62,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
   },
   NOVUSAGENDA: {
     sourceName: "novusagenda", agendaSourceType: "NOVUSAGENDA", entry: "lib/sources/novusagenda/index.ts",
+    route: { key: "portalUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
+  },
+  SWAGIT: {
+    sourceName: "swagit", agendaSourceType: "SWAGIT", entry: "lib/sources/swagit/index.ts",
     route: { key: "portalUrl", as: "url" },
     allowed: ["bodyMatch"], required: ["bodyMatch"],
   },

@@ -54,7 +54,7 @@ export async function publishOfficialBallotCandidacies(input: {
   const candidate = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", scope: "MEMBERS",
     version: registryEdition(`ballot-candidacies:${digest}`), sourceThrough: input.now, sourceReceipt: input.sourceReceipt,
     payload: { ...prior.payload, registry: { ...prior.payload.registry, generatedAt: input.now, divisions: [], bodies: [] },
-      bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+      statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
       officialCandidacies: { ...bridge, rows: changed } } }, { prior });
   const outcome = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
   if (!outcome.promoted || outcome.readerReadback?.status !== "PASS") {

@@ -1,0 +1,23 @@
+{
+  "n": 33,
+  "branch": "release/33",
+  "river_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+  "tested_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+  "steps": [
+    "BL-12",
+    "BL-14",
+    "SRC-AC"
+  ],
+  "lanes": [
+    "ballot-bl-12",
+    "ballot-bl-14",
+    "src-census"
+  ],
+  "integration_from": 178,
+  "integration_count": 181,
+  "pr": {
+    "number": 742,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/742"
+  },
+  "at": "2026-10-14T08:48:39Z"
+}

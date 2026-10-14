@@ -13,7 +13,7 @@ export function rosterFactReader(rosters: readonly BodyRoster[]): Query {
       const person = Object.fromEntries(Object.entries({ name: fact(member.name), [`office:${roster.bodyId}`]: fact(member.officeTitle), email: fact(member.email),
         phone: fact(member.phone), website: fact(member.websiteUrl), [`term_note:${roster.bodyId}`]: fact(member.termNote) }).filter(([, held]) => held));
       return { body_id: roster.bodyId, body_name: roster.bodyName, person_id: member.personId ?? member.id, value: { name: member.name, office: member.officeTitle },
-        quote: member.name, checked_at: checked, provenance_kind: "OFFICIAL", url, legacy_id: member.id, person };
+        quote: member.name, checked_at: checked, provenance_kind: "OFFICIAL", url, shown_id: member.id, person };
     }));
   };
 }

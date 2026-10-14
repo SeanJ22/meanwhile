@@ -21,7 +21,7 @@ interface RosterFactsInput {
   readonly complete: boolean;
   readonly producedBy: string;
   /** Member ids already shown to readers, kept so links to them still resolve. */
-  readonly legacyMemberIds?: ReadonlyMap<string, string>;
+  readonly shownMemberIds?: ReadonlyMap<string, string>;
 }
 
 export interface RosterFactsReport {
@@ -79,7 +79,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
     }
     const personId = await resolvePerson(db, { name, state: body.state, placeId: place ?? body.parentId,
       externalIds: [["roster-name:" + body.id, nameKey(name)],
-        ...(input.legacyMemberIds?.has(nameKey(name)) ? [["roster-member", input.legacyMemberIds.get(nameKey(name))!] as const] : [])] });
+        ...(input.shownMemberIds?.has(nameKey(name)) ? [["roster-member", input.shownMemberIds.get(nameKey(name))!] as const] : [])] });
     seated.add(personId);
     tally.people.set(member.recordId, personId);
     const person: CheckEntity = { id: personId, fullName: written, stateName: null, hosts: bodyEntity.hosts, externalIds: [] };

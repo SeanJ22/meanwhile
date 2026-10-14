@@ -52,7 +52,7 @@ export async function importCartonRosters(input: {
       const tally = await publishRosterFacts(input.facts, {
         body: { id: roster.bodyId, name: roster.bodyName, state, parentId },
         capture: read.capture, complete: false, producedBy: `carton:${input.versionId}`,
-        legacyMemberIds: new Map(members.map(member => [nameKey(member.name), member.id])),
+        shownMemberIds: new Map(members.map(member => [nameKey(member.name), member.id])),
         members: members.map(member => ({ recordId: member.id,
           fields: { name: member.name, office: member.officeTitle, ...Object.fromEntries(MEMBER_FIELDS.flatMap(field => member[field] ? [[field, member[field]]] : [])) },
           ...(member.fieldSources ? { fieldSources: member.fieldSources } : {}) })),

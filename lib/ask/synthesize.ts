@@ -152,8 +152,8 @@ export function synthesisRequestBody(
   };
   if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
   const fields = modelRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
-  const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] = shape.cached
-    ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.cacheControl }]
+  const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.stableCacheControl }[] = shape.cached
+    ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.stableCacheControl }]
     : synthesisPrompt(pack);
 
   return {

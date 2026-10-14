@@ -28,7 +28,7 @@ const RULES = {
   "nh-sos-campaign-finance": { mode: "DIRECT_SOURCE", state: "NH", reason: "The standing New Hampshire collector acquires native statewide financial identities and their actual filing periods from its official source." },
   "nj-elec-campaign-finance": { mode: "DIRECT_SOURCE", state: "NJ", reason: "The standing New Jersey collector acquires native statewide financial identities and their actual filing periods from its official source." },
   "az-pima-local-finance": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "The adapter covers Pima County only; Arizona state membership alone does not establish Pima applicability." },
-  "voting-sites": { mode: "DIRECT_SOURCE", reason: "The existing automatic pass stays active until live replacement is verified. Registered election-authority polling doors also publish their complete saved rows through the normal worker Slide." },
+  "voting-sites": { mode: "DIRECT_SOURCE", reason: "The automatic pass starts at chief election offices and follows official doors with generic readers. Saved polling-door worker results use the same publication pointer." },
   "prl": { mode: "DIRECT_SOURCE", reason: "The licensed national PRL archive is acquired and attributed for every Send, like any national source (the licence covers every place)." },
   "prl-archives": { mode: "DIRECT_SOURCE", reason: "The known licensed PRL datasets refresh through the shared service; completed native-person partitions serve every place." },
   "az-official-actions": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "Plain code that builds Arizona official actions from their saved sources is still owed; the promotion command takes a prepared projection." },

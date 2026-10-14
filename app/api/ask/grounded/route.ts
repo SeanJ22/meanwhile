@@ -1,5 +1,6 @@
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
 import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
 import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
@@ -1294,7 +1295,7 @@ async function answerWithSettings(request: Request) {
       Object.assign(denominators, profile.denominators);
     }
     const candidateSeats = ballotRecord?.kind === "PERSON"
-      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))
+      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(id=>seatHolderById(id))))
         .flatMap((result) => result.status === "fulfilled" && result.value ? [result.value] : [])
       : [];
     for (const seat of candidateSeats) canonicalSubjectKeys.add(seat.id);
@@ -1967,6 +1968,13 @@ async function answerWithSettings(request: Request) {
       records.push(...financeDetail.records);
       denominators.financeDetailRowsReturned = financeDetail.records.length;
       denominators.financeDetailComplete = financeDetail.complete ? 1 : 0;
+    }
+    if (isBillQuestion(question)) {
+      const person = subject?.kind === "PERSON" ? await seatHolderById(subject.id).catch(() => null) : null;
+      const billStates = person?.id.startsWith("congress:") ? ["US"] : person?.state ? [person.state] :
+        [...new Set([...statesOf(ocdIds), ...statesOf(subject ? [subject.id] : [])])];
+      const bills = await legiscanBillEvidence({question,subject,person,states:billStates});
+      records.push(...bills.records); gaps.push(...bills.gaps); Object.assign(denominators,bills.denominators);
     }
     const relevant = gateRecordsToSubject(subject, records, comparedIds);
     denominators.recordsExcludedOffSubject = relevant.excluded.length;

@@ -40,7 +40,8 @@ export function scoutProcessExecutor(input: {
       scoutDispatch: { input: { ...data, liveClock: Boolean(clock), maturity: maturity(request.obligation.obligation.routeId) },
         context, contextError, toolNames: [...toolsByName.keys()], toolTimeoutMs: tools.timeoutMs, options: { model: input.deps.model,
           bound: input.deps.bound, minRungs: input.deps.minRungs, role: input.deps.role } },
-    }, slots: input.slots, capacity: () => 1, onStarted: input.onStarted, transportFor: () => input.deps.transport,
+    }, slots: input.slots, capacity: () => 1, onStarted: input.onStarted,
+    transportFor: (_, taskId) => input.deps.transportFor?.(taskId) ?? input.deps.transport,
     reserveEscalation: input.deps.reserveEscalation,
     scout: { onStart: input.deps.onStart, onResult: input.deps.onResult,
       tool: async (name, args) => {

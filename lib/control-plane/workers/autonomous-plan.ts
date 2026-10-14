@@ -131,6 +131,8 @@ export function isRetiredRoutineMeetingAcquisition(
 
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
+  /** Sourced population of the subject, when held; used to order election-site blanks. */
+  readonly subjectPopulation?: number;
   /** The mission part this work belongs to, set where the plan is built. Read it with `missionPartOfPlan`. */
   readonly missionPart?: string;
   readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };

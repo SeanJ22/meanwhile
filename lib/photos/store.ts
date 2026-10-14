@@ -11,12 +11,13 @@ export interface PortraitRuntime {
 }
 
 const decodedBytes = new WeakMap<Uint8Array, Awaited<ReturnType<typeof normalizePortrait>>>();
-const runtime: PortraitRuntime = {
+export function createPortraitRuntime(acquire:typeof acquireKnownRelease = acquireKnownRelease): PortraitRuntime {
+  return {
   read: async (url, signal) => {
     const requested = assertPublicUrl(url);
     if(requested.protocol === "http:") requested.protocol = "https:";
     const host=requested.hostname.replace(/^www\./,"");
-    const held = await acquireKnownRelease({sourceId:"person-portrait",releaseId:url,url:requested.href,allowedHosts:[host,`www.${host}`],
+    const held = await acquire({sourceId:"person-portrait",releaseId:url,url:requested.href,allowedHosts:[host,`www.${host}`],
       parserVersion:PORTRAIT_DECODER_VERSION,maxBytes:MAX_PORTRAIT_BYTES,checkAfterMs:7*86_400_000,
       signal:signal ? AbortSignal.any([signal,AbortSignal.timeout(30_000)]) : AbortSignal.timeout(30_000),
       headers:{accept:PORTRAIT_ACCEPT},validate:async (bytes,release)=>{const decoded=await normalizePortrait(bytes);if(!decoded.verdict.ok)throw Error(`PORTRAIT_${decoded.verdict.reason}`);
@@ -31,7 +32,9 @@ const runtime: PortraitRuntime = {
     const store = getStore({name:"meanwhile-portraits",consistency:"strong",...(siteID && token ? {siteID,token} : {})});
     await store.set(key, new Uint8Array(bytes).buffer, {onlyIfNew:true});
   },
-};
+  };
+}
+const runtime=createPortraitRuntime();
 
 /**
  * A resident-task screenshot goes in the same blob store under its own `resident-tasks/` prefix, which

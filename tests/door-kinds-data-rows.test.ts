@@ -9,15 +9,14 @@ import { CROSSWALK_KINDS } from "@/lib/civic-data/meeting-body-crosswalk.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "@/lib/civic-data/derived-meeting-wiring.ts";
 import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts";
 
-// Reviewed filters may carry settings added since the hand-wired import.
 const SAMPLE_ROWS = [
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "ESCRIBE" as const, config: { portalUrl: "https://pub-lamesa.escribemeetings.com", meetingTypes: "City Council" } },
   ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,
     config: { portalUrl: "https://go.boarddocs.com/mi/grand/Board.nsf/Public", committeeId: "A4EP6J588C05" } },
 ];
 
-/** Settings a reviewer would supply, taken from a body the code already wires on the same adapter. */
 function sampleFilter(kind: (typeof DATA_DOOR_KINDS)[number]): Record<string, string> {
   const spec = DOOR_KIND_SPECS[kind];
   const row = SAMPLE_ROWS.find((r) => r.agendaSourceType === spec.agendaSourceType && (kind !== "LEGISTAR_INSITE" || r.config.insiteHost) && spec.required.every((key) => r.config[key] !== undefined));

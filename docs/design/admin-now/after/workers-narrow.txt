@@ -1,0 +1,123 @@
+Skip to the page
+meanwhile …
+Now
+Queue
+Workers
+Checklist
+Money
+Scoreboard
+Data business
+Settings
+Brief
+Changes
+Ask the console
+Start hunts or send leads
+United States
+Change place
+Country · 79 hunts inside
+Period
+Today
+Last 7 days
+Last 30 days
+This month (October 2026)
+Live · updated 10:00 AM ET
+
+UNITED STATES
+
+Workers
+
+Read Oct 13, 10:00 AM ET
+
+In plain words
+
+The latest database update did not finish; the card below says who is fixing it.
+
+The workers last checked in less than 5 minutes ago.
+
+Round of work: finished 9:31 AM ET, with an error; the details are on the Round of work tile.
+
+3 jobs are working now, and 49 are waiting.
+
+The last useful progress was about 30 minutes ago: published 14 meetings for Tucson Unified.
+
+12 paid jobs were not sent to the AI because paid research is paused.
+
+The latest database update
+Checked Oct 13, 8:10 AM ET
+
+The latest database update did not finish: the step that runs before new code goes live failed.
+
+Why it matters
+Database changes new code needs run before it goes live; changes that remove old parts run after the new code is serving.
+Who handles it
+Deployment and runner
+What happens next
+Engineering repairs the step that runs before new code goes live; that part of the release stays on hold until then.
+Do you need to act?
+No action needed.
+Technical details
+LIVE UPDATES
+Live
+WORKERS LAST CHECKED IN
+Oct 13, 9:56 AM ET
+less than 5 minutes ago
+LAST USEFUL PROGRESS
+Oct 13, 9:28 AM ET
+about 30 minutes ago. Published 14 meetings for Tucson Unified.
+ROUND OF WORK
+Finished 9:31 AM ET
+Last finished 9:31 AM ET
+Started Oct 13, 9:20 AM ET; finished Oct 13, 9:31 AM ET; it ended with an error (code 1).
+The last round ended with an error.
+Technical details
+REFUSED BEFORE THE AI
+12 paid jobs
+Not sent to the AI because paid research is paused.
+WORK
+3 running · 49 waiting
+What the agents did
+—
+How reliable our sources are · whole country
+—
+Published versus reader-visible
+—
+Working now, by stage
+Research
+0 running · 41 waiting
+Paid research is paused.
+Plain code
+3 running · 8 waiting
+Waiting, and why
+
+—
+
+What changed
+
+—
+
+What happens next
+Paid research is paused.
+Pause all workers
+Doors
+
+60 doors are open, 37 are shut and 2 are set aside.
+
+23 Legistar events doors are shut
+Shut
+3 reads in a row could not reach it
+The first shut Oct 1, 6:00 AM ET
+9 Official page events doors are shut
+Shut
+the address answers 404
+The first shut Oct 1, 6:00 AM ET
+4 Legistar events doors are shut
+Shut
+the page no longer reads the way this door says
+The first shut Oct 9, 6:00 AM ET
+1 Board docs door is shut
+Shut
+No reason is recorded.
+Shut Oct 1, 6:00 AM ET
+Technical details
+
+Read Oct 13, 10:00 AM ET

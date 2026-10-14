@@ -276,7 +276,8 @@ function recordedCacheSaving(entry: CostEntry): number | null {
     const metering = cacheMeteringOf(portion.entry.cost);
     if (metering.status !== "MEASURED") return null;
     // Current shares inherit the row's batch flag; conflicting explicit flags are not a price estimate.
-    if (share && "batch" in share && (typeof share.batch !== "boolean" || share.batch !== metering.batch)) return null;
+    if (share && "batch" in share && (typeof share.batch !== "boolean" ||
+      (share.batch !== entry.cost.batch && (share.batchRequestCount == null || entry.cost.batchRequestCount == null)))) return null;
     const amount = cacheSavingUsd(metering.cacheReadInputTokens, model);
     if (amount === null) return null;
     saved += amount * (metering.batch ? CACHE_RATE_MULTIPLIERS.batch : 1);

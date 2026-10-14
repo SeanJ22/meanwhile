@@ -28,6 +28,7 @@ import {
   routinePreSpawnMemoryDeferral,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -289,6 +290,9 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
+    "legiscan-bulk",
+    "google-civic-voterinfo",
+    ...PEOPLE_SOURCE_CONTRACTS.map(contract => contract.id),
     "socrata-discovery",
     "epa-echo",
     "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
@@ -344,6 +348,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "az-legislature",
     "nj-legislature",
     "legiscan",
+    "legiscan-bills",
     "plural-openstates",
     "meetings-history",
     "door-outcomes",
@@ -372,6 +377,10 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   assert.equal(arbitrary.ok, false);
   if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
+  // Bill datasets are their own source and are not competent for roll calls.
+  const billIntermediary = authorityFor("legiscan-bills", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
+  assert.equal(billIntermediary.ok, false);
+  if (!billIntermediary.ok) assert.equal(billIntermediary.code, "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
   assert.equal(intermediary.ok, true);
   assert.equal(SOURCE_AUTHORITIES.legiscan.routineAutoPromotion, true);
   assert.ok(SOURCE_AUTHORITIES.legiscan.competentFacts.includes("exact native member positions"));
@@ -923,6 +932,9 @@ test("national and publication source commands retain the progress-renewed timeo
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", `
     ${snippet} return sourceChildCommand;`)(() => process.env, () => null);
+  const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id === "people-portraits-federal")!;
+  assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
+    "standing portrait work overrides the parent's quiet interval so every due person finishes");
   const commands = ["national-place:85635", "worker-publication:registry-runtime-bindings:fixture"].map(id => ({
     ...commandFor({ id, kind: "SOURCE", task: { id, ownerInvocation: true, registeredContractId: id }, command: [] }),
     executable: process.execPath, args: ["-e", "setTimeout(()=>{},400)"],

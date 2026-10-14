@@ -32,8 +32,12 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
   const starts: number[] = [];
   try {
     neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
+      const request = JSON.parse(init?.body ?? "{}");
+      // The supplied reader database enables the byte counter's background transaction.
+      // Answer that fixture write separately; it is not one of the civic POINT reads.
+      if (Array.isArray(request.queries)) return Response.json(request.queries.map(() => ({ fields: [], rows: [], rowCount: 0, command: "INSERT" })));
       active++; peak = Math.max(peak, active); calls++;
-      starts.push(Number(JSON.parse(init?.body ?? "{}").params[0]));
+      starts.push(Number(request.params[0]));
       try {
         await new Promise(resolve => setTimeout(resolve, 8));
         return answer([]);

@@ -1,5 +1,15 @@
 # Returned: platform-swagit
 
+## platform-swagit — cleanup list (River's review at fold; delete in stream/platform-swagit, then mark READY again)
+
+Lane platform-swagit (R3-SWAGIT), READY 1359d8e5b, folded into river-next. Measured effect against river 0e9d37e08299: +1,795 / −9 lines across 21 files (7 added, 0 deleted, 14 modified); code and tests +585 / −9 in 17 files. The READY commit gives no line or file counts; state them when marking READY again.
+
+Delete:
+1. Remove the unused `export` keyword (nothing outside the file imports them, tests included): lib/sources/swagit/index.ts:10 (SwagitMeeting) and :23 (SwagitRaw). If a symbol is also unused inside its file, delete it.
+
+Checked and clean otherwise: no commented-out code; every new code file and fixture is referenced.
+
+
 lane: platform-swagit
 owner: platform-swagit
 writer: the platform-swagit lane

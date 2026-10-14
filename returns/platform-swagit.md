@@ -3,18 +3,25 @@
 lane: platform-swagit
 owner: platform-swagit
 writer: the platform-swagit lane
-check: fold-conflict
-ready: R3-SWAGIT f82c6a3d692df5e76a225cfb49d64dc18ba983ad
-river: dc5cddd3834ac04588782f84b6becc81fe6a5e25
-at: 2026-10-14T17:02:32Z
+check: cleanliness
+ready: R3-SWAGIT 1359d8e5b63201edf6f8a05d68780dba819c273c
+river: 0e9d37e0829974dbf3c91800fe7e3cb12360f00e
+at: 2026-10-14T21:08:42Z
 state: returned
-fix_subject: fix:68770547
-fix: River · stream/platform-swagit — fold-conflict failed for platform-swagit: platform-swagit READY f82c6a3d6 conflicts with river dc5cddd3834a by itself in lib/civic-data/derived-door-kinds.ts, lib/civic-data/meeting-body-crosswalk.ts, lib/civic-data/meeting-partitions.ts, lib/control-plane/discovery/auto-crosswalk.
+fix_subject: fix:73623c9c
+fix: River · stream/platform-swagit — cleanliness failed for platform-swagit: ## platform-swagit — cleanup list (River's review at fold; delete in stream/platform-swagit, then mark READY again)
 
 ## Failure
 
 ```
-platform-swagit READY f82c6a3d6 conflicts with river dc5cddd3834a by itself in lib/civic-data/derived-door-kinds.ts, lib/civic-data/meeting-body-crosswalk.ts, lib/civic-data/meeting-partitions.ts, lib/control-plane/discovery/auto-crosswalk.ts, lib/control-plane/discovery/derived-wiring-reading.ts (platform-civicclerk, civicplus, escribe and novusagenda are now on river); merge river into stream/platform-swagit, resolve, and mark READY again.
+## platform-swagit — cleanup list (River's review at fold; delete in stream/platform-swagit, then mark READY again)
+
+Lane platform-swagit (R3-SWAGIT), READY 1359d8e5b, folded into river-next. Measured effect against river 0e9d37e08299: +1,795 / −9 lines across 21 files (7 added, 0 deleted, 14 modified); code and tests +585 / −9 in 17 files. The READY commit gives no line or file counts; state them when marking READY again.
+
+Delete:
+1. Remove the unused `export` keyword (nothing outside the file imports them, tests included): lib/sources/swagit/index.ts:10 (SwagitMeeting) and :23 (SwagitRaw). If a symbol is also unused inside its file, delete it.
+
+Checked and clean otherwise: no commented-out code; every new code file and fixture is referenced.
 ```
 
 ## Repair

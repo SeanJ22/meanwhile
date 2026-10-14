@@ -7,6 +7,8 @@ import { appendTransition, contextFromRepositories, readPipelineStatesWhere, sco
 import { finishBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
 import { checkFact, linkQuote } from "../../facts/check.ts";
 import { factClocks } from "../../facts/clocks.ts";
+import type { Clocks } from "../../facts/publish.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { CAMPAIGN_SITE_LEAD } from "../../facts/finding-slots.ts";
 import { pageCopy } from "../../facts/source-copy.ts";
 import {
@@ -180,7 +182,7 @@ const displayName = candidateDisplayName;
 
 /** A hunter's reported campaign site, held to checkFact on the page it cited, as a SCOUTED lead; or why it is refused. */
 async function boxLead(repos: ControlPlaneRepositories, finding: BoxFinding, subject: CampaignSiteSubject,
-  options: Pick<CampaignSiteChainOptions, "heldPage" | "now">): Promise<ScoutedRecord | { readonly refused: string }> {
+  options: Pick<CampaignSiteChainOptions, "heldPage" | "now">, windowHours: Clocks["windowHours"]): Promise<ScoutedRecord | { readonly refused: string }> {
   const origin = finding.origins.find(row => row.reported);
   if (!origin?.reported || finding.exactQuote === null) return { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" };
   const url = String(origin.reported.value);
@@ -189,7 +191,7 @@ async function boxLead(repos: ControlPlaneRepositories, finding: BoxFinding, sub
   if (page === null) return { refused: "CITED_PAGE_NOT_SAVED" };
   const checked = checkFact({ entity: { id: subject.candidacyId, fullName: `${subject.givenName} ${subject.familyName}`, stateName: null, hosts: [], externalIds: [] },
     fieldKind: "ballot", provenance: "CAMPAIGN", valueText: url, quote: linkQuote(url, finding.exactQuote),
-    copy: pageCopy({ finalUrl: page.finalUrl, body: page.body, contentType: page.contentType, fetchedAt: page.retrievedAt }) }, new Date(options.now), factClocks(null).windowHours);
+    copy: pageCopy({ finalUrl: page.finalUrl, body: page.body, contentType: page.contentType, fetchedAt: page.retrievedAt }) }, new Date(options.now), windowHours);
   if (!checked.ok) return { refused: checked.reason };
   const itemId = `pp-${fingerprint(["box-finding", subject.candidacyId, url])}`;
   return { formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:scouted`, itemId, at: origin.recordedAt,
@@ -500,10 +502,12 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   }
 
   // A hunter's campaign-site finding becomes a lead once checkFact holds it on its own saved page; one for a candidacy no ballot holds waits.
-  for (const { value: finding } of await repos.boxFindings.listWhere(["state"], "waiting")) {
-    const subject = options.subjects.get(finding.subjectId);
-    if (finding.waitingFor?.reason !== CAMPAIGN_SITE_LEAD || subject === undefined) continue;
-    const scouted = await boxLead(repos, finding, subject, options);
+  const leads = (await repos.boxFindings.listWhere(["state"], "waiting")).filter(row => row.value.waitingFor?.reason === CAMPAIGN_SITE_LEAD);
+  const windowHours = leads.length ? factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).windowHours : () => 0;
+  for (const { value: finding } of leads) {
+    const subject = options.subjects.get(finding.subjectId) ?? [...options.subjects.values()].find(row => row.readerKeys.includes(finding.subjectId));
+    if (subject === undefined) continue;
+    const scouted = await boxLead(repos, finding, subject, options, windowHours);
     const claim = await takeBoxFinding(repos.boxFindings, finding.id, "campaign-site-chain", options.now, new Date(Date.parse(options.now) + 120_000).toISOString());
     if (claim === null) continue;
     if ("refused" in scouted) { await finishBoxFinding(repos.boxFindings, finding.id, claim.token, { state: "refused", reason: scouted.refused }, options.now); continue; }

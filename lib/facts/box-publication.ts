@@ -13,7 +13,7 @@ import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { learnOfficialHost } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, FINDING_SLOTS_VERSION, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
@@ -32,7 +32,7 @@ interface BoxPublicationReport {
   readonly published: number;
   /** Published by where each went: the fact store's classes and ballot navigation. */
   readonly publishedByRoute: Readonly<Record<string, number>>;
-  /** Handed to the campaign-site chain, which checks each lead on its own pass. */
+  /** Handed to the campaign-site chain or the candidate-profile writer, which check each on their own passes. */
   readonly handed: number;
   readonly refused: number;
   readonly waitingByClass: Readonly<Record<string, number>>;
@@ -148,7 +148,7 @@ export async function publishBoxFindings(input: {
     if (!raw.field || raw.value === undefined || raw.value === null || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
     const slot = slotFor(raw.field, raw.value, result?.recordClass ?? null, row.exactQuote);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
-    if ("lead" in slot) { await wait(row, slot.class, CAMPAIGN_SITE_LEAD); report.handed++; continue; }
+    if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
     const finding: Finding = { row, origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: result?.recordClass ?? null };
     if ("election" in slot) {
       const divisionId = [row.subjectId, placeOf(row)].find(id => id.startsWith("ocd-division/"));

@@ -12,7 +12,8 @@ import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { projectCampaignSiteChains, type CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
 import { publishBoxFindings } from "../lib/facts/box-publication.ts";
-import { factClocks } from "../lib/facts/clocks.ts";
+import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
 import { slotFor } from "../lib/facts/finding-slots.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
@@ -87,7 +88,10 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("ELE-20", "https://my.arizona.vote", null, "Visit the state's site"), { class: "ballot navigation", waiting: "LOOKUP_KIND_NOT_STATED" });
   assert.deepEqual(slot("ELE-08", "October 5, 2026", null, "The deadline to register is October 5, 2026."), { class: "ballot navigation", election: "registration_deadline" });
   assert.deepEqual(slot("CAN-04", "https://example-campaign.com"), { class: "campaign sites", lead: "campaign-site" });
-  assert.deepEqual(slot("CAN-16", "x"), { class: "candidates", waiting: "NO_PUBLICATION_PATH_YET" });
+  assert.deepEqual(slot("CAN-16", "x"), { class: "candidates", lead: "candidate-profile" });
+  assert.deepEqual(slot("CAN-06", "(614) 555-0100"), { class: "candidates", lead: "candidate-profile" });
+  assert.deepEqual(slot("CAN-17", "https://upload.wikimedia.org/x.jpg"), { class: "candidates", lead: "candidate-profile" });
+  assert.deepEqual(slot("GOV-13", "x"), { class: "governments", waiting: "NO_PUBLICATION_PATH_YET" });
   assert.deepEqual(slot("MTG-08", "x"), { class: "meetings", waiting: "SITTING_FIELDS_COME_FROM_ITS_DOOR" });
   assert.deepEqual(slot("PAR-04", "x"), { class: "taking part", waiting: "NO_READER_FIELD" });
   assert.deepEqual(slot("FIN-03", "x"), { class: "government money", waiting: "TAKES_WHOLE_RECORDS_ONLY" });
@@ -249,4 +253,24 @@ test("each checklist id goes where its record publishes: body links, the agenda 
   assert.ok(chain.offers.some(offer => offer.stage === "SCOUTED" && offer.accepted), JSON.stringify(chain.offers));
   const lead = (await repos.boxFindings.list()).find(row => row.value.subjectId === hobbs.candidacyId)!.value;
   assert.equal(lead.state, "built", "the campaign-site chain took the checked lead");
+});
+
+test("the campaign-site check holds a hunter's lead to the freshness clock Admin sets", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const CAMPAIGN = "https://hobbs-for-governor.example.com/";
+  const html = "<html><body><h1>Katie Hobbs for Governor</h1><p>Visit https://hobbs-for-governor.example.com/</p></body></html>";
+  const campaign = await hold(CAMPAIGN, html, "2026-09-01T15:00:00.000Z");
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-packet", obligationId: `hunt:packet:${TUCSON}`, missionPart: null,
+    finding: { subjectId: "ballot-az-pima:governor:hobbs-katie", field: "CAN-04", value: CAMPAIGN, exactQuote: "Visit https://hobbs-for-governor.example.com/",
+      sourceUrl: CAMPAIGN, artifactIds: [campaign], subjectHint: null, index: 0 } }, NOW);
+  await publishBoxFindings({ repos, facts, vault, fetch: async () => { throw new Error("held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(NOW), settings: { "facts.freshnessHours": { ...FRESHNESS_HOURS_DEFAULT, ballot: 1 } } }, NOW);
+  const hobbs: CampaignSiteSubject = { candidacyId: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs", officeTitle: "Governor",
+    ocdId: "ocd-division/country:us/state:az", stateCode: "AZ", cycle: 2026, readerKeys: [], filingDomains: [] };
+  const unread = async (): Promise<never> => { throw new Error("no lead is read in this pass"); };
+  await projectCampaignSiteChains(repos, { subjects: new Map([[hobbs.candidacyId, hobbs]]), readLead: unread, recordRead: unread, now: NOW, maxReads: 0,
+    heldPage: async artifact => ({ requestedUrl: artifact.canonicalUrl, finalUrl: artifact.canonicalUrl, httpStatus: 200, contentType: "text/html", body: html,
+      sha256: "0".repeat(64), retrievedAt: "2026-09-01T15:00:00.000Z", permissions: [], redirects: [] }) });
+  const lead = (await repos.boxFindings.list())[0]!.value;
+  assert.deepEqual([lead.state, lead.refusal], ["refused", "COPY_OUTSIDE_FRESHNESS_WINDOW"], "a week-old page is past Admin's one-hour clock");
 });

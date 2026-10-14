@@ -13,14 +13,16 @@ export type FindingSlot =
   | { readonly class: "comment rules"; readonly slot: "comment:period" | "comment:detail" | "comment:signup" | "comment:written" | "comment:attend" | "comment:time_limit" }
   | { readonly class: "official hosts"; readonly slot: "host" }
   | { readonly class: "ballot navigation"; readonly election: ElectionFieldKind }
-  | { readonly class: "campaign sites"; readonly lead: "campaign-site" }
+  | { readonly class: "campaign sites" | "candidates"; readonly lead: "campaign-site" | "candidate-profile" }
   | { readonly class: string; readonly waiting: string };
 
 /** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
-export const FINDING_SLOTS_VERSION = "3";
+export const FINDING_SLOTS_VERSION = "4";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
+/** A candidate's bio, campaign contact or portrait waits for the candidate-profile writer, which knows each candidate's identity. */
+export const CANDIDATE_PROFILE_LEAD = "CANDIDATE_PROFILE_WRITER_TAKES_IT";
 
 const PHONE = /^\+?[\d\s().-]{7,}(\s*(x|ext\.?)\s*\d+)?$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
@@ -65,12 +67,16 @@ const CHECKLIST: Readonly<Record<string, (value: string, quote: string) => Findi
   "ELE-24": navigation,
   "CAN-04": value => URL_VALUE.test(value) ? { class: "campaign sites", lead: "campaign-site" } : { class: "campaign sites", waiting: "SITE_IS_NOT_AN_ADDRESS" },
   "CAN-05": value => URL_VALUE.test(value) ? { class: "campaign sites", lead: "campaign-site" } : { class: "campaign sites", waiting: "SITE_IS_NOT_AN_ADDRESS" },
+  "CAN-06": value => EMAIL.test(value) || PHONE.test(value) ? { class: "candidates", lead: "candidate-profile" }
+    : { class: "candidates", waiting: "CONTACT_IS_NEITHER_EMAIL_NOR_PHONE" },
+  "CAN-16": () => ({ class: "candidates", lead: "candidate-profile" }),
+  "CAN-17": value => URL_VALUE.test(value) ? { class: "candidates", lead: "candidate-profile" } : { class: "candidates", waiting: "PORTRAIT_IS_NOT_AN_ADDRESS" },
 };
 
 /** Ids whose record publishes only as a whole import (a directory reading, a ballot list, a filing, a dataset), never one value at a time. */
 const WHOLE_RECORDS = new Set(("GEO-07 GEO-08 GEO-10 GOV-03 GOV-05 GOV-06 OFF-11 OFF-12 OFF-15 OFF-17 OFF-18 OFF-19 OFF-20 MTG-05 MTG-13 MTG-19 " +
   "DOC-02 DOC-03 DOC-06 DOC-08 DOC-09 DOC-10 DOC-17 PAR-07 LEG-02 LEG-03 LEG-04 LEG-05 LEG-06 LEG-07 LEG-09 LEG-11 LEG-17 LEG-18 LEG-20 LEG-21 " +
-  "ELE-01 ELE-04 ELE-07 ELE-11 ELE-16 ELE-21 ELE-22 ELE-25 ELE-26 CAN-01 CAN-02 CAN-03 CAN-07 CAN-12 CAN-17 CAN-21 " +
+  "ELE-01 ELE-04 ELE-07 ELE-11 ELE-16 ELE-21 ELE-22 ELE-25 ELE-26 CAN-01 CAN-02 CAN-03 CAN-07 CAN-12 CAN-21 " +
   "CAM-01 CAM-02 CAM-03 CAM-05 CAM-06 CAM-07 CAM-13 CAM-14 FIN-01 FIN-02 FIN-03 FIN-04 FIN-05 FIN-06 FIN-07 FIN-08 FIN-09 FIN-10 " +
   "FIN-11 FIN-12 FIN-13 FIN-14 FIN-15 PRL-01 PRL-02 PRL-03 REF-01 EXE-01 EXE-02 EXE-03 EXE-04 EXE-05").split(" "));
 /** Ids our own code decides (a constant, a derived count, a reader rule), so no page can fill them. */
@@ -81,7 +87,7 @@ const SITTING_READ = new Set("MTG-06 MTG-07 MTG-08 MTG-12".split(" "));
 /** Definitions are written from the saved page by the translation step, never copied from a hunter's quote. */
 const TRANSLATED = new Set("GOV-07 GOV-09 REF-04 REF-05".split(" "));
 /** Readers have a place for these, but nothing publishes them yet. */
-const UNPRODUCED = new Set("GOV-13 CAN-06 CAN-16 CAM-15".split(" "));
+const UNPRODUCED = new Set("GOV-13 CAM-15".split(" "));
 
 function checklistWait(id: string): string {
   return WHOLE_RECORDS.has(id) ? "TAKES_WHOLE_RECORDS_ONLY" : CODE_HELD.has(id) ? "HELD_IN_CODE_NOT_ON_A_PAGE"

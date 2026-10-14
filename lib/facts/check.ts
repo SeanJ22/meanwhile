@@ -73,9 +73,9 @@ export function isOfficialUrl(url: string, entitySites: readonly string[]): bool
 }
 
 /** Judgment calls: matching one person across sources, an unofficial portrait, and anything a third party says about someone else. */
-export function needsSecondSource(kind: FieldKind, provenance: Provenance): boolean {
+export function needsSecondSource(kind: FieldKind, provenance: Provenance, url: string): boolean {
   if (kind === "same_person_link") return true;
-  if (kind === "portrait") return provenance !== "OFFICIAL" && provenance !== "CAMPAIGN" && provenance !== "OWNER";
+  if (kind === "portrait") return provenance !== "OFFICIAL" && provenance !== "CAMPAIGN" && provenance !== "OWNER" && hostOf(url) !== "commons.wikimedia.org";
   return provenance === "OTHER";
 }
 
@@ -108,7 +108,7 @@ export function checkFact(c: Claim, now: Date, windowHours: (k: FieldKind) => nu
   if (typeof held === "string") return { ok: false, reason: held };
   if (!aboutEntity(c.entity, c.copy)) return { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" };
   if ((now.getTime() - c.copy.fetchedAt.getTime()) / 3_600_000 > windowHours(c.fieldKind)) return { ok: false, reason: "COPY_OUTSIDE_FRESHNESS_WINDOW" };
-  if (needsSecondSource(c.fieldKind, c.provenance)) {
+  if (needsSecondSource(c.fieldKind, c.provenance, c.copy.finalUrl)) {
     if (!c.second) return { ok: false, reason: "SECOND_SOURCE_REQUIRED" };
     const second = quoteHolds(c.second.copy, c.second.quote, c.valueText);
     if (typeof second === "string") return { ok: false, reason: `SECOND_${second}` };

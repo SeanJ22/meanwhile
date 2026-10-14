@@ -132,7 +132,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Little Rock, AR",
     "url": "https://www.sos.arkansas.gov/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "AR",
       "ocdId": "ocd-division/country:us/state:ar",
@@ -155,7 +158,19 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.arkansas.gov/elections\">https://www.sos.arkansas.gov/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+      "https://candidates.arkansas.gov/"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.arkansas.gov/elections/initiatives-and-referenda/",
+      "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+      "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+      "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+      "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
+      "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf"
+    ]
   },
   {
     "id": "fec-ca-chief",

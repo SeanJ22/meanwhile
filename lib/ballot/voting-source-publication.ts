@@ -3,7 +3,7 @@ import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
 import { listDoors, upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
 import type { VotingJurisdiction, VotingSitesFile, VotingSource } from "./voting-sites.ts";
-import type { VotingSourceDoor, VotingSourceRead } from "./voting-source-types.ts";
+import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
 
 export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
 
@@ -17,10 +17,12 @@ export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSou
   const mappings = [...new Map([...matches.flatMap(row => [JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor,
     ...JSON.parse(String(row.value.config.votingMappings ?? "[]")) as VotingSourceDoor[]]), door].map(source => [source.id, source])).values()];
   const primary = mappings[0]!;
+  const holds = mappings.flatMap(source => source.covers.map(kind => isVotingSiteKind(kind) ? "voting-sites" :
+    kind === "CANDIDATE_LIST" ? "ballot-contests" : "ballot-measures"));
   await upsertDerivedDoor(repo, {
     doorId: prior?.id ?? pageDoorId(address), kind: VOTING_SOURCE_DOOR_KIND, ocdId: primary.scope.ocdId,
     hosts: [...new Set([address.host, ...mappings.flatMap(source => source.extraction?.dataUrl ? [new URL(source.extraction.dataUrl, source.url).hostname] : [])])],
-    config: { ...prior?.value.config, url: address.url, votingSource: JSON.stringify(primary), votingMappings: JSON.stringify(mappings.slice(1)) }, holds: [...new Set([...(prior?.value.holds ?? []), "voting-sites"])],
+    config: { ...prior?.value.config, url: address.url, votingSource: JSON.stringify(primary), votingMappings: JSON.stringify(mappings.slice(1)) }, holds: [...new Set([...(prior?.value.holds ?? []), ...holds])],
     checkEveryMinutes: checkEveryFor("VOTING_SITE"), notes: `${primary.publisher}: ${primary.shape}; ${primary.electionDate}`,
   }, now, now);
   for (const duplicate of matches.filter(row => row.id !== prior?.id && row.value.status !== "SUSPENDED")) {

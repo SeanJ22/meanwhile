@@ -1,7 +1,7 @@
+import { officeIdentity } from "../../officials/office-identity.ts";
 import type { OfficeholderSet } from "../../officials/types.ts";
 import { acquisition, appendRoster, array, emptyPerson, emptyRoster, gap, json, legislativeDivision, number, provenance, record, result, savedRead, sourced, stateIdentity, string, url, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
 
-/** The API's concurrency agreement applies across state jobs in this worker. */
 let pending: Promise<unknown> = Promise.resolve();
 async function oneRequest<T>(read: () => Promise<T>): Promise<T> {
   const next = pending.then(read, read); pending = next.catch(() => undefined); return next;
@@ -33,7 +33,7 @@ export function normalizeLegiscanPeople(value: unknown, options: PeopleAcquisiti
     holder.personId=personId;holder.nativeIds = nativeIds; holder.chamber = chamber; holder.partyLabel = string(row.party); holder.websiteUrl = url(row.url ?? row.website);
     holder.phone = string(row.phone); holder.email = string(row.email);
     const divisionId = legislativeDivision(options, chamber, district), membershipId = `${id}:${sessionId}:${chamber}:${district}`;
-    holder.memberships = [{ id: membershipId, personId, officeId: `legiscan-office:${state.state}:${chamber}:${district}`, jurisdiction: state.jurisdiction,
+    holder.memberships = [{ id: membershipId, personId, officeId: `legiscan-office:${state.state}:${officeIdentity(chamber === "upper" ? "State Senator" : "State Representative")}:${district}`, jurisdiction: state.jurisdiction,
       chamber, district, officeTitle: holder.officeTitle, level: "STATE", current: true, divisionId, sourceUrl }];
     roster.officeholders.push(sourced(holder, source));
     if (divisionId) roster.divisions.push({ officeholderId: id, membershipId, ocdId: divisionId, bodyId: null });

@@ -14,8 +14,8 @@ export function getCandidateCorpus(): CandidateCorpus {
   return currentCandidateCorpusProjection();
 }
 
-export function documentsFor(candidateKey: string, corpus?: CandidateCorpus): CandidateDocument[] {
-  const keys = verifiedReaderPersonKeys(candidateKey);
+export function documentsFor(candidateKey: string, corpus?: CandidateCorpus, holderId?: string): CandidateDocument[] {
+  const keys = [...verifiedReaderPersonKeys(candidateKey), ...(holderId ? verifiedReaderPersonKeys(holderId) : [])];
   const seen = new Map<string, string>();
   return (corpus ?? getCandidateCorpus()).documents.filter((document) => {
     if (!keys.includes(document.candidateKey)) return false;
@@ -46,15 +46,15 @@ export function positionsFor(
   candidateKey: string,
   ownSiteUrl: string | null = null,
   topics: readonly StanceTopic[] = DEFAULT_STANCE_TOPICS,
+  holderId?: string,
 ): IssuePosition[] {
-  const documents = documentsFor(candidateKey);
+  const documents = documentsFor(candidateKey, undefined, holderId);
   return topics.map((issue) => {
     const answer = answerFor(documents, issue.phrases, ownSiteUrl);
     return { issue, answer, sentence: answerSentence(answer, issue.label) };
   });
 }
 
-/** In the curated issue order, never sorted by how much a candidate said. */
 export function matchedIssues(positions: readonly IssuePosition[]): IssuePosition[] {
   return positions.filter((p) => p.answer.kind === "MATCHED");
 }
@@ -67,7 +67,6 @@ export function positionsSummary(positions: readonly IssuePosition[]) {
   };
 }
 
-/** The line above a candidate's quotes, never a count; null when nothing they published is held. */
 export function positionsHeadline(
   positions: readonly IssuePosition[],
 ): string | null {

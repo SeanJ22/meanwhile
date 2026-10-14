@@ -79,7 +79,7 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
   const promotionByItem = indexBy(snapshot.promotion, row => row.itemId);
   const promotionByWork = new Map<string, PromotionPipelineRecord[]>();
   for (const record of snapshot.promotion) {
-    if (record.stage !== "SCOUTED") continue;
+    if (record.stage !== "SCOUTED" || record.source.kind === "PROMOTED_CANDIDACY") continue;
     const owners = new Set(rowsFor(attemptsById, record.source.attemptId).map(attempt => attempt.workItemId));
     for (const owner of owners) {
       const group = promotionByWork.get(owner) ?? [];

@@ -3,6 +3,8 @@ import { cache } from "react";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { seatHoldersForOffice, seatHolderById } from "../registry/server.ts";
 import { standingChipMayAttach } from "../officials/elected-role.ts";
+import { sameSeatDiscriminators } from "../officials/office-seat.ts";
+export { sameSeatDiscriminators } from "../officials/office-seat.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { readerPersonKeys } from "../identity/reader-person.ts";
 import { currentOfficialIdentity } from "../funding/campaign-money.ts";
@@ -29,7 +31,6 @@ import {
 import { nhLegislativeHolders, nhLegislativeRosterAppliesTo } from "./seat-holders.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../state-rollcalls/authority.ts";
 
-/** `key` is how the calling surface looks the decision back up; `targetKey` is the key the FEC/congress join is stored under. They differ between the certified-lineup and filed-candidate branches. */
 export interface ContestCandidate {
   readonly key: string;
   readonly display: string;
@@ -42,7 +43,8 @@ export interface ContestForIncumbency {
   readonly ocdId: string;
   readonly candidates: readonly ContestCandidate[];
   readonly federal: boolean;
-  readonly voteFor: number;
+  readonly voteFor: number | null;
+  readonly candidateListComplete?: boolean;
 }
 
 export interface ContestIncumbencyResult {
@@ -53,26 +55,6 @@ export interface ContestIncumbencyResult {
   readonly holderFor: Map<string, SeatHolder>;
 }
 
-export function sameSeatDiscriminators(contestTitle: string, holderTitle: string, ocdId: string): boolean {
-  const qualifiers = (title: string) => {
-    const found = new Map<string, string>();
-    for (const match of title.matchAll(/\b(ward|seat|position|division|district)\s*(?:no\.?\s*)?[:#]?\s*(\d+|[ivxlc]+)\b/gi)) found.set(match[1].toLowerCase(), match[2].toLowerCase());
-    for (const match of title.matchAll(/\b(\d+)(?:st|nd|rd|th)?\s+(?:congressional\s+)?district\b/gi)) found.set("district", match[1]);
-    if (/\bat[-\s]large\b/i.test(title)) found.set("at-large", "true");
-    return found;
-  };
-  const left = qualifiers(contestTitle), right = qualifiers(holderTitle);
-  for (const kind of new Set([...left.keys(), ...right.keys()])) {
-    const a = left.get(kind), b = right.get(kind);
-    if (a && b) { if (a !== b) return false; continue; }
-    if (kind === "district" && /\/(?:cd|sldl|sldu):[^/]+$/.test(ocdId)) continue;
-    if (kind !== "at-large" && ocdId.endsWith(`/${kind}:${a ?? b}`)) continue;
-    return false;
-  }
-  return true;
-}
-
-/** Keyed on primitives so React `cache` dedupes across calls within one request. */
 const committedHolderByKey = cache(
   async (ocdId: string, title: string, targetKey: string): Promise<SeatHolder | null> => {
     const office = officeIdentity(title);
@@ -96,7 +78,6 @@ export async function committedIncumbentHolderFor(
 
 export type FederalHolderLookup = (targetKey: string) => Promise<SeatHolder | null>;
 
-/** The body's own published membership, where it answers for this exact seat. */
 export function enumeratedSeatHolders(contest: { title: string; ocdId: string }): SeatHolderRef[] {
   if (!nhLegislativeRosterAppliesTo(contest)) return [];
   return nhLegislativeHolders(contest.title);
@@ -112,7 +93,6 @@ export function certifiedNomineesFor(contestId: string): { source: string; names
   };
 }
 
-/** Id prefixes of whole-chamber rosters: Congress, Open States, and each official state legislature. */
 const ENUMERATING_ROSTER_PREFIXES = [
   "congress:",
   "plural:",
@@ -143,7 +123,9 @@ export async function contestIncumbency(
 
   const officeIsElected = standingChipMayAttach(contest.title);
 
-  const registryHolders = officeIsElected ? await holdersForSeat(contest.ocdId, contest.title) : [];
+  const registryHolders = officeIsElected ? (await holdersForSeat(contest.ocdId, contest.title)).filter(holder =>
+    officeIdentity(holder.officeTitle) === officeIdentity(contest.title) &&
+    sameSeatDiscriminators(contest.title, holder.officeTitle, contest.ocdId)) : [];
   let holders: SeatHolderRef[] = registryHolders.map((h) => ({
     ...splitDisplayName(h.name),
     personKey: h.id?.trim() || null,
@@ -163,7 +145,8 @@ export async function contestIncumbency(
     const resolved = await Promise.all(
       contest.candidates.map(async (c) => {
         const holder = await federalHolderFor(c.targetKey);
-        return holder === null ? null : { display: c.display, holder };
+        return holder === null || officeIdentity(holder.officeTitle) !== officeIdentity(contest.title) ||
+          !sameSeatDiscriminators(contest.title, holder.officeTitle, contest.ocdId) ? null : { display: c.display, holder };
       }),
     );
     holders = resolved
@@ -184,7 +167,6 @@ export async function contestIncumbency(
       const holder = await (universeSources.committedHolder ?? committedIncumbentHolderFor)(contest, candidate.targetKey);
       if (holder) committed.set(candidate.key, holder);
     } catch {
-      // The optional candidacy bridge cannot erase the body's independently held roster.
     }
   }
   for (const [key, holder] of committed) {
@@ -248,13 +230,18 @@ export async function contestIncumbency(
     holders: holders.length,
     seatsThisContestFills: contest.voteFor,
   });
-  const certified = (universeSources.certifiedNominees ?? certifiedNomineesFor)(contest.id);
+  const certified = contest.candidateListComplete ? { source: "the state election authority’s complete candidate list",
+    names: contest.candidates.map(c => c.display) } : (universeSources.certifiedNominees ?? certifiedNomineesFor)(contest.id);
   const candidatesUniverse = candidateUniverse({
     certified,
     rendered: contest.candidates.map((c) => c.display),
     renderedSource: contest.candidates.length > 0 ? "the contest's own filed-candidate record" : null,
   });
-  const states = statesFromResolution(resolved, candidateKeys, officeholders.complete);
+  if (contest.candidateListComplete) for (const key of candidateKeys) {
+    if (resolved.get(key)?.standing === "INCUMBENT" || resolved.get(key)?.standing === "UNKNOWN") continue;
+    resolved.set(key, { standing: "CHALLENGER", basis: "This non-incumbent is on the state election authority’s complete candidate list.", source: certified!.source });
+  }
+  const states = statesFromResolution(resolved, candidateKeys, officeholders.complete || contest.candidateListComplete === true);
   const eligibility = contestLabelEligibility({
     candidateUniverse: candidatesUniverse,
     officeholderUniverse: officeholders,
@@ -262,12 +249,11 @@ export async function contestIncumbency(
     states,
   });
 
-  if (eligibility.eligible) return { decisions: resolved, resolved, states, eligibility, holderFor };
+  if (eligibility.eligible || contest.candidateListComplete) return { decisions: resolved, resolved, states, eligibility, holderFor };
 
   const gap = holders.length > 0 ? ("CONTEST_NOT_ESTABLISHED" as const) : ("HOLDER_NOT_SOURCED" as const);
   const decisions = new Map<string, IncumbencyDecision>();
   for (const key of candidateKeys) {
-    // A sourced Incumbent survives an incomplete universe, since it claims nothing about the others; a contradicted candidate list silences the whole contest.
     const identityContradicted = eligibility.candidateUniverse.contradicted;
     const resolvedHere = resolved.get(key);
     if (!identityContradicted && resolvedHere?.standing === "INCUMBENT") {

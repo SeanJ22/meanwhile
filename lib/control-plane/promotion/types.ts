@@ -1,7 +1,4 @@
-/**
- * SCOUTED -> CONFIRMED -> VERIFIED -> AUDITED -> APPROVED_FOR_PROMOTION, or REFUSED at any stage.
- * The actor of a transition is never the actor of the stage before it, and a refusal is appended as a record.
- */
+
 
 import type { WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
@@ -82,6 +79,12 @@ interface RecordBase {
 }
 
 export type ScoutedSource =
+  | {
+      readonly kind: "PROMOTED_CANDIDACY";
+      readonly candidacyId: string;
+      readonly sourceUrl: string;
+      readonly websiteUrl: string;
+    }
   | {
       readonly kind: "SCOUT_RESULT";
       readonly attemptId: string;

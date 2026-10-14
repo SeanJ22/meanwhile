@@ -13,6 +13,7 @@ function capture(url:string,text:string):WorkerPublicationCapture {
 }
 const profile=capture('https://legislature.gov/jane',`<h1>Jane Doe</h1><img alt="Jane Doe" src="${IMAGE}"><p>Photograph is public domain.</p>`);
 const roster=capture('https://data.openstates.org/people/current/oh.csv',`id,name,image\nocd-person/person-123,Jane Doe,${IMAGE}\n`);
+const campaignIdentity = { candidacyId: ID, givenName: "Jane", familyName: "Doe", officeTitle: "Mayor", cycle: 2026, stateCode: "OH", ocdId: "ocd-division/country:us/state:oh/place:columbus" };
 const subject={personId:ID,name:NAME,nativeIds:{"ocd-person":["ocd-person/person-123"]},profileUrls:[profile.evidence.canonicalUrl,"https://press.example.org/jane","https://jane.example/","https://social.example/jane"]};
 const sources={subject,imageUrl:IMAGE,captures:[profile,roster]};
 
@@ -60,11 +61,11 @@ test('CP-10: one official portrait publishes without a licence sentence and stil
 
 test('CP-10: a verified own-campaign portrait needs one source; a personal social account still needs two',()=>{
   const own = capture('https://jane.example/', `<title>Jane Doe for Mayor 2026</title><img alt="Jane Doe" src="${IMAGE}">`);
-  const checked=verifyPortraitSources(ID,{subject,imageUrl:IMAGE,captures:[own],campaign:{url:own.evidence.canonicalUrl,name:NAME,office:'Mayor',cycle:'2026'}},NOW);
+  const checked=verifyPortraitSources(ID,{subject,imageUrl:IMAGE,captures:[own],campaign:{url:own.evidence.canonicalUrl,identity:campaignIdentity}},NOW);
   assert.equal(checked.basis,'OWN_PAGE');
   const personal=capture('https://social.example/jane',own.evidence.text);
   assert.throws(()=>verifyPortraitSources(ID,{subject,imageUrl:IMAGE,captures:[personal]},NOW),/SECOND_SOURCE/);
-  assert.throws(()=>verifyPortraitSources('Other Person',{subject,imageUrl:IMAGE,captures:[own],campaign:{url:own.evidence.canonicalUrl,name:NAME,office:'Mayor',cycle:'2026'}},NOW),/PORTRAIT_/);
+  assert.throws(()=>verifyPortraitSources('Other Person',{subject,imageUrl:IMAGE,captures:[own],campaign:{url:own.evidence.canonicalUrl,identity:campaignIdentity}},NOW),/PORTRAIT_/);
 });
 
 test('a rechecked known profile cites its real vault object and preserves the original acquisition date',()=>{

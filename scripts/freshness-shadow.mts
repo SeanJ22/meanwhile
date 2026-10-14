@@ -120,7 +120,8 @@ import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
 import { HUNT_PACKET_NAMESPACE } from "../lib/hunt/packet.ts";
-import { divisionsOfPlace, placeDivisionIds, placeKeyOfWords } from "../lib/hunt/packet-read.ts";
+import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
+import { readPlaceWords } from "../lib/hunt/place-words.ts";
 import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
@@ -1487,8 +1488,9 @@ if (dispatchTargets.length > 0) {
       try {
         if (target.kind === "SCOPE" && target.scope.kind === "RESOLVED") packetDivisions.set(target.key, await divisionsOfPlace([...target.scope.zctas], target.scope.states));
         if (target.kind === "DISPATCH") {
-          const place = await placeKeyOfWords(target.target.text);
-          if (place !== null) packetDivisions.set(target.key, await placeDivisionIds(place));
+          const place = await readPlaceWords(target.target.text);
+          if (place.state === "PLACE") packetDivisions.set(target.key, place.divisionIds);
+          if (place.state === "CHOICES") runtimeConditions.push(`“${target.target.text}” names ${place.choices.length} places (${place.choices.slice(0, 3).map(c => c.label).join("; ")}${place.choices.length > 3 ? " …" : ""}); choose one in Admin to hunt it`);
         }
       } catch (error) { console.warn(`  ${target.label}: the divisions it touches could not be read (${error instanceof Error ? error.message : String(error)})`); }
     }

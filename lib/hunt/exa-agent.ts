@@ -76,6 +76,7 @@ export async function runExaAgent(input: {
   readonly fetchImpl?: FetchLike;
   readonly sleep?: (ms: number) => Promise<void>;
   readonly clock?: () => number;
+  readonly onPoll?: () => void;
 }): Promise<ExaAgentRun> {
   const fetchImpl = input.fetchImpl ?? ((url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
   const sleep = input.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
@@ -91,12 +92,20 @@ export async function runExaAgent(input: {
   const runId = typeof body.id === "string" ? body.id : null;
   while (runId !== null && !TERMINAL.has(String(body.status)) && clock() < input.deadlineMs) {
     await sleep(POLL_MS);
+    input.onPoll?.();
     const polled = await fetchImpl(`${AGENT_RUNS}/${encodeURIComponent(runId)}`, { method: "GET", headers });
     if (!polled.ok) continue;
     body = JSON.parse(await polled.text()) as typeof body;
   }
+  let timedOut = false;
+  if (runId !== null && !TERMINAL.has(String(body.status))) {
+    timedOut = true;
+    const cancelled = await fetchImpl(`${AGENT_RUNS}/${encodeURIComponent(runId)}/cancel`, { method: "POST", headers });
+    if (cancelled.ok) body = JSON.parse(await cancelled.text()) as typeof body;
+  }
   const status = String(body.status ?? "unknown");
-  const { findings, summary } = status === "completed" ? findingsOf(body.output?.structured) : { findings: [], summary: "" };
+  const { findings, summary } = findingsOf(body.output?.structured);
   return { runId, status, findings, summary, costUsd: costOf(body),
-    error: status === "completed" ? null : body.error?.message ?? (TERMINAL.has(status) ? status : "the run did not finish before its time limit") };
+    error: status === "completed" ? null : timedOut ? `the run passed its time limit and was ${status === "cancelled" ? "cancelled" : "left running: the cancel was not accepted"}`
+      : body.error?.message ?? status };
 }

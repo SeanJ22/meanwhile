@@ -1,5 +1,6 @@
 
 import { parsePlainOrder } from "./orders.ts";
+import { readPlaceWords } from "../../hunt/place-words.ts";
 import { classify } from "./router.ts";
 import { answerFor } from "./read-models.ts";
 import { definitionFor, proposeAction, type GatewayBinding } from "./actions.ts";
@@ -99,6 +100,11 @@ export async function respondToOperator(
      */
     const plain = parsePlainOrder(text, context);
     if (plain && "why" in plain) return {kind:"REFUSED",says:plain.why,actionType:definition.type};
+    if (plain?.type === "fleet.deployHere") {
+      const named = await readPlaceWords(String(plain.input.note));
+      if (named.state === "CHOICES") return { kind: "REFUSED", actionType: definition.type,
+        says: `“${String(plain.input.note)}” names ${named.choices.length} places: ${named.choices.slice(0, 8).map(c => c.label).join("; ")}${named.choices.length > 8 ? "; …" : ""}. Say which one, like “hunt ${named.choices[0]!.words}”.` };
+    }
     const proposedAt = input.confirm?.proposedAt ?? context.nowIso;
     const outcome = proposeAction({
       definition,

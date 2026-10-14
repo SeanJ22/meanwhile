@@ -1,13 +1,10 @@
 /** Reads of what we hold and what is still blank, as hunt packets. Nothing here runs an agent or writes. */
 import { readHeldPlaceCapture, type HeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../coverage/place-owed.ts";
-import { readPlaceOwed, resolvePlaceKey, type PlaceOwedDeps, defaultPlaceOwedDeps } from "../control-plane/admin-view/place-owed-read.ts";
-import { askedPlace } from "../control-plane/operator-chat/place-key.ts";
-import { stateOfZip } from "../control-plane/bulk-hunts/zip-state.ts";
 import { rateFor } from "../control-plane/model-cost.ts";
 import { scoutLoopBase } from "../control-plane/scheduler/scout-executor.ts";
 import { stateDivisionId, unionDivisions, zipDivisionIds } from "../control-plane/admin-view/v6-national-geography.ts";
-import { blankFingerprint, mergePackets, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
+import { blankFingerprint, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
 import { SEARCH_PRICE_USD } from "./search.ts";
 
 export type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
@@ -35,57 +32,31 @@ export async function divisionsOfPlace(zips: readonly string[], states: readonly
   return unionDivisions([...byZip.values()], always).map(division => division.id).sort();
 }
 
-/** The place an owner's words name: a place key, a district like AZ-01, a state, or a ZIP. Null when none is named. */
-export async function placeKeyOfWords(words: string, zipState: typeof stateOfZip = stateOfZip): Promise<string | null> {
-  const named = askedPlace(words, "");
-  if (named !== null) return named;
-  const zip = /\b\d{5}\b/.exec(words)?.[0];
-  const state = zip === undefined ? null : await zipState(zip);
-  return zip !== undefined && state !== null ? `geo:${state.toLowerCase()}.zcta.${zip}` : null;
-}
-
-/** Every division a place key touches, as its owed list reads it. */
-export async function placeDivisionIds(placeKey: string, deps: Pick<PlaceOwedDeps, "resolveDivisions"> = defaultPlaceOwedDeps): Promise<string[]> {
-  const place = resolvePlaceKey(placeKey);
-  if ("says" in place) throw new Error(place.says);
-  return (await deps.resolveDivisions(place)).divisions.map(division => division.id).sort();
-}
-
 export interface PacketPreview {
   readonly state: "READ";
-  readonly places: readonly { readonly placeKey: string; readonly label: string }[];
+  readonly label: string;
   readonly governments: readonly { readonly governmentId: string; readonly label: string; readonly held: number; readonly blanks: number; readonly fingerprint: string }[];
   readonly families: readonly FamilyCount[];
   readonly held: number;
   readonly blanks: number;
-  /** Model turns and searches for every packet with a blank, before caching. */
-  readonly estimatedUsd: number;
+  /** Model turns and searches for every packet with a blank, before caching; null when the hunter's model has no stated price. */
+  readonly estimatedUsd: number | null;
 }
 
-export type PacketPreviewRefusal = { readonly state: "REFUSED"; readonly placeKey: string; readonly says: string };
-
-/** What sending agents to these places would hunt: held facts, blanks by family and the estimated cost. */
-export async function previewPlacePackets(placeKeys: readonly string[], deps: PlaceOwedDeps = defaultPlaceOwedDeps): Promise<PacketPreview | PacketPreviewRefusal> {
-  const reads = await Promise.all(placeKeys.map(key => readPlaceOwed(key, deps)));
-  const groups: HuntPacket[][] = [];
-  const places: { placeKey: string; label: string }[] = [];
-  for (const [i, read] of reads.entries()) {
-    if (read.state === "REFUSED") return { state: "REFUSED", placeKey: placeKeys[i]!, says: read.says };
-    places.push({ placeKey: read.placeKey, label: read.label });
-    groups.push(packetsFrom({ divisions: read.divisions, items: read.rows }));
-  }
-  const packets = mergePackets(groups);
+/** What sending agents to a place would hunt: held facts, blanks by family and the estimated cost. */
+export async function previewPlacePackets(place: { readonly label: string; readonly divisionIds: readonly string[] }, now: string,
+  read: typeof readGovernmentPackets = readGovernmentPackets): Promise<PacketPreview> {
+  const packets = [...(await read(place.divisionIds, now)).values()];
   const rate = rateFor(scoutLoopBase().model);
-  if (rate === null) return { state: "REFUSED", placeKey: placeKeys[0] ?? "", says: "The hunter's model has no stated price, so no estimate is shown." };
-  const rates = { inputUsdPerMillion: rate.inputUsdPerMillion, outputUsdPerMillion: rate.outputUsdPerMillion, searchUsd: SEARCH_PRICE_USD.brave };
   return {
     state: "READ",
-    places,
+    label: place.label,
     governments: packets.map(packet => ({ governmentId: packet.governmentId, label: packet.label, held: packet.held.length,
       blanks: packet.blanks.length, fingerprint: blankFingerprint(packet) })),
     families: packetFamilies(packets),
     held: packets.reduce((n, packet) => n + packet.held.length, 0),
     blanks: packets.reduce((n, packet) => n + packet.blanks.length, 0),
-    estimatedUsd: packetCostEstimateUsd(packets, rates),
+    estimatedUsd: rate === null ? null : packetCostEstimateUsd(packets,
+      { inputUsdPerMillion: rate.inputUsdPerMillion, outputUsdPerMillion: rate.outputUsdPerMillion, searchUsd: SEARCH_PRICE_USD.brave }),
   };
 }

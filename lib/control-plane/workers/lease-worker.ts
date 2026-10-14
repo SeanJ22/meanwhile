@@ -17,8 +17,11 @@ import { readFromHeldCopies } from "../repository/incremental-reads.ts";
 readFromHeldCopies();
 
 const broker = workerBroker<LeaseWorkerConfig>(work);
+/** A long job stops this far before the pool would end the process, so it can record what it has. */
+const WALL_MARGIN_MS = 60_000;
 
 async function work(config: LeaseWorkerConfig): Promise<void> {
+  const endsAt = Date.now() + (config.wallMs ?? Number.POSITIVE_INFINITY) - WALL_MARGIN_MS;
   const url = config.postgres ? controlPlaneUrlFromEnv() : null;
   if (config.postgres && !url) throw new Error("CONTROL_PLANE_DATABASE_UNCONFIGURED");
   const stores = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
@@ -44,7 +47,8 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
       transportFor: jurisdiction => { broker.assignment(current, jurisdiction); return request => broker.call<ModelResponse>("model", request); } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call<HuntSearchResult>("search", request),
       searchBudget: { take: host => broker.call<string | null>("search-take", host), done: async host => { await broker.call("search-done", host); } } } : {}),
-    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads });
+    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads,
+    endsAt, progress: () => broker.send("progress", "", null) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
   // The first process to claim wins in the existing repository dispatcher.

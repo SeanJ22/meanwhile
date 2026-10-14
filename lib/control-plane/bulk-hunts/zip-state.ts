@@ -8,18 +8,18 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-interface Shard {
+export interface ZipShard {
   readonly divisions: readonly string[];
   readonly zips: Readonly<Record<string, readonly number[]>>;
 }
 
-const shards = new Map<string, Promise<Shard | null>>();
+const shards = new Map<string, Promise<ZipShard | null>>();
 
-function shardFor(prefix: string): Promise<Shard | null> {
+function shardFor(prefix: string): Promise<ZipShard | null> {
   const held = shards.get(prefix);
   if (held !== undefined) return held;
   const read = readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${prefix}.json`), "utf8")
-    .then((text) => JSON.parse(text) as Shard)
+    .then((text) => JSON.parse(text) as ZipShard)
     .catch(() => {
       shards.delete(prefix);
       return null;
@@ -61,28 +61,30 @@ let countsByState: Promise<ReadonlyMap<string, number> | null> | null = null;
  */
 export function zipCountsByState(): Promise<ReadonlyMap<string, number> | null> {
   if (countsByState !== null) return countsByState;
-  const read = readFile(join(process.cwd(), "data", "derived", "zip-divisions", "index.json"), "utf8")
-    .then(async (text) => {
-      const names = Object.keys((JSON.parse(text) as { shards: Record<string, unknown> }).shards).sort();
-      const out = new Map<string, number>();
-      for (const name of names) {
-        const shard = JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as Shard;
-        for (const refs of Object.values(shard.zips)) {
-          for (const i of refs) {
-            const hit = JURISDICTION_IN_ID.exec(shard.divisions[i] ?? "");
-            if (hit) {
-              out.set(hit[1], (out.get(hit[1]) ?? 0) + 1);
-              break;
-            }
-          }
+  const out = new Map<string, number>();
+  const read = visitZipShards((shard) => {
+    for (const refs of Object.values(shard.zips)) {
+      for (const i of refs) {
+        const hit = JURISDICTION_IN_ID.exec(shard.divisions[i] ?? "");
+        if (hit) {
+          out.set(hit[1], (out.get(hit[1]) ?? 0) + 1);
+          break;
         }
       }
-      return out as ReadonlyMap<string, number>;
-    })
+    }
+  }).then(() => out as ReadonlyMap<string, number>)
     .catch(() => {
       countsByState = null;
       return null;
     });
   countsByState = read;
   return read;
+}
+
+/** Reads every shard of the national ZIP index in turn and hands it to `visit`; no shard is kept. */
+export async function visitZipShards(visit: (shard: ZipShard) => void): Promise<void> {
+  const index = JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", "index.json"), "utf8")) as { shards: Record<string, unknown> };
+  for (const name of Object.keys(index.shards).sort()) {
+    visit(JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as ZipShard);
+  }
 }

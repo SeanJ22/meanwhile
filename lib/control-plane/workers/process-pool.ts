@@ -69,6 +69,8 @@ export interface LeaseWorkerConfig {
   /** Admin's requests in flight at once to one website; absent, the default. */
   readonly hostConcurrency?: number;
   readonly fundedSubjects: readonly string[];
+  /** How long the pool lets this worker process live; set by the pool, not the caller. */
+  readonly wallMs?: number;
   /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
   readonly nationalZips?: readonly string[];
   readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
@@ -267,13 +269,14 @@ export async function runLeaseWorkerProcesses(input: {
       if (child.connected) { child.send(payload, () => {}); moved(); }
     };
     const offset = (launched - 1) % ids.length;
-    child.once("spawn", () => { release?.observe?.(child.pid!); input.onStarted?.(child.pid!); child.send({ ...input.config,
+    child.once("spawn", () => { release?.observe?.(child.pid!); input.onStarted?.(child.pid!); child.send({ ...input.config, wallMs: timeoutMs,
       taskIds: [...ids.slice(offset), ...ids.slice(0, offset)] }); moved(); });
     child.on("error", error => { clearTimeout(killTimer); clearTimeout(quietTimer); terminate(error); if (!child.pid) reject(error); });
     child.on("message", async (raw: unknown) => {
       const message = raw as { kind: string; id: string; taskId: string; jurisdiction: AutonomousJurisdiction; body: unknown };
       if (standing !== null && terminating) return;
       moved();
+      if (message.kind === "progress") return;
       if (message.kind === "task-start") {
         current = String(message.body);
         if (standing !== null) inFlight.set(current, child.pid ?? 0);

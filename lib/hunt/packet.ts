@@ -96,21 +96,6 @@ export function packetsFrom(input: {
 
 const fieldKey = (field: PacketField): string => `${field.subjectId}\u0000${field.checklistId}`;
 
-/** Several places' packets as one per government: a government shared by many places is hunted once. */
-export function mergePackets(groups: readonly (readonly HuntPacket[])[]): HuntPacket[] {
-  const merged = new Map<string, { label: string; held: Map<string, HeldFact>; blanks: Map<string, PacketField> }>();
-  for (const packet of groups.flat()) {
-    const row = merged.get(packet.governmentId) ?? { label: packet.label, held: new Map(), blanks: new Map() };
-    merged.set(packet.governmentId, row);
-    for (const fact of packet.held) row.held.set(`${fieldKey(fact)}\u0000${fact.sourceUrl}`, fact);
-    for (const blank of packet.blanks) row.blanks.set(fieldKey(blank), blank);
-  }
-  return [...merged].sort(([a], [b]) => a.localeCompare(b)).map(([governmentId, row]) => {
-    const blanks = [...row.blanks.values()].filter(blank => ![...row.held.values()].some(fact => fieldKey(fact) === fieldKey(blank)));
-    return { governmentId, label: row.label, held: [...row.held.values()], blanks };
-  });
-}
-
 /** Changes whenever a blank opens or closes, so a packet is re-sent only when something changed. */
 export function blankFingerprint(packet: Pick<HuntPacket, "blanks">): string {
   return contentHash(packet.blanks.map(fieldKey).sort().join("\n"));

@@ -46,6 +46,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   searchFor?:(subjectId:string)=>HuntSearch|undefined;
   /** The paid-search budget the Exa agent lane is admitted by. */
   searchBudget?:SearchBudget;
+  /** When this process will be ended; a long outside run is cancelled before then. */
+  endsAt?:number;
+  /** Tells the worker pool this process is still working while it waits on an outside run. */
+  progress?:()=>void;
   /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
   auditCeilingUsd?:number;
   lifetimeHuntSubject?:(subjectId:string)=>boolean;
@@ -174,6 +178,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       if (task.routeId===EXA_AGENT_ROUTE_ID) {
         const packetNow=async()=>(await readGovernmentPackets([item.subject],now())).get(item.subject)??null;
         return exaAgentExecutor({key:exaKey,now,budget:input.searchBudget,packetNow,
+          ...(input.endsAt!==undefined?{endsAt:input.endsAt}:{}),...(input.progress?{progress:input.progress}:{}),
           instructions:async()=>(await readRolePlaybook(input.repos,"HUNTER")).text,
           toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root}),
           toolsFor:(job,packet)=>{

@@ -33,11 +33,14 @@ export function exaAgentExecutor(deps: {
     Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "openBytes" | "reportFinding">;
   readonly onResult: (result: ScoutResult, packet: HuntPacket) => Promise<void>;
   readonly fetchImpl?: FetchLike;
+  /** When the worker process will be ended; the run is cancelled before then if that comes first. */
+  readonly endsAt?: number;
+  readonly progress?: () => void;
 }): DeclaredExecutor {
   return {
     lane: "BOUNDED_MODEL_WORKER",
     workerFor: ({ holder }) => ({ role: "SCOUT", provider: "exa", version: EXA_AGENT_MODEL, instance: holder }),
-    run: async ({ obligation: row, attemptId, workItemId, routeTaskId, holder, bound }): Promise<WorkOutcome> => {
+    run: async ({ obligation: row, attemptId, workItemId, routeTaskId, holder }): Promise<WorkOutcome> => {
       const started = Date.now();
       const startedAt = deps.now();
       const packet = await deps.packetNow();
@@ -57,7 +60,8 @@ export function exaAgentExecutor(deps: {
       let run: Awaited<ReturnType<typeof runExaAgent>>;
       try {
         run = await runExaAgent({ packet, key, instructions: await deps.instructions(),
-          deadlineMs: Date.now() + (bound.maxWallMs > 0 ? bound.maxWallMs : EXA_AGENT_WALL_MS), ...(deps.fetchImpl ? { fetchImpl: deps.fetchImpl } : {}) });
+          deadlineMs: Math.min(Date.now() + EXA_AGENT_WALL_MS, deps.endsAt ?? Number.POSITIVE_INFINITY),
+          ...(deps.progress ? { onPoll: deps.progress } : {}), ...(deps.fetchImpl ? { fetchImpl: deps.fetchImpl } : {}) });
       } finally {
         await budget.done(EXA_AGENT_HOST).catch(() => undefined);
       }

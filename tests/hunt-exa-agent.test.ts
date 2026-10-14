@@ -35,11 +35,19 @@ test("the packet goes to Exa's agent at high effort with the report_finding shap
   assert.equal(run.error, null);
 });
 
-test("a run that does not finish in time returns no findings and says why", async () => {
+test("a run past its time limit is cancelled, its cost recorded and whatever it reported kept", async () => {
   let now = 0;
-  const { fetchImpl } = exa([{ id: "run-2", status: "running" }]);
-  const run = await runExaAgent({ packet, key: "secret", instructions: "Hunt.", deadlineMs: 10, fetchImpl: fetchImpl as never,
-    sleep: async () => { now += 5; }, clock: () => now });
-  assert.deepEqual(run.findings, []);
-  assert.match(run.error ?? "", /time limit/);
+  let polls = 0;
+  const kept = { subjectId: `${COUNTY}#board`, field: "MTG-01", value: "first Tuesday", sourceUrl: "https://pima.example.gov/board", sentence: "The Board meets on the first Tuesday." };
+  const { sent, fetchImpl } = exa([{ id: "run-2", status: "running" }, { id: "run-2", status: "running" },
+    { id: "run-2", status: "cancelled", output: { structured: { findings: [kept], summary: "" } }, costDollars: { total: 0.5 } }]);
+  const run = await runExaAgent({ packet, key: "secret", instructions: "Hunt.", deadlineMs: 4, fetchImpl: fetchImpl as never,
+    sleep: async () => { now += 5; }, clock: () => now, onPoll: () => { polls += 1; } });
+  assert.equal(sent.at(-1)!.url, "https://api.exa.ai/agent/runs/run-2/cancel");
+  assert.equal(sent.at(-1)!.init.method, "POST");
+  assert.equal(run.status, "cancelled");
+  assert.deepEqual(run.findings, [kept]);
+  assert.equal(run.costUsd, 0.5);
+  assert.match(run.error ?? "", /passed its time limit and was cancelled/);
+  assert.ok(polls > 0, "each poll tells the worker pool the job is still working");
 });

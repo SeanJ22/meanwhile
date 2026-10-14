@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import type { HeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
-import { blankFingerprint, huntableItem, mergePackets, packetCostEstimateUsd, packetFamilies, packetsFrom, reportableSubjects } from "../lib/hunt/packet.ts";
+import { blankFingerprint, huntableItem, packetCostEstimateUsd, packetFamilies, packetsFrom, reportableSubjects } from "../lib/hunt/packet.ts";
 
 const NOW = "2026-10-14T12:00:00.000Z";
 const COUNTY = "ocd-division/country:us/state:az/county:santa_cruz";
@@ -53,14 +53,12 @@ test("blanks are only what an agent can find on a page", () => {
   assert.equal(huntableItem("ASK-01"), false);
 });
 
-test("a government shared by many places is one packet, its held facts closing blanks another place still listed", () => {
-  const zipA = packetsFrom({ divisions, items: owed([]) });
-  const zipB = packetsFrom({ divisions: [divisions[0]!], items: owed([seatName], [divisions[0]!]) });
-  const merged = mergePackets([zipA, zipB]);
-  assert.deepEqual(merged.map(p => p.governmentId), [COUNTY, CITY]);
-  const county = merged.find(p => p.governmentId === COUNTY)!;
-  assert.ok(!county.blanks.some(b => b.subjectId === `${COUNTY}#seat-1` && b.checklistId === "OFF-04"));
-  assert.ok(reportableSubjects(county).has(`${COUNTY}#seat-1`));
+test("a packet's subjects are its government and every subject it holds or owes", () => {
+  const county = packetsFrom({ divisions, items: owed([seatName]) }).find(p => p.governmentId === COUNTY)!;
+  const subjects = reportableSubjects(county);
+  assert.ok(subjects.has(COUNTY));
+  assert.ok(subjects.has(`${COUNTY}#seat-1`));
+  assert.ok(!subjects.has(`${CITY}#council`));
 });
 
 test("the fingerprint moves only when the open blanks change", () => {

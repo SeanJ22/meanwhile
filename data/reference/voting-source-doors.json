@@ -395,14 +395,17 @@
     "publisher": "Office of the State Election Commissioner, Dover, DE",
     "url": "https://elections.delaware.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "DE",
       "ocdId": "ocd-division/country:us/state:de",
       "name": "Delaware"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://elections.delaware.gov/",
+    "electionPageUrl": "https://elections.delaware.gov/elections/general/general.html",
     "title": "Delaware chief election office discovery root",
     "office": {
       "name": "Office of the State Election Commissioner, Dover, DE",
@@ -418,7 +421,14 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.delaware.gov/\">https://elections.delaware.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+      "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html"
+    ],
+    "ballotMeasuresUrls": [
+      "https://elections.delaware.gov/elections/general/sampleballots/GE2026/index.html"
+    ]
   },
   {
     "id": "fec-dc-chief",
@@ -663,7 +673,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses’ public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
+      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses\u2019 public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
       "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",

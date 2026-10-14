@@ -327,67 +327,17 @@
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page\">https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page</a>"
     },
     "candidateListUrls": [
-      "https://portal.ct.gov/sots/election-services/town-ballots/2026-november-town-election-ballots",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/eastford_sample_ada.pdf?rev=9f0ae3b327634636b51f823ab81473e0&hash=26D8B09694E49CCBFA59AB0E924620B6",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_britain_sample_ada.pdf?rev=8020fdb826da487282a364240352b86f&hash=A295C6FAAC08B5EE60A62B9AD8480515",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_fairfield_sample_ada.pdf?rev=d1ae0e80521c402b9de547ff59f7ef4c&hash=BC72390311788228F2D41FC919CC0B6C",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/essex_sample_ada.pdf?rev=ffad4e960cf143cc95e83a34d8eb3a7a&hash=07BE241DF5219BF53276F5739FC1B835",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/sterling_sample_ada.pdf?rev=5a9d6f4b591949ddbabdae97dc353595&hash=82CACA8889B8911ADCD19BFFF4F863DE",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/26gctfai_sample-updated.pdf?rev=295f39d02a874206bb10d09b57636c11&hash=969A70C957955BD727DC6F17C3EA3D21",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/stratford_sample_ada.pdf?rev=fec2676e33eb42b892e5668b15228d82&hash=8D25EC02C5E0867D59E3183A6BC6AFE7",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bolton_sample_ada.pdf?rev=8ef72dba81e842adaa1f63f811565088&hash=74F10EEC959A8382E8E8AE2832BE562C",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/goshen_sample_ada.pdf?rev=48f022bf3fab49bca46f6fea17c842ec&hash=C2D2756019E7B3430944127C3C9DDADA",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bozrah_sample_ada.pdf?rev=dda99100e23a468facf14ea995ea669f&hash=159C60336D3BD02EA6081B329C5E5782",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/north_branford_sample_ada.pdf?rev=96a21087aa894883b4e7f6449e17e6c4&hash=DF4214B943E77874AE6FD166367B33AC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/greenwich_sample_ada.pdf?rev=787e69bd1850415598951cf11744d45b&hash=889BFE444792988E8B2DF4B82B2E2CAE",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bridgeport_sample_ada.pdf?rev=47d49a29bfcc46a0add77ba98a131377&hash=DC99789420022F52EC23E99B94BA43BE",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/haddam_sample_ada.pdf?rev=52ecf19247aa437f8387e5d7164e8fc7&hash=96C8CF449CF0D2F0AAE636AD79B9E402",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/voluntown_sample_ada.pdf?rev=ab1e84944d1e4ebb8d194762d1d076c9&hash=C75CD8BCE2FE85FF43A8B6AD1C80E9F5",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hamden_sample_ada.pdf?rev=ebfacee20c7548b889fd65bf606b40da&hash=CEE8FCA4BC2506437E39707673AAC3CD",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/old_lyme_sample_ada.pdf?rev=71ed5ec3085c432980b466a441443d41&hash=2EC693478CD9FDE14FB2F1BE17B002AF",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wallingford_sample_ada.pdf?rev=6f6f4ea5771742bc85b7df8175f60dc8&hash=C75B8D58549843E059EF81ADFCB00405",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/burlington_sample_ada.pdf?rev=9311f4f1f6904f9c929cb8d25eb41ffe&hash=A85A415FC6A5912C78AC45A2E6C4EF17",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canaan_sample_ada.pdf?rev=3ef65f08efc043199fc8fa44ee748993&hash=7237ACE908C991433D8DA79321D9AE05",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canterbury_sample_ada.pdf?rev=75377e42b14a4cb5b4cdcb8fd494005d&hash=A4211D8521AA513732D34062D4AB75CB",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartland_sample_ada.pdf?rev=dba34491b8724b858b21915a1178511b&hash=CDDAC2C4C0C1C49C008A93AD4FCEB2FC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/oxford_sample_ada.pdf?rev=e259c0c8e75241a7a061b6523be9c449&hash=0A57AC7B5D65D252D45B44BC2632F27D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/harwinton_sample_ada.pdf?rev=2231ac734d8240e2a09969464b9aebc2&hash=50D412DCCBCF082B06102E18D83CF46F",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/chaplin_sample_ada.pdf?rev=528bfc8d6f9e4f0a80cb4c8c28c35876&hash=DFFA0C2943755340541117C8110B9E14",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/cheshire_sample_ada.pdf?rev=d3e30d7525864190be8870d8ff50fe9f&hash=A80548D35DD669B1637318E530FF2ABF",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/kent_sample_ada.pdf?rev=2e5e03d838194c6195fda597d79f4d2a&hash=6FAEA7923A44FF8A91BB1057C9562EE6",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/chester_sample_ada.pdf?rev=12db445bf64246cb977f27e7a7a076bd&hash=E59F4796553212E8912FF1F811F8CA3D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/killingly_sample_ada.pdf?rev=3a4793c2fb354e6692d449951b250ebc&hash=452C809FB3C7704AC4F4D061CBF26D0D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/pomfret_sample_ada.pdf?rev=ab916451bea842eb9459ab2edbac50ff&hash=4F85ECB741CD83FA5D7E17ED4326DB4F",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/portland_sample_ada.pdf?rev=db03b756c8dd4be59f261e428487d30f&hash=3E82E9824F51B1564A8885CBE6EF262D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/colebrook_sample_ada.pdf?rev=ee7364ef7a8c40328c0cb81ff6054d18&hash=3954D2F271EB11AA30000FC82C00E65D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/westport_sample_ada.pdf?rev=136da92a99664ef3a22bac5dfd4776b3&hash=04050350C79DA8A8BD3DB6001714A814",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/lisbon_sample_ada.pdf?rev=4d66d5f663c24d3d93d666881b198ef1&hash=3B9ECDC37A7C2778DBDE69F79DA712FB",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/cornwall_sample_ada.pdf?rev=5fa4201633cd4912b1c7ba713396b8fc&hash=6C2C73B0D43C1E12C803A67DF1528881",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/redding_sample_ada.pdf?rev=fc0f55f83bf14a59923dde0959a4ae23&hash=2333F81D87777996F98621B9A03869EC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/willington_sample_ada.pdf?rev=54ce6864e8014b608f996efdefe59053&hash=79EDC7D1727557EDEFFAB86491AA6B2D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/lyme_sample_ada.pdf?rev=5f33e9b28fe9499bbc981a6966e1be95&hash=A514C07CA97FD2F077C8973A122E7E87",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wilton_sample_ada.pdf?rev=2f936220c9b646b4bb7fe2023984f636&hash=DCBCC6B8334AA3EA967736583A7E3ECC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/madison_sample_ada.pdf?rev=7109a4fa67854f2c84417eb2d5d90ce9&hash=1A84F9CFD335BB4A51CA85C446A3427E",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/danbury_sample_ada.pdf?rev=02c8e5802ffa4aacaf4146178b67ef13&hash=426708A2C9C8282FA4B731C2A4C56129",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/manchester_sample_ada-(1).pdf?rev=89268b4bd2274a62b9230c67bb0300de&hash=C25F821489FD9AC520E18EB539EB0B72",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/roxbury_sample_ada.pdf?rev=93506c8ef8d342d19facdfb252a3759c&hash=6FCAA429A991A1B17CBFD9419FA1196A",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/salem_sample_ada.pdf?rev=2fd2c7d271d340b9a09829fba362e1f6&hash=1EF5CF38829497D084747D8463586F9F",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/deep_river_sample_ada.pdf?rev=5f5b7472777246e6aad40871d598571e&hash=1FCF5D781B91CA49346770C22F907337",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_ada.pdf?rev=8e2c5ec2a2a1492b805b47ae30b2d10f&hash=857F1076B25EBB20041BE2E6BC79B0DF",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/meriden_sample_ada.pdf?rev=3d3a971fcc494f0da9d46d313d93afbb&hash=06F1568B9549E5F0BD6514FC24A5D1E1",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/scotland_sample_ada.pdf?rev=bd159ddab19545ea8070286276639b93&hash=328F9BFA1603903C76A6C58E11E6F328",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/woodbridge_sample_ada.pdf?rev=a76cb9f629e24f7e980df4a1efaa823c&hash=1B4373B6B8DD12C12A8AECBB636CB2D0",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/middletown_sample_ada.pdf?rev=042e7771e59a4ca7ac5aff577d83787e&hash=FDA81E1584C4E8DDF29A3453A0784E2B",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hampton_sample_ada.pdf?rev=6b81b30dae4d42629651fc9510329475&hash=E187EECC504FC38AF50B792DE3E7716A",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/milford_sample_ada.pdf?rev=457b9fc79d9e4196830a899d678d180d&hash=2A8DF2BBB0C2FA2033118E270B85AA07"
+      "https://portal.ct.gov/sots/election-services/election-results/election-results",
+      "https://ctemspublic.pcctg.net/",
+      "https://ctemspublic.pcctg.net/ng-app/data/Elections.json",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/Version.json",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/Lookupdata.json",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/stateVotes_Electiondata.json",
+      "https://ctemspublic.tgstg.net/Default.aspx?action=Candidates"
     ],
     "ballotMeasuresUrls": [
-      "https://portal.ct.gov/sots/election-services/ballotquestions/questions-on-the-ballot"
+      "https://portal.ct.gov/sots/election-services/ballotquestions/questions-on-the-ballot",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/ballotQuestion_Electiondata.json"
     ]
   },
   {
@@ -733,7 +683,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses\u2019 public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
+      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses’ public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
       "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1951,14 +1901,17 @@
     "publisher": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
     "url": "https://vote.utah.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "UT",
       "ocdId": "ocd-division/country:us/state:ut",
       "name": "Utah"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://vote.utah.gov/",
+    "electionPageUrl": "https://vote.utah.gov/current-election-information/",
     "title": "Utah chief election office discovery root",
     "office": {
       "name": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
@@ -1974,21 +1927,27 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://vote.utah.gov/\">https://vote.utah.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+    "writeInCandidateListUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Write-In-Certification.pdf",
+    "ballotMeasuresUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf"
   },
   {
     "id": "fec-vt-chief",
     "publisher": "Office of the Secretary of State, Montpelier, VT",
     "url": "https://sos.vermont.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "VT",
       "ocdId": "ocd-division/country:us/state:vt",
       "name": "Vermont"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.vermont.gov/elections/",
+    "electionPageUrl": "https://sos.vermont.gov/elections/election-info-resources/candidates",
     "title": "Vermont chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Montpelier, VT",
@@ -1997,14 +1956,28 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "State elections page and robots.txt return HTTP 403, including the permitted browser-UA rung. Later network-enabled captures resolved the initial workspace proxy limitation.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "The Secretary of State HTML root returns HTTP 403. The official outside.vermont.gov qualified-candidates workbook and Fair Haven official sample ballot were acquired HTTP 200; all requested contests, candidates and statewide questions converted with scripts."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.vermont.gov/elections/\">https://sos.vermont.gov/elections/</a>"
-    }
+    },
+    "discoveredSources": [
+      {
+        "url": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      }
+    ]
   },
   {
     "id": "fec-va-chief",

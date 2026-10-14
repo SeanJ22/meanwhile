@@ -455,7 +455,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "curated-reader-primary-sources",
     recordClass: "CURATED_READER_RECORD",
-    scope: "US-AZ+US-NH+US-NJ:official-ballot-navigation",
+    scope: "US:official-ballot-navigation",
     command: ["scripts/promote-manual-civic-projection.mts", "--contract=ballot-navigation"],
     parserNormalizerVersion: "curated-reader-records/2",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },

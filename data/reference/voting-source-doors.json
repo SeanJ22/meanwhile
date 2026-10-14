@@ -2280,14 +2280,17 @@
     "publisher": "Office of the Secretary of State, Cheyenne, WY",
     "url": "https://sos.wyo.gov/Elections/Default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WY",
       "ocdId": "ocd-division/country:us/state:wy",
       "name": "Wyoming"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.wyo.gov/Elections/Default.aspx",
+    "electionPageUrl": "https://sos.wyo.gov/Elections/2026ElectionInformation.aspx",
     "title": "Wyoming chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Cheyenne, WY",
@@ -2296,14 +2299,16 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official election root links the 2026 general election candidate roster in CSV/PDF and statewide propositions with full initiative text."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.wyo.gov/Elections/Default.aspx\">https://sos.wyo.gov/Elections/Default.aspx</a>"
-    }
+    },
+    "candidateListUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+    "ballotMeasuresUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf"
   },
   {
     "id": "mt-statewide-polling-2026",

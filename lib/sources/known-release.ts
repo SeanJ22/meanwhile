@@ -1,6 +1,3 @@
-/** Known releases reuse the existing evidence vault and repository lock.
- * Source bytes are immutable; only the small source/release index changes.
- * No parser or reader owns a second download for the same release. */
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
@@ -11,7 +8,7 @@ import { RepositoryLockHeld } from "../control-plane/repository/types.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories, readPlaceArtifacts } from "../control-plane/repository/pg-store.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
 import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
-import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
+import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
 import { publicFetch } from "../hunt/egress.ts";
@@ -43,6 +40,15 @@ export interface KnownRelease {
   readonly vaultKey?: string;
   /** A failed new check never replaces the successful held observation. */
   readonly failedSourceCheck?: FailedSourceCheck;
+  readonly outage?: string;
+}
+
+export class KnownReleaseUnavailable extends SourceAcquisitionFailure {
+  readonly held: KnownRelease;
+  constructor(failure: SourceAcquisitionFailure, held: KnownRelease) {
+    super(failure.code, failure.message);
+    this.held = held;
+  }
 }
 /** A real provider observation is separate from the original response bytes. */
 export function knownReleaseSourceCheck(release: Pick<KnownRelease, "requestedUrl" | "finalUrl" | "lastCheckStatus" | "sha256" | "checkedAt">): {
@@ -310,10 +316,13 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     }
     return await save(release, [options.parserVersion]);
     } catch (error) {
-      if (!options.reuseOnSourceFailure || !prior || !heldBytes || !isSourceAcquisitionFailure(error)) throw error;
+      if (!isSourceAcquisitionFailure(error) || !prior || !heldBytes || options.signal?.aborted) throw error;
       const failedSourceCheck = { at: options.now?.() ?? new Date().toISOString(), code: error.code, detail: error.message };
-      await writeIndex({ ...prior, failedSourceCheck });
-      return { ...prior, bytes: heldBytes, reused: true, failedSourceCheck };
+      const release = { ...prior, bytes: heldBytes, reused: true, outage: error.message, failedSourceCheck };
+      await options.validate?.(heldBytes, release);
+      // A caller that replays saved evidence takes it directly; others receive it with the failure.
+      if (options.reuseOnSourceFailure) { await writeIndex({ ...prior, failedSourceCheck }); return release; }
+      throw new KnownReleaseUnavailable(error, release);
     }
   });
   inflight.set(identity, work);

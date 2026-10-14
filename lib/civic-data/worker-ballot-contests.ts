@@ -18,7 +18,7 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
-import { readManualProjectionPrior, manualProjectionCandidate } from "./manual-projections.ts";
+import { readManualProjectionPrior, manualProjectionCandidate, completeOfficialBallotContests } from "./manual-projections.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
@@ -101,6 +101,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   const fresh = input.payload as GenericBallotProjection;
   const previous = prior?.payload as GenericBallotProjection | undefined;
   const ballots = { ...previous?.ballots };
+  const complete = new Set(completeOfficialBallotContests(fresh, input.sourceReceipt).map(row => row.contest.id));
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
@@ -112,8 +113,11 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     const keepsMeasure = (contestId: string, sourceUrl: string | null) => !ids.has(contestId) ||
       !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
+    // A candidacy leaves when a verified list replaces it or a newer complete official list for the same contest omits it.
     const carriedCandidates = (before?.candidacies ?? []).filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
-      !replacedLists.has(row.contestId));
+      !replacedLists.has(row.contestId) &&
+      !ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
+        Date.parse(contest.provenance.collectedAt) >= Date.parse(before?.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? "")));
     const contests = ballot.contests.map(contest => carriedCandidates.some(row => row.contestId === contest.id)
       ? { ...contest, candidateListComplete: false, scopeNote: "We're working on getting the rest of this candidate list" }
       : contest);

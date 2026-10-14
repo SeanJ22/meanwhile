@@ -7,18 +7,14 @@ import { useSessionAddressScope } from "@/hooks/use-session-address";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
 
-/**
- * Marks ballot contests outside the reader's confirmed divisions as
- * `data-scoped-out` (hidden by the stylesheet) and shows how many were set
- * aside with a way back. Only confirmed divisions narrow; a split level
- * contributes nothing until the reader settles it.
- */
 export function BallotNarrowing({
   zip,
+  electionDate,
   /** The class for the trigger pill; never applied to the open form. */
   className = "mt-2",
 }: {
   zip: string;
+  electionDate: string | null;
   className?: string;
 }) {
   const address = useSessionAddressScope(zip);
@@ -74,6 +70,7 @@ export function BallotNarrowing({
       )}
       <AddressPrompt
         zip={zip}
+        selection={electionDate ? { purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate } : undefined}
         trigger="Narrow this to where you live"
         triggerClassName={className}
         /* An address that resolves in another zip is offered, never taken. */

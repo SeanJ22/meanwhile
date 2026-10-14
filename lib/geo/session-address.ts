@@ -11,6 +11,7 @@ import {
   publishToListeners,
   subscribeToStorage,
 } from "@/lib/state/subscribe-to-storage";
+import type { GeographySelection } from "../census-geography/selection.ts";
 
 /** The one key. Named so it is greppable and so nothing else claims it. */
 export const SESSION_ADDRESS_KEY = "wtp.session_address_scope";
@@ -21,10 +22,6 @@ export const SESSION_ADDRESS_KEY = "wtp.session_address_scope";
  */
 const listeners = new Set<() => void>();
 
-/**
- * Subscribe to changes, for `useSyncExternalStore`: local listeners carry
- * same-tab writes and the `storage` event carries cross-tab ones.
- */
 export function subscribeToSessionAddress(onStoreChange: () => void): () => void {
   return subscribeToStorage(listeners, onStoreChange);
 }
@@ -35,6 +32,7 @@ function publish(): void {
 }
 
 export interface SessionAddressScope {
+  selection?: GeographySelection;
   /** The zip the address was resolved inside. */
   zip: string;
   /** Contest ids on the ballot at that point. The whole payload's value. */
@@ -84,6 +82,7 @@ export function readSessionAddress(): SessionAddressScope | null {
     }
     return {
       zip: parsed.zip,
+      ...(parsed.selection ? { selection: parsed.selection } : {}),
       contestIds: parsed.contestIds.filter((id): id is string => typeof id === "string"),
       excludedContestIds: Array.isArray(parsed.excludedContestIds) ? parsed.excludedContestIds.filter((id): id is string => typeof id === "string") : [],
       divisionIds: Array.isArray(parsed.divisionIds)
@@ -133,8 +132,11 @@ export function clearSessionAddress(): void {
  * Does the device hold an address that answers for this zip? An address in
  * one zip answers nothing about another.
  */
-export function sessionAddressFor(zip: string | null): SessionAddressScope | null {
+export function sessionAddressFor(zip: string | null, selection?: GeographySelection): SessionAddressScope | null {
   if (!zip) return null;
   const scope = readSessionAddress();
-  return scope && scope.zip === zip ? scope : null;
+  if (!scope || scope.zip !== zip || (scope.selection?.purpose ?? "representation") !== (selection?.purpose ?? "representation")) return null;
+  // A remembered address stays until it is forgotten; only a different election asks again.
+  if (selection?.purpose === "election" && scope.selection?.electionDate !== selection.electionDate) return null;
+  return scope;
 }

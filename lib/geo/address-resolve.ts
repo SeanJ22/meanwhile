@@ -6,7 +6,7 @@ import { ballotScopeAtAddress } from "@/lib/geo/address-ballot-scope";
 import { publishedZipDistricts } from "@/lib/geo/zip-census-districts";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { censusWorkDivision } from "@/lib/census-geography/division-id";
-import { currentRepresentationSelection } from "@/lib/census-geography/selection";
+import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
 import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
 import { lookupZcta } from "@/lib/geo/zcta";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
@@ -21,12 +21,18 @@ const answer = (body: unknown, status = 200) => Response.json(body, { status, he
 export async function resolveAddressRequest(request: Request, fetchImpl: typeof fetch = publicFetch) {
   let input: Record<string, unknown>;
   try { input = await request.json(); } catch { return answer({ ok: false }, 400); }
-  if (!input || typeof input !== "object" || Array.isArray(input) || Object.keys(input).some(key => !["zip", "street", "houseNumber", "postalEntry"].includes(key))) return answer({ ok: false }, 400);
+  if (!input || typeof input !== "object" || Array.isArray(input) || Object.keys(input).some(key => !["zip", "street", "houseNumber", "postalEntry", "selection"].includes(key))) return answer({ ok: false }, 400);
   const zip = typeof input.zip === "string" ? input.zip.trim() : "";
   const typedStreet = typeof input.street === "string" ? input.street.trim() : "";
   const house = typeof input.houseNumber === "string" ? input.houseNumber.trim() : "";
   if (!/^\d{5}$/.test(zip) || typedStreet.length < 3) return answer({ ok: false }, 400);
   // Postal entry: a mail-only or unknown ZIP is not a residential boundary, so the street carries city and state instead.
+  // The surface may ask for the election it is showing; otherwise the address answers for representation today.
+  const day = /^\d{4}-\d{2}-\d{2}$/;
+  const asked = input.selection as Partial<GeographySelection> | undefined;
+  if (asked !== undefined && (typeof asked !== "object" || asked === null || !["representation", "election"].includes(String(asked.purpose)) ||
+    !day.test(String(asked.asOf)) || asked.purpose === "election" && !day.test(String(asked.electionDate)))) return answer({ ok: false }, 400);
+  const requested = asked as GeographySelection | undefined;
   const omitZip = input.postalEntry === true && (zipNeedsAddress(zip) || !lookupZcta(zip));
   const area = postalArea(zip);
   const street = omitZip && !typedStreet.includes(",") && area?.place && area.state ? `${typedStreet}, ${area.place}, ${area.state}` : typedStreet;
@@ -62,7 +68,7 @@ export async function resolveAddressRequest(request: Request, fetchImpl: typeof 
     contestIds: [], excludedContestIds: [] });
   const geographies = found.geographies;
   const stateFips = addressStateFips(geographies);
-  const selection = { ...currentRepresentationSelection(), ...(stateFips ? { stateFips } : {}) };
+  const selection = { ...(requested ?? currentRepresentationSelection()), ...(stateFips ? { stateFips } : {}) };
   const resolution = resolveAddress([addressDivisions(geographies, held, selection)]);
   // The source lookup starts from every held plan touching the ZIP, not just today's representation map.
   const ids = new Set(entry?.ids ?? []);

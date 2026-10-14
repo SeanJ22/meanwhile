@@ -21,6 +21,7 @@ export interface ArchiveSourceOpen {
   readonly member: string; readonly retrievedAt: string; readonly publishedAt: string | null;
   readonly checkedAt: string; readonly lastCheckStatus: number;
   readonly byteLength: number; readonly unchanged?: boolean; readonly failedSourceCheck?: FailedSourceCheck;
+  readonly outage?: string;
   readonly accept?: () => Promise<void>; readonly dispose: () => Promise<void>;
 }
 
@@ -74,8 +75,10 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
       }
     }
     if (options.replayHeld && held) failedSourceCheck = held.failedSourceCheck;
-    const checkedAt = failedSourceCheck?.at ?? options.now?.() ?? new Date().toISOString();
-    const lastCheckStatus = response?.status ?? 0;
+    // A failed check never advances the source check: the saved observation stands.
+    const checkedAt = response ? options.now?.() ?? new Date().toISOString() : held!.retrievedAt;
+    const lastCheckStatus = response?.status ?? 200;
+    const outage = failedSourceCheck?.detail;
     if (response?.status === 304 && held && held.sha256 === reuseIfSha256) {
       if (archive && held.failedSourceCheck) await archive.put(sourceKey,
         new TextEncoder().encode(JSON.stringify({ ...held, failedSourceCheck: undefined })), "application/json");
@@ -134,7 +137,7 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
     if (source.sha256 === reuseIfSha256) {
       if (archive) await archive.put(sourceKey, new TextEncoder().encode(JSON.stringify(source)), "application/json");
       return { textChunks: (async function* () {})(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
-        member: dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus, byteLength: source.bytes, unchanged: true, failedSourceCheck, dispose };
+        member: dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus, byteLength: source.bytes, unchanged: true, failedSourceCheck, dispose, ...(outage ? { outage } : {}) };
     }
     const entries = dataset.format === "csv" ? null : await openZipFile(path, {
       maxEntries: 8, maxMemberBytes: 32 * 1024 ** 3, maxTotalBytes: 32 * 1024 ** 3, maxDirectoryBytes: 1024 * 1024,
@@ -149,7 +152,7 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
       complete = true;
     }
     return { textChunks: textChunks(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
-      member: entries?.[0].name ?? dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus, byteLength: source.bytes, failedSourceCheck, dispose,
+      member: entries?.[0].name ?? dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus, byteLength: source.bytes, failedSourceCheck, dispose, ...(outage ? { outage } : {}),
       accept: async () => {
         if (!complete) throw new Error("PRL_SOURCE_NOT_FULLY_READ");
       } };

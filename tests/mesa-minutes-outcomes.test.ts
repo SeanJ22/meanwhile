@@ -8,7 +8,7 @@ import {
   applyMinutesApprovals,
   concludedSittingRows,
   FAILED_MINUTES_REVERIFY_DAYS,
-  failedDocumentCheck,
+  minutesDocumentCheck,
   failedMinutesReadFor,
   isHeldFailedExtraction,
   minutesLinkFor,
@@ -34,12 +34,6 @@ import {
   type MinutesPage,
 } from "../lib/sources/legistar-insite/minutes.ts";
 import { findTenant } from "../lib/sources/legistar-insite/tenant-registry.ts";
-
-/**
- * Mesa's City Council decisions are in its minutes, not the vendor's API. Every document below is a real Mesa
- * minutes document: some as their exact PDF bytes, others as the text layer extracted from bytes identified by
- * sha256 (`*.pages.json`). No test here touches the network.
- */
 
 const DIR = "tests/fixtures/legistar-insite-mesa-minutes";
 /** sha256 of lib/sources/legistar-insite/minutes.ts (LF line endings) at MINUTES_PARSER_REVISION "2026-09-25.motion-clauses". */
@@ -320,11 +314,11 @@ test("the minutes link: the accessible HTML first, the PDF second, on the portal
   assert.deepEqual(parsed.motions[0]?.items, ["5-c"]);
 });
 
-test("which sittings a pass reads again: new, newly published, relabelled, failed and scheduled rechecks", async () => {
+test("which sittings a pass reads again: new, newly published, relabelled, failed or due for rechecking", async () => {
   const july20 = sittingFrom("1336056", await pdfDocument("1336056"));
   const link = minutesLinkFor(row("1336056"), tenant.host)!;
   assert.deepEqual(minutesRefreshDecision(link, undefined), { walk: true, reason: "NEW" });
-  assert.deepEqual(minutesRefreshDecision(link, july20), { walk: true, reason: "SCHEDULED_RECHECK" });
+  assert.deepEqual(minutesRefreshDecision(link, july20), { walk: true, reason: "DOCUMENT_REVERIFY" });
   assert.deepEqual(minutesRefreshDecision({ ...link, label: "Results" }, july20), { walk: true, reason: "PUBLISHER_RELABELED" });
   assert.deepEqual(minutesRefreshDecision(null, july20), { walk: false, reason: "LINK_WITHDRAWN_KEPT" });
   const unpublished = notYetPublishedSitting({ tenant, row: row("1336069"), calendarUrl: CALENDAR_URL, observedAt: "2026-09-25T17:34:19.584Z" });
@@ -343,11 +337,6 @@ test("the concluded sittings a pass considers: the wired bodies, in the window, 
   assert.ok(!rows.some((candidate) => candidate.insiteId === "1336059"), "7/27 is outside this window");
   resetOutcomeSnapshotCache();
 });
-
-/*
- * The clerk's other two motion wordings: a motion without "that", and a motion as an infinitive. Minutes that
- * record no motion and do not say no action was taken stay a failed extraction.
- */
 
 /** The grid row as Mesa's calendar printed it for a sitting the recorded grids do not carry. */
 function printedRow(insiteId: string, date: string, kind: string, guid: string): InSiteCalendarRow {
@@ -425,22 +414,17 @@ test("a held sitting uses a new parser immediately and still checks its source o
   const now = printedSitting("1343172", printed);
   assert.equal(now.extractionNote, null, "this parser leaves no passage unread");
   assert.equal(now.minutesDocument?.parserRevision, MINUTES_PARSER_REVISION, "the reading records the parser that made it");
-  assert.deepEqual(minutesRefreshDecision(link, now), { walk: true, reason: "SCHEDULED_RECHECK" });
+  assert.deepEqual(minutesRefreshDecision(link, now), { walk: true, reason: "DOCUMENT_REVERIFY" });
   // Three motions, the fourth named unread, held before parser revisions existed.
   const { parserRevision: _revision, ...olderDocument } = now.minutesDocument!;
   const unread =
     ' 1 passage(s) beginning "It was moved" were not in the clerk\'s usual form and were not read: "It was moved by Councilmember Adams, seconded by Councilmember Duff, to direct the City Attorney …"';
   const heldThen = { ...now, extractionNote: unread, minutesDocument: olderDocument };
   assert.deepEqual(minutesRefreshDecision(link, heldThen), { walk: true, reason: "UNREAD_PASSAGES_HELD" });
-  // A successful partial reading still checks for a correction at the same URL.
-  assert.deepEqual(minutesRefreshDecision(link, { ...now, extractionNote: unread }), { walk: true, reason: "SCHEDULED_RECHECK" });
+  // The same unread passage under the parser in force is not downloaded again every pass.
+  assert.deepEqual(minutesRefreshDecision(link, { ...now, extractionNote: unread }), { walk: true, reason: "DOCUMENT_REVERIFY" });
 });
 
-/*
- * A held failed extraction is not downloaded and failed again every hour: the failure is held with the bytes'
- * identity, the portal is asked by HEAD whether the document changed, and the bytes are read again only when it
- * changed, the parser changed, or the failure is a week old.
- */
 const STRATEGIC = () => printedRow("1343166", "5/28/2026", "Strategic Planning Session", "F1571C51-0D0D-4537-9B82-C6F355A76A24");
 const FAILED_AT = "2026-09-25T22:31:11.000Z";
 
@@ -495,23 +479,23 @@ test("the next pass asks the portal first: an unchanged document is not download
   assert.equal(decision.check, held.failedMinutesRead);
 
   const failed = held.failedMinutesRead!;
-  assert.deepEqual(failedDocumentCheck(failed, MESA_HEAD()), { walk: false, reason: "FAILED_DOCUMENT_UNCHANGED", detail: "the same 18779714 bytes by length, type and validators" });
-  assert.equal(failedDocumentCheck(failed, MESA_HEAD({ contentType: "application/pdf; charset=binary" })).reason, "FAILED_DOCUMENT_UNCHANGED", "the type's parameters are not the type");
+  assert.deepEqual(minutesDocumentCheck(failed, MESA_HEAD()), { walk: false, reason: "DOCUMENT_UNCHANGED", detail: "the same 18779714 bytes by length, type and validators" });
+  assert.equal(minutesDocumentCheck(failed, MESA_HEAD({ contentType: "application/pdf; charset=binary" })).reason, "DOCUMENT_UNCHANGED", "the type's parameters are not the type");
   for (const [changed, why] of [
     [MESA_HEAD({ contentLength: 18_779_715 }), /length 18779714 → 18779715/],
     [MESA_HEAD({ contentType: "text/html" }), /type application\/pdf → text\/html/],
     [MESA_HEAD({ etag: '"abc"' }), /ETag none → "abc"/],
     [MESA_HEAD({ lastModified: "Fri, 25 Sep 2026 23:00:00 GMT" }), /Last-Modified none →/],
   ] as const) {
-    const check = failedDocumentCheck(failed, changed);
+    const check = minutesDocumentCheck(failed, changed);
     assert.equal(check.walk, true, why.source);
-    assert.equal(check.reason, "FAILED_DOCUMENT_CHANGED");
+    assert.equal(check.reason, "DOCUMENT_CHANGED");
     assert.match(check.detail, why);
   }
   // A check the portal does not answer says nothing: the failure stays held, nothing is downloaded.
   for (const unanswered of [null, MESA_HEAD({ status: 405 }), MESA_HEAD({ contentLength: null })]) {
-    const check = failedDocumentCheck(failed, unanswered);
-    assert.deepEqual({ walk: check.walk, reason: check.reason }, { walk: false, reason: "FAILED_DOCUMENT_UNCHECKED" });
+    const check = minutesDocumentCheck(failed, unanswered);
+    assert.deepEqual({ walk: check.walk, reason: check.reason }, { walk: false, reason: "DOCUMENT_UNCHECKED" });
   }
 });
 

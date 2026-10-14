@@ -30,9 +30,13 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
     try {
       const prior = projection.datasets[dataset.id] ?? await readReceipt(input.archive, dataset.id);
       const receipt = await ingestDataset({ dataset, archive: input.archive, now: Date.now(), priorReceipt: prior,
-        open: () => openPrlSource(dataset, input.fetchImpl, input.archive,
-          prior?.parserVersion === PRL_INGEST_PARSER_VERSION ? prior.sourceSha256 : undefined,
-          { replayHeld: prior?.parserVersion !== PRL_INGEST_PARSER_VERSION }) });
+        open: async () => {
+          const source = await openPrlSource(dataset, input.fetchImpl, input.archive,
+            prior?.parserVersion === PRL_INGEST_PARSER_VERSION ? prior.sourceSha256 : undefined,
+            { replayHeld: prior?.parserVersion !== PRL_INGEST_PARSER_VERSION });
+          if (source.outage) failures.push(`${dataset.id}: ${source.outage}`);
+          return source;
+        } });
       const violations = prlReceiptViolations(receipt);
       if (violations.length) throw new Error(violations.join("; "));
       const checkedAt = new Date().toISOString();

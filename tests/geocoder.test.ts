@@ -6,6 +6,7 @@ import test from "node:test";
 import {
   CENSUS_BENCHMARK,
   CENSUS_GEOCODER_URL,
+  CENSUS_GEOGRAPHIES_URL,
   MAX_SPREAD_KM,
   SAMPLE_HOUSE_NUMBERS,
   censusGeocodeUrl,
@@ -349,7 +350,7 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
   assert.equal(points.length, 4);
   assert.equal(calls.length, 4);
   assert.ok(
-    calls[0].startsWith(CENSUS_GEOCODER_URL),
+    calls[0].startsWith(CENSUS_GEOGRAPHIES_URL),
     `server-side call went to ${calls[0]}`,
   );
 });
@@ -370,7 +371,6 @@ test("the address prompt discloses Census lookup and device storage until Forget
     assert.doesNotMatch(paragraph, /never (?:send it to us|store|log)/i);
   }
 });
-
 
 test("Census geocoding preserves ambiguity, rejects another ZIP, and supports US territories", async () => {
   assert.equal(parseCensusPoint({ result: { addressMatches: [...REAL_MATCH.result.addressMatches, ...REAL_MATCH.result.addressMatches] } }), null);

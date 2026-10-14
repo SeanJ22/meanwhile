@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRememberedAddress } from "@/hooks/use-session-address";
 import { RememberedAddress } from "@/components/address/remembered-address";
 import { logAddressEntered, readerPageForPath, type ReaderPage } from "@/lib/log/address-events";
+import type { GeographySelection } from "@/lib/census-geography/selection";
 
 import {
   houseNumberReason,
@@ -22,6 +23,7 @@ import { writeSessionAddress } from "@/lib/geo/session-address";
 
 export interface AddressPromptProps {
   zip: string;
+  selection?: GeographySelection;
   /** The Ask prompt records Ask even when it is opened from the map or ballot. */
   page?: ReaderPage;
   /** Fires whenever the jurisdiction picture changes; callers re-read the session scope. */
@@ -49,6 +51,7 @@ type Phase = "IDLE" | "ASKING" | "WORKING" | "NEEDS_NUMBER" | "SETTLED" | "FAILE
 export function AddressPrompt({
   zip,
   page,
+  selection,
   onResolved,
   onPoint,
   onCleared,
@@ -93,6 +96,7 @@ export function AddressPrompt({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           zip,
+          ...(selection ? { selection } : {}),
           ...(postalEntry ? { postalEntry: true } : {}),
           street: street.trim(),
           ...(withNumber ? { houseNumber: withNumber } : {}),
@@ -160,6 +164,7 @@ export function AddressPrompt({
         divisionLabels,
         splitLevels,
         streetLabel: withNumber ? `${withNumber} ${street}` : street,
+        ...(selection ? { selection } : {}),
       });
       onResolved?.({ divisionIds, contestIds, excludedContestIds, splitLevels });
       setPhase(result.status === "AMBIGUOUS" ? "NEEDS_NUMBER" : "SETTLED");

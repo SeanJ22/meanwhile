@@ -3,7 +3,7 @@
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
+import { acquireKnownRelease, KnownReleaseUnavailable, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { openZipFile, type FileArchiveMember } from "../archive.ts";
 import { bulkUrl, indexDivisions, normalize, pluralRosterIssue, rowsToPeople, yamlToPeople, type PluralPerson, type RegistryDivisionLite } from "./index.ts";
 import { PLURAL_PARSER_VERSION, PLURAL_REVISION_URL, PLURAL_SOURCE_ID, PLURAL_STATES } from "./targets.ts";
@@ -16,6 +16,14 @@ import type { OfficeholderSet } from "../../officials/types.ts";
 import { RepositoryLockHeld } from "../../control-plane/repository/types.ts";
 
 const DAY = 24 * 60 * 60_000;
+
+async function acquirePeopleRelease(options: KnownReleaseOptions) {
+  try { return await acquireKnownRelease(options); }
+  catch (error) {
+    if (error instanceof KnownReleaseUnavailable) return error.held;
+    throw error;
+  }
+}
 const ARCHIVE_LIMITS = { maxEntries: 100_000, maxMemberBytes: 16 * 1024 * 1024, maxTotalBytes: 2 * 1024 * 1024 * 1024 };
 type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now">;
 export interface StatePeopleRelease {
@@ -62,7 +70,6 @@ export async function acquireStatePeople(input: SharedOptions & {
   readonly state: string; readonly signal: AbortSignal; readonly asOf?: string;
   readonly divisions?: readonly RegistryDivisionLite[];
   readonly geographyQuery?: ReadOnlyQuery | null;
-  /** Exact previously captured CSV bytes can seed the shared release without a new request. */
   readonly readHeldCsv?: () => Promise<KnownRelease | null>;
 }): Promise<StatePeopleRelease> {
   const state = input.state.toLowerCase();
@@ -73,14 +80,15 @@ export async function acquireStatePeople(input: SharedOptions & {
   let currentMembershipComplete = true;
   let people: PluralPerson[] = [], acquisitions: StatePeopleAcquisition[] = [], releaseId = "";
   try {
-    const current = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: "people-current-revision",
+    const current = await acquirePeopleRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: "people-current-revision",
       url: PLURAL_REVISION_URL, parserVersion: `openstates-revision/1:${PLURAL_PARSER_VERSION}`, reuseOnSourceFailure: true, signal: input.signal, maxBytes: 1024 * 1024,
       checkAfterMs: DAY, validate: bytes => { revision(bytes); } });
     const sourceCheck = knownReleaseSourceCheck(current);
     if (current.failedSourceCheck) gaps.push({ sourceUrl: PLURAL_REVISION_URL,
       detail: `Fresh source check failed at ${current.failedSourceCheck.at}: ${current.failedSourceCheck.detail}; replaying the saved release.` });
+    else if (current.outage) gaps.push({ sourceUrl: current.requestedUrl, detail: current.outage });
     const sha = revision(current.bytes), url = `https://codeload.github.com/openstates/people/zip/${sha}`;
-    const release = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
+    const release = await acquirePeopleRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
       parserVersion: "openstates-archive/2", signal: input.signal, maxBytes: 96 * 1024 * 1024, checkAfterMs: Number.MAX_SAFE_INTEGER,
       // Central directory, every local header, member size and CRC are checked
       // before this immutable release can become a reuse candidate.
@@ -90,6 +98,7 @@ export async function acquireStatePeople(input: SharedOptions & {
         for (const entry of entries) { input.signal.throwIfAborted(); for await (const chunk of entry.stream()) void chunk; }
       }),
     });
+    if (release.outage) gaps.push({ sourceUrl: release.requestedUrl, detail: release.outage });
     releaseId = sha;
     await staged(release.bytes, async entries => {
       const selected = entries.filter(entry => new RegExp(`^people-[^/]+/data/${state}/(?:legislature|executive|municipal|municipalities)/.+\\.ya?ml$`).test(entry.name))

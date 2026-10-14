@@ -26,7 +26,7 @@ function release(csv: string, member = "release.csv"): KnownRelease {
 
 test("the real page-loaded catalog chooses the newest official directory and F33 flat file", () => {
   assert.equal(schoolReleaseLinks(fixture("nces-lea-catalog.json"), "lea-directory")[0], "https://nces.ed.gov/ccd/data/zip/ccd_lea_029_2526_w_0a_050626.zip");
-  assert.equal(schoolReleaseLinks(fixture("nces-f33-catalog.json"), "f33")[0], "https://nces.ed.gov/ccd/Data/zip/sdf23_1a_txt.zip");
+  assert.equal(schoolReleaseLinks(fixture("nces-f33-catalog.json"), "f33")[0], "https://nces.ed.gov/ccd/Data/txt/sdf24_1a.txt");
   const untrusted = fixture("nces-lea-catalog.json").replaceAll("https://nces.ed.gov/", "https://evil.example/");
   assert.deepEqual(schoolReleaseLinks(untrusted, "lea-directory"), []);
   const ies = fixture("nces-lea-catalog.json").replaceAll("https://nces.ed.gov/ccd/data/zip/", "https://ies.ed.gov/sites/default/files/");
@@ -51,14 +51,13 @@ test("a failed school archive reports its exact known source URL for the durable
 test("real national catalogs and files acquire once, and every state registration publishes from their saved bytes", async () => {
   const { locks } = createMemoryRepositories(), evidence = new MemoryEvidenceStore();
   const directory = release(fixture("nces-lea-directory.csv"));
-  const f33 = release(fixture("nces-f33.txt"), "sdf23_1a.txt");
   const calls: string[] = [];
   const fetchImpl = (async url => {
     calls.push(String(url));
     if (String(url) === NCES_SCHOOL_CATALOG["lea-directory"]) return new Response(fixture("nces-lea-catalog.json"));
     if (String(url) === NCES_SCHOOL_CATALOG.f33) return new Response(fixture("nces-f33-catalog.json"));
     if (String(url).includes("ccd_lea_029_2526")) return new Response(Buffer.from(directory.bytes));
-    if (String(url).includes("sdf23_1a_txt.zip")) return new Response(Buffer.from(f33.bytes));
+    if (String(url).endsWith("sdf24_1a.txt")) return new Response(fixture("nces-f33.txt"));
     throw new Error(`Unexpected fixture URL: ${url}`);
   }) as typeof fetch;
   // Each acquisition gets its own 120 s budget; the 56-state publication loop below is not an acquisition and must not spend it.

@@ -1,4 +1,5 @@
-import { publicFetch } from "../lib/hunt/egress.ts";
+import { readShutDoors, shutDoorsProvider, parseShutDoorId } from "../lib/control-plane/scheduler/providers/shut-doors.ts";
+import { useDetectiveFind as applyDetectiveFind } from "../lib/doors/detective-repair.ts";
 import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
@@ -10,7 +11,6 @@ import { routeProcessExecutor } from "../lib/control-plane/workers/route-process
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
-import { costEntryWithModel } from "../lib/control-plane/cost.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
@@ -32,77 +32,6 @@ import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-sup
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { ADMIN_MIRROR_BUDGET_MS, runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
-/**
- * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
- *
- * It observes, ACQUIRES for real, records, normalizes, STAGES — and **promotes
- * nothing to canonical reader truth**. `runCycle` has no parameter that could,
- * and the promotion tail writes only under ignored `.runtime/control-plane/staging/` diagnostics.
- *
- * ## Two lanes, one cycle
- *
- * The input is the OBLIGATION-PROVIDER REGISTRY
- * (`lib/control-plane/scheduler/registry.ts`) — four research providers, one scheduled
- * unit per (RECORD x REPRESENTATION). Every due unit is decided ONCE by the
- * canonical executor rule (`decideExecutor`):
- *
- * ```
- *   a machine-executable shape exists       ->  DETERMINISTIC   the route executor, serial
- *   no shape exists — unresolved novelty    ->  BOUNDED_MODEL_WORKER   a real Scout, pooled
- * ```
- *
- * The Scout lane is ADMITTED per row or DEFERRED BY CODE: `LANE_DISABLED`
- * (no credential in this process, `--dry`, `--no-model`, no delivery path),
- * `PAUSED` (the owner's lane PAUSE or runner PAUSE_RUNNER, or an owner control
- * that could not be read), `CEILING`, `CYCLE_MAX`
- * (the per-cycle Scout maximum), `BUDGET` (it could not finish inside the
- * dispatch budget). A deferred row keeps its next-due; nothing is dropped and
- * nothing is reported complete.
- *
- * **The bytes reach a real vault** through `DurableEvidenceStore`; the Scout's
- * tools vault before the model sees anything. The typed Scout result is
- * appended to `scout_results`; route candidates are PROPOSED and VALIDATED in
- * the adopted `cp_method_candidates/live` aggregate and never admitted here.
- *
- * ## What this process writes about itself
- *
- * A `research_state` record (id `level-1`) at cycle start, on every Scout
- * start and end, and at cycle end — lane state, the credential CONFIRMED BY
- * NAME, the bounds, the rolling spend, the queue, the Scouts running. A runner
- * heartbeat (`pilot-runner`). Pending RUN_CYCLE_NOW intents are marked
- * HONORED by this cycle; so is a pending DISPATCH (the owner's target is
- * parsed, the matching registered units go FIRST in both lanes, and the HONORED
- * detail states what matched of what was registered), and the latest lane
- * PAUSE / RESUME the cycle applied. The admin Research view DERIVES its verdict
- * from these; none of them stores a verdict.
- *
- * ## Flags
- *
- * ```
- *   --provider=postgres   the durable control plane named by
- *                         WTP_CONTROL_PLANE_DATABASE_URL; default is the file store
- *   --dry                 a recorded executor instead of the network. Labelled
- *                         SIMULATED, and by construction discharges nothing it
- *                         dispatches (an occurrence an earlier cycle already
- *                         disposed is still recovered with that disposition)
- *   --max=N               the stated deterministic dispatch ceiling for this cycle
- *   --scout-max=N         the stated Scout ceiling for this cycle (default RESEARCH_BOUNDS)
- *   --no-model            hold the Scout lane closed for this cycle (a diagnostic)
- *   --owner-intents-unreadable
- *                         the runner could not read the owner's intents before
- *                         starting this cycle: the paid lane stays closed, free
- *                         work runs (pilot-runner.mts passes it)
- *   --interval=N          the runner's minutes between cycles, so the heartbeat
- *                         can state when the next cycle is due
- *   --only=<prefix>       work only obligations whose id starts with <prefix>.
- *                         A DIAGNOSTIC filter: the count it skipped is printed,
- *                         so a filtered cycle can never read as a full one
- * ```
- *
- * Env var names only, never values. `WTP_WORKERS_ANTHROPIC_API_KEY` is read
- * by NAME to build the Scout transport; its value reaches nothing but the
- * provider request header.
- */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
@@ -152,22 +81,16 @@ import {
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
-import { includeVaultCapture, indexVault, readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
-import { VAULT_READ_TIMEOUT_MS } from "../lib/control-plane/evidence/netlify-store.ts";
+import { indexVault, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
-  meetingsDiscoveryObligationId,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
   paidDiscoveryHold,
   parseMeetingsDiscoveryId,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
-import { loadRegistrationJurisdictions, preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
-import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
-import { readRegistrationProjection } from "../lib/registration/reader.ts";
-import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readPlatformCensusNeeds, refreshDotgovCensusLeads } from "../lib/control-plane/discovery/platform-census.ts";
+import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
@@ -207,28 +130,18 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
-import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle, requiredJurisdictionRegistry } from "../lib/civic-data/operational-references.ts";
+import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
-import { heldCalendarRouteBodies, missionMeetingsDiscoveryNeeds } from "../lib/hunt/mission-meetings-discovery.ts";
+import { heldCalendarRouteBodies } from "../lib/hunt/mission-meetings-discovery.ts";
 import {
-  discoveryNeedsToWalk,
-  runMeetingsDiscovery,
   walkableByFreeWalk,
-  type MeetingsDiscoveryPass,
-  type DiscoveryRuntime,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
-import { knownRecipes, RECIPE_KIND } from "../lib/hunt/meetings-recipes.ts";
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { guardedLeadGet, LEADS_PASS_BUDGET_MS, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
-import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
-import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
-import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scope.ts";
-import { fingerprint } from "../lib/control-plane/ids.ts";
+import { durableSearchBudget } from "../lib/control-plane/discovery/search-runtime.ts";
 import {
   closeAbandonedOccurrences,
   jurisdictionMeetingsSubject,
@@ -290,7 +203,7 @@ import {
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
-import { emptyFieldManual, readFieldManual, readFieldManualForPlaces, type FieldManualRead, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { emptyFieldManual, readFieldManualForPlaces, type FieldManualRead, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
   fieldManualBriefLines,
@@ -431,18 +344,6 @@ const NOW = new Date().toISOString();
 const HOST = hostname();
 const nowIso = (): string => new Date().toISOString();
 
-/*
- * **THE CYCLE'S IDENTITY, ITS ONE RECORD PATH, AND WHAT IT IS WAITING ON.**
- *
- *
- * The SHA and the run provenance are read once, here: they are of the code
- * this process loaded and the tree it started from, and every later read
- * spawned git again, unbounded, inside finalization. The run record's path is
- * reserved at start, so the stall diagnostic, the crash handler and the cycle's
- * own record all write the one record. `pending` is the main thread's account
- * of the last phase, the labelled await and the store calls in flight, which
- * the stall diagnostic reads from its own thread (cycle-stall.ts).
- */
 const RUNNING_CODE_SHA = headSha(ROOT);
 /* The provenance is of the tree this run STARTED from (run-provenance.ts): read here, not by git calls in finalization. */
 const RUN_PROVENANCE = readRunProvenance(RUNNING_CODE_SHA, ROOT);
@@ -453,11 +354,7 @@ const pending = new PendingOperations();
 answerStallProbes({ describe: () => describePending(pending.snapshot()) });
 /* Finished tasks of the long phases (dispatch, worker wave, meetings walks) are progress the runner can see. */
 const roundProgress = roundProgressReporter();
-/*
- * Waits after the dispatch cutoff (the discovery-lane join, the promotion tail's reads) end once the child has printed
- * nothing for this long, three minutes inside the runner's no-progress limit and before its stall probe; what was still
- * running is named as deferred and its work stays owed (post-cutoff-bound.ts).
- */
+
 const outputClock = watchOutputClock();
 const POST_CUTOFF_QUIET_MS = RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS;
 const boundedAfterCutoff = <T,>(work: Promise<T>) => untilQuietLimit(work, { clock: outputClock, quietMs: POST_CUTOFF_QUIET_MS });
@@ -475,21 +372,6 @@ function writeCycleRecord(record: Readonly<Record<string, unknown>>): string {
   return path;
 }
 
-/*
- * **A CRASHED CYCLE WRITES A LEGIBLE RECORD; IT DOES NOT VANISH.**
- *
- *
- * Every await in this script is unguarded by construction — it is a script, not
- * a function. A last-resort handler writes a run record marking the cycle
- * FAILED with the error, prints the `run record:` line the runner greps for,
- * and exits non-zero. A rejected top-level await surfaces here as
- * `uncaughtException` on this runtime; both events are handled and the handler
- * fires at most once.
- *
- * Bounded since 2026-09-23 (recordFailedCycle): the FAILED outcome's append
- * has its own budget, cut to what is left before the wall, and the record names
- * what the cycle was waiting on when it failed.
- */
 let crashRecorded = false;
 let crashRepos: ControlPlaneRepositories | null = null;
 /** Set once the round's paid jobs exist: settles every job the round never settled, so a failed round leaves no hold behind. */
@@ -545,13 +427,7 @@ const boundedNumber = (raw: string | undefined, fallback: number, maximum: numbe
   const parsed = raw === undefined ? fallback : Number(raw);
   return Number.isFinite(parsed) && parsed >= 0 ? Math.min(parsed, maximum) : fallback;
 };
-/*
- * `--max=` and `--scout-max=` are DIAGNOSTIC overrides for proof runs (one or a
- * few units at a time). There is NO per-cycle dispatch or Scout ceiling by
- * default: the cycle wall and the rolling daily spend ceiling are the only
- * limits, and each lane opens work in step with what it can dispatch before the
- * wall. A canary is pinned to one of each.
- */
+
 const ceilingArg = argv.find((a) => a.startsWith("--max="));
 const MAX_DISPATCHES = canary
   ? 1
@@ -562,15 +438,9 @@ const SCOUT_MAX = boundedNumber(
   canary ? 1 : Number.POSITIVE_INFINITY,
   canary ? 1 : Number.POSITIVE_INFINITY,
 );
-/* A dispatch's worst-case model reserve, used only to PAUSE the scout lane before
-   the rolling ceiling rather than admit scouts the per-request guard then refuses
-   in a busy-loop. Sized a little above the observed ~$0.45/attempt so the lane
-   pauses once it could not afford even one scout. */
+
 const SCOUT_WORST_CASE_USD = 0.6;
-/*
- * Initial response allowance; the existing request guard holds full input/output
- * cost before every request and extends this hold when needed.
- */
+
 const SCOUT_JOB_WORST_CASE_USD = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch);
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
@@ -625,14 +495,6 @@ const finishPhase = (name: string) => {
   console.log(`  phase ${phase.name}: ${phase.durationMs}ms; ${phase.repositoryCalls} repository calls`);
 };
 
-/*
- * Both startup authority reads are idempotent, and one failed read must not
- * cost the hour: on 2026-09-22 at 21:34:53Z a single STORE_READ_FAILED on the
- * operational reference crashed the cycle 17 s in, and the store answered
- * again minutes later. A failed read is re-read within the connect-retry
- * bounds, never while the Neon circuit is latched; a persistent failure still
- * reaches the named failure below unchanged.
- */
 const startupReadRetry = {
   circuitLatched: () => readNeonCircuit(ROOT, nowIso()) !== null,
   onRetry: ({ attempt, delayMs, error }: { readonly attempt: number; readonly delayMs: number; readonly error: unknown }) =>
@@ -641,11 +503,6 @@ const startupReadRetry = {
     ),
 };
 
-/*
- * The candidate store is read once, here. A store that cannot be read costs this
- * round its candidate proposals and nothing else: research, meeting refresh and
- * publication go on, and Admin shows one line.
- */
 let candidateStoreUnreadable: string | null = null;
 if (wantsPostgres) {
   try {
@@ -655,11 +512,6 @@ if (wantsPostgres) {
   }
 }
 
-/*
- * The standing obligation registry consumes the same proof-validated runtime
- * authority as Admin. A missing/unreachable pointer is a named failed cycle;
- * the retired tracked jurisdiction projections are never a silent fallback.
- */
 const [legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
   () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
 ).catch(error => {
@@ -682,11 +534,6 @@ await preloadCandidateEnrichmentAuthorities();
   console.log(`  meeting doors: ${doors.rows} read from the registry${doors.reason ? ` — ${doors.reason}` : ""}`);
 }
 
-/*
- * One CAS lease on the fixed aggregate id `nightly-window` serializes cycle
- * writers: a cycle that finds it held is REFUSED by name (exit 3). The lease is
- * released at the run record; a crashed cycle holds nothing past the TTL.
- */
 const CYCLE_LEASE_HOLDER = `cycle@${HOST}#${process.pid}`;
 const CYCLE_LEASE_TTL_MS = 25 * 60_000;
 try {
@@ -701,33 +548,6 @@ try {
 
 /* ----------------------------------------------------------- the registry --- */
 
-/*
- * The research providers. `local-jurisdictions` gives every named filing
- * officer and election custodian a clock, and `candidate-enrichment` makes
- * campaign sites, positions, bios, photos and contact standing obligations
- * against each state's canonical candidate acquisition denominator.
- */
-/*
- * Meeting acquisition belongs to the meeting-partition
- * contracts; the worker pipeline may project evidence into a fail-closed
- * receipt but never opens the same official feeds on a parallel schedule.
- */
-/*
- * THE TRACKED STATES AND THE OWNER'S MATERIALIZED WORK, read before the
- * registry is built.
- *
- * Which states' registry work stands is DATA: the coverage set. Until the
- * redesign's promoted coverage-set accessor is on main, the interim source is
- * the promoted operational-reference bundle this cycle just preloaded — a state
- * is tracked when its registry is promoted. When the accessor lands, await it
- * here and hand `trackedStatesFrom(set.states, set.source)` to both providers.
- *
- * The obligations the owner's dispatch materialized are read back by their
- * mark (one bounded query, only those rows), so the two providers that own them
- * keep them in the corpus: scheduled, and never mistaken for rows the registry
- * stopped emitting. A read that fails is named on both providers, which holds
- * their retirement for the cycle rather than retiring the owner's work.
- */
 const trackedStates = trackedStatesFromOperationalReference();
 const meetingPartitions = createMeetingPartitionOwnership({ root: ROOT });
 let materialized: MaterializedReading;
@@ -747,16 +567,14 @@ await meetingPartitions.readStates([
   ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
 ]);
 /* The providers and context are kept so the registry can be built again in the same round when the owner's dispatch has just written new work. */
+const shutDoorsReading = await readShutDoors(repos.doors);
 const registryProviders = [
+  shutDoorsProvider({ doors: () => shutDoorsReading }),
   campaignFinanceProvider(),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
   candidateEnrichmentProvider({ trackedStates }),
   meetingsDiscoveryProvider({ materialized: () => materialized }),
-  /*
-   * The gaps Ask states about each body, decided by Ask's own rule over what we hold; read once, here, bounded.
-   * Beside it, the counts of gaps readers were told, which
-   * make those gaps reader impact now and create the work for a body readers were told we hold no meeting of.
-   */
+
   (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
     await pending.step("ask-gaps:held-reading", async () =>
       (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
@@ -869,11 +687,6 @@ if (sync.refreshed.length > 0) {
 
 /* ---------------------------------------------- the executor decision --- */
 
-/*
- * ONE decision per unit, from the descriptor and the method store together
- * (`decideExecutor`). Made here, before any occurrence is opened, so the
- * deterministic ceiling and the Scout ceiling each see their own queue.
- */
 const maturity = await methodMaturityFromManual(repos);
 const decisions = new Map<string, ExecutorDecision>();
 const decisionFor = (obligationId: string, routeId: string | null): ExecutorDecision => {
@@ -900,43 +713,11 @@ if (canonicalCandidateCounts === null) {
   runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
 }
 
-/*
- * **WHAT THE REGISTRY NO LONGER EMITS IS RETIRED, AND A RETIRED ROW HOLDS
- * NOTHING OPEN.**
- *
- * Three planners over the rows `syncObligations` read outside the corpus, and
- * one apply (`settleRetirements`):
- *
- * - **A jurisdiction meetings row** (`freshness:jurisdiction:<id>#meetings-N`)
- *   is retired only when its government's exact body holds a calendar route on
- *   the owed rows, and its reason names that body (`planHeldRouteRetirement`).
- *   The superseded planner never sees one.
- * - **A row the registry stopped emitting** is retired only when its provider
- *   read cleanly and the drop stays inside the bound
- *   (`planSupersededRetirement`). Otherwise it is held back by name.
- * - **An already-retired row that still points at an open occurrence** has that
- *   occurrence closed (`planRetiredResidue`).
- *
- * Each open occurrence closes unresolved, never with a disposition, and a
- * retired row's debt is tombstoned as retired by `persistDebts`. The judgement
- * is always made against the FULL registry, never a filtered one. Only a full
- * standing cycle writes; a --dry, --canary, --only/--ids cycle
- * prints the plan and writes nothing. A failure is named in the digest and the
- * run record, and the cycle continues: the rows stay as they were and are
- * planned again next cycle.
- */
 const retirementWrites = !dry && !canary;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
 const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
-/*
- * The meetings discovery the owner's dispatch materialized. Each
- * government's need is derived from its promoted registry, as the provider
- * derives it. The free walk goes first on these even where the committed ledger
- * does not hold them. The paid lane reads what the walk found (`freeWalks`,
- * read before dispatch); a need that cannot be derived reads UNREAD, which
- * holds.
- */
+
 const dispatchedDiscoveryIds = sync.all.filter(row => row.materializedBy === OWNER_DISPATCH).map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
 /* A dispatched or mission need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
@@ -944,13 +725,7 @@ const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly r
   ({ ...e.need, addressSource: dispatchedAddressSource(e.reg,
     (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) });
 const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, withAddressSource(e)]));
-/*
- * The calendar blanks of every Send's mission map, read with the place order each wave
- * (`refreshPlaceOrder`): each government in a mission place whose body holds no calendar route. The free walk
- * takes them after the dispatched needs, in any state, with no dispatch.
- */
-let missionDiscoveryNeeds = new Map<string, MeetingsDiscoveryNeed>();
-let missionDiscoveryHeld = 0;
+
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
   ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
 ].map((jurisdictionId) => {
@@ -958,10 +733,7 @@ const freeWalkSubjects: readonly FreeWalkSubject[] = [
   return { jurisdictionId, walkable: need === undefined ? null : walkableByFreeWalk(need) };
 });
 let freeWalks: FreeDiscoveryWalks = UNREAD_FREE_DISCOVERY_WALKS;
-/*
- * The evidence an old jurisdiction meetings row retires on. Only the governments with an active row outside
- * the corpus are read: each one's exact body, and that body's division's owed rows for a held calendar route.
- */
+
 const corpusIds = new Set(corpusUnits.map((u) => u.obligationId));
 const heldRouteCandidates = retirementOutside === null ? [] : [...new Set(retirementOutside
   .filter((row) => row.active && !corpusIds.has(row.id))
@@ -1004,13 +776,7 @@ const retirementHolds = retirementHeldBack.reduce<Record<string, number>>(
   (m, h) => ((m[h.code] = (m[h.code] ?? 0) + 1), m),
   {},
 );
-/*
- * The share of the cycle's wall the writes may spend. #368's first pass wrote
- * 43 rows in 34 s; the 484 moved rows would take about three minutes in one
- * cycle. The rest is deferred untouched and planned again, so the move takes
- * a few cycles and the dispatch lanes keep their time. Residue and superseded
- * rows go first, so the large move never starves them.
- */
+
 let retirementApplied: Awaited<ReturnType<typeof settleRetirements>> | null = null;
 let retirementError: string | null = null;
 /** Retired obligations, id → reason: their debt stays out of the cycle and is tombstoned as retired. */
@@ -1077,10 +843,7 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
-/*
- * BR-05: Admin's shut-door threshold, read from the config as this round starts (no process-wide snapshot).
- * An unreadable or invalid value is the code default 3. What was applied goes into the heartbeat's `settings`.
- */
+
 let settingsConfig: AdminConfig | null = null;
 try {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
@@ -1159,25 +922,6 @@ if (continuedStandingLineages.length) console.log(`  standing source periods con
 
 /* ------------------------------------------------- the owner's intents --- */
 
-/*
- * READ ONCE, BEFORE ANY ORDER IS DECIDED. The owner's DISPATCH
- * reorders both lanes, so the intent log is read before the deterministic
- * sort and the reader-impact bands below. A log that cannot be read is a
- * named runtime condition — an intent nobody can read is not an intent nobody
- * sent, so the failure is on the record rather than in a guess.
- *
- * **UNREADABLE FAILS CLOSED FOR PAID WORK ONLY.** Before this an
- * unreadable log read as "not paused" and the paid lane could open over a
- * pause nobody could see. Now `intentLogUnreadable` holds the model lane
- * closed as if paused (model-lane.ts), and FleetSafety refuses every model
- * request on the same reason. Each other reader of `intents` was weighed:
- * RUN_CYCLE_NOW / DISPATCH / lane PAUSE-RESUME honoring have nothing to honor
- * from an empty log; routine meeting intake and the dispatch-work writes are
- * plain-code work behind `runnerPause`, and they continue — "free work
- * continues" is the owner's rule for an unreadable control, and anything model-
- * class they create waits behind the closed lane. `pausedByOwner` is not set:
- * the record says the log was unreadable, never that the owner paused.
- */
 let intentLog: ResearchIntent[] = [];
 let intentLogUnreadable: string | null = null;
 try {
@@ -1191,11 +935,6 @@ try {
 }
 const intents = readIntents(intentLog);
 
-/**
- * Append this cycle's HONORED record beside an intent. The runner never edits
- * an intent; it acknowledges one with its own record. Returns false, with the
- * failure named on the research state, when the append did not land.
- */
 async function honorIntent(intent: ResearchIntentRequest, detail: string): Promise<boolean> {
   const id = `${intent.intentId}:honored`;
   try {
@@ -1236,23 +975,6 @@ for (const pending of intents.pendingRunNow) {
   }
 }
 
-/*
- * **THE OWNER'S DISPATCH — "deploy the fleet".**
- *
- * The owner's words (for example "deep dive on Illinois")
- * are parsed by the PURE `dispatch-target.ts` into state codes and terms and
- * matched against the whole registered universe — `allUnits`, before any
- * `--only` filter — and every matching unit goes FIRST in both lanes this
- * cycle: ahead of the oldest-first deterministic order, ahead of the Scout
- * lane's reader-impact bands, through the one `placeFirstRows` derivation the
- * dispatcher itself applies. Nothing else changes in the ORDER: not the
- * ceilings, not the budget, not per-host spacing, not a debt backoff. What the
- * target is MISSING is created further down, by the dispatch-work step, from the
- * registry's own requirement definitions (`dispatch-work.ts`), and the HONORED
- * record is appended after that step so it carries both counts. A target that
- * matches nothing registered is honored with a sentence naming the missing
- * registry, never with a manufactured unit.
- */
 interface OwnerDispatchRecord {
   readonly intentId: string;
   readonly target: string;
@@ -1294,25 +1016,6 @@ for (const pending of intents.pendingDispatch) {
   );
 }
 
-/*
- * **THE OWNER'S EXPANSION SCOPES — STANDING PRIORITY.** (Expansion controls,
- * 2026-09-23; `lib/control-plane/expansion/membership.ts`.)
- *
- * Read once, here, before any order is decided. After the owner's DISPATCH,
- * due work whose government lies in a selected scope (its territory overlaps
- * the scope's ZCTAs) goes first: in the Scout lane by scope priority, 1 first;
- * in the plain-code lane every selected scope together, because the
- * dispatcher's `placeFirst` is a set — and a cycle with a pending DISPATCH
- * orders that lane by the DISPATCH alone. The ORDER
- * never adds, skips or makes due a row, and never opens the paid lane; what a
- * scope is missing is created by the dispatch-work step below, bounded and counted.
- */
-/*
- * The promoted registries, read through the one accessor the standing providers
- * use: the territory index, the scope placement and the work a Send
- * creates all see exactly the registries the providers can keep in the corpus.
- * A registry the reader refuses is named, never used.
- */
 const promoted = promotedRegistries();
 /** The registries as read now: the ones above, and every state's registration read since. */
 const registriesNow = (fallback: ReadonlyMap<string, JurisdictionRegistry>): ReadonlyMap<string, JurisdictionRegistry> => {
@@ -1387,16 +1090,6 @@ async function refreshPlaceOrder(): Promise<void> {
     missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
     missionMapUnread = null;
     missionBlanks = missionBlanksFrom(places.flatMap(place => place.items), parts);
-    /* Every government in a mission place whose body holds no calendar route is owed discovery. */
-    const mission = missionMeetingsDiscoveryNeeds({
-      jurisdictionIds: scopes.flatMap(scope => [...scope.members]),
-      registryFor: requiredJurisdictionRegistry,
-      bodyIdFor: (id) => meetingPartitions.bodyIdFor?.(id) ?? null,
-      heldRoutes: heldCalendarRouteBodies(places.flatMap(place => place.items)),
-    });
-    missionDiscoveryNeeds = new Map(mission.entries.map(e => [e.need.jurisdictionId, withAddressSource(e)] as const));
-    missionDiscoveryHeld = mission.heldRoute.length;
-    for (const failure of mission.failures) if (!runtimeConditions.includes(failure)) runtimeConditions.push(failure);
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
     if (missionMaps.size === 0) missionMapUnread = detail;
@@ -1457,12 +1150,6 @@ const dueModel = dueOrdered.filter((d) => decisionFor(d.obligation.id, d.obligat
 const dueDeterministicRows = dueOrdered.filter((d) => !dueModel.includes(d));
 let dueDeterministic = dueDeterministicRows.length;
 
-/*
- * **READER IMPACT FIRST for the Scout lane.** The Scout ceiling is small, so
- * which rows go first matters: band 1, band 2, band 3, and the longest wait
- * first within a band, where a row that failed waits from the end of its
- * backoff. Reader impact is the obligation's canonical `readerImpactAt`.
- */
 const orderingInputs: OrderingInputs = {};
 /* Both the recorded queue and the live pool read each row through `orderableDueRow`, with the debt it carried in: longest wait first within a band. */
 const modelOrder = orderByReaderImpact(
@@ -1489,11 +1176,7 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
     orderableDueRow(row, registry.providerOf(row.obligation.id), debtAtCycleStart.get(row.obligation.id));
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
-/*
- * The method version the round's plain-code passes stamp on what they record, read once: the field manual is one
- * multi-megabyte row (6.6 MB on Oct 6), and the intake, campaign-site and linked-publication passes each read it whole
- * for this one number. A failed read is not kept, so the next caller reads again.
- */
+
 let roundMethodVersionRead: Promise<number> | null = null;
 const roundMethodVersion = (): Promise<number> => {
   roundMethodVersionRead ??= readMethodKnowledge(repos).then((knowledge) => knowledge.version,
@@ -1543,17 +1226,6 @@ if (dispatchOrdering !== null) {
   }
 }
 
-/*
- * **OPEN IN STEP WITH DISPATCH.** Nothing is pre-opened. Each lane
- * calls this the moment it is about to dispatch a row — after the wall and
- * admission gates have passed — so the runner opens exactly what it can
- * dispatch before the wall, never the whole backlog, and there is no per-cycle
- * open ceiling to size. A resume picks up an occurrence an earlier cycle opened
- * and did not reach; a fresh open otherwise. A throw is isolated by name and the
- * row keeps its next-due. Returns whether the occurrence is now open — or, when
- * the open occurrence's route was already disposed by a cycle that ended before
- * closing it, `{ settled }`, and the cycle recovers it without dispatching.
- */
 const standingById = new Map(sync.all.map((o) => [o.id, o]));
 const openOccurrenceInStep = async (
   row: ScheduledObligation,
@@ -1601,28 +1273,6 @@ const workerMessages = anthropicTransport(workerKey, fetch, undefined, {
 const workerBatch = backgroundBatchTransport({ apiKey: workerKey });
 const credentialConfigured = workerKey.length > 0;
 
-/*
- * THE ROLLING CEILING IN FORCE — the owner's console override, read at cycle
- * start from the control plane (`AdminConfig.fleetSpendCeiling`), or the built-in
- * fallback when the row was read and no override stands. Read HERE, not at
- * module import, so a change made in the console governs this very cycle
- * with no deploy and no restart. One number drives BOTH scout-admission gates —
- * the FleetSafety rolling ceiling (`rollingCeilingReached`, which admitScout
- * reads) and the research daily ceiling (`ceilingPermits`) — the auditor's
- * admission, and the per-request reservation through the controller's bounds,
- * so a lane paused at the old ceiling resumes on this cycle and there is no
- * second ceiling that silently binds when the dial is raised.
- *
- * A row that cannot be read or is malformed HOLDS paid work: the
- * owner's dial may be set below the built-in fallback, so falling back could
- * raise the ceiling in force. `configHold` closes the model lane below and turns
- * paid search off; the cycle's free work is untouched. Read before the lane is
- * decided, which is why this sits above `modelLaneClosure`.
- *
- * The owner's switch for PAID discovery search (`AdminConfig.discoverySearch`)
- * is read from the same row at the same moment, so a change in the console
- * governs this cycle. Absent, malformed or unreadable reads OFF.
- */
 let discoverySearchOn = false;
 /* The receipt of the decision applied, echoed into the heartbeat as the runner's acknowledgement; null means the default. */
 let discoverySearchReceiptId: string | null = null;
@@ -1665,13 +1315,6 @@ let effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-/*
- * Every owner spending control this cycle could not read, as a sentence. The
- * runner passes `--owner-intents-unreadable` when its own read before starting
- * this cycle failed (pilot-runner.mts `ownerSays`): it could not tell whether
- * the runner itself is paused, so this cycle's paid lane stays closed even when
- * the read above succeeds.
- */
 let costLedger: CostEntry[] = [];
 let historicalSpendHolds: readonly SpendHold[] = [];
 let ledgerUnreadable: string | null = null;
@@ -1709,12 +1352,6 @@ const unreadableControls: string[] = [
   ...(configHold === null ? [] : [configHold]),
 ];
 
-/* One ordered answer for why the model lane is closed (model-lane.ts). It also
-   closes the lane while no delivery path is open: with promotion off, paid
-   Scout and auditor output could only accumulate unread (owner, 2026-09-22).
-   Either owner pause closes it — the research-lane PAUSE and the runner-level
-   PAUSE_RUNNER Admin's runner card issues — and so does any control above that
-   could not be read (2026-09-25). */
 /* With the switch on, the standing hunter lane is the one process that admits paid work; this round plans and queues. */
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 const laneClosure = modelLaneClosure({
@@ -1732,11 +1369,7 @@ const laneClosure = modelLaneClosure({
 });
 /* The lane is closed only because paid work runs in the standing hunter lane (no pause, hold or unread control). */
 const queuesForHunterLane = laneClosure?.hunterLane === true;
-/*
- * With the lane closed only for the hunter lane, each due paid row that carries a work plan has its occurrence
- * opened here (plain-code work, no spend). Its work item then joins this round's coordinator wave and the one hunter
- * queue, and the hunter lane admits its Scout. A row with no plan waits for the lane, as before.
- */
+
 if (queuesForHunterLane && !canary) {
   let queued = 0;
   for (const row of dueModel) {
@@ -1750,15 +1383,6 @@ const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;
 
-/*
- * THE LANE PAUSE / RESUME GETS ITS HONORED RECORD. (9.4.26 admin feedback.)
- * Before this, a PAUSE or RESUME of the research lane never received one and
- * rendered PENDING forever on /admin/research, beside RUN_CYCLE_NOW rows that
- * did. The cycle that applies the latest of them acknowledges it, once, and
- * the detail says what the lane actually did — a RESUME over a lane that is
- * closed for another reason (no credential, --dry) is acknowledged as applied
- * and still closed, never as "reopened".
- */
 const honoredLaneIntents: string[] = [];
 {
   const pendingAcknowledgment = pendingResearchLaneAcknowledgment(intentLog, laneClosure);
@@ -1796,8 +1420,7 @@ try {
 /* The ceiling in force and the paid-search switch were read above the lane closure. */
 
 const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
-let standingDiscoveryWebsiteSize: ReturnType<typeof websiteSizeFromHoldings> | null = null;
-const sizeForDiscovery = (url: string) => standingDiscoveryWebsiteSize?.(url) ?? websiteSize(url);
+const sizeForDiscovery = websiteSize;
 const fleetSafety = new FleetSafetyController({
   websiteSize: sizeForDiscovery,
   now: NOW,
@@ -1813,13 +1436,7 @@ const fleetSafety = new FleetSafetyController({
   rollingCeilingUsd: effectiveCeilingUsd,
   lifetimeHuntWork,
 });
-/**
- * The owner's spend dial is re-read on each admission batch, the way
- * `refreshPlaceOrder` already re-reads the place order, so raising the ceiling
- * in Admin lets more paid workers in before this round ends. A read that fails
- * or is malformed keeps the ceiling already in force: a disappeared ceiling is
- * never a higher one.
- */
+
 const SETTINGS_REFRESH_MIN_MS = 5_000;
 let settingsReadAt = 0;
 let settingsRead: Promise<void> | null = null;
@@ -1848,17 +1465,6 @@ if (ledgerUnreadable !== null) {
   fleetSafety.defer("all model-backed Fleet work", "UNMEASURED_MODEL_SPEND", `the canonical cost ledger could not be read: ${ledgerUnreadable}`);
 }
 
-/*
- * PAID SEARCH: ONE SWITCH, ONE BUDGET, BOTH CALLERS. The Scout
- * `search` tool and the discovery walk's search rung send the same paid Brave
- * and Exa requests. Before this the Scout tool was built from the env keys
- * alone — outside the owner's switch, the per-cycle and per-day caps and
- * FleetSafety admission. Now neither exists unless the switch is on (an
- * unreadable or malformed row reads OFF, above), and both draw on this one
- * budget: the cycle's cap here, the day's cap in the durable shared ledger
- * under the `discovery-search` vendor, and FleetSafety on its own provider key.
- * The Scout tool is reached only inside the paid model lane besides.
- */
 const SEARCH_PER_CYCLE = Number.MAX_SAFE_INTEGER;
 const SEARCH_PER_DAY = Number.MAX_SAFE_INTEGER;
 const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
@@ -1903,12 +1509,6 @@ console.log(
         `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots.txt recorded downstream`,
 );
 
-/*
- * THE EXPANSION-SCOPE BUDGETS, armed from the same ledger the Fleet ceiling
- * reads. Restrict-only: `admitScout` consults the gate AFTER every Fleet gate,
- * so a scope can hold a Scout back and can never admit one the Fleet refused.
- * An unreadable ledger arms every budgeted scope to hold its paid work.
- */
 const expansionBudget = expansionPlan === null
   ? null
   : armExpansionBudget(expansionPlan, { now: NOW, costs: ledgerUnreadable === null ? costLedger : null, worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY });
@@ -1923,21 +1523,6 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
       gate: null,
     });
 
-/*
- * **WHERE THE OWNER SENT THE FLEET, THE MISSING WORK IS CREATED.**
- * (2026-09-23; `lib/control-plane/expansion/dispatch-work.ts` carries the
- * design note.)
- *
- * The targets: this cycle's DISPATCH intents, the DISPATCH targets an earlier
- * cycle left with work still owed, and every selected expansion scope. For each
- * government in them, every requirement the promoted registry defines that no
- * clock carries is written as a standing obligation, marked OWNER_DISPATCH.
- * There is no write budget and no per-target cap in the code. The new rows join the
- * corpus next cycle through their providers. Nothing here calls a model,
- * appends an intent, or reads a ceiling it could raise: created model-class
- * work waits behind the same lane, the same Fleet ceiling and the same scope
- * budgets as every other row. Only a full standing cycle writes.
- */
 /* Obligation rows only, no spend: an unreadable intent log does not stop them; what they create waits behind the closed lane. */
 const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents.runnerPause.paused;
 const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
@@ -2053,17 +1638,7 @@ if (dispatchTargets.length > 0) {
     );
   }
 }
-/*
- * **THE FIRST HUNT STARTS IN THE SAME ROUND AS THE ORDER.** The rows the
- * step above just wrote join the corpus through their providers, which ran
- * before it; so the providers are run again over the rows now on file, the new
- * rows are synced, scheduled on this round's clock, and the due ones added to
- * this round's work before the lanes start. Nothing here opens an occurrence or
- * spends: the lanes still admit each row behind every gate, in the same order
- * rules. A failure is named and the rows join next round, as they did before.
- * `WTP_FIRST_HUNT_NEXT_ROUND=1` in the runner's environment file keeps the old
- * path until the same-round start is checked live.
- */
+
 if (dispatchWrittenThisCycle.size > 0 && sameRoundFirstHuntEnabled(process.env)) {
   try {
     const written = [...dispatchWrittenThisCycle.keys()];
@@ -2127,20 +1702,8 @@ for (const { intent, detail } of dispatchDetails) {
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }
 
-/*
- * **EACH SEND'S OWN BUDGET.** (`lib/control-plane/expansion/
- * assignment-budget.ts` carries the design note.) Who belongs to a Send is read
- * from the obligations' own records (plus what the step above recorded after
- * they were read); what it spent, from the same canonical ledger the Fleet
- * ceiling reads. Restrict-only, consulted in `admitScout` after every Fleet gate.
- */
 const assignmentMembers = assignmentMembership([...sync.all, ...(sync.outside ?? [])], dispatchRecorded);
-/*
- * Fail closed: the Sends this cycle reached each row under — the
- * records the dispatch-work plan meant to write, or, when no plan could be
- * made, every pending DISPATCH's own match. A budgeted Send whose record did
- * not reach the row holds its paid work instead of letting it run unbudgeted.
- */
+
 const sendsReachedThisCycle = new Map<string, readonly string[]>();
 if (plannedSendMarks !== null) {
   for (const m of plannedSendMarks) sendsReachedThisCycle.set(m.obligationId, [...(sendsReachedThisCycle.get(m.obligationId) ?? []), m.key]);
@@ -2162,16 +1725,6 @@ const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
 });
 const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
 
-/*
- * **THE SEND AND AREA BUDGETS ARE HARD CAPS.**
- * (`lib/control-plane/expansion/spend-holds.ts` carries the design note.) The
- * gates above decide whether a budget can be checked at all; the dollars are
- * HELD on the one shared budget ledger, under its compare-and-set, before any
- * paid call: a Scout job's worst case at admission, an escalation's and a
- * pre-warm's before they run, and every request past what its job holds. A
- * settled job books what it measured; an unmeasured job or a crash leaves the
- * whole hold counting for the rolling 24 hours.
- */
 const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: nowIso });
 /** The admitted Scout job on each obligation this cycle, with what it holds. */
 const jobSpend = new Map<string, JobSpend>();
@@ -2380,15 +1933,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   const discovery = parseMeetingsDiscoveryId(id);
   const freeWalk = discovery === null ? null : (freeWalks.evidenceFor?.(discovery.jurisdictionId) ?? null);
   if (freeWalk !== null) lines.push(freeWalk);
-  /*
-   * The recorded rung list is the resume cursor, and a durably
-   * failed rung is not re-walked. An inherited artifact may be
-   * cited only where the machine can say when and under what verdict it was
-   * retrieved — rungs recorded before the verdict travelled on them yield
-   * provenance for robots documents only (the tool vaults those under
-   * ALLOWED); a page artifact with no recorded verdict yields none, so a
-   * candidate resting on it alone is refused rather than guessed at.
-   */
+
   const priorRungs: PriorRung[] = all
     .flatMap((r) => r.rungs.map((g) => ({ rung: g.rung, tool: g.tool, target: g.target, observed: g.observed, ok: g.ok ?? null, at: g.at, attemptId: r.attemptId })))
     .slice(-PRIOR_RUNGS_BRIEFED);
@@ -2412,13 +1957,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
       }
     }
   }
-  /*
-   * Open by inheriting the field manual. Project it to this
-   * obligation's jurisdiction and record class and put the known doors at the
-   * TOP of the brief, so the Scout walks what already worked before novelty and
-   * does not rebuild a door already listed. The count is the inherited half of
-   * the reported pair, stashed for onResult.
-   */
+
   const manual = manualReads.get(row.obligation.subjectId) ?? { store: emptyFieldManual() };
   const projection = scoutFieldManualProjection(manual, {
     subjectId: row.obligation.subjectId,
@@ -2507,13 +2046,6 @@ let researchProgression = priorResearchState?.researchProgression ?? null;
 let researchProgressionFailure: string | null = null;
 let autonomousDispatchedThisCycle = 0;
 
-/**
- * The research state this cycle writes, carrying the owner's dispatch it
- * honored. `ownerDispatch` is the latest DISPATCH this cycle honored,
- * or null; every one of them is on the run record. It rides as an extra field
- * on `ResearchState` so the page can pick it up without this script deciding
- * the page's contract.
- */
 type CycleResearchState = ResearchState & { readonly ownerDispatch: OwnerDispatchRecord | null };
 
 function researchState(cycleFinishedAt: string | null): CycleResearchState {
@@ -2596,11 +2128,6 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
   };
 }
 
-/*
- * Up to four tries, inside one budget, and every failed try said on stderr.
- * The 1.1 MB row is never read before a write: a lost compare-and-set names
- * the current revision and the write goes again on it.
- */
 const putResearchState = soleWriter(repos.researchState, RESEARCH_STATE_ID, researchStateRevision);
 const writeResearchState = cycleStateWriter(async (cycleFinishedAt) => {
   await (async () => {
@@ -2654,16 +2181,6 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
   };
 };
 
-/**
- * THE PRE-WARM. Once per cycle, before the first admitted Scout
- * is dispatched: one `max_tokens: 0` request carrying the exact tools and
- * system the Attempts send, through the same guarded transport, so the static
- * prefix is written once and every Attempt this cycle — including the two
- * that start together — reads it. Its cost is a SCOUT ledger row under
- * `SCOUT_PREWARM_ROUTE_ID`, so the rolling ceiling sees it and capacity does
- * not count it as an Attempt. A failure is recorded on the lane counts and
- * the Attempts still run.
- */
 const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
   const at = nowIso();
   const started = Date.now();
@@ -2674,12 +2191,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
     const plan = scoutPrewarmPlan({ playbook: playbook.text, toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
     if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
     const { model, request } = plan;
-    /*
-     * The pre-warm is made for the Scouts this cycle
-     * admitted, so when one of them runs under a Send or area budget, the
-     * pre-warm's own worst case is held on those budgets first — refused, it
-     * is skipped by name with no paid call — and its cost is charged there.
-     */
+
     const forJob = [...jobSpend.values()][0] ?? null;
     let prewarmHold: JobSpend | null = null;
     if (forJob !== null) {
@@ -2730,13 +2242,6 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
   }
 };
 
-/**
- * THE SCOUT LANE. A real bounded model worker: role SCOUT, provider
- * anthropic, the model named, provider-reported usage and computed cost on
- * the Attempt, research through tools that vault first. Built only when the
- * lane is enabled; otherwise a refusing stand-in that `admitScout` never
- * reaches.
- */
 const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...priorScoutResults.values()].flat(),
   scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId);
 const scoutTransportFor = (scheduled: ScheduledObligation, taskId?: string) => {
@@ -2762,7 +2267,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
         fileStoreRoot: CONTROL_PLANE_ROOT, slots: paidScoutSlots,
         search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
-        onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps }),
+        onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps: parseShutDoorId(scheduled.obligation.id) ? { ...deps, role: "DETECTIVE" } : deps }),
       /* Every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: scoutTransportFor(scheduled),
       transportFor: taskId => scoutTransportFor(scheduled, taskId),
@@ -2828,13 +2333,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
             };
           }
         }
-        /*
-         * Reported pair + live write-back. The inherited count is what
-         * the brief projected; a candidate whose routeId the manual already held
-         * is a rebuilt-existing defect. Grounded discoveries are written straight
-         * back into the field manual so the NEXT Scout of any role inherits them
-         * this cycle — no human method:learn step in between.
-         */
+
         const handedManual = inheritedManualStores.get(result.obligationId) ?? emptyFieldManual();
         const pair = compoundingPair(inheritedFieldManualCounts.get(result.obligationId) ?? 0, result, knownRouteIds(handedManual));
         const doors = inheritedFieldManualDoors.get(result.obligationId);
@@ -2862,7 +2361,9 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         const heldJobId = jobSpend.get(amended.obligationId)?.jobId;
         if (heldJobId !== undefined) amended = { ...amended, spendHoldJobId: heldJobId };
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
-        await recordFoundSources(repos.doors, [amended], nowIso());
+        await recordFoundSources(repos, [amended], nowIso(), readScoutEvidence);
+        const shutDoorId = parseShutDoorId(amended.obligationId);
+        if (shutDoorId) await applyDetectiveFind(repos, shutDoorId, amended, nowIso());
         scoutResultsThisCycle.push(amended);
         priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);
         const outcome = amended.refusal !== null ? "REFUSED"
@@ -2886,22 +2387,8 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
 // verification unresolved; initial source discovery is not the only model work.
 finishPhase("worker-context");
 
-/*
- * **SETTLED OCCURRENCES ARE RECOVERED BEFORE THE LANES, NOT WHEN A LANE REACHES
- * THEM.** A recovery walks nothing and spends nothing, so it
- * waits on no ceiling, budget or Scout admission. The scan starts from the
- * settled RouteTask ids the listing above already read, and reads the
- * occurrences once, about 5 s over the 4,751 production rows. A failed scan is
- * named, and the lanes still recover any settled row they reach, so a failure
- * costs latency and never correctness.
- */
 let settledOccurrences: readonly SettledOccurrence[] = [];
-/*
- * The same pass finds ABANDONED occurrences: open, unreferenced,
- * with the obligation moved past them and a RouteTask never claimed. Only a full
- * standing cycle closes them; the rest print them. Each close writes only the
- * occurrence, unresolved, and is named in the digest and the run record.
- */
+
 let abandonedOccurrences: readonly AbandonedOccurrence[] = [];
 let abandonedClosed: Awaited<ReturnType<typeof closeAbandonedOccurrences>> | null = null;
 if (!canary) {
@@ -2933,11 +2420,6 @@ if (!canary) {
 }
 finishPhase("settled-occurrence-scan");
 
-/*
- * What the free walk last recorded for each dispatched government, in one
- * batched read. It is taken only when the paid lane can admit anyone: while the
- * lane is closed, admission never reaches the hold, and nothing is read.
- */
 if (modelLaneEnabled && freeWalkSubjects.length > 0) {
   freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects));
 }
@@ -3019,9 +2501,7 @@ const cycle = await runCycle({
         const cap = ceilingPermits(window, effectiveCeilingUsd);
         if (!cap.permits) return { admit: false, code: "CEILING", why: cap.why };
       }
-      /* The binding ceiling is FleetSafety's rolling-24h one: read here, it pauses
-         the whole lane when reached instead of admitting scouts the per-request
-         guard then refuses. Same `effectiveCeilingUsd`, through the controller's bounds. */
+
       const rolling = fleetSafety.rollingCeilingReached(SCOUT_WORST_CASE_USD, row.obligation.id);
       if (rolling.reached) {
         return {
@@ -3045,12 +2525,7 @@ const cycle = await runCycle({
       assignmentBudget.admit(row.obligation.id);
       scoutsAdmittedThisCycle += 1;
       if (!lifetimeHuntWork(row.obligation.id)) scoutsAdmittedOutsideLifetime += 1;
-      /*
-       * THE HARD CAP. The job's worst case is held on the shared
-       * budget ledger, atomically against every other Scout and every
-       * overlapping cycle, before it starts; refused, the in-cycle holds above
-       * are returned and the Scout waits, by name.
-       */
+
       const undo = (): void => {
         scoutsAdmittedThisCycle -= 1;
         if (!lifetimeHuntWork(row.obligation.id)) scoutsAdmittedOutsideLifetime -= 1;
@@ -3158,8 +2633,6 @@ for (const row of cycle.deferred) {
       (leftOpen.length > 0 ? `; ${leftOpen.length} left open on an unscheduled obligation: ${leftOpen.map((s) => s.obligationId).join(", ")}` : ""),
   );
 }
-
-
 
 /* ------------------------------------------------- test the owner's research leads --- */
 
@@ -3357,15 +2830,10 @@ async function runAutonomousProcesses() {
   }
   return report;
 }
-let meetingsDiscovery = null as MeetingsDiscoveryPass | null;
-let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";
 let campaignSites = null as CampaignSiteCycleReport | null;
 let campaignSitesState = "not run: the campaign-site pass has not started";
 let candidatePublications = null as CandidatePublicationCycleReport | null;
 let candidatePublicationsState = "not run: no original-scope candidacy admission";
-const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY !== "off";
-let meetingsDiscoveryByOutcome: Record<string, number> = {};
-let roundVaultIndex: VaultIndex | undefined;
 let roundVaultRead: Promise<VaultIndex> | undefined;
 let discoveryLaneRun: Promise<readonly IndependentRuntimeOutcome[]> | null = null;
 let discoveryLaneIds: readonly string[] = [];
@@ -3374,242 +2842,12 @@ const discoveryLanesFinished = new Set<string>();
 const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= (async () => {
   const startedMs = Date.now();
   const index = await indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal });
-  roundVaultIndex = index;
   const phase = cycleObservation.note("vault-index", Date.now() - startedMs);
   console.log(`  phase ${phase.name}: ${phase.durationMs}ms`);
   return index;
 })();
 try {
 
-/*
- * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.**
- *
- * Walks every registered government's website, plus .gov domains, and dispatched or mission-map needs: robots first on every host,
- * no model, a find confirmed by content and recorded as a candidate
- * (`lib/control-plane/discovery/meetings-discovery-executor.ts`). It runs while paid search or model work is off.
- * WTP_MEETINGS_DISCOVERY=off is the existing kill switch.
- *
- * It spends at most MEETINGS_DISCOVERY_BUDGET_MS, walks at most
- * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle.
- * The phase budget includes its setup and bounds the walk in
- * progress too: each request's timeout is cut to the time left, so a slow site
- * cannot keep sending requests beyond that allowance, and a walk the time
- * runs out on before it confirmed anything is deferred, never recorded. It opens on its own FleetSafety
- * provider key, `discovery-web`, so a latch it trips never stops the routine
- * lanes, and shares the cycle's host spacing and vault.
- */
-/* On unless the kill switch says off. */
-const MEETINGS_DISCOVERY_MAX_WALKS = 12;
-const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
-/* The meetings lane's own no-progress limit: this many walks in a row that fail or run out of time and the lane stops; the rest stay due. */
-const DISCOVERY_NO_PROGRESS_LIMIT = 5;
-/*
- * The search rung's caps (Brave and Exa combined, pointers only) are
- * SEARCH_PER_CYCLE / SEARCH_PER_DAY, set with the one paid-search budget at
- * cycle start and shared with the Scout `search` tool. The defaults are the
- * conservative dial agreed with the data-plane owner; an env value may lower or
- * raise them within 0..1000.
- */
-const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: number): Promise<void> => {
-  /* The owner's dispatch first, then every Send's mission map's calendar blanks, as read this wave. */
-  let discoveryToWalk = discoveryNeedsToWalk([...missionDiscoveryNeeds.values()], [...dispatchedNeeds.values()], need => {
-    const id = meetingsDiscoveryObligationId(need);
-    return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
-  });
-  if (!MEETINGS_DISCOVERY_ENABLED) {
-    meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
-  } else if (dry || canary) {
-    meetingsDiscoveryState = "not run: a dry or canary cycle walks nothing";
-  } else if (intents.runnerPause.paused) {
-    meetingsDiscoveryState = "not run: the owner has paused the runner";
-  } else {
-    /* The caller sets the deadline: 60 s on the serial path, the time left in the round on its own lane. */
-    /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
-    const leaveDiscovery = pending.enter("meetings-discovery");
-    try {
-      /*
-       * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
-       * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
-       * no refusal, no budget-ledger write. When it is on, the env caps bind it per cycle and per day, on FleetSafety's
-       * own key, and every request sent is charged. `searchBudget` is the one budget the Scout tool also draws on.
-       */
-      const discoverySearch = searchBudget === null ? null : makeDiscoverySearch({
-        braveKey: process.env.BRAVE_SEARCH_API_KEY,
-        exaKey: process.env.EXA_API_KEY,
-        budget: searchBudget,
-      });
-      const directoryItems = (await repos.workItems.list()).map(row => row.value).filter(item => item.publicationOutcome?.bodyIds?.length);
-      const directoryRegistry = directoryItems.length ? await readRegistryRuntimeProjection({ bypassCache: true }) : null;
-      if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
-      const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
-      let costSeq = 0;
-      const readOfficialText = async (held: HeldVaultArtifact) => {
-        const signal = AbortSignal.timeout(Math.max(1, Math.min(VAULT_READ_TIMEOUT_MS, discoveryDeadlineMs - Date.now())));
-        try { return new TextDecoder().decode(await readHeldBytes(held, signal)); }
-        catch (error) {
-          if (Date.now() < discoveryDeadlineMs) runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`);
-          throw error;
-        }
-      };
-      let officialPagesRead: Promise<{canonicalUrl:string;readText:()=>Promise<string>}[]> | undefined;
-      const readOfficialPages = () => officialPagesRead ??= (async () => {
-        const index = await readRoundVault(AbortSignal.timeout(Math.max(1, discoveryDeadlineMs - Date.now())));
-        const pages: {canonicalUrl:string;readText:()=>Promise<string>}[] = [];
-        for (const held of index.byId.values()) {
-          if (!held.canonicalUrl || held.tier === "RESTRICTED_RAW" || held.retentionPolicy === "DIAGNOSTIC" ||
-            held.httpStatus === null || held.httpStatus < 200 || held.httpStatus >= 300 || !/html/i.test(held.contentType)) continue;
-          pages.push({ canonicalUrl: held.canonicalUrl, readText: () => readOfficialText(held) });
-        }
-        return pages;
-      })();
-      const discoveryRuntime: DiscoveryRuntime = {
-        websiteSize: sizeForDiscovery,
-        open: async ({ url, headers, timeoutMs, method, body }) => {
-          const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery",
-            (target, init) => publicFetch(target, { ...init, method: method ?? "GET", ...(body === undefined ? {} : { body }), signal: AbortSignal.timeout(timeoutMs) }),
-            { followRedirects: false });
-          const got = await openDiscovery({ url, headers, timeoutMs });
-          return {
-            status: got.status,
-            body: new TextDecoder().decode(got.bytes),
-            bytes: got.bytes.byteLength,
-            contentType: got.contentType,
-            location: got.location ?? null,
-            transportError: got.transportError,
-          };
-        },
-        spaceOut: spacer,
-        vault: async (artifact, bytes) => {
-          const stored=await vault.put(artifact,bytes);
-          if(stored.stored && roundVaultIndex) includeVaultCapture(roundVaultIndex,artifact,stored.where,join(ROOT,...VAULT_DIR));
-          return stored;
-        },
-        readOfficialPages,
-        readOfficialPageTextFor: async artifact => {
-          const held = (await readRoundVault()).byHash.get(artifact.contentHash.slice("sha256-".length));
-          if (!held) throw new Error(`Official-source linking capture is not held: ${artifact.id}`);
-          return readOfficialText(held);
-        },
-        now: nowIso,
-        budget: {
-          spent: () => Date.now() >= discoveryDeadlineMs,
-          remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
-        },
-        /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
-        routeHints: meetingHints,
-        ...(discoverySearch === null ? {} : { search: discoverySearch }),
-        searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
-        recordCost: async (entry) => {
-          costSeq += 1;
-          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`,
-            costEntryWithModel(entry, null), nowIso());
-        },
-      };
-      let remainingWalks = maxWalks;
-      const mergePass = (pass: MeetingsDiscoveryPass) => {
-        remainingWalks -= pass.walked.length + pass.walkFailures.length + pass.cutShort.length;
-        if (meetingsDiscovery === null) { meetingsDiscovery = pass; return; }
-        const previous = meetingsDiscovery;
-        meetingsDiscovery = {
-          walked: [...previous.walked, ...pass.walked], notDue: [...previous.notDue, ...pass.notDue],
-          deferred: [...previous.deferred, ...pass.deferred], cutShort: [...previous.cutShort, ...pass.cutShort],
-          appendFailures: [...previous.appendFailures, ...pass.appendFailures], walkFailures: [...previous.walkFailures, ...pass.walkFailures],
-          recipesUpdated: [...new Set([...previous.recipesUpdated, ...pass.recipesUpdated])],
-          recipeApplications: previous.recipeApplications + pass.recipeApplications,
-          fieldManual: { written: previous.fieldManual.written + pass.fieldManual.written,
-            ...((previous.fieldManual.error || pass.fieldManual.error) ? { error: [previous.fieldManual.error, pass.fieldManual.error].filter(Boolean).join("; ") } : {}) },
-        };
-      };
-      const runNeeds = async (needs: readonly MeetingsDiscoveryNeed[], runtime: DiscoveryRuntime) => {
-        if (!needs.length || remainingWalks <= 0 || runtime.budget.spent()) return;
-        mergePass(await runMeetingsDiscovery(repos, {
-          needs, runtime, cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
-          maxWalks: remainingWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
-          firstIds: new Set(dispatchedNeeds.keys()),
-          onWalk: () => roundProgress.note("meetings walks"),
-          skipIds: new Set(sync.all.filter(row => row.materializedBy === OWNER_DISPATCH &&
-            row.id.startsWith(MEETINGS_DISCOVERY_NAMESPACE) && row.openOccurrenceId !== null).map(row => row.subjectId)),
-        }));
-      };
-      // Explicit work keeps its priority; every other registered site remains free standing work.
-      await runNeeds(discoveryToWalk, discoveryRuntime);
-      const freeRuntime: DiscoveryRuntime = { ...discoveryRuntime, search: undefined, searchScopeFor: undefined, recordCost: undefined };
-      const states = ONLY !== null || IDS !== null ? [] : [...REGISTRATION_TARGETS.map(target => target.state.toLowerCase()), "us"];
-      const firstState = states.length ? Math.floor(Date.parse(NOW) / 3_600_000) % states.length : 0;
-      const visited = new Set(discoveryToWalk.map(need => need.jurisdictionId));
-      for (let index = 0; index < states.length && remainingWalks > 0 && !discoveryRuntime.budget.spent(); index++) {
-        const state = states[(firstState + index) % states.length];
-        // Read one state, work it, and release it; no whole-country registration is installed.
-        let registry: JurisdictionRegistry | null = null;
-        if (state !== "us") {
-          try { registry = requiredJurisdictionRegistry(state); }
-          catch {
-            const loaded = await loadRegistrationJurisdictions({ root: ROOT, states: [state],
-              read: code => readRegistrationProjection(code, { store: new PostgresRoutineDataStore(), bypassCache: true }) });
-            registry = loaded.registries.get(state) ?? null;
-            for (const [code, why] of loaded.refused) runtimeConditions.push(`${code.toUpperCase()} standing meetings discovery: ${why}`);
-          }
-        }
-        standingDiscoveryWebsiteSize = websiteSizeFromHoldings(state === "us" ? [] : [state], ROOT);
-        const manual = await readFieldManual(repos, { kinds: [RECIPE_KIND], state });
-        if (manual.error) runtimeConditions.push(`${state.toUpperCase()} meeting methods: ${manual.error}`);
-        const runtime = { ...freeRuntime, recipes: knownRecipes(manual.store.entries) };
-        try { await refreshDotgovCensusLeads(repos, runtime, state); }
-        catch (error) { runtimeConditions.push(`${state.toUpperCase()} platform census reference: ${error instanceof Error ? error.message : String(error)}`); }
-        const standing = await readPlatformCensusNeeds(state, registry, { repos, root: ROOT,
-          reviewedVersionId: (state === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null });
-        for (const why of standing.failures) runtimeConditions.push(`${state.toUpperCase()} platform census: ${why}`);
-        discoveryToWalk = discoveryNeedsToWalk(standing.needs.filter(need => !visited.has(need.jurisdictionId)), [], need => {
-          const id = meetingsDiscoveryObligationId(need);
-          return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
-        });
-        await runNeeds(discoveryToWalk, runtime);
-      }
-      standingDiscoveryWebsiteSize = null;
-      meetingsDiscoveryState = "ran";
-    } catch (error) {
-      meetingsDiscoveryState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
-      runtimeConditions.push(`meetings discovery ${meetingsDiscoveryState}`);
-    } finally {
-      standingDiscoveryWebsiteSize = null;
-      leaveDiscovery();
-    }
-  }
-  meetingsDiscoveryByOutcome = (meetingsDiscovery?.walked ?? []).reduce<Record<string, number>>(
-    (m, a) => ((m[a.outcome] = (m[a.outcome] ?? 0) + 1), m),
-    {},
-  );
-  console.log(
-    `  meetings discovery: ${meetingsDiscoveryState}` +
-      (meetingsDiscovery === null
-        ? ""
-        : ` · ${meetingsDiscovery.walked.length} walked ${JSON.stringify(meetingsDiscoveryByOutcome)} · ` +
-          `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)` +
-          (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
-          (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side: ${meetingsDiscovery.walkFailures.map((f) => f.jurisdictionId).join(", ")}` : "")),
-  );
-};
-
-/*
- * **THE CAMPAIGN-SITE PASS: HELD RESEARCH REACHES THE PUBLICATION DOOR, FREE.**
- * (2026-09-25; the design note and the bounds are in
- * lib/control-plane/promotion/campaign-site-cycle.ts.)
- *
- * The held Scout findings and Marginalia answers go through the complete
- * campaign-site chain: observed profile links lead to robots-first primary
- * reads through this cycle's guarded seam and host spacer. Identity matching
- * uses independently captured sources already held; no extra audit request or
- * clock wait. It calls no model and no paid search, so it runs while the paid
- * lane is closed. Its offers are pipeline records (Admin's delivery trail);
- * its approvals publish through the derived routine contract
- * `candidate-campaign-sites-derived`, with no owner step.
- */
-/*
- * The lane's own bound. No lead read starts after the dispatch cutoff and a read in flight answers within one
- * request timeout, so past the cutoff plus this settle time the lane is waiting on something that has not answered. It
- * then ends as a deferral naming the step it was waiting on, and its leads and sites stay owed. The settle time ends well
- * inside the round's post-cutoff quiet limit, so the round's join never waits on this lane.
- */
 const CAMPAIGN_SITES_SETTLE_MS = 3 * 60_000;
 const runCampaignSitesPass = async (): Promise<void> => {
   if (dry || canary || ONLY !== null || IDS !== null) {
@@ -3686,9 +2924,6 @@ const runCampaignSitesPass = async (): Promise<void> => {
   console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
 };
 
-/* Linked publication pages are a separate bounded deterministic pass. Its
- * candidates are exact members of the selected hunt receipts; a
- * broadly tracked candidate universe does not itself authorize a new walk. */
 const runCandidatePublicationsPass = async (): Promise<void> => {
   if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused) {
     candidatePublicationsState = "not run: dry, canary, filtered or paused cycle";
@@ -3727,16 +2962,8 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
   console.log(`  candidate documents ${candidatePublicationsState}`);
 };
 
-/*
- * Each pass is its own lane. The serial path (WTP_DISCOVERY_SERIAL=1) runs them in turn before the worker
- * wave, as before: 12 walks, 60 s. Otherwise they start at once beside the worker wave, each contained to its own
- * outcome, and the round joins them before it finalizes; a slow site holds up only its own lane, and the walk is
- * bounded by the time left in the round.
- */
 const DISCOVERY_SERIAL = process.env.WTP_DISCOVERY_SERIAL === "1";
 if (DISCOVERY_SERIAL) {
-  await runMeetingsDiscoveryPass(Date.now() + MEETINGS_DISCOVERY_BUDGET_MS, MEETINGS_DISCOVERY_MAX_WALKS);
-  finishPhase("meetings-discovery");
   await runCampaignSitesPass();
   finishPhase("campaign-sites");
   await runCandidatePublicationsPass();
@@ -3747,24 +2974,12 @@ if (DISCOVERY_SERIAL) {
     try { await run(); } finally { discoveryLanesFinished.add(id); console.log(`  lane ${id}: ${Date.now() - lanesStartedMs}ms`); }
   } });
   discoveryLaneRun = runIndependentRuntimePass([
-    timed("meetings-discovery", () => runMeetingsDiscoveryPass(dispatchDeadlineMs, Number.MAX_SAFE_INTEGER)),
     timed("campaign-sites", runCampaignSitesPass),
     timed("candidate-publications", runCandidatePublicationsPass),
   ]);
-  discoveryLaneIds = ["meetings-discovery", "campaign-sites", "candidate-publications"];
+  discoveryLaneIds = ["campaign-sites", "candidate-publications"];
 }
 
-
-/*
- * A scout that argued a record absent this cycle (a proper walk
- * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
- * a BLOCKED wall, which reschedules on its own cadence) records an EXPIRING
- * absence, so the obligation is not re-walked until it lapses (~30 days) instead
- * of every cycle. This is NOT a debt — it is a proven negative that rechecks on
- * a clock; a later cycle's productive disposition clears it. Best effort: an
- * absence that cannot be written leaves the obligation to re-walk next cycle,
- * never dropped.
- */
 if (!dry && !canary) {
   const until = absenceExpiry(NOW);
   let absencesRecorded = 0;
@@ -3795,11 +3010,7 @@ if (!dry && !canary) {
 // admitted earlier still has time to finish and settle. This is a technical
 // slice boundary, not a count or spend cap: undispatched work remains owed.
 } finally {
-  /*
-   * The early worker wave's processes end at the cutoff, but its settling reads do not, and this wait was the one
-   * unlabelled await between the lanes' start and their join: a stall answer named only the lane still running beside
-   * it. It is labelled and ends like every other post-cutoff wait: a named deferral, its unsettled tasks still owed.
-   */
+
   if (earlyOriginal !== null) {
     const leaveEarlyWave = pending.enter("autonomous-workers:early-wave");
     const early = await boundedAfterCutoff(earlyOriginal);
@@ -3868,11 +3079,6 @@ if (discoveryLaneRun !== null) {
 
 /* ------------------------------------------------------- the promotion tail --- */
 
-/*
- * The tail runs on EVERY cycle with no operator: acquire -> vault -> normalize ->
- * snapshot -> STAGED. Staged records publish through the
- * typed reader doors; this block itself writes only `.runtime/control-plane/staging/` diagnostics.
- */
 const leavePromotionTail = pending.enter("promotion-tail");
 const staged: StagedEntry[] = [];
 for (const result of cycle.dispatched) {
@@ -3912,12 +3118,7 @@ for (const result of cycle.dispatched) {
     }),
   );
 }
-/*
- * A RECOVERED DISPOSITION STILL MOVES THROUGH THE TAIL. The cycle
- * that committed it ended before staging it, and closing the occurrence is not
- * the end of the record's work: its bytes are read back by held identity, since
- * this cycle's ledger never saw them, and staged exactly as a dispatch's would be.
- */
+
 for (const recovered of cycle.recovered) {
   const unit = units.find((u) => u.obligation.id === recovered.obligationId);
   if (unit === undefined) continue;
@@ -3975,11 +3176,6 @@ leavePromotionTail();
 
 /* ------------------------------------------------- research metrics --- */
 
-/*
- * Computed ONCE, at cycle end, from re-reads of the durable logs so this
- * cycle's own Attempts are in the denominators. A failed re-read is a named
- * runtime condition and the metrics record is withheld, never zeroed.
- */
 // These independent final reads share the existing repository transport limit.
 // Join failures too: neither finalization view retries an unchanged failed read.
 const finalizationReads = canary ? null : Promise.allSettled([
@@ -4030,11 +3226,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
-  /*
-   * The cache rows, from the COST LEDGER — the same rows the
-   * rolling ceiling reads — over the ceiling's own trailing window, and
-   * separately over this cycle's rows for the COST section of the digest.
-   */
+
   const windowSince = new Date(Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString();
   cacheThisCycle = cacheHitRateByRole({ costs: costsNow, results, sinceIso: NOW, untilIso: at });
   return {
@@ -4057,13 +3249,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
 }
 /** This cycle's cache rows, for the run record's COST section (null until computed, or when the ledger could not be re-read). */
 let cacheThisCycle: CacheHitRate[] | null = null;
-/*
- * The metrics and the research progression are the cycle's largest reads
- * and both are withheld by name when a read fails. From the late-work deadline they yield
- * (`lateWorkBudgetMs`, set with the clock): their store calls are refused by
- * name so the records below keep their whole budgets. A cycle on its usual ten
- * minutes never meets this deadline.
- */
+
 if (canary) {
   runtimeConditions.push("live canary: whole-store metrics scans were intentionally skipped");
   metrics = null;
@@ -4102,16 +3288,6 @@ if (!dry && !canary) {
 }
 finishPhase("metrics-and-finalization");
 
-/*
- * **FINALIZATION: EVERY STEP COMPLETES OR FAILS BY NAME INSIDE ITS OWN BUDGET.**
- * Each step is
- * labelled for the stall diagnostic and bounded: its store calls are cut at its
- * budget, and the steps before the canonical outcome leave it and the local
- * record their time before the wall. A step that fails is named — on stderr, in
- * the runtime conditions — and the cycle goes on to its records; only a failed
- * canonical append ends the cycle, through the crash handler, with a FAILED
- * outcome and a local crash record.
- */
 const finalStep = <T,>(label: string, fn: () => Promise<T>): Promise<T> => pending.step(label, fn);
 const failedStep = (step: string, error: unknown): string => {
   const detail = error instanceof Error ? error.message : String(error);
@@ -4127,14 +3303,6 @@ try {
 }
 const finalState = researchState(finishedAt);
 
-/*
- * The three code identities, read once per cycle. A live
- * cycle refreshes origin/main with a bounded fetch; a dry or canary cycle reads
- * the refs as last seen so no test reaches the network. A read that throws
- * leaves the field null — the beat still says the cycle ran; it never says the
- * code identity is consistent. The whole read is bounded: a git
- * call it no longer has time for is not made, and reads as CANNOT_TELL.
- */
 const codeIdentity = pending.sync("code-identity", () => {
   try {
     return readCodeIdentity({
@@ -4178,9 +3346,7 @@ try {
     const beat = await pending.step("heartbeat:read", () => repos.runnerHeartbeat.read(RUNNER_ID));
     const nextHeartbeat: RunnerHeartbeat = {
       ...heartbeat,
-      /* The intake observer runs immediately after this child. Preserve its
-         latest durable receipt while refreshing cycle/liveness fields; a cycle
-         crash before the observer runs must not erase the last known reading. */
+
       intakeRuntime: beat?.value.intakeRuntime ?? null,
       /* The parent recorded this release adoption at a separate boundary.
          Carry the original observation unchanged; a cycle is not a recheck. */
@@ -4270,17 +3436,6 @@ const lines = [
           ((retirementApplied?.deferred.length ?? 0) > 0 ? ` · ${retirementApplied?.deferred.length} deferred to the next cycle (budget)` : "") +
           (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
       ]),
-  `  discovery          meetings: ${meetingsDiscoveryState}` +
-    (meetingsDiscovery === null
-      ? ` · ${missionDiscoveryNeeds.size} mission government(s) owed discovery, ${missionDiscoveryHeld} with a held calendar route, ${dispatchedNeeds.size} dispatched`
-      : ` · ${meetingsDiscovery.walked.length} walked (${meetingsDiscoveryByOutcome.FOUND ?? 0} found, ${meetingsDiscoveryByOutcome.LEAD ?? 0} lead, ` +
-        `${meetingsDiscoveryByOutcome.NOTHING_DETECTED ?? 0} nothing detected, ${meetingsDiscoveryByOutcome.BLOCKED ?? 0} blocked, ` +
-        `${meetingsDiscoveryByOutcome.COULD_NOT_READ ?? 0} could not read) · ${meetingsDiscovery.notDue.length} not yet due · ` +
-        `${meetingsDiscovery.deferred.length} deferred (budget)` +
-        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
-        ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
-        (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "") +
-        (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side` : "")),
   campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`,
   ...(abandonedOccurrences.length === 0
     ? []
@@ -4357,10 +3512,7 @@ const runRecord = {
       })),
       /* Open occurrences their obligation moved past without closing. */
       abandonedOccurrences: { found: abandonedOccurrences, applied: abandonedClosed },
-      /*
-       * What the paid lane read of the free walk for the dispatched discovery rows: whether it was
-       * read (only while the lane can admit), each government's reading, and any registry that could not be read.
-       */
+
       freeWalks: {
         dispatched: freeWalkSubjects.length,
         read: freeWalks !== UNREAD_FREE_DISCOVERY_WALKS,
@@ -4379,42 +3531,6 @@ const runRecord = {
                 return m;
               }, {}),
         registryFailures: dispatchedDiscovery.failures,
-      },
-      /* The unpaid meetings-discovery phase: whether it ran, and every walk it made. */
-      meetingsDiscovery: {
-        enabled: MEETINGS_DISCOVERY_ENABLED,
-        state: meetingsDiscoveryState,
-        /* The governments in mission places owed discovery, and those whose body holds a calendar route. */
-        mission: { owed: [...missionDiscoveryNeeds.keys()], heldCalendarRoute: missionDiscoveryHeld },
-        walked: (meetingsDiscovery?.walked ?? []).map((a) => ({
-          jurisdictionId: a.jurisdictionId,
-          attemptId: a.attemptId,
-          outcome: a.outcome,
-          found: a.found.map((f) => ({ vendor: f.vendor, url: f.url, count: f.count })),
-          leads: a.leads.length,
-          requestCount: a.requestCount,
-          recheckAfter: a.recheckAfter,
-        })),
-        notDue: meetingsDiscovery?.notDue ?? [],
-        deferred: meetingsDiscovery?.deferred ?? [],
-        cutShort: meetingsDiscovery?.cutShort ?? [],
-        recipesApplied: meetingsDiscovery?.recipeApplications ?? 0,
-        recipesUpdated: meetingsDiscovery?.recipesUpdated ?? [],
-        search: {
-          /* The owner's switch in Admin: paid search runs only while it is ON, and then only inside the caps below. */
-          ownerSwitch: discoverySearchDecision,
-          perCycleCap: SEARCH_PER_CYCLE,
-          perDayCap: SEARCH_PER_DAY,
-          /* Every request sent, including those of walks the time cut short: all of them were charged. */
-          requests: [
-            ...(meetingsDiscovery?.walked ?? []).flatMap((a) => a.search.flatMap((q) => q.requests)),
-            ...(meetingsDiscovery?.cutShort ?? []).flatMap((c) => c.search.flatMap((q) => q.requests)),
-          ],
-        },
-        appendFailures: meetingsDiscovery?.appendFailures ?? [],
-        /* Walks that failed on something of ours, named; the pass went on without them and each need stays due. */
-        walkFailures: meetingsDiscovery?.walkFailures ?? [],
-        fieldManual: meetingsDiscovery?.fieldManual ?? null,
       },
       /* The free campaign-site pass: whether it ran, each lead it read, and every verdict by code. */
       campaignSites: {
@@ -4595,12 +3711,6 @@ const canonicalOutcome: FreshnessCycleOutcome = {
   failure: null,
 };
 
-/*
- * Canonical append happens first. A local file is disposable diagnostics only.
- * The append is bounded and retried while its budget lasts: the append-only
- * identity makes an uncertain retry a no-op success, never a second record. A
- * failure here is the cycle's crash — a FAILED outcome and a local crash record.
- */
 await finalStep("digest:append", () =>
   withControlPlaneConnectRetry(() => appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines }), {
     maxAttempts: 3,

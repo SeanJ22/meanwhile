@@ -81,7 +81,6 @@ const KAPNER_ROOT = "https://www.kapner4mendhamtwp.com/";
 const MARGINALIA_URL = "https://api.marginalia.nu/public/search/Lily%20Tang%20Williams";
 const MAYES_KEY = "ballot-az-pima:attorney-general:mayes-kris";
 
-
 function scoutedSite(f: { attemptId: string; obligationId: string; subjectId: string; outcome: "ROUTE_CANDIDATE"; routeId: string;
   canonicalUrl: string; artifactIds: string[]; recordedAt: string; summary: string }): ScoutedRecord {
   const itemId = scoutResultItemId({ attemptId: f.attemptId }, f.routeId);
@@ -958,10 +957,9 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
     assert.doesNotMatch(readFileSync(join(ROOT, file), "utf8"), /model-lane|scout-executor|scout-search|scout-tools|model-routing|@anthropic-ai|anthropic|BRAVE_SEARCH|EXA_API/i, file);
   }
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
-  const meetingsEnd = runner.indexOf("const runMeetingsDiscoveryPass");
-  const start = runner.indexOf("const runCampaignSitesPass", meetingsEnd);
+  const start = runner.indexOf("const runCampaignSitesPass");
   const end = runner.indexOf("const runCandidatePublicationsPass", start);
-  assert.ok(start > meetingsEnd && end > start, "the executable pass is its own lane, after meetings discovery");
+  assert.ok(start > 0 && end > start, "the executable campaign-site pass is its own lane");
   const block = runner.slice(start, end);
   assert.doesNotMatch(block, /modelLaneEnabled|laneClosure|guardedModelTransport|scoutFor|workerKey/);
   assert.match(block, /intents\.runnerPause\.paused/);

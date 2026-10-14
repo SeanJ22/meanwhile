@@ -334,7 +334,10 @@
     "publisher": "Office of Elections, Honolulu, HI",
     "url": "https://elections.hawaii.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "HI",
       "ocdId": "ocd-division/country:us/state:hi",
@@ -357,7 +360,14 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.hawaii.gov/\">https://elections.hawaii.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://elections.hawaii.gov/candidates/candidate-reports/",
+      "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94"
+    ],
+    "ballotMeasureUrls": [
+      "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/"
+    ]
   },
   {
     "id": "fec-id-chief",

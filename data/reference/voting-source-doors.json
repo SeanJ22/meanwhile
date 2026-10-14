@@ -1084,7 +1084,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Columbus, OH",
     "url": "https://www.sos.state.oh.us/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "OH",
       "ocdId": "ocd-division/country:us/state:oh",
@@ -1107,7 +1110,9 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.oh.us/elections/\">https://www.sos.state.oh.us/elections/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
+    "ballotMeasuresUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf"
   },
   {
     "id": "fec-ok-chief",

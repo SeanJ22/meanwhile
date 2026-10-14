@@ -1,6 +1,6 @@
 import { formFor } from "./body-form.ts";
 import { definitionsForBody } from "./body-definitions.ts";
-import { blurbForTitle, officeTypeForTitle, blurbForContestTitle, officeTypeForContestTitle } from "./office-blurbs.ts";
+import { blurbForTitle, officeTypeForTitle } from "./office-blurbs.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readTranslations } from "../translate/projection-reader.ts";
 import { textTranslationFor } from "../translate/reader.ts";
@@ -21,14 +21,13 @@ export async function readCuratedBodyDefinitions(input: Parameters<typeof defini
   const bodyRecord=textTranslationFor(records,{kind:"BODY",subjectId:`body:${input.bodyId}`,ocdId:input.ocdId});
   const formKey=formFor(input).formKey;
   const formRecord=formKey ? textTranslationFor(records,{kind:"BODY_CLASS",subjectId:`body_class:${jurisdiction.usps}:form:${formKey}`,ocdId:stateOcd}) : null;
-  // A division/body-specific explanation keeps its precedence over a shared
-  // form definition. Migrate that form layer only where it was the old value.
+  // A shared form cannot replace this body's own charter explanation.
   const formValue=formRecord?.curatedOrigin && formRecord.text===legacy.formDefinition?.text ? originalDefinition(formRecord) : null;
   return {...legacy,classDefinition:originalDefinition(classRecord) ?? legacy.classDefinition,
     formDefinition:originalDefinition(bodyRecord) ?? formValue ?? legacy.formDefinition};
 }
 export async function readCuratedOfficeBlurb(title: string, divisionOcdId: string | null, options: PromotedCivicDataReadOptions = {}) {
-  const legacy=blurbForTitle(title,divisionOcdId), key=officeTypeForTitle(title), jurisdiction=jurisdictionFromOcdId(divisionOcdId);
+  const legacy=blurbForTitle(title,divisionOcdId), key=officeTypeForTitle(title,divisionOcdId), jurisdiction=jurisdictionFromOcdId(divisionOcdId);
   if(!key || !jurisdiction || !divisionOcdId)return legacy;
   const stateOcd=`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
   const records=await readTranslations([stateOcd,divisionOcdId],options);
@@ -47,7 +46,7 @@ export async function readCuratedContestOfficeBlurbs(contests: readonly { id: st
   });
   const records=await readTranslations(scopes,options);
   return new Map(contests.map(contest=>{
-    const legacy=blurbForContestTitle(contest.title,contest.ocdId),jurisdiction=jurisdictionFromOcdId(contest.ocdId),key=officeTypeForContestTitle(contest.title);
+    const legacy=blurbForTitle(contest.title,contest.ocdId),jurisdiction=jurisdictionFromOcdId(contest.ocdId),key=officeTypeForTitle(contest.title,contest.ocdId);
     if(!jurisdiction || !key)return [contest.id,legacy] as const;
     const stateOcd=`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
     const specific=textTranslationFor(records,{kind:"OFFICE",subjectId:`office:${jurisdiction.usps}:${key}:division:${contest.ocdId}`,ocdId:contest.ocdId});

@@ -1,3 +1,4 @@
+import { pageAddress } from "../doors/page-doors.ts";
 import { evaluatePermission } from "../control-plane/scheduler/robots.ts";
 import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
 import type { VotingSourceAttempt, VotingSourceRuntime } from "./voting-source-types.ts";
@@ -14,11 +15,7 @@ function publicUrl(value: string): URL {
   if (!["https:", "http:"].includes(url.protocol) || url.username || url.password || /^(?:localhost|127\.|10\.|192\.168\.|169\.254\.|0\.|\[|172\.(?:1[6-9]|2\d|3[01])\.)/i.test(url.hostname)) throw new Error("Only public election source URLs may be read");
   return url;
 }
-/**
- * Rulings §2: robots.txt alone never blocks acquisition. Each read records what the publisher's robots.txt says about the
- * page as evidence (an attempt line and the saved robots.txt body) and then reads the public page. Logins, CAPTCHAs,
- * identity-locked lookups and credentials stay off-limits: those are access controls, not robots.txt.
- */
+
 export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSession {
   const attempts: VotingSourceAttempt[] = [], rawBodies: VotingCapture[] = [];
   const robots = new Map<string, { text: string | null; status: number | null; error: string | null; type: string | null }>();
@@ -58,7 +55,7 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
         outcome: `robots.txt ${permission.verdict} for ${url.pathname}${permission.crawlDelayMs ? ` (crawl-delay ${permission.crawlDelayMs} ms)` : ""}: ${permission.detail} — recorded as evidence; the public page is still read` });
     }
   };
-  const get = async (value: string, init: RequestInit = {}): Promise<VotingCapture> => {
+  const fetchCapture = async (value: string, init: RequestInit = {}): Promise<VotingCapture> => {
     let url = publicUrl(value);
     for (let hops = 0; hops < 8; hops++) {
       if (runtime.deadlineMs !== undefined && Date.now() >= runtime.deadlineMs) throw new Error("Reader lookup deadline reached");
@@ -79,6 +76,22 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
       const capture = { url: url.href, contentType, bytes }; rawBodies.push(capture); return capture;
     }
     throw new Error("Source redirect chain did not resolve");
+  };
+  const get = async (value: string, init: RequestInit = {}): Promise<VotingCapture> => {
+    if (!runtime.captureCache || init.body || (init.method ?? "GET") !== "GET") return fetchCapture(value, init);
+    const key = pageAddress(value)?.url ?? value;
+    const held = runtime.captureCache.get(key);
+    if (held) {
+      const captures = await held;
+      rawBodies.push(...captures);
+      attempts.push({ url: value, route: "direct", outcome: "Held capture reused in this pass" });
+      return captures.at(-1)!;
+    }
+    const start = rawBodies.length;
+    const pending = fetchCapture(value, init).then(() => rawBodies.slice(start));
+    runtime.captureCache.set(key, pending);
+    try { return (await pending).at(-1)!; }
+    catch (error) { runtime.captureCache.delete(key); throw error; }
   };
   return { attempts, rawBodies, get };
 }

@@ -164,11 +164,6 @@ import {
   IncumbencyMarker,
 } from "@/components/ballot/incumbency-note";
 
-/**
- * Renders exactly what the election authorities filed. It never suggests how to vote: no contest or
- * candidate is scored, ranked, matched or recommended.
- */
-
 export const runtime = "nodejs";
 
 /** What each supporting holding means to a reader, in their words. */
@@ -299,7 +294,6 @@ async function CandidateFunding({
   );
 }
 
-
 /** State records and their disclosure use the same already-loaded authority. */
 function stateCandidateFunding(
   records: ReturnType<typeof stateMoneyForCard>["records"],
@@ -392,11 +386,7 @@ async function BallotBattlecard({
     source: null,
   };
 
-  /*
-   * The officeholder record to READ VOTES FROM. The federal join first,
-   * because it is exact; otherwise the officeholder the contest resolution
-   * matched to this candidate by seat.
-   */
+
   const recordHolder = holder ?? resolvedStanding?.holderFor.get(targetKey) ?? null;
 
   let positions: ReturnType<typeof positionsFor> = [];
@@ -489,7 +479,7 @@ async function BallotBattlecard({
             {!authorityAvailability.candidateProfiles && unavailableHolding("candidate-profile")}
             {holder && <CandidateSources holder={holder} />}
             <CandidateContactSources links={links} filing={filingContact} />
-            
+
           </>
         ),
       }}
@@ -529,18 +519,12 @@ function unavailableHolding(family: string) {
   return <CardGapContribution id={`ballot-holding:${family}`} label={HOLDING_LABEL[family]} />;
 }
 
-
 /** The tab names the page: this one inherited the map's "Public meetings near you". */
 export const metadata: Metadata = {
   title: titleFor("Your ballot"),
   description: "The contests on your ballot, the candidates in them, and where to vote.",
 };
 
-/**
- * The reader authority edge for this render, fetched and not entered: an entry made inside a helper never
- * reaches its caller's later reads, so the page enters what this returns. Null when nothing is published or
- * the fetch failed; never reads the database.
- */
 async function readBallotReaderEdge(): Promise<ReaderAuthorityEdgeBundle | null> {
   const manifest = await readReaderManifest().catch(() => null);
   if (!manifest?.authorityArtifacts) return null;
@@ -581,11 +565,7 @@ export default async function BallotPage({
   // the same request bundle as the ballot, never ahead of the edge boundary.
   let certainty = await readerEdgeRead.then(edge => withReaderAuthorityEdge(edge, () => zipCertainty(zip)));
 
-  /*
-   * The reader edge is entered here, in the page's own function. Async components React renders later run
-   * outside this context, so each is handed `readerEdge`. A supporting family opens only for the ballot that
-   * answered.
-   */
+
   let readerEdge: ReaderAuthorityEdgeBundle | null = null;
   if (centroid) {
     readerEdge = await readerEdgeRead;
@@ -628,11 +608,7 @@ export default async function BallotPage({
     }
   }
 
-  /*
-   * The exact ballot authority has now answered. Only now may supporting
-   * projections be opened, each in its own failure domain. Their outcome
-   * controls only their own section; none can erase or replace `set`.
-   */
+
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
   // Verified registration/polling routes are useful before a ballot or an
   // election calendar has been acquired. Neither is a publication dependency.
@@ -764,9 +740,7 @@ export default async function BallotPage({
           })),
         )
       : []),
-    /* And the general-election nominees, keyed EXACTLY as the cards key them
-       (`contestId|name`) — a differently derived key would resolve to a person
-       and retrieve nothing. */
+
     ...candidacyContests.flatMap((c) =>
       (lineupForContest(c.id)?.nominees ?? []).map((n) => ({
         id: `${c.id}|${n.name}`,
@@ -903,7 +877,7 @@ export default async function BallotPage({
 
       {zip && (
         <div className="ballot-top-pills">
-          <BallotNarrowing zip={zip} className="ballot-top-pill" />
+          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
           <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">
             Moving here? Know the basics →
           </Link>
@@ -1176,11 +1150,8 @@ export default async function BallotPage({
       {/* The jurisdiction answer once, above the contests, built from the same `needsPill` decision each contest heading uses. */}
       {set && matched && certainty && (
         <JurisdictionNote
-          /*
-           * UNKNOWN is COUNTED, not named — see the component. Naming a
-           * division we hold no boundary for would turn our missing polygon
-           * into a claim about that district's geography.
-           */
+          electionDate={set?.election.date ?? null}
+
           unplaceable={
             candidacyContests.filter(
               (contest) => certainty.certaintyOf(contest.ocdId) === "UNKNOWN",
@@ -1631,7 +1602,6 @@ export default async function BallotPage({
               <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[]}>
               <div>
 
-
                 {/* The question, verbatim, first. */}
                 {/* The plain-language summary leads, for a local measure as well as a statewide one. */}
                 {summary ? (
@@ -1870,10 +1840,8 @@ export default async function BallotPage({
             </div>
           )}
 
-
-
           {/* The page-level disclosure, once, inside the block that renders when contests render. */}
-          
+
         </>
       )}
 

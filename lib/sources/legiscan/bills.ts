@@ -9,13 +9,13 @@ export const LEGISCAN_BULK_SCOPE = "US:legiscan-datasets";
 export const LEGISCAN_BULK_PARSER = "legiscan-bulk/2";
 export const LEGISCAN_API = "https://api.legiscan.com/";
 /** LegiScan state_id is its own identifier space, never Census FIPS. */
-export const LEGISCAN_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY US".split(" ");
+const LEGISCAN_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY US".split(" ");
 export interface Dataset {
   state_id: number; session_id: number; session_name: string; dataset_hash: string; dataset_date: string;
   access_key?: string;
 }
 export type HeldPerson = Pick<Officeholder,"id"|"personId"|"nativeIds">;
-export interface BillSponsor {
+interface BillSponsor {
   peopleId: number; name: string; committee: boolean; nativeIds: Record<string,string[]>;
   officeholderId: string | null; joinReason: string | null;
 }
@@ -75,7 +75,7 @@ export function joinSponsor(sponsor:BillSponsor, people:readonly HeldPerson[]):B
   const ids=[...new Set(matches.map(person=>person.id))];
   return {...sponsor,officeholderId:ids.length===1?ids[0]:null,joinReason:ids.length===1?null:ids.length?"Ambiguous source identifiers":"No held source identifier"};
 }
-export function normalizeBill(value:unknown, dataset:Dataset, capturedAt:string, people:readonly HeldPerson[]=[]):Bill {
+function normalizeBill(value:unknown, dataset:Dataset, capturedAt:string, people:readonly HeldPerson[]=[]):Bill {
   const raw=object(object(value).bill), state=stateOfDataset(dataset);
   if(raw.state!==state||positive(raw.state_id)!==dataset.state_id||positive(raw.session_id)!==dataset.session_id) throw Error("LEGISCAN_BILL_SCOPE_MISMATCH");
   const billId=positive(raw.bill_id), sourceUrl=url(raw.url)!;

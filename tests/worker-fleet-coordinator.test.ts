@@ -28,8 +28,6 @@ import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
 
-
-
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
   const attempt=(await h.repos.attempts.mustRead(metadata.attemptId)).value;
@@ -423,7 +421,6 @@ test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain ret
   assert.equal(shut.action,"SCOUT",shut.reason); assert.match(shut.task!.routeId,/autonomous:novelty:/);
 });
 
-
 test("an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",async()=>{
   const h=await autonomousHarness(); const acquired=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
   const first=(await h.repos.workerResults.readAll())[0]; if(first.result.role!=="ACQUIRER")throw new Error("wrong role");
@@ -594,7 +591,8 @@ test("a worker kill timer defers unfinished work and ends only its owned process
 test("the autonomous wave loop stops at its dispatch slice even while waves keep working", async () => {
   const source = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   const start = source.indexOf("async function runAutonomousProcesses()");
-  const end = source.indexOf("let meetingsDiscovery", start);
+  const end = source.indexOf("let campaignSites", start);
+  assert.ok(start >= 0 && end > start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let calls = 0, now = 0;
   const wave = async () => { calls++; now += 20; return { dispatches: [{ outcome: calls <= 3 ? "WORKED" : "FAILED" }],

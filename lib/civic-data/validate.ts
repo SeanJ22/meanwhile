@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { sourceCheckIssue } from "./source-check.ts";
+import { completeOfficialBallotContests } from "./manual-projections.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
@@ -205,6 +207,27 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
     `${removed.length} current person record(s) left only after every active native tenure ended; exact identities, original captures and historical memberships remain held.`);
 }
 
+function completeBallotRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null): ValidationCheck | null {
+  if (candidate.recordClass !== "BALLOT_CANDIDACY" || candidate.sourceId !== "official-ballot-authorities" || !prior ||
+      !candidate.retrieval.manualSourceReceipt || prior.candidate.sourceId !== candidate.sourceId ||
+      prior.candidate.scope !== candidate.scope || (candidate.removalEvidence?.length ?? 0) > 0) return null;
+  const next = candidate.readModel as GenericBallotProjection;
+  const before = prior.candidate.readModel as GenericBallotProjection;
+  if (next.kind !== "ballot-contests" || before.kind !== "ballot-contests") return null;
+  const complete = completeOfficialBallotContests(next, candidate.retrieval.manualSourceReceipt);
+  const old = Object.values(before.ballots).flatMap(ballot => ballot.candidacies.map(candidacy => ({ ballot, candidacy })));
+  if (!(candidate.changeSet?.removed ?? []).every(delta => {
+    const held = old.find(row => delta.key === `candidacy:${row.candidacy.id}`);
+    if (!held) return false;
+    const matches = complete.filter(row => row.contest.id === held.candidacy.contestId &&
+      row.ballot.election.id === held.ballot.election.id && row.ballot.election.date === held.ballot.election.date &&
+      row.contest.ocdId === held.ballot.contests.find(contest => contest.id === held.candidacy.contestId)?.ocdId);
+    return matches.length === 1 && Date.parse(matches[0].contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
+  })) return null;
+  return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "COMPLETE_OFFICIAL_CONTEST_REMOVAL",
+    "Each removed candidacy is absent from its exact contest's newer complete election-authority list.");
+}
+
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
   const removed = candidate.changeSet?.removed ?? [];
   const evidence = candidate.removalEvidence ?? [];
@@ -236,6 +259,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;
+
+  const ballotRemoval = completeBallotRemovalCheck(candidate, prior);
+  if (ballotRemoval !== null) return ballotRemoval;
 
   const auditPull = auditPullRemovalCheck(candidate, removed, evidence);
   if (auditPull !== null) return auditPull;

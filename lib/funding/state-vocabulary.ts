@@ -32,7 +32,7 @@
  * ## Why this file exists before any state adapter does
  *
  * The three covered states' filing systems are all walled from this egress
- * today (see `docs/source-ladder.md`), so no adapter can be built against
+ * today (the field manual records each wall), so no adapter can be built against
  * live data yet. The SHAPE can, and building it first means the first state
  * that opens is a table and a fetch rather than a design.
  */

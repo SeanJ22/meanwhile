@@ -18,9 +18,9 @@
  * transcribing it, so a refreshed snapshot cannot leave a stale number here.
  *
  * It still does not close, and the reason is exactly the model's point:
- * `docs/sources.md` records OpenFEC as "WIRED for committee TOTALS only", and
- * **independent expenditures (FEC Schedule E) are not read at all** — tracker
- * `D51`, held behind `PB10`/`D23`, the election-law counsel review of the
+ * the source registry records OpenFEC as "WIRED for committee TOTALS only", and
+ * **independent expenditures (FEC Schedule E) are not read at all** — held
+ * behind `D23`, the election-law counsel review of the
  * 52 U.S.C. § 30111(a)(4) sale-or-use restriction. Money spent ABOUT this race
  * by groups that gave these campaigns nothing is unmeasured, so the contest's
  * money is not fully described. That is an OPEN route with a named next move,
@@ -179,12 +179,12 @@ export const FEDERAL_ROUTES: readonly PlannedRoute[] = [
     target: "api.open.fec.gov",
     disposition: "BLOCKED_CURRENTLY",
     note:
-      "NOT READ. docs/sources.md records OpenFEC as 'WIRED for committee TOTALS only'; tracker D51 " +
-      "holds the independent-expenditure surface and PB10/D23 is the BLOCKING PRECONDITION — " +
+      "NOT READ. The source registry records OpenFEC as 'WIRED for committee TOTALS only'; " +
+      "the independent-expenditure surface waits on D23, the BLOCKING PRECONDITION — " +
       "election-law counsel must rule on the 52 U.S.C. § 30111(a)(4) sale-or-use restriction before " +
       "any campaign-finance feature built on this ships. A blocked route is not a blocked fact: " +
       "these expenditures exist or do not independently of our being allowed to read them.",
-    citation: "docs/tracker-working.csv — D51, PB10",
+    citation: "field manual source registry — OpenFEC",
     permission: "CANNOT_TELL",
     transport: null,
     rung: null,

@@ -29,6 +29,7 @@ import { blankFingerprint, HUNT_PACKET_ROUTE_ID, huntPacketObligationId, reporta
 import { readGovernmentPackets } from "./packet-read.ts";
 import { stateOfDivision } from "./packet-plan.ts";
 import type { HuntSearch, SearchCharge } from "./search.ts";
+import { foldAskGapObservations, readAskGapObservations, type AskedGap } from "../control-plane/ask-gap-observations.ts";
 
 const NOTE_LIMIT = 12;
 
@@ -88,11 +89,18 @@ export function huntLearnings(result: ScoutResult, packet: Pick<HuntPacket, "gov
   ];
 }
 
+/** The questions Ask could not answer in its observation window. */
+export async function readAskedGaps(repos: Pick<ControlPlaneRepositories, "askGapObservations">, now: string): Promise<readonly AskedGap[]> {
+  const reading = await readAskGapObservations(repos.askGapObservations);
+  if ("unreadable" in reading) throw new Error(`the questions Ask could not answer could not be read (${reading.unreadable})`);
+  return [...foldAskGapObservations(reading.rows, now).asked.values()];
+}
+
 /** Whether each government's packet is sent this round: its blanks read now, its last job, its shut doors and newest order. */
-export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults" | "doors" | "adminConfig">,
+export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults" | "doors" | "adminConfig" | "askGapObservations">,
   rows: readonly { readonly governmentId: string; readonly assignments?: readonly { readonly at: string }[] }[], now: string,
   read: typeof readGovernmentPackets = readGovernmentPackets): Promise<Map<string, PacketDue>> {
-  const packets = await read(rows.map(row => row.governmentId), now);
+  const packets = await read(rows.map(row => row.governmentId), now, await readAskedGaps(repos, now));
   const maxWaitMs = await deadEndWaitMs(repos);
   const out = new Map<string, PacketDue>();
   for (const row of rows) {
@@ -125,7 +133,8 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
   const doors = await shutDoorsOf(input.repos, governmentId).catch(() => [] as ShutDoorNote[]);
   const maxWaitMs = await deadEndWaitMs(input.repos);
   const read = input.readPackets ?? readGovernmentPackets;
-  const packetNow = async (): Promise<HuntPacket | null> => (await read([governmentId], input.now())).get(governmentId) ?? null;
+  const packetNow = async (): Promise<HuntPacket | null> =>
+    (await read([governmentId], input.now(), await readAskedGaps(input.repos, input.now()))).get(governmentId) ?? null;
   const opening = await packetNow();
   const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
   const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];

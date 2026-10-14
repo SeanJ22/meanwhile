@@ -4,22 +4,24 @@ import { buildPlaceOwedList } from "../coverage/place-owed.ts";
 import { rateFor } from "../control-plane/model-cost.ts";
 import { scoutLoopBase } from "../control-plane/scheduler/scout-executor.ts";
 import { stateDivisionId, unionDivisions, zipDivisionIds } from "../control-plane/admin-view/v6-national-geography.ts";
-import { blankFingerprint, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
+import type { AskedGap } from "../control-plane/ask-gap-observations.ts";
+import { blankFingerprint, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
 import { SEARCH_PRICE_USD } from "./search.ts";
 
 export type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
 const readHeld: HeldReader = (ids, now) => readHeldPlaceCapture(ids, { now, bypassCache: true });
 
-/** Each government's packet as it stands now, recomputed from held data. A government with nothing open has no blanks. */
-export async function readGovernmentPackets(governmentIds: readonly string[], now: string, read: HeldReader = readHeld): Promise<ReadonlyMap<string, HuntPacket>> {
+/** Each government's packet as it stands now, recomputed from held data and what Ask could not answer. A government with nothing open has no blanks. */
+export async function readGovernmentPackets(governmentIds: readonly string[], now: string, asked: readonly AskedGap[] = [],
+  read: HeldReader = readHeld): Promise<ReadonlyMap<string, HuntPacket>> {
   const ids = [...new Set(governmentIds)];
   if (ids.length === 0) return new Map();
   const capture = await read(ids, now);
   const labelOf = new Map(capture.subjects.filter(subject => subject.kind === "division").map(subject => [subject.id, subject.label] as const));
   const divisions = ids.map(id => ({ id, label: labelOf.get(id) ?? id }));
   const items = buildPlaceOwedList({ divisions, subjects: capture.subjects, held: capture.held, now });
-  const packets = new Map(packetsFrom({ divisions, items }).map(packet => [packet.governmentId, packet] as const));
-  for (const division of divisions) if (!packets.has(division.id)) packets.set(division.id, { governmentId: division.id, label: division.label, held: [], blanks: [] });
+  const packets = new Map(packetsFrom({ divisions, items }).map(packet => [packet.governmentId, withAskedBlanks(packet, asked)] as const));
+  for (const division of divisions) if (!packets.has(division.id)) packets.set(division.id, withAskedBlanks({ governmentId: division.id, label: division.label, held: [], blanks: [] }, asked));
   return packets;
 }
 

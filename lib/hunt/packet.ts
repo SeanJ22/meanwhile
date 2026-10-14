@@ -7,6 +7,8 @@ import { CHECKLIST_FAMILIES, checklistItem } from "../coverage/checklist-map.ts"
 import { isOpenBlank } from "../coverage/open-blanks.ts";
 import type { PlaceOwedItem, PlaceSubject } from "../coverage/place-owed.ts";
 import { contentHash } from "../control-plane/ids.ts";
+import { askedWords, type AskedGap } from "../control-plane/ask-gap-observations.ts";
+import { ASK_GAP_CODE_WORDS, type AskGapCode } from "../ask/gap-codes.ts";
 
 export const HUNT_PACKET_CAPABILITY = "hunt-packet";
 export const HUNT_PACKET_RECORD_CLASS = "HUNT_PACKET";
@@ -95,6 +97,30 @@ export function packetsFrom(input: {
 }
 
 const fieldKey = (field: PacketField): string => `${field.subjectId}\u0000${field.checklistId}`;
+
+/** The checklist item whose fact answers each kind of question Ask could not answer about a body. */
+const ASKED_ITEM: Readonly<Record<AskGapCode, string>> = {
+  MEETINGS_NOT_HELD: "MTG-01", CALENDAR_STALE: "MTG-04", AGENDA_NOT_HELD: "DOC-01", OUTCOME_NOT_READ: "DOC-08", OUTCOMES_UNREADABLE: "DOC-08",
+};
+
+/** Each question Ask could not answer about one of this government's bodies is a blank on that body's calendar, held value or not. */
+export function withAskedBlanks(packet: HuntPacket, asked: readonly AskedGap[]): HuntPacket {
+  const labels = new Map([...packet.held, ...packet.blanks].map(field => [field.subjectId, field.subjectLabel] as const));
+  const fields = new Map<string, PacketField>();
+  for (const gap of asked) {
+    if (gap.bodyId.split("#")[0] !== packet.governmentId) continue;
+    const subjectId = `${gap.bodyId}#calendar`;
+    const checklistId = ASKED_ITEM[gap.code];
+    const field: PacketField = { subjectId, checklistId, family: familyOf(checklistId),
+      subjectLabel: labels.get(subjectId) ?? `${labels.get(gap.bodyId) ?? gap.bodyId}: calendar`,
+      requirement: `${ASK_GAP_CODE_WORDS[gap.code]}. ${askedWords(gap)}` };
+    const prior = fields.get(fieldKey(field));
+    fields.set(fieldKey(field), prior ? { ...prior, requirement: `${prior.requirement} ${field.requirement}` } : field);
+  }
+  if (fields.size === 0) return packet;
+  return { ...packet, held: packet.held.filter(fact => !fields.has(fieldKey(fact))),
+    blanks: [...packet.blanks.filter(blank => !fields.has(fieldKey(blank))), ...fields.values()] };
+}
 
 /** Changes whenever a blank opens or closes, so a packet is re-sent only when something changed. */
 export function blankFingerprint(packet: Pick<HuntPacket, "blanks">): string {

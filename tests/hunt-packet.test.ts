@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import type { HeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
-import { blankFingerprint, huntableItem, packetCostEstimateUsd, packetFamilies, packetsFrom, reportableSubjects } from "../lib/hunt/packet.ts";
+import { blankFingerprint, huntableItem, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, reportableSubjects } from "../lib/hunt/packet.ts";
 
 const NOW = "2026-10-14T12:00:00.000Z";
 const COUNTY = "ocd-division/country:us/state:az/county:santa_cruz";
@@ -77,4 +77,20 @@ test("families and the estimate count only open blanks", () => {
   const rates = { inputUsdPerMillion: 0.1, outputUsdPerMillion: 0.5, searchUsd: 0.005 };
   assert.equal(packetCostEstimateUsd([{ blanks: [] }], rates), 0);
   assert.ok(packetCostEstimateUsd(packets, rates) > 0);
+});
+
+test("a question Ask could not answer about a body becomes a blank on its calendar, even where a value is held", () => {
+  const county = packetsFrom({ divisions, items: owed([]) }).find(p => p.governmentId === COUNTY)!;
+  const calendar = `${COUNTY}#board#calendar`;
+  const heldCadence = { ...county, blanks: county.blanks.filter(b => !(b.subjectId === calendar && b.checklistId === "MTG-04")), held: [...county.held, { subjectId: calendar, subjectLabel: "Board of Supervisors: calendar", checklistId: "MTG-04",
+    family: "MTG", requirement: "Cadence", value: "monthly", sourceUrl: "https://example.gov/board", checkedAt: "2026-01-01T00:00:00.000Z" }] };
+  const asked = [{ bodyId: `${COUNTY}#board`, code: "CALENDAR_STALE" as const, recordClass: "MEETING" as const, asks: 3, days: 2, firstDay: "2026-10-12", lastDay: "2026-10-13" },
+    { bodyId: `${CITY}#council`, code: "AGENDA_NOT_HELD" as const, recordClass: "MEETING" as const, asks: 1, days: 1, firstDay: "2026-10-13", lastDay: "2026-10-13" }];
+  const withAsked = withAskedBlanks(heldCadence, asked);
+  const blank = withAsked.blanks.find(b => b.subjectId === calendar && b.checklistId === "MTG-04");
+  assert.ok(blank, "the stale calendar readers asked about is hunted");
+  assert.match(blank.requirement, /Readers were told this 3 times/);
+  assert.ok(!withAsked.held.some(f => f.subjectId === calendar && f.checklistId === "MTG-04"), "it is no longer listed as never-look-again");
+  assert.ok(!withAsked.blanks.some(b => b.subjectId.startsWith(CITY)), "another government's question stays with that government");
+  assert.notEqual(blankFingerprint(withAsked), blankFingerprint(heldCadence), "a new question makes the packet due again");
 });

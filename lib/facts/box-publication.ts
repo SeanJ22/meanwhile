@@ -30,6 +30,7 @@ interface BoxPublicationReport {
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
 }
 
+const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone" } as const;
 const KIND: Readonly<Record<string, FieldKind>> = { rosters: "officeholder", contacts: "contact", "office contacts": "contact", schedules: "meeting", "comment rules": "comment_rule" };
 
 /** The body a hunter's subject stands for: the body itself, or a government's own governing board. */
@@ -144,7 +145,7 @@ export async function publishBoxFindings(input: {
         if (!name) { await settle(finding.row, { blank: "NO_PERSON_NAMED_IN_QUOTE" }); continue; }
         const recordId = `box:${nameKey(name)}`;
         const member = members.get(recordId) ?? { recordId, fields: {}, fieldSources: {} };
-        const field = own.slot === "member_name" ? "name" : own.slot === "member_office" ? "office" : own.slot;
+        const field = MEMBER_FIELD[own.slot as keyof typeof MEMBER_FIELD];
         if (field !== "name" && !member.fields.name) { member.fields.name = name; member.fieldSources.name = quoteOf(finding.exactQuote); }
         if (field !== "name" && member.fields[field] !== undefined && member.fields[field] !== finding.value) { await settle(finding.row, { blank: "OTHER_VALUE_ON_THE_SAME_PAGE" }); continue; }
         member.fields[field] = finding.value; member.fieldSources[field] = quoteOf(finding.exactQuote);

@@ -28,6 +28,12 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("officeholder.name"), { class: "rosters", slot: "member_name" });
   assert.deepEqual(slot("boardMember.title"), { class: "rosters", slot: "member_office" });
   assert.deepEqual(slot("name"), { class: "rosters", slot: "member_name" });
+  assert.deepEqual(slot("officeholder.name (Board Member)"), { class: "rosters", slot: "member_name" });
+  assert.deepEqual(slot("officeholder.name/office (board member)"), { class: "rosters", slot: "member_name" });
+  assert.deepEqual(slot("officeholder.councilMember.name"), { class: "rosters", slot: "member_name" });
+  assert.deepEqual(slot("governingBoard.member"), { class: "rosters", slot: "member_name" });
+  assert.deepEqual(slot("officeholder.term_expires"), { class: "rosters", slot: "term_end" });
+  assert.deepEqual(slot("officeholder.term"), { class: "rosters", slot: "term_note" });
   assert.deepEqual(slot("officeholder.email"), { class: "contacts", slot: "email" });
   assert.deepEqual(slot("phone"), { class: "contacts", slot: "phone" });
   assert.deepEqual(slot("district.phone"), { class: "office contacts", slot: "office_phone" });

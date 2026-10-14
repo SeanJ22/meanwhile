@@ -7,6 +7,9 @@ import { processRegisteredRoutineCandidate } from "./promotion.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { readManualProjectionPrior } from "./manual-projections.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
+import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
 
 export interface StatePeopleAcquisition {
   readonly requestedUrl:string; readonly finalUrl:string; readonly httpStatus:number; readonly body:string; readonly retrievedAt:string;
@@ -100,47 +103,52 @@ export async function publishStatePeople(input: {store:RoutineDataStore;state:st
   const candidate = statePeopleCandidate({...input,roster,acquisitions,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
     prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged});
+  if (outcome.promoted) {
+    const ballotPrior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
+    const ballots = Object.values((ballotPrior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})
+      .filter(ballot => ballot.election.state === input.state.toUpperCase());
+    if (ballots.length && ballotPrior) await publishOfficialBallotCandidacies({ store: input.store, now: input.now, ballots,
+      sourceReceipt: ballotPrior.sourceReceipt, statePeople: new Map([[jurisdiction, roster]]) });
+  }
   return {candidate,outcome};
 }
 
-/** Finite known profiles share the existing deadline; per-person failures remain durable continuation work. */
-export async function refreshStatePeoplePortraits(input: {store:RoutineDataStore;state:string;now?:string;signal?:AbortSignal;limit?:number}, options: {
-  now?:()=>string;
-  acquire?:typeof import("../sources/known-release.ts").acquireKnownRelease;
-  storePortrait?:(personId:string,sources:import("../photos/evidence.ts").PortraitSources,now:string,signal:AbortSignal)=>Promise<import("../officials/types.ts").OfficeholderPhoto>;
-} = {}) {
+/** Every due profile is standing work, independent of its roster refresh. */
+export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:string;now?:string;signal?:AbortSignal},
+  options:import("../photos/portrait-work.ts").StandingPortraitOptions = {}) {
   const clock = options.now ?? (()=>new Date().toISOString());
   const now = input.now ?? clock();
-  const read = await readOpenStatesPeopleProjection(`US-${input.state.toUpperCase()}`,{store:input.store,now,bypassCache:true});
-  if (read.kind !== "PROMOTED") return null;
-  const prior = await input.store.readCandidate(read.metadata.versionId!);
-  const source = prior?.candidate.normalizedPayload as {releaseId?:string;acquisitions?:StatePeopleAcquisition[];gaps?:StatePeopleEvidence["gaps"]}|undefined;
-  if (!source?.releaseId || !source.acquisitions?.length) return null;
-  const { acquireKnownRelease } = await import("../sources/known-release.ts");
   const { isOfficialSource } = await import("./source-authority.ts");
   const { imagesIn,pickPortraits } = await import("../hunt/portrait-pick.ts");
   const { portraitHash } = await import("../photos/evidence.ts");
-  const { storeVerifiedPortrait } = await import("../photos/store.ts");
   const { portraitBindingMatches } = await import("../photos/binding.ts");
   const { runBoundedWorkPool } = await import("../ops/bounded-work-pool.ts");
   const { sanitizedErrorDiagnostic } = await import("../ops/error-diagnostic.ts");
-  const acquire = options.acquire ?? acquireKnownRelease;
-  const storePortrait = options.storePortrait ?? ((id,sources,at,signal)=>storeVerifiedPortrait(id,sources,at,undefined,"officials",signal));
-  const sourceSignal = input.signal ?? AbortSignal.timeout(5*60_000);
-  const roster = {...read.value.roster,officeholders:read.value.roster.officeholders.map(row=>({...row}))};
+  const { linkingPageFrom } = await import("../control-plane/promotion/section3.ts");
+  const { pacedPortraitAcquire, storeStandingPortrait } = await import("../photos/portrait-work.ts");
+  const acquire = options.acquire ?? pacedPortraitAcquire;
+  const storePortrait = options.storePortrait ?? storeStandingPortrait;
+  const sourceSignal = input.signal ?? new AbortController().signal;
+  const linkingCaptures=options.linkingCaptures ?? [];
+  const official=(url:string)=>isOfficialSource(url,linkingPageFrom(url,linkingCaptures.map(row=>row.evidence)));
+  const roster = {...input.roster,officeholders:input.roster.officeholders.map(row=>({...row}))};
   const lastAttempt = new Map<string,string>();
-  for (const fact of prior?.candidate.excludedFacts ?? []) {
+  for (const fact of options.previousExcludedFacts ?? []) {
     const record = fact.record as {personId?:string;attemptedAt?:string}|undefined;
     if (fact.code.startsWith("STATE_PORTRAIT_") && record?.personId && record.attemptedAt) lastAttempt.set(record.personId,record.attemptedAt);
   }
   const due = roster.officeholders.filter(row=>!portraitBindingMatches(row.personId ?? row.id,row.photo ?? {url:""}) ||
     Date.parse(now)-Date.parse(row.photo!.verification!.checkedAt)>=7*86400000)
     .sort((a,b)=>(lastAttempt.get(a.personId ?? a.id) ?? "").localeCompare(lastAttempt.get(b.personId ?? b.id) ?? "") || a.id.localeCompare(b.id));
-  const work = input.limit === undefined ? due : due.slice(0,Math.max(1,Math.min(input.limit,64)));
   const dueIds = new Set(due.map(person=>person.personId ?? person.id));
-  const excludedFacts = (prior?.candidate.excludedFacts ?? []).filter(fact=>fact.code.startsWith("STATE_PORTRAIT_") &&
+  const excludedFacts = (options.previousExcludedFacts ?? []).filter(fact=>fact.code.startsWith("STATE_PORTRAIT_") &&
     dueIds.has((fact.record as {personId?:string}|undefined)?.personId ?? ""));
-  let changed=false, attempted=0;
+  let attempted=0;
+  const publicationErrors:unknown[]=[];
+  const recordPerson = async (person:OfficeholderSet["officeholders"][number]) => {
+    try { await options.onPerson?.(person,excludedFacts.filter(fact=>(fact.record as {personId?:string}|undefined)?.personId === (person.personId ?? person.id))); }
+    catch (error) { publicationErrors.push(error); }
+  };
   const gap = (person:OfficeholderSet["officeholders"][number],code:string,detail:string,page?:import("../sources/known-release.ts").KnownRelease,
     profileAttempts?:readonly {sourceUrl:string;code:string;detail:string}[]) => {
     excludedFacts.push({key:`${person.personId ?? person.id}:portrait`,code,detail,
@@ -149,19 +157,18 @@ export async function refreshStatePeoplePortraits(input: {store:RoutineDataStore
         ...(page ? {sourceRetrievedAt:page.retrievedAt,sourceCheckedAt:page.checkedAt,rawHash:page.sha256,vaultKey:page.vaultKey} : {}),
         retainedVerifiedPortrait:Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id,person.photo))}});
   };
-  await runBoundedWorkPool(work,3,async person=>{
+  const results=await runBoundedWorkPool(due,3,async person=>{
     if (sourceSignal.aborted) return;
     attempted++;
     for (let i=excludedFacts.length-1;i>=0;i--) if (excludedFacts[i].key === `${person.personId ?? person.id}:portrait`) excludedFacts.splice(i,1);
     const profiles = [...new Set([person.websiteUrl,...(person.profileUrls ?? [])])]
-      .filter((url):url is string=>Boolean(url && isOfficialSource(url)));
+      .filter((url):url is string=>Boolean(url && official(url)));
     if (!profiles.length) {
-      gap(person,"STATE_PORTRAIT_PROFILE_UNRESOLVED","No verified official profile URL is held for this native person; no source route was invented."); return;
+      gap(person,"STATE_PORTRAIT_PROFILE_UNRESOLVED","No verified official profile URL is held for this native person; no source route was invented."); await recordPerson(person); return;
     }
     let page:import("../sources/known-release.ts").KnownRelease|undefined;
     const profileAttempts:{sourceUrl:string;code:string;detail:string}[]=[];
-    // Each known profile keeps the existing request timeout. Every attempt
-    // also shares the continuation's total deadline and bounded worker pool.
+    // Per-request cancellation remains; there is no deadline on the due roster.
     for (const sourceUrl of profiles) {
       if (sourceSignal.aborted) break;
       const signal = AbortSignal.any([sourceSignal,AbortSignal.timeout(20000)]);
@@ -170,7 +177,7 @@ export async function refreshStatePeoplePortraits(input: {store:RoutineDataStore
         if (profile.protocol === "http:") profile.protocol = "https:";
         const host = profile.hostname.replace(/^www\./, "");
         page = await acquire({sourceId:"official-person-profile",releaseId:sourceUrl,url:profile.href,parserVersion:"portrait-profile/2",maxBytes:2*1024*1024,checkAfterMs:7*86400000,signal,allowedHosts:[host,`www.${host}`],headers:{accept:"text/html"}});
-        if (!isOfficialSource(page.finalUrl)) throw Error("STATE_PORTRAIT_PROFILE_REDIRECT_UNVERIFIED");
+        if (!official(page.finalUrl)) throw Error("STATE_PORTRAIT_PROFILE_REDIRECT_UNVERIFIED");
         const text=new TextDecoder("utf-8",{fatal:true}).decode(page.bytes);
         const candidates=pickPortraits(person.name,imagesIn(text,page.finalUrl));
         candidates.sort((a,b)=>Number(b.src===person.portraitCandidate?.imageUrl)-Number(a.src===person.portraitCandidate?.imageUrl));
@@ -185,8 +192,10 @@ export async function refreshStatePeoplePortraits(input: {store:RoutineDataStore
           signal.throwIfAborted();
           try {
             // Verify after capture while preserving the source's original vintage.
-            person.photo=await storePortrait(person.personId ?? person.id,{subject:{personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,profileUrls:[page.finalUrl]},imageUrl:selected.src,captures:[capture]},clock(),signal);
-            changed=true; return;
+            person.photo=await storePortrait(person.personId ?? person.id,{subject:{personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,profileUrls:[page.finalUrl]},imageUrl:selected.src,captures:[capture,...linkingCaptures]},clock(),signal);
+            person.profileUrls=[...new Set([...(person.profileUrls ?? []),page.finalUrl])];
+            person.fieldSources={...person.fieldSources,photo:{sourceUrl:page.finalUrl,sourceOrg:new URL(page.finalUrl).hostname,collectedAt:page.retrievedAt,verifiedAt:clock()}};
+            await recordPerson(person); return;
           } catch (error) { failure=error; }
         }
         throw failure ?? Error("STATE_PORTRAIT_IMAGE_UNVERIFIED");
@@ -197,10 +206,15 @@ export async function refreshStatePeoplePortraits(input: {store:RoutineDataStore
     const code = profileAttempts.length && profileAttempts.every(row=>row.code === "STATE_PORTRAIT_IMAGE_NOT_FOUND")
       ? "STATE_PORTRAIT_IMAGE_NOT_FOUND" : "STATE_PORTRAIT_PROCESSING_FAILED";
     gap(person,code,"The directly held profile/image leads did not verify within this attempt; prior person facts and verified portrait remain.",page,profileAttempts);
+    await recordPerson(person);
   });
   if (attempted<due.length) excludedFacts.push({key:`US-${input.state.toUpperCase()}:portrait-continuation`,code:"STATE_PORTRAIT_WORK_REMAINS",
     detail:`${due.length-attempted} known native profiles remain after this continuation; saved attempt dates prioritize unattempted people next.`});
-  if (!changed && !attempted && !excludedFacts.length) return null;
-  return publishStatePeople({store:input.store,state:input.state,roster,acquisitions:source.acquisitions,releaseId:source.releaseId,
-    now:clock(),gaps:source.gaps,excludedFacts,confirmUnchanged:false});
+  for (const result of results) if (!result.ok) {
+    const person=due[result.index]!;
+    gap(person,"STATE_PORTRAIT_PROCESSING_FAILED",result.error);
+    await recordPerson(person);
+  }
+  if (publicationErrors.length) throw new AggregateError(publicationErrors,"STATE_PORTRAIT_PUBLICATION_FAILED");
+  return {roster,excludedFacts,attempted};
 }

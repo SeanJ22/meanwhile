@@ -1,5 +1,7 @@
+import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
 import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
 import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
@@ -1237,6 +1239,11 @@ async function answerWithSettings(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    if (populationQuestion(question)) {
+      const division = bound?.ocdId ?? (subject?.kind === "BODY" ? canonicalBodyIdentity(subject.id)?.ocdId : null);
+      const ids = populationEvidenceIds(subject?.kind ?? null, division, ballotZip, ocdIds);
+      records.push(...await readPopulationEvidence(ids, subject?.kind === "BODY" ? subject.id : undefined));
+    }
     /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
        recorded actions are not retrieved. */
     const financeAsked = financeQuestionAskedFor(question, subject?.kind ?? null);
@@ -1298,7 +1305,7 @@ async function answerWithSettings(request: Request) {
       Object.assign(denominators, profile.denominators);
     }
     const candidateSeats = ballotRecord?.kind === "PERSON"
-      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))
+      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(id=>seatHolderById(id))))
         .flatMap((result) => result.status === "fulfilled" && result.value ? [result.value] : [])
       : [];
     for (const seat of candidateSeats) canonicalSubjectKeys.add(seat.id);
@@ -1972,6 +1979,13 @@ async function answerWithSettings(request: Request) {
       denominators.financeDetailRowsReturned = financeDetail.records.length;
       denominators.financeDetailComplete = financeDetail.complete ? 1 : 0;
     }
+    if (isBillQuestion(question)) {
+      const person = subject?.kind === "PERSON" ? await seatHolderById(subject.id).catch(() => null) : null;
+      const billStates = person?.id.startsWith("congress:") ? ["US"] : person?.state ? [person.state] :
+        [...new Set([...statesOf(ocdIds), ...statesOf(subject ? [subject.id] : [])])];
+      const bills = await legiscanBillEvidence({question,subject,person,states:billStates});
+      records.push(...bills.records); gaps.push(...bills.gaps); Object.assign(denominators,bills.denominators);
+    }
     const relevant = gateRecordsToSubject(subject, records, comparedIds);
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
@@ -2180,8 +2194,10 @@ async function answerWithSettings(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const populationSettled = settleSittingComposition(composePopulationAnswer(question, packRecords),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

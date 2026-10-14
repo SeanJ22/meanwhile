@@ -9,6 +9,8 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
+import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
 
 const HOUR = 60 * 60 * 1_000;
@@ -131,9 +133,11 @@ export interface RoutineSourceContract {
   };
   readonly lkgBehavior: string;
   readonly autoPromotable: boolean;
+  /** Zero keeps finite standing work alive; its individual requests still have transport deadlines. */
+  readonly childTimeoutMs?: number;
   /**
-   * A fan-out contract owns a scope family: its per-state marker at `scope`
-   * plus one bounded per-member candidate at `<sourceId>:<officeholderId>`. The
+   * A fan-out contract owns a scope family: its clock marker at `scope`
+   * plus bounded member or session candidates under `<sourceId>:`. The
    * runner still enumerates and clocks exactly this one contract; the family
    * lives inside the acquisition child. Verification stays per-contract.
    */
@@ -350,14 +354,14 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: "census-data-api",
     recordClass: "CENSUS_REFERENCE",
     scope: "acs-population",
-    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/acs-population-promote.mts"], requestedUrl: "https://api.census.gov/data/2024/acs/acs5" },
-    parserNormalizerVersion: "census-data-api/2",
-    cadence: { description: "monthly check for the supported Census product vintage", defaultEveryMs: 30 * DAY },
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/acs-population-promote.mts"], requestedUrl: "https://api.census.gov/data/" },
+    parserNormalizerVersion: "census-data-api/3",
+    cadence: { description: "monthly check of Census's annual ACS five-year release catalog; read the newest published vintage", defaultEveryMs: 30 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "census-data-api" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: "acs-population-reference", consumers: ["lib/reference/acs-population.ts", "readiness", "Admin"] },
+    readerProjection: { id: "acs-population-reference", consumers: ["lib/reference/acs-population.ts", "readiness", "Admin", "data business", "Ask"] },
     lkgBehavior: "The current atomic pointer remains on the last GOOD complete ACS projection after refusal.",
     autoPromotable: true,
     classification: "OPERATIONAL_REFERENCE_DATA",
@@ -589,6 +593,37 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  {
+    id: "legiscan-bulk", sourceId: "legiscan-bills", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },
+    parserNormalizerVersion: "legiscan-bulk/2",
+    cadence: { description: "weekly, following LegiScan's weekly dataset publication", defaultEveryMs: 7 * DAY },
+    retry: { afterMs: HOUR, description: "one hour after a failed bulk pass; already published sessions remain live" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "legiscan-bills" },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "legiscan-bills", consumers: ["legislator cards", "Ask"] },
+    lkgBehavior: "Each complete session publishes independently; failed archives leave prior bills live. Unchanged dataset hashes confirm success. Unjoined bills and sponsors remain in the session with their reason.",
+    autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
+  {
+    id: GOOGLE_CIVIC_SOURCE_ID,
+    sourceId: GOOGLE_CIVIC_SOURCE_ID,
+    recordClass: "GOOGLE_CIVIC_VOTERINFO",
+    scope: GOOGLE_CIVIC_SCOPE,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/google-civic-refresh.mts", "--promote"] },
+    parserNormalizerVersion: GOOGLE_CIVIC_PARSER_VERSION,
+    cadence: { description: "daily elections-catalog checks through November 3; weekly outside the election window; voterinfo only on an explicit reader fallback where official sources are absent", defaultEveryMs: 7 * DAY,
+      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: DAY, description: "daily through the November 3 election" }] },
+    retry: { afterMs: HOUR, description: "one hour after source failure; honor provider Retry-After" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: GOOGLE_CIVIC_SOURCE_ID },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "google-civic-voterinfo", consumers: ["ballot", "voting-sites", "Admin"] },
+    lkgBehavior: "Failed catalog reads retain the prior catalog. Reader voterinfo is transient, explicitly requested only where official voting sources are absent; held source observations remain separate from official lists.",
+    autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: ["tests/fixtures/google-civic/elections.json", "tests/fixtures/google-civic/az-voterinfo.json", "tests/fixtures/google-civic/mi-voterinfo.json", "tests/fixtures/google-civic/va-voterinfo.json"],
+  },
+  ...PEOPLE_SOURCE_CONTRACTS,
   ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
     id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,
     acquisitionFailureDomain: `routine-source:${sourceId}`,

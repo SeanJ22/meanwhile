@@ -133,18 +133,19 @@ export type MinutesRefreshReason =
   /** The link serves a document whose extraction failed: the caller checks whether it changed before downloading again. */
   | "FAILED_DOCUMENT_CHECK"
   /** The failed document's cheap check says it changed: read it again at once. */
-  | "FAILED_DOCUMENT_CHANGED"
+  | "DOCUMENT_CHANGED"
   /** The failed document's cheap check says it is the same document: held, not downloaded. */
-  | "FAILED_DOCUMENT_UNCHANGED"
+  | "DOCUMENT_UNCHANGED"
   /** The cheap check could not be made (the portal did not answer it): held until the re-verification date. */
-  | "FAILED_DOCUMENT_UNCHECKED"
+  | "DOCUMENT_UNCHECKED"
   /** A newer parser revision than the one that failed on these bytes: read again at once. */
   | "FAILED_DOCUMENT_PARSER_CHANGED"
   /** The failed read is `FAILED_MINUTES_REVERIFY_DAYS` old: the bytes are read once more, whatever the check says. */
   | "FAILED_DOCUMENT_REVERIFY"
   | "FORCED"
   /** Held and unchanged. */
-  | "UNCHANGED_SKIP"
+  | "DOCUMENT_CHECK"
+  | "DOCUMENT_REVERIFY"
   /** Still not published, as last recorded. */
   | "STILL_NOT_PUBLISHED"
   /** Minutes held from a link the portal no longer shows: kept, since a withdrawn link is not a reversed decision. */
@@ -161,7 +162,7 @@ export function minutesRefreshDecision(
   link: MinutesLink | null,
   held: PersistedSittingOutcomes | undefined,
   now: Date = new Date(),
-): { readonly walk: boolean; readonly reason: MinutesRefreshReason; readonly check?: PersistedFailedMinutesRead } {
+): { readonly walk: boolean; readonly reason: MinutesRefreshReason; readonly check?: MinutesDocumentIdentity } {
   if (held === undefined) return { walk: true, reason: "NEW" };
   if (held.extraction === "NOT_YET_PUBLISHED") {
     return link === null ? { walk: false, reason: "STILL_NOT_PUBLISHED" } : { walk: true, reason: "MINUTES_PUBLISHED" };
@@ -184,7 +185,20 @@ export function minutesRefreshDecision(
   if (UNREAD_PASSAGES_NOTE.test(held.extractionNote ?? "") && document.parserRevision !== MINUTES_PARSER_REVISION) {
     return { walk: true, reason: "UNREAD_PASSAGES_HELD" };
   }
-  return { walk: false, reason: "UNCHANGED_SKIP" };
+  if (!document.readAt || !Number.isFinite(Date.parse(document.readAt)) || now.getTime() - Date.parse(document.readAt) >= FAILED_MINUTES_REVERIFY_DAYS * 86_400_000) {
+    return { walk: true, reason: "DOCUMENT_REVERIFY" };
+  }
+  return { walk: false, reason: "DOCUMENT_CHECK", check: {
+    byteCount: document.byteCount, contentType: document.contentType ?? null,
+    etag: document.etag ?? null, lastModified: document.lastModified ?? null,
+  } };
+}
+
+export interface MinutesDocumentIdentity {
+  readonly byteCount: number;
+  readonly contentType: string | null;
+  readonly etag: string | null;
+  readonly lastModified: string | null;
 }
 
 /** What a HEAD of the failed document answered, or null when it could not be asked. */
@@ -201,18 +215,14 @@ function baseType(contentType: string | null): string | null {
   return base === "" ? null : base;
 }
 
-/**
- * Whether a document whose extraction failed changed, from one HEAD: a different length, type or validator means
- * changed. A HEAD without a 2xx and a length says nothing; the failure stays held until the re-verification bound.
- */
-export function failedDocumentCheck(
-  failed: PersistedFailedMinutesRead,
+export function minutesDocumentCheck(
+  failed: MinutesDocumentIdentity,
   head: MinutesDocumentHead | null,
-): { readonly walk: boolean; readonly reason: "FAILED_DOCUMENT_CHANGED" | "FAILED_DOCUMENT_UNCHANGED" | "FAILED_DOCUMENT_UNCHECKED"; readonly detail: string } {
+): { readonly walk: boolean; readonly reason: "DOCUMENT_CHANGED" | "DOCUMENT_UNCHANGED" | "DOCUMENT_UNCHECKED"; readonly detail: string } {
   if (head === null || head.status < 200 || head.status >= 300 || head.contentLength === null) {
     return {
       walk: false,
-      reason: "FAILED_DOCUMENT_UNCHECKED",
+      reason: "DOCUMENT_UNCHECKED",
       detail: head === null
         ? "the portal did not answer the check"
         : `the check answered HTTP ${head.status}${head.contentLength === null ? " with no length" : ""}`,
@@ -225,14 +235,10 @@ export function failedDocumentCheck(
     head.lastModified !== failed.lastModified ? `Last-Modified ${failed.lastModified ?? "none"} → ${head.lastModified ?? "none"}` : null,
   ].filter((difference): difference is string => difference !== null);
   return differences.length > 0
-    ? { walk: true, reason: "FAILED_DOCUMENT_CHANGED", detail: differences.join("; ") }
-    : { walk: false, reason: "FAILED_DOCUMENT_UNCHANGED", detail: `the same ${failed.byteCount} bytes by length, type and validators` };
+    ? { walk: true, reason: "DOCUMENT_CHANGED", detail: differences.join("; ") }
+    : { walk: false, reason: "DOCUMENT_UNCHANGED", detail: `the same ${failed.byteCount} bytes by length, type and validators` };
 }
 
-/**
- * The failed read to remember, when a document was read and its extraction failed on its bytes; null for any
- * other sitting (a read that succeeded, or a request that failed and read no bytes).
- */
 export function failedMinutesReadFor(
   sitting: PersistedSittingOutcomes,
   document: MinutesDocumentRead,
@@ -254,10 +260,6 @@ export function failedMinutesReadFor(
   };
 }
 
-/**
- * What a read leaves held: a success replaces the sitting and clears any failure; a failed extraction is held with its
- * bytes' identity, beside (never over) verified minutes already held; a failed request is not held.
- */
 export function sittingAfterRead(
   held: PersistedSittingOutcomes | undefined,
   fresh: PersistedSittingOutcomes,
@@ -435,11 +437,6 @@ function approvalDetail(state: MinutesApprovalState, label: string): string {
   return "Approved by the council at a later sitting.";
 }
 
-/**
- * One sitting's minutes, read. The records, the document's standing, and the
- * approvals this document records for OTHER sittings (applied across the
- * whole projection by {@link applyMinutesApprovals}).
- */
 export function minutesSitting(
   input: SittingInput & { readonly document: MinutesDocumentRead; readonly readOn: ReadStamp | NeverRead },
 ): { readonly sitting: PersistedSittingOutcomes; readonly parsed: ParsedCouncilMinutes | null } {
@@ -538,11 +535,6 @@ const APPROVAL_KIND_MATCH: Readonly<Record<string, (sitting: PersistedSittingOut
   STRATEGIC_PLANNING: (sitting) => sitting.bodyName === "City Council Strategic Planning Session",
 };
 
-/**
- * Mark every held sitting whose minutes a later held sitting's minutes record approving, recomputed over the whole
- * projection. Only when exactly one held sitting matches, the approving item carried, and the held document is the
- * council's minutes.
- */
 export function applyMinutesApprovals(snapshot: OutcomeSnapshot): OutcomeSnapshot {
   const approvals = new Map<string, { meetingId: string; startsAt: string | null; quote: string }>();
   for (const approving of snapshot.sittings) {

@@ -1,7 +1,7 @@
 /** The research lane's numbers: capacity, queue order, funnel, model share, cache hit rate and cost per useful outcome, each with its denominator. */
 
 import { MODELS, canonicalModelId, modelTierFor } from "../models.ts";
-import { cacheMeteringOf, costPortionsByModel, type CostEntry } from "./cost.ts";
+import { cacheMeteringOf, costPortionsByModel, type MeteredCharge } from "./cost.ts";
 import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
@@ -21,7 +21,7 @@ export interface ScoutCapacity {
 
 /** The mean is over measured Scout entries in the window; an unmeasured Attempt is counted beside it, never as zero. */
 export function scoutCapacity(input: {
-  readonly costs: readonly CostEntry[];
+  readonly costs: readonly MeteredCharge[];
   readonly nowIso: string;
   readonly windowHours: number;
   readonly ceilingUsd: number;
@@ -258,7 +258,7 @@ export function modelShareTrend(input: {
  * Roles that also run plain code require recorded model evidence. */
 const LEGACY_MODEL_CACHE_ROLES = new Set(["SCOUT", "ADVERSARIAL_AUDITOR", "ASK"]);
 
-function recordedCacheSaving(entry: CostEntry): number | null {
+function recordedCacheSaving(entry: MeteredCharge): number | null {
   const aggregate = cacheMeteringOf(entry.cost);
   if (aggregate.status !== "MEASURED") return null;
   const portions = costPortionsByModel(entry, "");
@@ -276,7 +276,8 @@ function recordedCacheSaving(entry: CostEntry): number | null {
     const metering = cacheMeteringOf(portion.entry.cost);
     if (metering.status !== "MEASURED") return null;
     // Current shares inherit the row's batch flag; conflicting explicit flags are not a price estimate.
-    if (share && "batch" in share && (typeof share.batch !== "boolean" || share.batch !== metering.batch)) return null;
+    if (share && "batch" in share && (typeof share.batch !== "boolean" ||
+      (share.batch !== entry.cost.batch && (share.batchRequestCount == null || entry.cost.batchRequestCount == null)))) return null;
     const amount = cacheSavingUsd(metering.cacheReadInputTokens, model);
     if (amount === null) return null;
     saved += amount * (metering.batch ? CACHE_RATE_MULTIPLIERS.batch : 1);
@@ -320,7 +321,7 @@ export interface CacheHitRate {
 
 /** Computed from the cost ledger. */
 export function cacheHitRateByRole(input: {
-  readonly costs: readonly CostEntry[];
+  readonly costs: readonly MeteredCharge[];
   readonly results: readonly ScoutResult[];
   /** Rows recorded at or after this instant. Omit for every row. */
   readonly sinceIso?: string;

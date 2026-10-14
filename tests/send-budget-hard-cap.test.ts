@@ -201,7 +201,7 @@ test("a missing Send record or an unreadable budget refuses; with no Send budget
     now: NOW,
     specs: assignmentBudgetsOf({ scopes: [], intents }),
     membership,
-    costs: [],
+    charges: [],
     worstCaseUsd: WORST,
     intentsReadable: true,
     malformed,
@@ -340,7 +340,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
     return { id: "msg-unpriced", model: asked.model, role: "assistant", content: [{ type: "text", text: "done" }],
       stop_reason: "end_turn", usage: { input_tokens: 100 } } as unknown as ModelResponse;
   };
-  const controller = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 100, clock: () => Date.parse(NOW) });
+  const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 100, clock: () => Date.parse(NOW) });
   const afterResponse = autonomous(spend, scope, { subjectId: PIMA, state: "AZ" },
     controller.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(afterResponse(request()), (error: unknown) =>
@@ -351,7 +351,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
   assert.equal(held[0].settled, null, "unknown-cost provider processing cannot release its durable area hold");
 
   const { repos: preRepos, spend: preSpend } = holds();
-  const preController = new FleetSafetyController({ now: NOW, costs: [], modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
+  const preController = new FleetSafetyController({ now: NOW, charges: [], modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
   const beforeRequest = autonomous(preSpend, scope, { subjectId: PIMA, state: "AZ" },
     preController.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(beforeRequest(request()), FleetPreSendRefusal);

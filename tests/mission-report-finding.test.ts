@@ -82,12 +82,12 @@ function toolkit(report?: ScoutToolContext["reportFinding"]) {
 }
 
 test("report_finding is offered only when the Box can take it, and the pre-warm list follows the same switch", () => {
-  assert.ok(!toolkit().specs.some(spec => spec.name === "report_finding"));
+  assert.ok(toolkit().specs.some(spec => spec.name === "report_finding"));
   const written: ReportedFinding[] = [];
   const kit = toolkit({ subjects: new Set([COUNTY, CITY]), write: async finding => { written.push(finding); return { boxId: "box-1" }; } });
   assert.equal(kit.specs.at(-1), REPORT_FINDING_TOOL_SPEC);
   assert.deepEqual(scoutToolSpecsFor(false, true).map(spec => spec.name), kit.specs.map(spec => spec.name));
-  assert.ok(!scoutToolSpecsFor(false).some(spec => spec.name === "report_finding"));
+  assert.deepEqual(scoutToolSpecsFor(false), scoutToolSpecsFor(true, true), "tool availability does not change cached prefix bytes");
 });
 
 test("a Scout drops a finding for another mission subject from a page it saved, and nothing it did not see or was not sent for", async () => {

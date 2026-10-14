@@ -1,0 +1,3183 @@
+{
+  "contractId": "ballot-contests",
+  "version": "bl-12-hi-36fed610a190d994",
+  "sourceThrough": "2026-10-14T06:29:16.382743+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T06:29:16.382743+00:00",
+    "reviewedBy": "BL-12 official-source script conversion",
+    "sources": [
+      {
+        "requestedUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "finalUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "httpStatus": 200,
+        "rawHash": "f92576e7a23fa9b7f80350f6ee1b59eca9281b9c1e692edfc413898ee70f3173",
+        "retrievedAt": "2026-10-14T05:04:03.018486+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official CSV export; all filing records acquired, November candidacies filtered by In General status; printed ballot names, parties and websites preserved; mailing addresses excluded.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "finalUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "httpStatus": 200,
+        "rawHash": "d3e76565d3d10f95911fd89c9ba55e849adebedbba02f348fe7a985953f60c3a",
+        "retrievedAt": "2026-10-14T05:03:28.504332+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official public Candidate Report grid supplies the total filing count used to verify the full CSV export.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.hawaii.gov/voting/contest-schedule/",
+        "finalUrl": "https://elections.hawaii.gov/voting/contest-schedule/",
+        "httpStatus": 200,
+        "rawHash": "c939b3bbcbb596dc1c0b67398c162697214824756797c7fffdcf794d460cb9f5",
+        "retrievedAt": "2026-10-14T05:04:37.255251+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 contest schedule validates all legislative districts and term lengths, identifies three at-large OHA seats and places U.S. Senate in 2028.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+        "finalUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+        "httpStatus": 200,
+        "rawHash": "5cf1c07c1b4d5e5c6c1572dbee348a0b7c9e8ac91a7e3b94763f1e2614ff4e55",
+        "retrievedAt": "2026-10-14T05:03:16.991898+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official statewide constitutional-amendment page supplies both question titles, verbatim ballot questions, and linked full-text measures.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+        "finalUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+        "httpStatus": 200,
+        "rawHash": "f85a2f92cc34c1d580659052757a1b82ffc232317ff7498788dc3cd597930906",
+        "retrievedAt": "2026-10-14T06:15:41.224962+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 precinct 01-01 general-election ballot prints one Governor and Lieutenant Governor contest with two joint choices; OCR verifies every pairing against the complete official CSV.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.hawaii.gov/wp-content/uploads/2026-Candidates-Manual.pdf",
+        "finalUrl": "https://elections.hawaii.gov/wp-content/uploads/2026-Candidates-Manual.pdf",
+        "httpStatus": 200,
+        "rawHash": "30c4af1451509b38e05e6e26863e86b30d3df292f4f2a9d2a83e0309fdca3345",
+        "retrievedAt": "2026-10-14T06:15:41.509386+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 Candidate’s Manual, printed page 24: In the Primary Election, Governor and Lieutenant Governor are each a separate contest. However, in the General Election, Governor and Lieutenant Governor are voted for as a team by political party or as a team by nonpartisan.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.hawaii.gov/news-release/last-day-to-file-as-a-candidate-for-the-2026-elections/",
+        "finalUrl": "https://elections.hawaii.gov/news-release/last-day-to-file-as-a-candidate-for-the-2026-elections/",
+        "httpStatus": 200,
+        "rawHash": "e530b41aaba409967cfccbf951c0e4a5f794797a944f647e02e3b76e28b9c495",
+        "retrievedAt": "2026-10-14T06:25:24.877760+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 news release identifies the Candidate Report as the official candidate list: Following the candidate filing deadline, election officials will then finalize the list of candidates for the 2026 Elections and begin preparing ballots based on each voter’s district.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.hawaii.gov/candidates/candidate-reports/",
+        "finalUrl": "https://elections.hawaii.gov/candidates/candidate-reports/",
+        "httpStatus": 200,
+        "rawHash": "ab8825fb9c24a1e4c203526507505bebafd4e1aadd6df0cccf9f429afa0629d4",
+        "retrievedAt": "2026-10-14T05:03:16.830768+00:00",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Candidate Reports page states filing is closed and links the public candidate report, last updated September 4, 2026.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
+        "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
+        "httpStatus": 200,
+        "rawHash": "b81e37db4ad97593497ab0a8b6cb26cd6cb45cefae6ba141bb43e349446df3ec",
+        "retrievedAt": "2026-10-14T06:29:15.718066+00:00",
+        "publisher": "Hawaii State Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official full text of SB121, linked from the Legislature report whose measure status link exactly matches the election-office full-text link. The printed ballot question matches the election-office question after whitespace and typographic quote normalization.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=secondCross_unammend&title=Senate+bills+that+have+passed+Third+Reading+and+were+unamended+by+the+nonoriginating+chamber&year=2025",
+        "finalUrl": "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=secondCross_unammend&title=Senate+bills+that+have+passed+Third+Reading+and+were+unamended+by+the+nonoriginating+chamber&year=2025",
+        "httpStatus": 200,
+        "rawHash": "0f515c707d1b82540239bf83ef08baea4f5e40ff4edffd770cdd3df7dcce511b",
+        "retrievedAt": "2026-10-14T06:28:51.325667+00:00",
+        "publisher": "Hawaii State Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Legislature report identifies the final measure label, links its full-text PDF, and records Enrolled to Governor: SB121 Justices and Judges; Appointment; Confirmation; Constitutional Amendment (ConAm) PROPOSING AN AMENDMENT TO ARTICLE VI, SECTION 3, OF THE HAWAII STATE CONSTITUTION TO ALLOW THE SENATE MORE TIME TO CONFIRM JUDICIAL APPOINTMENTS. Proposes an amendment to the Hawaii State Constitution to extend the amount of time allowed the Senate to consider and act on the appointments of justices and judges from thirty to sixty days for appointments made between April 1 and December 31 when the Senate is not in Regular Session or is about to adjourn the Regular Session. (S) 4/4/2025- Enrolled to Governor. RHOADS, KANUHA, KIDANI JHA, FIN",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
+        "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
+        "httpStatus": 200,
+        "rawHash": "2107c3ca9b5e88e2e66b9c0484eb2951bd079a6b185a6ed1fab062eaa68e3067",
+        "retrievedAt": "2026-10-14T06:29:16.382743+00:00",
+        "publisher": "Hawaii State Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official full text of SB3219 HD3 CD1, linked from the Legislature report whose measure status link exactly matches the election-office full-text link. The printed ballot question matches the election-office question after whitespace and typographic quote normalization.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=passLeg_finalDecking&title=Senate+bills+that+have+passed+the+Legislature+or+been+decked+for+Final+Reading&year=2026",
+        "finalUrl": "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=passLeg_finalDecking&title=Senate+bills+that+have+passed+the+Legislature+or+been+decked+for+Final+Reading&year=2026",
+        "httpStatus": 200,
+        "rawHash": "cd9cd8345c907348296b713da429aa86e7eed37cf3d63029931cfa4025e27633",
+        "retrievedAt": "2026-10-14T06:28:50.915042+00:00",
+        "publisher": "Hawaii State Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Legislature report identifies the final measure label, links its full-text PDF, and records Enrolled to Governor: SB3219 HD3 CD1 Constitutional Amendments; Counties; Resilient Infrastructure for Shelter and Equity Bonds (ConAm) PROPOSING AMENDMENTS TO ARTICLE VII, SECTIONS 12 AND 13, OF THE HAWAII STATE CONSTITUTION. Proposes constitutional amendments to expressly provide that the Legislature may authorize political subdivisions, such as the counties, to issue resilient infrastructure for shelter and equity bonds for specified public works, public improvements, or other actions necessary for housing and community development, and exclude these bonds from determinations of the funded debt of the political subdivisions. (CD1) (S) 5/8/2026- Enrolled to Governor. HASHIMOTO, CHANG, KEOHOKALOLE, McKelvey HSG, JHA, FIN HB2476",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-contests",
+    "ballots": {
+      "HI:hi-2026-11-03": {
+        "election": {
+          "id": "hi-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 Hawaii General Election",
+          "state": "HI"
+        },
+        "contests": [
+          {
+            "id": "hi-2026-general-u-s-representative-dist-i",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/cd:1",
+            "divisionVintage": "2022",
+            "title": "U.S. REPRESENTATIVE, DIST I",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST I | NONPARTISAN | BERNING, Nathan M. | In General\nU.S. REPRESENTATIVE, DIST I | DEMOCRATIC | CASE, Ed | In General\nU.S. REPRESENTATIVE, DIST I | GREEN | CONLEY, Jordan S. | In General\nU.S. REPRESENTATIVE, DIST I | REPUBLICAN | LAM, Adriel C. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-u-s-representative-dist-ii",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/cd:2",
+            "divisionVintage": "2022",
+            "title": "U.S. REPRESENTATIVE, DIST II",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST II | REPUBLICAN | AWA, Brenton | In General\nU.S. REPRESENTATIVE, DIST II | DEMOCRATIC | TOKUDA, Jill N. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-governor-and-lieutenant-governor",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi",
+            "divisionVintage": "2022",
+            "title": "Governor and Lieutenant Governor",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T06:15:41.224962+00:00",
+              "verifiedAt": "2026-10-14T06:15:41.224962+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "State Contests\n\nGovernor and Lieutenant\nGovernor\nVote For Not More Than One (1)\nC_] (R) CORDERY, Gary\n\nFor GOVERNOR\n\nANTHONY, Daniel\n\nFor LIEUTENANT GOVERNOR\nCo] (D) GREEN, Josh\n\nFor GOVERNOR\n\nKAWAKAMI, Derek S.K.\n\nFor LIEUTENANT GOVERNOR"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-2",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldu:2",
+            "divisionVintage": "2022",
+            "title": "STATE SENATOR, DIST 2",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 2 | LIBERTARIAN | FOGEL, Frederick F. | In General\nSTATE SENATOR, DIST 2 | DEMOCRATIC | SAN BUENAVENTURA, Joy | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-9",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldu:9",
+            "divisionVintage": "2022",
+            "title": "STATE SENATOR, DIST 9",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 9 | DEMOCRATIC | CHANG, Stanley | In General\nSTATE SENATOR, DIST 9 | REPUBLICAN | CROSWELL, David A. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-13",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldu:13",
+            "divisionVintage": "2022",
+            "title": "STATE SENATOR, DIST 13",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 13 | REPUBLICAN | CHRISTIAN, Wallyn Kanoelani | In General\nSTATE SENATOR, DIST 13 | DEMOCRATIC | NAKAMATSU, Tricia Kwai Lin | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-18-vacancy",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldu:18",
+            "divisionVintage": "2022",
+            "title": "STATE SENATOR, DIST 18 VACANCY",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 18 VACANCY | DEMOCRATIC | BASS, Danielle Maliekekai | In General\nSTATE SENATOR, DIST 18 VACANCY | NONPARTISAN | HANNA, Max G. | In General\nSTATE SENATOR, DIST 18 VACANCY | REPUBLICAN | KITASHIMA, Kelly Puamailani | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-19-vacancy",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldu:19",
+            "divisionVintage": "2022",
+            "title": "STATE SENATOR, DIST 19 VACANCY",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 19 VACANCY | DEMOCRATIC | LAMOSAO, Rachele F. | In General\nSTATE SENATOR, DIST 19 VACANCY | REPUBLICAN | PIERICK, Elijah | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-20",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldu:20",
+            "divisionVintage": "2022",
+            "title": "STATE SENATOR, DIST 20",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 20 | REPUBLICAN | MCDERMOTT, Bob | In General\nSTATE SENATOR, DIST 20 | DEMOCRATIC | OWENS, Markus | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-2",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:2",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 2",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 2 | REPUBLICAN | KENNEALY, Jonathan | In General\nSTATE REPRESENTATIVE, DIST 2 | DEMOCRATIC | KEOHOKAPU LEE LOY, Sue | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-3",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:3",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 3",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 3 | LIBERTARIAN | MARTIN, Austin | In General\nSTATE REPRESENTATIVE, DIST 3 | DEMOCRATIC | TODD, Christopher L.T. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-4",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:4",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 4",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 4 | DEMOCRATIC | ILAGAN, Greggor | In General\nSTATE REPRESENTATIVE, DIST 4 | REPUBLICAN | WITTENHAGEN, Zak | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-5",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:5",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 5",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 5 | DEMOCRATIC | KAPELA, Jeanne | In General\nSTATE REPRESENTATIVE, DIST 5 | REPUBLICAN | MCCORMICK, Dalene | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-8",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:8",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 8",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 8 | REPUBLICAN | PERREIRA, Monique | In General\nSTATE REPRESENTATIVE, DIST 8 | DEMOCRATIC | TARNAS, David A. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-10",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:10",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 10",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 10 | REPUBLICAN | BUMANGLAG, Travis | In General\nSTATE REPRESENTATIVE, DIST 10 | DEMOCRATIC | MIYAKE, Tyson K. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-11",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:11",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 11",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 11 | DEMOCRATIC | AMATO, Terez (T.Amato) | In General\nSTATE REPRESENTATIVE, DIST 11 | REPUBLICAN | WALKER, Sheila | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-12",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:12",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 12",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 12 | REPUBLICAN | JOHNSON, Dan | In General\nSTATE REPRESENTATIVE, DIST 12 | DEMOCRATIC | YAMASHITA, Kyle T.  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-13",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:13",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 13",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 13 | DEMOCRATIC | POEPOE, Mahina | In General\nSTATE REPRESENTATIVE, DIST 13 | REPUBLICAN | VANDERPOOL, Robin D. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-14",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:14",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 14",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 14 | REPUBLICAN | COCHRAN, Elle | In General\nSTATE REPRESENTATIVE, DIST 14 | GREEN | KIAKONA, Pa'ele | In General\nSTATE REPRESENTATIVE, DIST 14 | DEMOCRATIC | PATEL, Sne  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-16",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:16",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 16",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 16 | DEMOCRATIC | EVSLIN, Luke A. | In General\nSTATE REPRESENTATIVE, DIST 16 | REPUBLICAN | HAZLEBECK, David | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-17",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:17",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 17",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 17 | REPUBLICAN | CLUETT, Misty | In General\nSTATE REPRESENTATIVE, DIST 17 | DEMOCRATIC | MORIKAWA, Daynette (Dee) | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-18",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:18",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 18",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 18 | REPUBLICAN | GEDEON, Joe | In General\nSTATE REPRESENTATIVE, DIST 18 | DEMOCRATIC | WATARU, James (Jamie) | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-20",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:20",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 20",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 20 | REPUBLICAN | ASING, David | In General\nSTATE REPRESENTATIVE, DIST 20 | DEMOCRATIC | NAKADA GRANDINETTI, Tina | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-23",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:23",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 23",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 23 | REPUBLICAN | MUH, Victor | In General\nSTATE REPRESENTATIVE, DIST 23 | DEMOCRATIC | OLDS, Ikaika M. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-26",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:26",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 26",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 26 | DEMOCRATIC | ROSS, Ian M.A. | In General\nSTATE REPRESENTATIVE, DIST 26 | REPUBLICAN | SILVA, Tony | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-29",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:29",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 29",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 29 | DEMOCRATIC | HUSSEY, Ikaika | In General\nSTATE REPRESENTATIVE, DIST 29 | REPUBLICAN | ABALOS, Tess | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-30",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:30",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 30",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 30 | DEMOCRATIC | TEMPLO, Shirley Ann | In General\nSTATE REPRESENTATIVE, DIST 30 | REPUBLICAN | YBANEZ, Amanda | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-31",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:31",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 31",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 31 | DEMOCRATIC | ICHIYAMA, Linda | In General\nSTATE REPRESENTATIVE, DIST 31 | REPUBLICAN | VALDEZ, Nancy | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-32",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:32",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 32",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 32 | DEMOCRATIC | AIU, Micah Pookela Kim | In General\nSTATE REPRESENTATIVE, DIST 32 | REPUBLICAN | SHIMIZU, Garner M. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-34",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:34",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 34",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 34 | REPUBLICAN | DUPIO, Gaius, II (Kipi) | In General\nSTATE REPRESENTATIVE, DIST 34 | DEMOCRATIC | TAKAYAMA, Gregg | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-39",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:39",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 39",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 39 | REPUBLICAN | DEGRACIA, Daniel (Danny) | In General\nSTATE REPRESENTATIVE, DIST 39 | DEMOCRATIC | ROSENLEE, Corey | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-40",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:40",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 40",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 40 | DEMOCRATIC | MARTINEZ, Rose | In General\nSTATE REPRESENTATIVE, DIST 40 | REPUBLICAN | REYES ODA, Julie | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-42",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:42",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 42",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 42 | REPUBLICAN | GARCIA, Diamond | In General\nSTATE REPRESENTATIVE, DIST 42 | DEMOCRATIC | PARIS, Anthony Makana | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-43",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:43",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 43",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 43 | REPUBLICAN | MEDEIROS, Sheila | In General\nSTATE REPRESENTATIVE, DIST 43 | REPUBLICAN | SOUZA, Kanani | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-44",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:44",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 44",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 44 | DEMOCRATIC | KILA, Darius K. | In General\nSTATE REPRESENTATIVE, DIST 44 | REPUBLICAN | WEAVER, Charla (Kahealani) | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-45",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:45",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 45",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 45 | DEMOCRATIC | KAOPUA, Kalehua | In General\nSTATE REPRESENTATIVE, DIST 45 | REPUBLICAN | MURAOKA, Chris | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-46",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:46",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 46",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 46 | REPUBLICAN | GABRIEL, Daniel Michael | In General\nSTATE REPRESENTATIVE, DIST 46 | DEMOCRATIC | PERRUSO, Amy A. | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-47",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:47",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 47",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 47 | DEMOCRATIC | QUINLAN, Sean | In General\nSTATE REPRESENTATIVE, DIST 47 | REPUBLICAN | TALAEAI, Mark | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-49",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:49",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 49",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 49 | DEMOCRATIC | MATAYOSHI, Scot | In General\nSTATE REPRESENTATIVE, DIST 49 | REPUBLICAN | RODAS, 'Ale | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-50",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi/sldl:50",
+            "divisionVintage": "2022",
+            "title": "STATE REPRESENTATIVE, DIST 50",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 2,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 50 | GREEN | FITZGERALD, Jesse W.M. | In General\nSTATE REPRESENTATIVE, DIST 50 | DEMOCRATIC | LEE, Mike | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-maui-resident-trustee",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi",
+            "divisionVintage": "2022",
+            "title": "OHA MAUI RESIDENT TRUSTEE",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA MAUI RESIDENT TRUSTEE | NONPARTISAN SPECIAL | KAPU, Ke'eaumoku | In General\nOHA MAUI RESIDENT TRUSTEE | NONPARTISAN SPECIAL | LINDSEY, Carmen Hulu | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-oahu-resident-trustee",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi",
+            "divisionVintage": "2022",
+            "title": "OHA OAHU RESIDENT TRUSTEE",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 1,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA OAHU RESIDENT TRUSTEE | NONPARTISAN SPECIAL | AKAKA, Kalei | In General\nOHA OAHU RESIDENT TRUSTEE | NONPARTISAN SPECIAL | WONG, Hinaleimoana (Hina) | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-at-large-trustee",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi",
+            "divisionVintage": "2022",
+            "title": "OHA AT-LARGE TRUSTEE",
+            "type": "CANDIDACY",
+            "candidateListComplete": false,
+            "voteFor": 3,
+            "termYears": 4,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | AKINA, Adrian (Kealii)  | In General\nOHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | ANDERSON, Ikaika | In General\nOHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | CRABBE, Kanekoa (Koa) | In General\nOHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | GALUTERIA, Brickwood M. | In General\nOHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | SOUZA, Keoni | In General\nOHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | WAIHEE, John, IV | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-question-1",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi",
+            "divisionVintage": "2022",
+            "title": "QUESTION #1: Increasing the Timeframe for the Hawaii Senate to Consider and Act on Judicial Appointments.",
+            "type": "MEASURE",
+            "measureTextUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:03:16.991898+00:00",
+              "verifiedAt": "2026-10-14T05:03:16.991898+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "QUESTION #1: Increasing the Timeframe for the Hawaii Senate to Consider and Act on Judicial Appointments.\nShall the Constitution of the State of Hawaii be amended to allow the Senate more time to consider and act on the appointments of justices and judges, by increasing the timeframe from thirty days to sixty days for appointments made between April 1 and December 31 when the senate is not in regular session or is about to adjourn the regular session?"
+            }
+          },
+          {
+            "id": "hi-2026-general-question-2",
+            "electionId": "hi-2026-11-03",
+            "ocdId": "ocd-division/country:us/state:hi",
+            "divisionVintage": "2022",
+            "title": "QUESTION #2: Directing the Hawaii State Legislature to Establish Procedures for Counties to Issue RISE Bonds, Exempt from County Debt Limits.",
+            "type": "MEASURE",
+            "measureTextUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
+            "voteFor": 1,
+            "termYears": null,
+            "scopeNote": null,
+            "provenance": {
+              "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:03:16.991898+00:00",
+              "verifiedAt": "2026-10-14T05:03:16.991898+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "QUESTION #2: Directing the Hawaii State Legislature to Establish Procedures for Counties to Issue RISE Bonds, Exempt from County Debt Limits.\nShall the Hawaii State Constitution be amended to direct the legislature to authorize the counties to issue resilient infrastructure for shelter and equity bonds to fund public improvements in designated districts, repaid solely by future growth in property tax revenues within those districts, not by increasing real property tax rates, where such bonds are excluded from the counties’ debt limit and are subject to accountability and oversight requirements as may be provided by law?"
+            }
+          }
+        ],
+        "candidacies": [
+          {
+            "id": "hi-2026-general-u-s-representative-dist-i-277f700e7cd8b408",
+            "contestId": "hi-2026-general-u-s-representative-dist-i",
+            "familyName": "BERNING",
+            "givenName": "Nathan M.",
+            "partyLabel": "NONPARTISAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "righttokeep.org",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST I | NONPARTISAN | BERNING, Nathan M. | righttokeep.org | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-u-s-representative-dist-i-692a681cba6e5141",
+            "contestId": "hi-2026-general-u-s-representative-dist-i",
+            "familyName": "CASE",
+            "givenName": "Ed",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.edcase.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST I | DEMOCRATIC | CASE, Ed | www.edcase.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-u-s-representative-dist-i-94da11d3927fcf98",
+            "contestId": "hi-2026-general-u-s-representative-dist-i",
+            "familyName": "CONLEY",
+            "givenName": "Jordan S.",
+            "partyLabel": "GREEN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "JordanforHawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST I | GREEN | CONLEY, Jordan S. | JordanforHawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-u-s-representative-dist-i-6f1a2e3cca6d4727",
+            "contestId": "hi-2026-general-u-s-representative-dist-i",
+            "familyName": "LAM",
+            "givenName": "Adriel C.",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.lam4aloha.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST I | REPUBLICAN | LAM, Adriel C. | www.lam4aloha.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-u-s-representative-dist-ii-5d3d6c8d5419c7a6",
+            "contestId": "hi-2026-general-u-s-representative-dist-ii",
+            "familyName": "AWA",
+            "givenName": "Brenton",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "votebrentonawa.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST II | REPUBLICAN | AWA, Brenton | votebrentonawa.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-u-s-representative-dist-ii-4ae0922abe2494de",
+            "contestId": "hi-2026-general-u-s-representative-dist-ii",
+            "familyName": "TOKUDA",
+            "givenName": "Jill N.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "tokudaforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S. REPRESENTATIVE, DIST II | DEMOCRATIC | TOKUDA, Jill N. | tokudaforhawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-2-e368e368088244ce",
+            "contestId": "hi-2026-general-state-senator-dist-2",
+            "familyName": "FOGEL",
+            "givenName": "Frederick F.",
+            "partyLabel": "LIBERTARIAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 2 | LIBERTARIAN | FOGEL, Frederick F. |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-2-c33aff1d3653e2aa",
+            "contestId": "hi-2026-general-state-senator-dist-2",
+            "familyName": "SAN BUENAVENTURA",
+            "givenName": "Joy",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.joysanbuenaventura.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 2 | DEMOCRATIC | SAN BUENAVENTURA, Joy | www.joysanbuenaventura.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-9-b963c0fb87c7038d",
+            "contestId": "hi-2026-general-state-senator-dist-9",
+            "familyName": "CHANG",
+            "givenName": "Stanley",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "stanleychang.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 9 | DEMOCRATIC | CHANG, Stanley | stanleychang.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-9-aeda449e3a4d45ee",
+            "contestId": "hi-2026-general-state-senator-dist-9",
+            "familyName": "CROSWELL",
+            "givenName": "David A.",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "davidcroswell.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 9 | REPUBLICAN | CROSWELL, David A. | davidcroswell.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-13-167cc1f81b563e7d",
+            "contestId": "hi-2026-general-state-senator-dist-13",
+            "familyName": "CHRISTIAN",
+            "givenName": "Wallyn Kanoelani",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.WallynForHawaii.net",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 13 | REPUBLICAN | CHRISTIAN, Wallyn Kanoelani | www.WallynForHawaii.net | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-13-ef05d3178780938f",
+            "contestId": "hi-2026-general-state-senator-dist-13",
+            "familyName": "NAKAMATSU",
+            "givenName": "Tricia Kwai Lin",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "tricianakamatsu.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 13 | DEMOCRATIC | NAKAMATSU, Tricia Kwai Lin | tricianakamatsu.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-18-vacancy-da0235992570b457",
+            "contestId": "hi-2026-general-state-senator-dist-18-vacancy",
+            "familyName": "BASS",
+            "givenName": "Danielle Maliekekai",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "daniellebass.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 18 VACANCY | DEMOCRATIC | BASS, Danielle Maliekekai | daniellebass.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-18-vacancy-47eaf6f0d1d411f9",
+            "contestId": "hi-2026-general-state-senator-dist-18-vacancy",
+            "familyName": "HANNA",
+            "givenName": "Max G.",
+            "partyLabel": "NONPARTISAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 18 VACANCY | NONPARTISAN | HANNA, Max G. |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-18-vacancy-0e1bec3565a62a6c",
+            "contestId": "hi-2026-general-state-senator-dist-18-vacancy",
+            "familyName": "KITASHIMA",
+            "givenName": "Kelly Puamailani",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "votekellykitashima.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 18 VACANCY | REPUBLICAN | KITASHIMA, Kelly Puamailani | votekellykitashima.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-19-vacancy-09e22b8eebfd6b91",
+            "contestId": "hi-2026-general-state-senator-dist-19-vacancy",
+            "familyName": "LAMOSAO",
+            "givenName": "Rachele F.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "Rachelelamosao.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 19 VACANCY | DEMOCRATIC | LAMOSAO, Rachele F. | Rachelelamosao.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-19-vacancy-fa28fe46fecc32db",
+            "contestId": "hi-2026-general-state-senator-dist-19-vacancy",
+            "familyName": "PIERICK",
+            "givenName": "Elijah",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "elijahpierick.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 19 VACANCY | REPUBLICAN | PIERICK, Elijah | elijahpierick.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-20-f01d5be1616cae00",
+            "contestId": "hi-2026-general-state-senator-dist-20",
+            "familyName": "MCDERMOTT",
+            "givenName": "Bob",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "votemcdermott.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 20 | REPUBLICAN | MCDERMOTT, Bob | votemcdermott.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-senator-dist-20-c6bd9e511b0abe45",
+            "contestId": "hi-2026-general-state-senator-dist-20",
+            "familyName": "OWENS",
+            "givenName": "Markus",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.votemarkusowens.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 20 | DEMOCRATIC | OWENS, Markus | www.votemarkusowens.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-2-49d18de9b07b7765",
+            "contestId": "hi-2026-general-state-representative-dist-2",
+            "familyName": "KENNEALY",
+            "givenName": "Jonathan",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 2 | REPUBLICAN | KENNEALY, Jonathan |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-2-53d326ee6961ffdc",
+            "contestId": "hi-2026-general-state-representative-dist-2",
+            "familyName": "KEOHOKAPU LEE LOY",
+            "givenName": "Sue",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "voteleeloy.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 2 | DEMOCRATIC | KEOHOKAPU LEE LOY, Sue | voteleeloy.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-3-b3caea62066859d0",
+            "contestId": "hi-2026-general-state-representative-dist-3",
+            "familyName": "MARTIN",
+            "givenName": "Austin",
+            "partyLabel": "LIBERTARIAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 3 | LIBERTARIAN | MARTIN, Austin |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-3-eaab8e992a47f2a1",
+            "contestId": "hi-2026-general-state-representative-dist-3",
+            "familyName": "TODD",
+            "givenName": "Christopher L.T.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 3 | DEMOCRATIC | TODD, Christopher L.T. |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-4-40ad284d8651d371",
+            "contestId": "hi-2026-general-state-representative-dist-4",
+            "familyName": "ILAGAN",
+            "givenName": "Greggor",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "voteilagan.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 4 | DEMOCRATIC | ILAGAN, Greggor | voteilagan.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-4-c31448bfa9c7e2fa",
+            "contestId": "hi-2026-general-state-representative-dist-4",
+            "familyName": "WITTENHAGEN",
+            "givenName": "Zak",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 4 | REPUBLICAN | WITTENHAGEN, Zak |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-5-c4ae8ec4dbbb6ecb",
+            "contestId": "hi-2026-general-state-representative-dist-5",
+            "familyName": "KAPELA",
+            "givenName": "Jeanne",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "jeannekapela.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 5 | DEMOCRATIC | KAPELA, Jeanne | jeannekapela.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-5-e61a24da85b1fc8a",
+            "contestId": "hi-2026-general-state-representative-dist-5",
+            "familyName": "MCCORMICK",
+            "givenName": "Dalene",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "votemccormick.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 5 | REPUBLICAN | MCCORMICK, Dalene | votemccormick.com  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-8-f1f06c8bbc3bd566",
+            "contestId": "hi-2026-general-state-representative-dist-8",
+            "familyName": "PERREIRA",
+            "givenName": "Monique",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "moniqueforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 8 | REPUBLICAN | PERREIRA, Monique | moniqueforhawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-8-6691caae2e61d3d1",
+            "contestId": "hi-2026-general-state-representative-dist-8",
+            "familyName": "TARNAS",
+            "givenName": "David A.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "votetarnas.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 8 | DEMOCRATIC | TARNAS, David A. | votetarnas.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-10-40286c429f2d8318",
+            "contestId": "hi-2026-general-state-representative-dist-10",
+            "familyName": "BUMANGLAG",
+            "givenName": "Travis",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "teampatriotteampre.wixsite.com/travisbumanglag",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 10 | REPUBLICAN | BUMANGLAG, Travis | teampatriotteampre.wixsite.com/travisbumanglag | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-10-ba87c24ba7ecd477",
+            "contestId": "hi-2026-general-state-representative-dist-10",
+            "familyName": "MIYAKE",
+            "givenName": "Tyson K.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.tysonmiyake.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 10 | DEMOCRATIC | MIYAKE, Tyson K. | www.tysonmiyake.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-11-07e0c7bfa9ec6c2c",
+            "contestId": "hi-2026-general-state-representative-dist-11",
+            "familyName": "AMATO",
+            "givenName": "Terez (T.Amato)",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "tamato.org",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 11 | DEMOCRATIC | AMATO, Terez (T.Amato) | tamato.org | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-11-7be6c1381f60b5d0",
+            "contestId": "hi-2026-general-state-representative-dist-11",
+            "familyName": "WALKER",
+            "givenName": "Sheila",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "votesheilawalker.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 11 | REPUBLICAN | WALKER, Sheila | votesheilawalker.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-12-412f1f31c876fa08",
+            "contestId": "hi-2026-general-state-representative-dist-12",
+            "familyName": "JOHNSON",
+            "givenName": "Dan",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.danjohnsonhi.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 12 | REPUBLICAN | JOHNSON, Dan | www.danjohnsonhi.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-12-7dc5821d35392d60",
+            "contestId": "hi-2026-general-state-representative-dist-12",
+            "familyName": "YAMASHITA",
+            "givenName": "Kyle T. ",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 12 | DEMOCRATIC | YAMASHITA, Kyle T.  |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-13-20a30a64d34627a8",
+            "contestId": "hi-2026-general-state-representative-dist-13",
+            "familyName": "POEPOE",
+            "givenName": "Mahina",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 13 | DEMOCRATIC | POEPOE, Mahina |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-13-e98040dcd6fa30ed",
+            "contestId": "hi-2026-general-state-representative-dist-13",
+            "familyName": "VANDERPOOL",
+            "givenName": "Robin D.",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 13 | REPUBLICAN | VANDERPOOL, Robin D. |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-14-fd645420140d26fa",
+            "contestId": "hi-2026-general-state-representative-dist-14",
+            "familyName": "COCHRAN",
+            "givenName": "Elle",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "voteelle.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 14 | REPUBLICAN | COCHRAN, Elle | voteelle.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-14-bdca778e933cc145",
+            "contestId": "hi-2026-general-state-representative-dist-14",
+            "familyName": "KIAKONA",
+            "givenName": "Pa'ele",
+            "partyLabel": "GREEN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "votepaele.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 14 | GREEN | KIAKONA, Pa'ele | votepaele.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-14-a95e7c4c194c75f7",
+            "contestId": "hi-2026-general-state-representative-dist-14",
+            "familyName": "PATEL",
+            "givenName": "Sne ",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.joinpatel.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 14 | DEMOCRATIC | PATEL, Sne  | www.joinpatel.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-16-03f4ed9758f57fac",
+            "contestId": "hi-2026-general-state-representative-dist-16",
+            "familyName": "EVSLIN",
+            "givenName": "Luke A.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "lukeevslin.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 16 | DEMOCRATIC | EVSLIN, Luke A. | lukeevslin.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-16-d4ba28a55d21d242",
+            "contestId": "hi-2026-general-state-representative-dist-16",
+            "familyName": "HAZLEBECK",
+            "givenName": "David",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "davidforkauai.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 16 | REPUBLICAN | HAZLEBECK, David | davidforkauai.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-17-7630cc57546dd5f6",
+            "contestId": "hi-2026-general-state-representative-dist-17",
+            "familyName": "CLUETT",
+            "givenName": "Misty",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "mistycluett.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 17 | REPUBLICAN | CLUETT, Misty | mistycluett.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-17-839735e717ba6f2c",
+            "contestId": "hi-2026-general-state-representative-dist-17",
+            "familyName": "MORIKAWA",
+            "givenName": "Daynette (Dee)",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 17 | DEMOCRATIC | MORIKAWA, Daynette (Dee) |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-18-003b11d2b83df0e0",
+            "contestId": "hi-2026-general-state-representative-dist-18",
+            "familyName": "GEDEON",
+            "givenName": "Joe",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "joegedeon.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 18 | REPUBLICAN | GEDEON, Joe | joegedeon.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-18-727f752e0921595f",
+            "contestId": "hi-2026-general-state-representative-dist-18",
+            "familyName": "WATARU",
+            "givenName": "James (Jamie)",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "Wataruforhawaiikai.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 18 | DEMOCRATIC | WATARU, James (Jamie) | Wataruforhawaiikai.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-20-ebfe08d1d3e4c47f",
+            "contestId": "hi-2026-general-state-representative-dist-20",
+            "familyName": "ASING",
+            "givenName": "David",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "davidasing.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 20 | REPUBLICAN | ASING, David | davidasing.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-20-4905761ec4a46486",
+            "contestId": "hi-2026-general-state-representative-dist-20",
+            "familyName": "NAKADA GRANDINETTI",
+            "givenName": "Tina",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.tinaforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 20 | DEMOCRATIC | NAKADA GRANDINETTI, Tina | www.tinaforhawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-23-ab9a8492e38eba2a",
+            "contestId": "hi-2026-general-state-representative-dist-23",
+            "familyName": "MUH",
+            "givenName": "Victor",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "victormuh.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 23 | REPUBLICAN | MUH, Victor | victormuh.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-23-9d0c227492a5802a",
+            "contestId": "hi-2026-general-state-representative-dist-23",
+            "familyName": "OLDS",
+            "givenName": "Ikaika M.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.oldsforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 23 | DEMOCRATIC | OLDS, Ikaika M. | www.oldsforhawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-26-c3b3ae1dd76b575e",
+            "contestId": "hi-2026-general-state-representative-dist-26",
+            "familyName": "ROSS",
+            "givenName": "Ian M.A.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "rossforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 26 | DEMOCRATIC | ROSS, Ian M.A. | rossforhawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-26-86a01f6b9253ab4f",
+            "contestId": "hi-2026-general-state-representative-dist-26",
+            "familyName": "SILVA",
+            "givenName": "Tony",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 26 | REPUBLICAN | SILVA, Tony |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-29-06696862acad65db",
+            "contestId": "hi-2026-general-state-representative-dist-29",
+            "familyName": "HUSSEY",
+            "givenName": "Ikaika",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "ikaikahussey.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 29 | DEMOCRATIC | HUSSEY, Ikaika | ikaikahussey.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-29-e39cce231048a355",
+            "contestId": "hi-2026-general-state-representative-dist-29",
+            "familyName": "ABALOS",
+            "givenName": "Tess",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.tessabaloshawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 29 | REPUBLICAN | ABALOS, Tess | www.tessabaloshawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-30-a91b91a7838e3834",
+            "contestId": "hi-2026-general-state-representative-dist-30",
+            "familyName": "TEMPLO",
+            "givenName": "Shirley Ann",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "shirleytemplo.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 30 | DEMOCRATIC | TEMPLO, Shirley Ann | shirleytemplo.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-30-c0dfaea26d6f3dc1",
+            "contestId": "hi-2026-general-state-representative-dist-30",
+            "familyName": "YBANEZ",
+            "givenName": "Amanda",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "voteybanezdist30.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 30 | REPUBLICAN | YBANEZ, Amanda | voteybanezdist30.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-31-90b78b464a884c02",
+            "contestId": "hi-2026-general-state-representative-dist-31",
+            "familyName": "ICHIYAMA",
+            "givenName": "Linda",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.lindaichiyama.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 31 | DEMOCRATIC | ICHIYAMA, Linda | www.lindaichiyama.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-31-bad074ad59a499ca",
+            "contestId": "hi-2026-general-state-representative-dist-31",
+            "familyName": "VALDEZ",
+            "givenName": "Nancy",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.friendsofnancyvaldez.org",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 31 | REPUBLICAN | VALDEZ, Nancy | www.friendsofnancyvaldez.org | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-32-0f02b32c9574850f",
+            "contestId": "hi-2026-general-state-representative-dist-32",
+            "familyName": "AIU",
+            "givenName": "Micah Pookela Kim",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "micahaiu.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 32 | DEMOCRATIC | AIU, Micah Pookela Kim | micahaiu.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-32-067a535f2c29a6f2",
+            "contestId": "hi-2026-general-state-representative-dist-32",
+            "familyName": "SHIMIZU",
+            "givenName": "Garner M.",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "voteshimizu.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 32 | REPUBLICAN | SHIMIZU, Garner M. | voteshimizu.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-34-09ca0a28e4ba224a",
+            "contestId": "hi-2026-general-state-representative-dist-34",
+            "familyName": "DUPIO",
+            "givenName": "Gaius, II (Kipi)",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 34 | REPUBLICAN | DUPIO, Gaius, II (Kipi) |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-34-4a97c1160111445a",
+            "contestId": "hi-2026-general-state-representative-dist-34",
+            "familyName": "TAKAYAMA",
+            "givenName": "Gregg",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "Greggtakayama.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 34 | DEMOCRATIC | TAKAYAMA, Gregg | Greggtakayama.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-39-c2ba2e18f9692ed2",
+            "contestId": "hi-2026-general-state-representative-dist-39",
+            "familyName": "DEGRACIA",
+            "givenName": "Daniel (Danny)",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 39 | REPUBLICAN | DEGRACIA, Daniel (Danny) |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-39-4f358a12282d12e1",
+            "contestId": "hi-2026-general-state-representative-dist-39",
+            "familyName": "ROSENLEE",
+            "givenName": "Corey",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "coreyrosenlee.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 39 | DEMOCRATIC | ROSENLEE, Corey | coreyrosenlee.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-40-97245e02c13e60ae",
+            "contestId": "hi-2026-general-state-representative-dist-40",
+            "familyName": "MARTINEZ",
+            "givenName": "Rose",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 40 | DEMOCRATIC | MARTINEZ, Rose |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-40-ac3412aed590a094",
+            "contestId": "hi-2026-general-state-representative-dist-40",
+            "familyName": "REYES ODA",
+            "givenName": "Julie",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "juliereyesoda.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 40 | REPUBLICAN | REYES ODA, Julie | juliereyesoda.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-42-d6ac6a89534278c2",
+            "contestId": "hi-2026-general-state-representative-dist-42",
+            "familyName": "GARCIA",
+            "givenName": "Diamond",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "DiamondGarcia.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 42 | REPUBLICAN | GARCIA, Diamond | DiamondGarcia.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-42-fcea859ddb9ffb0b",
+            "contestId": "hi-2026-general-state-representative-dist-42",
+            "familyName": "PARIS",
+            "givenName": "Anthony Makana",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.votemakana.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 42 | DEMOCRATIC | PARIS, Anthony Makana | www.votemakana.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-43-f91b2bbb76fcb8ee",
+            "contestId": "hi-2026-general-state-representative-dist-43",
+            "familyName": "MEDEIROS",
+            "givenName": "Sheila",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "friendsofsheilamedeiros.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 43 | REPUBLICAN | MEDEIROS, Sheila | friendsofsheilamedeiros.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-43-08922e1023c1e290",
+            "contestId": "hi-2026-general-state-representative-dist-43",
+            "familyName": "SOUZA",
+            "givenName": "Kanani",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.votesouza.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 43 | REPUBLICAN | SOUZA, Kanani | www.votesouza.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-44-0854ee25d1d534ce",
+            "contestId": "hi-2026-general-state-representative-dist-44",
+            "familyName": "KILA",
+            "givenName": "Darius K.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.dariuskila.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 44 | DEMOCRATIC | KILA, Darius K. | www.dariuskila.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-44-7dae9c8ac927e05b",
+            "contestId": "hi-2026-general-state-representative-dist-44",
+            "familyName": "WEAVER",
+            "givenName": "Charla (Kahealani)",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.charlaweaver.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 44 | REPUBLICAN | WEAVER, Charla (Kahealani) | www.charlaweaver.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-45-32da563804a564b4",
+            "contestId": "hi-2026-general-state-representative-dist-45",
+            "familyName": "KAOPUA",
+            "givenName": "Kalehua",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 45 | DEMOCRATIC | KAOPUA, Kalehua |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-45-93c1ddb79e237130",
+            "contestId": "hi-2026-general-state-representative-dist-45",
+            "familyName": "MURAOKA",
+            "givenName": "Chris",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "chrismuraoka.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 45 | REPUBLICAN | MURAOKA, Chris | chrismuraoka.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-46-b001bbfb34c4b866",
+            "contestId": "hi-2026-general-state-representative-dist-46",
+            "familyName": "GABRIEL",
+            "givenName": "Daniel Michael",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.votedmg.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 46 | REPUBLICAN | GABRIEL, Daniel Michael | www.votedmg.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-46-d3d510753482be4b",
+            "contestId": "hi-2026-general-state-representative-dist-46",
+            "familyName": "PERRUSO",
+            "givenName": "Amy A.",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "voteamyperruso.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 46 | DEMOCRATIC | PERRUSO, Amy A. | voteamyperruso.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-47-18261c53373da843",
+            "contestId": "hi-2026-general-state-representative-dist-47",
+            "familyName": "QUINLAN",
+            "givenName": "Sean",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 47 | DEMOCRATIC | QUINLAN, Sean |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-47-68c18a797c4917ca",
+            "contestId": "hi-2026-general-state-representative-dist-47",
+            "familyName": "TALAEAI",
+            "givenName": "Mark",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "marktalaeai.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 47 | REPUBLICAN | TALAEAI, Mark | marktalaeai.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-49-14f84288b8f13020",
+            "contestId": "hi-2026-general-state-representative-dist-49",
+            "familyName": "MATAYOSHI",
+            "givenName": "Scot",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 49 | DEMOCRATIC | MATAYOSHI, Scot |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-49-19957c8c4103d067",
+            "contestId": "hi-2026-general-state-representative-dist-49",
+            "familyName": "RODAS",
+            "givenName": "'Ale",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "rodasforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 49 | REPUBLICAN | RODAS, 'Ale | rodasforhawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-50-a25ca52edf05c6ee",
+            "contestId": "hi-2026-general-state-representative-dist-50",
+            "familyName": "FITZGERALD",
+            "givenName": "Jesse W.M.",
+            "partyLabel": "GREEN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 50 | GREEN | FITZGERALD, Jesse W.M. |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-state-representative-dist-50-17f277ae63a406cb",
+            "contestId": "hi-2026-general-state-representative-dist-50",
+            "familyName": "LEE",
+            "givenName": "Mike",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.mikeleeforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 50 | DEMOCRATIC | LEE, Mike | www.mikeleeforhawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-maui-resident-trustee-ca8088c4f3339a8a",
+            "contestId": "hi-2026-general-oha-maui-resident-trustee",
+            "familyName": "KAPU",
+            "givenName": "Ke'eaumoku",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA MAUI RESIDENT TRUSTEE | NONPARTISAN SPECIAL | KAPU, Ke'eaumoku |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-maui-resident-trustee-899f9d05ea7ee46a",
+            "contestId": "hi-2026-general-oha-maui-resident-trustee",
+            "familyName": "LINDSEY",
+            "givenName": "Carmen Hulu",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA MAUI RESIDENT TRUSTEE | NONPARTISAN SPECIAL | LINDSEY, Carmen Hulu |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-oahu-resident-trustee-19374a7d3687c636",
+            "contestId": "hi-2026-general-oha-oahu-resident-trustee",
+            "familyName": "AKAKA",
+            "givenName": "Kalei",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "ShakaVoteAkaka.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA OAHU RESIDENT TRUSTEE | NONPARTISAN SPECIAL | AKAKA, Kalei | ShakaVoteAkaka.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-oahu-resident-trustee-d3d3ee8a9e74c0f6",
+            "contestId": "hi-2026-general-oha-oahu-resident-trustee",
+            "familyName": "WONG",
+            "givenName": "Hinaleimoana (Hina)",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "kumuhinaforoha.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA OAHU RESIDENT TRUSTEE | NONPARTISAN SPECIAL | WONG, Hinaleimoana (Hina) | kumuhinaforoha.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-at-large-trustee-955f8146f147994c",
+            "contestId": "hi-2026-general-oha-at-large-trustee",
+            "familyName": "AKINA",
+            "givenName": "Adrian (Kealii) ",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "www.kealiiakina.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | AKINA, Adrian (Kealii)  | www.kealiiakina.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-at-large-trustee-125600e922bd04b4",
+            "contestId": "hi-2026-general-oha-at-large-trustee",
+            "familyName": "ANDERSON",
+            "givenName": "Ikaika",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "ikaika4hawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | ANDERSON, Ikaika | ikaika4hawaii.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-at-large-trustee-5b458dd3e848b056",
+            "contestId": "hi-2026-general-oha-at-large-trustee",
+            "familyName": "CRABBE",
+            "givenName": "Kanekoa (Koa)",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | CRABBE, Kanekoa (Koa) |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-at-large-trustee-76240e2abb2c2594",
+            "contestId": "hi-2026-general-oha-at-large-trustee",
+            "familyName": "GALUTERIA",
+            "givenName": "Brickwood M.",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | GALUTERIA, Brickwood M. |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-at-large-trustee-7fe5147c3d9dee42",
+            "contestId": "hi-2026-general-oha-at-large-trustee",
+            "familyName": "SOUZA",
+            "givenName": "Keoni",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "souzaforoha.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | SOUZA, Keoni | souzaforoha.com | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-oha-at-large-trustee-b65ddf04daff58ff",
+            "contestId": "hi-2026-general-oha-at-large-trustee",
+            "familyName": "WAIHEE",
+            "givenName": "John, IV",
+            "partyLabel": "NONPARTISAN SPECIAL",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "OHA AT-LARGE TRUSTEE | NONPARTISAN SPECIAL | WAIHEE, John, IV |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-governor-and-lieutenant-governor-8062888b7d17d839",
+            "contestId": "hi-2026-general-governor-and-lieutenant-governor",
+            "familyName": "CORDERY, Gary\nANTHONY, Daniel",
+            "givenName": "",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "garycorderyforgovernor.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "GOVERNOR | REPUBLICAN | CORDERY, Gary | garycorderyforgovernor.com | In General\nLIEUTENANT GOVERNOR | REPUBLICAN | ANTHONY, Daniel |  | In General"
+            }
+          },
+          {
+            "id": "hi-2026-general-governor-and-lieutenant-governor-911c8e50e8b51d48",
+            "contestId": "hi-2026-general-governor-and-lieutenant-governor",
+            "familyName": "GREEN, Josh\nKAWAKAMI, Derek S.K.",
+            "givenName": "",
+            "partyLabel": "DEMOCRATIC",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": "joshgreenforhawaii.com",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "GOVERNOR | DEMOCRATIC | GREEN, Josh | joshgreenforhawaii.com | In General\nLIEUTENANT GOVERNOR | DEMOCRATIC | KAWAKAMI, Derek S.K. | derekkawakami.com | In General"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "id": "hi-2026-general-question-1-measure",
+            "contestId": "hi-2026-general-question-1",
+            "officialNumber": "QUESTION #1",
+            "questionText": "Shall the Constitution of the State of Hawaii be amended to allow the Senate more time to consider and act on the appointments of justices and judges, by increasing the timeframe from thirty days to sixty days for appointments made between April 1 and December 31 when the senate is not in regular session or is about to adjourn the regular session?",
+            "officialStatement": null,
+            "provenance": {
+              "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:03:16.991898+00:00",
+              "verifiedAt": "2026-10-14T05:03:16.991898+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "Shall the Constitution of the State of Hawaii be amended to allow the Senate more time to consider and act on the appointments of justices and judges, by increasing the timeframe from thirty days to sixty days for appointments made between April 1 and December 31 when the senate is not in regular session or is about to adjourn the regular session?"
+            }
+          },
+          {
+            "id": "hi-2026-general-question-2-measure",
+            "contestId": "hi-2026-general-question-2",
+            "officialNumber": "QUESTION #2",
+            "questionText": "Shall the Hawaii State Constitution be amended to direct the legislature to authorize the counties to issue resilient infrastructure for shelter and equity bonds to fund public improvements in designated districts, repaid solely by future growth in property tax revenues within those districts, not by increasing real property tax rates, where such bonds are excluded from the counties’ debt limit and are subject to accountability and oversight requirements as may be provided by law?",
+            "officialStatement": null,
+            "provenance": {
+              "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:03:16.991898+00:00",
+              "verifiedAt": "2026-10-14T05:03:16.991898+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "Shall the Hawaii State Constitution be amended to direct the legislature to authorize the counties to issue resilient infrastructure for shelter and equity bonds to fund public improvements in designated districts, repaid solely by future growth in property tax revenues within those districts, not by increasing real property tax rates, where such bonds are excluded from the counties’ debt limit and are subject to accountability and oversight requirements as may be provided by law?"
+            }
+          }
+        ],
+        "absences": [
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:5",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 5: HASHIMOTO, Troy N. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 5 | DEMOCRATIC | HASHIMOTO, Troy N. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:8",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 8: KOUCHI, Ronald D. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 8 | DEMOCRATIC | KOUCHI, Ronald D. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:10",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 10: SAYAMA, Jackson D. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 10 | DEMOCRATIC | SAYAMA, Jackson D. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:11",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 11: FUKUNAGA, Carol is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 11 | DEMOCRATIC | FUKUNAGA, Carol | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:14",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 14: KIM, Donna Mercado is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 14 | DEMOCRATIC | KIM, Donna Mercado | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:15",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 15: WAKAI, Glenn is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 15 | DEMOCRATIC | WAKAI, Glenn | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:17",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 17: DELA CRUZ, Donovan is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 17 | DEMOCRATIC | DELA CRUZ, Donovan | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:21",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 21: GABBARD, Mike is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 21 | DEMOCRATIC | GABBARD, Mike | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldu:25",
+            "divisionVintage": "2022",
+            "statement": "STATE SENATOR, DIST 25: LEE, Chris is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE SENATOR, DIST 25 | DEMOCRATIC | LEE, Chris | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:1",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 1: KUSCH, Matthias is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 1 | DEMOCRATIC | KUSCH, Matthias | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:6",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 6: KAHALOA, Kirstin is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 6 | DEMOCRATIC | KAHALOA, Kirstin | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:7",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 7: LOWEN, Nicole is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 7 | DEMOCRATIC | LOWEN, Nicole | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:9",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 9: WOODSON, Justin H. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 9 | DEMOCRATIC | WOODSON, Justin H. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:15",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 15: NAKAMURA, Nadine K. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 15 | DEMOCRATIC | NAKAMURA, Nadine K. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:19",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 19: HASHEM, Mark Jun is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 19 | DEMOCRATIC | HASHEM, Mark Jun | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:21",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 21: TURBIN, Derek is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 21 | DEMOCRATIC | TURBIN, Derek | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:22",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 22: GARRETT, Andrew Takuya is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 22 | DEMOCRATIC | GARRETT, Andrew Takuya | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:24",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 24: TAM, Adrian is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 24 | DEMOCRATIC | TAM, Adrian | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:25",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 25: IWAMOTO, Kim Coco is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 25 | DEMOCRATIC | IWAMOTO, Kim Coco | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:27",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 27: TAKENOUCHI, Jenna W.Y.C. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 27 | DEMOCRATIC | TAKENOUCHI, Jenna W.Y.C. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:28",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 28: RATCLIFFE, Michael (Cov) is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 28 | DEMOCRATIC | RATCLIFFE, Michael (Cov) | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:33",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 33: KONG, Sam Satoru is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 33 | DEMOCRATIC | KONG, Sam Satoru | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:35",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 35: CHUN, Cory M. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 35 | DEMOCRATIC | CHUN, Cory M. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:36",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 36: HARTSFIELD, Daisy Balais is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 36 | DEMOCRATIC | HARTSFIELD, Daisy Balais | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:37",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 37: LA CHICA, Trish is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 37 | DEMOCRATIC | LA CHICA, Trish | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:38",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 38: CHEAPE MATSUMOTO, Lauren is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 38 | REPUBLICAN | CHEAPE MATSUMOTO, Lauren | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:41",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 41: ALCOS, David A., III is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 41 | REPUBLICAN | ALCOS, David A., III | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:48",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 48: KITAGAWA, Lisa C. is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 48 | DEMOCRATIC | KITAGAWA, Lisa C. | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi/sldl:51",
+            "divisionVintage": "2022",
+            "statement": "STATE REPRESENTATIVE, DIST 51: MARTEN, Lisa is listed as Elected After Primary in the official Candidate Report; this contest is not on the general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:03.018486+00:00",
+              "verifiedAt": "2026-10-14T05:04:03.018486+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "STATE REPRESENTATIVE, DIST 51 | DEMOCRATIC | MARTEN, Lisa | Elected After Primary"
+            }
+          },
+          {
+            "ocdId": "ocd-division/country:us/state:hi",
+            "divisionVintage": "2022",
+            "statement": "The official Contest Schedule places the next U.S. Senate election in 2028; no U.S. Senate contest is on the 2026 general-election ballot.",
+            "provenance": {
+              "sourceUrl": "https://elections.hawaii.gov/voting/contest-schedule/",
+              "sourceOrg": "Hawaii Office of Elections",
+              "collectedAt": "2026-10-14T05:04:37.255251+00:00",
+              "verifiedAt": "2026-10-14T05:04:37.255251+00:00",
+              "doorId": "fec-hi-chief",
+              "quote": "U.S Senate1State of Hawaii6 years"
+            }
+          }
+        ],
+        "coverageNotes": [
+          "The Office of Elections identifies the Candidate Report as the official list and states: Following the candidate filing deadline, election officials will then finalize the list of candidates for the 2026 Elections and begin preparing ballots based on each voter’s district. The report page says candidate filing is closed and reports In General status, but certification of the complete November inventory was not established. All 43 candidacy contests therefore retain candidateListComplete false; no claim is made that the state has not certified.",
+          "The complete official Candidate Report CSV contains 415 filing records. Only candidates with status In General are included. 29 state legislative contests were decided at the primary and are recorded as absences.",
+          "The Governor and Lieutenant Governor form 2 joint ticket choices on the official general-election sample ballot. Both printed names are retained in each ticket; all 96 people listed In General remain represented.",
+          "The two statewide constitutional questions are taken verbatim from the Office of Elections. Both official full texts were acquired from the Legislature. Its reports link the enrolled bill PDFs and match the bill identifiers and original links on the election-office question page; each printed PDF question matches the held question after typography and whitespace normalization."
+        ]
+      }
+    }
+  }
+}

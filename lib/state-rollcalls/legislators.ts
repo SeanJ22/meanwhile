@@ -1,8 +1,11 @@
 import { statePeopleVersion } from "../officials/people-version.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
-import type { Officeholder } from "../officials/types.ts";
-import { sameNativePerson, type StatePeopleJurisdiction } from "../officials/people-identity.ts";
+import { type StatePeopleJurisdiction } from "../officials/people-identity.ts";
+import { mergePeopleSets } from "../officials/merge-people.ts";
+import { PEOPLE_SOURCE_IDS } from "../officials/people-sources.ts";
+import { readPeopleSourceProjection } from "../civic-data/people-source-read.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
+import { currentReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import {
   CivicDataStoreUnavailableError,
   readPromotedCivicData,
@@ -30,6 +33,23 @@ const NH_COUNTY: Readonly<Record<string, string>> = {
   Strafford: "STR",
   Sullivan: "SUL",
 };
+
+const requestPeople = new WeakMap<ReaderAuthorityEdgeBundle, Map<StatePeopleJurisdiction, OfficialStateLegislatorReadModel>>();
+let standalonePeople: OfficialStateLegislatorReadModel | null = null;
+
+export function primeStatePeopleProjection(value: OfficialStateLegislatorReadModel): void {
+  const request = currentReaderAuthorityEdge();
+  if (!request) { standalonePeople = value; return; }
+  const people = requestPeople.get(request) ?? new Map();
+  people.set(value.jurisdiction, value);
+  requestPeople.set(request, people);
+}
+
+export function currentStatePeopleProjection(scope: StatePeopleJurisdiction): OfficialStateLegislatorReadModel | null {
+  const request = currentReaderAuthorityEdge();
+  return request ? requestPeople.get(request)?.get(scope) ?? null
+    : standalonePeople?.jurisdiction === scope ? standalonePeople : null;
+}
 
 function nhHouseDivision(county: string, district: string): string | null {
   const abbreviation = NH_COUNTY[county.trim()];
@@ -164,6 +184,8 @@ export function heldOfficialStateLegislatorsFromRead(
     personId: person.personId ?? person.id,
     nativeIds: person.nativeIds,
     memberships: person.memberships,
+    selectionMethod: person.selectionMethod,
+    selectionMethodSourceUrl: person.selectionMethodSourceUrl,
     fieldSources: person.fieldSources ? {...person.fieldSources} : undefined,
     name: person.name,
     officeTitle: person.officeTitle,
@@ -192,41 +214,9 @@ export function heldOfficialStateLegislatorsFromRead(
 
 /** Optional facts from a reference remain usable when an official roster only supplies the minimum. */
 export function mergeStatePeople(reference: OfficeholderSet | null, official: OfficeholderSet | null): OfficeholderSet {
-  if (!reference && !official) throw new Error("STATE_PEOPLE_NO_SOURCE");
-  if (!reference) return official!;
-  if (!official) return reference;
-  const people = [...reference.officeholders];
-  const aliases = new Map<string,string>();
-  for (const person of official.officeholders) {
-    const matches = people.flatMap((row,index) => sameNativePerson(row,person) ? [index] : []);
-    if (matches.length !== 1) { people.push(person); continue; }
-    const at = matches[0], prior = people[at];
-    const fields = ["termStart","termEnd","birthDate","partyLabel","websiteUrl","profileUrls","contactFormUrl","phone","email","campaignUrl","photo","social","offices"] as const;
-    const merged: Officeholder = {...prior,...person,personId:prior.personId ?? person.personId ?? person.id,
-      nativeIds:{...Object.fromEntries([...new Set([...Object.keys(prior.nativeIds ?? {}),...Object.keys(person.nativeIds ?? {})])].map(key=>[key,[...new Set([...(prior.nativeIds?.[key] ?? []),...(person.nativeIds?.[key] ?? [])])]])),reader:[...new Set([...(prior.nativeIds?.reader ?? []),...(person.nativeIds?.reader ?? []),prior.id,prior.personId ?? prior.id,person.id,person.personId ?? person.id])]},
-      fieldSources:{...prior.fieldSources,...person.fieldSources},
-      memberships:[...new Map([...(prior.memberships ?? []),...(person.memberships ?? [])].map(row=>[row.id,row])).values()]};
-    for (const field of fields) {
-      const value = person[field];
-      if (value === null || value === undefined || value === "" ||
-        typeof value === "object" && Object.keys(value).length === 0) {
-        Object.assign(merged,{[field]:prior[field]});
-        if (prior[field] !== null && prior[field] !== undefined && prior[field] !== "") {
-          merged.fieldSources = {...merged.fieldSources,[field]:prior.fieldSources?.[field] ?? prior.provenance};
-        }
-      } else merged.fieldSources = {...merged.fieldSources,[field]:person.fieldSources?.[field] ?? person.provenance};
-    }
-    aliases.set(prior.id,person.id);
-    people[at] = merged;
-  }
-  const divisions = [...reference.divisions,...official.divisions].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId}));
-  const currentMembershipIds=new Set(people.flatMap(person=>(person.memberships ?? []).filter(row=>row.current !== false).map(row=>row.id)));
-  const endedMemberships=[...new Map([...(reference.endedMemberships ?? []),...(official.endedMemberships ?? [])].map(row=>[row.id,row])).values()]
-    .filter(row=>!currentMembershipIds.has(row.id));
-  return JSON.parse(JSON.stringify({currentMembershipComplete:official.currentMembershipComplete ?? false,scope:official.scope,generatedAt:[reference.generatedAt,official.generatedAt].sort().at(-1)!,officeholders:people,
-    ...(endedMemberships.length ? {endedMemberships} : {}),
-    divisions:[...new Map(divisions.map(row=>[`${row.officeholderId}|${row.ocdId}|${row.bodyId}|${row.membershipId ?? ""}`,row])).values()],
-    unmatched:[...new Map([...reference.unmatched,...official.unmatched].map(row=>({...row,officeholderId:aliases.get(row.officeholderId) ?? row.officeholderId})).map(row=>[`${row.officeholderId}|${row.reason}`,row])).values()]}));
+  const merged = mergePeopleSets([reference, official].filter((row): row is OfficeholderSet=>row !== null));
+  if (!merged) throw new Error("STATE_PEOPLE_NO_SOURCE");
+  return {...merged,currentMembershipComplete:official?.currentMembershipComplete ?? reference?.currentMembershipComplete ?? false};
 }
 
 /** Validate the source shard; source-specific roster authorities keep their independent pointers. */
@@ -251,22 +241,29 @@ export async function readStatePeopleProjection(jurisdiction: StatePeopleJurisdi
   const reads = await Promise.allSettled([
     readOpenStatesPeopleProjection(jurisdiction,options),
     target ? readOfficialStateLegislatorsProjection(target.jurisdiction,options) : Promise.resolve(null),
+    ...PEOPLE_SOURCE_IDS.map(sourceId=>readPeopleSourceProjection(jurisdiction,sourceId,options)),
   ]);
-  const results = reads.flatMap(row=>row.status === "fulfilled" && row.value ? [row.value] : []);
+  const results = reads.flatMap(row=>row.status === "fulfilled" && row.value ? [row.value as CivicDataReadResult<OfficialStateLegislatorReadModel>] : []);
   const available = results.filter((row):row is AvailableOfficialStateLegislatorsRead=>row.kind === "PROMOTED" || row.kind === "BOOTSTRAP");
   if (!available.length) {
+    const request = currentReaderAuthorityEdge();
+    if (request) requestPeople.get(request)?.delete(jurisdiction);
+    else if (standalonePeople?.jurisdiction === jurisdiction) standalonePeople = null;
     const failed = reads.find((row):row is PromiseRejectedResult=>row.status === "rejected");
     if (failed) throw failed.reason;
     return results.find(row=>row.kind === "STORE_UNREACHABLE") ?? results[0];
   }
-  if (available.length === 1) return available[0];
-  const reference = available.find(row=>row.value.sourceId === "plural-openstates")!;
-  const official = available.find(row=>row.value.sourceId !== "plural-openstates")!;
-  const roster = mergeStatePeople(reference.value.roster,official.value.roster);
-  const versionId = statePeopleVersion(jurisdiction,available.map(row=>({scope:row.metadata.scope,versionId:row.metadata.versionId ?? row.kind})));
-  const value: OfficialStateLegislatorReadModel = {...official.value,roster,generatedAt:roster.generatedAt};
-  return official.kind === "PROMOTED" ? {...official,value,metadata:{...official.metadata,versionId,sourceThrough:available.map(row=>row.metadata.sourceThrough).filter((value):value is string=>Boolean(value)).sort().at(-1) ?? null,retrievedAt:available.map(row=>row.metadata.retrievedAt).filter((value):value is string=>Boolean(value)).sort().at(-1) ?? null},projection:{...official.projection,versionId,payload:value}}
-    : {...official,value,metadata:{...official.metadata,versionId,sourceThrough:available.map(row=>row.metadata.sourceThrough).filter((value):value is string=>Boolean(value)).sort().at(-1) ?? null,retrievedAt:available.map(row=>row.metadata.retrievedAt).filter((value):value is string=>Boolean(value)).sort().at(-1) ?? null}};
+  // The composite version names every read source, including federal and portrait shards.
+  const primary = available.find(row=>row.value.sourceId === "plural-openstates") ?? available[0];
+  const ordered = [primary,...available.filter(row=>row !== primary)];
+  const roster = mergePeopleSets(ordered.map(row=>row.value.roster))!;
+  const versionId = available.length === 1 ? primary.metadata.versionId : statePeopleVersion(jurisdiction,available.map(row=>({scope:row.metadata.scope,versionId:row.metadata.versionId ?? row.kind})));
+  const value: OfficialStateLegislatorReadModel = {...primary.value,roster,generatedAt:roster.generatedAt};
+  primeStatePeopleProjection(value);
+  const metadata = {...primary.metadata,versionId,sourceThrough:available.map(row=>row.metadata.sourceThrough).filter((value):value is string=>Boolean(value)).sort().at(-1) ?? null,
+    retrievedAt:available.map(row=>row.metadata.retrievedAt).filter((value):value is string=>Boolean(value)).sort().at(-1) ?? null};
+  return primary.kind === "PROMOTED" ? {...primary,value,metadata,projection:{...primary.projection,versionId:versionId!,payload:value}}
+    : {...primary,value,metadata};
 }
 
 /** Reader render shape for one successfully held official roster. */

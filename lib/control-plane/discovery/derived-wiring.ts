@@ -1,3 +1,5 @@
+
+
 import type {
   AdapterBinding,
   AdapterVerification,
@@ -32,6 +34,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   BOARDBOOK: ["boardbook"],
   BOARDDOCS: ["boarddocs"],
   GRANICUS: ["granicus"],
+  ESCRIBE: ["escribe"],
   CIVICCLERK: ["civicclerk-api"],
   IQM2: ["iqm2"],
   REVIZE: ["revize"],
@@ -56,6 +59,7 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `the route ${find.url} is not a URL` };
   }
   if (find.vendor === "granicus" && /\.granicus\.com$/i.test(url.hostname) && /^\/ViewPublisher\.php$/i.test(url.pathname) && /^\d+$/.test(url.searchParams.get("view_id") ?? "")) return { kind: "GRANICUS", endpoint: { publisherUrl: url.toString() } };
+  if (find.vendor === "escribe" && /^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(url.hostname)) return { kind: "ESCRIBE", endpoint: { portalUrl: url.origin } };
   if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
   if (find.vendor === "legistar-api" && url.hostname === "webapi.legistar.com") {
     const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(url.pathname)?.[1];
@@ -82,10 +86,6 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
 
 type Attested = { readonly attestation: HostAttestation } | { readonly held: DerivedHeldReason; readonly detail: string };
 
-/**
- * The host attestation for a confirmed route, from the chain the walk recorded (`attempt.site`, each find's
- * `via`). A page on the chain must have its vaulted artifact, or the chain cannot be recomputed.
- */
 export function attestationFor(attempt: MeetingsDiscoveryAttempt, find: DiscoveryFind): Attested {
   const site = attempt.site;
   if (site === undefined) {
@@ -160,11 +160,7 @@ export type WiringVerification =
   | { readonly wrongAttribution: string };
 
 export interface DerivedWiringInputs {
-  /**
-   * The promoted crosswalk: its version and rows. `automatic` names the rows the runner's deterministic reviewer
-   * accepted (`meeting-body-crosswalk-derived`, composed beside the manual rows by `composeCrosswalk`): each is
-   * decided exactly as a reviewed row, cites that version, and gives way to a reviewed row that selects its sittings.
-   */
+
   readonly crosswalk: {
     readonly input: DerivedInputRef;
     readonly versionId: string;
@@ -259,10 +255,6 @@ export function wiringRowFor(row: MeetingBodyCrosswalkRow): DerivedWiringRow {
 
 type Decision = DerivedRowDecision<DerivedWiringRow>;
 
-/**
- * Decide every row of the next version, one decision per reviewed crosswalk row, plus a suspension for any
- * promoted row whose crosswalk row was withdrawn or is gone.
- */
 export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Decision[] {
   const previous = new Map(inputs.previous.map((entry) => [entry.key, entry]));
   const previousRoutes = new Map(inputs.previous.map(entry =>

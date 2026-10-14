@@ -1,0 +1,20 @@
+{
+  "publisher": "Comisión Estatal de Elecciones de Puerto Rico",
+  "url": "https://ww2.ceepur.org/",
+  "discoveredFrom": "https://ceepur.org/",
+  "checkedAt": "2026-10-13",
+  "representation": "Calendar evidence normalized from official page labels; not a source JSON API response.",
+  "generalElectionGuideLabel": "Guía de Orientación Estadística - Elecciones Generales 2028",
+  "generalElectionGuideUrl": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Documents/2028-GUIA-ESTADISTICAS-ELECCIONES.pdf",
+  "generalElectionDateRequested": "2026-11-03",
+  "noGeneralElectionOnRequestedDate": true,
+  "basis": "User-supplied 2026 election scope; CEE currently publishes its 2028 general-election guide. The page does not expressly say no November 3 special election.",
+  "specialElectionLinkLabel": "Divulgación de Resultados Elección Especial Cataño 2026",
+  "specialElectionUrl": "https://catano2026.ceepur.org/",
+  "specialElectionAppliesOnRequestedDate": null,
+  "office": {
+    "name": "Comisión Estatal de Elecciones",
+    "phone": "787-777-8682",
+    "address": "PO Box 195552, San Juan, PR 00919-5552"
+  }
+}

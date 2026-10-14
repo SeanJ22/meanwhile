@@ -33,6 +33,15 @@ export const REFERENCE_DATASETS = [
 
 export type ReferenceDataset = (typeof REFERENCE_DATASETS)[number];
 
+/** Voting routes and election scope are structured reference data, not CSV enumerations. */
+export const REFERENCE_JSON_DATASETS = [
+  "voting-election",
+  "voting-legacy-doors",
+  "voting-root-discovery",
+  "voting-source-doors",
+] as const;
+type ReferenceJsonDataset = (typeof REFERENCE_JSON_DATASETS)[number];
+
 /**
  * The Census of Governments does not enumerate the territories, so their registration reads
  * TIGER/Line 2023 functional status (FUNCSTAT) for county-equivalents, county subdivisions and places.
@@ -63,8 +72,12 @@ export function dataPath(dataset: ReferenceDataset): string {
   return join(REFERENCE_DIR, `${dataset}.csv`);
 }
 
-export function notePath(dataset: ReferenceDataset): string {
+export function notePath(dataset: ReferenceDataset | ReferenceJsonDataset): string {
   return join(REFERENCE_DIR, `${dataset}.md`);
+}
+
+function jsonDataPath(dataset: ReferenceJsonDataset): string {
+  return join(REFERENCE_DIR, `${dataset}.json`);
 }
 
 /** Everything actually in the directory, for the inventory gate. */

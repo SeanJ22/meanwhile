@@ -6,6 +6,7 @@ import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
+import { isPeopleSource } from "../officials/people-sources.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -62,11 +63,15 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
+  if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
   if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   if (contract.sourceId === "plural-openstates-votes") return "lib/sources/plural/votes.ts#readPluralVotesProjection";
   if (contract.sourceId === "legiscan" && contract.recordClass === "STATE_ROLL_CALL") return "lib/sources/legiscan/votes.ts#readLegiscanVotesProjection";
   switch (contract.id) {
+    case "legiscan-bulk": return "lib/sources/legiscan/reader.ts#readBulkProjection";
+    case "google-civic-voterinfo": return "lib/sources/google-civic/reader.ts#readCivicProjection";
     case "socrata-discovery":
     case "epa-echo": return "lib/sources/open-data/publication.ts#readOpenDataProjection";
     case "dotgov": return "lib/civic-data/dotgov.ts#readDotGovProjection";
@@ -135,6 +140,12 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") {
+      const { readPeopleSourceProjection } = await import("./people-source-read.ts");
+      const jurisdiction = /^(US(?:-[A-Z]{2})?):/.exec(contract.scope)?.[1] as "US" | `US-${string}` | undefined;
+      if (!jurisdiction) return fail(verifierId,"The people source has no exact jurisdiction.");
+      return verifyExactVersion(verifierId,await readPeopleSourceProjection(jurisdiction,contract.sourceId,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"people source");
+    }
     if (contract.recordClass === "FEDERAL_CIVIC_RECORD") {
       const { readFederalSourceProjection } = await import("../sources/congress/publication.ts");
       const { isFederalSource } = await import("../sources/congress/targets.ts");
@@ -158,6 +169,15 @@ export async function verifyRoutineReaderProjection(
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
     }
     switch (contract.id) {
+      case "legiscan-bulk": {
+        const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
+        return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"LegiScan bills");
+      }
+      case "google-civic-voterinfo": {
+        const { readCivicProjection } = await import("../sources/google-civic/reader.ts");
+        const result = await readCivicProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true });
+        return verifyExactVersion(verifierId, result, options.expectedVersionId, "Google Civic voterinfo");
+      }
       case "socrata-discovery":
       case "epa-echo": {
         const { readOpenDataProjection } = await import("../sources/open-data/publication.ts");

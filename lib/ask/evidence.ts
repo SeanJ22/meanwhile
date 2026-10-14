@@ -16,11 +16,13 @@ export interface EvidenceRecord {
    * A page search hit alone may never populate this field. */
   verifiedStatement?: { speakerId: string; quote: string; date: string; attribution: string; nativeSourceId: string };
   governmentFinance?: GovernmentBudgetFact;
+  population?: import("../reference/population-facts.ts").PopulationFact;
   /** Native meeting/document identity survives the Ask path unchanged. */
   meetingId?: string;
   documentId?: string;
   agendaDocument?: { contentHash: string; title: string | null; publicationIndex: boolean };
   kind:
+    | "POPULATION"
     | "DATASET"
     | "REGULATED_FACILITY"
     | "GOVERNMENT_FINANCE"
@@ -63,6 +65,8 @@ export interface EvidenceRecord {
     | "KEY_VOTE_CONTEXT"
     | "KEY_VOTE_POSITION"
     | "BILL_SUMMARY"
+    | "STATE_BILL"
+    | "BILL_TEXT_LINK"
     /*
      * What a body did to one agenda item: verb, disposition, mover, seconder
      * and tally prose verbatim. Classed `ACTION_SUMMARY`: it answers
@@ -96,6 +100,7 @@ export interface EvidenceRecord {
     | "FINANCE_SUMMARY";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
+  bill?: {number:string;state:string;session:string;status:string;publishedAt:string;texts:readonly {id:number;date:string|null;type:string;url:string;governmentUrl:string|null;governmentSourceOfficial:boolean}[]};
   /** Canonical holding subject when the reader's question uses a bridged card identity. */
   canonicalSubjectId?: string;
   fecProfile?: { candidateId: string; name: string; personId: string };

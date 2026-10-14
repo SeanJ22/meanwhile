@@ -18,12 +18,6 @@ import { codeOf } from "./read-code.ts";
 import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
 import { azBallot, electionSelection } from "./helpers/ballot-district-fixtures.ts";
 
-/**
- * A ZIP cannot answer "who governs you"; a street address can. Certainty is measured rather than hand-listed, the
- * pill lands only on bodies that govern part of the ZIP, and the pill is a fact about the reader's location, never a
- * completeness marker about our data.
- */
-
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
 const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, "pill-qualified-fixture");
@@ -111,11 +105,6 @@ test("3.8: the index states how many zips cross, and it is a real fraction", asy
   );
 });
 
-/**
- * A completeness marker (a per-card "we did not find this") is banned; this pill says "this is a fact about your
- * street that only you can settle". The distinction is asserted mechanically so the pill is not mistaken for one.
- * The lexicons are restated rather than imported so this file stands on its own terms.
- */
 const ABSENCE_POLARITY =
   /\b(haven'?t|hasn'?t|no|nothing|none|missing|few|little|thin|sparse|empty|still|not yet|yet)\b/i;
 const COVERAGE_OBJECT =
@@ -151,10 +140,7 @@ test("the pill's subject is the reader's location, and it says so", () => {
 });
 
 test("the pill attaches to a BODY, never to a candidate", () => {
-  /*
-   * A completeness marker's harm was printing next to a named person on the thinnest card. The mark renders on the
-   * contest heading, which is a body, so it can never single out a candidate.
-   */
+
   const page = codeOf("app", "ballot", "page.tsx");
   assert.match(page, /<JurisdictionMark \/>/, "the body-level mark is not rendered by the ballot page");
   assert.match(page, /<JurisdictionNote/, "the page-level block is not rendered by the ballot page");
@@ -209,19 +195,34 @@ test("nothing about the address reaches the server or a store", () => {
   );
 });
 
-test("an address given for one zip does not answer for another", () => {
-  const mod = codeOf("lib", "geo", "session-address.ts");
-  assert.match(
-    mod,
-    /scope\.zip === zip/,
-    "a scope resolved in one zip says nothing about another, and asserting otherwise would be the product claiming a location the reader never gave it",
-  );
+test("an address scope stays inside its ZIP and selected election date", async () => {
+  let saved: string | null = null;
+  const previous = Reflect.get(globalThis, "window");
+  Reflect.set(globalThis, "window", { sessionStorage: {
+    getItem: () => saved, setItem: (_key: string, value: string) => { saved = value; },
+  } });
+  try {
+    const { writeSessionAddress, sessionAddressFor } = await import("../lib/geo/session-address.ts");
+    const scope = { zip: "85641", contestIds: [], divisionIds: ["ocd-division/country:us/state:az/sldl:17"],
+      splitLevels: [], streetLabel: "South Bear Table Tank Drive" };
+    writeSessionAddress({ ...scope, selection: current });
+    assert.ok(sessionAddressFor("85641", current));
+    assert.equal(sessionAddressFor("85701", current), null);
+    const election = { purpose: "election" as const, asOf: "2026-10-13", electionDate: "2026-11-03" };
+    writeSessionAddress({ ...scope, selection: election });
+    assert.equal(sessionAddressFor("85641", current), null);
+    assert.ok(sessionAddressFor("85641", election));
+    assert.equal(sessionAddressFor("85641", { ...election, electionDate: "2026-05-19" }), null);
+  } finally {
+    if (previous === undefined) Reflect.deleteProperty(globalThis, "window");
+    else Reflect.set(globalThis, "window", previous);
+  }
 });
 
 test("the narrowing surface reads the session before it prompts", () => {
   /* There is one address form across surfaces, and the session read lives in it. */
   const narrowing = codeOf("components", "address", "address-prompt.tsx");
-  assert.match(narrowing, /sessionAddressFor\(zip\)/, "it asks what the session already holds");
+  assert.match(narrowing, /sessionAddressFor\(zip,\s*selection\)/, "it reads the session for this ZIP and selection");
   assert.match(narrowing, /writeSessionAddress\(/, "and it records its own answer for the others");
   assert.match(
     narrowing,
@@ -229,10 +230,6 @@ test("the narrowing surface reads the session before it prompts", () => {
     "undo forgets it everywhere, not only here — a reader asking for the whole zip back is asking us to forget",
   );
 });
-
-/*
- * A statewide division is absent from the lattice index and must not fall through to UNKNOWN.
- */
 
 test("3.3: a statewide office is CERTAIN — every reader at this zip votes in it", async () => {
   const nj = await zipCertainty("07866");
@@ -246,10 +243,7 @@ test("3.3: a statewide office is CERTAIN — every reader at this zip votes in i
 });
 
 test("3.3: a congressional district is NOT statewide and keeps the pill", async () => {
-  /*
-   * A congressional district looks federal and is not statewide. A ZIP can cross a congressional line, and the
-   * district reached the page from the ZCTA centroid, a single point, so the pill is true.
-   */
+
   const c = await zipCertainty("07866");
   assert.ok(c);
   assert.notEqual(
@@ -272,10 +266,7 @@ test("3.3: the statewide rule matches the SHAPE exactly, not a prefix", async ()
 });
 
 test("the action half of the pill is never hidden by a media query", () => {
-  /*
-   * Stripping the invitation leaves a bare uncertainty marker beside a body's name, which reads as a completeness
-   * statement. It may wrap; it may not vanish.
-   */
+
   const css = codeOf("app", "globals.css");
   assert.doesNotMatch(
     css,
@@ -290,12 +281,8 @@ test("the action half of the pill is never hidden by a media query", () => {
   assert.match(css, /\.could-govern-pill\s*\{/, "the pill's own rule is still here");
 });
 
-
 test("3.3: the who-governs card carries the pill, per body", () => {
-  /*
-   * The map card is headed "Who governs here". Widening it to the ZIP's area lists bodies that govern everyone beside
-   * bodies that govern only some readers; the per-body mark, from the body's own flag, tells them apart.
-   */
+
   const card = codeOf("components", "map", "coverage-notice.tsx");
   assert.match(card, /CouldGovernMark/, "the card marks the affected rows");
   assert.match(
@@ -356,11 +343,7 @@ test("3.1: the held election plans widen 85641 to both legislative districts and
 });
 
 test("3.1: a body arriving only through the widening must be GOVERNING", () => {
-  /*
-   * Widening is right about divisions but must not widen bodies: a clipped city's advisory boards and commissions
-   * must not reach a reader in a neighbouring place. Councils and school boards of a municipality a reader may live
-   * in are governments; an advisory committee is not.
-   */
+
   const route = codeOf("app", "api", "meetings", "route.ts");
   assert.match(
     route,

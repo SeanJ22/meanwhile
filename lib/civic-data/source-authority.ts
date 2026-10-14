@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
@@ -39,7 +40,76 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
   return false;
 }
 
+function peopleSourceAuthority(input: {
+  readonly id: string; readonly publisher: string; readonly official: boolean;
+  readonly federal?: boolean; readonly routePrefixes: readonly string[];
+}): SourceAuthorityContract {
+  return {
+    id: input.id, publisher: input.publisher,
+    trust: input.official ? "T2_AUTHORITATIVE_DOCUMENT" : "T4_RESEARCH_SECONDARY",
+    sourceClass: input.official ? "MULTI_PUBLISHER_PRIMARY" : "INTERMEDIARY",
+    routePrefixes: input.routePrefixes,
+    jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
+    recordClasses: [input.federal ? "FEDERAL_DIRECTORY" : "STATE_LEGISLATOR"],
+    competentFacts: input.official ? ["source-verified current holder", "office", "official contact", "term"] : ["attributed identity and current-office leads"],
+    expectedIdentifierKeys: ["person_id", "people_id", "bioguide_id", "wikidata_id"],
+    expectedTemporalFields: ["term", "source_through"],
+    horizonSemantics: input.official
+      ? "Each person must be named in the office on their captured own official page. Statewide election and appointment labels come from explicit state-page evidence. A failed page preserves prior verified facts."
+      : "Every native fact is attributed to its source. Shared identifiers join complementary evidence; secondary sources never establish an official photo or statewide elected-office label.",
+    parserVersion: "people-sources/1", freshnessExpectation: "Daily standing per-state acquisition with independent source clocks.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  };
+}
+
+/** Congress.gov and GovInfo serve two jobs: their people directories and their federal civic records. One authority covers both. */
+const PEOPLE_FEDERAL_AUTHORITIES = {
+  "congress-api": peopleSourceAuthority({ id: "congress-api", publisher: "Congress.gov member API", official: true, federal: true, routePrefixes: ["https://api.congress.gov/v3/", "https://www.congress.gov/"] }),
+  govinfo: peopleSourceAuthority({ id: "govinfo", publisher: "U.S. Government Publishing Office Congressional Directory", official: true, federal: true, routePrefixes: ["https://api.govinfo.gov/", "https://www.govinfo.gov/", "https://govinfo.gov/"] }),
+};
+
+function sharedAuthority(people: SourceAuthorityContract, federal: SourceAuthorityContract): SourceAuthorityContract {
+  const union = <T,>(a: readonly T[], b: readonly T[]): T[] => [...new Set([...a, ...b])];
+  return {
+    ...federal,
+    publisher: `${federal.publisher}; ${people.publisher}`,
+    routePrefixes: union(federal.routePrefixes, people.routePrefixes),
+    jurisdictions: union(federal.jurisdictions, people.jurisdictions),
+    recordClasses: union(federal.recordClasses, people.recordClasses),
+    competentFacts: union(federal.competentFacts, people.competentFacts),
+    expectedIdentifierKeys: union(federal.expectedIdentifierKeys, people.expectedIdentifierKeys),
+    expectedTemporalFields: union(federal.expectedTemporalFields, people.expectedTemporalFields),
+    horizonSemantics: `${federal.horizonSemantics} ${people.horizonSemantics}`,
+  };
+}
+
 export const SOURCE_AUTHORITIES = {
+  "google-civic-voterinfo": {
+    id: "google-civic-voterinfo", publisher: "Google Civic Information; upstream publishers and official flags retained per fact",
+    trust: "T3_ATTRIBUTED_PRIMARY", sourceClass: "INTERMEDIARY",
+    routePrefixes: ["https://www.googleapis.com/civicinfo/v2/elections", "https://www.googleapis.com/civicinfo/v2/voterinfo"],
+    jurisdictions: ["US"], recordClasses: ["GOOGLE_CIVIC_VOTERINFO"],
+    competentFacts: ["election", "contests and candidates", "polling locations", "early vote sites", "drop off locations"],
+    expectedIdentifierKeys: ["observation_id"], expectedTemporalFields: ["checked_at", "election_day"],
+    horizonSemantics: "Address-query observations; no bulk endpoint and no nationwide completeness claim. Native district OCD IDs join only when held; every unjoined row survives. Reader addresses are transient.",
+    parserVersion: "google-civic-voterinfo/1", freshnessExpectation: "Daily elections-catalog checks through the election. Address lookup only on an explicit reader fallback where official voting sources are absent. Publication date unknown when omitted by the API.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
+  "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
+  "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
+  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"] }),
+  "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
+  "people-portraits": {
+    id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
+    trust: "T2_AUTHORITATIVE_DOCUMENT", sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: [],
+    jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
+    recordClasses: ["STATE_LEGISLATOR", "FEDERAL_DIRECTORY"], competentFacts: ["own-page verified official portrait", "portrait recheck", "recorded portrait gap"],
+    expectedIdentifierKeys: ["person_id", "bioguide_id"], expectedTemporalFields: ["checked_at", "source_through"],
+    horizonSemantics: "Standing work checks every missing or due photo independently of roster acquisition. A photo publishes only when it appears on the person's own official page; failed reads preserve published photos and record a reason.",
+    parserVersion: "people-portraits/1", freshnessExpectation: "Hourly standing admission; each photo follows its own recheck date.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+    derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "SL-03: Sean's October 12, 2026 instruction for standing own-page portrait verification" },
+  },
   "socrata-discovery": {
     id: "socrata-discovery", publisher: "Government publishers through the Socrata Discovery API", trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: ["https://api.us.socrata.com/api/catalog/v1"],
@@ -61,6 +131,8 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
   },
   ...FEDERAL_SOURCE_AUTHORITIES,
+  "congress-api": sharedAuthority(PEOPLE_FEDERAL_AUTHORITIES["congress-api"], FEDERAL_SOURCE_AUTHORITIES["congress-api"]),
+  govinfo: sharedAuthority(PEOPLE_FEDERAL_AUTHORITIES.govinfo, FEDERAL_SOURCE_AUTHORITIES.govinfo),
   "official-ballot-authorities": {
     id: "official-ballot-authorities",
     publisher: "Exact official election authorities in the saved-source receipt",
@@ -194,8 +266,8 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["ocd_id", "voting_site_id"],
     expectedTemporalFields: ["election", "collected_at", "source_through"],
     horizonSemantics: "Every supported election authority is an independent acquisition scope. A failed authority retains only that scope's prior GOOD version; a zero-site response is a refusal, never proof that no place exists.",
-    parserVersion: "official-voting-sites/3",
-    freshnessExpectation: "Explicit owner invocation when an authority publishes or changes its election locations; no standing clock.",
+    parserVersion: "official-voting-sites/4",
+    freshnessExpectation: "Every official door daily through Election Day, hourly in the final seven days. Failed routes retain their last verified facts and open hunter work.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
@@ -315,14 +387,14 @@ export const SOURCE_AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: ["https://api.census.gov/data/"],
+    routePrefixes: ["https://api.census.gov/data/", "https://www.census.gov/programs-surveys/acs/news/data-releases/"],
     jurisdictions: ["US"],
     recordClasses: ["CENSUS_REFERENCE"],
     competentFacts: ["named Census product values", "product vintage", "Census geography code"],
     expectedIdentifierKeys: ["product", "vintage", "geography"],
     expectedTemporalFields: ["vintage"],
     horizonSemantics: "A wildcard geography query is complete only when its returned geography identifiers are unique and reconcile to the product's declared/expected cardinality.",
-    parserVersion: "census-data-api/2",
+    parserVersion: "census-data-api/3",
     freshnessExpectation: "On publication of a newer supported product vintage; never silently substitute a different geography.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["product", "vintage", "geography", "wildcard"] },
     routineAutoPromotion: true,
@@ -479,10 +551,7 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-    /*
-     * Neither authority below has a route of its own; each is authentic only as the exact inputs its candidate names.
-     * The `authorization` strings are stored text, kept byte-identical.
-     */
+
   "meeting-source-wiring": {
     id: "meeting-source-wiring",
     publisher: "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and its vaulted evidence",
@@ -582,10 +651,11 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: [
       "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
       "literal candidate-authored text from those same identity-verified captured pages, with distinct source-byte and transcription hashes; no inferred positions",
+      "portraits from the candidate’s own verified campaign site or freely licensed Wikimedia Commons images bound to the candidacy through Wikidata identity, office or district and state",
     ],
     expectedIdentifierKeys: ["record_id", "candidacy_id"],
     expectedTemporalFields: ["read_at", "approved_at"],
-    horizonSemantics: "Each row is one approved site for one canonical candidacy, keyed by the Reader's own key. It never says a candidate has no site, and a candidate the version does not name is simply not yet verified.",
+    horizonSemantics: "Each row carries a verified campaign site, publication or portrait for one canonical candidacy, keyed by the Reader’s own key. Missing records carry no absence claim.",
     parserVersion: "candidate-campaign-site-chain/1",
     freshnessExpectation: "Recomputed by the standing runner as the campaign-site chain approves sites; no tracked writer.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
@@ -843,6 +913,23 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
+  "legiscan-bills": {
+    id: "legiscan-bills",
+    publisher: "LegiScan",
+    trust: "T4_RESEARCH_SECONDARY",
+    sourceClass: "INTERMEDIARY",
+    routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"],
+    jurisdictions: ["US", ...PLURAL_STATES.map(state => `US-${state.toUpperCase()}`)],
+    recordClasses: ["STATE_BILL"],
+    competentFacts: ["attributed bill status", "native bill sponsors", "published bill text links"],
+    expectedIdentifierKeys: ["bill_id", "session_id"],
+    expectedTemporalFields: ["dataset_date", "session_id"],
+    horizonSemantics: "All bills in each published session archive; LegiScan attribution remains secondary, while linked government documents retain official labels. Unresolved sponsor joins never imply no bills.",
+    parserVersion: "legiscan-bulk/2",
+    freshnessExpectation: "Vendor weekly publication.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
   "plural-openstates-votes": {
     id: "plural-openstates-votes",
     publisher: "Plural / Open States",
@@ -1004,10 +1091,6 @@ export function authorityForManualReceipt(
   return { ok: true, contract };
 }
 
-/**
- * Null means only the contract's own routes are registered. A door's host admits any HTTPS path on that host, unless
- * the contract already names routes on that host: then only those routes are read there.
- */
 let doorHosts: ReadonlySet<string> | null = null;
 const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 

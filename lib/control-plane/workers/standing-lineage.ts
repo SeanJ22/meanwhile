@@ -1,4 +1,4 @@
-import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories, type RecordProjection } from "../repository/types.ts";
 import type { Attempt } from "../attempt.ts";
 import { FRESHNESS_PROJECT, type FreshnessOccurrence, type StandingObligation } from "../scheduler/durable.ts";
 import { isScheduled, scheduleObligation } from "../scheduler/obligation.ts";
@@ -34,12 +34,18 @@ export interface StandingLineage {
   readonly publishedAt: string | null;
 }
 
+/** The capture and Attempt fields lineage selection reads; whole-store callers read only these (`readAllNarrowed`, `listNarrowed`). */
+export const LINEAGE_ARTIFACT_FIELDS: RecordProjection = { artifactId: true, workItemId: true, attemptId: true, partial: true, canonicalUrl: true };
+export type LineageArtifact = Pick<ArtifactRecord, "artifactId" | "workItemId" | "attemptId" | "partial" | "canonicalUrl">;
+export const LINEAGE_ATTEMPT_FIELDS: RecordProjection = { id: true, workItemId: true, outcome: true, worker: ["role"] };
+export type LineageAttempt = Pick<Attempt, "id" | "workItemId" | "outcome"> & { readonly worker: Pick<Attempt["worker"], "role"> };
+
 /** Every sibling remains durable; this selects only which one may spend the next work slice. */
 export function selectStandingLineages(input: {
   readonly occurrences: readonly FreshnessOccurrence[];
   readonly workItems: readonly WorkItem[];
-  readonly artifacts: readonly ArtifactRecord[];
-  readonly attempts: readonly Attempt[];
+  readonly artifacts: readonly LineageArtifact[];
+  readonly attempts: readonly LineageAttempt[];
   readonly workerResults: readonly {readonly id:string;readonly workItemId:string;readonly attemptId:string;
     readonly result:{readonly role:string;readonly verdict:string}}[];
 }): readonly StandingLineage[] {
@@ -196,7 +202,7 @@ export async function persistVerifiedPublicationAnchors(repos:ControlPlaneReposi
  * exact fetch/browser rung and metadata agree on ID, owner and official host.
  * Vault hash, permission and freshness are checked again when the ID is read. */
 export function brokeredSiblingCaptures(input: { readonly lineage: StandingLineage;
-  readonly artifacts: readonly ArtifactRecord[]; readonly attempts: readonly Attempt[];
+  readonly artifacts: readonly LineageArtifact[]; readonly attempts: readonly LineageAttempt[];
   readonly scouts: readonly Pick<ScoutResult,"attemptId"|"workItemId"|"rungs">[];
   readonly registeredHost: string }): readonly {readonly artifactId:string;readonly originWorkItemId:string}[] {
   const siblings=new Set(input.lineage.siblingRootIds.filter(id=>id!==input.lineage.rootWorkItemId));

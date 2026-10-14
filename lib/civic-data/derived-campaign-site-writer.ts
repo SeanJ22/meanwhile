@@ -13,6 +13,7 @@ import {
   derivedCandidateRevisionId,
   type CandidateLinksShape,
   type DerivedCampaignSiteRecord,
+  type DerivedCandidatePortraitRecord,
   type DerivedCampaignSitesProjection,
 } from "./derived-campaign-sites.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
@@ -35,12 +36,6 @@ export type { HeldCandidatePublicationRead as HeldLinkedPublicationRead } from "
 import type { CandidateDocument, CandidatePublicationDate } from "../candidates/corpus.ts";
 import { readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../control-plane/evidence/read-only-vault.ts";
 
-/**
- * Builds the derived campaign-sites version from approved sites. Each approval's vaulted bytes must hash to what it
- * names and verify again now for its own identity; one candidacy carries one campaign link; every input is named, and
- * held records are excluded facts. Its import closure holds no filesystem writer, so the approval shape is held
- * structurally.
- */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
 
 export interface PublishableCampaignSiteApproval {
@@ -74,9 +69,7 @@ export interface PublishableCampaignSiteApproval {
 }
 
 const text = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
-/** Only an exact source tag identifying its own article publication time may
- * supply a publication date. A retrieval time or generic event `<time>` never
- * substitutes for it. Multiple conflicting source-stated dates stay unknown. */
+
 function sourcePublicationDate(html: string, artifactId: string, rawContentHash: string): CandidatePublicationDate | undefined {
   const found: CandidatePublicationDate[] = [];
   // Keep offsets in the original source. Masking or rewriting HTML before
@@ -185,6 +178,7 @@ function publicationEvidence(record: PublishableCampaignSiteApproval): DerivedCa
 
 export interface DerivedCampaignSitesPlan {
   readonly records: readonly DerivedCampaignSiteRecord[];
+  readonly portraits?: readonly DerivedCandidatePortraitRecord[];
   readonly published: readonly { readonly key: string; readonly candidacyId: string; readonly url: string; readonly approvalRecordId: string }[];
   readonly held: readonly { readonly key: string; readonly code: DerivedCampaignSiteHoldCode; readonly detail: string }[];
   readonly inputs: readonly DerivedInputRef[];
@@ -441,6 +435,7 @@ export function planDerivedCampaignSites(input: {
   const byId = (a: { id: string }, b: { id: string }) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   return {
     records: [...records.values()].sort(byId),
+    ...(input.prior?.projection.portraits?.length ? { portraits: input.prior.projection.portraits } : {}),
     published: published.sort((a, b) => a.key.localeCompare(b.key)),
     held: held.sort((a, b) => `${a.key}\n${a.code}`.localeCompare(`${b.key}\n${b.code}`)),
     inputs: [...inputs.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, i]) => i),
@@ -453,7 +448,7 @@ const sha256Hex = (value: string): string => createHash("sha256").update(value).
 const FACT_KIND = "2026 candidates' campaign sites, each read robots-first by our own Attempt, verified on vaulted bytes and approved by the campaign-site chain";
 
 export function derivedCampaignSitesProjection(plan: DerivedCampaignSitesPlan): DerivedCampaignSitesProjection {
-  return { kind: "candidate-campaign-sites-derived", formatVersion: 1, records: plan.records };
+  return { kind: "candidate-campaign-sites-derived", formatVersion: 1, records: plan.records, ...(plan.portraits?.length ? { portraits: plan.portraits } : {}) };
 }
 
 export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, attemptedAt: string): RoutineCandidate {
@@ -478,12 +473,20 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
   const uncitedPublications = readModel.records.flatMap(r => (r.publications ?? []).filter(p => !cited.has(p.evidence.artifactId) ||
     !cited.has(p.evidence.approvalRecordId) || ("kind" in p.evidence && p.evidence.kind === "LINKED_PAGE" && !cited.has(p.evidence.sourceArtifactId)))
     .filter(p => !(inheritedIdentity(r)?.publications ?? []).some(prior => canonicalCivicDataJson(prior) === canonicalCivicDataJson(p))).map(p => p.document.id));
+  const imageSourceInputs = new Set(plan.inputs.flatMap(input => input.kind === "VAULTED_EVIDENCE"
+    ? [`${input.contentHash}|${input.retrievedAt}`] : []));
+  const inheritedPortraits = new Map((priorValid ? plan.prior!.projection.portraits ?? [] : []).map(record => [record.id, record]));
+  const uncitedPortraits = (readModel.portraits ?? []).filter(record =>
+    canonicalCivicDataJson(record) !== canonicalCivicDataJson(inheritedPortraits.get(record.id)) &&
+    record.portrait.photoVerification?.sources.some(source => !imageSourceInputs.has(`${source.contentHash}|${source.retrievedAt}`))).map(record => record.id);
   const violations = [
     ...(shapeIssue === null ? [] : [`the version is not a derived campaign-sites version: ${shapeIssue}`]),
     ...(plan.prior && !priorValid ? ["the inherited campaign facts do not match their referenced promoted version"] : []),
     ...(uncited.length === 0 ? [] : [`record(s) ${uncited.join(", ")} rest on an approval or vaulted read the version does not name as an input`]),
+    ...(uncitedPortraits.length === 0 ? [] : [`portrait(s) ${uncitedPortraits.join(", ")} lack their exact captured source input`]),
     ...(uncitedPublications.length === 0 ? [] : [`publication(s) ${uncitedPublications.join(", ")} lack their exact approved capture input`]),
   ];
+  const outputRecords = readModel.records.length + (readModel.portraits?.length ?? 0);
   const normalized = sha256Hex(canonicalCivicDataJson(readModel));
   const normalizedPayload = {
     readModel,
@@ -511,12 +514,12 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
       schemaVersion: "candidate-campaign-sites-derived:1",
       normalizedHash: normalized,
       normalizedPayloadHash: sha256Hex(canonicalCivicDataJson(normalizedPayload)),
-      inputRecords: readModel.records.length,
-      outputRecords: readModel.records.length,
+      inputRecords: outputRecords,
+      outputRecords,
       droppedRecords: 0,
       missingRequiredFields: [],
     },
-    identities: readModel.records.map((record) => ({
+    identities: [...readModel.records, ...(readModel.portraits ?? [])].map((record) => ({
       subjectId: record.id,
       jurisdiction: "US",
       identifiers: { record_id: record.id, candidacy_id: record.candidacyId },
@@ -528,7 +531,7 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
     horizon: {
       kind: "OPEN_FACT_SET",
       query: "every campaign site the campaign-site chain approved; no claim that a candidate the version does not name has no site",
-      returnedRecords: readModel.records.length,
+      returnedRecords: outputRecords,
       declaredTotal: null,
       paginationComplete: false,
       claimsComplete: false,
@@ -593,7 +596,7 @@ export function derivedCampaignSitesPass(input: {
   }
   const plan = planDerivedCampaignSites({ approvals: input.approvals, held: input.held, profiles: input.profiles, prior: input.prior,
     linkedPublications: input.linkedPublications });
-  if (plan.records.length === 0) {
+  if (plan.records.length === 0 && !plan.portraits?.length) {
     const why = input.approvals.length === 0
       ? "NO_APPROVED_SITE_YET: the campaign-site chain has approved no site"
       : `NO_PUBLISHABLE_SITE: all ${input.approvals.length} approval(s) are held (${plan.held.map((h) => `${h.code} ${h.key}`).join("; ")})`;

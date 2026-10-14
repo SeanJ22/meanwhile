@@ -17,6 +17,7 @@ const STAGES: readonly WorkerStage[] = ["finding", "collecting", "extracting", "
 
 const when = (iso: string | null | undefined, withDay = true): string => (iso && Number.isFinite(Date.parse(iso)) ? mst(iso, withDay) : "—");
 
+const megabytes = (bytes: number): string => `${(bytes / 1e6).toLocaleString("en-US", { maximumFractionDigits: 1 })} MB`;
 const MINUTE = 60_000;
 const noSubscription = () => () => {};
 const minuteNow = () => Math.floor(Date.now() / MINUTE) * MINUTE;
@@ -58,7 +59,7 @@ export interface RoundReading {
 export function roundReading(st: WorkerStatus | null | undefined, now: number): RoundReading {
   const cycle = st?.cycle;
   if (cycle?.finishedAt) {
-    const exit = cycle.signal ? `signal ${cycle.signal}` : cycle.exitCode === null ? "exit not recorded" : `exit ${cycle.exitCode}`;
+    const exit = cycle.signal ? "it was stopped from outside" : cycle.exitCode === null ? "how it ended is not recorded" : cycle.exitCode === 0 ? "it ended normally" : `it ended with an error (code ${cycle.exitCode})`;
     return { headline: `Finished ${mst(cycle.finishedAt, false)}`,
       detail: `Started ${mst(cycle.startedAt)}; finished ${mst(cycle.finishedAt)}; ${exit}.`, overdue: false };
   }
@@ -125,6 +126,42 @@ export function missingByCard(parts: readonly string[] | undefined): Readonly<Re
 /** False for the pulse-only stand-in: the Workers section itself hasn’t arrived. */
 export function workersSectionArrived(src: AdminV6Data["workers"]): boolean {
   return src.state === "sample" || src.state === "live" && !(src.missingParts ?? []).includes(SECTION_DEP.workers.need);
+}
+
+/**
+ * The Workers page in a few plain sentences, read before any tile or table: whether the workers are current, when
+ * they last checked in, the round, the work, the last useful progress and anything refused. An unknown is said as
+ * not reported, never guessed.
+ */
+export function workersInWords(input: {
+  readonly update: { readonly status?: string; readonly title: string } | null | undefined;
+  readonly status: WorkerStatus | null | undefined;
+  readonly round: RoundReading;
+  readonly checkIn: string | null;
+  readonly progressAge: string | null;
+  readonly working: string;
+  readonly waiting: number | null;
+  readonly place: string | null;
+  readonly live: boolean;
+}): string[] {
+  const st = input.status;
+  const lines: string[] = [];
+  if (input.update) lines.push(input.update.status === "SUCCEEDED" ? "The latest update to the workers finished." : `${input.update.title} did not finish; the card below says who is fixing it.`);
+  if (!st?.lastCheckIn) lines.push("The workers have no check-in on record.");
+  else if (st.runnerState && st.runnerState !== "ALIVE") lines.push(`The workers last checked in ${input.checkIn ?? mst(st.lastCheckIn)} and are ${runnerStateWords(st.runnerState)} now.`);
+  else lines.push(`The workers last checked in ${input.checkIn ?? mst(st.lastCheckIn)}.`);
+  const failed = !!st?.cycle && (st.cycle.lastError !== null || (st.cycle.exitCode !== null && st.cycle.exitCode !== 0));
+  if (input.round.headline !== "Not reported") lines.push(input.round.overdue ? `${input.round.headline}. ${input.round.detail}`
+    : `Round of work: ${input.round.headline.charAt(0).toLowerCase()}${input.round.headline.slice(1)}${failed ? ", with an error; the details are on the Round of work tile" : ""}.`);
+  const where = input.place ? ` in ${input.place}` : "";
+  if (input.working !== "—" || input.waiting !== null) {
+    lines.push(`${input.working === "—" ? "An unreported number of" : input.working} ${input.working === "1" ? "job is" : "jobs are"} working now${where}${input.waiting === null ? "" : `, and ${count(input.waiting)} ${input.waiting === 1 ? "is" : "are"} waiting`}.`);
+  }
+  if (st?.lastUsefulProgress) lines.push(`The last useful progress${where} was ${input.progressAge ?? mst(st.lastUsefulProgress.at)}: ${st.lastUsefulProgress.what.charAt(0).toLowerCase()}${st.lastUsefulProgress.what.slice(1).replace(/\.$/, "")}.`);
+  else lines.push(`No useful progress${where} is on record yet.`);
+  if (st?.refused) lines.push(`${count(st.refused.count)} paid ${st.refused.count === 1 ? "job was" : "jobs were"} not sent to the AI because ${st.refused.why.replace(/\.$/, "")}.`);
+  if (!input.live) lines.push("This page is not getting live updates right now, so these may be out of date.");
+  return lines;
 }
 
 type AgentFilter = "all" | AgentRun["state"];
@@ -286,6 +323,15 @@ export function WorkersScreen() {
         {arrived && src.asOf && <p className={cx(s.p, s.meta)}>Read {mst(src.asOf)}</p>}
       </header>
 
+      <Card title="In plain words">
+        <div className={s.stack} style={{ gap: 6 }}>
+          {workersInWords({ update: w?.update, status: st, round, checkIn, progressAge,
+            working: jobs ? nowWorking : totals?.running != null ? count(totals.running) : "—",
+            waiting: jobs ? (waiting ? waiting.length : null) : totals ? totals.waiting : null,
+            place: isCountry ? null : v.place.name, live }).map((line) => <p key={line} className={s.p}>{line}</p>)}
+        </div>
+      </Card>
+
       {w?.update ? (
         <Card title={w.update.title} tone={w.update.status === "SUCCEEDED" ? undefined : "warn"} aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
           <p className={s.p}>{w.update.what}</p>
@@ -314,7 +360,13 @@ export function WorkersScreen() {
           <strong>{when(st?.lastUsefulProgress?.at)}</strong>
           {st?.lastUsefulProgress && <span className={s.meta}>{progressAge ? `${progressAge}. ` : ""}{st.lastUsefulProgress.what}</span>}
         </div>
-        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <span className={cx(s.meta, s.textWarn)}>Last round error: {st.cycle.lastError}</span>}</>}</div>
+        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <><span className={cx(s.meta, s.textWarn)}>The last round ended with an error.</span><Technical lines={[st.cycle.lastError]} /></>}</>}</div>
+        <div className={s.row}>
+          <span className={s.eyebrow}>Database reads, last full hour</span>
+          <strong>{st?.databaseReads ? megabytes(st.databaseReads.controlPlaneBytes + st.databaseReads.readerBytes) : "—"}</strong>
+          {st?.databaseReads && <><span className={s.meta}>Work records {megabytes(st.databaseReads.controlPlaneBytes)} · reader data {megabytes(st.databaseReads.readerBytes)} · hour starting {mst(st.databaseReads.hour, false)}</span>
+            <Technical lines={st.databaseReads.byCaller.map(row => `${megabytes(row.bytes)} ← ${row.caller}`)} /></>}
+        </div>
         {st?.refused && <div className={cx(s.row, s.cardWarn)}><span className={s.eyebrow}>Refused before the AI</span><strong className={s.textWarn}>{count(st.refused.count)} paid jobs</strong><span className={s.meta}>Not sent to the AI because {st.refused.why}.</span></div>}
         <div className={s.row}>
           <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>

@@ -1,465 +1,214 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the read: the freshness date
- * is taken at the moment of the fetch.
- */
+// @freshness-reads-here
+import { createHash } from "node:crypto";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
-import {
-  isPlacelessLocation,
-  resolveVenue,
-  soleVenueForBody,
-  unplacedVenueGap,
-} from "../../meetings/venue-cache.ts";
+import { isPlacelessLocation, resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
-import { decodeEntities, politeGetText } from "../http.ts";
-import type {
-  Meeting,
-  MeetingQuery,
-  MeetingStatus,
-  NormalizeDropCounts,
-  PartialScopeFailure,
-  ReportingMeetingSource,
-} from "../types.ts";
-import {
-  accountedNormalize,
-  type Accounted,
-} from "../normalize-account.ts";
+import { accountedNormalize } from "../normalize-account.ts";
+import { parseDtStart, parseIcs, publisherPostedAt } from "../ical/index.ts";
+import { acquireKnownRelease, type KnownReleaseOptions } from "../known-release.ts";
+import { recordAcquiredResponse } from "../acquisition-trace.ts";
+import { readValidatedResponse, REQUEST_SPACING_MS } from "../http.ts";
+import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import type { Meeting, MeetingQuery, MeetingStatus, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
+import { agendaCenterPages, agendaCenterRssUrl, parseAgendaCenter, parseAgendaCenterUpdates, type ArchivedSitting } from "./agenda-center.ts";
 
-/**
- * CivicPlus / CivicEngage meeting source: the municipality's own iCal and RSS feeds, first-party and
- * machine-readable. Both URL patterns are CivicPlus-wide, so another CivicPlus municipality is a
- * meeting door, not code. The iCal category feed mixes civic events with sittings; only events
- * whose SUMMARY matches the row's `summaryMatch` are this body's meetings, and the rest count as
- * `notConfigured`.
- */
+export { parseAgendaCenter, parseAgendaCenterCategories } from "./agenda-center.ts";
 
 const SOURCE_NAME = "civicplus";
+type CacheOptions = Pick<KnownReleaseOptions, "store" | "locks" | "now">;
 
 export interface CivicPlusRaw {
   wiring: BodySourceWiring;
   ical: string;
-  /** The AgendaCenter page's HTML, when the row wires one. */
-  agendaCenter?: string;
+  rss?: { url: string; text: string; collectedAt: string };
+  agendaPages?: { url: string; text: string; collectedAt: string }[];
   partialScopes?: PartialScopeFailure[];
   collectedAt: string;
 }
 
-/** A sitting the AgendaCenter archives: a date, and documents filed under it. */
-export interface ArchivedSitting {
-  /** `YYYY-MM-DD`, from the document href's own `MMDDYYYY` token. */
-  date: string;
-  /** Site-relative hrefs, agenda first where both exist. */
-  agendaHref: string | null;
-  title?: string;
-}
-
-/** CivicEngage renders both flat `listing` categories and grouped `category` panels. */
-function categoryBlocks(html: string): { id: string; name: string; html: string }[] {
-  const blocks: { id: string; name: string; html: string }[] = [];
-  for (const match of html.matchAll(/<div\b[^>]*\bid\s*=\s*["']cat(\d+)["'][^>]*>/gi)) {
-    const start = match.index! + match[0].length;
-    let depth = 1;
-    let end = html.length;
-    for (const tag of html.slice(start).matchAll(/<\/?div\b[^>]*>/gi)) {
-      depth += /^<\//.test(tag[0]) ? -1 : 1;
-      if (depth === 0) { end = start + tag.index!; break; }
-    }
-    const block = html.slice(start, end);
-    const heading = /<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/i.exec(block)?.[1] ?? "";
-    const name = decodeEntities(heading.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
-    blocks.push({ id: match[1], name, html: block });
-  }
-  return blocks;
-}
-
-export function parseAgendaCenterCategories(html: string): { id: string; name: string }[] {
-  return categoryBlocks(html).map(({ id, name }) => ({ id, name }));
-}
-
-/**
- * Sittings archived under one AgendaCenter category. CivicPlus renders each category as
- * `<div class="listing" id="cat<N>">` and every document as
- * `/AgendaCenter/ViewFile/<Agenda|Minutes>/_MMDDYYYY-<id>`; the date is read from the href. The category
- * id is required and never guessed: one page hosts several bodies.
- */
-export function parseAgendaCenter(
-  html: string,
-  categoryId: string,
-): ArchivedSitting[] {
-  const block = categoryBlocks(html).find((category) => category.id === categoryId);
-  if (!block) return [];
-
-  const byDate = new Map<string, { agenda?: string; other?: string }>();
-  for (const m of block.html.matchAll(
-    /\/AgendaCenter\/ViewFile\/(Agenda|Minutes)\/_?(\d{2})(\d{2})(\d{4})-(\d+)(?:\?[^"'<>\s]*)?/gi,
-  )) {
-    const date = `${m[4]}-${m[2]}-${m[3]}`;
-    const stamp = Date.parse(`${date}T00:00:00Z`);
-    if (!Number.isFinite(stamp) || new Date(stamp).toISOString().slice(0, 10) !== date) continue;
-    const entry = byDate.get(date) ?? {};
-    if (m[1].toLowerCase() === "agenda" && !entry.agenda) entry.agenda = decodeEntities(m[0]);
-    else entry.other = m[0];
-    byDate.set(date, entry);
-  }
-
-  return [...byDate]
-    .map(([date, hrefs]) => ({ date, agendaHref: hrefs.agenda ?? hrefs.other ?? null }))
-    .sort((a, b) => a.date.localeCompare(b.date));
-}
-
-interface IcalEvent {
-  uid: string;
-  summary: string;
-  location: string;
-  /** Wall-clock start: YYYYMMDDTHHMMSS, with the TZID it was published in. */
-  dtstart: string;
-  tzid: string | null;
-}
-
-/** Unfold RFC 5545 folded lines (CRLF followed by a space or tab). */
-function unfoldIcal(text: string): string[] {
-  return text
-    .replace(/\r\n/g, "\n")
-    .replace(/\n[ \t]/g, "")
-    .split("\n");
-}
-
-export function parseIcalEvents(text: string): IcalEvent[] {
-  const events: IcalEvent[] = [];
-  let current: Partial<IcalEvent> | null = null;
-
-  for (const line of unfoldIcal(text)) {
-    if (line.startsWith("BEGIN:VEVENT")) {
-      current = {};
-      continue;
-    }
-    if (line.startsWith("END:VEVENT")) {
-      if (current?.uid && current.summary && current.dtstart) {
-        events.push({
-          uid: current.uid,
-          summary: current.summary,
-          location: current.location ?? "",
-          dtstart: current.dtstart,
-          tzid: current.tzid ?? null,
-        });
-      }
-      current = null;
-      continue;
-    }
-    if (!current) continue;
-
-    const colon = line.indexOf(":");
-    if (colon < 0) continue;
-    const rawName = line.slice(0, colon);
-    const value = line.slice(colon + 1).trim();
-    const [name, ...params] = rawName.split(";");
-
-    switch (name) {
-      case "UID":
-        current.uid = value;
-        break;
-      case "SUMMARY":
-        current.summary = value;
-        break;
-      case "LOCATION":
-        current.location = value;
-        break;
-      case "DTSTART": {
-        current.dtstart = value;
-        const tz = params.find((p) => p.startsWith("TZID="));
-        current.tzid = tz ? tz.slice("TZID=".length) : null;
-        break;
-      }
-    }
-  }
-
-  return events;
-}
-
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
-}
-
-/**
- * Whether the feed is announcing a cancellation. CivicPlus cancels by editing the SUMMARY text, not by
- * setting iCal `STATUS`, so a `summaryMatch` prefix still matches it. A cancelled meeting is kept; it
- * never says SCHEDULED. Both spellings are accepted.
- */
 export function isCancelledSummary(summary: string): boolean {
   return /\bcancell?ed\b/i.test(summary);
 }
 
-/**
- * The venue string, with a cancellation notice the publisher pasted into `LOCATION` removed. Never
- * supplies a venue that was not published.
- */
 export function locationWithoutNotice(location: string): string {
   const close = location.lastIndexOf("</p>");
-  return close >= 0 ? location.slice(close + "</p>".length) : location;
+  return close >= 0 ? location.slice(close + 4) : location;
+}
+
+function clockAt(raw: string, zone: string): { iso: string; dayOnly: boolean } | null {
+  const stamp = /:(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2}))?Z?$/.exec(raw);
+  if (!stamp) return null;
+  const [, y, m, d, h = "00", minute = "00", second = "00"] = stamp;
+  const civil = `${y}-${m}-${d}T${h}:${minute}:${second}.000Z`;
+  if (!Number.isFinite(Date.parse(civil)) || new Date(civil).toISOString() !== civil) return null;
+  const parsed = parseDtStart(raw, zone);
+  if (!parsed) return null;
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {
+    timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(new Date(parsed.iso)).map(part => [part.type, part.value]));
+  return { iso: toZonedIso(+parts.year, +parts.month, +parts.day, +parts.hour, +parts.minute, zone), dayOnly: parsed.dayOnly };
+}
+
+function linksFor(sitting: ArchivedSitting, url: string): NonNullable<Meeting["publishedLinks"]> {
+  return sitting.links.flatMap(link => {
+    const target = new URL(link.href, url);
+    return ["https:", "http:"].includes(target.protocol) ? [{ label: link.label, href: target.href }] : [];
+  });
+}
+
+function statusOf(startsAt: string, dayOnly: boolean, now: Date, timeZone: string): MeetingStatus {
+  if (!dayOnly) return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  return startsAt.slice(0, 10) < today ? "CONCLUDED" : "SCHEDULED";
 }
 
 export function makeCivicPlusSource(
-  wiringRows: BodySourceWiring[],
-  fetchImpl?: typeof fetch,
+  wiringRows: BodySourceWiring[], fetchImpl?: typeof fetch, cache: CacheOptions = {},
 ): ReportingMeetingSource<CivicPlusRaw> {
-  const normalizeWithDrops = (
-    raw: CivicPlusRaw[],
-    now: Date = new Date(),
-  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts; partialScopes?: PartialScopeFailure[] }> => {
+  const normalizeWithDrops = (raw: CivicPlusRaw[], now = new Date()) => {
     const meetings: Meeting[] = [];
-    const drops: NormalizeDropCounts = {
-      placeless: 0,
-      unknownVenue: 0,
-      unplaceableInTime: 0,
-      notConfigured: 0,
-    };
-
-    // A-002 · counted in the unit the disposition happens in. One raw row is
-    // one town's feed plus its archive page, and both expand into many events.
-    let considered = 0;
-    let duplicates = 0;
-    let keptButPlaceless = 0;
-
-    for (const { wiring, ical, agendaCenter, collectedAt } of raw) {
-      const summaryMatch = wiring.config.summaryMatch ?? "";
-      // The body's own published name, where the feed's SUMMARY is a sitting
-      // label rather than a body ("Planning Board Meeting"). Read off the
-      // township's own page and cited on the wiring row; never minted.
-      const bodyName =
-        wiring.config.bodyName || summaryMatch || wiring.publishingOrg;
-      // Scoped to this row, not the division: several bodies can share one ocdId, and one body's sitting must
-      // not suppress another's on the same day.
-      const rowDates = new Map<string, Meeting[]>();
-
-      for (const event of parseIcalEvents(ical)) {
-        considered += 1;
-        if (summaryMatch && !event.summary.includes(summaryMatch)) {
-          drops.notConfigured++;
-          continue;
+    const drops: NormalizeDropCounts = { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 };
+    let logicalInput = 0, duplicates = 0, countedButProduced = 0;
+    const seen = new Set<string>();
+    for (const { wiring, ical, agendaPages = [], rss, collectedAt } of raw) {
+      const bodyName = wiring.config.bodyName || wiring.config.summaryMatch || wiring.publishingOrg;
+      const feedDates = new Map<string, Meeting[]>();
+      const placed = (published: string) => {
+        const online = isPlacelessLocation(published) ? { label: published, joinUrl: null } : null;
+        const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, published);
+        const venueGap = !online && !venue ? unplacedVenueGap(published, wiring.publishingOrg) : null;
+        if (online || venueGap) { drops[online ? "placeless" : "unknownVenue"]++; countedButProduced++; }
+        return { location: venue ? { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } : null,
+          ...(online ? { online } : {}), ...(venueGap ? { venueGap } : {}) };
+      };
+      const common = { ocdId: wiring.ocdId, bodyId: wiring.bodyId, bodyName, timeZone: wiring.timeZone, jurisdiction: wiring.jurisdiction };
+      for (const event of parseIcs(ical)) {
+        logicalInput++;
+        if (!event.uid || !event.summary || (wiring.config.summaryMatch && !event.summary.includes(wiring.config.summaryMatch))) {
+          drops.notConfigured++; continue;
         }
-
-        const m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})/.exec(event.dtstart);
-        if (!m) {
-          drops.unplaceableInTime++;
-          continue;
-        }
-        const startsAt = toZonedIso(
-          Number(m[1]),
-          Number(m[2]),
-          Number(m[3]),
-          Number(m[4]),
-          Number(m[5]),
-          event.tzid ?? wiring.timeZone,
-        );
-
-        const eventLocation = locationWithoutNotice(event.location);
-        // A meeting held online is kept: no building means no pin, but it is a real public meeting. The label is
-        // the published string verbatim; no join link is published, so `joinUrl` is null.
-        const online = isPlacelessLocation(eventLocation)
-          ? { label: eventLocation, joinUrl: null }
-          : null;
-        if (online) {
-          drops.placeless++;
-          // A-002: this TALLIES a meeting that is then PRODUCED below (D18),
-          // so it is not a drop and must not be summed as one.
-          keptButPlaceless += 1;
-        }
-        const venue = online
-          ? null
-          : resolveVenue(SOURCE_NAME, wiring.ocdId, eventLocation) ?? null;
-        // No reviewed venue never suppresses the sitting: it is published with no pin and its gap named (the
-        // feed's `LOCATION` verbatim, or its silence), counted as `unknownVenue`.
-        const venueGap = !online && !venue ? unplacedVenueGap(eventLocation, wiring.publishingOrg) : null;
-        if (venueGap) {
-          drops.unknownVenue++;
-          keptButPlaceless += 1;
-        }
-
-        const feedDay = startsAt.slice(0, 10);
-
-        meetings.push({
-          id: `${SOURCE_NAME}:${wiring.config.slug}:${event.uid}`,
-          ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
-          bodyId: wiring.bodyId,
-          bodyName,
-          title: event.summary,
-          startsAt,
-          timeZone: wiring.timeZone,
-          location: venue
-            ? {
-                name: venue.name,
-                address: venue.address,
-                lat: venue.lat,
-                lng: venue.lng,
-              }
-            : null,
-          ...(online ? { online } : {}),
-          ...(venueGap ? { venueGap } : {}),
-          // The feed carries no per-meeting agenda link; never a constructed AgendaCenter URL. The archive's own
-          // link for the same date is attached below.
-          agendaUrl: null,
-          jurisdiction: wiring.jurisdiction,
-          status: isCancelledSummary(event.summary)
-            ? "CANCELED"
-            : statusOf(startsAt, now),
-          provenance: {
-            sourceUrl: wiring.config.icalUrl,
-            sourceOrg: wiring.publishingOrg,
-            collectedAt,
-            verifiedAt: null,
-          },
-        });
-        rowDates.set(feedDay, [...(rowDates.get(feedDay) ?? []), meetings[meetings.length - 1]!]);
+        const start = event.dtstart && clockAt(event.dtstart, wiring.timeZone);
+        if (!start) { drops.unplaceableInTime++; continue; }
+        const id = `${SOURCE_NAME}:${wiring.config.slug}:${event.uid}`;
+        if (seen.has(id)) { duplicates++; continue; }
+        seen.add(id);
+        const meeting: Meeting = {
+          ...common, id, title: event.summary, startsAt: start.iso, ...(start.dayOnly ? { startPrecision: "DAY" } : {}),
+          ...placed(locationWithoutNotice(event.location ?? "")), agendaUrl: null,
+          ...(publisherPostedAt(event) ? { postedAt: publisherPostedAt(event)! } : {}),
+          status: isCancelledSummary(event.summary) || /^CANCELLED$/i.test(event.status ?? "") ? "CANCELED" : statusOf(start.iso, start.dayOnly, now, wiring.timeZone),
+          provenance: { sourceUrl: wiring.config.icalUrl, sourceOrg: wiring.publishingOrg, collectedAt, verifiedAt: null },
+        };
+        meetings.push(meeting);
+        const day = start.iso.slice(0, 10);
+        feedDates.set(day, [...(feedDates.get(day) ?? []), meeting]);
       }
-
-      // The AgendaCenter archive. The iCal feed is upcoming-only; the archive lists past sittings as dated
-      // agenda and minutes documents with no start time, hence `startPrecision: "DAY"`.
-      const categoryId = wiring.config.agendaCenterCategoryId;
-      if (!agendaCenter || !categoryId) continue;
-
-      const venue = soleVenueForBody(SOURCE_NAME, wiring.ocdId);
-      const archiveUrl = `${wiring.config.agendaCenterUrl}`;
-
-      for (const sitting of parseAgendaCenter(agendaCenter, categoryId)) {
-        considered += 1;
-        // The feed's own row for a date, with its real time, always wins —
-        // for THIS body. `rowDates` is per wiring row, not per division.
-        const feedRows = rowDates.get(sitting.date);
-        if (feedRows) {
-          // A-002: the feed already produced this sitting; the archive row is
-          // the same logical record arriving a second way.
-          duplicates += 1;
-          // The archive row is the only representation carrying the agenda: the feed row keeps its real time and
-          // gains the archive's link.
-          if (sitting.agendaHref) {
-            const agendaUrl = new URL(sitting.agendaHref, archiveUrl).toString();
-            for (const row of feedRows) if (row.agendaUrl === null) row.agendaUrl = agendaUrl;
-          }
+      const categoryIds = wiring.config.agendaCenterCategoryId?.split(",").map(id => id.trim()) ?? [];
+      const archiveRows = agendaPages.flatMap(page => categoryIds.flatMap(categoryId => parseAgendaCenter(page.text, categoryId).map(sitting => ({ sitting, page }))));
+      const updates = new Map(parseAgendaCenterUpdates(rss?.text ?? "").map(update => [update.id, update]));
+      const dateCounts = new Map<string, Set<string>>();
+      for (const { sitting } of archiveRows) {
+        const ids = dateCounts.get(sitting.date) ?? new Set(); ids.add(sitting.id); dateCounts.set(sitting.date, ids);
+      }
+      for (const { sitting, page } of archiveRows) {
+        logicalInput++;
+        const id = `${SOURCE_NAME}:${wiring.config.slug}:archive:${sitting.categoryId}:${sitting.id}`;
+        if (seen.has(id)) { duplicates++; continue; }
+        seen.add(id);
+        const links = linksFor(sitting, page.url);
+        const agendaUrl = sitting.agendaHref ? new URL(sitting.agendaHref, page.url).href : null;
+        const update = updates.get(sitting.id);
+        const posting = update && rss ? {
+          postedAt: update.postedAt,
+          fieldSources: { postedAt: { sourceUrl: rss.url, sourceOrg: wiring.publishingOrg, collectedAt: rss.collectedAt, verifiedAt: null } },
+        } : {};
+        const feed = feedDates.get(sitting.date) ?? [];
+        // A day alone cannot match two distinct sittings. Keep their own document identities.
+        if (feed.length === 1 && dateCounts.get(sitting.date)?.size === 1) {
+          duplicates++; feed[0].agendaUrl ??= agendaUrl; feed[0].publishedLinks = links;
+          const provenance = { sourceUrl: page.url, sourceOrg: wiring.publishingOrg, collectedAt: page.collectedAt, verifiedAt: null };
+          feed[0].fieldSources = { ...feed[0].fieldSources, ...(agendaUrl ? { agendaUrl: provenance } : {}), publishedLinks: provenance };
+          if (posting.postedAt) { feed[0].postedAt = posting.postedAt; feed[0].fieldSources = { ...feed[0].fieldSources, ...posting.fieldSources }; }
+          if (isCancelledSummary(sitting.title)) feed[0].status = "CANCELED";
           continue;
         }
-        if (!venue) {
-          // The archive states no place for any sitting and this body has no one reviewed venue, so the sitting is
-          // published with our own place-not-recorded gap, counted as `unknownVenue`.
-          drops.unknownVenue++;
-          keptButPlaceless += 1;
-        }
-
         const [y, m, d] = sitting.date.split("-").map(Number);
-        // Local midnight: an ordering position, not a claim.
-        const startsAt = toZonedIso(y, m, d, 0, 0, wiring.timeZone);
-
+        const startsAt = toZonedIso(y, m, d, sitting.hour ?? 0, sitting.minute ?? 0, wiring.timeZone);
         meetings.push({
-          id: `${SOURCE_NAME}:${wiring.config.slug}:archive:${sitting.date}`,
-          ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
-          bodyId: wiring.bodyId,
-          bodyName,
-          title: bodyName,
-          startsAt,
-          startPrecision: "DAY",
-          timeZone: wiring.timeZone,
-          location: venue
-            ? {
-                name: venue.name,
-                address: venue.address,
-                lat: venue.lat,
-                lng: venue.lng,
-              }
-            : null,
-          agendaUrl: sitting.agendaHref
-            ? new URL(sitting.agendaHref, archiveUrl).toString()
-            : null,
-          jurisdiction: wiring.jurisdiction,
-          status:
-            Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED",
-          provenance: {
-            sourceUrl: archiveUrl,
-            sourceOrg: wiring.publishingOrg,
-            collectedAt,
-            verifiedAt: null,
-          },
+          ...common, id, title: sitting.title || bodyName, startsAt,
+          ...(sitting.hour === null ? { startPrecision: "DAY" as const } : {}), ...placed(sitting.location),
+          agendaUrl, publishedLinks: links, ...posting, ...(sitting.agendaSlotObservedEmpty ? { agendaSlotObservedEmpty: true } : {}),
+          status: isCancelledSummary(sitting.title) ? "CANCELED" : statusOf(startsAt, sitting.hour === null, now, wiring.timeZone),
+          provenance: { sourceUrl: page.url, sourceOrg: wiring.publishingOrg, collectedAt: page.collectedAt, verifiedAt: null, evidenceExcerpt: sitting.evidence },
         });
       }
     }
-
-    return accountedNormalize(
-      SOURCE_NAME,
-      raw,
-      { meetings, drops, ...(raw.some(row => row.partialScopes?.length) ? { partialScopes: raw.flatMap(row => row.partialScopes ?? []) } : {}) },
-      { logicalInput: considered, duplicates, countedButProduced: keptButPlaceless },
-    );
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops,
+      ...(raw.some(row => row.partialScopes?.length) ? { partialScopes: raw.flatMap(row => row.partialScopes ?? []) } : {}),
+    }, { logicalInput: logicalInput, duplicates, countedButProduced });
   };
-
   return {
-    name: SOURCE_NAME,
-
-    // The AgendaCenter rung emits every dated sitting the archive lists and clips nothing, so this source's
-    // lookback is the publisher's, not the app's serving window; carry-forward must judge its rows that
-    // way.
-    publishedLookbackDays: null,
-
+    name: SOURCE_NAME, publishedLookbackDays: null,
     async fetch(query?: MeetingQuery): Promise<CivicPlusRaw[]> {
       const collected: CivicPlusRaw[] = [];
-      // Serialized across bodies, same as every adapter here.
+      const responses = new Map<string, { text: string; collectedAt: string }>();
+      const read = async (url: string, accept: string) => {
+        const existing = responses.get(url);
+        if (existing) return existing;
+        if (responses.size) await sourceAcquisitionSleep(REQUEST_SPACING_MS, query?.signal);
+        const release = await acquireKnownRelease({
+          ...cache, sourceId: SOURCE_NAME, releaseId: createHash("sha256").update(url).digest("hex"), url,
+          parserVersion: "civicplus/2", signal: query?.signal ?? AbortSignal.timeout(120_000), maxBytes: 8 * 1024 * 1024,
+          checkAfterMs: 0, fetchImpl, headers: { accept },
+          validate: (bytes, response) => { readValidatedResponse(url, 2, {
+            status: response.httpStatus, contentType: response.contentType, text: new TextDecoder().decode(bytes),
+          }, accept === "text/calendar" ? { label: "iCalendar feed", marker: "BEGIN:VCALENDAR" }
+            : accept === "application/rss+xml" ? { label: "AgendaCenter RSS", marker: "<rss" } : { label: "AgendaCenter", marker: "cat" }); },
+        });
+        recordAcquiredResponse({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, bytes: release.bytes });
+        const response = { text: new TextDecoder().decode(release.bytes), collectedAt: release.checkedAt };
+        responses.set(url, response); return response;
+      };
       for (const wiring of wiringRows) {
-        // An AgendaCenter is a complete publication route on its own. A site's
-        // separate calendar module is optional and must never be guessed.
-        if (!wiring.config.icalUrl && !wiring.config.agendaCenterUrl) {
-          throw new Error(`CIVICPLUS_SOURCE_WIRING_INVALID:${wiring.bodyId}: no published calendar or AgendaCenter URL`);
-        }
+        if (!wiring.config.icalUrl && !wiring.config.agendaCenterUrl) throw new Error(`CIVICPLUS_SOURCE_WIRING_INVALID:${wiring.bodyId}`);
         const partialScopes: PartialScopeFailure[] = [];
-        let failure: unknown;
-        let text = "";
-        if (wiring.config.icalUrl) {
-          try {
-            text = (await politeGetText(wiring.config.icalUrl, {
-              fetchImpl, accept: "text/calendar", signal: query?.signal,
-              expect: { label: "iCalendar feed", marker: "BEGIN:VCALENDAR" },
-            })).text;
-          } catch (error) {
-            query?.signal?.throwIfAborted();
-            failure = error;
-            partialScopes.push({ scope: "UPCOMING", ocdIds: [wiring.ocdId], cause: String(error) });
-          }
-        }
-        // M59: one extra GET, only where a row wires an archive.
-        let agendaCenter: string | undefined;
+        const agendaPages: NonNullable<CivicPlusRaw["agendaPages"]> = [];
+        let rss: CivicPlusRaw["rss"];
+        let ical = "", collectedAt = "", failure: unknown;
         if (wiring.config.agendaCenterUrl) {
           try {
-            const archive = await politeGetText(wiring.config.agendaCenterUrl, {
-              fetchImpl, accept: "text/html", signal: query?.signal,
-            });
-            agendaCenter = archive.text;
-          } catch (error) {
-            query?.signal?.throwIfAborted();
-            failure = error;
-            partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) });
+            const url = wiring.config.rssUrl || agendaCenterRssUrl(wiring.config.agendaCenterUrl);
+            rss = { url, ...await read(url, "application/rss+xml") };
+          }
+          catch (error) { query?.signal?.throwIfAborted(); partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) }); }
+        }
+        if (wiring.config.icalUrl) {
+          try { const reply = await read(wiring.config.icalUrl, "text/calendar"); ical = reply.text; collectedAt = reply.collectedAt; }
+          catch (error) { query?.signal?.throwIfAborted(); failure = error; partialScopes.push({ scope: "UPCOMING", ocdIds: [wiring.ocdId], cause: String(error) }); }
+        }
+        if (wiring.config.agendaCenterUrl) {
+          const pending = [wiring.config.agendaCenterUrl], visited = new Set<string>();
+          while (pending.length) {
+            const url = pending.shift()!;
+            if (visited.has(url)) continue;
+            visited.add(url);
+            try {
+              const reply = await read(url, "text/html");
+              agendaPages.push({ url, ...reply }); collectedAt ||= reply.collectedAt;
+              pending.push(...agendaCenterPages(reply.text, url, wiring.config.agendaCenterCategoryId).filter(next => !visited.has(next)));
+            } catch (error) {
+              query?.signal?.throwIfAborted(); failure = error;
+              partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) });
+            }
           }
         }
-        if (!text && !agendaCenter && failure) throw failure;
-        collected.push({
-          wiring,
-          ical: text,
-          agendaCenter,
-          ...(partialScopes.length ? { partialScopes } : {}),
-          collectedAt: new Date().toISOString(),
-        });
+        if (!ical && !agendaPages.length && failure) throw failure;
+        collected.push({ wiring, ical, agendaPages, rss, collectedAt, ...(partialScopes.length ? { partialScopes } : {}) });
       }
       return collected;
     },
-
-    normalize(raw, now: Date = new Date()): Meeting[] {
-      return normalizeWithDrops(raw, now).meetings;
-    },
-
+    normalize: (raw, now) => normalizeWithDrops(raw, now).meetings,
     normalizeWithDrops,
-
-    async upsert(meetings: Meeting[]) {
-      // No tables yet — lib/db/schema.ts is `export {}`. Same honest no-op as
-      // the other adapters until Phase 5 persistence lands.
-      return { inserted: 0, updated: meetings.length };
-    },
+    async upsert(meetings) { return { inserted: 0, updated: meetings.length }; },
   };
 }

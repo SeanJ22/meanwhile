@@ -1,3 +1,5 @@
+import { parseShutDoorId, shutDoorForWork } from "../scheduler/providers/shut-doors.ts";
+import { useDetectiveFind as applyDetectiveFind } from "../../doors/detective-repair.ts";
 import { readRolePlaybook } from "../playbooks.ts";
 import { buildBoxFindings } from "./scout-extraction.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
@@ -48,7 +50,7 @@ import { consumePlanRepairs, planRepairBrief, planRepairFailureBrief, type PlanR
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 import { promotedRegistries } from "../scheduler/provider-inputs.ts";
-import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-lineage.ts";
+import { brokeredSiblingCaptures, LINEAGE_ARTIFACT_FIELDS, LINEAGE_ATTEMPT_FIELDS, selectStandingLineages, type LineageArtifact, type LineageAttempt } from "./standing-lineage.ts";
 import { readLineageHistory } from "./scoped-history.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
@@ -73,7 +75,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
   reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
   /** The transport for one jurisdiction's work, held on the area budget covering it; absent, `transport` serves all. */
-  transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null})=>ModelTransport}):Promise<AutonomousCoordinatorRuntime> {
+  transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null},taskId?:string)=>ModelTransport}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
@@ -187,11 +189,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   };
   const brokerWholeStore=async()=>{
     const [allWorkRows,allOccurrenceRows,allArtifactRows,allAttemptRows,scouts,workers] = await Promise.all([
-      input.repos.workItems.list(),input.repos.occurrences.list(),input.repos.artifacts.readAll(),input.repos.attempts.list(),
+      input.repos.workItems.list(),input.repos.occurrences.list(),
+      input.repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS) as Promise<readonly LineageArtifact[]>,input.repos.attempts.listNarrowed(LINEAGE_ATTEMPT_FIELDS),
       scoped ? input.repos.scoutResults.readAll() : prior, scoped ? readCompletedWorkerResults(input.repos) : priorWorkers,
     ]);
     brokerLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWorkRows.map(row=>row.value),
-      artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:workers,scouts});
+      artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value as LineageAttempt),workerResults:workers,scouts});
   };
   if (!scoped) await brokerWholeStore();
 
@@ -236,7 +239,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       const blanks=blanksFor(item.subject);
       const mission=missionBriefLines(item.subject,blanks,MISSION_BRIEF_LINE_CAP);
       const ownPart=item.autonomousPlan?missionPartOfPlan(item.autonomousPlan):null;
-      return withScoutManual(item,(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,playbookFor:role=>readRolePlaybook(input.repos,role),
+      return withScoutManual(item,(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),Boolean(shutDoorForWork(item)) || task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null},task.id):input.transport!,now,playbookFor:role=>readRolePlaybook(input.repos,role),
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root,
         obligation:{...ctx.obligation,obligation:{...ctx.obligation.obligation,autonomousPlan:item.autonomousPlan}},
@@ -355,7 +358,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
-        await recordFoundSources(input.repos.doors,[recorded],recorded.recordedAt);
+        await recordFoundSources(input.repos,[recorded],recorded.recordedAt, async id => {
+          const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
+          return { canonicalUrl: evidence.canonicalUrl, text: evidence.text, contentType: artifact.contentType };
+        });
+        const shutDoorId = parseShutDoorId(recorded.obligationId) ?? shutDoorForWork(item);
+        if (shutDoorId) await applyDetectiveFind(input.repos, shutDoorId, recorded, recorded.recordedAt);
         if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());
         return recorded;
       }

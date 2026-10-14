@@ -4,10 +4,8 @@
  * after the caller's filter. Opt in with `scopedReads` (runner switch
  * WTP_SCOPED_TASK_READS=1); otherwise every read is the whole-table one.
  */
-import type { CostEntry } from "../cost.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import { keysWhere } from "../repository/types.ts";
-import { RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { Attempt } from "../attempt.ts";
@@ -15,21 +13,6 @@ import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./types.ts";
 import { readSubjectScoutHistory } from "./detective.ts";
-
-/**
- * A cost row is stored when it is appended, at or after the time it records.
- * Reading from this much before the window's start keeps any row whose own time
- * falls in the window, even when its writer's clock ran ahead of the store's.
- */
-export const SPEND_WINDOW_READ_SLACK_HOURS = 6;
-
-/** The cost rows the rolling spend window can count: since its start (with slack) when scoped, every row otherwise. */
-export async function readSpendWindowCosts(repos: ControlPlaneRepositories, nowIso: string, scoped: boolean,
-  windowHours: number = RESEARCH_BOUNDS.windowHours): Promise<readonly CostEntry[]> {
-  if (!scoped) return repos.costs.readAll();
-  const since = new Date(Date.parse(nowIso) - (windowHours + SPEND_WINDOW_READ_SLACK_HOURS) * 3_600_000).toISOString();
-  return repos.costs.readSince(since);
-}
 
 /** The Scout logs that ever held a record about one of these subjects, or null when the store cannot say without a full read. */
 async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly string[] | null> {

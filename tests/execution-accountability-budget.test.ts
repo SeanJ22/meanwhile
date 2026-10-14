@@ -5,12 +5,14 @@ import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansio
 import { createLedger } from "../lib/control-plane/budget.ts";
 import { decideHold } from "../lib/control-plane/expansion/spend-holds.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
-import { FleetSafetyController, FleetSafetyRefusal } from "../lib/control-plane/fleet-safety.ts";
+import { FleetSafetyController, FleetSafetyRefusal, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import type { CostEntry } from "../lib/control-plane/cost.ts";
 
 const now = "2026-09-28T12:00:00.000Z";
 const started = "2026-09-27T12:00:00.000Z";
 const huntKey = ORIGINAL_LIFETIME_HUNT.key;
+const chargesOf = (rows: readonly CostEntry[]) => rows.flatMap(row => pricedModelCharge(row, row.attemptId) ?? []);
 const member = { id: "obligation", subjectId: "az:sierra-vista", assignments: [
   { assignmentKey: "rolling", ref: "old", relation: "REORDERED", at: started },
   { assignmentKey: huntKey, ref: ORIGINAL_LIFETIME_HUNT.receiptId, relation: "CREATED", at: started },
@@ -145,7 +147,7 @@ test("a new same-key hunt cannot inherit the old receipt's charges or an unmarke
     {assignmentKey:key,ref:nextReceipt,relation:"REORDERED",at:started}]};
   const scoped=armAssignmentBudget({now,specs:[{key,kind:"SCOPE",label:"new hunt",ref:nextReceipt,
     budgetUsd:50,budgetStartedAt:started,sentAt:now}],membership:assignmentMembership([newlyMarked] as never),
-    costs:[{...cost,obligationId:member.id}] as never,worstCaseUsd:1,intentsReadable:true});
+    charges:chargesOf([{...cost,obligationId:member.id}] as never),worstCaseUsd:1,intentsReadable:true});
   assert.equal(scoped.state(key)?.spentUsd,0,"an exact old-receipt charge does not spend the new hunt");
   assert.equal(scoped.admit(member.id).admit,true);
 });
@@ -171,10 +173,10 @@ test("shared token charges are reported once but consume every exact beneficiary
 
 test("all work ignores blackout while every hunt obeys the Admin spend dial", () => {
   const blackout = "2026-09-27T02:00:00.000Z"; // Saturday 19:00 Arizona.
-  const controller = new FleetSafetyController({ now: blackout, costs: [{
+  const controller = new FleetSafetyController({ now: blackout, charges: chargesOf([{
     source: "api.anthropic.com", role: "SCOUT", recordedAt: "2026-09-27T01:00:00.000Z",
     cost: { usd: 105, inputTokens: 1, outputTokens: 1 },
-  }] as never, rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
+  }] as never), rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
   lifetimeHuntWork: work => work === member.id });
   assert.equal(controller.admitDispatch(member.id).admit, true);
   assert.deepEqual(controller.rollingCeilingReached(1, member.id).reached, true);

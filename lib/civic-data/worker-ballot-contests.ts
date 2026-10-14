@@ -16,11 +16,12 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
-import { readManualProjectionPrior, manualProjectionCandidate } from "./manual-projections.ts";
+import { readManualProjectionPrior, manualProjectionCandidate, completeOfficialBallotContests } from "./manual-projections.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
+import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
 
 const words = (value: unknown) => String(value ?? "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const text = (value: unknown) => typeof value === "string" ? value : "";
@@ -95,6 +96,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   const fresh = input.payload as GenericBallotProjection;
   const previous = prior?.payload as GenericBallotProjection | undefined;
   const ballots = { ...previous?.ballots };
+  const complete = new Set(completeOfficialBallotContests(fresh, input.sourceReceipt).map(row => row.contest.id));
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
@@ -104,8 +106,8 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },
       contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests],
       candidacies: [...before.candidacies.filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
-        !ballot.contests.some(contest => contest.id === row.contestId && contest.candidateListComplete === true &&
-          contest.provenance.sourceUrl === before.contests.find(old => old.id === contest.id)?.provenance.sourceUrl)), ...ballot.candidacies],
+        !ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
+          Date.parse(contest.provenance.collectedAt) >= Date.parse(before.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? ""))), ...ballot.candidacies],
       measures: [...before.measures.filter(row => keepsMeasure(row.contestId, row.provenance.sourceUrl)), ...ballot.measures],
       ...(before.measureRecords !== undefined || ballot.measureRecords !== undefined ? {
         measureRecords: [...before.measureRecords ?? []].filter(row => keepsMeasure(row.contestId, row.sourceUrl)).concat([...ballot.measureRecords ?? []]) } : {}) } : ballot;
@@ -113,7 +115,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   const urls = new Set(Object.values(ballots).flatMap(ballot => [...ballot.contests, ...ballot.candidacies, ...ballot.measures].map(row => row.provenance.sourceUrl)));
   const sources = [...input.sourceReceipt.sources, ...prior?.sourceReceipt.sources ?? []].filter(row => urls.has(row.finalUrl) || urls.has(row.requestedUrl));
   return { ...input, payload: { kind: "ballot-contests", ballots }, sourceReceipt: { ...input.sourceReceipt,
-    sources: sources.filter((source, at) => sources.findIndex(row => canonicalCivicDataJson(row) === canonicalCivicDataJson(source)) === at) } };
+    sources: sources.filter((source, at) => sources.findIndex(row => row.finalUrl === source.finalUrl && row.rawHash === source.rawHash) === at) } };
 }
 
 export async function publishWorkerBallotContestsResults(input: {
@@ -146,7 +148,8 @@ export async function publishWorkerBallotContestsResults(input: {
       const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results,
         registry: await readRegistryRuntimePrior(input.store, input.now) });
       const prior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
-      const candidate = manualProjectionCandidate(mergeBallotContests(checked.package, prior));
+      const merged = mergeBallotContests(checked.package, prior);
+      const candidate = manualProjectionCandidate(merged);
       candidateId = candidate.id; verified = true;
       const contests = Object.values((checked.package.payload as GenericBallotProjection).ballots).flatMap(ballot => ballot.contests);
       const before = Object.values((prior?.payload as GenericBallotProjection | undefined)?.ballots ?? {}).flatMap(ballot => ballot.contests);
@@ -157,6 +160,10 @@ export async function publishWorkerBallotContestsResults(input: {
         { workerResultId: parser.id, stage: "CHECKED", records: contests.length, changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       requirePublication(published.promoted && published.readerReadback?.status === "PASS", `BALLOT_READER_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);
       versionId = published.promoted.versionId;
+      requirePublication(plan.contract.schemaVersion === 2, "BALLOT_CONTRACT_UNRESOLVED");
+      const state = plan.contract.jurisdiction.state.toUpperCase();
+      await publishOfficialBallotCandidacies({ store: input.store, now: input.now, sourceReceipt: merged.sourceReceipt,
+        ballots: Object.values((merged.payload as GenericBallotProjection).ballots).filter(ballot => ballot.election.state === state) });
       await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: contests.length, changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: checked.heldContests.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",

@@ -76,7 +76,7 @@ import {
 import {
   campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
-  heldMarginaliaFromManifest,
+  heldMarginaliaAnswers,
   runCampaignSiteCycle,
   withinWallTime,
   type CampaignSiteCycleReport,
@@ -130,8 +130,6 @@ import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-fa
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
-import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
-import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
@@ -166,13 +164,6 @@ import {
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
-import {
-  promotionLines,
-  readStagingManifest,
-  stageOne,
-  writeStagingManifest,
-  type StagedEntry,
-} from "../lib/control-plane/scheduler/promotion-tail.ts";
 import {
   decideExecutor,
   type DeclaredExecutor,
@@ -711,8 +702,8 @@ const runtimeConditions: string[] = [];
 if (candidateStoreUnreadable !== null) runtimeConditions.push(
   `method candidates could not be read (${candidateStoreUnreadable}); no candidate proposals this round, everything else continues`);
 let canonicalCandidateCounts = await candidateStoreCounts(repos);
-if (canonicalCandidateCounts === null) {
-  runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
+if (canonicalCandidateCounts === null && candidateStoreUnreadable === null) {
+  runtimeConditions.push("method candidate counts could not be read; no tracked-file fallback was used");
 }
 
 const retirementWrites = !dry && !canary;
@@ -828,7 +819,6 @@ if (movedIds.size > 0) {
 }
 finishPhase("retirement");
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
-const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
 let openedModel = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
@@ -896,7 +886,6 @@ for (const o of sync.all) {
   if (o.nextDueAt !== row.nextDueAt) {
     nextDueWrites.push(o.id);
   }
-  nextDueByObligation.set(o.id, row.nextDueAt);
   if (backedOff.has(o.id)) continue;
   const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);
   if (!isDue) continue;
@@ -2429,16 +2418,9 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
 // Retained results publish alongside acquisition rather than holding ready leases.
 // Join this pass before the later projection of new worker output.
 async function projectRetainedFacts(phase: string): Promise<void> {
-  const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
   try {
     const selected = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
-    const report = await pending.step(phase, () => projectFleetPipeline(selected, {
-        readArtifactText: async id => (await readEvidence(id)).text,
-        now: nowIso(), root: ROOT,
-        freshness: createPermanentMeetingFreshness({ connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
-          onUnavailable: detail => runtimeConditions.push(detail) }),
-      }));
-    if (report !== null) for (const line of factChainLines(report)) console.log(line);
+    await pending.step(phase, () => projectFleetPipeline(selected));
   } catch (error) {
     const reason = isControlPlaneRequestTimeout(error)
       ? error.message
@@ -2883,14 +2865,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
         if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
         const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
         const vaultIndex = await step("the saved-page index", () => readRoundVault());
-        /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
-        let stagingManifest: ReturnType<typeof readStagingManifest> = null;
-        try {
-          stagingManifest = readStagingManifest(ROOT);
-        } catch (error) {
-          runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
-        }
-        const held = await step("the held Marginalia answers", () => heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso()));
+        const held = await step("the held Marginalia answers", () => heldMarginaliaAnswers(repos, vaultIndex, nowIso()));
         const methodVersion = await step("the method version", roundMethodVersion);
         const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
         const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
@@ -2916,7 +2891,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
         return {
           report,
           state:
-            `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+            `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} newest held Marginalia answer(s) of ${held.answers} vaulted` +
             (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
         };
       })(), dispatchDeadlineMs + CAMPAIGN_SITES_SETTLE_MS - Date.now());
@@ -3015,7 +2990,7 @@ if (!dry && !canary) {
 
 // Registered autonomous plans use the same dispatcher, vault, host spacing and
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
-// Leave a minute after the last worker for staging and the Admin state/heartbeat.
+// Leave a minute after the last worker for the Admin state/heartbeat.
 // A prior cycle's late worker ended at the dispatch deadline, then its final
 // research state and heartbeat could not start before the hard wall.
 // Selection can read several complete repositories before it admits a worker.
@@ -3090,103 +3065,6 @@ if (discoveryLaneRun !== null) {
   finishPhase("discovery-lanes");
 }
 
-/* ------------------------------------------------------- the promotion tail --- */
-
-const leavePromotionTail = pending.enter("promotion-tail");
-const staged: StagedEntry[] = [];
-for (const result of cycle.dispatched) {
-  const unit = units.find((u) => u.obligation.id === result.obligationId);
-  if (unit === undefined) continue;
-  let body: string | null = null;
-  let detail = result.detail;
-  for (const artifactId of result.artifactIds) {
-    const entry = vault.ledger.get(artifactId);
-    if (entry === undefined) continue;
-    const read = await boundedAfterCutoff(vault.readBack(entry.key));
-    if (!read.done) {
-      const line = `promotion tail: ${result.obligationId}'s vaulted bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
-      runtimeConditions.push(line);
-      console.log(`  ${line}`);
-      detail = `${detail}; its vaulted bytes did not read back this round, so it is staged as still owed`;
-      break;
-    }
-    body = read.value;
-    if (body !== null) break;
-  }
-
-  staged.push(
-    stageOne({
-      root: ROOT,
-      obligationId: result.obligationId,
-      providerId: unit.providerId,
-      recordClass: unit.record.recordClass,
-      subjectId: unit.record.subjectId,
-      route: unit.route,
-      disposition: result.disposition,
-      artifactIds: result.artifactIds,
-      body,
-      nextDueAt: nextDueByObligation.get(result.obligationId) ?? null,
-      detail,
-      stagedOn: today(),
-    }),
-  );
-}
-
-for (const recovered of cycle.recovered) {
-  const unit = units.find((u) => u.obligation.id === recovered.obligationId);
-  if (unit === undefined) continue;
-  const { disposition } = recovered;
-  let body: string | null = null;
-  try {
-    const readHeldBody = async (): Promise<string | null> => {
-      const held = disposition.artifactIds.length === 0 ? [] : await repos.artifacts.read(recovered.workItemId);
-      for (const artifactId of disposition.artifactIds) {
-        const record = held.find((a) => a.artifactId === artifactId);
-        if (record === undefined) continue;
-        const bytes = await vault.readHeld(record);
-        if (bytes !== null) return bytes;
-      }
-      return null;
-    };
-    const read = await boundedAfterCutoff(readHeldBody());
-    if (read.done) body = read.value;
-    else {
-      const line = `recovered ${recovered.obligationId}: its held bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
-      runtimeConditions.push(line);
-      console.log(`  ${line}`);
-    }
-  } catch (error) {
-    runtimeConditions.push(
-      `recovered ${recovered.obligationId}: its held bytes could not be read back ` +
-        `(${error instanceof Error ? error.message : String(error)}); it is staged as still owed`,
-    );
-  }
-  staged.push(
-    stageOne({
-      root: ROOT,
-      obligationId: recovered.obligationId,
-      providerId: unit.providerId,
-      recordClass: unit.record.recordClass,
-      subjectId: unit.record.subjectId,
-      route: unit.route,
-      disposition: disposition.disposition,
-      artifactIds: disposition.artifactIds,
-      body,
-      nextDueAt: nextDueByObligation.get(recovered.obligationId) ?? null,
-      detail:
-        `committed ${disposition.at} by Attempt ${disposition.attemptId} in a cycle that ended before ` +
-        "closing or staging it, and recovered without walking the route again" +
-        (disposition.disposition === "INGESTED" && body === null
-          ? "; its vaulted bytes were not found in this runner's vault, so the record is staged as still owed"
-          : "") +
-        `. ${disposition.note}`,
-      stagedOn: today(),
-    }),
-  );
-}
-const manifest = writeStagingManifest(ROOT, staged, today());
-leavePromotionTail();
-
 /* ------------------------------------------------- research metrics --- */
 
 // These independent final reads share the existing repository transport limit.
@@ -3256,7 +3134,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     share: modelShareTrend({ thisCycle: { deterministic: laneCounts.deterministicDispatched, model: laneCounts.modelDispatched }, windowCycles }),
     cacheByRole: cacheHitRateByRole({ costs: costsNow, results, sinceIso: windowSince, untilIso: at }),
     cacheWindow: { sinceIso: windowSince, untilIso: at },
-    costPerOutcome: costPerUsefulOutcome({ results, candidateCounts, confirmed: null }),
+    costPerOutcome: costPerUsefulOutcome({ results, candidateCounts }),
     cacheDefects: cacheDefectCounts(results),
   };
 }
@@ -3462,9 +3340,6 @@ const lines = [
   ...researchLines,
   "",
   ...registryLines(registry),
-  "",
-  ...promotionLines(staged),
-  `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
 ];
 console.log();
 for (const line of lines) console.log(line);
@@ -3660,8 +3535,6 @@ const runRecord = {
         metrics,
       },
       vaulted: [...vault.ledger.values()],
-      staged,
-      stagingManifest: `${[".runtime", "control-plane", "staging"].join("/")}/manifest.json`,
       deferred: cycle.deferred.length,
       deferredReasons: cycle.deferred,
       reclaim: cycle.reclaim,

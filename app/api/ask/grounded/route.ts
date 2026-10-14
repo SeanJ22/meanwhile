@@ -16,6 +16,7 @@ import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { readCommentAccessFacts } from "@/lib/registry/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
@@ -48,7 +49,6 @@ import {
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
 import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { statementEvidenceFor } from "@/lib/ask/statements";
-import { stanceAnswerability } from "@/lib/ask/stance-answerability";
 import { fetchThroughKey, composeFinanceDetail } from "@/lib/ask/fetch-through-key";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
@@ -105,9 +105,6 @@ import {
   settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
 import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
-import {
-  refreshCommentAccessFromPromoted,
-} from "@/lib/civic-data/curated-reader-read-model";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
@@ -483,7 +480,7 @@ async function answerWithSettings(request: Request) {
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
   const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
-    ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
+    ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
@@ -839,8 +836,7 @@ async function answerWithSettings(request: Request) {
     try {
       const path = await answerPath(structuredClone(reading.interpretation), emptyTrace());
       if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack) ||
-        path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 ||
-        stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
+        path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0) return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
       const cached = synthesisCache.get(synthesisCacheKey(path.pack, writerCacheModel, ladderKey.effort));
       const controller = new AbortController();
@@ -1884,13 +1880,6 @@ async function answerWithSettings(request: Request) {
     const packRecords = relevant.records;
 
     const ownWordsComposed = composeOwnWordsAnswer({ subject, question, records: packRecords });
-    if (!ownWordsComposed && stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
-      const pageMatches = packRecords.filter((record) => record.kind === "SOURCE_PASSAGE").length;
-      denominators.personalStanceVerified = 0;
-      denominators.linkedSourcePassages = pageMatches;
-      gaps.push({ whose: "OURS", statement: `We have not verified a statement by ${subject!.name} that establishes their personal stance.` +
-        (pageMatches > 0 ? " The linked page passages below show only what the pages say." : "") });
-    }
 
     /* One named gap is said once, even when two same-day sittings carry it. */
     const packGaps = gaps.filter((gap, index) =>
@@ -2134,8 +2123,7 @@ async function answerWithSettings(request: Request) {
   const synthesisKey = composed ? null : synthesisCacheKey(pack, writerCacheModel, ladderKey.effort);
   const missingMeasureMeaning = subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 &&
     !composeMeasureMeaningAnswer({ subject, question, records: packRecords });
-  const cachedSynthesis = !missingMeasureMeaning && synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"
-    ? synthesisCache.get(synthesisKey) : null;
+  const cachedSynthesis = !missingMeasureMeaning && synthesisKey ? synthesisCache.get(synthesisKey) : null;
   const keepSpeculative = settleSpeculation(outcome?.kind !== "READ" ? "MODEL_READING_UNAVAILABLE"
     : composed ? "MODEL_READING_NEEDS_NO_WRITER" : readingOutcome(path));
   const written = composed || missingMeasureMeaning ? null : cachedSynthesis ?? (keepSpeculative && speculation?.started ? await speculation.writing : await synthesizeWithLadder(pack, {

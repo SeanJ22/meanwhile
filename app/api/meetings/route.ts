@@ -34,8 +34,7 @@ import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography, pr
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { stageTimer } from "@/lib/api/server-timing";
-import { currentCommentAccess, type CommentAccess } from "@/lib/registry/comment-access";
-import { refreshCommentAccessFromPromoted } from "@/lib/civic-data/curated-reader-read-model";
+import { currentCommentAccess, readCommentAccessFacts, type CommentAccess } from "@/lib/registry/comment-access";
 import {
   currentEverydayRoutingProjection,
   readEverydayRoutingProjection,
@@ -124,9 +123,9 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
-        const version = await refreshCommentAccessFromPromoted();
+        const { versionId } = await readCommentAccessFacts();
         commentAccessDataState = "PROMOTED";
-        commentAccessDataDetail = `Canonical comment-access projection ${version} was read.`;
+        commentAccessDataDetail = `Comment rules read from live facts (${versionId}).`;
       }
       commentAccess = currentCommentAccess();
     }

@@ -4,18 +4,23 @@ import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } fro
 import type { WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
 import { appendTransition, contextFromRepositories, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
+import { finishBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
+import { checkFact, linkQuote } from "../../facts/check.ts";
+import { factClocks } from "../../facts/clocks.ts";
+import type { Clocks } from "../../facts/publish.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
+import { CAMPAIGN_SITE_LEAD } from "../../facts/finding-slots.ts";
+import { pageCopy } from "../../facts/source-copy.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
   type ApprovalBurden,
   type ApprovedRecord,
-  type ConfirmedRecord,
   type PipelineItemState,
   type PipelineStage,
   type RefusedRecord,
   type ScoutedRecord,
   type TransitionRecord,
   type VerificationCheck,
-  type VerifiedRecord,
 } from "./types.ts";
 import {
   CAMPAIGN_SITE_VERIFIER_ID,
@@ -45,7 +50,6 @@ import {
   type CampaignSiteSupportingRead,
 } from "../../candidates/campaign-site-verifier.ts";
 export { profileCampaignSiteLeads } from "../../candidates/campaign-site-verifier.ts";
-import { normalizeMarginaliaSearch } from "../scheduler/promotion-tail.ts";
 
 export const CAMPAIGN_SITE_CHAIN_VERSION = "campaign-site-chain/2";
 export const CAMPAIGN_SITE_RECORD_CLASS = "candidate-enrichment";
@@ -176,6 +180,27 @@ export function discoveryPointerItemId(subjectId: string, url: string): string {
 
 const displayName = candidateDisplayName;
 
+/** A hunter's reported campaign site, held to checkFact on the page it cited, as a SCOUTED lead; or why it is refused. */
+async function boxLead(repos: ControlPlaneRepositories, finding: BoxFinding, subject: CampaignSiteSubject,
+  options: Pick<CampaignSiteChainOptions, "heldPage" | "now">, windowHours: Clocks["windowHours"]): Promise<ScoutedRecord | { readonly refused: string }> {
+  const origin = finding.origins.find(row => row.reported);
+  if (!origin?.reported || finding.exactQuote === null) return { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" };
+  const url = String(origin.reported.value);
+  const artifact = (await repos.artifacts.read(origin.workItemId)).find(row => origin.artifactIds.includes(row.artifactId));
+  const page = artifact ? await options.heldPage(artifact) : null;
+  if (page === null) return { refused: "CITED_PAGE_NOT_SAVED" };
+  const checked = checkFact({ entity: { id: subject.candidacyId, fullName: `${subject.givenName} ${subject.familyName}`, stateName: null, hosts: [], externalIds: [] },
+    fieldKind: "ballot", provenance: "CAMPAIGN", valueText: url, quote: linkQuote(url, finding.exactQuote),
+    copy: pageCopy({ finalUrl: page.finalUrl, body: page.body, contentType: page.contentType, fetchedAt: page.retrievedAt }) }, new Date(options.now), windowHours);
+  if (!checked.ok) return { refused: checked.reason };
+  const itemId = `pp-${fingerprint(["box-finding", subject.candidacyId, url])}`;
+  return { formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:scouted`, itemId, at: origin.recordedAt,
+    actor: { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: origin.resultId }, stage: "SCOUTED",
+    source: { kind: "SCOUT_RESULT", attemptId: origin.resultId, obligationId: origin.resultKey ?? finding.subjectId, outcome: "EVIDENCE_FOUND", routeId: null },
+    recordClass: CAMPAIGN_SITE_RECORD_CLASS, subjectId: subject.candidacyId, canonicalUrl: url, artifactIds: [artifact!.artifactId],
+    scoutAttemptId: origin.resultId, summary: `A hunter found ${url} for ${displayName(subject)}: "${finding.exactQuote.slice(0, 200)}"` };
+}
+
 /** Leads a held Scout finding points at: its URL, or the pages its own Attempt vaulted. */
 async function scoutLeads(state: PipelineItemState, ctx: PipelineContext, subject: CampaignSiteSubject,
   heldPage: CampaignSiteChainOptions["heldPage"]): Promise<CampaignSiteLead[]> {
@@ -270,6 +295,31 @@ async function independentProfileSignal(subject: CampaignSiteSubject, primary: A
   return null;
 }
 
+/** One Marginalia result: a URL and what the index called it, never the index's licensed description. */
+interface MarginaliaPointer {
+  readonly kind: "POINTER";
+  readonly url: string;
+  readonly title: string | null;
+  readonly format: string | null;
+  readonly rank: number;
+}
+
+/** A held Marginalia answer as pointers; an empty `results` is a named no-hit, an undocumented answer throws. */
+export function normalizeMarginaliaSearch(body: string): { readonly rows: readonly MarginaliaPointer[]; readonly noHit?: string } {
+  const parsed = JSON.parse(body) as { license?: unknown; query?: unknown; results?: unknown };
+  if (typeof parsed.license !== "string" || !Array.isArray(parsed.results)) {
+    throw new Error("MARGINALIA_ANSWER_UNDOCUMENTED: the response carries no `license` string and `results` array, so it is not the documented search answer");
+  }
+  const rows = (parsed.results as readonly Record<string, unknown>[]).flatMap((row, index): MarginaliaPointer[] =>
+    typeof row?.url === "string" && /^https?:\/\//.test(row.url)
+      ? [{ kind: "POINTER", url: row.url, title: typeof row.title === "string" ? row.title : null, format: typeof row.format === "string" ? row.format : null, rank: index + 1 }]
+      : [],
+  );
+  if (rows.length > 0) return { rows };
+  const query = typeof parsed.query === "string" ? parsed.query : null;
+  return { rows, noHit: `NO_HIT: the index answered ${JSON.stringify(query)} with no result — a dated fact about one query to one index, never a statement about the candidate` };
+}
+
 /**
  * A Marginalia pointer is a lead only when its host could be a candidate's own
  * site AND either the host or the index's title names the candidate. The index
@@ -283,21 +333,21 @@ export function marginaliaLeads(held: HeldMarginaliaResponse, subject: CampaignS
   const leads: (CampaignSiteLead & { rank: number })[] = [];
   const refused: { url: string; refusal: CampaignSiteRefusal }[] = [];
   for (const row of normalized.rows) {
-    const url = String(row.url);
+    const url = row.url;
     const hostRefusal = campaignSiteHostRefusal(url);
     if (hostRefusal !== null) { refused.push({ url, refusal: hostRefusal }); continue; }
-    if (typeof row.format === "string" && row.format !== "html") {
+    if (row.format !== null && row.format !== "html") {
       refused.push({ url, refusal: { code: "NOT_A_PAGE", detail: `the index files ${url} as ${row.format}, not a web page` } });
       continue;
     }
     const host = siteHost(url) ?? "";
     const label = siteLabel(host).replace(/[^a-z0-9]/g, "");
-    const branded = tokens.some((token) => label.includes(token)) || titleBrandsCandidate(String(row.title ?? ""), forms) !== null;
+    const branded = tokens.some((token) => label.includes(token)) || titleBrandsCandidate(row.title ?? "", forms) !== null;
     if (!branded) {
       refused.push({ url, refusal: { code: "SITE_NOT_CANDIDATE_BRANDED", detail: `neither ${host} nor the index title names ${displayName(subject)}; a keyword hit is not a lead` } });
       continue;
     }
-    leads.push({ url, origin: "MARGINALIA_POINTER", ref: held.artifactId, title: row.title === null ? null : String(row.title), rank: Number(row.rank) });
+    leads.push({ url, origin: "MARGINALIA_POINTER", ref: held.artifactId, title: row.title, rank: row.rank });
   }
   return { leads, refused, noHit: normalized.noHit !== undefined };
 }
@@ -375,7 +425,7 @@ export function campaignSiteChecks(input: {
 }
 
 function zeroStages(): Record<PipelineStage, number> {
-  return { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 };
+  return { SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 };
 }
 
 /**
@@ -451,6 +501,20 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     }
   }
 
+  // A hunter's campaign-site finding becomes a lead once checkFact holds it on its own saved page; one for a candidacy no ballot holds waits.
+  const leads = (await repos.boxFindings.listWhere(["state"], "waiting")).filter(row => row.value.waitingFor?.reason === CAMPAIGN_SITE_LEAD);
+  const windowHours = leads.length ? factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).windowHours : () => 0;
+  for (const { value: finding } of leads) {
+    const subject = options.subjects.get(finding.subjectId) ?? [...options.subjects.values()].find(row => row.readerKeys.includes(finding.subjectId));
+    if (subject === undefined) continue;
+    const scouted = await boxLead(repos, finding, subject, options, windowHours);
+    const claim = await takeBoxFinding(repos.boxFindings, finding.id, "campaign-site-chain", options.now, new Date(Date.parse(options.now) + 120_000).toISOString());
+    if (claim === null) continue;
+    if ("refused" in scouted) { await finishBoxFinding(repos.boxFindings, finding.id, claim.token, { state: "refused", reason: scouted.refused }, options.now); continue; }
+    if (!heldStates.get(scouted.itemId)?.byStage.SCOUTED) await offer(scouted);
+    await finishBoxFinding(repos.boxFindings, finding.id, claim.token, { state: "built", publicationId: scouted.itemId }, options.now);
+  }
+
   /* SCOUTED: every Marginalia pointer that is a lead becomes its own item, once: a later answer naming the same page is the same lead. */
   let pointersOffered = 0;
   for (const held of options.marginalia ?? []) {
@@ -493,105 +557,94 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   const pastScouted = (s: PipelineItemState): boolean => s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.stage !== null && s.stage !== "SCOUTED";
 
   /*
-   * Our own reads already held, newest per URL: a deterministic ACQUIRER's
-   * vaulted page (never a Scout's). Within `recheckAfterMs` a lead is judged
-   * again from these bytes, so the run's reads go to what was never read.
+   * Saved reads already held, newest per URL, whichever job captured them.
+   * Within `recheckAfterMs` a lead is judged again from these bytes, so the
+   * run's reads go to what was never read.
    */
-  const ownReads = new Map<string, ArtifactRecord>();
+  const heldReads = new Map<string, ArtifactRecord>();
   for (const a of allArtifacts) {
-    if (!/html/i.test(a.contentType) || ctx.attemptRoleById(a.attemptId) !== "ACQUIRER") continue;
-    const newest = ownReads.get(a.canonicalUrl);
-    if (newest === undefined || a.recordedAt > newest.recordedAt) ownReads.set(a.canonicalUrl, a);
+    if (!/html/i.test(a.contentType) || a.partial) continue;
+    const newest = heldReads.get(a.canonicalUrl);
+    if (newest === undefined || a.recordedAt > newest.recordedAt) heldReads.set(a.canonicalUrl, a);
   }
 
   /*
-   * VERIFIED, AUDITED, APPROVED — from the vault, for an item past SCOUTED.
-   * The items an earlier run carried past SCOUTED are advanced first from
-   * held sources; leads are read next, then newly confirmed items advance.
+   * APPROVED — from the vault, for an item past SCOUTED. The items an earlier
+   * run verified are advanced first from held sources; leads are read next,
+   * then newly verified items advance.
    */
   let readsUsed = 0;
   const approved: CampaignSiteApprovedRecord[] = [];
   const rereadsUsed = 0;
+  const approve = async (state: PipelineItemState, subject: CampaignSiteSubject): Promise<PipelineItemState> => {
+    const verifiedRecord = state.byStage.VERIFIED!;
+    const artifactId = verifiedRecord.artifactIds?.[0] ?? "";
+    const artifact = allArtifacts.find((a) => a.artifactId === artifactId) ?? null;
+    if (artifact === null) return state;
+    const read = await options.heldPage(artifact);
+    if (read === null) return state;
+    /* The verdict the approval rests on is re-made from the vaulted bytes, never carried from the read. */
+    const independent = await independentProfileSignal(subject, artifact, profiles, options, read);
+    const verdict = verifyCampaignSitePage(subject, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: verifiedRecord.recordId }, read, independent?.supporting);
+    if (verdict.verdict !== "VERIFIED") return state;
+    const scouted = state.byStage.SCOUTED!;
+    const failedChecks = verifiedRecord.checks.filter((c) => c.result !== "PASS").map((c) => c.name);
+    const host = siteHost(artifact.canonicalUrl) ?? "";
+    /*
+     * A later read of THIS PAGE that no longer verifies contradicts it. Another page of the same site (its donate or
+     * press page, which need not name the office) is not a contradiction, and never holds the site's approval.
+     */
+    const newer = allArtifacts.filter((a) => a.canonicalUrl === artifact.canonicalUrl && a.recordedAt > artifact.recordedAt && a.attemptId !== artifact.attemptId && ctx.attemptRoleById(a.attemptId) === "ACQUIRER")
+      .sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1))[0];
+    const newerPage = newer === undefined ? null : await options.heldPage(newer);
+    const newerVerdict = newer === undefined || newerPage === null ? null : verifyCampaignSitePage(subject, { url: newer.canonicalUrl, origin: "RECORDED_SITE", ref: newer.artifactId }, newerPage, independent?.supporting);
+    const age = Date.parse(options.now) - Date.parse(verdict.measurement.retrievedAt);
+    const burdens: ApprovalBurden[] = [
+      { name: "CHAIN_CHECKS_PASS", result: failedChecks.length === 0 ? "PASS" : "FAIL", detail: failedChecks.length === 0 ? `all ${verifiedRecord.checks.length} checks PASS on ${verifiedRecord.recordId}` : `${failedChecks.join(", ")} not PASS on ${verifiedRecord.recordId}` },
+      { name: "FACT_CURRENT", result: newerVerdict !== null && newerVerdict.verdict !== "VERIFIED" ? "FAIL" : "PASS",
+        detail: newerVerdict === null ? `no later read of ${artifact.canonicalUrl} by our own Attempt contradicts ${artifact.artifactId}` : `the newest read ${newer!.artifactId} of ${artifact.canonicalUrl} ${newerVerdict.verdict === "VERIFIED" ? "agrees" : `no longer verifies (${newerVerdict.refusals.map((r) => r.code).join(", ")})`}` },
+      { name: "FRESHNESS_NOT_STALE", result: age <= MAX_READ_AGE_MS ? "PASS" : "FAIL", detail: `the verifying read is ${Math.round(age / 3_600_000)}h old; the bound is ${MAX_READ_AGE_MS / 86_400_000} days` },
+    ];
+    const record: CampaignSiteApprovedRecord = {
+      formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${state.itemId}:approved:${verifiedRecord.recordId}`, itemId: state.itemId, at: verifiedRecord.at,
+      actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: `${CAMPAIGN_SITE_APPROVER_ID}@${state.itemId}` },
+      stage: "APPROVED_FOR_PROMOTION",
+      chain: { scouted: scouted.recordId, verified: verifiedRecord.recordId },
+      recordClass: CAMPAIGN_SITE_RECORD_CLASS, burdens, field: CAMPAIGN_SITE_FIELD,
+      campaignSite: {
+        field: CAMPAIGN_SITE_FIELD,
+        candidacyId: subject.candidacyId,
+        candidateName: displayName(subject),
+        identity: {
+          candidacyId: subject.candidacyId, givenName: subject.givenName, familyName: subject.familyName,
+          officeTitle: subject.officeTitle, ocdId: subject.ocdId, stateCode: subject.stateCode, cycle: subject.cycle,
+        },
+        readerKeys: subject.readerKeys,
+        url: verdict.measurement.finalUrl,
+        host,
+        verification: verdict.verification,
+        evidence: {
+          verifierId: CAMPAIGN_SITE_VERIFIER_ID,
+          artifactId: artifact.artifactId,
+          attemptId: artifact.attemptId,
+          sha256: artifact.contentHash.replace(/^sha256-/, ""),
+          requestedUrl: verdict.measurement.requestedUrl,
+          finalUrl: verdict.measurement.finalUrl,
+          httpStatus: verdict.measurement.httpStatus,
+          contentType: verdict.measurement.contentType,
+          readAt: verdict.measurement.retrievedAt,
+          ...(verdict.measurement.cycle.source ? { cycleSource: verdict.measurement.cycle.source } : {}),
+        },
+        publicationDoor: CAMPAIGN_SITE_PUBLICATION_DOOR,
+      },
+    };
+    return offer(record);
+  };
   const advance = async (initial: PipelineItemState): Promise<void> => {
     if (!pastScouted(initial)) return;
     const subject = options.subjects.get(initial.subjectId ?? "");
     if (subject === undefined) return;
-    let state = initial;
-    const confirmed = state.byStage.CONFIRMED!;
-    const artifact = ctx.artifactById(confirmed.confirmingArtifactIds[0] ?? "");
-    if (artifact === null) return;
-    const read = await options.heldPage(artifact);
-    if (read === null) return;
-    /* The verdict every later stage rests on is re-made from the vaulted bytes, never carried from the read. */
-    const independent = await independentProfileSignal(subject, artifact, profiles, options, read);
-    const verdict = verifyCampaignSitePage(subject, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: confirmed.recordId }, read, independent?.supporting);
-
-    if (state.stage === "CONFIRMED") {
-      const verifiedRecord: VerifiedRecord = {
-        formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${state.itemId}:verified:${fingerprint([CAMPAIGN_SITE_VERIFIER_ID, artifact.artifactId])}`,
-        itemId: state.itemId, at: artifact.recordedAt,
-        actor: { role: "VALIDATOR", lane: "DETERMINISTIC", instance: `${CAMPAIGN_SITE_VERIFIER_ID}@${state.itemId}` },
-        stage: "VERIFIED", checks: campaignSiteChecks({ subject, verdict, read, artifact, subjects: options.subjects, now: options.now }),
-      };
-      state = await offer(verifiedRecord);
-    }
-
-    if ((state.stage === "VERIFIED" || state.stage === "AUDITED") && verdict.verdict === "VERIFIED") {
-      const scouted = state.byStage.SCOUTED!;
-      const verifiedRecord = state.byStage.VERIFIED!;
-      const failedChecks = verifiedRecord.checks.filter((c) => c.result !== "PASS").map((c) => c.name);
-      const host = siteHost(artifact.canonicalUrl) ?? "";
-      /*
-       * A later read of THIS PAGE that no longer verifies contradicts it. Another page of the same site (its donate or
-       * press page, which need not name the office) is not a contradiction, and never holds the site's approval.
-       */
-      const newer = allArtifacts.filter((a) => a.canonicalUrl === artifact.canonicalUrl && a.recordedAt > artifact.recordedAt && a.attemptId !== artifact.attemptId && ctx.attemptRoleById(a.attemptId) === "ACQUIRER")
-        .sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1))[0];
-      const newerPage = newer === undefined ? null : await options.heldPage(newer);
-      const newerVerdict = newer === undefined || newerPage === null ? null : verifyCampaignSitePage(subject, { url: newer.canonicalUrl, origin: "RECORDED_SITE", ref: newer.artifactId }, newerPage, independent?.supporting);
-      const age = Date.parse(options.now) - Date.parse(verdict.measurement.retrievedAt);
-      const burdens: ApprovalBurden[] = [
-        { name: "CHAIN_CHECKS_PASS", result: failedChecks.length === 0 ? "PASS" : "FAIL", detail: failedChecks.length === 0 ? `all ${verifiedRecord.checks.length} checks PASS on ${verifiedRecord.recordId}` : `${failedChecks.join(", ")} not PASS on ${verifiedRecord.recordId}` },
-        { name: "FACT_CURRENT", result: newerVerdict !== null && newerVerdict.verdict !== "VERIFIED" ? "FAIL" : "PASS",
-          detail: newerVerdict === null ? `no later read of ${artifact.canonicalUrl} by our own Attempt contradicts ${artifact.artifactId}` : `the newest read ${newer!.artifactId} of ${artifact.canonicalUrl} ${newerVerdict.verdict === "VERIFIED" ? "agrees" : `no longer verifies (${newerVerdict.refusals.map((r) => r.code).join(", ")})`}` },
-        { name: "FRESHNESS_NOT_STALE", result: age <= MAX_READ_AGE_MS ? "PASS" : "FAIL", detail: `the verifying read is ${Math.round(age / 3_600_000)}h old; the bound is ${MAX_READ_AGE_MS / 86_400_000} days` },
-
-      ];
-      const record: CampaignSiteApprovedRecord = {
-        formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${state.itemId}:approved:${verifiedRecord.recordId}`, itemId: state.itemId, at: verifiedRecord.at,
-        actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: `${CAMPAIGN_SITE_APPROVER_ID}@${state.itemId}` },
-        stage: "APPROVED_FOR_PROMOTION",
-        chain: { scouted: scouted.recordId, confirmed: confirmed.recordId, verified: verifiedRecord.recordId },
-        recordClass: CAMPAIGN_SITE_RECORD_CLASS, burdens, field: CAMPAIGN_SITE_FIELD,
-        campaignSite: {
-          field: CAMPAIGN_SITE_FIELD,
-          candidacyId: subject.candidacyId,
-          candidateName: displayName(subject),
-          identity: {
-            candidacyId: subject.candidacyId, givenName: subject.givenName, familyName: subject.familyName,
-            officeTitle: subject.officeTitle, ocdId: subject.ocdId, stateCode: subject.stateCode, cycle: subject.cycle,
-          },
-          readerKeys: subject.readerKeys,
-          url: verdict.measurement.finalUrl,
-          host,
-          verification: verdict.verification,
-          evidence: {
-            verifierId: CAMPAIGN_SITE_VERIFIER_ID,
-            artifactId: artifact.artifactId,
-            attemptId: artifact.attemptId,
-            sha256: artifact.contentHash.replace(/^sha256-/, ""),
-            requestedUrl: verdict.measurement.requestedUrl,
-            finalUrl: verdict.measurement.finalUrl,
-            httpStatus: verdict.measurement.httpStatus,
-            contentType: verdict.measurement.contentType,
-            readAt: verdict.measurement.retrievedAt,
-            ...(verdict.measurement.cycle.source ? { cycleSource: verdict.measurement.cycle.source } : {}),
-          },
-          publicationDoor: CAMPAIGN_SITE_PUBLICATION_DOOR,
-        },
-      };
-      state = await offer(record);
-    }
+    const state = initial.stage === "VERIFIED" ? await approve(initial, subject) : initial;
     if (state.stage === "APPROVED_FOR_PROMOTION") {
       const held = state.byStage.APPROVED_FOR_PROMOTION as CampaignSiteApprovedRecord;
       if (held.campaignSite !== undefined) approved.push(held);
@@ -605,10 +658,9 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   const recordedBeforeLeads = recordedThisRun;
 
   /*
-   * CONFIRMED, in two passes: every lead of every held item at SCOUTED is read
-   * robots-first by our own Attempt and recorded first (each distinct URL once
-   * per run, within the read bound), then the context is rebuilt once so the
-   * pipeline's confirmation rules can see the new Attempts and artifacts.
+   * VERIFIED, in two passes: every lead of every held item at SCOUTED without
+   * a saved page is read robots-first and recorded (each distinct URL once per
+   * run, within the read bound); then each item is verified on its saved page.
    */
   const readCache = new Map<string, { result: LeadReadResult; artifact: ArtifactRecord | null; via: "READ" | "VAULT" }>();
   let judgedFromVault = 0;
@@ -624,7 +676,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       const pre = campaignSiteHostRefusal(lead.url);
       if (pre !== null) { leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "REFUSED", refusals: [pre], historical: null, via: "NONE" }); continue; }
       let cached = readCache.get(lead.url);
-      const earlier = cached === undefined && options.recheckAfterMs !== undefined ? ownReads.get(lead.url) : undefined;
+      const earlier = cached === undefined && options.recheckAfterMs !== undefined ? heldReads.get(lead.url) : undefined;
       if (earlier !== undefined && Date.parse(options.now) - Date.parse(earlier.recordedAt) < options.recheckAfterMs!) {
         const page = await options.heldPage(earlier);
         if (page !== null) {
@@ -663,8 +715,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     }
     pending.push({ state, subject, verdicts });
   }
-  /* Only acquisition artifacts and Attempts changed. Preserve the held worker
-   * result/audit context instead of loading its completion evidence again. */
+  /* Only acquisition artifacts and Attempts changed; the held worker result context stands. */
   if (recordedThisRun > recordedBeforeLeads) {
     const [artifacts, attempts] = await Promise.all([repos.artifacts.readAll(), repos.attempts.list()]);
     const byArtifact = new Map(artifacts.map(artifact => [artifact.artifactId, artifact]));
@@ -672,47 +723,32 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     ctx = { ...ctx,
       artifactById: id => byArtifact.get(id) ?? null,
       attemptRoleById: id => byAttempt.get(id)?.worker.role ?? null,
-      attemptArtifactIds: id => {
-        const attempt = byAttempt.get(id);
-        return attempt?.outcome === "COMPLETED" ? attempt.artifactIds : null;
-      },
     };
   }
   for (const { state, subject, verdicts } of pending) {
-    const scouted = state.byStage.SCOUTED!;
     const verified = verdicts.filter((v) => v.verdict.verdict === "VERIFIED");
     const hosts = [...new Set(verified.map((v) => siteHost(v.artifact.canonicalUrl)))];
     /* A refused page that still names the candidate was a plausible site: its refusal is recorded on the item. */
     const named = verdicts.filter((v) => v.verdict.verdict === "REFUSED" && v.verdict.measurement !== null && v.verdict.measurement.name !== null);
-    let chosen: (typeof verdicts)[number] | null = null;
-    let agreement: { sameFact: boolean; detail: string } | null = null;
-    if (hosts.length === 1) {
-      chosen = [...verified].sort((a, b) => sitePathLength(a.artifact.canonicalUrl) - sitePathLength(b.artifact.canonicalUrl) || a.artifact.canonicalUrl.localeCompare(b.artifact.canonicalUrl))[0]!;
-      agreement = { sameFact: true, detail: (chosen.verdict as Extract<CampaignSiteVerdict, { verdict: "VERIFIED" }>).verification };
-    } else if (hosts.length > 1) {
-      chosen = verified[0]!;
-      agreement = { sameFact: false, detail: `MULTIPLE_SITES: ${hosts.join(", ")} each verify for ${displayName(subject)}; one campaign link is never chosen by guess` };
-    } else if (named.length > 0) {
-      chosen = named[0]!;
-      const refused = chosen.verdict as Extract<CampaignSiteVerdict, { verdict: "REFUSED" }>;
-      agreement = { sameFact: false, detail: `${refused.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ")}${refused.historical ? ` (historical site: ${refused.historical.years.join(", ")})` : ""}` };
-    }
-    if (chosen === null || agreement === null) continue;
-    const secondAcquisition = scouted.canonicalUrl !== null && chosen.artifact.canonicalUrl === scouted.canonicalUrl;
-    const confirmed: ConfirmedRecord = {
-      formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
-      recordId: `${state.itemId}:confirmed:${fingerprint([chosen.artifact.artifactId, chosen.artifact.attemptId, agreement.sameFact ? "same" : "conflict"])}`,
+    const chosen = hosts.length === 1
+      ? [...verified].sort((a, b) => sitePathLength(a.artifact.canonicalUrl) - sitePathLength(b.artifact.canonicalUrl) || a.artifact.canonicalUrl.localeCompare(b.artifact.canonicalUrl))[0]!
+      : verified[0] ?? named[0] ?? null;
+    if (chosen === null) continue;
+    const read = await options.heldPage(chosen.artifact);
+    if (read === null) continue;
+    const checks = campaignSiteChecks({ subject, verdict: chosen.verdict, read, artifact: chosen.artifact, subjects: options.subjects, now: options.now })
+      .map((check): VerificationCheck => hosts.length > 1 && check.name === "CANONICAL_IDENTITY_UNIQUE"
+        ? { ...check, result: "FAIL", detail: `MULTIPLE_SITES: ${hosts.join(", ")} each verify for ${displayName(subject)}; one campaign link is never chosen by guess` }
+        : check);
+    await offer({
+      formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${state.itemId}:verified:${fingerprint([CAMPAIGN_SITE_VERIFIER_ID, chosen.artifact.artifactId])}`,
       itemId: state.itemId, at: chosen.artifact.recordedAt,
-      actor: { role: "ACQUIRER", lane: "DETERMINISTIC", instance: chosen.artifact.attemptId },
-      stage: "CONFIRMED", basis: secondAcquisition ? "SECOND_ACQUISITION" : "SECOND_ROUTE",
-      confirmingArtifactIds: [chosen.artifact.artifactId],
-      sameFact: secondAcquisition ? null : `${displayName(subject)}'s ${subject.cycle} campaign site is ${siteHost(chosen.artifact.canonicalUrl)}`,
-      factAgreement: agreement,
-    };
-    await offer(confirmed);
+      actor: { role: "VALIDATOR", lane: "DETERMINISTIC", instance: `${CAMPAIGN_SITE_VERIFIER_ID}@${state.itemId}` },
+      stage: "VERIFIED", checks, artifactIds: [chosen.artifact.artifactId],
+    });
   }
 
-  /* Advance newly confirmed items from the sources this pass now holds. */
+  /* Advance newly verified items from the sources this pass now holds. */
   for (const initial of inReadOrder([...heldStates.values()].filter((s) => pastScouted(s) && !advancedFirst.has(s.itemId)))) await advance(initial);
 
   /* Every offer's outcome replaced its item's state as it was made, so the final count needs no second read of the log. */

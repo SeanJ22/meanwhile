@@ -32,6 +32,8 @@ import { deadLinkReadings, DEAD_LINKS_SURFACE_DEFAULT, DEAD_LINKS_SURFACE_SETTIN
 import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
 import { readVitalNow } from "@/lib/control-plane/admin-view/vital-now.ts";
 import { readFlowWeek } from "@/lib/control-plane/admin-view/flow-read.ts";
+import { readFactStore } from "@/lib/facts/admin-read.ts";
+import { readerQuery } from "@/lib/civic-data/promoted-reader-query.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
 
 const shotUrl = (key: string): string => `/api/admin/v6/resident-tasks/shot/${key.replace(/^resident-tasks\//, "")}`;
@@ -55,7 +57,7 @@ export async function GET(request: NextRequest) {
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
-    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, vital, deadLinks, looks] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, vital, deadLinks, looks] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -85,6 +87,8 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
       // The last seven days of the flow from findings to live, from hourly counts; seven bounded reads.
       attempt(async () => (url ? readFlowWeek({ control: neon(url), through: observedAt }) : null)),
+      // The fact store's last 24 hours of live facts and its open blanks; three small reads of the reader database.
+      attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query, observedAt) : null; }),
       // Now: the last two full hours of the runner's vital signs; one indexed read of at most two small rows.
       attempt(async () => (url ? readVitalNow(neon(url), observedAt) : null)),
       // The link sweep's dead links per surface, kept beside door health.
@@ -104,6 +108,7 @@ export async function GET(request: NextRequest) {
       doors: learning?.doors ?? null,
       doorNumbers,
       flow,
+      factStore,
       vital,
       audit,
       speed,

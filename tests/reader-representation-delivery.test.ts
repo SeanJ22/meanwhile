@@ -6,7 +6,8 @@ await installRegistryAuthority();
 
 import { GET } from "../app/api/representation/[...division]/route.ts";
 import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
-import { BODY_ROSTERS, governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
+import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 import { seatHoldersForDivision } from "../lib/registry/server.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 

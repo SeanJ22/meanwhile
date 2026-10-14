@@ -327,67 +327,17 @@
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page\">https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page</a>"
     },
     "candidateListUrls": [
-      "https://portal.ct.gov/sots/election-services/town-ballots/2026-november-town-election-ballots",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/eastford_sample_ada.pdf?rev=9f0ae3b327634636b51f823ab81473e0&hash=26D8B09694E49CCBFA59AB0E924620B6",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_britain_sample_ada.pdf?rev=8020fdb826da487282a364240352b86f&hash=A295C6FAAC08B5EE60A62B9AD8480515",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_fairfield_sample_ada.pdf?rev=d1ae0e80521c402b9de547ff59f7ef4c&hash=BC72390311788228F2D41FC919CC0B6C",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/essex_sample_ada.pdf?rev=ffad4e960cf143cc95e83a34d8eb3a7a&hash=07BE241DF5219BF53276F5739FC1B835",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/sterling_sample_ada.pdf?rev=5a9d6f4b591949ddbabdae97dc353595&hash=82CACA8889B8911ADCD19BFFF4F863DE",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/26gctfai_sample-updated.pdf?rev=295f39d02a874206bb10d09b57636c11&hash=969A70C957955BD727DC6F17C3EA3D21",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/stratford_sample_ada.pdf?rev=fec2676e33eb42b892e5668b15228d82&hash=8D25EC02C5E0867D59E3183A6BC6AFE7",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bolton_sample_ada.pdf?rev=8ef72dba81e842adaa1f63f811565088&hash=74F10EEC959A8382E8E8AE2832BE562C",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/goshen_sample_ada.pdf?rev=48f022bf3fab49bca46f6fea17c842ec&hash=C2D2756019E7B3430944127C3C9DDADA",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bozrah_sample_ada.pdf?rev=dda99100e23a468facf14ea995ea669f&hash=159C60336D3BD02EA6081B329C5E5782",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/north_branford_sample_ada.pdf?rev=96a21087aa894883b4e7f6449e17e6c4&hash=DF4214B943E77874AE6FD166367B33AC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/greenwich_sample_ada.pdf?rev=787e69bd1850415598951cf11744d45b&hash=889BFE444792988E8B2DF4B82B2E2CAE",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bridgeport_sample_ada.pdf?rev=47d49a29bfcc46a0add77ba98a131377&hash=DC99789420022F52EC23E99B94BA43BE",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/haddam_sample_ada.pdf?rev=52ecf19247aa437f8387e5d7164e8fc7&hash=96C8CF449CF0D2F0AAE636AD79B9E402",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/voluntown_sample_ada.pdf?rev=ab1e84944d1e4ebb8d194762d1d076c9&hash=C75CD8BCE2FE85FF43A8B6AD1C80E9F5",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hamden_sample_ada.pdf?rev=ebfacee20c7548b889fd65bf606b40da&hash=CEE8FCA4BC2506437E39707673AAC3CD",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/old_lyme_sample_ada.pdf?rev=71ed5ec3085c432980b466a441443d41&hash=2EC693478CD9FDE14FB2F1BE17B002AF",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wallingford_sample_ada.pdf?rev=6f6f4ea5771742bc85b7df8175f60dc8&hash=C75B8D58549843E059EF81ADFCB00405",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/burlington_sample_ada.pdf?rev=9311f4f1f6904f9c929cb8d25eb41ffe&hash=A85A415FC6A5912C78AC45A2E6C4EF17",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canaan_sample_ada.pdf?rev=3ef65f08efc043199fc8fa44ee748993&hash=7237ACE908C991433D8DA79321D9AE05",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canterbury_sample_ada.pdf?rev=75377e42b14a4cb5b4cdcb8fd494005d&hash=A4211D8521AA513732D34062D4AB75CB",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartland_sample_ada.pdf?rev=dba34491b8724b858b21915a1178511b&hash=CDDAC2C4C0C1C49C008A93AD4FCEB2FC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/oxford_sample_ada.pdf?rev=e259c0c8e75241a7a061b6523be9c449&hash=0A57AC7B5D65D252D45B44BC2632F27D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/harwinton_sample_ada.pdf?rev=2231ac734d8240e2a09969464b9aebc2&hash=50D412DCCBCF082B06102E18D83CF46F",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/chaplin_sample_ada.pdf?rev=528bfc8d6f9e4f0a80cb4c8c28c35876&hash=DFFA0C2943755340541117C8110B9E14",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/cheshire_sample_ada.pdf?rev=d3e30d7525864190be8870d8ff50fe9f&hash=A80548D35DD669B1637318E530FF2ABF",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/kent_sample_ada.pdf?rev=2e5e03d838194c6195fda597d79f4d2a&hash=6FAEA7923A44FF8A91BB1057C9562EE6",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/chester_sample_ada.pdf?rev=12db445bf64246cb977f27e7a7a076bd&hash=E59F4796553212E8912FF1F811F8CA3D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/killingly_sample_ada.pdf?rev=3a4793c2fb354e6692d449951b250ebc&hash=452C809FB3C7704AC4F4D061CBF26D0D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/pomfret_sample_ada.pdf?rev=ab916451bea842eb9459ab2edbac50ff&hash=4F85ECB741CD83FA5D7E17ED4326DB4F",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/portland_sample_ada.pdf?rev=db03b756c8dd4be59f261e428487d30f&hash=3E82E9824F51B1564A8885CBE6EF262D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/colebrook_sample_ada.pdf?rev=ee7364ef7a8c40328c0cb81ff6054d18&hash=3954D2F271EB11AA30000FC82C00E65D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/westport_sample_ada.pdf?rev=136da92a99664ef3a22bac5dfd4776b3&hash=04050350C79DA8A8BD3DB6001714A814",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/lisbon_sample_ada.pdf?rev=4d66d5f663c24d3d93d666881b198ef1&hash=3B9ECDC37A7C2778DBDE69F79DA712FB",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/cornwall_sample_ada.pdf?rev=5fa4201633cd4912b1c7ba713396b8fc&hash=6C2C73B0D43C1E12C803A67DF1528881",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/redding_sample_ada.pdf?rev=fc0f55f83bf14a59923dde0959a4ae23&hash=2333F81D87777996F98621B9A03869EC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/willington_sample_ada.pdf?rev=54ce6864e8014b608f996efdefe59053&hash=79EDC7D1727557EDEFFAB86491AA6B2D",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/lyme_sample_ada.pdf?rev=5f33e9b28fe9499bbc981a6966e1be95&hash=A514C07CA97FD2F077C8973A122E7E87",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wilton_sample_ada.pdf?rev=2f936220c9b646b4bb7fe2023984f636&hash=DCBCC6B8334AA3EA967736583A7E3ECC",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/madison_sample_ada.pdf?rev=7109a4fa67854f2c84417eb2d5d90ce9&hash=1A84F9CFD335BB4A51CA85C446A3427E",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/danbury_sample_ada.pdf?rev=02c8e5802ffa4aacaf4146178b67ef13&hash=426708A2C9C8282FA4B731C2A4C56129",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/manchester_sample_ada-(1).pdf?rev=89268b4bd2274a62b9230c67bb0300de&hash=C25F821489FD9AC520E18EB539EB0B72",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/roxbury_sample_ada.pdf?rev=93506c8ef8d342d19facdfb252a3759c&hash=6FCAA429A991A1B17CBFD9419FA1196A",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/salem_sample_ada.pdf?rev=2fd2c7d271d340b9a09829fba362e1f6&hash=1EF5CF38829497D084747D8463586F9F",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/deep_river_sample_ada.pdf?rev=5f5b7472777246e6aad40871d598571e&hash=1FCF5D781B91CA49346770C22F907337",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_ada.pdf?rev=8e2c5ec2a2a1492b805b47ae30b2d10f&hash=857F1076B25EBB20041BE2E6BC79B0DF",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/meriden_sample_ada.pdf?rev=3d3a971fcc494f0da9d46d313d93afbb&hash=06F1568B9549E5F0BD6514FC24A5D1E1",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/scotland_sample_ada.pdf?rev=bd159ddab19545ea8070286276639b93&hash=328F9BFA1603903C76A6C58E11E6F328",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/woodbridge_sample_ada.pdf?rev=a76cb9f629e24f7e980df4a1efaa823c&hash=1B4373B6B8DD12C12A8AECBB636CB2D0",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/middletown_sample_ada.pdf?rev=042e7771e59a4ca7ac5aff577d83787e&hash=FDA81E1584C4E8DDF29A3453A0784E2B",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hampton_sample_ada.pdf?rev=6b81b30dae4d42629651fc9510329475&hash=E187EECC504FC38AF50B792DE3E7716A",
-      "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/milford_sample_ada.pdf?rev=457b9fc79d9e4196830a899d678d180d&hash=2A8DF2BBB0C2FA2033118E270B85AA07"
+      "https://portal.ct.gov/sots/election-services/election-results/election-results",
+      "https://ctemspublic.pcctg.net/",
+      "https://ctemspublic.pcctg.net/ng-app/data/Elections.json",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/Version.json",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/Lookupdata.json",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/stateVotes_Electiondata.json",
+      "https://ctemspublic.tgstg.net/Default.aspx?action=Candidates"
     ],
     "ballotMeasuresUrls": [
-      "https://portal.ct.gov/sots/election-services/ballotquestions/questions-on-the-ballot"
+      "https://portal.ct.gov/sots/election-services/ballotquestions/questions-on-the-ballot",
+      "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/ballotQuestion_Electiondata.json"
     ]
   },
   {
@@ -701,13 +651,39 @@
       "https://cms4files.revize.com/madisoncountyilus/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
       "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-08/Candidate%20List_20260819-1_0.pdf",
       "https://douglas.wp.webfoot.io/wp-content/uploads/2026/09/Publication.pdf",
-      "https://douglascountyil.gov/clerk-recorder/elections"
+      "https://douglascountyil.gov/clerk-recorder/elections",
+      "https://www.dupagecounty.gov/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+      "https://lakecountyil.gov/DocumentCenter/View/13059",
+      "https://www.rockislandcountyil.gov/DocumentCenter/View/3377",
+      "https://www.grundycountyil.gov/County%20Clerk/Elections/2026%20General/ALLCONTESTBALLOT_Style1_English_8.5x14_Paper.pdf?t=202609141300590",
+      "https://www.madisoncountyil.gov/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
+      "https://vr.platinumvrms.com/county/rslrequest/103?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/13?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/10?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/21?t=2",
+      "https://il-coles.pollresults.net/",
+      "https://www.macoupinvotes.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=23&lang=en&callback=soeSampleBallotObj.processSampleBallot",
+      "https://vr.platinumvrms.com/county/RSLRequest/119?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/6?t=2",
+      "https://vr.platinumvrms.com/county/RSLRequest/66?t=2",
+      "https://il-macon.pollresults.net/",
+      "https://il-tazewell.pollresults.net/",
+      "https://il-bureau.pollresults.net/",
+      "https://il-livingston.pollresults.net/",
+      "https://il-whiteside.pollresults.net/",
+      "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026WriteIns.pdf",
+      "https://montgomerycountyil.gov/wp-content/uploads/MontgomeryCountyILGeneralElectionSpecimenBallot11032026-.pdf",
+      "https://www.henrycty.com/DocumentCenter/View/1202/HENRY-COUNTY-GENERAL-ELECTION-2026-SAMPLE-BALLOT",
+      "https://www.knoxcountyil.gov/Specimen%20Ballot%20-%20GE2026.pdf?t=202609241135070",
+      "https://cms2.revize.com/revize/knoxcounty/Specimen%20Ballot%20-%20GE2026.pdf?t=202609241135070",
+      "https://files-accl.zohoexternal.com/public/workdrive-external/download/7xc3r013726b9e9794986beae531fa69c0ec6?x-cli-msg=null"
     ],
     "ballotMeasureUrls": [
       "https://www.lakecountyil.gov//DocumentCenter/View/21161/Referenda",
-      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Proposition%20Listing.pdf?t=202609300917350"
+      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Proposition%20Listing.pdf?t=202609300917350",
+      "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026ReferendaList.pdf"
     ],
-    "publicationMessage": "County and city sources cover part of the statewide ballot; statewide candidate and measure inventories remain an access gap."
+    "publicationMessage": "Official county and city sources provide 163 acquired contests and 255 candidates. Whole-territory nominee coverage remains unverified for Senate 36 and House 71, 79, and 118; Senate 27 and House 2, 17, 30, 37, 38, 44, 53, 54, 63, 80, 86, 97, 98, 99, 103, and 104 remain unacquired. The statewide measure inventory and write-in qualification outside acquired publishing jurisdictions remain gaps. The State Board public candidate and statewide-measure doors return HTTP 403."
   },
   {
     "id": "fec-in-chief",
@@ -733,7 +709,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses\u2019 public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
+      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses’ public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
       "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -943,47 +919,56 @@
   {
     "id": "fec-me-chief",
     "publisher": "Bureau of Corporations, Elections and Commissions, Office of the Secretary of State, Augusta, ME",
-    "url": "https://www.maine.gov/sos/cec/elec/index.html",
+    "url": "https://www.maine.gov/sos/elections-voting",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "ME",
       "ocdId": "ocd-division/country:us/state:me",
       "name": "Maine"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.maine.gov/sos/cec/elec/index.html",
+    "electionPageUrl": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
     "title": "Maine chief election office discovery root",
     "office": {
       "name": "Bureau of Corporations, Elections and Commissions, Office of the Secretary of State, Augusta, ME",
       "phone": "207/624-7650",
-      "url": "https://www.maine.gov/sos/cec/elec/index.html"
+      "url": "https://www.maine.gov/sos/elections-voting"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Failed to fetch https://www.maine.gov/sos/cec/elec/index.html: (404) Not Found",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "checkedAt": "2026-10-14",
+      "detail": "Current official November 3 general election page and FINAL candidate spreadsheet reached; legacy root returns 404. No certified November measure list was captured."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
-    "officialLinkingPage": {
-      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.maine.gov/sos/cec/elec/index.html\">https://www.maine.gov/sos/cec/elec/index.html</a>"
-    }
+    "candidateListUrl": "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
+    "candidateListUrls": [
+      "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
+      "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20Post%20Primary%20Withdrawals%20%26%20Replacement%20Candidates%20-%20Updated%209.22.26_0.pdf",
+      "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List.pdf"
+    ],
+    "ballotMeasuresUrl": "https://www.maine.gov/sos/news/secretary-state-issues-final-wording-referendum-question-1"
   },
   {
     "id": "fec-md-chief",
     "publisher": "State Board of Elections, Annapolis, MD",
     "url": "https://www.elections.maryland.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MD",
       "ocdId": "ocd-division/country:us/state:md",
       "name": "Maryland"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.elections.maryland.gov/",
-    "title": "Maryland chief election office discovery root",
+    "electionPageUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+    "title": "Maryland November 3, 2026 general election candidates and statewide questions",
     "office": {
       "name": "State Board of Elections, Annapolis, MD",
       "phone": "800/222-8683 410/269-2840",
@@ -991,21 +976,26 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official statewide candidate CSV and certified general-election ballots for all 24 election jurisdictions read successfully; the three statewide questions and full constitutional amendment text are public.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.maryland.gov/\">https://www.elections.maryland.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+    "ballotMeasuresUrl": "https://www.elections.maryland.gov/elections/2026/ballot_questions.html"
   },
   {
     "id": "fec-ma-chief",
     "publisher": "Elections Division, Office of the Secretary of the Commonwealth, Boston, MA",
     "url": "https://www.sec.state.ma.us/ele/eleidx.htm",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MA",
       "ocdId": "ocd-division/country:us/state:ma",
@@ -1021,21 +1011,27 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official full November 3 candidate list and nine statewide ballot questions captured through the public browser route; the official Information for Voters booklet supplies all nine full texts."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sec.state.ma.us/ele/eleidx.htm\">https://www.sec.state.ma.us/ele/eleidx.htm</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "ballotMeasuresUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-ballot-questions.htm",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mi-chief",
     "publisher": "Elections Bureau, Office of the Secretary of State, Lansing, MI",
     "url": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MI",
       "ocdId": "ocd-division/country:us/state:mi",
@@ -1051,21 +1047,27 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official election office page links the statewide November 3, 2026 general-election candidate report and both November 2026 ballot questions. All requested whole-territory candidate lists and both measure texts were read."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html\">https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html</a>"
-    }
+    },
+    "candidateListUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+    "ballotMeasuresUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mn-chief",
     "publisher": "Elections Division, Office of the Secretary of State, St. Paul, MN",
     "url": "https://www.sos.state.mn.us/elections-voting/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MN",
       "ocdId": "ocd-division/country:us/state:mn",
@@ -1088,14 +1090,25 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.mn.us/elections-voting/\">https://www.sos.state.mn.us/elections-voting/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://candidates.sos.mn.gov/",
+      "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false&bl13=1791954750022338651"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.state.mn.us/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+      "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/"
+    ]
   },
   {
     "id": "fec-ms-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Jackson, MS",
     "url": "https://www.sos.ms.gov/index.php/elections-voting",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MS",
       "ocdId": "ocd-division/country:us/state:ms",
@@ -1111,14 +1124,26 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official statewide November 3, 2026 sample ballot and public candidate qualifying list read successfully. Senate District 34 lacks an election date on the qualifying list; a certified November statewide measure list remains unverified."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ms.gov/index.php/elections-voting\">https://www.sos.ms.gov/index.php/elections-voting</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+    "candidateListUrls": [
+      "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+      "https://www.sos.ms.gov/content/CandidateQualifying/default.aspx",
+      "https://www.sos.ms.gov/elections-voting/candidate-qualifying-list"
+    ],
+    "ballotMeasuresUrl": "https://www.sos.ms.gov/elections-voting/initiatives",
+    "ballotMeasuresUrls": [
+      "https://www.sos.ms.gov/elections-voting/initiatives",
+      "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mo-chief",
@@ -1577,7 +1602,9 @@
     "candidateListUrl": "https://hosting.okelections.gov/electionlist.html",
     "ballotMeasuresUrl": "https://oklahoma.gov/elections/elections-results/state-question-info.html",
     "candidateListUrls": [
-      "https://hosting.okelections.gov/electionlist.html"
+      "https://hosting.okelections.gov/electionlist.html",
+      "https://www.clevelandcountyelectionboard.com/sample-ballots-november-3-2026-general-election",
+      "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf"
     ],
     "ballotMeasureUrls": [
       "https://oklahoma.gov/elections/elections-results/state-question-info.html",
@@ -1645,7 +1672,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Legacy DOS root redirects to pa.gov. Philadelphia official November 3 candidate list, York unofficial general-election PDF, and Allegheny unofficial general-election XLSX fetched HTTP 200. Statewide Candidate Database returns a bot wall; remaining statewide district coverage and measures remain gaps.",
+      "detail": "Official full November 3 candidate lists for Philadelphia, York, and Allegheny fetched HTTP 200. York candidates match every choice across all 162 official precinct ballots. Allegheny identifies its linked file as a full candidate list. The statewide Candidate Database remains unavailable through public routes; unheld districts and statewide measures remain gaps.",
       "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1657,11 +1684,17 @@
     "candidateDatabaseUrl": "https://www.pavoterservices.pa.gov/ElectionInfo/ElectionInfo.aspx",
     "ballotMeasuresUrl": "https://vote.phila.gov/media/2026G_Ballot_Questions.pdf",
     "electionAssociationVerified": true,
-    "publicationMessage": "Philadelphia, York, and Allegheny county candidate coverage; the two latter lists are explicitly unofficial. Statewide ballot acquisition and measures remain incomplete.",
+    "publicationMessage": "All 68 held contests have full official candidate-list evidence. Other Pennsylvania districts and statewide measures remain incomplete.",
     "candidateListUrls": [
       "https://vote.phila.gov/voting/candidates-for-office/",
       "https://yorkcountypa.gov/DocumentCenter/View/9014",
-      "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx"
+      "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
+      "https://yorkcountypa.gov/DocumentCenter/View/9195"
+    ],
+    "candidateListCompletenessUrls": [
+      "https://www.alleghenycounty.us/Government/Elections/Sample-Ballots",
+      "https://www.alleghenycounty.us/Government/Elections/Candidate-and-Municipality-Resources",
+      "https://yorkcountypa.gov/971/Sample-Ballots"
     ]
   },
   {
@@ -1951,14 +1984,17 @@
     "publisher": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
     "url": "https://vote.utah.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "UT",
       "ocdId": "ocd-division/country:us/state:ut",
       "name": "Utah"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://vote.utah.gov/",
+    "electionPageUrl": "https://vote.utah.gov/current-election-information/",
     "title": "Utah chief election office discovery root",
     "office": {
       "name": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
@@ -1974,21 +2010,27 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://vote.utah.gov/\">https://vote.utah.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+    "writeInCandidateListUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Write-In-Certification.pdf",
+    "ballotMeasuresUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf"
   },
   {
     "id": "fec-vt-chief",
     "publisher": "Office of the Secretary of State, Montpelier, VT",
     "url": "https://sos.vermont.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "VT",
       "ocdId": "ocd-division/country:us/state:vt",
       "name": "Vermont"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.vermont.gov/elections/",
+    "electionPageUrl": "https://sos.vermont.gov/elections/election-info-resources/candidates",
     "title": "Vermont chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Montpelier, VT",
@@ -1997,28 +2039,45 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "State elections page and robots.txt return HTTP 403, including the permitted browser-UA rung. Later network-enabled captures resolved the initial workspace proxy limitation.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "The Secretary of State HTML root returns HTTP 403. The official outside.vermont.gov qualified-candidates workbook and Fair Haven official sample ballot were acquired HTTP 200; all requested contests, candidates and statewide questions converted with scripts."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.vermont.gov/elections/\">https://sos.vermont.gov/elections/</a>"
-    }
+    },
+    "discoveredSources": [
+      {
+        "url": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      }
+    ]
   },
   {
     "id": "fec-va-chief",
     "publisher": "State Board of Elections, Richmond, VA",
     "url": "https://www.elections.virginia.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "VA",
       "ocdId": "ocd-division/country:us/state:va",
       "name": "Virginia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.elections.virginia.gov/",
+    "electionPageUrl": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/",
     "title": "Virginia chief election office discovery root",
     "office": {
       "name": "State Board of Elections, Richmond, VA",
@@ -2027,28 +2086,63 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official federal, special legislative and statewide measure workbooks acquired as HTTP 200 and converted with a script."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.virginia.gov/\">https://www.elections.virginia.gov/</a>"
-    }
+    },
+    "discoveredSources": [
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      }
+    ]
   },
   {
     "id": "fec-wa-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Olympia, WA",
     "url": "https://www.sos.wa.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WA",
       "ocdId": "ocd-division/country:us/state:wa",
       "name": "Washington"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.wa.gov/elections/",
+    "electionPageUrl": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
     "title": "Washington chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Olympia, WA",
@@ -2057,28 +2151,42 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "2026 general candidate list exported as official CSV; all 10 U.S. House districts, 98 state House seats, 24 state Senate seats, five statewide Supreme Court seats and three statewide initiatives converted from official sources."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.wa.gov/elections/\">https://www.sos.wa.gov/elections/</a>"
-    }
+    },
+    "candidateListUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899",
+    "measureListUrl": "https://www.sos.wa.gov/elections/voters/proposed-ballot-measure-information",
+    "sourceUrls": [
+      "https://voter.votewa.gov/CandidateList.aspx?e=899",
+      "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+      "https://www.sos.wa.gov/sites/default/files/2026-08/2026%20Certification%20of%20Measures%20to%20General%20Election.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-07/Finaltext_IP26-645_fulltext.pdf"
+    ]
   },
   {
     "id": "fec-wv-chief",
     "publisher": "Office of the Secretary of State, Charleston, WV",
     "url": "https://sos.wv.gov/elections/Pages/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WV",
       "ocdId": "ocd-division/country:us/state:wv",
       "name": "West Virginia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.wv.gov/elections/Pages/default.aspx",
+    "electionPageUrl": "https://sos.wv.gov/govotewv",
     "title": "West Virginia chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Charleston, WV",
@@ -2087,21 +2195,88 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Current official candidate listing returned HTTP 503. Official sample ballots acquired for all 55 counties supply every federal and state legislative contest; candidateListComplete remains false. Amendment 1 question and full text acquired."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.wv.gov/elections/Pages/default.aspx\">https://sos.wv.gov/elections/Pages/default.aspx</a>"
-    }
+    },
+    "candidateListUrl": "https://candidates.wvsos.gov/",
+    "candidateSampleBallotsUrl": "https://apps.sos.wv.gov/elections/SampleBallots",
+    "measureListUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+    "sourceUrls": [
+      "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Barbour%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Berkeley%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Boone%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Braxton%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Brooke%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Cabell%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Calhoun%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Clay%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Doddridge%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Gilmer%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Grant%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Greenbrier%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hampshire%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hancock%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hardy%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Harrison%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Jackson%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Jefferson%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lewis%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lincoln%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Logan%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marion%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marshall%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mason%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20McDowell%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mercer%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mineral%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mingo%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monongalia%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monroe%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Morgan%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Nicholas%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Ohio%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pendleton%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pleasants%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pocahontas%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Preston%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Putnam%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Raleigh%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Randolph%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Ritchie%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Roane%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Summers%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tucker%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tyler%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Upshur%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wayne%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Webster%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wetzel%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wirt%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wood%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wyoming%20261103%20General%20-%2014inch.pdf",
+      "https://sos.wv.gov/govotewv",
+      "https://www.wvlegislature.gov/Bill_Status/bills_text.cfm?billdoc=sjr9%20sub1%20enr.htm&yr=2026&sesstype=RS&i=9&houseorig=s&billtype=jr",
+      "https://apps.sos.wv.gov/elections/SampleBallots"
+    ]
   },
   {
     "id": "fec-wi-chief",
     "publisher": "Wisconsin Elections Commission, Madison, WI",
     "url": "https://elections.wi.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WI",
       "ocdId": "ocd-division/country:us/state:wi",
@@ -2117,28 +2292,38 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Wisconsin Elections Commission root and certified general candidate download return HTTP 403. Official Green County candidate ballot and statewide referendum notice were acquired with HTTP 200; other districts remain unacquired."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.wi.gov/\">https://elections.wi.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+    "ballotMeasuresUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+    "candidateListUrls": [
+      "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+      "https://www.greencountywi.org/DocumentCenter/View/4592/Type-B-Notice-for-Fall-General"
+    ],
+    "officialCertifiedCandidateListUrl": "https://elections.wi.gov/media/40951/download"
   },
   {
     "id": "fec-wy-chief",
     "publisher": "Office of the Secretary of State, Cheyenne, WY",
     "url": "https://sos.wyo.gov/Elections/Default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WY",
       "ocdId": "ocd-division/country:us/state:wy",
       "name": "Wyoming"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.wyo.gov/Elections/Default.aspx",
+    "electionPageUrl": "https://sos.wyo.gov/Elections/2026ElectionInformation.aspx",
     "title": "Wyoming chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Cheyenne, WY",
@@ -2147,14 +2332,16 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official election root links the 2026 general election candidate roster in CSV/PDF and statewide propositions with full initiative text."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.wyo.gov/Elections/Default.aspx\">https://sos.wyo.gov/Elections/Default.aspx</a>"
-    }
+    },
+    "candidateListUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+    "ballotMeasuresUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf"
   },
   {
     "id": "mt-statewide-polling-2026",

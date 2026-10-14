@@ -37,8 +37,6 @@ export const FIRST_PARTY_ROUTES = [
   "INSITE_MEETING_DETAIL",
   /** The body's OWN site: the Clerk of the Board's schedule table. */
   "CLERK_SCHEDULE_PAGE",
-  /** `{tenant}.granicus.com/ViewPublisher.php` — see `GRANICUS_LIVE_PROCEEDINGS_ROUTE`. */
-  "GRANICUS_VIEW_PUBLISHER",
 ] as const;
 
 export type FirstPartyRoute = (typeof FIRST_PARTY_ROUTES)[number];
@@ -46,15 +44,13 @@ export type FirstPartyRoute = (typeof FIRST_PARTY_ROUTES)[number];
 /**
  * What a route's enumeration actually achieved, never inferred from a 200. `PUBLISHER_STATED_EMPTY` is the
  * only state that licenses a zero (the grid said "No records were found."). `NOT_RETRIEVED` with zero rows
- * is a wall. `NOT_BUILT` means no adapter reads the route yet: a fact about us, saying nothing about the
- * record behind it.
+ * is a wall.
  */
 export type EnumerationState =
   | "COMPLETE_AS_OBSERVED"
   | "INCOMPLETE"
   | "PUBLISHER_STATED_EMPTY"
-  | "NOT_RETRIEVED"
-  | "NOT_BUILT";
+  | "NOT_RETRIEVED";
 
 /** One future sitting, as ONE route published it. */
 export interface RouteInstance {
@@ -396,51 +392,6 @@ export function unaccounted(
   return union.filter(
     (instance) => !producedKeys.has(instance.key) && !explained.has(instance.key),
   );
-}
-
-/**
- * A route nobody has built yet (a Granicus "Live Proceedings" `ViewPublisher.php` surface the county
- * links to). Its robots.txt reading is kept as evidence and blocks nothing. No adapter reads it, so each
- * run's observation makes no claim about what the route holds.
- */
-export const GRANICUS_LIVE_PROCEEDINGS_ROUTE = {
-  host: "pima.granicus.com",
-  /** The host's robots.txt, as read: recorded evidence, not a block. */
-  rule: "User-agent: * / Disallow: /",
-  readAt: "2026-08-28",
-  /** robots.txt blocks no public page. */
-  robotsBlocks: false as const,
-  /** OURS: no adapter reads this route yet. */
-  state: "NOT_BUILT" as const,
-  /** Where we learned the surface exists. */
-  linkedFrom: "https://www.pima.gov/2312/Clerk-of-the-Board",
-  linkedUrl: "http://pima.granicus.com/ViewPublisher.php?view_id=3",
-  /** Deliberately empty of any statement about the content behind it. */
-  claimAboutContent: null,
-};
-
-/** The unbuilt route as a route observation, so it appears in the per-route table as ours to build. */
-export function granicusRouteObservation(): RouteObservation {
-  return {
-    route: "GRANICUS_VIEW_PUBLISHER",
-    mechanism: GRANICUS_LIVE_PROCEEDINGS_ROUTE.linkedUrl,
-    observedAt: GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt,
-    enumeration: "NOT_BUILT",
-    // Not zero-as-measured. Zero is what we RETRIEVED, and we retrieved nothing
-    // because no adapter reads this route. The counts are the honest report of
-    // our own action; they are not a statement about the route's contents.
-    rawFutureCount: 0,
-    uniqueFutureCount: 0,
-    earliest: null,
-    latest: null,
-    instances: [],
-    note:
-      "NOT BUILT: no adapter reads this route yet, so nothing was retrieved and the zero " +
-      `is ours. ${GRANICUS_LIVE_PROCEEDINGS_ROUTE.host}/robots.txt publishes ` +
-      `"${GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule}" (read ${GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt}): ` +
-      "recorded, and not blocking since the owner decision of 2026-09-25. NO claim is " +
-      "made about what the route publishes.",
-  };
 }
 
 /** Build a route observation from its instances, computing what can be computed. */

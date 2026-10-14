@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { FIRST_PARTY_ROUTES, GRANICUS_LIVE_PROCEEDINGS_ROUTE, type FirstPartyRoute } from "../lib/sources/legistar-insite/horizon.ts";
+import { FIRST_PARTY_ROUTES, type FirstPartyRoute } from "../lib/sources/legistar-insite/horizon.ts";
 import type { Jurisdiction } from "../lib/method/portability.ts";
 import { computeRouteFloor, describeFloor, materializeFloor, type AdapterRouteDeclaration } from "../lib/control-plane/preflight.ts";
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
@@ -19,7 +19,7 @@ const JURISDICTION: Jurisdiction = { state: "az", governmentType: "county", plat
 const ADAPTER_ROUTES: readonly AdapterRouteDeclaration[] = FIRST_PARTY_ROUTES.map((routeId) => ({
   routeId,
   label: routeId,
-  target: routeId === "GRANICUS_VIEW_PUBLISHER" ? GRANICUS_LIVE_PROCEEDINGS_ROUTE.host : "example.legistar.com",
+  target: "example.legistar.com",
 }));
 
 const MEASURED_FUTURE_COUNTS: Readonly<Partial<Record<FirstPartyRoute, number>>> = {
@@ -177,7 +177,7 @@ test("adapter-declared routes are never marked speculative, whatever the store's
   }
 });
 
-test("SEEDED: walking seven of eight routes and omitting /EventDates cannot close the obligation", () => {
+test("SEEDED: omitting /EventDates from the observed routes cannot close the obligation", () => {
   const { floor } = floorFor();
   const { item, routeTasks } = materializeFloor(futureMeetingsWorkItem(T0), floor, T0);
 
@@ -188,9 +188,6 @@ test("SEEDED: walking seven of eight routes and omitting /EventDates cannot clos
   const walked = routeTasks
     .filter((t) => t.routeId !== forgotten)
     .map((t) => {
-      if (t.routeId === "GRANICUS_VIEW_PUBLISHER") {
-        return walk(t, "REQUIRES_NEW_ADAPTER", { permission: "DISALLOWED", transport: "REACHABLE" });
-      }
       const rows = MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof MEASURED_FUTURE_COUNTS];
       return rows && rows > 0
         ? walk(t, "INGESTED", { rows })
@@ -199,43 +196,12 @@ test("SEEDED: walking seven of eight routes and omitting /EventDates cannot clos
 
   const verdict = evaluateCompletion(snapshotFor(item, walked, true), "VERIFIED_COMPLETE");
 
-  assert.equal(verdict.mayComplete, false, "seven of eight routes cannot close an eight-route floor");
+  assert.equal(verdict.mayComplete, false, "a route with no disposition keeps its obligation open");
 
   const missing = verdict.refusals
     .filter((r) => r.code === "INHERITED_ROUTE_WITHOUT_DISPOSITION")
     .map((r) => r.subject);
   assert.deepEqual(missing, [forgotten], "the refusal must name the forgotten route, not report a count");
-});
-
-test("SEEDED: the unbuilt Granicus route keeps the obligation open — its robots.txt reading is evidence, not a finding", () => {
-  const { floor } = floorFor();
-  const { item, routeTasks } = materializeFloor(futureMeetingsWorkItem(T0), floor, T0);
-
-  const walked = routeTasks.map((t) => {
-    if (t.routeId === "GRANICUS_VIEW_PUBLISHER") {
-      return walk(t, "REQUIRES_NEW_ADAPTER", { permission: "DISALLOWED", transport: "REACHABLE" });
-    }
-    const rows = MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof MEASURED_FUTURE_COUNTS];
-    return rows && rows > 0 ? walk(t, "INGESTED", { rows }) : walk(t, "WALKED_NO_YIELD", { rows: 0 });
-  });
-
-  const verdict = evaluateCompletion(snapshotFor(item, walked, true), "VERIFIED_COMPLETE");
-
-  assert.equal(verdict.mayComplete, false, "a REQUIRES_NEW_ADAPTER route is an open obligation");
-  const open = verdict.refusals.filter((r) => r.code === "ROUTE_TASK_STILL_OUTSTANDING");
-  assert.ok(open.length >= 1);
-  assert.ok(
-    open.some((r) => /REQUIRES_NEW_ADAPTER/.test(r.detail)),
-    "the refusal must say the route is unbuilt, not that the meetings are absent",
-  );
-
-  assert.equal(
-    GRANICUS_LIVE_PROCEEDINGS_ROUTE.claimAboutContent,
-    null,
-    "an unread route carries no claim about what is behind it",
-  );
-  assert.match(GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule, /Disallow: \//);
-  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.robotsBlocks, false);
 });
 
 test("SEEDED: an incomplete denominator refuses the close even when every route is disposed", () => {

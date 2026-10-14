@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -10,8 +11,29 @@ import { currentReaderRoute } from "../lib/db/reader-route.ts";
 import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-route.ts";
 import { publishReaderEdgeArtifacts, readAuthorityArtifactValue } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+
+test("a cooked registry edge hit never rereads facts, including an explicit reader refresh", async () => {
+  const fixture = JSON.parse(gunzipSync(readFileSync(new URL("./fixtures/registry-transfer-import.json.gz", import.meta.url))).toString("utf8")) as {
+    projection: { payload: RegistryRuntimeReadModel };
+  };
+  const value = fixture.projection.payload;
+  let queries = 0;
+  installFactReader(async () => { queries++; throw new Error("Unexpected fact query on an edge hit"); });
+  try {
+    await withReaderSelection({ keys: new Set(["ocd-division/country:us/state:az/county:pima"]) }, () =>
+      withReaderAuthorityEdge({ registryRuntime: { value, versionId: "test:fact-edge" } }, async () => {
+        const read = await readRegistryRuntimeProjection({ bypassCache: true });
+        assert.equal(read.kind, "BOOTSTRAP");
+        assert.ok("value" in read);
+        assert.equal(read.value, value);
+        assert.equal(getRegistryRuntimeReadModel(), value);
+      }));
+    assert.equal(queries, 0);
+  } finally { installFactReader(undefined); }
+});
 
 test("one body's facts and citations survive while another body's payload is never opened", async () => {
   const dir = mkdtempSync(join(tmpdir(), "site-read-"));

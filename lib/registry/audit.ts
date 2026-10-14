@@ -10,7 +10,7 @@ import type { AgendaSourceType, CoverageStatus } from "./types.ts";
 /**
  * The rungs of the source hunt, in the order they are walked, ordered by how long the source can be
  * trusted to keep working. Rungs 1-7 are passive retrieval. Rung 9 (a formal records request) is never
- * automated; see `docs/vendor-review.md`.
+ * automated.
  */
 export type LadderRung =
   /** 1. A vendor API this repo already has a cleared adapter for. */

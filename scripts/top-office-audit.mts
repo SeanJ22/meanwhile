@@ -10,7 +10,9 @@
  *
  * A registry that failed to load fails the run rather than reporting zero wrong.
  */
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import type { BodyRoster } from "../lib/registry/body-rosters.ts";
+import { factReader } from "../lib/facts/db.ts";
+import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { topOfficesFor } from "../lib/officials/top-offices.ts";
 
@@ -28,7 +30,7 @@ export interface OfficeAuditRow {
   shouldBe: string | null;
 }
 
-export function auditTopOffices(rosters = BODY_ROSTERS): OfficeAuditRow[] {
+export function auditTopOffices(rosters: readonly BodyRoster[]): OfficeAuditRow[] {
   const out: OfficeAuditRow[] = [];
   for (const roster of rosters) {
     const holders = (roster.members ?? []) as unknown as Parameters<typeof topOfficesFor>[0];
@@ -92,14 +94,16 @@ export function auditTopOffices(rosters = BODY_ROSTERS): OfficeAuditRow[] {
 }
 
 if (import.meta.filename === process.argv[1]) {
-  const rows = auditTopOffices();
+  const facts = factReader();
+  if (!facts) throw new Error("OFFICE_AUDIT_NEEDS_THE_READER_DATABASE: set DATABASE_URL");
+  const rows = auditTopOffices((await readFactRosters(facts)).rosters);
   const wrong = rows.filter((r) => r.verdict === "WRONG");
   const outOfScope = rows.filter((r) => r.verdict === "OUT_OF_SCOPE");
   const correct = rows.filter((r) => r.verdict === "CORRECT");
 
   const measured = floored(
     "bodies with the WRONG person in the runs-it-day-to-day slot",
-    "lib/registry/body-rosters.ts",
+    "the fact store's live rosters",
     rows.length,
     wrong.length,
   );

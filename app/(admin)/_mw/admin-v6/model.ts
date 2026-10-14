@@ -514,6 +514,7 @@ export interface PublicationRow {
   readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
 }
 export interface PublicationView {
+  readonly ballotPublication?: import("@/lib/civic-data/ballot-publication").BallotPublicationResult | null;
   readonly total: number;
   readonly counts: readonly { readonly verdict: PublicationRow["verdict"]; readonly words: string; readonly count: number }[];
   readonly latestAttemptFailing: number;
@@ -758,6 +759,7 @@ export interface FixView {
 }
 
 export type ActionKind =
+  "ballot-publish" |
   "focus" |
   "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 

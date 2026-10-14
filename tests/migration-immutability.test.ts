@@ -1,10 +1,3 @@
-/**
- * An established migration is immutable. `migrationTagsIn` cannot tell which way a migration file changed, so the
- * guard is run here as the real gate (`scripts/db-shipping-gate.mts`), spawned in a throwaway git repository: a
- * rewrite, a delete and a rename must exit 1 naming the file, and an append must pass. The child's environment has
- * `WTP_PRODUCTION_DATABASE_URL_READONLY` removed, so exit codes are deterministic and no connection is opened.
- */
-
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -65,9 +58,7 @@ test("the applier's sha256 is read back — the content anchor, wired end to end
   assert.match(applier, /INSERT INTO drizzle\.__drizzle_migrations \(hash, created_at\)/);
 
   const reader = readFileSync(join(ROOT, "lib", "db", "applied-migrations.ts"), "utf8");
-  // `[\s\S]` rather than the `s` flag: tsconfig targets below es2018, where the
-  // flag is a compile error rather than a runtime one — it would pass the suite
-  // on this machine and fail `tsc --noEmit` on the fresh-checkout gate.
+
   assert.ok(
     new RegExp(
       `SELECT[\\s\\S]*?\\bhash\\b[\\s\\S]*?\\bFROM\\s+drizzle\\.__drizzle_migrations\\b`,
@@ -157,10 +148,7 @@ function writeJournal(dir: string, entries: readonly JournalEntry[]): void {
   );
 }
 
-/**
- * Run the real gate in the scratch repository, in an environment carrying only what this test put there: the
- * credential and every variable the gate reads, CI event context included, are removed.
- */
+
 function runGate(dir: string, base: string): { status: number; out: string } {
   const env = { ...process.env };
   delete env.WTP_PRODUCTION_DATABASE_URL_READONLY;
@@ -480,10 +468,7 @@ test("appliedHashesFrom reads real rows and refuses malformed ones", () => {
   assert.equal(appliedHashesFrom({ ok: false, why: "refused" }), null);
 });
 
-/**
- * An unreachable merge base makes direction unknown, so the gate refuses, but only where a migration is in play: a
- * readable path list with nothing under `lib/db/migrations/` is a second, independent finding. Both halves are asserted.
- */
+
 function withUnreachableBase(paths: string): { status: number; out: string } {
   const { dir } = scratch();
   try {
@@ -580,4 +565,29 @@ test("if a database reports applying a retracted migration, the retraction is re
   assert.deepEqual(violations.map((v) => v.rule), ["retracted-migration-applied"]);
   assert.match(violations[0].what, /premise is false/);
   assert.deepEqual(checksumViolations(established, [], () => null), [], "an unapplied retracted migration is fine");
+});
+
+test("an applied replacement identifies its reused timestamp by its own committed SQL hash", () => {
+  const replacement = { ...PB_RETIRE, tag: "0035_r1_fact_store" };
+  const hash = createHash("sha256").update("CREATE TABLE fact (id bigint);").digest("hex");
+  assert.deepEqual(checksumViolations([...established, replacement], [{ when: replacement.when, hash }],
+    tag => tag === replacement.tag ? hash : null), []);
+});
+
+test("a reused timestamp cannot conceal retired SQL or a mismatched replacement", () => {
+  const replacement = { ...PB_RETIRE, tag: "0035_r1_fact_store" };
+  const retired = RETRACTED_MIGRATIONS.find(row => row.tag === PB_RETIRE.tag)!;
+  const current = createHash("sha256").update("CREATE TABLE fact (id bigint);").digest("hex");
+  assert.deepEqual(checksumViolations([...established, replacement], [{ when: replacement.when, hash: retired.sha256 }],
+    () => retired.sha256).map(row => row.rule), ["retracted-migration-applied"]);
+  assert.deepEqual(checksumViolations([...established, replacement], [{ when: replacement.when, hash: retired.sha256 }],
+    () => current).map(row => row.rule), ["retracted-migration-applied", "applied-sql-rewritten"]);
+  assert.deepEqual(checksumViolations([...established, replacement], [{ when: replacement.when, hash: current }],
+    () => null).map(row => row.rule), ["retracted-migration-applied"]);
+  const retiredRow = { when: replacement.when, hash: retired.sha256 };
+  const currentRow = { when: replacement.when, hash: current };
+  for (const rows of [[retiredRow, currentRow], [currentRow, retiredRow]]) {
+    assert.ok(checksumViolations([...established, replacement], rows, () => current)
+      .some(row => row.rule === "retracted-migration-applied"), "a current row cannot conceal retired SQL at the same timestamp");
+  }
 });

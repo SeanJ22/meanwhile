@@ -2,7 +2,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import { isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
+import { COMMENT_RULE_PUBLICATION, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { auditPull, latestParserResult } from "./worker-publication-evidence.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
@@ -21,6 +21,11 @@ export type WorkerPublicationItem = Pick<WorkItem, "id"> & {
     readonly contract: Pick<NonNullable<WorkItem["autonomousPlan"]>["contract"], "recordClass">;
   };
 };
+
+/** The classes that publish as facts in the runner's own pass rather than through a contract's command. */
+const factClass = (item: WorkerPublicationItem): "rosters" | "comments" | null =>
+  item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER" ? "rosters"
+    : item.autonomousPlan?.publication?.contractId === COMMENT_RULE_PUBLICATION ? "comments" : null;
 
 /** When each input a held ballot route is read from last changed: its place's saved pages, the national office list, the registry and the published routes. */
 export interface HeldBallotInputs {
@@ -52,12 +57,18 @@ export function workerPublicationTasks(items: readonly WorkerPublicationItem[], 
 /** One owed publication: the item, when it was asked for, and whether it is a held ballot route read in a batch. */
 export interface OwedWorkerPublication {
   readonly id: string;
-  readonly contractId: "registry-runtime-bindings" | WorkerReaderContract;
+  readonly contractId: "registry-runtime-bindings" | WorkerReaderContract | typeof COMMENT_RULE_PUBLICATION;
   readonly requestedAt: string;
   readonly batch: boolean;
 }
 
+/** Owed publications that run through a contract's command; rosters and comment rules publish as facts instead. */
 export function owedWorkerPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
+  heldInputs: HeldBallotInputs | null = null): OwedWorkerPublication[] {
+  return owedPublications(items.filter(item => factClass(item) === null), results, now, heldInputs);
+}
+
+function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
   heldInputs: HeldBallotInputs | null = null): OwedWorkerPublication[] {
   const byItem = new Map<string, WorkerResultRecord[]>();
   for (const result of results) {
@@ -70,7 +81,7 @@ export function owedWorkerPublications(items: readonly WorkerPublicationItem[], 
   return items.flatMap((item): OwedWorkerPublication[] => {
     const plan = item.autonomousPlan;
     const target = plan?.publication?.contractId;
-    if (!plan || !target || (target !== "registry-runtime-bindings" && !isWorkerReaderContract(target))) return [];
+    if (!plan || !target || (target !== "registry-runtime-bindings" && target !== COMMENT_RULE_PUBLICATION && !isWorkerReaderContract(target))) return [];
     const outcome = item.publicationOutcome;
     const ownResults = byItem.get(item.id) ?? [];
     const parser = latestParserResult(ownResults, item.id);
@@ -96,6 +107,13 @@ export function owedWorkerPublications(items: readonly WorkerPublicationItem[], 
   });
 }
 
+export function owedFactItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { rosters: string[]; comments: string[] } {
+  const owed = { rosters: [] as string[], comments: [] as string[] };
+  const facts = items.filter(item => factClass(item) !== null), byId = new Map(facts.map(item => [item.id, item]));
+  for (const row of owedPublications(facts, results, now)) owed[factClass(byId.get(row.id)!)!].push(row.id);
+  return owed;
+}
+
 /** Each owed publication as its own task, except held ballot routes, which share a child per batch. */
 export function workerPublicationTasksFor(owed: readonly OwedWorkerPublication[], now: string): RoutineSourceTask[] {
   const hour = new Date(Math.floor(Date.parse(now) / HOUR) * HOUR).toISOString();
@@ -104,12 +122,14 @@ export function workerPublicationTasksFor(owed: readonly OwedWorkerPublication[]
     .map(ids => ({ ids, key: `held-pages:${ids[0]}`, requestedAt: hour, contractId: "ballot-navigation" as const }));
   return [...owed.filter(row => !row.batch).map(row => ({ ids: [row.id], key: row.id, requestedAt: row.requestedAt, contractId: row.contractId })), ...batches]
     .map(({ ids, key, requestedAt, contractId: id }) => {
-      const contract = requiredManualProductionContract(id);
+      const contract = requiredManualProductionContract(id as Exclude<typeof id, typeof COMMENT_RULE_PUBLICATION>);
       const taskId = `worker-publication:${contract.id}:${key}`;
+      const command = id === "registry-runtime-bindings" || id === "voting-sites" ? contract.command
+        : ["scripts/promote-manual-civic-projection.mts", `--contract=${id}`];
       return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
         acquisitionFailureDomain: taskId, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
         parserVersion: contract.parserNormalizerVersion,
-        command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-rosters" : "worker-results"}=${ids.join(",")}`],
+        command: [...command, `--${id === "registry-runtime-bindings" ? "worker-directories" : "worker-results"}=${ids.join(",")}`],
         cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
         contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
         ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"] } };

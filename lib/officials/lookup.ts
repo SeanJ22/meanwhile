@@ -43,8 +43,6 @@ export interface SeatHolder {
   phone: string | null;
 
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
-
-  retainedFieldSources?: Partial<Record<"termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
   contactFormUrl: string | null;
 
   photoUrl: string | null;

@@ -10,6 +10,7 @@ import { CROSSWALK_KINDS } from "@/lib/civic-data/meeting-body-crosswalk.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "@/lib/civic-data/derived-meeting-wiring.ts";
 import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts";
 
+// Reviewed filters may carry settings added since the hand-wired import.
 const mandan = JSON.parse(readFileSync(new URL("./fixtures/civicclerk-mandan-events.json", import.meta.url), "utf8")).value[0];
 const sharedCategory = JSON.parse(readFileSync(new URL("./fixtures/civicclerk/mandannd/Events.json", import.meta.url), "utf8")).value[0];
 const SAMPLE_ROWS: BodySourceWiring[] = [
@@ -21,10 +22,14 @@ const SAMPLE_ROWS: BodySourceWiring[] = [
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "NOVUSAGENDA" as const,
     config: { portalUrl: "https://coalinga.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx", bodyMatch: "City Council Meeting" } },
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "ESCRIBE" as const, config: { portalUrl: "https://pub-lamesa.escribemeetings.com", meetingTypes: "City Council" } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "GRANICUS" as const,
+    config: { publisherUrl: "https://alexandria.granicus.com/ViewPublisher.php?view_id=57", bodyMatch: "City Council", bodyName: "City Council" } },
   ...FIXTURE_DOOR_ROWS.map(row => row.agendaSourceType === "CIVICCLERK"
     ? { ...row, config: { ...row.config, bodyMatch: "Board of Directors" } } : row),
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "BOARDDOCS" as const,
     config: { portalUrl: "https://go.boarddocs.com/mi/grand/Board.nsf/Public", committeeId: "A4EP6J588C05" } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "SWAGIT" as const,
+    config: { portalUrl: "https://chandleraz.new.swagit.com/views/155/", bodyMatch: "City Council" } },
 ];
 
 function sampleFilter(kind: (typeof DATA_DOOR_KINDS)[number]): Record<string, string> {

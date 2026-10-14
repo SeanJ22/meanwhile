@@ -86,7 +86,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
     "scripts/freshness-shadow.mts",
     "scripts/pilot-runner.mts",
     "scripts/publish-owner-snapshot.mts",
-    "lib/control-plane/scheduler/promotion-tail.ts",
   ];
   for (const file of files) {
     const source = readFileSync(join(ROOT, file), "utf8");

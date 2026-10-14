@@ -175,7 +175,7 @@ export interface WorkItem {
   /** An explicit capability debt, never an executable route or a source refusal. */
   readonly manualSourceGap?: {
     readonly contractId: import("../civic-data/manual-contracts.ts").ManualProductionContractId;
-    readonly mode: "REVIEWED_INPUT" | "SCOPED_ADAPTER_OWED";
+    readonly mode: "SCOPED_ADAPTER_OWED";
     readonly reason: string;
     readonly instructionReceipt: string;
     readonly assignmentKey?: string;

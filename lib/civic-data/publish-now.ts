@@ -3,11 +3,9 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { doorPartitionIds } from "../doors/mission-refresh.ts";
-import { owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldBallotInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
+import { owedFactItems, owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldBallotInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
-import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import type { WorkItem } from "../control-plane/work-item.ts";
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
@@ -108,24 +106,6 @@ export async function readWorkerPublicationItems(
   }
 }
 
-/** Full work instructions are needed only for findings currently waiting to be built. */
-export async function readPublicationBoxItems(repos: ControlPlaneRepositories, items: readonly WorkerPublicationItem[], now: string): Promise<WorkItem[]> {
-  const [waiting, taken] = await Promise.all([
-    repos.boxFindings.listWhere(["state"], "waiting"),
-    repos.boxFindings.listWhere(["state"], "taken"),
-  ]);
-  const allowed = new Set(items.map(item => item.id));
-  const ids = [...new Set([...waiting, ...taken.filter(row => row.value.claim && row.value.claim.expiresAt <= now)]
-    .flatMap(row => row.value.origins.map(origin => origin.workItemId)).filter(id => allowed.has(id)))];
-  if (repos.workItems.readMany) return (await repos.workItems.readMany(ids)).map(row => row.value);
-  const full: WorkItem[] = [];
-  for (const id of ids) {
-    const row = await repos.workItems.read(id);
-    if (row) full.push(row.value);
-  }
-  return full;
-}
-
 /** Keep only task descriptors across pages; source documents and completion evidence stay with each existing repository page. */
 export async function readPublishNowWorkerTasks(
   items: readonly WorkerPublicationItem[],
@@ -139,6 +119,22 @@ export async function readPublishNowWorkerTasks(
     owed.push(...owedWorkerPublications(page, await readCompleted(page.map(item => item.id)), now, heldInputs));
   }
   return workerPublicationTasksFor(owed, now);
+}
+
+/** Rosters and comment rules owed publication as facts, read a page of completion evidence at a time. */
+export async function readOwedFactItems(
+  items: readonly WorkerPublicationItem[],
+  readCompleted: (workItemIds: readonly string[]) => Promise<readonly WorkerResultRecord[]>,
+  now: string,
+): Promise<{ rosters: string[]; comments: string[] }> {
+  const owed = { rosters: [] as string[], comments: [] as string[] };
+  for (let at = 0; at < items.length; at += AGGREGATE_LIST_READ_PAGE) {
+    const page = items.slice(at, at + AGGREGATE_LIST_READ_PAGE);
+    const found = owedFactItems(page, await readCompleted(page.map(item => item.id)), now);
+    owed.rosters.push(...found.rosters);
+    owed.comments.push(...found.comments);
+  }
+  return owed;
 }
 
 export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {

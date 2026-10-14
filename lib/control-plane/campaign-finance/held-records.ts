@@ -654,8 +654,8 @@ export function federalIndependentExpenditureGap(subjectId: string): {
     attribution: "THE_LAW",
     subject: subjectId,
     what:
-      "FEC Schedule E is not read. docs/sources.md records OpenFEC as WIRED for committee TOTALS " +
-      "only; tracker D51 holds the independent-expenditure surface behind PB10/D23, the " +
+      "FEC Schedule E is not read. The source registry records OpenFEC as WIRED for committee TOTALS " +
+      "only; the independent-expenditure surface waits on D23, the " +
       "election-law counsel review of the 52 U.S.C. § 30111(a)(4) sale-or-use restriction.",
     nextMove:
       "Counsel closes D23. Nobody else may. Until then the route is BLOCKED_CURRENTLY, which is a " +

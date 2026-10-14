@@ -96,6 +96,7 @@ export function huntLeftUsd(h: Hunt): number | null {
  * state, a ZIP at a district. Every figure is null when it is not known (never zero).
  */
 export interface StateRow {
+  readonly population?: import("@/lib/reference/population-facts.ts").PopulationFact | null;
   readonly placeKey: string;
   readonly code: string;
   readonly name: string;

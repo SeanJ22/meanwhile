@@ -86,7 +86,7 @@ export interface VotingSourceBlank {
   reason: "access" | "unpublished" | "extraction" | "earlier-election" | "missing-sites" | "geocode";
 }
 export interface VotingSourceAttempt { url: string; route: "direct" | "browser-ua"; outcome: string; }
-export interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
+interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
 export interface VotingSourceRead {
   doorId: string;
   contacts?: VotingSourceContact[];

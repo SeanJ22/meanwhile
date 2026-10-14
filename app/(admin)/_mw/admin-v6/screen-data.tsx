@@ -4,6 +4,7 @@ import { CaptureHealthPanel } from "./capture-health.tsx";
 import { DataSwitchesPanel } from "./data-switches.tsx";
 import { ReaderDemandPanel } from "./reader-demand.tsx";
 import { TopicCountsPanel } from "./topic-counts.tsx";
+import { PopulationPanel } from "./population-panel.tsx";
 import s from "./v6.module.css";
 
 export function DataBusinessScreen() {
@@ -15,6 +16,7 @@ export function DataBusinessScreen() {
       </header>
       <ReaderDemandPanel />
       <CaptureHealthPanel />
+      <PopulationPanel />
       <TopicCountsPanel />
       <DataSwitchesPanel />
     </>

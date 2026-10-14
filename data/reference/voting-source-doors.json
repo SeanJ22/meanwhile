@@ -2240,7 +2240,10 @@
     "publisher": "Wisconsin Elections Commission, Madison, WI",
     "url": "https://elections.wi.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WI",
       "ocdId": "ocd-division/country:us/state:wi",
@@ -2256,14 +2259,21 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Wisconsin Elections Commission root and certified general candidate download return HTTP 403. Official Green County candidate ballot and statewide referendum notice were acquired with HTTP 200; other districts remain unacquired."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.wi.gov/\">https://elections.wi.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+    "ballotMeasuresUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+    "candidateListUrls": [
+      "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+      "https://www.greencountywi.org/DocumentCenter/View/4592/Type-B-Notice-for-Fall-General"
+    ],
+    "officialCertifiedCandidateListUrl": "https://elections.wi.gov/media/40951/download"
   },
   {
     "id": "fec-wy-chief",

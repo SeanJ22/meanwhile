@@ -2205,5 +2205,35 @@
     "tested_sha": "25ef70542f9bf5cffd93368ce29dcb11576e46cf",
     "gates": "pass",
     "at": "2026-10-13T22:49:19Z"
+  },
+  {
+    "lane": "acquisition-leftovers",
+    "steps": [],
+    "ready_sha": "37080911ddf367885daf9b5e9bdb372383f10bda",
+    "merge_sha": "66f2e261b2510dd3b5be665e54af59b2bdd19b50",
+    "river_sha": "5bb464f06e345165d6302377d20418f29d392409",
+    "tested_sha": "5bb464f06e345165d6302377d20418f29d392409",
+    "gates": "pass",
+    "at": "2026-10-14T00:53:41Z"
+  },
+  {
+    "lane": "census-lane",
+    "steps": [],
+    "ready_sha": "634e1f5fedfc09c2e986556d2d17da7f5848673c",
+    "merge_sha": "c609046344712e64f9a15ad0b6ad0ebfdba8e9f4",
+    "river_sha": "5bb464f06e345165d6302377d20418f29d392409",
+    "tested_sha": "5bb464f06e345165d6302377d20418f29d392409",
+    "gates": "pass",
+    "at": "2026-10-14T00:53:41Z"
+  },
+  {
+    "lane": "src-legiscan",
+    "steps": [],
+    "ready_sha": "018bd38172b8e713512f4dedcb0d50072b5615b0",
+    "merge_sha": "5bb464f06e345165d6302377d20418f29d392409",
+    "river_sha": "5bb464f06e345165d6302377d20418f29d392409",
+    "tested_sha": "5bb464f06e345165d6302377d20418f29d392409",
+    "gates": "pass",
+    "at": "2026-10-14T00:53:41Z"
   }
 ]

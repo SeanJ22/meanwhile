@@ -549,14 +549,17 @@
     "publisher": "Office of the Secretary of State, Des Moines, IA",
     "url": "https://sos.iowa.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "IA",
       "ocdId": "ocd-division/country:us/state:ia",
       "name": "Iowa"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.iowa.gov/",
+    "electionPageUrl": "https://sos.iowa.gov/general-election",
     "title": "Iowa chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Des Moines, IA",
@@ -565,14 +568,23 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official general-election page and candidate PDF reached with a browser user agent. Statewide measure full text and official ballot acquired from .gov county election publications. The statewide candidate PDF is reviewed and accepted, but not labeled certified.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.iowa.gov/\">https://sos.iowa.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+      "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+      "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+      "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf"
+    ]
   },
   {
     "id": "fec-ks-chief",

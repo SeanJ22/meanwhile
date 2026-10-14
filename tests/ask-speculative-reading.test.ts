@@ -158,6 +158,10 @@ async function timedAsk(question: string, extra: Record<string, unknown> = {}): 
 
 const CONTACT_READING = { intent: "CONTACT", entityMentions: ["Vail school board"], normalizedMentions: ["Vail Unified School District Governing Board"], temporal: { kind: "NONE" }, referent: null };
 
+function modelWindow(calls: readonly Call[]): number {
+  return Math.max(...calls.map(call => call.endedAt!)) - Math.min(...calls.map(call => call.startedAt));
+}
+
 test("ROUTE: the reading and the writing overlap — the answer arrives in about the longer call, not the sum", { concurrency: false }, async () => {
   reading = CONTACT_READING;
   const on = await timedAsk(QUESTION);
@@ -171,7 +175,6 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
   assert.deepEqual([on.payload.trace.speculation?.ran, on.payload.trace.speculation?.delivered, on.payload.trace.speculation?.why, on.payload.trace.speculation?.codeIntent],
     [true, "SPECULATIVE_ANSWER", "same-subject-body-kind-and-writer-input", "CONTACT"]);
   // Measured on the two model calls themselves, first start to last end; the route's own work around them slows with the machine.
-  const modelWindow = (calls: typeof on.calls) => Math.max(...calls.map((call) => call.endedAt!)) - Math.min(...calls.map((call) => call.startedAt));
   const onWindow = modelWindow(on.calls);
   assert.ok(onWindow >= WRITING_MS && onWindow < READING_MS + WRITING_MS, `the model calls took ${onWindow.toFixed(0)} ms together: about the longer call, under the sum`);
 
@@ -207,7 +210,8 @@ test("ROUTE: a pronoun follow-up the code cannot read overlaps too, bound to the
   assert.deepEqual(followUp.calls.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE"]);
   assert.ok(followUp.calls[1].startedAt < followUp.calls[0].endedAt!, "the writer started while the model was still reading");
   assert.equal(followUp.payload.trace.speculation?.delivered, "SPECULATIVE_ANSWER");
-  assert.ok(followUp.ms < READING_MS + WRITING_MS, `total ${followUp.ms.toFixed(0)} ms is under the sum`);
+  const window = modelWindow(followUp.calls);
+  assert.ok(window < READING_MS + WRITING_MS, `the overlapping model calls took ${window.toFixed(0)} ms, under the sum`);
 });
 
 test("ROUTE: a model reading that disagrees discards the speculative answer — its call is stopped and the answer is written from the model's reading", { concurrency: false }, async () => {

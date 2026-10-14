@@ -4,7 +4,9 @@ import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
+import { searchMeetings } from "@/lib/meetings/query";
+import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
+import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
 import type { Meeting } from "@/lib/sources/types";
 import {
@@ -41,23 +43,9 @@ import {
 } from "@/lib/routing/everyday-data-plane";
 import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
-/**
- * GET /api/meetings?lat=&lng=&radiusKm=
- *
- * Normalized meetings plus which rung of the empty-state cascade produced them, and the coverage summary for the point.
- */
-
 // The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
 
-/**
- * Only a 200 built whole from the published edge is held by the CDN; anything else says `no-store`.
- *
- * - `s-maxage=300`, and the runner purges the `reader-manifest` tag when it publishes.
- * - `durable`: shared across Netlify's edge nodes.
- * - `Netlify-Vary: query` keys on every query parameter, because a request carrying an unknown one is refused.
- * - `max-age=0`: the browser revalidates every time, so a purge reaches it.
- */
 const CDN_HELD = {
   "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
   "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,
@@ -94,15 +82,14 @@ export async function GET(request: Request) {
   const lat = latRead.value;
   const lng = lngRead.value;
 
-  /* An absent `radiusKm` starts at the ladder's first rung; a present but unparseable one refuses. */
-  const radiusRead = numeric(params, "radiusKm", { default: RADIUS_LADDER_KM[0] });
+  const radiusRead = numeric(params, "radiusKm", { default: DEFAULT_RADIUS_KM });
   if (!radiusRead.ok) return refuse(radiusRead.error);
   if (radiusRead.value <= 0) {
     return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
   }
   const radiusKm = Math.min(
     radiusRead.value,
-    RADIUS_LADDER_KM[RADIUS_LADDER_KM.length - 1],
+    MAX_RADIUS_KM,
   );
 
   /* A malformed zip refuses rather than becoming null; an absent one means the reader panned. Read at the door so a refused request never runs the search. */
@@ -204,10 +191,6 @@ export async function GET(request: Request) {
   // not held and `coverageAt` below meets it on its own terms.
   const coverageReady = timing.time("coverageGraph", () => prepareCoverage()).catch(() => undefined);
 
-  /*
-   * Which divisions actually contain this point. A meeting held online has no distance, so without this a
-   * virtual sitting is invisible at every radius. Degrades to an empty set rather than failing the request.
-   */
   let divisionsAtPoint = new Set<string>();
   /* Null when the lookup failed, never empty: `coverageAt` must not read a failed resolution as "no body governs here". */
   let resolvedDivisions: Division[] | null = null;
@@ -215,7 +198,7 @@ export async function GET(request: Request) {
     resolvedDivisions = await timing.time("divisions", () => divisionsAt(lat, lng));
     divisionsAtPoint = new Set(resolvedDivisions.map((d) => d.ocdId));
   } catch (error) {
-    console.error("division lookup failed; online meetings fall back to body-in-view", error);
+    console.error("division lookup failed", error);
   }
 
   /*
@@ -225,16 +208,16 @@ export async function GET(request: Request) {
   /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
   if (zipRead.value && resolvedDivisions) {
-    const widening = timing.start("widen");
+    const zipArea = timing.start("zipArea");
     const areaIds = await divisionIdsForZipArea(
       zipRead.value,
       resolvedDivisions.map((d) => d.ocdId),
       undefined, POINT_GEOMETRY_PLANS,
     );
-    const widened = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
-    widening();
-    resolvedDivisions = widened;
-    divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
+    const zipDivisions = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
+    zipArea();
+    resolvedDivisions = zipDivisions;
+    divisionsAtPoint = new Set(zipDivisions.map((d) => d.ocdId));
   }
 
   // One projection read per request. The search and the freshness meta
@@ -270,8 +253,7 @@ export async function GET(request: Request) {
         manifest: edgeManifest,
         includeAgenda: false,
         ...(readerStates.length > 0 ? { states: readerStates } : {}),
-        ...(resolvedDivisions?.length ? { ocdIds: resolvedDivisions.map(division => division.ocdId) } : {}),
-        nearby: { lat, lng, radiusKm: Math.max(radiusKm, ...RADIUS_LADDER_KM) },
+        ocdIds: resolvedDivisions?.map(division => division.ocdId) ?? [],
       }));
       meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);
@@ -283,13 +265,17 @@ export async function GET(request: Request) {
         new Date(),
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
+        undefined,
+        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [],
       ));
       snapshotMeta =
         read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
           ? snapshotClientMeta(read.value, read)
           : null;
     } else {
-      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
+        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : []);
+      heldMeetings = result.meetings;
       snapshotMeta = await getActiveSnapshotMeta();
     }
   } catch (error) {
@@ -316,7 +302,7 @@ export async function GET(request: Request) {
   }
 
   // A coverage statement we cannot stand behind is worse than none, so a
-  // registry that fails to load degrades to the cascade's own answer rather
+  // registry that fails to load leaves the meeting answer intact rather
   // than failing the whole request or guessing.
   let coverage = null;
   try {
@@ -446,7 +432,7 @@ export async function GET(request: Request) {
 
   return Response.json({
     ...result,
-    readerScope: readerMeetingScope({ heldMeetings: heldMeetings ?? result.meetings, shownMeetings: result.meetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? pointOwnDivisionIds : null, radiusKm: result.radiusKm, requestedRadiusKm: result.requestedRadiusKm, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings ?? result.meetings, canonicalBodyIdentity) }),
+    readerScope: readerMeetingScope({ heldMeetings: heldMeetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? divisionsAtPoint : null, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings, canonicalBodyIdentity) }),
     commentAccess,
     commentAccessDataState,
     commentAccessDataDetail,

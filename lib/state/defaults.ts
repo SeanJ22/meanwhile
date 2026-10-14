@@ -1,16 +1,11 @@
 import {
   CONCLUDED_LOOKBACK_DAYS,
-  RADIUS_LADDER_KM,
+  DEFAULT_RADIUS_KM,
   UPCOMING_HORIZON_DAYS,
 } from "../meetings/constants.ts";
 import { TIERS } from "../ocd/tiers.ts";
 
 import type { DistrictType, FilterState, UiState } from "./types.ts";
-
-/**
- * The store's default values, in their own module so both the reducer and
- * the reset registry (`reset.ts`) can read them without importing each other.
- */
 
 /** Every district type the overlay registry knows about. */
 export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
@@ -26,11 +21,6 @@ export const ALL_DISTRICT_TYPES: readonly DistrictType[] = [
   "municipal",
 ] as const;
 
-/**
- * District types drawn when the overlay is on: ALL of them, so every body the
- * who-governs card counts is findable on the map without knowing which
- * checkbox to tick.
- */
 export const DEFAULT_DISTRICT_TYPES: readonly DistrictType[] = [
   ...ALL_DISTRICT_TYPES,
 ] as const;
@@ -56,7 +46,7 @@ export const INITIAL_STATE: UiState = {
   selectedDistrictOcdId: null,
   selectedDistrictType: null,
   districtPick: null,
-  radiusKm: RADIUS_LADDER_KM[0],
+  radiusKm: DEFAULT_RADIUS_KM,
   radiusOverridden: false,
   nearMeEnabled: false,
   nearMe: null,

@@ -1,8 +1,3 @@
-/**
- * The keep-warm pinger keeps instances booted and cannot be used to hold them longer: app/api/warm/route.ts
- * holds a marked call for up to a second, and netlify/functions/keep-warm.mts makes ten overlapping calls every
- * five minutes. No live calls.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -14,12 +9,12 @@ import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 const call = (query: string, marked: boolean) =>
   GET(new Request(`${PUBLIC_SITE_ORIGIN}/api/warm${query}`, marked ? { headers: { "x-wtp-synthetic-run": KEEP_WARM_MARKER } } : {}));
 
-test("KEEP-WARM · an unmarked call answers at once, whatever hold it asks for, and is never cached", async () => {
-  const started = Date.now();
+test("KEEP-WARM · an unmarked call answers at once, whatever hold it asks for, and is never cached", async (t) => {
+  const delay = t.mock.method(globalThis, "setTimeout");
   const response = await call("?hold=900", false);
   assert.equal(response.status, 200);
   assert.equal((await response.json()).heldMs, 0);
-  assert.ok(Date.now() - started < 200, "an unmarked call does not hold its instance");
+  assert.equal(delay.mock.calls.length, 0, "an unmarked call schedules no hold");
   assert.equal(response.headers.get("cache-control"), "no-store, max-age=0");
 });
 

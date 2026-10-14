@@ -4,8 +4,8 @@ import { stateBase } from "../../ocd/divisions.ts";
 import { readPublisherBody, sourceAcquisitionFailure } from "../../civic-data/source-acquisition-error.ts";
 import { censusRequest, fetch as fetchTable, normalize, ACS_GEOGRAPHIES, type AcsScope, type AcsFetch, type AcsPopulationRow } from "./index.ts";
 
-export const ACS_CATALOG = "https://api.census.gov/data.json";
-export interface AcsRelease { readonly vintage: number; readonly publishedAt: string | null; readonly publicationUrl?: string }
+const ACS_CATALOG = "https://api.census.gov/data.json";
+interface AcsRelease { readonly vintage: number; readonly publishedAt: string | null; readonly publicationUrl?: string }
 export interface AcsJoinTarget { readonly geography: AcsScope; readonly geoid: string; readonly divisionId: string }
 export interface AcsLoadCounts { readonly state: string; readonly loaded: number; readonly joined: number; readonly unjoined: number }
 export interface AcsNationalLoad {
@@ -30,7 +30,7 @@ export function latestAcsRelease(value: unknown): AcsRelease {
   return releases[0];
 }
 
-export async function discoverAcsRelease(fetcher: typeof globalThis.fetch = globalThis.fetch, signal?: AbortSignal): Promise<AcsRelease> {
+async function discoverAcsRelease(fetcher: typeof globalThis.fetch = globalThis.fetch, signal?: AbortSignal): Promise<AcsRelease> {
   const response = await censusRequest("Census ACS catalog", ACS_CATALOG, fetcher, signal);
   if (response.status !== 200) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `The Census catalog answered HTTP ${response.status}.`);
   const text = await readPublisherBody("Census ACS catalog", () => response.text());

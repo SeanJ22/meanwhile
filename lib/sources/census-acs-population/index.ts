@@ -43,7 +43,7 @@ export const ACS_GEOGRAPHIES = {
   school_unified: "school district (unified)", school_elementary: "school district (elementary)", school_secondary: "school district (secondary)",
 } as const;
 export type AcsScope = keyof typeof ACS_GEOGRAPHIES;
-export interface AcsAttribution {
+interface AcsAttribution {
   readonly sourceUrl: string;
   readonly citationUrl?: string;
   readonly sourceOrg: string;

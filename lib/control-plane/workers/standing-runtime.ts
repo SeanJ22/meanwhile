@@ -22,7 +22,6 @@ import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
-import { consumePlanRepairs } from "./plan-repair.ts";
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 import { promotedRegistries } from "../scheduler/provider-inputs.ts";
@@ -120,19 +119,17 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
   // The lineage broker: which sibling's captures each lineage root may reuse. Whole-store when unscoped; one task's lineage when scoped.
   let lineages: ReturnType<typeof selectStandingLineages> = [];
-  let sharedHeldByRoot=new Map<string,string[]>();
   let sharedOriginByRoot=new Map<string,Set<string>>();
   const brokerLineages=(history:{occurrences:Parameters<typeof selectStandingLineages>[0]["occurrences"];workItems:readonly WorkItem[];
     artifacts:Parameters<typeof selectStandingLineages>[0]["artifacts"];attempts:Parameters<typeof selectStandingLineages>[0]["attempts"];
     workerResults:Parameters<typeof selectStandingLineages>[0]["workerResults"];scouts:readonly ScoutResult[]})=>{
     lineages=selectStandingLineages(history);
-    sharedHeldByRoot=new Map(); sharedOriginByRoot=new Map();
+    sharedOriginByRoot=new Map();
     for (const lineage of lineages.filter(row=>row.siblingRootIds.length>1)) {
       const address=registeredPublisherAddressFor(history.workItems.find(item=>item.id===lineage.rootWorkItemId)?.subject??"");
       if (!address) continue;
       const registeredHost=new URL(address).hostname.toLowerCase();
       const brokered=brokeredSiblingCaptures({lineage,artifacts:history.artifacts,attempts:history.attempts,scouts:history.scouts,registeredHost});
-      sharedHeldByRoot.set(lineage.rootWorkItemId,[...new Set(brokered.map(row=>row.artifactId))]);
       sharedOriginByRoot.set(lineage.rootWorkItemId,new Set(brokered.map(row=>`${row.originWorkItemId}\u0000${row.artifactId}`)));
     }
   };
@@ -153,15 +150,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       sharedOriginByRoot.get(row.rootWorkItemId)?.has(`${held.originWorkItemId}\u0000${held.artifactId}`));
     return lineage?.rootWorkItemId??null;
   };
-  const deferredSiblingRoots=new Set(lineages.flatMap(lineage=>lineage.siblingRootIds.filter(id=>id!==lineage.rootWorkItemId)));
-  if (!scoped) await consumePlanRepairs({ repos: input.repos, scouts: prior.filter(result=>!deferredSiblingRoots.has(result.workItemId)),
-    now: now(),registeredPublisherAddressFor,
-    authorizedSiblingArtifactIdsFor: parent=>sharedHeldByRoot.get(parent.id)??[],
-    readCapture: async id => {
-      const { artifact } = await readRepairCapture(id);
-      return { evidence: evidenceProjection(await heldRuntime.readEvidence(id)), permission: artifact.permission, transport: artifact.transport,
-        httpStatus: artifact.httpStatus, partial: artifact.httpStatus === 206 || Boolean(artifact.headers["content-range"]) || artifact.retentionPolicy === "DIAGNOSTIC" };
-    } });
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,
     beginTask:async (task)=>{
       const fresh=await readCompletedWorkerResults(input.repos,task.workItemId);
@@ -172,7 +160,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         if (history) brokerLineages(history); else await brokerWholeStore();
       } },
     rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
-    authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder,input.root),
     ...(input.transport?{scoutFor:async (item:WorkItem,task)=>{
       const search=input.searchFor?.(item.subject)??input.search;
@@ -184,7 +171,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           retrievalUrl: artifact.retrievalUrl, contentType: artifact.contentType } };
       };
       const exaKey=(input.environment??process.env).EXA_API_KEY?.trim();
-      if (task.routeId===EXA_AGENT_ROUTE_ID && exaKey && input.searchBudget) {
+      if (task.routeId===EXA_AGENT_ROUTE_ID) {
         const packetNow=async()=>(await readGovernmentPackets([item.subject],now())).get(item.subject)??null;
         return exaAgentExecutor({key:exaKey,now,budget:input.searchBudget,packetNow,
           instructions:async()=>(await readRolePlaybook(input.repos,"HUNTER")).text,

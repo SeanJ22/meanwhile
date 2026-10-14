@@ -24,7 +24,7 @@ import { listDoors } from "../doors/registry.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
 import type { ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { huntBrief, type HuntRole } from "./brief.ts";
-import { blankDigest, packetDue, triedSteps, type LastPacketJob, type ShutDoorNote } from "./packet-due.ts";
+import { blankDigest, packetDue, triedSteps, type LastPacketJob, type PacketDue, type ShutDoorNote } from "./packet-due.ts";
 import { blankFingerprint, huntPacketObligationId, reportableSubjects, type HuntPacket } from "./packet.ts";
 import { readGovernmentPackets } from "./packet-read.ts";
 import { stateOfDivision } from "./packet-plan.ts";
@@ -39,6 +39,10 @@ export async function lastPacketJob(repos: Pick<ControlPlaneRepositories, "scout
 
 export const lastJobOf = (result: ScoutResult | null): LastPacketJob | null =>
   result?.blankFingerprint ? { recordedAt: result.recordedAt, blankFingerprint: result.blankFingerprint, blankDigests: result.blankDigests ?? [] } : null;
+
+/** When the newest order reached a packet; null when none is recorded. */
+export const orderedAtOf = (assignments: readonly { readonly at: string }[] | undefined): string | null =>
+  (assignments ?? []).reduce<string | null>((newest, mark) => newest === null || mark.at > newest ? mark.at : newest, null);
 
 /** A government's shut doors, with what each door's record says broke. */
 export async function shutDoorsOf(repos: Pick<ControlPlaneRepositories, "doors">, governmentId: string): Promise<ShutDoorNote[]> {
@@ -84,6 +88,22 @@ export function huntLearnings(result: ScoutResult, packet: Pick<HuntPacket, "gov
   ];
 }
 
+/** Whether each government's packet is sent this round: its blanks read now, its last job, its shut doors and newest order. */
+export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults" | "doors" | "adminConfig">,
+  rows: readonly { readonly governmentId: string; readonly assignments?: readonly { readonly at: string }[] }[], now: string,
+  read: typeof readGovernmentPackets = readGovernmentPackets): Promise<Map<string, PacketDue>> {
+  const packets = await read(rows.map(row => row.governmentId), now);
+  const maxWaitMs = await deadEndWaitMs(repos);
+  const out = new Map<string, PacketDue>();
+  for (const row of rows) {
+    const packet = packets.get(row.governmentId);
+    if (packet === undefined) { out.set(row.governmentId, { due: false, why: "its owed list could not be read" }); continue; }
+    const [last, doors] = await Promise.all([lastPacketJob(repos, row.governmentId), shutDoorsOf(repos, row.governmentId)]);
+    out.set(row.governmentId, packetDue({ packet, last: lastJobOf(last), orderedAt: orderedAtOf(row.assignments), shutDoors: doors, now, maxWaitMs }));
+  }
+  return out;
+}
+
 export interface HunterRuntimeInput {
   readonly repos: ControlPlaneRepositories;
   readonly root: string;
@@ -107,7 +127,9 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
   const read = input.readPackets ?? readGovernmentPackets;
   const packetNow = async (): Promise<HuntPacket | null> => (await read([governmentId], input.now())).get(governmentId) ?? null;
   const opening = await packetNow();
-  const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: null, shutDoors: doors, now: input.now(), maxWaitMs });
+  const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
+  const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
+  const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: orderedAtOf(owner?.assignments), shutDoors: doors, now: input.now(), maxWaitMs });
   const role: HuntRole = due?.due ? due.role : last ? "DETECTIVE" : "HUNTER";
   let packet: HuntPacket | null = null;
   return hunterExecutor({
@@ -124,8 +146,6 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
       const manual = await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: governmentId, divisions: [governmentId] })).catch(() => null);
       const notes = manual === null ? [] : scoutFieldManualProjection(manual, { subjectId: governmentId, divisions: [governmentId], limit: NOTE_LIMIT }).lines;
       const tried = role === "DETECTIVE" ? triedSteps({ steps: last?.rungs ?? [], unfilled: last?.unfilled ?? [], shutDoors: doors }) : [];
-      const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
-      const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
       const bound = durableResearchTools(input.tools, { project: item.project, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id, subjectId: governmentId });
       const reportPacket = packet;
       return {

@@ -2,6 +2,7 @@
 import { readHeldPlaceCapture, type HeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../coverage/place-owed.ts";
 import { readPlaceOwed, type PlaceOwedDeps, defaultPlaceOwedDeps } from "../control-plane/admin-view/place-owed-read.ts";
+import { stateDivisionId, unionDivisions, zipDivisionIds } from "../control-plane/admin-view/v6-national-geography.ts";
 import { MODELS } from "../models.ts";
 import { blankFingerprint, mergePackets, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
 import { SEARCH_PRICE_USD } from "./search.ts";
@@ -20,6 +21,15 @@ export async function readGovernmentPackets(governmentIds: readonly string[], no
   const packets = new Map(packetsFrom({ divisions, items }).map(packet => [packet.governmentId, packet] as const));
   for (const division of divisions) if (!packets.has(division.id)) packets.set(division.id, { governmentId: division.id, label: division.label, held: [], blanks: [] });
   return packets;
+}
+
+/** Every division a sent place touches: each ZIP's divisions, its states and the country. */
+export async function divisionsOfPlace(zips: readonly string[], states: readonly string[],
+  readZips: typeof zipDivisionIds = zipDivisionIds): Promise<string[]> {
+  const byZip = await readZips(zips);
+  const always = [{ id: "ocd-division/country:us", label: "United States" },
+    ...states.flatMap(state => { const id = stateDivisionId(state); return id === null ? [] : [{ id, label: state.toUpperCase() }]; })];
+  return unionDivisions([...byZip.values()], always).map(division => division.id).sort();
 }
 
 export interface PacketPreview {

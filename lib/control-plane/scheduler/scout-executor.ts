@@ -4,6 +4,7 @@
  * is tools, system and brief as a static cached prefix, then append-only turns under a moving breakpoint.
  */
 
+import { createHash } from "node:crypto";
 import type { AttemptCost } from "../attempt.ts";
 import { workerSystemPrompt, type WorkerPlaybook } from "../playbooks.ts";
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
@@ -409,7 +410,7 @@ export function withToolBreakpoint(specs: readonly ScoutToolSpec[]): ScoutToolSp
   });
 }
 
-/** The static prefix (tools then system), built in one place so the pre-warm writes exactly the entry Attempts read. */
+/** The static prefix (tools then system), identical on every turn so it caches. */
 export function scoutStaticPrefix(input: {
   readonly toolkitSpecs: readonly ScoutToolSpec[];
   readonly playbook: string;
@@ -441,92 +442,10 @@ export function cacheTtlOrderProblems(request: Pick<ModelRequest, "tools" | "sys
   return problems;
 }
 
-/** The one-word placeholder a pre-warm sends. Read during prefill, never answered, never marked. */
-export const SCOUT_PREWARM_PLACEHOLDER = "warmup";
-
-
-/** The pre-warm request: `max_tokens: 0` runs prefill only and writes the static prefix's cache entry. It sends the Attempts' own tools, thinking and effort so the entry matches real traffic. */
-export function scoutPrewarmRequest(input: {
-  readonly model: string;
-  readonly effort: ModelEffort;
-  readonly toolkitSpecs: readonly ScoutToolSpec[];
-  readonly playbook: string;
-  readonly role: HuntRole;
-}): ModelRequest {
-  const prefix = scoutStaticPrefix(input);
-  return {
-    model: input.model,
-    max_tokens: 0,
-    system: prefix.system,
-    tools: prefix.tools,
-    tool_choice: { type: "auto" },
-    ...scoutThinkingOptions(input.effort),
-    messages: [{ role: "user", content: [{ type: "text", text: SCOUT_PREWARM_PLACEHOLDER }] }],
-  };
-}
-
-/** Bytes per token for a lower bound on prefix tokens; an undercount can only skip a pre-warm that would have cached. */
-export const PREFIX_BYTES_PER_TOKEN_CEILING = 4;
-
-/** A lower bound on the tokens in a static prefix (tools + system), from its bytes. */
-export function prefixTokensAtLeast(prefix: Pick<ModelRequest, "tools" | "system">): number {
-  const bytes = Buffer.byteLength(JSON.stringify(prefix.tools), "utf8") + prefix.system.reduce((n, s) => n + Buffer.byteLength(s.text, "utf8"), 0);
-  return Math.floor(bytes / PREFIX_BYTES_PER_TOKEN_CEILING);
-}
-
-export type ScoutPrewarmPlan =
-  | {
-      readonly kind: "SEND";
-      readonly model: string;
-      readonly request: ModelRequest;
-      readonly prefixTokensAtLeast: number;
-      readonly minimumCacheablePrefixTokens: number;
-    }
-  | {
-      readonly kind: "SKIP";
-      readonly model: string;
-      /** BELOW_CACHE_MINIMUM: the prefix may not reach the model's cacheable minimum. CACHE_MINIMUM_UNKNOWN: the model states none. */
-      readonly code: "BELOW_CACHE_MINIMUM" | "CACHE_MINIMUM_UNKNOWN";
-      readonly detail: string;
-    };
-
-/** Whether, and for which model, to pre-warm: only the loop's start model, and only when the prefix clears its minimum cacheable length. */
-export function scoutPrewarmPlan(input: {
-  readonly toolkitSpecs: readonly ScoutToolSpec[];
-  readonly playbook: string;
-  readonly role: HuntRole;
-  /** An injected model id (a test); the loop's base model otherwise. */
-  readonly model?: string;
-}): ScoutPrewarmPlan {
-  const start = scoutLoopBase(input.model);
-  const minimum = minimumCacheablePrefixTokensFor(start.model);
-  if (minimum === null) {
-    return {
-      kind: "SKIP",
-      model: start.model,
-      code: "CACHE_MINIMUM_UNKNOWN",
-      detail: `${start.model} states no minimum cacheable prefix (model-cost.ts), so a pre-warm cannot be shown to cache; none was sent`,
-    };
-  }
-  const request = scoutPrewarmRequest({ model: start.model, effort: start.effort, toolkitSpecs: input.toolkitSpecs, playbook: input.playbook, role: input.role });
-  const atLeast = prefixTokensAtLeast(request);
-  if (atLeast < minimum) {
-    return {
-      kind: "SKIP",
-      model: start.model,
-      code: "BELOW_CACHE_MINIMUM",
-      detail:
-        `the static prefix is at least ${atLeast} tokens by its bytes, which does not prove it clears ${start.model}'s ` +
-        `${minimum}-token cacheable minimum; a pre-warm could bill a write that never caches, so none was sent`,
-    };
-  }
-  return { kind: "SEND", model: start.model, request, prefixTokensAtLeast: atLeast, minimumCacheablePrefixTokens: minimum };
-}
-
 /** The step the research loop is registered under; asserted before every transport call. */
 export const SCOUT_LOOP_STEP = "scout-research-loop";
 
-/** Where the loop starts (class, model and effort), one answer for the executor and the pre-warm. An injected model overrides the id only. */
+/** Where the loop starts (class, model and effort). An injected model overrides the id only. */
 export function scoutLoopBase(modelOverride?: string): {
   readonly model: string;
   readonly modelClass: ModelClass;
@@ -588,7 +507,7 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
       }
       if (ctx === null) {
         return { kind: "DISPOSED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: clock(), artifacts: [], cost: zeroCost(Date.now() - startedMs),
-          disposition: { disposition: "WALKED_NO_YIELD", observation: null, permission: "NOT_APPLICABLE", transport: "NOT_ATTEMPTED",
+          disposition: { disposition: "WALKED_NO_YIELD", observation: null, permission: "NOT_APPLICABLE", transport: "REACHABLE",
             note: "HUNT: no blank is open for this government, so nothing was sent." },
           detail: "HUNT_NOTHING_OPEN: every blank is held or not owed; no model request was made" };
       }
@@ -606,7 +525,8 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
       const modelSteps: ScoutStep[] = [];
       const overruns: NonNullable<ScoutResult["representationOverruns"]>[number][] = [];
       const inputTransformations: NonNullable<ScoutResult["inputTransformations"]>[number][] = [];
-      const listPrices: (number | null)[] = [];
+      const accounting: ReturnType<typeof modelRequestAccounting>[] = [];
+      const shown = new Map<string, number>();
       let turns = 0;
       let transportInvocations = 0;
       let batchWaitedMs = 0;
@@ -661,7 +581,7 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
         }
         const metered = readMeteredUsage(response.usage ?? {}, response.batch === true);
         meteredTurns.push(metered);
-        listPrices.push(modelRequestAccounting(response).listPriceUsd);
+        accounting.push(modelRequestAccounting(response));
         const priced = priceMeteredUsage(base.model, metered, "1h");
         modelSteps.push({ step: SCOUT_LOOP_STEP, kind: "MODEL", turn: turns, model: response.model ?? base.model, effort: step.effort,
           tokens: { uncachedInput: metered.uncachedInputTokens ?? 0, output: metered.outputTokens ?? 0,
@@ -693,7 +613,12 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
           const call = await toolkit.call(use.name, use.input ?? {});
           artifacts.push(...call.artifacts);
           if (call.step !== null) steps.push({ ...call.step, index: steps.length, rung: call.step.tool, note: null, at: clock() });
-          const fit = fitRepresentation(use.name, call.forModel, call.artifacts.map(a => a.artifactId));
+          const digest = createHash("sha256").update(JSON.stringify([use.name, call.forModel])).digest("hex");
+          const shownAt = call.ok ? shown.get(digest) : undefined;
+          if (call.ok && shownAt === undefined) shown.set(digest, turns);
+          const representation = shownAt === undefined ? call.forModel
+            : `This exact result was supplied on turn ${shownAt}. Reuse it from the conversation, or ask for something different.`;
+          const fit = fitRepresentation(use.name, representation, call.artifacts.map(a => a.artifactId));
           if (fit.truncated) overruns.push({ tool: use.name, target: call.step?.target ?? use.name, bytes: fit.bytes, budget: fit.budget, artifactIds: call.artifacts.map(a => a.artifactId) });
           representationBytesThisTurn += Math.min(fit.bytes, fit.budget);
           results.push({ type: "tool_result", tool_use_id: use.id, is_error: !call.ok, content: fit.text });
@@ -719,10 +644,11 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
       const inputTokens = reported && summed.uncachedInputTokens !== null && summed.cacheReadInputTokens !== null && summed.cacheCreationInputTokens !== null
         ? summed.uncachedInputTokens + summed.cacheReadInputTokens + summed.cacheCreationInputTokens : noUsage ? 0 : null;
       const cost: AttemptCost = {
-        listPriceUsd: unknown || listPrices.some(p => p === null) ? null : listPrices.reduce<number>((n, p) => n + (p ?? 0), 0),
+        listPriceUsd: unknown || accounting.some(a => a.listPriceUsd === null) ? null : accounting.reduce((n, a) => n + (a.listPriceUsd ?? 0), 0),
         modelRequestCount: transportInvocations,
-        batchRequestCount: unknown ? null : 0,
-        batchEligibleRequestCount: unknown ? null : 0,
+        batchRequestCount: unknown ? null : accounting.reduce((n, a) => n + a.batchRequestCount, 0),
+        batchEligibleRequestCount: unknown || accounting.some(a => a.batchEligibleRequestCount === null) ? null
+          : accounting.reduce((n, a) => n + (a.batchEligibleRequestCount ?? 0), 0),
         inputTokens,
         outputTokens: reported ? summed.outputTokens : noUsage ? 0 : null,
         usd,
@@ -735,7 +661,7 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
         cacheRead: s.tokens.cacheRead, cacheWrite: s.tokens.cacheWrite })), minimumCacheablePrefixTokensFor(base.model) ?? SCOUT_CACHE_POLICY.minimumCacheablePrefixTokens) : null;
       const findings = toolkit.reported.map(f => ({ subjectId: f.subjectId, field: f.field, value: f.value, exactQuote: f.exactQuote,
         sourceUrl: f.sourceUrl, summary: `${f.field} = ${String(f.value)}`, artifactIds: f.artifactIds, kind: "RECORD" as const }));
-            const refusal = transportFailure !== null && findings.length === 0
+      const refusal = transportFailure !== null && findings.length === 0
         ? [{ code: policyRefused ? "SCOUT_POLICY_DENIED" as const : "SCOUT_TRANSPORT_FAILED" as const,
           detail: policyRefused ? `refused before sending by Admin's spending or execution limits: ${transportFailure}` : `the AI service did not answer: ${transportFailure}` }]
         : null;

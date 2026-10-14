@@ -22,12 +22,12 @@ const cost = (usd: number | null, durationMs: number, requests: number, bytes: n
   uncachedInputTokens: null, batch: false });
 
 export function exaAgentExecutor(deps: {
-  readonly key: string;
+  readonly key: string | undefined;
   readonly now: () => string;
   readonly instructions: () => Promise<string>;
   readonly packetNow: () => Promise<HuntPacket | null>;
-  /** The paid-search budget admits each run; a refused or unread budget sends nothing. */
-  readonly budget: SearchBudget;
+  /** The paid-search budget admits each run; a refused, unread or absent budget sends nothing. */
+  readonly budget: SearchBudget | undefined;
   readonly toolkitFor: (ctx: ScoutToolContext) => ScoutToolkit;
   readonly toolsFor: (job: { readonly attemptId: string; readonly workItemId: string; readonly routeTaskId: string }, packet: HuntPacket) =>
     Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "openBytes" | "reportFinding">;
@@ -43,22 +43,23 @@ export function exaAgentExecutor(deps: {
       const packet = await deps.packetNow();
       if (packet === null || packet.blanks.length === 0) {
         return { kind: "DISPOSED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: deps.now(), artifacts: [], cost: cost(0, Date.now() - started, 0, 0),
-          disposition: { disposition: "WALKED_NO_YIELD", observation: null, permission: "NOT_APPLICABLE", transport: "NOT_ATTEMPTED",
+          disposition: { disposition: "WALKED_NO_YIELD", observation: null, permission: "NOT_APPLICABLE", transport: "REACHABLE",
             note: "EXA AGENT: no blank is open for this government, so nothing was sent." }, detail: "HUNT_NOTHING_OPEN" };
       }
+      const { key, budget } = deps;
       let refused: string | null;
-      try { refused = await deps.budget.take(EXA_AGENT_HOST); }
+      try { refused = !key ? "EXA_API_KEY is not set" : !budget ? "no paid-search budget reaches this worker" : await budget.take(EXA_AGENT_HOST); }
       catch (error) { refused = `the paid-search budget could not be read (${error instanceof Error ? error.message : String(error)})`; }
-      if (refused !== null) {
+      if (refused !== null || !key || !budget) {
         return { kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", failureOutcome: "DENIED_BY_POLICY", endedAt: deps.now(), artifacts: [],
           cost: cost(0, Date.now() - started, 0, 0), detail: `DENIED_BY_POLICY: Exa agent not sent, ${refused}` };
       }
       let run: Awaited<ReturnType<typeof runExaAgent>>;
       try {
-        run = await runExaAgent({ packet, key: deps.key, instructions: await deps.instructions(),
+        run = await runExaAgent({ packet, key, instructions: await deps.instructions(),
           deadlineMs: Date.now() + (bound.maxWallMs > 0 ? bound.maxWallMs : EXA_AGENT_WALL_MS), ...(deps.fetchImpl ? { fetchImpl: deps.fetchImpl } : {}) });
       } finally {
-        await deps.budget.done(EXA_AGENT_HOST).catch(() => undefined);
+        await budget.done(EXA_AGENT_HOST).catch(() => undefined);
       }
       const toolkit = deps.toolkitFor({ obligation: row, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder,
         bound: RESEARCH_BOUNDS.perDispatch, now: deps.now, handed: { artifactIds: [] },

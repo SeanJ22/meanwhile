@@ -1,6 +1,6 @@
 /**
  * What the free walk last recorded for each dispatched government, read once a
- * cycle for `paidDiscoveryHold` from `cp_log_discovery_attempts` in one
+ * cycle for the run record from `cp_log_discovery_attempts` in one
  * batched read of the newest attempt's outcome, finish time and leads.
  *
  * ```

@@ -29,7 +29,7 @@ export function huntPacketPlan(governmentId: string): AutonomousWorkPlan {
       completenessScope: "Every open blank this government owes; each fact goes into the Box as it is found and is checked there.",
       expectedSourceDate: null, methodVersion: 0,
       sourceScope: { sourceId: `hunt:${governmentId}`, publisher: governmentId, routeIds: [HUNT_PACKET_ROUTE_ID], canonicalUrls: [], observationArtifactIds: [] },
-      extraction: { format: "UNSUPPORTED", mediaType: "unobserved", reason: "Facts are reported one at a time into the Box." },
+      extraction: { format: "UNSUPPORTED", mediaType: "unobserved", reason: "Facts are reported one at a time into the Box.", fields: {} },
       verification: { required: false, authorities: [] },
     },
   };

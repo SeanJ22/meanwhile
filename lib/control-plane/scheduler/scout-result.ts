@@ -30,6 +30,8 @@ export interface ScoutRung {
   readonly at: string;
   readonly ok?: boolean;
   readonly permission?: PermissionState;
+  /** The stated reason for the step, on older rows. */
+  readonly applicableBecause?: string;
 }
 
 /** A route an older job proposed. New jobs propose none. */

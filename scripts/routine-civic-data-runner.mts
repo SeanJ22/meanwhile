@@ -40,6 +40,9 @@ import {
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
   routinePreSpawnDeferral,
+  routineChildCrash,
+  routineSerialLane,
+  ROUTINE_SERIAL_LANE_LAUNCH_MS,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -503,6 +506,7 @@ async function persistSupervisorOutcome(input: {
   readonly taskReceipts: readonly RoutineCivicDataTaskReceiptReference[];
   /** Owner due requests this pass honoured or deferred, one line each. */
   readonly dueRequestLines: readonly string[];
+  readonly crashedTasks?: readonly { readonly taskId: string; readonly detail: string }[];
   readonly readerReadback: {
     readonly denominator: number;
     readonly recordedPass: number;
@@ -538,6 +542,7 @@ async function persistSupervisorOutcome(input: {
     verifiedSourceFailures: input.verifiedSourceFailures,
     readerEdge: input.readerEdge,
     failures: input.failures,
+    crashedTasks: input.crashedTasks,
     taskReceipts: input.taskReceipts,
     readerReadback: input.readerReadback,
   });
@@ -552,6 +557,7 @@ async function persistSupervisorOutcome(input: {
         `${input.readerReadback.recordedFail + input.readerReadback.currentFail} Reader failure receipt(s) ` +
         `recorded/current; ${input.readerReadback.repairFailures} Reader repair mechanism failure(s).`,
       ...input.dueRequestLines,
+      ...(input.crashedTasks ?? []).map((crash) => `${crash.taskId} ${crash.detail}; the child crashed and its work waits its retry.`),
       ...input.failures.map((failure) => `${failure.taskId}: ${failure.code} — ${failure.detail}`),
       "Source outcomes were attributed only from exact durable receipts; the supervisor neither fabricated nor altered candidates, pointers, or LKG.",
     ],
@@ -567,6 +573,7 @@ let attempted = 0;
 let verifiedSourceSuccesses = 0;
 let verifiedSourceFailures = 0;
 const supervisorFailures: SupervisorFailure[] = [];
+const crashedTasks: { readonly taskId: string; readonly detail: string }[] = [];
 const pendingRuns: PendingRun[] = [];
 const verifiedTaskReceipts: RoutineCivicDataTaskReceiptReference[] = [];
 const dueCandidates: { readonly pending: PendingRun; readonly clock: RoutineTaskClock | undefined }[] = [];
@@ -909,6 +916,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     // One degraded provider may occupy one lane, never the whole standing
     // pool. Distinct sources keep running and settling independently.
     failureDomain: pending.task.acquisitionFailureDomain,
+    serialLane: routineSerialLane(pending.command),
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
@@ -956,6 +964,9 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChild
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
+      if (command.serialLane !== undefined && Date.now() >= Date.parse(RUN_STARTED_AT) + ROUTINE_SERIAL_LANE_LAUNCH_MS) {
+        throw new Error(`PASS_TIME_BUDGET: ${command.serialLane} has had this pass's turn; the next pass continues it`);
+      }
       await acquireChildMemory(command);
       await recordHuntSourceProgress(runs[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
@@ -986,6 +997,16 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     // Admission already wrote this pass's QUEUED progress row, and append-only history refuses a second one.
     const detail = safeFailure(deferral);
     console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
+    return;
+  }
+  const crash = routineChildCrash(run);
+  if (crash !== null) {
+    // Recorded in the outcome as this task's attempt, so its work waits the task's own retry clock.
+    const detail = `(${pending.command[0]?.split("/").at(-1)}): ${safeFailure(crash)}`;
+    crashedTasks.push({ taskId: pending.task.id, detail });
+    console.error(`RCD_CHILD_CRASHED ${pending.task.id} ${detail}`);
+    await recordHuntSourceProgress(pending.task, "FAILED", `The source process crashed (${crash}); this source's work stays owed.`);
+    await recordTaskDoorOutcome(pending.task.id, "FAILURE");
     return;
   }
   const output = `${run.stdout}\n${run.stderr}`;
@@ -1369,6 +1390,7 @@ try {
     finishedAt: new Date().toISOString(),
     taskReceipts: [...verifiedTaskReceipts].sort((left, right) => left.taskId.localeCompare(right.taskId)),
     dueRequestLines,
+    crashedTasks,
     readerReadback: {
       denominator: readerContracts.length,
       recordedPass: readerReadbacksRecordedPass,

@@ -18,7 +18,9 @@ import type { PortraitAttempt, StandingPortraitOptions } from "../lib/photos/por
 import { portraitHash, type PortraitCapture } from "../lib/photos/evidence.ts";
 import { pacedPortraitAcquire, storeStandingPortrait } from "../lib/photos/portrait-work.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
-import type { StatePeopleAcquisition } from "../lib/civic-data/state-people-publication.ts";
+import { capturedText, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 
 export function parsePeoplePortraitArguments(args:readonly string[]):string {
   const state=args.find(arg=>arg.startsWith("--state="))?.slice(8).toLowerCase();
@@ -37,20 +39,22 @@ function portraitPerson(person:Officeholder):Officeholder {
       ...(person.fieldSources?.photo ? {photo:person.fieldSources.photo} : {})}};
 }
 
-async function sourceInputs(store:RoutineDataStore,jurisdiction:string,captures?:PortraitCapture[]):Promise<DerivedInputRef[]> {
+async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:{vault:EvidenceStore;captures:PortraitCapture[]}):Promise<DerivedInputRef[]> {
   const contracts=[...ROUTINE_SOURCE_CONTRACTS,...MANUAL_PRODUCTION_SOURCE_CONTRACTS]
     .filter(row=>row.sourceId !== "people-portraits" && (jurisdiction === "US" ? row.recordClass === "FEDERAL_DIRECTORY" : ["STATE_LEGISLATOR","FEDERAL_DIRECTORY"].includes(row.recordClass)) &&
       (jurisdiction === "US" ? row.scope.startsWith("US:") : row.scope === jurisdiction || row.scope.startsWith(`${jurisdiction}:`)));
   const found=await Promise.all(contracts.map(async contract=>{
     const promotion=await store.readPromotion(contract.recordClass,contract.scope);
     if (!promotion) return null;
-    if(captures){
+    if(linking){
       const saved=await store.readCandidate(promotion.versionId);
-      const acquisitions=(saved?.candidate.normalizedPayload as {acquisitions?:StatePeopleAcquisition[]}|undefined)?.acquisitions ?? [];
-      for(const row of acquisitions)if(row.vaultKey || row.artifactId)captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
-        observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:row.finalUrl,sourceId:contract.sourceId,
-          contentHash:portraitHash(new TextEncoder().encode(row.body)),text:row.body,retrievedAt:row.retrievedAt,
-          ...(row.artifactId ? {artifactId:row.artifactId} : {vaultKey:row.vaultKey})}});
+      const captures=(saved?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [];
+      for(const row of captures){
+        const text=await capturedText(linking.vault,row);
+        linking.captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
+          observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:row.finalUrl,sourceId:contract.sourceId,
+            contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:row.retrievedAt,vaultKey:row.capture.vaultKey}});
+      }
     }
     return promotedInputRef(contract.recordClass,contract.scope,promotion.versionId,promotion.payload,promotion.promotedAt);
   }));
@@ -69,8 +73,8 @@ function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):De
   return saved;
 }
 
-export async function refreshPeoplePortraits(input:{store:RoutineDataStore;state:string;options?:StandingPortraitOptions}) {
-  const {store,state}=input,options=input.options ?? {},clock=options.now ?? (()=>new Date().toISOString());
+export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault:EvidenceStore;state:string;options?:StandingPortraitOptions}) {
+  const {store,vault,state}=input,options=input.options ?? {},clock=options.now ?? (()=>new Date().toISOString());
   const pacing={sizeFor:websiteSizeFromHoldings(state === "US" ? [] : [state])};
   const acquire=options.acquire ?? ((request:Parameters<typeof pacedPortraitAcquire>[0])=>pacedPortraitAcquire(request,pacing));
   const portraitOptions={...options,acquire,storePortrait:options.storePortrait ?? ((...args:Parameters<typeof storeStandingPortrait>)=>storeStandingPortrait(args[0],args[1],args[2],args[3],pacing))};
@@ -81,7 +85,7 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;state
   const previous=prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
   const priorFacts=previous?.candidate.excludedFacts ?? [];
   const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? [])];
-  await sourceInputs(store,jurisdiction,linkingCaptures);
+  await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
   let baseRoster:OfficeholderSet|null=null;
   let continuationFacts:readonly PortraitAttempt[]=[];
   let queue=Promise.resolve(),last:Awaited<ReturnType<typeof publishPeopleSource>>|null=null;
@@ -94,7 +98,7 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;state
         const personId=person.personId ?? person.id;
         const excludedFacts=[...(current?.candidate.excludedFacts ?? []).filter(row=>(row.record as {personId?:string}|undefined)?.personId !== personId),...facts];
         const roster:OfficeholderSet={scope:state,generatedAt:clock(),officeholders:[portraitPerson(person)],divisions:[],unmatched:[]};
-        const publication=await publishPeopleSource({store,state,contractId,sourceId:"people-portraits",roster,acquisitions:[],releaseId:clock(),now:clock(),
+        const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",roster,acquisitions:[],releaseId:clock(),now:clock(),
           derivedInputs:[...await sourceInputs(store,jurisdiction),...portraitInputs(person,facts)],excludedFacts,confirmUnchanged:false});
         if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED")continue;
         if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);
@@ -124,7 +128,7 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;state
     const current=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
     if(current.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
     const saved=current.kind === "PROMOTED" ? await store.readCandidate(current.metadata.versionId!) : null;
-    const publication=await publishPeopleSource({store,state,contractId,sourceId:"people-portraits",roster:{...baseRoster,officeholders:baseRoster.officeholders.map(portraitPerson)},
+    const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",roster:{...baseRoster,officeholders:baseRoster.officeholders.map(portraitPerson)},
       acquisitions:[],releaseId:clock(),now:clock(),derivedInputs:await sourceInputs(store,jurisdiction),
       excludedFacts:[...(saved?.candidate.excludedFacts ?? priorFacts).filter(fact=>!fact.code.endsWith("_WORK_REMAINS")),...continuationFacts],confirmUnchanged:continuationFacts.length === 0});
     last=publication;
@@ -137,6 +141,6 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;state
 async function main(){
   const state=parsePeoplePortraitArguments(process.argv.slice(2));
   installNeonRequestDeadline();prepareProductionCivicDataWrite();
-  await refreshPeoplePortraits({store:new PostgresRoutineDataStore(),state});
+  await refreshPeoplePortraits({store:new PostgresRoutineDataStore(),vault:rawCaptureVault(),state});
 }
 if(process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)await main();

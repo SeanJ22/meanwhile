@@ -39,6 +39,8 @@ function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
     transition: notImplemented,
     promote: notImplemented,
     appendEvidence: notImplemented,
+    recordRecheck: notImplemented,
+    latestCandidate: async () => null,
     events: async () => [],
     clock: async () => ({}),
     readCandidate: async () => null,

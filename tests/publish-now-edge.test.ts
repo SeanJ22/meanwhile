@@ -19,6 +19,9 @@ import { registrationCandidate } from "../lib/registration/candidate.ts";
 import { registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+
+const vault = new MemoryEvidenceStore();
 
 const NOW = "2026-10-01T12:00:00.000Z";
 
@@ -57,7 +60,7 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   const sourceUrl = `https://raw.githubusercontent.com/openstates/people/${releaseId}/data/az/legislature/Member.yml`;
   const body = "id: ocd-person/member-one\nname: Member One\nroles:\n  - type: upper\n    district: '7'\n    start_date: '2025-01-01'\n";
   const roster = normalize(yamlToPeople(body, "az", sourceUrl, NOW), new Map(), NOW, "US-AZ");
-  const people = await publishStatePeople({ store: memory, state: "az", roster, releaseId, now: NOW,
+  const people = await publishStatePeople({ vault, store: memory, state: "az", roster, releaseId, now: NOW,
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body, retrievedAt: NOW }] });
   assert.ok(people.outcome.promoted, JSON.stringify(people.outcome.candidate.receipt));
 

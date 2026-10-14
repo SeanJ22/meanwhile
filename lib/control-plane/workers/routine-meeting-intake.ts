@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { RetainedSourceResponse, RetainedMeetingCandidate } from "../../civic-data/meeting-research-evidence.ts";
+import { readRawCapture, rawCaptureVault } from "../../civic-data/raw-capture-vault.ts";
 import { getDb } from "../../db/index.ts";
 import { civicDataCandidates } from "../../db/schema.ts";
 import { and, desc, eq, sql } from "drizzle-orm";
@@ -104,8 +105,9 @@ export async function retainRoutineMeetingForWorkers(input: {
 /** Research consumes durable source candidates; routine children never import the control plane. */
 export async function retainRecentRoutineMeetingEvidence(input: {
   readonly repos: ControlPlaneRepositories; readonly store: EvidenceStore; readonly methodVersion: number; readonly now?: () => string;
-  readonly candidates?: readonly RetainedMeetingCandidate[];
+  readonly candidates?: readonly RetainedMeetingCandidate[]; readonly vault?: EvidenceStore;
 }) {
+  const vault = input.vault ?? rawCaptureVault();
   const partition = meetingPartitionForRow("legistar", PIMA_LEGISTAR_CONTRACT.subjectId);
   const candidates = input.candidates ?? (await getDb().select({ candidate: civicDataCandidates.candidate }).from(civicDataCandidates)
     .where(and(eq(civicDataCandidates.scope, partition.scope), eq(civicDataCandidates.recordClass, "MEETING"),
@@ -116,9 +118,9 @@ export async function retainRecentRoutineMeetingEvidence(input: {
   const failures: string[] = [];
   for (const candidate of [...candidates].reverse()) {
     if (candidate.scope !== partition.scope || candidate.recordClass !== "MEETING") continue;
-    for (const held of candidate.retainedSourceResponses ?? []) {
-      const response = { ...held, bytes: new Uint8Array(Buffer.from(held.base64, "base64")) };
+    for (const { raw, ...held } of candidate.retainedSourceResponses ?? []) {
       try {
+        const response = { ...held, bytes: await readRawCapture(vault, raw) };
         const result = await retainRoutineMeetingForWorkers({ ...input, response, candidateVersionId: candidate.id, subjectId: partition.bodyId });
         if (result) results.push(result);
       } catch (error) {

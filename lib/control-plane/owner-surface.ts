@@ -448,6 +448,8 @@ export interface RoutineCivicDataSupervisorOutcome {
     readonly code: string;
     readonly detail: string;
   }[];
+  /** Started source children that died without a receipt; each task's work waits its own retry clock. Older rows have none. */
+  readonly crashedTasks?: readonly { readonly taskId: string; readonly detail: string }[];
   readonly attributionBoundary: {
     readonly sourceReceiptAuthority: "SOURCE_ACQUISITION_CHILD_ONLY";
     readonly supervisorCandidateWrites: 0;
@@ -696,10 +698,11 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
     const candidateIds = outcome.taskReceipts.map(({ receipt }) => receipt.candidateId);
     const exactSuccesses = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_SUCCESS");
     const exactFailures = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_FAILURE");
+    const crashed = outcome.crashedTasks ?? [];
     const exactEvidenceIssue = outcome.taskReceiptEvidence !== "EXACT"
       ? "Exact task/candidate receipt references are unavailable."
-      : outcome.taskReceipts.length !== outcome.attemptedTasks
-        ? `${outcome.taskReceipts.length} exact task receipts do not reconcile to ${outcome.attemptedTasks} attempted tasks.`
+      : outcome.taskReceipts.length + crashed.length !== outcome.attemptedTasks
+        ? `${outcome.taskReceipts.length} exact task receipts and ${crashed.length} crashed task(s) do not reconcile to ${outcome.attemptedTasks} attempted tasks.`
         : exactSuccesses.length !== outcome.verifiedSourceSuccesses || exactFailures.length !== outcome.verifiedSourceFailures
           ? "Exact task receipt classifications do not reconcile to the recorded success/failure counts."
           : new Set(taskIds).size !== taskIds.length || new Set(candidateIds).size !== candidateIds.length
@@ -765,12 +768,13 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
       };
     }
     const contained = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_FAILURE");
-    if (contained.length > 0) {
+    if (contained.length > 0 || crashed.length > 0) {
       return {
         level: "AMBER",
         headline: "Routine source failure was contained",
         happened:
-          `${contained.length} exact source receipt(s) held their own LKG while ` +
+          `${contained.length} exact source receipt(s) held their own LKG` +
+          `${crashed.length > 0 ? ` and ${crashed.length} source process(es) crashed` : ""} while ` +
           `${outcome.verifiedSourceSuccesses} unaffected task(s) completed successfully. Retry remains data-plane work.`,
         needsYou: false,
         action: null,

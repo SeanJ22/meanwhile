@@ -5,11 +5,11 @@ import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { availableWorkerMemoryBytes, measuredReservationBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { fork, type ChildProcess } from "node:child_process";
+import { fork, spawn, type ChildProcess } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { once } from "node:events";
 import { setImmediate as yieldToEventLoop } from "node:timers/promises";
@@ -51,7 +51,7 @@ test("Windows and Linux process probes leave timers and the host lock available"
         readdir: async (path: string) => { assert.equal(path, "/proc"); await waitForProbe(); return [String(process.pid)]; },
         readFile: async (path: string) => { assert.equal(path, `/proc/${process.pid}/status`); return status; } };
       return nativeRequire(name);
-    }, process, console, Buffer, setTimeout, clearTimeout, queueMicrotask });
+    }, process, console, Buffer, setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask });
     const loadedSlots = loaded as { workerMemoryHost: typeof workerMemoryHost; workerProcessSlots: typeof workerProcessSlots };
     const host = loadedSlots.workerMemoryHost({ shared: true });
     const slots = loadedSlots.workerProcessSlots(() => 20, { host, availableBytes: () => 1000 * 1024,
@@ -383,4 +383,45 @@ test("the staging host size accounts for its already-running parent", () => {
     if (prior === undefined) delete process.env.WTP_WORKER_HOST_MEMORY_MIB;
     else process.env.WTP_WORKER_HOST_MEMORY_MIB = prior;
   }
+});
+
+test("a script's reservation follows its measured peak, and a never-measured script keeps its table peak", async () => {
+  const mib = 1024 * 1024;
+  const crashed = 3.57e9;
+  const host = workerMemoryHost({ processes: () => [] });
+  host.transact(state => { state.peaks = { "national-people-refresh.mts": [1.1e9, crashed, 1.2e9] }; }, false);
+  let free = crashed + 768 * mib;
+  const slots = routineProcessSlots({ host, availableBytes: () => free });
+  const people = "people-wikidata-people-ca/national-people-refresh.mts";
+  await assert.rejects(slots.acquire(people, Date.now() + 25), /WORKER_MEMORY_DEADLINE/,
+    "the 1,258 MiB table value would fit; the measured 3.57 GB does not");
+  free = measuredReservationBytes([crashed]) + 768 * mib;
+  const release = await slots.acquire(people, Date.now() + 100);
+  host.transact(state => { assert.ok(state.reservations[0]!.peak >= crashed); }, false);
+  release();
+  free = Number.MAX_SAFE_INTEGER;
+  const votes = await slots.acquire("openstates-votes-ca/openstates-votes-refresh.mts");
+  host.transact(state => { assert.equal(state.reservations[0]!.peak, 3072 * mib); }, false);
+  votes();
+});
+
+test("a running child's high-water memory is sampled, raises its live reservation and sets the next one", { skip: process.platform !== "linux" }, async () => {
+  const mib = 1024 * 1024;
+  const host = workerMemoryHost({ processes: () => [] });
+  const slots = workerProcessSlots(() => 10, { host, availableBytes: () => Number.MAX_SAFE_INTEGER, headroomBytes: 0, peakBytes: () => mib });
+  const release = await slots.acquire("probe/peak-probe.mts");
+  const child = spawn(process.execPath, ["-e", "const b = Buffer.alloc(160 * 1024 * 1024, 1); setTimeout(() => b.length, 2600)"], { stdio: "ignore" });
+  release.observe!(child.pid!);
+  await new Promise(resolve => setTimeout(resolve, 2300));
+  host.transact(state => { assert.ok(state.reservations[0]!.peak >= 160 * mib, "growth past the reserved peak is reserved"); }, false);
+  await once(child, "exit");
+  release();
+  await yieldToEventLoop();
+  let recorded: number[] = [];
+  host.transact(state => { recorded = state.peaks?.["peak-probe.mts"] ?? []; }, false);
+  assert.equal(recorded.length, 1);
+  assert.ok(recorded[0]! >= 160 * mib);
+  const next = await slots.acquire("probe/peak-probe.mts");
+  host.transact(state => { assert.equal(state.reservations[0]!.peak, measuredReservationBytes(recorded)); }, false);
+  next();
 });

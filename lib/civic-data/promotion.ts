@@ -22,6 +22,7 @@ import type { RoutineReaderVerification } from "./reader-verification.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -132,7 +133,7 @@ export async function processRegisteredRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   // Rechecks keep the held version by default. Explicit false is reserved for
   // callers that need a distinct candidate even when its facts are unchanged.
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   let boundedCandidate = durableCandidateSnapshot(candidate);
@@ -245,7 +246,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -280,7 +281,7 @@ export async function processRegisteredMeetingHistoryCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -384,7 +385,7 @@ export async function processRegisteredManualCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -458,7 +459,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
   if (productionStore && registeredDoor !== REGISTERED_PRODUCTION_DOOR) {
@@ -522,7 +523,7 @@ export async function processRoutineCandidate(
   const transitionAt = await routineEventObservedAt(store, candidate.recordClass, candidate.scope, now);
   const nativeRetirementCheck=candidate.sourceId === "plural-openstates" && candidate.recordClass === "STATE_LEGISLATOR" &&
     (candidate.changeSet?.removed.length ?? 0)>0 && !candidate.horizon.claimsComplete
-    ? (await import("../sources/plural/retirement.ts")).statePeopleRetirementSourceCheck(candidate,validationLkg,transitionAt) : null;
+    ? await (await import("../sources/plural/retirement.ts")).statePeopleRetirementSourceCheck(candidate,validationLkg,transitionAt,options.vault) : null;
   const validated = validateRoutineCandidate(
     candidate,
     validationLkg,
@@ -580,6 +581,14 @@ export async function processRoutineCandidate(
         confirmed: { versionId: confirmed.versionId, at: confirmed.at, recheck: candidate },
       };
     }
+  }
+  // A re-read refused for the same reason with the same extracted values as the newest candidate writes no new one.
+  const refusal = candidate.retrieval.succeeded && validated.state !== "VALIDATED" ? failureOf(validated.receipt) : null;
+  const latest = refusal ? await store.latestCandidate(candidate.sourceId, candidate.recordClass, candidate.scope) : null;
+  if (refusal && latest && latest.id !== current?.versionId && latest.failureCode === refusal.code &&
+    latest.normalizedHash === candidate.normalization.normalizedHash && latest.parserVersion === candidate.normalization.parserVersion) {
+    await store.recordRecheck(latest.id, transitionAt, `RECHECKED_UNCHANGED: read ${candidate.retrieval.retrievedAt} (${candidate.id}); the same values meet the same refusal, ${refusal.code}.`);
+    return { candidate: (await store.readCandidate(latest.id))!, promoted: null, readerReadback: null };
   }
   const acquisitionFailure = candidate.retrieval.succeeded ? null : failureOf(validated.receipt);
   await store.create({

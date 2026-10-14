@@ -42,7 +42,7 @@ test("LegiScan acquires each current state session serially and retains shared I
 });
 
 test("Congress.gov pagination stays in its native state slice and captures each own member API page",async()=>{
-  let deltas=0;const requests:string[]=[],fetchImpl:typeof fetch=async(resource)=>{
+  const requests:string[]=[],fetchImpl:typeof fetch=async(resource)=>{
     const parsed=new URL(String(resource));requests.push(parsed.pathname+parsed.search);assert.equal(parsed.searchParams.get("api_key"),"private-congress-key");
     if(parsed.pathname==="/v3/member/AZ")return json(parsed.searchParams.get("offset")==="0"
       ?{members:[{bioguideId:"A000001"}],pagination:{count:2,next:"https://api.congress.gov/v3/member/AZ?offset=1&api_key=private-congress-key"}}
@@ -52,7 +52,7 @@ test("Congress.gov pagination stays in its native state slice and captures each 
       officialWebsiteUrl:bioguide==="A000001"?"https://doe.senate.gov":"https://doe.house.gov",addressInformation:{phoneNumber:"202-224-0000"},
       terms:[{chamber:bioguide==="A000001"?"Senate":"House of Representatives",stateCode:"AZ",district:bioguide==="A000001"?undefined:1,startYear:2025}],depiction:{imageUrl:"https://www.congress.gov/img/member.jpg"}}});
   };
-  const release=await acquirePeopleSource({...options("congress-api",fetchImpl),onPerson:async release=>{deltas++;assert.equal(release.roster.currentMembershipComplete,undefined);}});assert.equal(release.gaps.length,0);assert.equal(release.roster.officeholders.length,2);assert.equal(deltas,2);
+  const release=await acquirePeopleSource(options("congress-api",fetchImpl));assert.equal(release.gaps.length,0);assert.equal(release.roster.officeholders.length,2);
   assert.equal(release.acquisitions.length,4);assert.equal(release.roster.divisions[0].ocdId,"ocd-division/country:us/state:az");
   assertScoped(release.roster,"congress-api");assert.equal(release.roster.officeholders[0].personId,"congress-api:A000001");
   assert.equal(release.roster.divisions[1].ocdId,"ocd-division/country:us/state:az/cd:1");assert.equal(release.roster.officeholders[0].termStart,"2025");

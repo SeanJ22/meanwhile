@@ -122,8 +122,9 @@ import {
   derivedFamilyFailedCandidate,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
-import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, readMeetingResearchWitness,
-  type RetainedSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
+import { retainMeetingFetchBytes, holdMeetingSourceResponses, retainMeetingCandidateEvidence, readMeetingResearchWitness,
+  type HeldSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
 
 /*
  * The committed registry, read the same way lib/registry/server.ts reads it:
@@ -1018,7 +1019,7 @@ async function main() {
       previous,
       promotionStore,
       partitions,
-      retained.responses,
+      retained.responses.length ? await holdMeetingSourceResponses(rawCaptureVault(), retained.responses) : [],
     );
     for (const refusal of retained.refusals) console.error(refusal);
   } else {
@@ -1539,7 +1540,7 @@ export async function promoteMeetingPartition(
   snapshot: MeetingsSnapshot,
   additionalViolations: readonly string[] = [],
   removalEvidence: readonly RoutineRemovalEvidence[] = [],
-  retainedResponses: readonly RetainedSourceResponse[] = [],
+  retainedResponses: readonly HeldSourceResponse[] = [],
   heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
   idSuffix = "",
 ): Promise<{
@@ -1615,7 +1616,7 @@ export async function promoteMeetingPartitions(input: {
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
   readonly researchIntake?: (partition: MeetingPartitionContract, current: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) => Promise<ApprovedResearchMeetingPartition | null>;
-  readonly retainedResponses?: readonly RetainedSourceResponse[];
+  readonly retainedResponses?: readonly HeldSourceResponse[];
   /** Test seam for the Census geocoder; production uses the global fetch. */
   readonly venueFetch?: typeof fetch;
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
@@ -1795,7 +1796,7 @@ async function promoteSelectedMeetingPartitions(
   previous: MeetingsSnapshot | null,
   promotionStore: RoutineDataStore,
   partitions: readonly MeetingPartitionContract[],
-  retainedResponses: readonly RetainedSourceResponse[] = [],
+  retainedResponses: readonly HeldSourceResponse[] = [],
 ): Promise<void> {
   const report = source.lastReport;
   if (!report) {

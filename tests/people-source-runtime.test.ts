@@ -10,6 +10,9 @@ import { stateIdentity } from "../lib/sources/people/common.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readPeopleSourceProjection } from "../lib/civic-data/people-source-publication.ts";
 import { parseRoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+
+const vault = new MemoryEvidenceStore();
 
 test("every nationally available people source has an independent standing state shard", () => {
   const tasks = PEOPLE_SOURCE_CONTRACTS.filter(contract => contract.sourceId !== "people-portraits").map(routineTaskFromContract);
@@ -64,16 +67,13 @@ test("the standing reader publishes acquired people and preserves both states af
     const release = { state: input.state, roster, releaseId: at, gaps: [],
       acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body, retrievedAt: at }],
       coverage: { people: roster.officeholders.length } };
-    await input.onPerson?.(release);
-    const immediatelyPublished = await readPeopleSourceProjection(`US-${input.state.toUpperCase()}`, sourceId, { store, now: at, bypassCache: true });
-    assert.equal(immediatelyPublished.kind, "PROMOTED", "verified people reach readers before acquisition finishes the state");
     return release;
   };
   const dependencies = { now: () => at, writeLine: (line: string) => lines.push(line),
     readDivisions: async (state:string) => {assert.ok(states.includes(state));return [{ocdId:`ocd-division/country:us/state:${state}/sldl:3`,label:"State House District 3",divisionType:"sldl"}];},
     readHeld: async (state: string) => { assert.ok(states.includes(state)); return undefined; }, acquire };
   for (const state of states) {
-    const result = await runPeopleSourceRefresh({ state, sourceId, store }, dependencies);
+    const result = await runPeopleSourceRefresh({ vault, state, sourceId, store }, dependencies);
     assert.equal(result.succeeded, true,lines.join("\n"));
     const receipt = parseRoutineRunnerReceipt(lines.at(-1)!);
     assert.equal(receipt.ok, true);
@@ -82,7 +82,7 @@ test("the standing reader publishes acquired people and preserves both states af
   const before = await Promise.all(states.map(state => store.readPromotion("STATE_LEGISLATOR", `US-${state.toUpperCase()}:people:${sourceId}:v1`)));
   assert.ok(before.every(Boolean));
   at = "2026-10-12T01:00:00.000Z";
-  const failed = await runPeopleSourceRefresh({ state: states[0]!, sourceId, store }, { ...dependencies,
+  const failed = await runPeopleSourceRefresh({ vault, state: states[0]!, sourceId, store }, { ...dependencies,
     acquire: async () => { throw new Error("HTTP 503 from the people provider"); } });
   assert.equal(failed.succeeded, false);
   const failureReceipt = parseRoutineRunnerReceipt(lines.at(-1)!);

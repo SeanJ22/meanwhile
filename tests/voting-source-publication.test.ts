@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
-import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { readRawCapture, type RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -28,8 +30,9 @@ test("saved official tables reach the existing public read model with hours, loc
   assert.match(drop.hours!, /7:00 pm/);
   assert.equal(drop.office?.phone, "(701) 845-8500 Ext. 6666");
   const current = replaceVotingJurisdiction(null, jurisdiction, at);
-  const candidate = votingSitesCandidate({ current, prior: null, failures: [], rawBodies: votingRawEvidence(read),
-    successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at, retainRawBodies: true });
+  const vault = new MemoryEvidenceStore();
+  const candidate = votingSitesCandidate({ current, prior: null, failures: [], acquisition: await holdVotingRawEvidence(vault, read),
+    successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at });
   const store = new MemoryRoutineDataStore();
   const outcome = await processRegisteredManualCandidate(store, "voting-sites", candidate, at);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the saved official table should publish");
@@ -37,7 +40,11 @@ test("saved official tables reach the existing public read model with hours, loc
   const projection = await readVotingSitesProjection({ store, now: at, bypassCache: true });
   assert.equal(projection.kind, "PROMOTED");
   if (projection.kind === "PROMOTED") assert.deepEqual(projection.value, JSON.parse(JSON.stringify(current)));
-  assert.ok(votingRawEvidence(read).some(frame => frame.endsWith(bytes.toString("base64"))));
+  const saved = (await store.readCandidate(candidate.id))!.candidate;
+  assert.ok(!JSON.stringify(saved).includes(bytes.toString("base64")) && !JSON.stringify(saved).includes("rgMasterTable"),
+    "the stored candidate holds refs, not the page bytes");
+  const page = (saved.normalizedPayload as { acquisition: (RawCaptureRef & { url: string })[] }).acquisition.find(ref => ref.url === door.url)!;
+  assert.deepEqual(Buffer.from(await readRawCapture(vault, page)), bytes);
 });
 
 test("a failed reread leaves all verified sites intact and keeps its attempted route as open work", async () => {

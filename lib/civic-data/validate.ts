@@ -180,13 +180,13 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
     if (typeof url !== "string") return false;
     const path=/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/([a-f0-9]{40})\/(data\/[a-z]{2}\/(?:legislature|executive|municipal|municipalities)\/.+\.ya?ml)$/.exec(url);
     if (!path || candidate.scope.slice(3,5).toLowerCase() !== path[2].split("/")[1]) return false;
-    return rows(object(source.normalizedPayload)?.acquisitions).some(acquisition=>{
+    return rows(object(source.normalizedPayload)?.captures).some(acquisition=>{
       const origin=object(acquisition.extractedFrom);
       return origin?.member === path[2] && acquisition.requestedUrl === `https://codeload.github.com/openstates/people/zip/${path[1]}` &&
         origin.requestedUrl === acquisition.requestedUrl && origin.finalUrl === acquisition.finalUrl &&
         typeof origin.sha256 === "string" && SHA256.test(origin.sha256) && origin.sha256 === acquisition.rawHash &&
         typeof acquisition.httpStatus === "number" && acquisition.httpStatus >= 200 && acquisition.httpStatus < 300 &&
-        typeof acquisition.body === "string" && acquisition.body.length > 0;
+        Number(object(acquisition.capture)?.byteLength) > 0;
     });
   };
   const removed=candidate.changeSet?.removed ?? [];

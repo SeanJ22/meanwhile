@@ -114,11 +114,9 @@ export async function acquireWikidataPeople(options: PeopleAcquisitionOptions): 
     });
     roster.divisions=roster.divisions.filter(row=>!statewideIds.has(row.officeholderId));
     roster.unmatched=roster.unmatched.filter(row=>!statewideIds.has(row.officeholderId));
-    if(roster.officeholders.length)await options.onPerson?.(result(options,roster,acquisitions,gaps));
     for (const holder of roster.officeholders) {
       const candidate = holder.portraitCandidate; if (!candidate) continue;
       holder.portraitCandidate=await acquireWikidataPortraitLicense(candidate,options,acquisitions,gaps);
-      await options.onPerson?.(result(options,roster,acquisitions,gaps));
     }
   } catch(error) { gap(gaps,options,sourceUrl,error); }
   roster.currentMembershipComplete = false;

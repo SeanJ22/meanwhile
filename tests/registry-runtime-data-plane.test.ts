@@ -13,6 +13,7 @@ import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate, Rout
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { getTableName } from "drizzle-orm";
 import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -199,7 +200,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
 test("federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer", async () => {
   const store = new MemoryRoutineDataStore();
   const projection = await federalSeed();
-  const good = federalDirectoryCandidate({ acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
+  const good = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
   const promoted = await processRegisteredManualCandidate(store, "congress-bulk-roster", good, T0);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
@@ -210,11 +211,11 @@ test("federal roster/directory promotes once and failed acquisition preserves it
 
   const alteredProjection = structuredClone(projection);
   alteredProjection.roster.officeholders[0]!.name = `${alteredProjection.roster.officeholders[0]!.name} Altered`;
-  const altered = federalDirectoryCandidate({ acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
+  const altered = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
   assert.notEqual(altered.id, good.id, "the federal candidate identity binds the exact normalized projection");
 
   const oneFile = federalAcquisitions(projection.sourceSha, "duplicate")[0]!;
-  const incomplete = federalDirectoryCandidate({ acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
+  const incomplete = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
   const incompleteOutcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", incomplete, T1);
   assert.equal(incompleteOutcome.candidate.state, "SOURCE_BLOCKED");
   assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE))?.versionId, good.id);
@@ -235,8 +236,9 @@ test("federal civic member ordering is independent of source-map insertion order
     Object.entries(reordered.directory.committees).reverse(),
   );
   const acquisitions = federalAcquisitions(projection.sourceSha, "stable-order");
-  const original = federalDirectoryCandidate({ acquisitions, retrievedAt: T0, projection });
-  const roundTripped = federalDirectoryCandidate({
+  const original = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions, retrievedAt: T0, projection });
+  const roundTripped = await federalDirectoryCandidate({
+    vault: new MemoryEvidenceStore(),
     acquisitions,
     retrievedAt: T0,
     projection: reordered,
@@ -696,7 +698,7 @@ test("the version production serves keeps reading until its correction promotes;
 
 test("both Reader projections reject cross-source proof and never bootstrap on store failure", async () => {
   const projection = await federalSeed();
-  const candidate = federalDirectoryCandidate({ acquisitions: federalAcquisitions(projection.sourceSha, "proof"), retrievedAt: T0, projection });
+  const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "proof"), retrievedAt: T0, projection });
   const mismatched = { ...candidate, id: `${candidate.id}-bad-proof`, sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", "US:wrong-scope") };
   const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "congress-bulk-roster", mismatched, T0);
   assert.equal(outcome.candidate.state, "DEPENDENT_CONSUMER_INVALID");

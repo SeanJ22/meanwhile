@@ -13,11 +13,13 @@ import { section3Page, linkingPageFrom } from "../control-plane/promotion/sectio
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { holdRawCapture, rawCaptureVault } from "./raw-capture-vault.ts";
 
 export async function publishPollingDoor(input: {
   readonly store: RoutineDataStore; readonly door: DoorRecord;
   readonly capture: WorkerPublicationCapture; readonly jurisdictionName: string;
-  readonly linkingCaptures?: readonly WorkerPublicationCapture[]; readonly now: string;
+  readonly linkingCaptures?: readonly WorkerPublicationCapture[]; readonly now: string; readonly vault?: EvidenceStore;
 }) {
   const capture = input.capture;
   const linkingPage = linkingPageFrom(capture.evidence.canonicalUrl, (input.linkingCaptures ?? []).filter(captureIntact).map(c => c.evidence));
@@ -29,7 +31,9 @@ export async function publishPollingDoor(input: {
   const held = prior.kind === "PROMOTED" ? prior.value : null;
   const base = prior.kind === "PROMOTED" ? prior.metadata.versionId : null;
   const candidate = votingSitesCandidate({ current: votingSitesScopedSuccessor(held, jurisdiction, input.now.slice(0, 10)),
-    prior: held, failures: [], rawBodies: [capture.evidence.text], successfulAuthorityReads: 1,
+    prior: held, failures: [], successfulAuthorityReads: 1,
+    acquisition: [{ url: capture.evidence.canonicalUrl, contentType: "text/plain",
+      ...await holdRawCapture(input.vault ?? rawCaptureVault(), "voting-sites", capture.evidence.text, "text/plain") }],
     requestedUrl: capture.evidence.canonicalUrl, finalUrl: capture.evidence.canonicalUrl,
     retrievedAt: input.now, carriedFromVersionId: base });
   const published = await processRegisteredManualCandidate(input.store, "voting-sites", candidate, input.now, base);
@@ -41,7 +45,7 @@ export async function publishPollingDoor(input: {
 
 export async function publishWorkerPollingResults(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
-  readonly workItemIds: readonly string[]; readonly now: string;
+  readonly workItemIds: readonly string[]; readonly now: string; readonly vault?: EvidenceStore;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
 }) {
   const [{ results, readCapture }, doors, registry] = await Promise.all([jobWorkerResults(input.repos, input.workItemIds, input.readCapture),

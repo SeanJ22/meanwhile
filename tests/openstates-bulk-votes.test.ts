@@ -7,7 +7,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes, PLURAL_SESSION_CATALOG, pluralJurisdictionUrl } from "../lib/sources/plural/vote-acquisition.ts";
 import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
-import { parsePluralBill, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence } from "../lib/sources/plural/votes.ts";
+import { parsePluralBill, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
 
 interface Example { personId: string; position: string; billNumber: string; billTitle: string; date: string; voteId: string }
@@ -49,7 +49,7 @@ async function harness(sample: Sample) {
     throw new Error(`unexpected fixture request: ${url}`);
   };
   return { zip, civicStore, requests,
-    input: { state: sample.state, store, locks, civicStore, apiKey: "fixture-key", fetchImpl, signal: AbortSignal.timeout(10_000), now: () => checkedAt },
+    input: { state: sample.state, store, locks, civicStore, vault: new MemoryEvidenceStore(), apiKey: "fixture-key", fetchImpl, signal: AbortSignal.timeout(10_000), now: () => checkedAt },
     nextCheck: () => { checkedAt = new Date(Date.parse(checkedAt) + 86_400_001).toISOString(); },
   };
 }
@@ -67,6 +67,8 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
     } });
     assert.equal(published, 1);
     assert.ok(first.publication.outcome.promoted);
+    const [archive] = (first.publication.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
+    assert.equal("body" in archive, false); assert.equal(archive.sha256, sample.fixtureArchiveSha256);
     if (sample.state === "GA") {
       assert.deepEqual(first.held, [{ key: `${example.voteId}:ocd-person/546d682f-b256-4060-8fd3-084d7f118d43`, detail: "the native person has conflicting publisher positions" }]);
       assert.deepEqual(await readPluralVotesForPerson(sample.state, "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43", { store: h.civicStore, bypassCache: true, now: h.input.now() }), []);

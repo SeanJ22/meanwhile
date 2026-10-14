@@ -9,7 +9,7 @@ import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts"
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { CENSUS_BENCHMARK, CENSUS_GEOCODER_URL, parseCensusPoint } from "../lib/geo/census-geocoder.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
-import { votingSitesCandidate, VOTING_SITES_CONTRACT } from "../lib/ballot/voting-sites-data-plane.ts";
+import { votingSitesCandidate, VOTING_SITES_CONTRACT, type VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
@@ -17,12 +17,14 @@ import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { pageAddress } from "../lib/doors/page-doors.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction,
-  saveVotingSourceDoor, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+  saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
 import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces } from "../lib/ballot/voting-source-blanks.ts";
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { isOfficialSource } from "../lib/civic-data/source-authority.ts";
@@ -120,7 +122,7 @@ function registeredElectionOfficeDoors(root: VotingSourceDoor, registry: Pick<Re
 }
 
 /** A publication retains its own read and official linking chain, never unrelated statewide captures. */
-export function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"] = []): string[] {
+export function votingSourceEvidence(vault: EvidenceStore, door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"] = []): Promise<VotingRawCapture[]> {
   const bodies = new Map(read.rawBodies.map(body => [body.url, body]));
   const links = new Set<string>();
   for (let page = door.officialLinkingPage; page; page = page.linkingPage ?? undefined) {
@@ -128,7 +130,7 @@ export function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceR
     if (!bodies.has(page.url)) bodies.set(page.url, { url: page.url, contentType: "text/html", bytes: new TextEncoder().encode(page.html) });
   }
   for (const capture of captures) if (links.has(capture.url) || capture.url === door.url) bodies.set(capture.url, capture);
-  return votingRawEvidence({ rawBodies: [...bodies.values()] });
+  return holdVotingRawEvidence(vault, { rawBodies: [...bodies.values()] });
 }
 
 /** Register an address-only route from its fresh official link without querying it for a voter. */
@@ -158,7 +160,7 @@ export function votingReadHasFacts(door: VotingSourceDoor, read: VotingSourceRea
 async function main() {
   if (!process.argv.includes("--promote")) throw new Error("Voting-source refresh publishes through the data plane; use --promote.");
   prepareProductionCivicDataWrite();
-  const now = () => new Date().toISOString(), store = new PostgresRoutineDataStore();
+  const now = () => new Date().toISOString(), store = new PostgresRoutineDataStore(), rawVault = rawCaptureVault();
   const seeds = ["voting-source-doors.json", "voting-legacy-doors.json"].flatMap(name =>
     JSON.parse(readFileSync(join(REFERENCE_DIR, name), "utf8")) as VotingSourceDoor[]);
   const election = JSON.parse(readFileSync(join(REFERENCE_DIR, "voting-election.json"), "utf8")) as { electionDate: string };
@@ -229,9 +231,9 @@ async function main() {
           const local = mergeVotingSourceRead(current.jurisdictions.find(row => row.ocdId === contact.scope.ocdId), contactDoor, contactRead, at);
           current = replaceVotingJurisdiction(current, local, at);
         }
-        const candidate = votingSitesCandidate({ current, prior: before, failures: [], rawBodies: votingSourceEvidence(door, read, captures),
+        const candidate = votingSitesCandidate({ current, prior: before, failures: [], acquisition: await votingSourceEvidence(rawVault, door, read, captures),
           successfulAuthorityReads: observed.length, requestedUrl: door.url, finalUrl: observed.at(-1)?.url ?? door.url,
-          retrievedAt: at, carriedFromVersionId: version, retainRawBodies: true });
+          retrievedAt: at, carriedFromVersionId: version });
         const outcome = await processRegisteredManualCandidate(store, VOTING_SITES_CONTRACT.id, candidate, at, version);
         if (outcome.promoted || outcome.confirmed) {
           held = current; version = outcome.promoted?.versionId ?? outcome.candidate.candidate.id;

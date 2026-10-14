@@ -87,6 +87,7 @@ export interface RoutineCivicDataSupervisorOutcomeInput {
   readonly verifiedSourceSuccesses: number;
   readonly verifiedSourceFailures: number;
   readonly failures: RoutineCivicDataSupervisorOutcome["failures"];
+  readonly crashedTasks?: RoutineCivicDataSupervisorOutcome["crashedTasks"];
   /** Omitted only by the outer crash/timeout fallback that cannot recover exact child JSON. */
   readonly taskReceipts?: readonly RoutineCivicDataTaskReceiptReference[];
   /** Omitted only by an outer fallback that never received the child's exact registry pass. */
@@ -244,6 +245,7 @@ export function routineCivicDataSupervisorOutcome(
 ): RoutineCivicDataSupervisorOutcome {
   const exactTaskReceipts = input.taskReceipts !== undefined;
   const taskReceipts = input.taskReceipts ?? [];
+  const crashedTasks = input.crashedTasks ?? [];
   const exactReaderReadbacks = input.readerReadback !== undefined;
   const readerReadback = input.readerReadback ?? {
     denominator: 0,
@@ -259,7 +261,9 @@ export function routineCivicDataSupervisorOutcome(
     !Number.isSafeInteger(input.campaignPublicationApprovalsAttempted) || input.campaignPublicationApprovalsAttempted < 0 ||
     !taskReceipts.some(row => row.taskId === "candidate-campaign-sites-derived")
   )) throw new Error("CAMPAIGN_PUBLICATION_INPUT_ACK_WITHOUT_RECEIPT");
-  if (new Set(taskIds).size !== taskIds.length) throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_DUPLICATE");
+  if (new Set([...taskIds, ...crashedTasks.map(({ taskId }) => taskId)]).size !== taskIds.length + crashedTasks.length) {
+    throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_DUPLICATE");
+  }
   if (taskReceipts.some((row) => row.taskId !== row.receipt.source)) {
     throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_ID_MISMATCH");
   }
@@ -269,10 +273,10 @@ export function routineCivicDataSupervisorOutcome(
     if (successes !== input.verifiedSourceSuccesses || failures !== input.verifiedSourceFailures) {
       throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_COUNT_MISMATCH");
     }
-    if (taskReceipts.length > input.attemptedTasks) {
+    if (taskReceipts.length + crashedTasks.length > input.attemptedTasks) {
       throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_DENOMINATOR_MISMATCH");
     }
-    if (input.failures.length === 0 && taskReceipts.length !== input.attemptedTasks) {
+    if (input.failures.length === 0 && taskReceipts.length + crashedTasks.length !== input.attemptedTasks) {
       throw new Error("ROUTINE_SUPERVISOR_SUCCESS_RECEIPT_INCOMPLETE");
     }
   }
@@ -287,6 +291,7 @@ export function routineCivicDataSupervisorOutcome(
     ...rest,
     taskReceiptEvidence: exactTaskReceipts ? "EXACT" : "UNAVAILABLE_OUTER_SUPERVISOR",
     taskReceipts,
+    crashedTasks,
     readerReadbackEvidence: exactReaderReadbacks ? "EXACT" : "UNAVAILABLE_OUTER_SUPERVISOR",
     readerReadbackDenominator: readerReadback.denominator,
     readerReadbacksRecordedPass: readerReadback.recordedPass,

@@ -1,15 +1,24 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { joinLdaHonoree } from "../lib/sources/congress/lda-honoree.ts";
 import { normalizeFederalCaptureWithRoster } from "../lib/sources/congress/normalize.ts";
-import { federalCandidate, readFederalSourceProjection } from "../lib/sources/congress/publication.ts";
+import { federalCandidate, holdFederalCapture, readFederalSourceProjection } from "../lib/sources/congress/publication.ts";
 import { refreshFederalSource } from "../lib/sources/congress/refresh.ts";
 import { federalAskEvidence, readFederalMember } from "../lib/sources/congress/reader.ts";
 import { ldaHonoreeCaptures, seedSrcCgRoster, SRC_CG_NOW } from "./helpers/src-cg-roster.ts";
+import { readFileSync } from "node:fs";
+import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { readLdaRosterVersion } from "../lib/sources/congress/lda-roster.ts";
+import type { FederalDirectoryCapture } from "../lib/officials/federal-directory-data-plane.ts";
+
+const vault = new MemoryEvidenceStore();
 
 test("real Senate LD-203 honoree strings resolve to one federal roster person, including titles, nicknames and middle initials", async () => {
-  const store = new MemoryRoutineDataStore(), roster = await seedSrcCgRoster(store);
+  const store = new MemoryRoutineDataStore(), roster = await seedSrcCgRoster(store, vault);
   const facts = ldaHonoreeCaptures().flatMap(capture => normalizeFederalCaptureWithRoster({ ...capture, context: { honoreeRosterVersionId: roster.versionId } }, roster));
   for (const [name, bioguide, state] of [
     ["Sen. John Cornyn (R-TX)", "C001056", "TX"], ["Rep. French Hill", "H001072", "AR"],
@@ -24,8 +33,32 @@ test("real Senate LD-203 honoree strings resolve to one federal roster person, i
   assert.ok(!JSON.stringify(facts).includes('"contributor_name"'));
 });
 
+test("the federal directory candidate holds roster references, and the LDA roster reads its aliases back from the vault", async () => {
+  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore(), roster = await seedSrcCgRoster(store, own);
+  const promoted = await store.readCandidate(roster.versionId);
+  const [held] = (promoted!.candidate.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions;
+  const body = readFileSync(new URL("./fixtures/src-cg/federal-roster.yaml", import.meta.url), "utf8");
+  assert.equal("body" in held, false); assert.equal(held.rawHash, held.raw.rawHash); assert.equal(held.byteCount, Buffer.byteLength(body));
+  assert.equal(await readRawCaptureText(own, held.raw), body);
+  assert.ok(roster.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
+});
+
+test("a directory version promoted before the vault still yields its roster, without published aliases", async () => {
+  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore(), roster = await seedSrcCgRoster(store, own);
+  const promoted = (await store.readCandidate(roster.versionId))!.candidate;
+  const body = readFileSync(new URL("./fixtures/src-cg/federal-roster.yaml", import.meta.url), "utf8");
+  const legacyPayload = { ...(promoted.normalizedPayload as object), acquisitions: (promoted.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions
+    .map(({ raw: _raw, ...row }) => ({ ...row, body })) };
+  const legacy = { ...promoted, id: `${promoted.id}-legacy`, normalizedPayload: legacyPayload, normalization: { ...promoted.normalization, normalizedPayloadHash: normalizedHash(legacyPayload) } };
+  const legacyStore = new MemoryRoutineDataStore();
+  assert.ok((await processRegisteredManualCandidate(legacyStore, "congress-bulk-roster", legacy, SRC_CG_NOW)).promoted);
+  const read = await readLdaRosterVersion(legacyStore, own, legacy.id);
+  assert.equal(read?.members.length, roster.members.length);
+  assert.ok(!read!.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
+});
+
 test("chamber and state conflicts, ambiguous names, missing honorees and inferred nicknames never publish a member link", async () => {
-  const roster = await seedSrcCgRoster(new MemoryRoutineDataStore());
+  const roster = await seedSrcCgRoster(new MemoryRoutineDataStore(), vault);
   const cornyn = roster.members.find(row => row.bioguideId === "C001056")!;
   const ambiguous = { ...roster, members: [...roster.members, { ...cornyn, bioguideId: "X000001", state: "NY" }] };
   assert.equal(joinLdaHonoree("Sen. John Cornyn", ambiguous).join.status, "UNJOINED");
@@ -41,20 +74,20 @@ test("chamber and state conflicts, ambiguous names, missing honorees and inferre
 });
 
 test("an invented Bioguide join cannot reproduce saved LDA and promoted roster evidence", async () => {
-  const store = new MemoryRoutineDataStore(), roster = await seedSrcCgRoster(store);
+  const store = new MemoryRoutineDataStore(), roster = await seedSrcCgRoster(store, vault);
   const capture = { ...ldaHonoreeCaptures()[0], context: { honoreeRosterVersionId: roster.versionId } };
   const records = normalizeFederalCaptureWithRoster(capture, roster);
-  const candidate = federalCandidate({ source: "senate-lda", partition: "filing:tamper", now: SRC_CG_NOW, captures: [capture],
+  const candidate = federalCandidate({ source: "senate-lda", partition: "filing:tamper", now: SRC_CG_NOW, captures: [await holdFederalCapture(vault, capture)],
     rosters: new Map([[roster.versionId, roster]]), projection: { formatVersion: 1, source: "senate-lda", records: records.map(row => ({ ...row, bioguideId: "S000033" })) } });
   assert.equal(candidate.normalization.succeeded, false); assert.match(candidate.normalization.failureDetail!, /do not reproduce/);
 });
 
 test("national LDA pages retain and report unresolved rows while joined facts reach the correct member cards and Ask", async t => {
   t.mock.method(console, "log", () => {});
-  const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store);
+  const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store, vault);
   const captures = ldaHonoreeCaptures(), filings = captures.flatMap(capture => JSON.parse(capture.body).results);
   const requests: URL[] = [];
-  const result = await refreshFederalSource({ source: "senate-lda", store, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW, sleep: async () => {},
+  const result = await refreshFederalSource({ vault, source: "senate-lda", store, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW, sleep: async () => {},
     fetchImpl: (async input => {
       const url = new URL(String(input)); requests.push(url);
       const second = url.searchParams.get("page") === "2";
@@ -86,10 +119,10 @@ test("national LDA pages retain and report unresolved rows while joined facts re
 
 test("an amended filing can unjoin a previously matched honoree without leaving stale money on that member's card", async t => {
   t.mock.method(console, "log", () => {});
-  const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store);
+  const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store, vault);
   const original = JSON.parse(ldaHonoreeCaptures()[0].body).results[0];
   let filing = original;
-  const options = { source: "senate-lda" as const, store, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW, sleep: async () => {},
+  const options = { source: "senate-lda" as const, store, vault, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW, sleep: async () => {},
     fetchImpl: (async () => Response.json({ count: 1, results: [filing], next: null })) as typeof fetch };
   assert.equal((await refreshFederalSource(options)).ok, true);
   assert.equal((await readFederalMember("congress:C001056", { store, now: SRC_CG_NOW })).contributions.length, 1);
@@ -113,7 +146,7 @@ test("an unavailable roster retains all LDA rows and reports the join gap as a s
   t.mock.method(console, "log", () => {});
   const store = new MemoryRoutineDataStore(), filing = JSON.parse(ldaHonoreeCaptures()[0].body).results[0];
   const doors: boolean[] = [];
-  const result = await refreshFederalSource({ source: "senate-lda", store, now: () => SRC_CG_NOW, sleep: async () => {},
+  const result = await refreshFederalSource({ vault, source: "senate-lda", store, now: () => SRC_CG_NOW, sleep: async () => {},
     fetchImpl: (async () => Response.json({ count: 1, results: [filing], next: null })) as typeof fetch, doorOutcome: async ok => { doors.push(ok); } });
   assert.equal(result.ok, true); assert.equal(result.counts.loaded, 1); assert.equal(result.counts.unjoinedReasons?.ROSTER_UNAVAILABLE, 1);
   assert.deepEqual(doors, [true]);
@@ -123,10 +156,10 @@ test("a newly available roster reopens the retained unjoined history, and an unc
   t.mock.method(console, "log", () => {});
   const store = new MemoryRoutineDataStore(), filing = JSON.parse(ldaHonoreeCaptures()[0].body).results[0], urls: URL[] = [];
   let unchanged = false;
-  const options = { source: "senate-lda" as const, store, now: () => SRC_CG_NOW, sleep: async () => {},
+  const options = { source: "senate-lda" as const, store, vault, now: () => SRC_CG_NOW, sleep: async () => {},
     fetchImpl: (async input => { urls.push(new URL(String(input))); return Response.json({ count: unchanged ? 0 : 1, results: unchanged ? [] : [filing], next: null }); }) as typeof fetch };
   assert.equal((await refreshFederalSource(options)).counts.unjoined, 1);
-  await seedSrcCgRoster(store);
+  await seedSrcCgRoster(store, vault);
   const joined = await refreshFederalSource(options); assert.equal(joined.ok, true); assert.equal(joined.counts.joined, 1); assert.equal(joined.counts.unjoined, 0);
   assert.equal(urls[1].searchParams.get("filing_dt_posted_after"), "2008-01-01T00:00:00Z", "The roster change reopens historical filings, not just new postings.");
   unchanged = true;
@@ -136,7 +169,7 @@ test("a newly available roster reopens the retained unjoined history, and an unc
 
 test("an interrupted LDA backfill resumes its next page and keeps the original posting watermark", async t => {
   t.mock.method(console, "log", () => {});
-  const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store);
+  const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store, vault);
   const filings = ldaHonoreeCaptures().slice(0, 2).flatMap(capture => JSON.parse(capture.body).results);
   let outage = true;
   const fetchImpl = (async input => {
@@ -144,7 +177,7 @@ test("an interrupted LDA backfill resumes its next page and keeps the original p
     if (outage && second) throw new Error("Controlled LDA page-two outage");
     return Response.json({ count: 2, results: [filings[second ? 1 : 0]], next: second ? null : "https://lda.gov/api/v1/contributions/?page_size=25&filing_year=2026&page=2" });
   }) as typeof fetch;
-  const options = { source: "senate-lda" as const, store, fetchImpl, sleep: async () => {} };
+  const options = { source: "senate-lda" as const, store, vault, fetchImpl, sleep: async () => {} };
   assert.equal((await refreshFederalSource({ ...options, now: () => SRC_CG_NOW })).ok, false);
   outage = false;
   const result = await refreshFederalSource({ ...options, now: () => "2026-10-13T04:21:00.000Z" });

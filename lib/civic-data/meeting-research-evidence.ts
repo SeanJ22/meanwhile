@@ -4,15 +4,16 @@ import { neon } from "@neondatabase/serverless";
 import type { RoutineCandidate } from "./types.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { holdRawCapture, type RawCaptureRef } from "./raw-capture-vault.ts";
 
 export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
   readonly httpStatus: number; readonly rawHash: string; readonly byteCount: number;
   readonly bytes: Uint8Array; readonly retrievedAt: string;
 }
-export type RetainedMeetingCandidate = RoutineCandidate & {
-  readonly retainedSourceResponses?: readonly (Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string })[];
-};
+export type HeldSourceResponse = Omit<RetainedSourceResponse, "bytes"> & { readonly raw: RawCaptureRef };
+export type RetainedMeetingCandidate = RoutineCandidate & { readonly retainedSourceResponses?: readonly HeldSourceResponse[] };
 export const RESEARCH_MEETING_ACTIVATION = "VERIFIED_RESEARCH_TO_REGISTERED_MEETING_PARTITION/1";
 export interface ResearchMeetingActivationReceipt {
   readonly kind: typeof RESEARCH_MEETING_ACTIVATION; readonly partitionId: string;
@@ -49,12 +50,16 @@ export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>, so
   finally { globalThis.fetch = originalFetch; }
 }
 
-export function retainMeetingCandidateEvidence(candidate: RoutineCandidate, snapshot: MeetingsSnapshot, responses: readonly RetainedSourceResponse[]): RetainedMeetingCandidate {
+export function holdMeetingSourceResponses(vault: EvidenceStore, responses: readonly RetainedSourceResponse[]): Promise<HeldSourceResponse[]> {
+  return Promise.all(responses.map(async ({ bytes, ...metadata }) =>
+    ({ ...metadata, raw: await holdRawCapture(vault, metadata.source, bytes, "application/json") })));
+}
+
+export function retainMeetingCandidateEvidence(candidate: RoutineCandidate, snapshot: MeetingsSnapshot, responses: readonly HeldSourceResponse[]): RetainedMeetingCandidate {
   const traced = snapshot.sources.flatMap(report => report.acquisitions ?? []);
   const retainedSourceResponses = responses.filter(response => traced.some(evidence => evidence.source === response.source &&
     evidence.requestedUrl === response.requestedUrl && evidence.finalUrl === response.finalUrl && evidence.rawHash === response.rawHash &&
-    evidence.byteCount === response.byteCount && evidence.httpStatus === response.httpStatus)).map(({ bytes, ...metadata }) =>
-      ({ ...metadata, base64: Buffer.from(bytes).toString("base64") }));
+    evidence.byteCount === response.byteCount && evidence.httpStatus === response.httpStatus));
   return retainedSourceResponses.length ? { ...candidate, retainedSourceResponses } : candidate;
 }
 

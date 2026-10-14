@@ -29,6 +29,7 @@ import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
 import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
+import { parseNovusMeetings } from "../../sources/novusagenda/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
@@ -69,7 +70,8 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", escribe: "ESCRIBE",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", novusagenda: "NOVUSAGENDA",
+  escribe: "ESCRIBE",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -444,7 +446,7 @@ type Selected = Selection | { readonly held: AutoCrosswalkHoldReason; readonly d
 const titleHas = (title: string, terms: readonly string[]): boolean => terms.some((t) => low(title).includes(low(t)));
 
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
-  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE"].includes(kind)) {
+  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE", "NOVUSAGENDA"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
     const matches = (event: CalendarEvent) => namesIn(event).some(name => canonical(name.text, jurisdictionId) === proposal.key) ||
@@ -456,6 +458,13 @@ function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly Cal
     if (kind === "BOARDBOOK") {
       if (selected.length !== events.length) return { held: "AMBIGUOUS_TITLE", detail: "the BoardBook organization feed also carries another body's events; a whole-organization reader cannot select this body alone" };
       return { filter: {}, selected };
+    }
+    if (kind === "NOVUSAGENDA") {
+      const labels = [...new Set(selected.flatMap(event => event.categories))];
+      if (!labels.length || labels.some(label => label.includes("|")) || events.some(event => event.categories.some(label => labels.includes(label)) && !selected.includes(event))) {
+        return { held: "AMBIGUOUS_TITLE", detail: "the NovusAgenda body labels also select another body" };
+      }
+      return { filter: { bodyMatch: labels.join("|") }, selected };
     }
     if (kind === "CIVICCLERK" || kind === "IQM2") {
       const labels = [...new Set(selected.flatMap(event => event.categories))];
@@ -664,7 +673,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE", "NOVUSAGENDA"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -721,6 +730,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         return { title: flat(row.eventName || body), context: body, categories: [body], scopeId: row.categoryId === undefined ? undefined : String(row.categoryId), identity: `${row.id}|${row.startDateTime ?? row.eventDate}`,
           tzid: stateZone, utc: false, floating: true, url: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}/event/${row.id}` };
       });
+    } else if (kind === "NOVUSAGENDA") {
+      let rows: ReturnType<typeof parseNovusMeetings> = [];
+      try { rows = parseNovusMeetings(calendar.text, route); } catch { /* Unreadable public lists name no meetings. */ }
+      events = rows.map(row => ({ title: flat(row.body), context: "", categories: [flat(row.body)],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: false, url: row.agendaUrl ?? route }));
     } else if (kind === "IQM2") {
       events = parseCalendarRows(calendar.text).filter(row => row.board && row.when).map(row => ({ title: flat(row.board), context: "", categories: [flat(row.board)],
         identity: `${row.detailId}|${row.when}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Citizens/Detail_Meeting.aspx?ID=${row.detailId}` }));

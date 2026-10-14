@@ -8,7 +8,7 @@ import { recordAcquiredResponse } from "../acquisition-trace.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
 
-export interface GranicusRow {
+interface GranicusRow {
   id: string;
   title: string;
   date: string;
@@ -20,7 +20,7 @@ export interface GranicusRow {
   quote: string;
   collectedAt?: string;
 }
-export interface GranicusRaw {
+interface GranicusRaw {
   wiring: BodySourceWiring;
   html: string;
   feeds?: ReadonlyArray<{ url: string; text: string; collectedAt: string }>;

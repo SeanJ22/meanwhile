@@ -1554,7 +1554,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Nashville, TN",
     "url": "https://sos.tn.gov/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "TN",
       "ocdId": "ocd-division/country:us/state:tn",
@@ -1569,15 +1572,34 @@
       "url": "https://sos.tn.gov/elections"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "detail": "Official November general-election candidate lists and statewide amendment questions retrieved with HTTP 200.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.tn.gov/elections\">https://sos.tn.gov/elections</a>"
-    }
+    },
+    "candidateListUrl": "https://sos.tn.gov/elections/2026-candidate-lists",
+    "candidateListUrls": [
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.pdf",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+      "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.pdf"
+    ],
+    "ballotMeasuresUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+    "ballotMeasuresUrls": [
+      "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
+      "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
+      "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf"
+    ]
   },
   {
     "id": "fec-tx-chief",

@@ -261,3 +261,4 @@ One line per batch folded into river.
 - 2026-10-14T17:40:41Z · ballot-bl-14 · BL-14 · ready e72a212907de · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
 - 2026-10-14T17:40:41Z · ballot-bl-16 · BL-16 · ready f32b510a72cf · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
 - 2026-10-14T17:40:41Z · ballot-parity · BL-20 · ready 20cc658b06f2 · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
+- 2026-10-14T18:36:33Z · platform-granicus · R3-GRANICUS · ready df57db75a01b · river 9b36ff25c9cd · pnpm gates pass on 9b36ff25c9cd

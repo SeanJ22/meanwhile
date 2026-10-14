@@ -1224,7 +1224,10 @@
     "publisher": "Office of the Secretary of State, Bismarck, ND",
     "url": "http://sos.nd.gov/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "ND",
       "ocdId": "ocd-division/country:us/state:nd",
@@ -1247,7 +1250,17 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"http://sos.nd.gov/elections\">http://sos.nd.gov/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://vip.sos.nd.gov/candidatelist.aspx?eid=348"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.sos.nd.gov/elections/voter/ballot-measures/measures-ballot",
+      "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+      "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+      "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+      "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf"
+    ]
   },
   {
     "id": "fec-oh-chief",

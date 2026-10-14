@@ -309,7 +309,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       if (facts !== null) try {
-        if (servedAuthorityVersion(servedManifest, "comment-access") === facts) authority["comment-access"] = { versionId: facts, carried: true };
+        const carried = await servedIfCurrent("comment-access", async () => facts);
+        if (carried !== null) authority["comment-access"] = { versionId: carried, carried: true };
         else {
           const read = comments ?? await readCommentAccessFacts();
           authority["comment-access"] = { value: read.value, versionId: read.versionId };

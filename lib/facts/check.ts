@@ -61,7 +61,8 @@ export function hostOf(url: string): string {
 function ownSite(url: string, site: string): boolean {
   const host = hostOf(url);
   if (!site.includes("/")) return host === site || host.endsWith(`.${site}`);
-  const at = `${host}${new URL(url).pathname}`.toLowerCase(), own = site.toLowerCase();
+  const { pathname } = new URL(url);
+  const at = `${host}${pathname}`.toLowerCase(), own = site.toLowerCase();
   return at === own || at.startsWith(`${own}/`);
 }
 

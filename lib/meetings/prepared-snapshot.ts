@@ -217,7 +217,7 @@ export async function preparePublishedMeetingSnapshot(
         sequence: result.sequence,
         coupledPartitions: composedFrom.length,
         generatedAt: aggregate.value.generatedAt,
-        ...preparedChecks(aggregate.value.generatedAt, withCurrentChecks(composedFrom, identityByScope)),
+        ...preparedChecks(aggregate.value.generatedAt, withCurrentChecks([...composedFrom, facts], identityByScope)),
       }
     : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
 }

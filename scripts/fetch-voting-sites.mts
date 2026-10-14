@@ -105,7 +105,7 @@ export function votingScopeResolvers(registry: Pick<Registry, "divisions" | "bod
 }
 
 /** Only a sourced office name establishes that a registered body is an election office. */
-export function registeredElectionOfficeDoors(root: VotingSourceDoor, registry: Pick<Registry, "divisions" | "bodies">): VotingSourceDoor[] {
+function registeredElectionOfficeDoors(root: VotingSourceDoor, registry: Pick<Registry, "divisions" | "bodies">): VotingSourceDoor[] {
   return registry.bodies.flatMap(body => {
     if (!body.name || !officeWords.test(body.name) || !body.homepageUrl || !body.ocdId) return [];
     const division = registry.divisions.find(row => row.ocdId === body.ocdId && row.state === root.scope.state && localTypes.has(row.divisionType));
@@ -132,7 +132,7 @@ export function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceR
 }
 
 /** Register an address-only route from its fresh official link without querying it for a voter. */
-export function votingLookupDiscoveryRead(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"], at: string): VotingSourceRead {
+function votingLookupDiscoveryRead(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"], at: string): VotingSourceRead {
   if (door.shape !== "address-lookup" || door.scopeUnresolved || door.access?.status === "identity-locked" ||
       !door.officialLinkingPage || !isOfficialSource(door.url, door.officialLinkingPage)) return read;
   const linking = captures.filter(capture => capture.url === door.officialLinkingPage!.url);

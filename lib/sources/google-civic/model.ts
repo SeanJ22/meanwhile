@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_ELECTION_DAY, GOOGLE_CIVIC_STATES } from "./targets.ts";
 
 export type CivicJson = Record<string, unknown>;
-export interface CivicAttribution {
+interface CivicAttribution {
   sourceUrl: string;
   sourceOrg: string;
   official: boolean;
@@ -10,7 +10,7 @@ export interface CivicAttribution {
   publishedAt: string | null;
   collectedAt: string;
 }
-export interface CivicFact {
+interface CivicFact {
   id: string;
   kind: "ELECTION" | "CONTEST" | "POLLING_LOCATION" | "EARLY_VOTE_SITE" | "DROP_OFF_LOCATION";
   electionId: string;
@@ -44,7 +44,7 @@ export interface CivicStateCoverage {
   unjoined: number;
   reason: string | null;
 }
-export interface CivicCatalog {
+interface CivicCatalog {
   formatVersion: 1;
   kind: "CATALOG" | "STATE";
   checkedAt: string;
@@ -52,18 +52,18 @@ export interface CivicCatalog {
   coverage: CivicStateCoverage[];
 }
 export type CivicProjection = CivicLookup | CivicCatalog;
-export const civicObject = (v: unknown): CivicJson => {
+const civicObject = (v: unknown): CivicJson => {
   if (!v || typeof v !== "object" || Array.isArray(v)) throw new Error("Google Civic returned an invalid object.");
   return v as CivicJson;
 };
 const string = (v: unknown) => typeof v === "string" ? v : "";
-export function civicArray(v: unknown): CivicJson[] {
+function civicArray(v: unknown): CivicJson[] {
   if (v === undefined) return [];
   if (!Array.isArray(v)) throw new Error("Google Civic returned an invalid row list.");
   return v.map(civicObject);
 }
 const digest = (v: unknown) => createHash("sha256").update(JSON.stringify(v)).digest("hex");
-export function civicSources(row: CivicJson, checkedAt: string, route: string): CivicAttribution[] {
+function civicSources(row: CivicJson, checkedAt: string, route: string): CivicAttribution[] {
   const sources = civicArray(row.sources);
   return (sources.length ? sources : [{ name: "Google Civic Information", official: false }]).map(source => ({
     sourceUrl: `${GOOGLE_CIVIC_API}${route}`,

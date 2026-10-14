@@ -347,6 +347,45 @@ export function pgAggregateRepository<T>(
     ? listChangedSince(null).then(changed => changed.rows.map(out))
     : copies.aggregateList(table, listChangedSince, out);
 
+  /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered; `selected` is the value or its projection. */
+  async function listWhereAs<O>(path: readonly string[], value: string, selected: string, caller: string): Promise<Persisted<O>[]> {
+    const jsonPath = jsonPathLiteral(table, path);
+    const out: Persisted<O>[] = [];
+    let afterId: string | null = null;
+    for (;;) {
+      const rows = (afterId === null
+        ? await run(
+            caller,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
+             WHERE value #>> '${jsonPath}' = $1
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            [value],
+          )
+        : await run(
+            caller,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
+             WHERE value #>> '${jsonPath}' = $1 AND id > $2
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            [value, afterId],
+          )) as Record<string, unknown>[];
+      for (const row of rows) {
+        out.push({
+          id: String(row.id),
+          revision: Number(row.revision),
+          updatedAt: new Date(row.updated_at as string).toISOString(),
+          value: parseValue<O>(row.value, `${where} id ${String(row.id)}`),
+        });
+      }
+      if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+      afterId = String(rows[rows.length - 1].id);
+    }
+    return out;
+  }
+
   return callerPinned({
     read,
 
@@ -472,44 +511,9 @@ export function pgAggregateRepository<T>(
     listNarrowed: projection => held(row => ({ ...row, value: projectAggregate(row.value, projection) })),
     listChangedSince,
 
-    async listWhere(path, value) {
-      /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered. */
-      const jsonPath = jsonPathLiteral(table, path);
-      const out: Persisted<T>[] = [];
-      let afterId: string | null = null;
-      for (;;) {
-        const rows = (afterId === null
-          ? await run(
-              "listWhere",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               WHERE value #>> '${jsonPath}' = $1
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-              [value],
-            )
-          : await run(
-              "listWhere",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               WHERE value #>> '${jsonPath}' = $1 AND id > $2
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-              [value, afterId],
-            )) as Record<string, unknown>[];
-        for (const row of rows) {
-          out.push({
-            id: String(row.id),
-            revision: Number(row.revision),
-            updatedAt: new Date(row.updated_at as string).toISOString(),
-            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-          });
-        }
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-        afterId = String(rows[rows.length - 1].id);
-      }
-      return out;
-    },
+    listWhere: (path, value) => listWhereAs<T>(path, value, "value", "listWhere"),
+    listWhereNarrowed: (path, value, projection) => listWhereAs<unknown>(path, value,
+      Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value"), "listWhereNarrowed"),
   });
 }
 

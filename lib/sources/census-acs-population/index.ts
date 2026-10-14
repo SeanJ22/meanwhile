@@ -1,7 +1,7 @@
 /**
- * Census ACS 5-year total population (B01003), by ZIP Code Tabulation Area and by state, from
+ * Census ACS 5-year total population (B01003), for every supported Census geography, from
  * `api.census.gov` (public domain). The API key is `CENSUS_API_KEY` in the environment and is never
- * printed. 2024 is the newest published 5-year vintage. A place or county estimate is a different
+ * printed. The national acquirer discovers the newest published five-year vintage. A place or county estimate is a different
  * geography and is never substituted for a ZCTA.
  *
  *   ZCTA    `get=NAME,B01003_001E,B01003_001M&for=zip code tabulation area:*`, one call
@@ -25,7 +25,7 @@ import {
 } from "../../civic-data/source-acquisition-error.ts";
 
 export const AGENCY = "U.S. Census Bureau — American Community Survey";
-/** The vintage year in the request path. Changing this is a source change. */
+/** Default vintage for older saved-source callers; the national acquirer supplies its discovered release. */
 export const VINTAGE_YEAR = 2024;
 export const DATASET = "ACS 5-Year Detailed Tables, 2024 vintage (ACSDT5Y2024)";
 export const DATASET_IDENTIFIER = "https://api.census.gov/data/id/ACSDT5Y2024";
@@ -36,10 +36,27 @@ export const VARIABLE = "B01003_001E";
 export const MARGIN_VARIABLE = "B01003_001M";
 export const KEY_VAR = "CENSUS_API_KEY";
 
-export type AcsScope = "zcta" | "state";
+export const ACS_GEOGRAPHIES = {
+  nation: "us", state: "state", zcta: "zip code tabulation area", county: "county",
+  place: "place", county_subdivision: "county subdivision", congressional_district: "congressional district",
+  state_leg_upper: "state legislative district (upper chamber)", state_leg_lower: "state legislative district (lower chamber)",
+  school_unified: "school district (unified)", school_elementary: "school district (elementary)", school_secondary: "school district (secondary)",
+} as const;
+export type AcsScope = keyof typeof ACS_GEOGRAPHIES;
+export interface AcsAttribution {
+  readonly sourceUrl: string;
+  readonly citationUrl?: string;
+  readonly sourceOrg: string;
+  readonly sourceKind: "OFFICIAL";
+  readonly publishedAt: string | null;
+  readonly publicationUrl?: string;
+  readonly retrievedAt: string;
+  readonly vintage: number;
+  readonly period: string;
+}
 
 export interface AcsPopulationRow {
-  /** Five-digit ZCTA, or the two-digit state FIPS code. */
+  /** Exact native GEOID, including every parent FIPS component. */
   readonly code: string;
   readonly name: string;
   readonly population: number;
@@ -49,6 +66,11 @@ export interface AcsPopulationRow {
    * Bureau did not state one", which is a different fact from a margin of 0.
    */
   readonly marginOfError: number | null;
+  readonly geography?: AcsScope;
+  readonly stateFips?: string | null;
+  readonly censusGeoId?: string;
+  readonly divisionIds?: readonly string[];
+  readonly attribution?: AcsAttribution;
 }
 
 export interface AcsFetch {
@@ -62,17 +84,18 @@ export interface AcsFetch {
   readonly rawText?: string;
   /** Credential-free final route used for authority-host validation. */
   readonly finalUrl?: string;
+  readonly vintage?: number;
+  readonly publishedAt?: string | null;
+  readonly publicationUrl?: string;
 }
 
 function geography(scope: AcsScope): string {
-  return scope === "zcta" ? "zip code tabulation area:*" : "state:*";
+  return `${ACS_GEOGRAPHIES[scope]}:*`;
 }
 
 /** The human name of the geography a scope tabulates, for notes and the panel. */
-export const GEOGRAPHY_LABEL: Record<AcsScope, string> = {
-  zcta: "ZIP Code Tabulation Area (ZCTA5)",
-  state: "state, the District of Columbia and Puerto Rico",
-};
+export const GEOGRAPHY_LABEL: Record<AcsScope, string> = { ...ACS_GEOGRAPHIES,
+  zcta: "ZIP Code Tabulation Area (ZCTA5)", state: "state, the District of Columbia and Puerto Rico" };
 
 /** The request URL with the key REDACTED, for logs and notes. */
 export function describeUrl(scope: AcsScope): string {
@@ -82,31 +105,36 @@ export function describeUrl(scope: AcsScope): string {
 /**
  * One call per scope. A missing key is refused up front (the API answers a
  * keyless call with a 302 to `missing_key.html`, which would otherwise read as
- * an empty dataset); a non-200 is thrown with the status and the first bytes
- * of the body, never swallowed.
+ * an empty dataset); a refused response is reported with its status and credential-free route.
  */
 export async function fetch(
   scope: AcsScope,
   key: string | undefined,
   fetcher: typeof globalThis.fetch = globalThis.fetch,
   signal?: AbortSignal,
+  options: { readonly vintage?: number; readonly stateFips?: string; readonly publishedAt?: string | null; readonly publicationUrl?: string } = {},
 ): Promise<AcsFetch> {
   const trimmed = (key ?? "").trim();
   if (trimmed === "") throw new Error(`${KEY_VAR} is not set; the Census Data API redirects a keyless call to missing_key.html, so nothing can be acquired without it`);
-  const url = `${BASE}?get=NAME,${VARIABLE},${MARGIN_VARIABLE}&for=${encodeURIComponent(geography(scope))}&key=${encodeURIComponent(trimmed)}`;
+  const vintage = options.vintage ?? VINTAGE_YEAR;
+  const route = new URL(`https://api.census.gov/data/${vintage}/acs/acs5`);
+  route.searchParams.set("get", `NAME,GEO_ID,${VARIABLE},${MARGIN_VARIABLE}`);
+  route.searchParams.set("for", geography(scope));
+  if (options.stateFips) route.searchParams.set("in", `state:${options.stateFips}${scope === "county_subdivision" ? " county:*" : ""}`);
+  const sourceUrl = route.toString();
+  route.searchParams.set("key", trimmed);
+  const url = route.toString();
   const fetchedAt = new Date().toISOString();
-  const response = await requestPublisher(`Census ACS ${scope}`, () =>
-    fetcher(url, {
-      redirect: "manual",
-      headers: { accept: "application/json" },
-      signal,
-    }));
+  const response = await censusRequest(`Census ACS ${scope}`, url, fetcher, signal);
   const text = await readPublisherBody(`Census ACS ${scope}`, () => response.text());
   signal?.throwIfAborted();
+  if (response.status === 204 && options.stateFips) return { scope, url: sourceUrl, status: 204, fetchedAt,
+    rows: [["NAME", VARIABLE, MARGIN_VARIABLE, "state", ...(scope === "county_subdivision" ? ["county"] : []), ACS_GEOGRAPHIES[scope]]],
+    rawText: text, finalUrl: sourceUrl, vintage, publishedAt: options.publishedAt ?? null };
   if (response.status !== 200) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_RESPONSE_REFUSED",
-      `Census ACS ${scope} answered HTTP ${response.status} (${describeUrl(scope)}): ${text.slice(0, 200)}`,
+      `Census ACS ${scope} answered HTTP ${response.status} (${sourceUrl}).`,
     );
   }
   let parsed: unknown;
@@ -118,15 +146,31 @@ export async function fetch(
       `Census ACS ${scope} answered 200 with invalid JSON.`,
     );
   }
-  if (!Array.isArray(parsed) || parsed.length < 2 || !parsed.every(Array.isArray)) {
+  if (!Array.isArray(parsed) || parsed.length < 1 || !parsed.every(Array.isArray)) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_DOCUMENT_INVALID",
-      `Census ACS ${scope} answered 200 with a body that is not the API's row array: ${text.slice(0, 200)}`,
+      `Census ACS ${scope} answered 200 without the API's row array.`,
     );
   }
   const final = new URL(response.url || BASE);
   final.searchParams.delete("key");
-  return { scope, url: describeUrl(scope), status: response.status, fetchedAt, rows: parsed as (string | null)[][], rawText: text, finalUrl: final.toString() };
+  return { scope, url: sourceUrl, status: response.status, fetchedAt, rows: parsed as (string | null)[][], rawText: text, finalUrl: final.toString(), vintage, publishedAt: options.publishedAt ?? null, publicationUrl: options.publicationUrl };
+}
+
+/** Census publishes 500 keyless queries/day; keyed bulk queries need no local-site pacing.
+ * Only provider backpressure delays a request. Response text never enters errors. */
+export async function censusRequest(label: string, url: string, fetcher: typeof globalThis.fetch, signal?: AbortSignal): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const response = await requestPublisher(label, () => fetcher(url, { redirect: "manual", headers: { accept: "application/json" }, signal }));
+    if ((response.status !== 429 && response.status < 500) || attempt === 3) return response;
+    const retry = response.headers.get("retry-after");
+    const seconds = retry && /^\d+(?:\.\d+)?$/.test(retry) ? Number(retry) * 1000 : null;
+    const date = retry ? Date.parse(retry) : NaN;
+    const delay = seconds ?? (Number.isFinite(date) ? Math.max(0, date - Date.now()) : 1000 * 2 ** attempt);
+    await response.body?.cancel();
+    const { setTimeout } = await import("node:timers/promises");
+    await setTimeout(delay, undefined, { signal });
+  }
 }
 
 /**
@@ -160,11 +204,12 @@ export function normalize(fetched: AcsFetch): AcsPopulationRow[] {
   // The margin is optional in the header so a recorded fixture from before it
   // was acquired still normalizes — it becomes "not stated", not a fake zero.
   const moeAt = header.indexOf(MARGIN_VARIABLE);
-  const codeAt = header.length - 1;
-  if (nameAt < 0 || popAt < 0) {
+  const codeAt = header.indexOf(ACS_GEOGRAPHIES[fetched.scope]);
+  const stateAt = header.indexOf("state"), countyAt = header.indexOf("county"), geoAt = header.indexOf("GEO_ID");
+  if (nameAt < 0 || popAt < 0 || codeAt < 0 || new Set(header).size !== header.length) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_DOCUMENT_INVALID",
-      `Census ACS ${fetched.scope}: the header row ${JSON.stringify(header)} does not carry NAME and ${VARIABLE}`,
+      `Census ACS ${fetched.scope}: the header does not carry unique NAME, ${VARIABLE} and geography columns.`,
     );
   }
   const out: AcsPopulationRow[] = [];
@@ -175,28 +220,45 @@ export function normalize(fetched: AcsFetch): AcsPopulationRow[] {
         `Census ACS ${fetched.scope}: a data row is not an array`,
       );
     }
-    const code = String(row[codeAt] ?? "").trim();
+    if (row.length !== header.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "An ACS row has incomplete columns.");
+    const localCode = String(row[codeAt] ?? "").trim();
+    const stateFips = stateAt < 0 ? null : String(row[stateAt] ?? "");
+    const code = ["state", "zcta", "nation"].includes(fetched.scope) ? localCode
+      : `${stateFips ?? ""}${fetched.scope === "county_subdivision" ? row[countyAt] ?? "" : ""}${localCode}`;
     const raw = row[popAt];
     const population = raw === null || raw === undefined || String(raw).trim() === "" ? Number.NaN : Number(raw);
-    if (code === "") {
+    const widths: Record<AcsScope, number> = { nation: 1, state: 2, zcta: 5, county: 5, place: 7, county_subdivision: 10,
+      congressional_district: 4, state_leg_upper: 5, state_leg_lower: 5, school_unified: 7, school_elementary: 7, school_secondary: 7 };
+    if (!new RegExp(`^[0-9A-Za-z-]{${widths[fetched.scope]}}$`).test(code) || !String(row[nameAt] ?? "").trim()) {
       throw sourceAcquisitionFailure(
         "PUBLISHER_DOCUMENT_INVALID",
-        `Census ACS ${fetched.scope}: a row carries no geography code: ${JSON.stringify(row)}`,
+        `Census ACS ${fetched.scope}: a row has an invalid geography identifier or name.`,
       );
     }
-    if (!Number.isInteger(population) || population < 0) {
+    if (!Number.isSafeInteger(population) || population < 0) {
       throw sourceAcquisitionFailure(
         "PUBLISHER_DOCUMENT_INVALID",
-        `Census ACS ${fetched.scope}: ${code} carries a population of ${JSON.stringify(raw)}, which is not a count`,
+        `Census ACS ${fetched.scope}: ${code} carries a population field that is not a count.`,
       );
+    }
+    if (geoAt >= 0 && (fetched.scope === "nation" ? row[geoAt] !== "0100000US" : !String(row[geoAt] ?? "").endsWith(code))) {
+      throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The ACS GEO_ID disagrees with its component FIPS identifiers.");
     }
     out.push({
       code,
       name: String(row[nameAt] ?? "").trim(),
       population,
       marginOfError: moeAt < 0 ? null : marginOf(row[moeAt]),
+      ...(fetched.vintage === undefined ? {} : { geography: fetched.scope, stateFips,
+        censusGeoId: geoAt < 0 ? code : String(row[geoAt] ?? ""),
+        attribution: { sourceUrl: fetched.url, sourceOrg: AGENCY, sourceKind: "OFFICIAL" as const,
+          ...(geoAt < 0 ? {} : { citationUrl: `https://data.census.gov/table/ACSDT5Y${fetched.vintage}.B01003?g=${encodeURIComponent(`${String(row[geoAt]).slice(0, 3)}XX00US${fetched.scope === "nation" ? "" : code}`)}` }),
+          publishedAt: fetched.publishedAt ?? null, retrievedAt: fetched.fetchedAt, vintage: fetched.vintage,
+          ...(fetched.publicationUrl ? { publicationUrl: fetched.publicationUrl } : {}),
+          period: `${fetched.vintage - 4}–${fetched.vintage}` } }),
     });
   }
+  if (new Set(out.map(row => row.code)).size !== out.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "ACS geography identifiers repeat within a table.");
   return out.sort((a, b) => a.code.localeCompare(b.code));
 }
 

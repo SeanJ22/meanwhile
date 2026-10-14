@@ -44,7 +44,7 @@ function publishedElectionDatesIn(text: string): string[] {
   for (const match of text.matchAll(/\b(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,\s*|\s+)(20\d{2})\b/gi)) add(match[3]!, months.indexOf(match[1]!.slice(0, 3).toLowerCase()) + 1, Number(match[2]));
   return [...new Set(dates)];
 }
-export function officialElectionLinkMatches(html: string, pageUrl: string, door: VotingSourceDoor): boolean {
+function officialElectionLinkMatches(html: string, pageUrl: string, door: VotingSourceDoor): boolean {
   if (!electionDateNamed(sourceText(html), door.electionDate)) return false;
   if (pageUrl === door.url) return true;
   return [...html.matchAll(/\b(?:href|src)=["']([^"']+)["']/gi)].some(match => {
@@ -99,7 +99,7 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
   return { sites, office, missingRows, missingRowPlaces, officeRows };
 }
 /** Decode the public querydata response used by embedded Power BI maps. */
-export function powerBiVotingRows(value: unknown): Record<string, unknown>[] {
+function powerBiVotingRows(value: unknown): Record<string, unknown>[] {
   if (!value || typeof value !== "object") return [];
   const envelope = value as Record<string, unknown>;
   if (Array.isArray(envelope.results)) return envelope.results.flatMap(powerBiVotingRows);

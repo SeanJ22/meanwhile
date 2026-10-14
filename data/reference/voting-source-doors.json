@@ -1285,7 +1285,9 @@
     "candidateListUrl": "https://hosting.okelections.gov/electionlist.html",
     "ballotMeasuresUrl": "https://oklahoma.gov/elections/elections-results/state-question-info.html",
     "candidateListUrls": [
-      "https://hosting.okelections.gov/electionlist.html"
+      "https://hosting.okelections.gov/electionlist.html",
+      "https://www.clevelandcountyelectionboard.com/sample-ballots-november-3-2026-general-election",
+      "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf"
     ],
     "ballotMeasureUrls": [
       "https://oklahoma.gov/elections/elections-results/state-question-info.html",

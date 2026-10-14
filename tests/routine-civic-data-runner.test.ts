@@ -25,7 +25,7 @@ import {
   routineTaskDue,
   routineTaskFromContract,
   routineTaskSelection,
-  routinePreSpawnMemoryDeferral,
+  routinePreSpawnDeferral,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
@@ -69,7 +69,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
     safeFailure: (message: string) => message,
     boundedExecutionFailure: () => ({ taskId: "deferred", code: "CHILD_SPAWN_FAILED", detail: "WORKER_MEMORY_DEADLINE: work remains owed" }),
-    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnMemoryDeferral,
+    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnDeferral,
     controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
     RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
@@ -101,17 +101,19 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   }
 });
 
-test("only an unstarted empty-output memory deadline is an unsent deferral", () => {
+test("only an unstarted empty-output memory deadline or spent pass budget is an unsent deferral", () => {
   const run = { id: "held", termination: "SPAWN_FAILED" as const, status: null, signal: null,
     stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: work remains owed" };
-  assert.equal(routinePreSpawnMemoryDeferral(run, false), run.errorMessage);
-  assert.equal(routinePreSpawnMemoryDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
+  assert.equal(routinePreSpawnDeferral(run, false), run.errorMessage);
+  const budget = { ...run, errorMessage: "PASS_TIME_BUDGET: this pass's time is spent" };
+  assert.equal(routinePreSpawnDeferral(budget, false), budget.errorMessage, "a pass out of time leaves the rest owed for the next pass");
+  assert.equal(routinePreSpawnDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
   for (const changed of [
     { ...run, termination: "EXITED" as const }, { ...run, termination: "TIMED_OUT" as const },
     { ...run, stdout: "RCD_RECEIPT={}" }, { ...run, stderr: "child emitted output" },
     { ...run, status: 0 }, { ...run, signal: "SIGTERM" as const },
     { ...run, errorMessage: "HTTP status 429" }, { ...run, errorMessage: "child mentioned WORKER_MEMORY_DEADLINE: later" },
-  ]) assert.equal(routinePreSpawnMemoryDeferral(changed, false), null);
+  ]) assert.equal(routinePreSpawnDeferral(changed, false), null);
 });
 
 test("source refreshes are admitted daily without a Send and retry failed sources hourly", () => {

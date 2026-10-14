@@ -1,0 +1,346 @@
+{
+  "source": "Census ACS",
+  "capturedAt": "2026-10-12T23:41:44.746Z",
+  "release": {
+    "vintage": 2024,
+    "publishedAt": "2026-01-29T00:00:00.000Z",
+    "publicationUrl": "https://www.census.gov/programs-surveys/acs/news/data-releases/2024/release-schedule.html"
+  },
+  "rows": 126461,
+  "counts": [
+    {
+      "state": "AK",
+      "loaded": 537,
+      "joined": 476,
+      "unjoined": 61
+    },
+    {
+      "state": "AL",
+      "loaded": 1340,
+      "joined": 1192,
+      "unjoined": 148
+    },
+    {
+      "state": "AR",
+      "loaded": 2169,
+      "joined": 2030,
+      "unjoined": 139
+    },
+    {
+      "state": "AZ",
+      "loaded": 850,
+      "joined": 778,
+      "unjoined": 72
+    },
+    {
+      "state": "CA",
+      "loaded": 3230,
+      "joined": 3054,
+      "unjoined": 176
+    },
+    {
+      "state": "CO",
+      "loaded": 1042,
+      "joined": 934,
+      "unjoined": 108
+    },
+    {
+      "state": "CT",
+      "loaded": 763,
+      "joined": 560,
+      "unjoined": 203
+    },
+    {
+      "state": "DC",
+      "loaded": 14,
+      "joined": 5,
+      "unjoined": 9
+    },
+    {
+      "state": "DE",
+      "loaded": 189,
+      "joined": 126,
+      "unjoined": 63
+    },
+    {
+      "state": "FL",
+      "loaded": 1595,
+      "joined": 1405,
+      "unjoined": 190
+    },
+    {
+      "state": "GA",
+      "loaded": 1858,
+      "joined": 1605,
+      "unjoined": 253
+    },
+    {
+      "state": "HI",
+      "loaded": 292,
+      "joined": 214,
+      "unjoined": 78
+    },
+    {
+      "state": "IA",
+      "loaded": 3268,
+      "joined": 3111,
+      "unjoined": 157
+    },
+    {
+      "state": "ID",
+      "loaded": 638,
+      "joined": 566,
+      "unjoined": 72
+    },
+    {
+      "state": "IL",
+      "loaded": 4322,
+      "joined": 4120,
+      "unjoined": 202
+    },
+    {
+      "state": "IN",
+      "loaded": 2531,
+      "joined": 2370,
+      "unjoined": 161
+    },
+    {
+      "state": "KS",
+      "loaded": 2826,
+      "joined": 2657,
+      "unjoined": 169
+    },
+    {
+      "state": "KY",
+      "loaded": 1492,
+      "joined": 1345,
+      "unjoined": 147
+    },
+    {
+      "state": "LA",
+      "loaded": 1350,
+      "joined": 1199,
+      "unjoined": 151
+    },
+    {
+      "state": "MA",
+      "loaded": 1138,
+      "joined": 909,
+      "unjoined": 229
+    },
+    {
+      "state": "MD",
+      "loaded": 1001,
+      "joined": 875,
+      "unjoined": 126
+    },
+    {
+      "state": "ME",
+      "loaded": 1159,
+      "joined": 965,
+      "unjoined": 194
+    },
+    {
+      "state": "MI",
+      "loaded": 3112,
+      "joined": 2909,
+      "unjoined": 203
+    },
+    {
+      "state": "MN",
+      "loaded": 4304,
+      "joined": 4085,
+      "unjoined": 219
+    },
+    {
+      "state": "MO",
+      "loaded": 3315,
+      "joined": 3108,
+      "unjoined": 207
+    },
+    {
+      "state": "MS",
+      "loaded": 1235,
+      "joined": 1057,
+      "unjoined": 178
+    },
+    {
+      "state": "MT",
+      "loaded": 1301,
+      "joined": 1146,
+      "unjoined": 155
+    },
+    {
+      "state": "NC",
+      "loaded": 2220,
+      "joined": 2036,
+      "unjoined": 184
+    },
+    {
+      "state": "ND",
+      "loaded": 2488,
+      "joined": 2384,
+      "unjoined": 104
+    },
+    {
+      "state": "NE",
+      "loaded": 2165,
+      "joined": 2098,
+      "unjoined": 67
+    },
+    {
+      "state": "NH",
+      "loaded": 746,
+      "joined": 549,
+      "unjoined": 197
+    },
+    {
+      "state": "NJ",
+      "loaded": 1943,
+      "joined": 1843,
+      "unjoined": 100
+    },
+    {
+      "state": "NM",
+      "loaded": 896,
+      "joined": 780,
+      "unjoined": 116
+    },
+    {
+      "state": "NV",
+      "loaded": 305,
+      "joined": 238,
+      "unjoined": 67
+    },
+    {
+      "state": "NY",
+      "loaded": 3298,
+      "joined": 3046,
+      "unjoined": 252
+    },
+    {
+      "state": "OH",
+      "loaded": 3720,
+      "joined": 3567,
+      "unjoined": 153
+    },
+    {
+      "state": "OK",
+      "loaded": 1894,
+      "joined": 1738,
+      "unjoined": 156
+    },
+    {
+      "state": "OR",
+      "loaded": 971,
+      "joined": 872,
+      "unjoined": 99
+    },
+    {
+      "state": "PA",
+      "loaded": 5414,
+      "joined": 5143,
+      "unjoined": 271
+    },
+    {
+      "state": "PR",
+      "loaded": 1362,
+      "joined": 1273,
+      "unjoined": 89
+    },
+    {
+      "state": "RI",
+      "loaded": 236,
+      "joined": 117,
+      "unjoined": 119
+    },
+    {
+      "state": "SC",
+      "loaded": 1078,
+      "joined": 898,
+      "unjoined": 180
+    },
+    {
+      "state": "SD",
+      "loaded": 2101,
+      "joined": 2026,
+      "unjoined": 75
+    },
+    {
+      "state": "TN",
+      "loaded": 1745,
+      "joined": 1601,
+      "unjoined": 144
+    },
+    {
+      "state": "TX",
+      "loaded": 4221,
+      "joined": 3999,
+      "unjoined": 222
+    },
+    {
+      "state": "Unassigned ZCTAs",
+      "loaded": 33772,
+      "joined": 0,
+      "unjoined": 33772
+    },
+    {
+      "state": "US",
+      "loaded": 1,
+      "joined": 1,
+      "unjoined": 0
+    },
+    {
+      "state": "UT",
+      "loaded": 606,
+      "joined": 498,
+      "unjoined": 108
+    },
+    {
+      "state": "VA",
+      "loaded": 1663,
+      "joined": 1509,
+      "unjoined": 154
+    },
+    {
+      "state": "VT",
+      "loaded": 711,
+      "joined": 579,
+      "unjoined": 132
+    },
+    {
+      "state": "WA",
+      "loaded": 1324,
+      "joined": 1216,
+      "unjoined": 108
+    },
+    {
+      "state": "WI",
+      "loaded": 3372,
+      "joined": 3212,
+      "unjoined": 160
+    },
+    {
+      "state": "WV",
+      "loaded": 894,
+      "joined": 771,
+      "unjoined": 123
+    },
+    {
+      "state": "WY",
+      "loaded": 444,
+      "joined": 348,
+      "unjoined": 96
+    }
+  ],
+  "captures": 471,
+  "validation": [
+    {
+      "consumer": "lib/reference/acs-population.ts",
+      "passed": true,
+      "detail": "126461 rows; 41318 unjoined rows retained."
+    }
+  ],
+  "maxRssMiB": 542,
+  "joinBasis": "Local held registration-reference GEOIDs plus state FIPS and nation ID. Production registry and published-geography joins are deferred; this is acquisition evidence, not production rows loaded."
+}

@@ -2,7 +2,7 @@ import { htmlTableFragments, sourceText } from "./voting-source-tables.ts";
 import type { VotingCapture, VotingFetchSession } from "./voting-source-fetch.ts";
 
 const attr = (tag: string, name: string) => sourceText(tag.match(new RegExp(`\\b${name}=["']([^"']*)["']`, "i"))?.[1] ?? "");
-export interface VotingPageRequest { grid: string; page: number; pageCount: number; target: string; url: string; body: string }
+interface VotingPageRequest { grid: string; page: number; pageCount: number; target: string; url: string; body: string }
 /** The public form's own hidden state and Next Page control; no guessed private endpoint. */
 export function votingPageRequests(html: string, pageUrl: string): VotingPageRequest[] {
   const hidden = new URLSearchParams();

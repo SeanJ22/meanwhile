@@ -69,6 +69,7 @@ export type AgendaSourceType =
   | "DOCUMENT_LISTING"
 
   | "SUITEONE"
+  | "GRANICUS"
   | "PRIMEGOV"
   | "SIMBLI"
   | "ICAL"

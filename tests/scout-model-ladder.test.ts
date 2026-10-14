@@ -242,7 +242,7 @@ test('a long Scout walks beyond the former turn, tool, token and wall limits unt
  const walks=Array.from({length:40},(_,i)=>[fetchOf('u'+i,`https://source${i}.gov/meetings`)]);
  const script=[...walks,[candidateFinish('done','art-40',walks.map((_,index)=>({index,note:'opened source'})))]];
  for(const ceiling of [100,0.075]) {
-  const controller=new FleetSafetyController({now:NOW,costs:[],rollingCeilingUsd:ceiling,clock:()=>NOW_MS});
+  const controller=new FleetSafetyController({now:NOW,charges:[],rollingCeilingUsd:ceiling,clock:()=>NOW_MS});
   const fake=perModelTransport({[HAIKU]:script},()=>{elapsed+=60_000;return {input_tokens:20_000,output_tokens:100};});
   const {outcome,result}=await runLadder({model:HAIKU,transport:controller.guardedModelTransport('anthropic',OBLIGATION.id,fake)});
   assert.ok(fake.requests.length>18,'long work passes the old model turn cap');
@@ -450,7 +450,7 @@ test("L4: a provider overload (HTTP 529) is not the model's failing and never es
 const LOOPING_SONNET = { [SONNET]: [[text("thinking")]] as readonly (readonly ContentBlock[])[], [OPUS]: [[text("never")]] as readonly (readonly ContentBlock[])[] };
 
 test("L5 CEILING: with the real FleetSafety controller, an escalation whose worst case the rolling ceiling cannot cover is refused before any frontier request, deferred by name, and recorded after the root cause", async () => {
-  const controller = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 0.15, clock: () => NOW_MS });
+  const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 0.15, clock: () => NOW_MS });
   const fake = perModelTransport(LOOPING_SONNET);
   const guarded = controller.guardedModelTransport("anthropic", OBLIGATION.id, fake);
   const { outcome, result } = await runLadder({ transport: guarded, reserveEscalation: scoutEscalationReservation(controller) });
@@ -470,7 +470,7 @@ test("L5 CEILING: with the real FleetSafety controller, an escalation whose wors
 });
 
 test("L5 CEILING (positive control): under a ceiling that covers both attempts the real controller holds the escalation, and after it every cent of the hold is drawn or released", async () => {
-  const controller = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 100, clock: () => NOW_MS });
+  const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 100, clock: () => NOW_MS });
   const fake = perModelTransport({ [SONNET]: [[text("thinking")]], [OPUS]: [[fetchOf("o1", "https://a.gov/meetings")], [candidateFinish("f", "art-1", [{ index: 0, note: "meetings" }])]] });
   const { outcome, result } = await runLadder({ transport: controller.guardedModelTransport("anthropic", OBLIGATION.id, fake), reserveEscalation: scoutEscalationReservation(controller) });
   assert.equal(outcome.kind, "DISPOSED");
@@ -482,7 +482,7 @@ test("L5 CEILING (positive control): under a ceiling that covers both attempts t
 });
 
 test("L5 FleetSafety.holdModelBudget: the hold counts against the rolling ceiling until drawn or released, and refuses over it", () => {
-  const controller = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 10, clock: () => NOW_MS });
+  const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 10, clock: () => NOW_MS });
   const hold = controller.holdModelBudget("w", 8);
   assert.equal(controller.rollingCeilingReached(2.5).reached, true, "the $8 hold is counted");
   /* A draw moves $3 out of the hold (the per-request guard counts that $3 as settled spend in a real run). */

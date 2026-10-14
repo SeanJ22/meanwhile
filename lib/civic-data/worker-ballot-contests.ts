@@ -16,7 +16,7 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
-import { readManualProjectionPrior, manualProjectionCandidate } from "./manual-projections.ts";
+import { readManualProjectionPrior, manualProjectionCandidate, completeOfficialBallotContests } from "./manual-projections.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
@@ -95,6 +95,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   const fresh = input.payload as GenericBallotProjection;
   const previous = prior?.payload as GenericBallotProjection | undefined;
   const ballots = { ...previous?.ballots };
+  const complete = new Set(completeOfficialBallotContests(fresh, input.sourceReceipt).map(row => row.contest.id));
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
@@ -104,8 +105,8 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },
       contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests],
       candidacies: [...before.candidacies.filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
-        !ballot.contests.some(contest => contest.id === row.contestId && contest.candidateListComplete === true &&
-          contest.provenance.sourceUrl === before.contests.find(old => old.id === contest.id)?.provenance.sourceUrl)), ...ballot.candidacies],
+        !ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
+          Date.parse(contest.provenance.collectedAt) >= Date.parse(before.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? ""))), ...ballot.candidacies],
       measures: [...before.measures.filter(row => keepsMeasure(row.contestId, row.provenance.sourceUrl)), ...ballot.measures],
       ...(before.measureRecords !== undefined || ballot.measureRecords !== undefined ? {
         measureRecords: [...before.measureRecords ?? []].filter(row => keepsMeasure(row.contestId, row.sourceUrl)).concat([...ballot.measureRecords ?? []]) } : {}) } : ballot;
@@ -113,7 +114,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   const urls = new Set(Object.values(ballots).flatMap(ballot => [...ballot.contests, ...ballot.candidacies, ...ballot.measures].map(row => row.provenance.sourceUrl)));
   const sources = [...input.sourceReceipt.sources, ...prior?.sourceReceipt.sources ?? []].filter(row => urls.has(row.finalUrl) || urls.has(row.requestedUrl));
   return { ...input, payload: { kind: "ballot-contests", ballots }, sourceReceipt: { ...input.sourceReceipt,
-    sources: sources.filter((source, at) => sources.findIndex(row => canonicalCivicDataJson(row) === canonicalCivicDataJson(source)) === at) } };
+    sources: sources.filter((source, at) => sources.findIndex(row => row.finalUrl === source.finalUrl && row.rawHash === source.rawHash) === at) } };
 }
 
 export async function publishWorkerBallotContestsResults(input: {

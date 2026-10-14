@@ -62,3 +62,9 @@ export function childStderrCause(stderr: string, maxChars: number = FATAL_QUOTE_
   const pick = named ?? plain;
   return pick ? redactDiagnosticText(pick).slice(0, maxChars) : null;
 }
+
+/** A native abort's own line ("FATAL ERROR: …", "# Fatal error …", "Assertion failed …"), which its stack trace follows. Null when none. */
+export function nativeAbortLine(stderr: string): string | null {
+  return stderr.split(/\r?\n/).map((line) => line.trim())
+    .filter((line) => /^(?:FATAL ERROR:|# Fatal error|Fatal process out of memory|Assertion failed|.*: Assertion `)/.test(line)).at(-1) ?? null;
+}

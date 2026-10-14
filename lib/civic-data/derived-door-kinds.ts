@@ -1,6 +1,5 @@
 import type { AgendaSourceType } from "../registry/types.ts";
 
-/** Each adapter kind a reviewed calendar can be wired to as data: a new kind is one entry here, never a branch in code. */
 export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
@@ -56,7 +55,7 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
   CIVICCLERK: {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",
     route: { key: "apiBase", as: "origin" },
-    allowed: ["portalBase", "bodyMatch"], required: ["portalBase", "bodyMatch"],
+    allowed: ["portalBase", "bodyMatch", "categoryId", "titleMatch"], required: ["portalBase", "categoryId"],
   },
   IQM2: {
     sourceName: "iqm2", agendaSourceType: "IQM2", entry: "lib/sources/iqm2/index.ts",
@@ -126,5 +125,8 @@ export function dataDoorConfig(input: {
   const given = Object.fromEntries(spec.allowed.filter((key) => typeof input.filter[key] === "string" && input.filter[key]!.trim() !== "").map((key) => [key, input.filter[key]!]));
   const missing = spec.required.filter((key) => given[key] === undefined);
   if (missing.length > 0) throw new Error(`DOOR_KIND_SETTING_MISSING:${input.kind}:${missing.join(",")}`);
+  if (input.kind === "CIVICPLUS" && !/^\d+(?:\s*,\s*\d+)*$/.test(given.agendaCenterCategoryId)) {
+    throw new Error("DOOR_KIND_CATEGORY_INVALID:CIVICPLUS");
+  }
   return { slug: input.slug, bodyName: input.bodyName, [spec.route.key]: route, ...given, ...(spec.fixed ?? {}) };
 }

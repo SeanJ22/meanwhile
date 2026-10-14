@@ -1,7 +1,4 @@
-/** Official election doors run on the standing daily/final-week hourly clock.
- * @freshness-reads-here — each saved source keeps its actual retrieval time.
- * Reference files seed missing doors; subsequent edits and publication use the data plane.
- */
+/* @freshness-reads-here */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -15,9 +12,12 @@ import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
 import { votingSitesCandidate, VOTING_SITES_CONTRACT } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
+import { recordSourceObservation } from "../lib/doors/source-capture.ts";
+import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import { pageAddress } from "../lib/doors/page-doors.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction,
-  saveVotingSourceDoor, seedVotingSourceDoors, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+  saveVotingSourceDoor, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
 import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces } from "../lib/ballot/voting-source-blanks.ts";
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
@@ -172,13 +172,14 @@ async function main() {
       if (!await printWorkerPublicationReceipt(store, "voting-sites", report, null, at)) throw new Error("No registered polling worker result reached the reader.");
       return;
     }
-    await seedVotingSourceDoors(context.repos.doors, seeds, now());
     const priorRead = await readVotingSitesProjection({ store, bypassCache: true });
     if (priorRead.kind !== "PROMOTED" && priorRead.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable; preserve its last verified facts.");
     let held = priorRead.kind === "PROMOTED" ? priorRead.value : null;
     let version = priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null;
     const registry = await readRegistryRuntimePrior(store, now());
-    const registered = await registeredVotingSourceDoors(context.repos.doors);
+    const savedDoors = await registeredVotingSourceDoors(context.repos.doors);
+    const registered = [...new Map([...seeds, ...savedDoors].map(source => [source.id, source])).values()];
+    const vault = cycleVault(join(process.cwd(), ...VAULT_DIR));
     const states = [...new Set(registered.map(door => door.scope.state))];
     let publications = 0;
     for (const state of states) {
@@ -188,13 +189,14 @@ async function main() {
       const localRegistry = { divisions, bodies };
       const stateDoors = registered.filter(door => door.scope.state === state);
       const roots = votingChiefRoots(stateDoors);
-      const doors = new Map(stateDoors.map(door => [door.id, door]));
+      const doors = new Map<string, VotingSourceDoor>();
       const reads = new Map<string, VotingSourceRead>(), walked = new Set<string>();
-      const discoveryBlanks: VotingSourceRead["blanks"] = [];
+      const evidenceSources = new Map<string, VotingSourceDoor>();
+      const observations = new Map<string, "DOOR" | "EVIDENCE" | "SKIP">();
       const geocodes = new Map<string, { lat: number; lng: number } | null>();
       let callbackFailure: unknown;
       const runtime: VotingSourceRuntime = {
-        fetch, now, ...votingScopeResolvers(localRegistry),
+        fetch, now, captureCache: new Map(), discoverySeen: new Set(), ...votingScopeResolvers(localRegistry),
         browserFetch: (url, init) => fetch(url, { ...init, headers: { ...init?.headers,
           "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" } }),
         geocode: async address => {
@@ -207,12 +209,12 @@ async function main() {
           geocodes.set(address, point); return point;
         },
       };
-      const acquire = async (door: VotingSourceDoor, captures: VotingSourceRead["rawBodies"] = []) => {
+      const acquire = async (door: VotingSourceDoor, captures: VotingSourceRead["rawBodies"] = [], persistent = true) => {
         if (reads.has(door.id)) return;
         const result = await readVotingSource(door, runtime), at = now();
         const read = votingLookupDiscoveryRead(door, result, captures, at);
         reads.set(door.id, read);
-        if (read.rawBodies.length || read.blanks.length) await recordVotingSourceRead(context.repos.doors, door, read, at);
+        if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(context.repos.doors, door, read, at);
         const observed = read.rawBodies.filter(isVotingSourceContent);
         if (!votingReadHasFacts(door, read)) return;
         const before = held;
@@ -243,7 +245,7 @@ async function main() {
         if (callbackFailure) throw callbackFailure;
         try {
           // One file can have several registered county/town mappings; preserve and read each of them.
-          const sameSource = [...doors.values()].filter(door => door.url === found.url);
+          const sameSource = stateDoors.filter(door => pageAddress(door.url)?.url === pageAddress(found.url)?.url);
           const targets = sameSource.length ? sameSource : [found];
           for (const existing of targets) {
             const door = existing === found ? found : { ...found, ...existing,
@@ -255,33 +257,47 @@ async function main() {
           }
         } catch (error) { callbackFailure = error; throw error; }
       };
+      runtime.onDiscoveredSource = async ({ source, disposition, capture, linkingCaptures }) => {
+        const url = pageAddress(source.url)!.url;
+        observations.set(url, disposition.kind);
+        await recordSourceObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
+          names: [source.scope.name, source.publisher], disposition, capture }, now(), vault);
+        if (disposition.kind === "EVIDENCE" && disposition.family === "voting") {
+          const configured = stateDoors.filter(known => pageAddress(known.url)?.url === url);
+          for (const target of configured.length ? configured : [source]) {
+            evidenceSources.set(target.id, target);
+            await acquire(target, [...linkingCaptures, ...(capture ? [capture] : [])], false);
+          }
+        }
+        if (capture && disposition.kind !== "DOOR") {
+          for (const old of stateDoors.filter(old => pageAddress(old.url)?.url === url)) doors.delete(old.id);
+
+        }
+      };
       const walk = async (root: VotingSourceDoor) => {
-        const key = `${root.scope.ocdId}\n${root.url}`;
+        const key = pageAddress(root.url)!.url;
         if (walked.has(key)) return;
         const discovery = await discoverVotingDoors(root, runtime);
         if (callbackFailure) throw callbackFailure;
-        discoveryBlanks.push(...discovery.blanks);
-        for (const found of discovery.doors) walked.add(`${found.scope.ocdId}\n${found.url}`);
-        await acquire(doors.get(root.id) ?? root);
+        for (const found of discovery.sources) walked.add(pageAddress(found.source.url)!.url);
       };
       // The FEC-listed chief office is the first read, even when its source is currently unreachable.
       for (const root of roots) await walk(root);
       const root = roots[0];
       if (root) for (const office of registeredElectionOfficeDoors(root, localRegistry)) {
         if ([...doors.values()].some(door => door.url === office.url && door.scope.ocdId === office.scope.ocdId)) continue;
-        doors.set(office.id, office); await saveVotingSourceDoor(context.repos.doors, office, now());
+        await walk(office);
       }
       // Every registered local office/directory is walked, including routes held before this run.
-      for (const door of doors.values()) if (["list-page", "county-directory", "vendor-platform"].includes(door.shape)) await walk(door);
-      for (const door of doors.values()) await acquire(door);
+      for (const source of stateDoors) await walk(source);
       const scope = root?.scope ?? stateDoors[0]!.scope;
-      const delegation = [...doors.values()].find(door => door.delegation)?.delegation ?? "county";
+      const delegation = stateDoors.find(door => door.delegation)?.delegation ?? "county";
       const populations = await votingSourcePopulations({ state, bodies });
       const places = votingSourcePlaces({ state: scope, divisions, delegation, populations });
-      const blanks = planVotingSourceBlanks({ electionDate: election.electionDate, places, doors: [...doors.values()], reads: [...reads.values()],
+      const blanks = planVotingSourceBlanks({ electionDate: election.electionDate, places, doors: [...doors.values(), ...evidenceSources.values()], reads: [...reads.values()],
         jurisdictions: held?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) });
-      await persistVotingSourceBlanks({ repos: context.repos, blanks: [...blanks, ...discoveryBlanks], electionDate: election.electionDate, now: now() });
-      console.log(`${state}: ${doors.size} official doors, ${[...reads.values()].reduce((sum, read) => sum + read.sites.length, 0)} site observations, ${blanks.length} open place blanks`);
+      await persistVotingSourceBlanks({ repos: context.repos, blanks, electionDate: election.electionDate, now: now() });
+      console.log(`${state}: ${[...observations.values()].filter(kind => kind === "DOOR").length} publishing doors, ${[...observations.values()].filter(kind => kind === "EVIDENCE").length} evidence captures, ${[...observations.values()].filter(kind => kind === "SKIP").length} skips, ${[...reads.values()].reduce((sum, read) => sum + read.sites.length, 0)} site observations, ${blanks.length} open place blanks`);
     }
     if (!publications) throw new Error("No official voting-source result could be published; prior facts and open hunter work are retained.");
   } catch (error) {

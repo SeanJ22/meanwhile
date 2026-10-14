@@ -3,7 +3,18 @@ export const REPORTING_PROVIDERS = ["anthropic-api", "neon", "exa", "github", "b
 export type ReportingProvider = typeof REPORTING_PROVIDERS[number];
 export const BILLING_SYNC_MS = 60 * 60_000;
 export const BILLING_STALE_MS = 3 * BILLING_SYNC_MS;
-export const BILLING_SECRET_NAMES = ["ANTHROPIC_ADMIN_API_KEY", "NEON_BILLING_API_KEY", "EXA_SERVICE_API_KEY", "GITHUB_BILLING_TOKEN", "NETLIFY_BILLING_TOKEN"] as const;
+/** The one billing key each provider's bill is read with. Brave has no billing read. */
+export const BILLING_KEYS = { "anthropic-api": "ANTHROPIC_ADMIN_API_KEY", neon: "NEON_BILLING_API_KEY", exa: "EXA_SERVICE_API_KEY", github: "GITHUB_BILLING_TOKEN", netlify: "NETLIFY_BILLING_TOKEN" } as const satisfies Partial<Record<ReportingProvider, string>>;
+export type BilledProvider = keyof typeof BILLING_KEYS;
+export const BILLED_PROVIDERS = Object.keys(BILLING_KEYS) as BilledProvider[];
+export const BILLING_SECRET_NAMES = Object.values(BILLING_KEYS);
+
+/** One provider-billed UTC day: dollars when the provider reports them, otherwise its usage. */
+export interface ProviderDay {
+  readonly day: string;
+  readonly usd: number | null;
+  readonly usage: readonly { readonly label: string; readonly value: number; readonly unit: string }[];
+}
 
 export interface ProviderReading {
   readonly provider: ReportingProvider;
@@ -17,6 +28,7 @@ export interface ProviderReading {
   readonly estimatedUsd: number | null;
   readonly credits: { readonly amount: number; readonly kind: "USED_ESTIMATE" | "INCLUDED" | "REMAINING" | "DISCOUNT_USD"; readonly unit: string } | null;
   readonly units: readonly { readonly label: string; readonly value: number; readonly unit: string }[];
+  readonly days?: readonly ProviderDay[];
   readonly accountIds: readonly string[];
   readonly existingLimits: readonly string[];
   readonly source: string;

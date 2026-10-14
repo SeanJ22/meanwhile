@@ -8,8 +8,8 @@
  * - Production serves validated, independently attributed source projections from the data plane.
  *
  * LegiScan's data is published under CC BY 4.0; `LEGISCAN_ATTRIBUTION` is the single string every
- * surface renders with it. Its weekly state datasets supplement independently attributed official
- * sources; exact official roll calls retain precedence in Reader.
+ * surface renders with it (`tests/legiscan.test.ts`). Its weekly state datasets supplement independently attributed official
+ * sources (exact official roll calls retain precedence in Reader); bill datasets publish through their own routine contract.
  */
 
 /**

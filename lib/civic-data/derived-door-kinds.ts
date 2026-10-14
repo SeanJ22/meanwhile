@@ -1,10 +1,13 @@
 import type { AgendaSourceType } from "../registry/types.ts";
 
-/** Each adapter kind a reviewed calendar can be wired to as data: a new kind is one entry here, never a branch in code. */
 export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
   "BOARDDOCS",
+  "GRANICUS",
+  "NOVUSAGENDA",
+  "SWAGIT",
+  "ESCRIBE",
   "PRIMEGOV",
   "CIVICCLERK",
   "IQM2",
@@ -43,15 +46,35 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     route: { key: "orgId", as: "lastPathSegment" },
     allowed: [], required: [],
   },
+  GRANICUS: {
+    sourceName: "granicus", agendaSourceType: "GRANICUS", entry: "lib/sources/granicus/index.ts",
+    route: { key: "publisherUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
+  },
+  ESCRIBE: {
+    sourceName: "escribe", agendaSourceType: "ESCRIBE", entry: "lib/sources/escribe/index.ts",
+    route: { key: "portalUrl", as: "origin" },
+    allowed: ["meetingTypes"], required: ["meetingTypes"],
+  },
   BOARDDOCS: {
     sourceName: "boarddocs", agendaSourceType: "BOARDDOCS", entry: "lib/sources/boarddocs/index.ts",
     route: { key: "portalUrl", as: "url" },
     allowed: ["committeeId"], required: ["committeeId"],
   },
+  NOVUSAGENDA: {
+    sourceName: "novusagenda", agendaSourceType: "NOVUSAGENDA", entry: "lib/sources/novusagenda/index.ts",
+    route: { key: "portalUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
+  },
+  SWAGIT: {
+    sourceName: "swagit", agendaSourceType: "SWAGIT", entry: "lib/sources/swagit/index.ts",
+    route: { key: "portalUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
+  },
   CIVICCLERK: {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",
     route: { key: "apiBase", as: "origin" },
-    allowed: ["portalBase", "bodyMatch"], required: ["portalBase", "bodyMatch"],
+    allowed: ["portalBase", "bodyMatch", "categoryId", "titleMatch"], required: ["portalBase", "categoryId"],
   },
   PRIMEGOV: {
     sourceName: "primegov", agendaSourceType: "PRIMEGOV", entry: "lib/sources/primegov/index.ts",
@@ -107,11 +130,6 @@ export function isDataDoorKind(kind: string): kind is DataDoorKind {
   return (DATA_DOOR_KINDS as readonly string[]).includes(kind);
 }
 
-/**
- * The adapter settings a reviewed route and filter give a data-door row, or
- * the reason they cannot: a missing required setting, or one the kind does not
- * declare, is refused by name rather than guessed.
- */
 export function dataDoorConfig(input: {
   readonly kind: DataDoorKind;
   readonly route: string;
@@ -131,5 +149,8 @@ export function dataDoorConfig(input: {
   const given = Object.fromEntries(spec.allowed.filter((key) => typeof input.filter[key] === "string" && input.filter[key]!.trim() !== "").map((key) => [key, input.filter[key]!]));
   const missing = spec.required.filter((key) => given[key] === undefined);
   if (missing.length > 0) throw new Error(`DOOR_KIND_SETTING_MISSING:${input.kind}:${missing.join(",")}`);
+  if (input.kind === "CIVICPLUS" && !/^\d+(?:\s*,\s*\d+)*$/.test(given.agendaCenterCategoryId)) {
+    throw new Error("DOOR_KIND_CATEGORY_INVALID:CIVICPLUS");
+  }
   return { slug: input.slug, bodyName: input.bodyName, [spec.route.key]: route, ...given, ...(spec.fixed ?? {}) };
 }

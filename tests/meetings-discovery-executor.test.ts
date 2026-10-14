@@ -1,10 +1,3 @@
-/**
- * The unpaid meetings-discovery executor, against a recorded fake transport. robots.txt is the first request to
- * every host and its verdict is recorded on every step, never a refusal; only an access control (a recorded wall,
- * or the site's own 401, 403 or 429) makes a walk BLOCKED. Walks are bounded by requests and time, and every walk
- * is appended to `discoveryAttempts`. Every test that writes runs on the in-memory double and the durable file store.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -15,8 +8,7 @@ import {
   RECORDED_WALLS,
   discoveryFieldManualEntries,
   discoveryWorkId,
-  rotationWindow,
-  runMeetingsDiscovery,
+
   walkMeetingsDiscoveryNeed,
   type DiscoveryOpen,
   type DiscoveryRuntime,
@@ -24,7 +16,6 @@ import {
 import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { ROUTE_HINTS, namesItself, routeHintProblems, routeHintsFingerprint, type JurisdictionRouteHints } from "../lib/hunt/meetings-route-hints.ts";
-import { eachStore } from "./control-plane-fixtures.ts";
 
 const NOW = "2026-09-24T01:00:00.000Z";
 const ICS = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nSUMMARY:Council\r\nDTSTART:20261001T180000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
@@ -81,19 +72,20 @@ test("FOUND: robots first, then the homepage, then the route it links; confirmed
   const rt = runtime(open);
   const attempt = await walkMeetingsDiscoveryNeed(need("az:city:city-of-avondale", "http://avondale.org"), rt);
 
-  assert.deepEqual(seen, ["https://avondale.org/robots.txt", "https://avondale.org/", "https://avondale.org/calendar/meetings.ics"]);
+  assert.deepEqual(seen, ["https://avondale.org/robots.txt", "https://avondale.org/", ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://avondale.org/${path}`), "https://avondale.org/calendar/meetings.ics",
+    "https://x.novusagenda.com/robots.txt", "https://x.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx"]);
   assert.equal(attempt.outcome, "FOUND");
   assert.deepEqual(attempt.found.map((f) => [f.vendor, f.url, f.count]), [["ical", "https://avondale.org/calendar/meetings.ics", 1]]);
-  assert.deepEqual(attempt.leads.map((l) => l.vendor), ["novusagenda"], "a vendor we cannot read is a lead and is never requested");
-  assert.equal(attempt.requestCount, 3);
+  assert.deepEqual(attempt.leads.map((l) => l.vendor), ["novusagenda"], "an unconfirmed public list remains a lead");
+  assert.equal(attempt.requestCount, 9);
   assert.ok(Date.parse(attempt.recheckAfter) > Date.parse(attempt.finishedAt));
-  assert.equal(rt.vaulted.length, 3, "robots, homepage and the route are all evidence");
+  assert.equal(rt.vaulted.length, 9, "every source response is saved as evidence");
   for (const a of rt.vaulted) {
     assert.equal(a.workItemId, discoveryWorkId("az:city:city-of-avondale"));
     assert.equal(a.attemptId, attempt.attemptId);
     assert.equal(a.methodRouteId, "discovery:meetings");
   }
-  assert.equal(attempt.found[0].artifactId, rt.vaulted[2].id);
+  assert.equal(attempt.found[0].artifactId, rt.vaulted.find(artifact => artifact.canonicalUrl === "https://avondale.org/calendar/meetings.ics")!.id);
   assert.deepEqual(attempt.found[0].via, { page: "https://avondale.org/", artifactId: rt.vaulted[1].id }, "the find names the page that linked it");
   assert.deepEqual(attempt.site, {
     address: null,
@@ -183,7 +175,7 @@ test("ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309),
     "https://red.gov/m.ics": { status: 200, body: ICS, contentType: "text/calendar" },
   });
   const found = await walkMeetingsDiscoveryNeed(need("az:t:red", "red.gov"), runtime(followed.open));
-  assert.deepEqual(followed.seen, ["https://red.gov/robots.txt", "https://www.red.gov/robots.txt", "https://red.gov/", "https://red.gov/m.ics"]);
+  assert.deepEqual(followed.seen, ["https://red.gov/robots.txt", "https://www.red.gov/robots.txt", "https://red.gov/", ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://red.gov/${path}`), "https://red.gov/m.ics"]);
   assert.equal(found.outcome, "FOUND");
   const robotsStep = found.steps.find((s) => s.purpose === "robots")!;
   assert.deepEqual([robotsStep.url, robotsStep.permission, robotsStep.status], ["https://red.gov/robots.txt", "ALLOWED", 200]);
@@ -344,7 +336,7 @@ test("TIME: each request's timeout is cut to the time left; a walk the time runs
   };
   const clamped = await walkMeetingsDiscoveryNeed(need("az:t:slow", "slow.gov"), runtime(timed, { budget: { spent: () => false, remainingMs: () => 7_500 } }));
   assert.equal(clamped.outcome, "FOUND");
-  assert.deepEqual(offered, [7_500, 7_500, 7_500]);
+  assert.deepEqual(offered, Array(7).fill(7_500));
 
   /* Out of time after robots.txt: no further request, and no reading of the site. */
   let left = 60_000;
@@ -405,133 +397,6 @@ test("TIME: each request's timeout is cut to the time left; a walk the time runs
   assert.deepEqual(partial.found.map((f) => f.url), ["https://two.gov/a.ics"]);
   assert.deepEqual(partial.leads.map((l) => [l.url, l.detail]), [["https://two.gov/b.ics", "not checked: the cycle's discovery time ran out first"]]);
   assert.equal(two.seen.includes("https://two.gov/b.ics"), false);
-});
-
-test("TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-")) {
-    let left = 60_000;
-    const cut = fakeOpen({ "https://cut.gov/robots.txt": ALLOW, "https://cut.gov/": { status: 200, body: "<p>home</p>" } });
-    const spendOnFirst: DiscoveryOpen = async (input) => {
-      left = 0;
-      return cut.open(input);
-    };
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [need("az:t:cut", "cut.gov"), need("az:u:later", "later.gov")],
-      runtime: runtime(spendOnFirst, { budget: { spent: () => left <= 0, remainingMs: () => left } }),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.deepEqual(pass.walked, [], label);
-    assert.deepEqual(pass.deferred, ["az:t:cut", "az:u:later"], `${label}: the cut walk and the rest are deferred`);
-    assert.deepEqual(pass.cutShort, [{ jurisdictionId: "az:t:cut", requests: 1, search: [] }], label);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:t:cut", 5), [], `${label}: nothing is recorded as a reading; the need stays due`);
-    assert.equal(pass.fieldManual.written, 0, `${label}: nothing is learned from a walk that concluded nothing`);
-  }
-});
-
-test("ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor", () => {
-  const needs = ["e", "a", "d", "c", "b"].map((id) => ({ jurisdictionId: id }));
-  assert.deepEqual(rotationWindow(needs, 0, 1).map((n) => n.jurisdictionId), ["a", "b", "c"]);
-  assert.deepEqual(rotationWindow(needs, 1, 1).map((n) => n.jurisdictionId), ["b", "c", "d"]);
-  assert.deepEqual(rotationWindow(needs, 4, 1).map((n) => n.jurisdictionId), ["e", "a", "b"], "the window wraps");
-  assert.deepEqual(rotationWindow(needs, 3, 5).map((n) => n.jurisdictionId), ["a", "b", "c", "d", "e"], "never longer than the list");
-  assert.deepEqual(rotationWindow([], 7, 3), []);
-});
-
-test("standing census reaches unread governments before repeating unchanged hinted sites", async () => {
-  for (const [label, repos] of await eachStore("wtp-census-unread-")) {
-    const old = need("az:town:already-read", "old.gov");
-    const hints: JurisdictionRouteHints[] = [{ jurisdictionId: old.jurisdictionId, officialSite: null, routes: [] }];
-    const previous = await walkMeetingsDiscoveryNeed(old, runtime(fakeOpen({}).open, { routeHints: hints }));
-    await repos.discoveryAttempts.append(old.jurisdictionId, previous.attemptId, previous, previous.finishedAt);
-    const untouched = need("az:town:unread", "new.gov");
-    const historyReads: string[] = [];
-    const readHistory = repos.discoveryAttempts.read.bind(repos.discoveryAttempts);
-    repos.discoveryAttempts.read = async id => { historyReads.push(id); return readHistory(id); };
-    const projectedReads: unknown[] = [];
-    const readLatest = repos.discoveryAttempts.readLatest.bind(repos.discoveryAttempts);
-    repos.discoveryAttempts.readLatest = async (ids, projection) => { projectedReads.push(projection); return readLatest(ids, projection); };
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [old, untouched], cycleIndex: 0, maxWalks: 1,
-      runtime: runtime(fakeOpen({}).open, { routeHints: hints, now: () => "2026-09-25T01:00:00.000Z" }),
-    });
-    assert.deepEqual(pass.walked.map(attempt => attempt.jurisdictionId), [untouched.jurisdictionId], `${label}: a recurring due hint cannot use the new government's place in the pass`);
-    assert.deepEqual(historyReads, [untouched.jurisdictionId]);
-    assert.deepEqual(projectedReads, [{ finishedAt: true, routeHints: ["fingerprint"] }], `${label}: only small scheduling fields are held for this state's needs`);
-    assert.deepEqual(pass.deferred, [old.jurisdictionId]);
-  }
-});
-
-test("PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-")) {
-    const { open, seen } = fakeOpen({
-      "https://found.gov/robots.txt": ALLOW,
-      "https://found.gov/": { status: 200, body: `<a href="/m.ics">m</a>` },
-      "https://found.gov/m.ics": { status: 200, body: ICS },
-      "https://blocked.gov/robots.txt": DENY,
-      "https://blocked.gov/": { status: 403, body: "Forbidden" },
-      "https://www.blocked.gov/robots.txt": DENY,
-      "https://www.blocked.gov/": { status: 403, body: "Forbidden" },
-    });
-    const needs = [
-      need("az:a:found", "found.gov"),
-      need("az:b:blocked", "blocked.gov"),
-      need("az:c:not-due", "notdue.gov"),
-      need("az:d:no-site", null, "NO_MEETINGS_SOURCE_RECORDED"),
-    ];
-    const earlier = await walkMeetingsDiscoveryNeed(need("az:c:not-due", "notdue.gov"), runtime(fakeOpen({}).open, {
-      now: () => "2026-09-24T00:00:00.000Z",
-    }));
-    await repos.discoveryAttempts.append("az:c:not-due", earlier.attemptId, { ...earlier, recheckAfter: "2026-10-01T00:00:00.000Z" }, earlier.finishedAt);
-
-    const pass = await runMeetingsDiscovery(repos, { needs, runtime: runtime(open), cycleIndex: 0, maxWalks: 5 });
-    assert.deepEqual(pass.walked.map((a) => [a.jurisdictionId, a.outcome]), [["az:a:found", "FOUND"], ["az:b:blocked", "BLOCKED"]], label);
-    assert.deepEqual(pass.notDue, ["az:c:not-due"], `${label}: a need not yet due is passed over`);
-    assert.equal(seen.some((u) => u.includes("notdue.gov")), false);
-    assert.deepEqual(pass.appendFailures, []);
-
-    const recorded = await repos.discoveryAttempts.readRecent("az:a:found", 5);
-    assert.deepEqual(recorded.map((a) => a.outcome), ["FOUND"], `${label}: the walk is recorded under its jurisdiction`);
-    assert.equal((await repos.discoveryAttempts.readRecent("az:b:blocked", 5))[0]?.outcome, "BLOCKED", `${label}: a blocked walk is recorded too`);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:d:no-site", 5), [], `${label}: a need with no site is not walked`);
-
-    const manual = (await repos.fieldManual.list()).map((row) => row.value);
-    assert.deepEqual(manual.map((e) => [e.kind, e.outcome]).sort(), [["DEAD_DOOR", "BLOCKED"], ["MEETINGS_ROUTE", "YIELDED"], ["PLATFORM_CENSUS", "ZERO"]], `${label}: a route, a dead door and a homepage census are learned`);
-    assert.equal(pass.fieldManual.written, 3);
-
-    let spent = false;
-    const deferred = await runMeetingsDiscovery(repos, {
-      needs: [need("az:e:one", "one.gov"), need("az:f:two", "two.gov")],
-      runtime: runtime(fakeOpen({}).open, { budget: { spent: () => spent } }),
-      onWalk: () => { spent = true; },
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.deepEqual(deferred.walked.map((a) => a.jurisdictionId), ["az:e:one"], label);
-    assert.deepEqual(deferred.deferred, ["az:f:two"], `${label}: the rest is deferred untouched`);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:f:two", 5), []);
-  }
-});
-
-test("DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-")) {
-    const { open } = fakeOpen({});
-    const needs = [need("az:a:first-in-rotation", "a.gov"), need("az:m:dispatched", "m.gov"), need("az:z:held", "z.gov")];
-    const pass = await runMeetingsDiscovery(repos, {
-      needs,
-      runtime: runtime(open),
-      cycleIndex: 0,
-      maxWalks: 3,
-      firstIds: new Set(["az:m:dispatched", "az:z:held"]),
-      skipIds: new Set(["az:z:held"]),
-    });
-    assert.deepEqual(
-      pass.walked.map((a) => a.jurisdictionId),
-      ["az:m:dispatched", "az:a:first-in-rotation"],
-      `${label}: dispatch order beats the rotation, and the held need is skipped even though it was dispatched`,
-    );
-    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:z:held", 5), [], `${label}: a held need is never walked twice`);
-  }
 });
 
 test("THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds", async () => {
@@ -612,7 +477,7 @@ test("A STALE RECORDED ADDRESS: the current official site a route hint records i
   const attempt = await walkMeetingsDiscoveryNeed(oldtown, runtime(open, { routeHints: OLDTOWN_HINTS }));
   assert.deepEqual(
     seen,
-    ["https://www.oldtownaz.gov/robots.txt", "https://www.oldtownaz.gov/", "https://www.oldtownaz.gov/calendar/meetings.ics"],
+    ["https://www.oldtownaz.gov/robots.txt", "https://www.oldtownaz.gov/", ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://www.oldtownaz.gov/${path}`), "https://www.oldtownaz.gov/calendar/meetings.ics"],
     "the current site is walked, and the dead recorded host costs nothing",
   );
   assert.equal(attempt.outcome, "FOUND");
@@ -682,6 +547,7 @@ test("HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed 
 
   assert.deepEqual(seen, [
     "https://hilltop.gov/robots.txt", "https://hilltop.gov/",
+    ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://hilltop.gov/${path}`),
     "https://library.example.org/robots.txt", "https://library.example.org/feed/",
     "https://energy.example.org/robots.txt", "https://energy.example.org/meetings.ics",
     "https://schools.example.org/robots.txt", "https://schools.example.org/f/board_schedule.pdf",
@@ -710,28 +576,6 @@ test("HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed 
   );
 });
 
-test("A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-")) {
-    const { open } = fakeOpen({});
-    const oldtown = need("az:city:city-of-oldtown", "http://www.ci.oldtown.az.us");
-    const earlier = await walkMeetingsDiscoveryNeed(oldtown, runtime(open, { now: () => "2026-09-23T00:00:00.000Z" }));
-    await repos.discoveryAttempts.append(oldtown.jurisdictionId, earlier.attemptId, { ...earlier, recheckAfter: "2026-10-01T00:00:00.000Z" }, earlier.finishedAt);
-
-    const first = await runMeetingsDiscovery(repos, { needs: [need("az:a:first-in-rotation", "a.gov"), oldtown], runtime: runtime(open, { routeHints: OLDTOWN_HINTS }), cycleIndex: 0, maxWalks: 1 });
-    assert.deepEqual(first.walked.map((a) => a.jurisdictionId), ["az:city:city-of-oldtown"], `${label}: the hint goes before the rotation, though the walk made without it set a later recheck`);
-
-    const again = await runMeetingsDiscovery(repos, { needs: [oldtown], runtime: runtime(open, { routeHints: OLDTOWN_HINTS }), cycleIndex: 0, maxWalks: 1 });
-    assert.deepEqual(again.notDue, ["az:city:city-of-oldtown"], `${label}: walked with its hints, it waits for its recheck like any other`);
-
-    const changed: readonly JurisdictionRouteHints[] = [{
-      ...OLDTOWN_HINTS[0],
-      routes: [{ url: "https://www.oldtownaz.gov/calendar/meetings.ics", kind: "FEED", body: "Oldtown City Council", platform: "civicplus", verifyAs: "ical", evidence: "the council calendar", observed: HINT_SEEN }],
-    }];
-    const third = await runMeetingsDiscovery(repos, { needs: [oldtown], runtime: runtime(open, { routeHints: changed }), cycleIndex: 0, maxWalks: 1 });
-    assert.deepEqual(third.walked.map((a) => a.jurisdictionId), ["az:city:city-of-oldtown"], `${label}: a changed hint is walked at once`);
-  }
-});
-
 test("A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN", () => {
   const problems = routeHintProblems([
     { jurisdictionId: "az:city:x", officialSite: { origin: "http://x.gov/path", selfName: "X", replaces: "http://x.gov", recordedState: " ", evidence: [], observed: { at: "yesterday", by: "" } }, routes: [] },
@@ -756,11 +600,10 @@ test("A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FRO
   assert.ok(!namesItself("<title>This domain may be for sale</title>", "City of El Mirage"));
 });
 
-test("THE COMMITTED HINTS ARE SOUND, and the runner passes them to every walk", () => {
+test("committed route hints stay valid and the independent census passes them to its walks", () => {
   assert.deepEqual(routeHintProblems(ROUTE_HINTS), []);
-  const runner = readFileSync("scripts/freshness-shadow.mts", "utf8");
-  assert.match(runner, /directoryMeetingHints\(directoryItems, directoryRegistry\.value, ROUTE_HINTS\) : ROUTE_HINTS/, "verified directory hints extend, and never replace, the committed hints");
-  assert.match(runner, /\n\s+routeHints: meetingHints,\n/, "the runner passes the combined committed and verified hints to its walks");
+  const runner = readFileSync("scripts/platform-census-runner.mts", "utf8");
+  assert.match(runner, /routeHints: ROUTE_HINTS/);
 });
 
 /* -------------------------------------------- what the vault will not hold */
@@ -802,62 +645,6 @@ test("A PAGE CARRYING A CREDENTIAL IS READ AS ITS SANITIZED DERIVATIVE, AND A VA
   assert.ok(!JSON.stringify(attempt).includes(FAKE_MAPS_KEY), "no credential value reaches the record");
 });
 
-test("A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other walks are recorded and their field manual is written", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-")) {
-    const { open: base } = fakeOpen({
-      "https://found.gov/robots.txt": ALLOW,
-      "https://found.gov/": { status: 200, body: `<a href="/m.ics">m</a>` },
-      "https://found.gov/m.ics": { status: 200, body: ICS },
-    });
-    const open: DiscoveryOpen = async (req) => {
-      if (req.url.startsWith("https://broken.gov/")) throw new Error("the transport adapter threw: not a site failure");
-      return base(req);
-    };
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [need("az:a:broken", "broken.gov"), need("az:b:found", "found.gov")],
-      runtime: runtime(open),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.deepEqual(pass.walked.map((a) => [a.jurisdictionId, a.outcome]), [["az:b:found", "FOUND"]], `${label}: the pass went on`);
-    assert.deepEqual(pass.walkFailures, [{ jurisdictionId: "az:a:broken", why: "the transport adapter threw: not a site failure" }], label);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:a:broken", 5), [], `${label}: nothing is recorded as a reading, so the need stays due`);
-    assert.equal(pass.fieldManual.written, 2, `${label}: the other walk's route and homepage census reached the field manual`);
-  }
-  assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /walkFailures: meetingsDiscovery\?\.walkFailures \?\? \[\],/, "the cycle record names them");
-});
-
-test("BOUNDED: failed walks consume maxWalks and the remaining dispatched needs stay deferred", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-failed-bound-")) {
-    let requests = 0;
-    const needs = [need("az:a:broken", "broken.gov"), need("az:b:untouched", "untouched.gov"), need("az:c:untouched", "untouched.gov")];
-    const pass = await runMeetingsDiscovery(repos, {
-      needs, firstIds: new Set(needs.map(n => n.jurisdictionId)), cycleIndex: 0, maxWalks: 1,
-      runtime: runtime(async () => { requests++; throw new Error("transport adapter failure"); }),
-    });
-    assert.equal(requests, 1, `${label}: a failed walk consumes its place in the pass`);
-    assert.deepEqual(pass.walkFailures.map(f => f.jurisdictionId), [needs[0].jurisdictionId]);
-    assert.deepEqual(pass.deferred, needs.slice(1).map(n => n.jurisdictionId));
-    for (const n of needs) assert.deepEqual(await repos.discoveryAttempts.read(n.jurisdictionId), [], `${label}: no incomplete reading is saved`);
-  }
-});
-
-test("TIME, PASS: a spent phase stops reading need histories as well as sending requests", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-spent-")) {
-    const needs = Array.from({length: 100}, (_, i) => need(`az:town:${i}`, "untouched.gov"));
-    const read = repos.discoveryAttempts.read.bind(repos.discoveryAttempts);
-    let historyReads = 0;
-    repos.discoveryAttempts.read = async id => { historyReads++; return read(id); };
-    const {open, seen} = fakeOpen({});
-    const pass = await runMeetingsDiscovery(repos, {needs, firstIds:new Set(needs.map(n=>n.jurisdictionId)),cycleIndex:0,maxWalks:12,
-      runtime:runtime(open,{budget:{spent:()=>true,remainingMs:()=>0}})});
-    assert.equal(historyReads,0,`${label}: phase exhaustion cannot leave an unbounded history-read tail`);
-    assert.deepEqual(seen,[]);
-    assert.deepEqual(pass.deferred,needs.map(n=>n.jurisdictionId));
-    assert.deepEqual(pass.walked,[]);
-  }
-});
-
 test("PROVENANCE (NH330): the walk records where the address came from, each redirect to the homepage, and a withdrawn route's own 404 as vaulted evidence", async () => {
   const { open } = fakeOpen({
     "https://redirected.gov/robots.txt": ALLOW,
@@ -880,88 +667,6 @@ test("PROVENANCE (NH330): the walk records where the address came from, each red
   assert.deepEqual(attempt.found, [], "and a 404 is never a find");
 });
 
-test("A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out a 90-day recheck unattestable (NH330)", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-")) {
-    const { open } = fakeOpen({
-      "https://found.gov/robots.txt": ALLOW,
-      "https://found.gov/": { status: 200, body: `<a href="/m.ics">m</a>` },
-      "https://found.gov/m.ics": { status: 200, body: ICS },
-    });
-    const first = await walkMeetingsDiscoveryNeed(need("az:a:found", "found.gov"), runtime(open));
-    const { site: _site, ...older } = first;
-    await repos.discoveryAttempts.append("az:a:found", older.attemptId, older, older.finishedAt);
-    const pass = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
-    assert.deepEqual(pass.walked.map((a) => a.jurisdictionId), ["az:a:found"], `${label}: the find without provenance is due again`);
-    const again = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
-    assert.deepEqual(again.notDue, ["az:a:found"], `${label}: once it carries provenance it waits for its recheck`);
-    const latest = pass.walked[0];
-    await repos.discoveryAttempts.append(latest.jurisdictionId, `${latest.attemptId}-legacy`,
-      { ...latest, platformCensus: undefined, recheckAfter: "2026-12-24T01:00:00.000Z" }, latest.finishedAt);
-    const next = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")],
-      runtime: runtime(open, { now: () => "2026-09-24T14:00:00.000Z" }), cycleIndex: 0, maxWalks: 1 });
-    assert.deepEqual(next.walked.map(attempt => attempt.jurisdictionId), [latest.jurisdictionId],
-      `${label}: an old ninety-day hold cannot hide new calendars beyond the twice-daily cadence`);
-  }
-});
-
-test("confirmed platform homepages follow the slow census clock while unresolved discovery remains twice daily", async () => {
-  for (const [label, repos] of await eachStore("wtp-census-clock-")) {
-    const site = need("az:town:monthly", "monthly.gov");
-    const { open } = fakeOpen({
-      "https://monthly.gov/robots.txt": ALLOW,
-      "https://monthly.gov/": { status: 200, body: `<a href="/meetings.ics">Meetings</a>` },
-      "https://monthly.gov/meetings.ics": { status: 200, body: ICS },
-    });
-    const first = await runMeetingsDiscovery(repos, { needs: [site], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
-    const census = first.walked[0].platformCensus;
-    assert.ok(census, `${label}: a confirmed homepage carries its census date`);
-    const unchanged = fakeOpen({});
-    const nextDay = await runMeetingsDiscovery(repos, { needs: [site], cycleIndex: 0, maxWalks: 1,
-      runtime: runtime(unchanged.open, { now: () => new Date(Date.parse(NOW) + 86_400_000).toISOString() }) });
-    assert.deepEqual(nextDay.notDue, [site.jurisdictionId], `${label}: a confirmed route does not consume daily homepage traffic`);
-    assert.deepEqual(unchanged.seen, []);
-    const due = await runMeetingsDiscovery(repos, { needs: [site], cycleIndex: 0, maxWalks: 1,
-      runtime: runtime(open, { now: () => census.recheckAfter }) });
-    assert.equal(due.walked.length, 1, `${label}: the controlled clock reaches the next census reading`);
-  }
-});
-
-test("a confirmed partial walk retains discovery work for routes beyond a small publisher's request limit", async () => {
-  for (const [label, repos] of await eachStore("wtp-partial-census-")) {
-    const site = need("az:town:partial", "partial.gov");
-    const reply: Record<string, Reply> = { "https://partial.gov/robots.txt": ALLOW,
-      "https://partial.gov/": { status: 200, body: Array.from({ length: 12 }, (_, index) => `<a href="/meetings-${index}.ics">Meetings ${index}</a>`).join("") } };
-    for (let index = 0; index < 12; index++) reply[`https://partial.gov/meetings-${index}.ics`] = { status: 200, body: ICS };
-    const { open } = fakeOpen(reply);
-    const options = { websiteSize: () => ({ kind: "local-government" as const, population: 9999 }) };
-    const first = await runMeetingsDiscovery(repos, { needs: [site], runtime: runtime(open, options), cycleIndex: 0, maxWalks: 1 });
-    assert.equal(first.walked[0].outcome, "FOUND");
-    assert.ok(first.walked[0].steps.some(step => step.status === null && /website reached/.test(step.note)));
-    const next = await runMeetingsDiscovery(repos, { needs: [site], cycleIndex: 0, maxWalks: 1,
-      runtime: runtime(open, { ...options, now: () => new Date(Date.parse(NOW) + 13 * 3_600_000).toISOString() }) });
-    assert.equal(next.walked.length, 1, `${label}: unfinished routes do not wait for the monthly census clock`);
-  }
-});
-
-test("newly promoted registration brings a Census lead forward before its monthly clock", async () => {
-  for (const [label, repos] of await eachStore("wtp-census-registration-")) {
-    const site = need("al:town:registered", "registered.gov");
-    const { open } = fakeOpen({
-      "https://registered.gov/robots.txt": ALLOW,
-      "https://registered.gov/": { status: 200, body: `<a href="/meetings.ics">Meetings</a>` },
-      "https://registered.gov/meetings.ics": { status: 200, body: ICS },
-    });
-    await runMeetingsDiscovery(repos, { needs: [site], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
-    const registered = { ...site, addressSource: { source: "REGISTRATION" as const, versionId: "new-registration" } };
-    const at = new Date(Date.parse(NOW) + 3_600_000).toISOString();
-    const ready = await runMeetingsDiscovery(repos, { needs: [registered], runtime: runtime(open, { now: () => at }), cycleIndex: 0, maxWalks: 1 });
-    assert.equal(ready.walked.length, 1, `${label}: a newly registered source is immediately walkable for attestation`);
-    assert.equal(ready.walked[0].site?.address?.versionId, "new-registration");
-    const again = await runMeetingsDiscovery(repos, { needs: [registered], runtime: runtime(open, { now: () => at }), cycleIndex: 0, maxWalks: 1 });
-    assert.deepEqual(again.notDue, [site.jurisdictionId], `${label}: unchanged registration keeps the monthly clock`);
-  }
-});
-
 test('discovery caps only known small publishers, leaving larger and unknown websites uncapped', async () => {
   const home='https://many.gov';
   for(const size of [undefined,{kind:'local-government',population:10000},{kind:'school-district',students:5000},
@@ -976,35 +681,11 @@ test('discovery caps only known small publishers, leaving larger and unknown web
   }
 });
 
-test("CH-08 NO PROGRESS: a lane stops after its limit of walks in a row that fail on our side, and the rest stay due", async () => {
-  for (const [label, repos] of await eachStore("wtp-discovery-no-progress-")) {
-    let requests = 0;
-    const needs = Array.from({ length: 8 }, (_, i) => need(`az:town:${i}`, "broken.gov"));
-    const pass = await runMeetingsDiscovery(repos, {
-      needs, firstIds: new Set(needs.map(n => n.jurisdictionId)), cycleIndex: 0, maxWalks: Number.MAX_SAFE_INTEGER, noProgressLimit: 3,
-      runtime: runtime(async () => { requests++; throw new Error("transport adapter failure"); }),
-    });
-    assert.equal(requests, 3, `${label}: the lane stopped sending after three failed walks in a row`);
-    assert.equal(pass.walkFailures.length, 3);
-    assert.deepEqual(pass.deferred, needs.slice(3).map(n => n.jurisdictionId), `${label}: the rest stay due`);
-  }
-});
-
-test("CH-08 UNCAPPED: with no walk cap the rotation still moves by its step, and every need is in the window", () => {
-  const needs = Array.from({ length: 30 }, (_, i) => ({ jurisdictionId: `az:town:${String(i).padStart(2, "0")}` }));
-  const first = rotationWindow(needs, 0, Number.MAX_SAFE_INTEGER, 12);
-  const next = rotationWindow(needs, 1, Number.MAX_SAFE_INTEGER, 12);
-  assert.equal(first.length, 30);
-  assert.equal(new Set(next.map(n => n.jurisdictionId)).size, 30);
-  assert.equal(first[0].jurisdictionId, "az:town:00");
-  assert.equal(next[0].jurisdictionId, "az:town:12", "the start moves by the step, not by the cap");
-});
-
-test("CH-08 LANES: the three discovery passes start together beside the worker wave unless WTP_DISCOVERY_SERIAL=1 keeps the old order", () => {
+test("the census owns an independent runner clock outside the research walk budget", () => {
+  const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
+  assert.match(runner, /id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, run: runPlatformCensus/);
   const source = readFileSync("scripts/freshness-shadow.mts", "utf8");
-  assert.match(source, /process\.env\.WTP_DISCOVERY_SERIAL === "1"/);
-  assert.match(source, /discoveryLaneRun = runIndependentRuntimePass\(\[\s*timed\("meetings-discovery"[\s\S]*timed\("campaign-sites"[\s\S]*timed\("candidate-publications"/);
-  assert.match(source, /runMeetingsDiscoveryPass\(dispatchDeadlineMs, Number\.MAX_SAFE_INTEGER\)/, "the new path is bounded by the time left, not a walk count");
-  assert.match(source, /runMeetingsDiscoveryPass\(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS, MEETINGS_DISCOVERY_MAX_WALKS\)/, "the old path keeps 12 walks and 60 s");
-  assert.ok(source.indexOf("await boundedAfterCutoff(discoveryLaneRun)") > source.indexOf("const autonomous = await runAutonomousProcesses()"), "the round joins the lanes after the worker wave, before finalization");
+  assert.doesNotMatch(source, /MEETINGS_DISCOVERY_MAX_WALKS|runMeetingsDiscoveryPass/);
+  assert.match(source, /timed\("campaign-sites"/);
+  assert.match(source, /timed\("candidate-publications"/);
 });

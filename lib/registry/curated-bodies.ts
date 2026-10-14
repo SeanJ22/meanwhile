@@ -505,7 +505,7 @@ function newburyBoardRows(): Body[] {
     /*
      * ── THE TEN THE MENU HAD AND THE REGISTRY DID NOT (NH Hunt, 2026-08-20) ──
      *
-     * `docs/zip-playbook.md` recorded fourteen Newbury boards on 2026-08-15,
+     * The field manual recorded fourteen Newbury boards on 2026-08-15,
      * read off the town's hover menu, with four wired and ten `NOT_ATTEMPTED`.
      * This is the session that walked them. The names and paths below are read
      * off the town's own `/boards` page and its `/sitemap.xml`, both retrieved

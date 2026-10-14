@@ -25,6 +25,7 @@ import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, ty
 import { createFixMapRepository } from "../../method/fix-map.ts";
 import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
+import { seedFieldManualNotes } from "../field-manual-notes.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import { appendActionReceiptWithHistoryAtomic, readActionHistoryPage } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -34,6 +35,7 @@ import type { CandidateStore } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -98,6 +100,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   projectAggregate,
+  projectRecord,
   reconcileIdempotentPut,
   type AggregateRepository,
   type AppendOnlyRepository,
@@ -345,6 +348,45 @@ export function pgAggregateRepository<T>(
     ? listChangedSince(null).then(changed => changed.rows.map(out))
     : copies.aggregateList(table, listChangedSince, out);
 
+  /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered; `selected` is the value or its projection. */
+  async function listWhereAs<O>(path: readonly string[], value: string, selected: string, caller: string): Promise<Persisted<O>[]> {
+    const jsonPath = jsonPathLiteral(table, path);
+    const out: Persisted<O>[] = [];
+    let afterId: string | null = null;
+    for (;;) {
+      const rows = (afterId === null
+        ? await run(
+            caller,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
+             WHERE value #>> '${jsonPath}' = $1
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            [value],
+          )
+        : await run(
+            caller,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
+             WHERE value #>> '${jsonPath}' = $1 AND id > $2
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            [value, afterId],
+          )) as Record<string, unknown>[];
+      for (const row of rows) {
+        out.push({
+          id: String(row.id),
+          revision: Number(row.revision),
+          updatedAt: new Date(row.updated_at as string).toISOString(),
+          value: parseValue<O>(row.value, `${where} id ${String(row.id)}`),
+        });
+      }
+      if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+      afterId = String(rows[rows.length - 1].id);
+    }
+    return out;
+  }
+
   return callerPinned({
     read,
 
@@ -470,44 +512,9 @@ export function pgAggregateRepository<T>(
     listNarrowed: projection => held(row => ({ ...row, value: projectAggregate(row.value, projection) })),
     listChangedSince,
 
-    async listWhere(path, value) {
-      /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered. */
-      const jsonPath = jsonPathLiteral(table, path);
-      const out: Persisted<T>[] = [];
-      let afterId: string | null = null;
-      for (;;) {
-        const rows = (afterId === null
-          ? await run(
-              "listWhere",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               WHERE value #>> '${jsonPath}' = $1
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-              [value],
-            )
-          : await run(
-              "listWhere",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               WHERE value #>> '${jsonPath}' = $1 AND id > $2
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-              [value, afterId],
-            )) as Record<string, unknown>[];
-        for (const row of rows) {
-          out.push({
-            id: String(row.id),
-            revision: Number(row.revision),
-            updatedAt: new Date(row.updated_at as string).toISOString(),
-            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-          });
-        }
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-        afterId = String(rows[rows.length - 1].id);
-      }
-      return out;
-    },
+    listWhere: (path, value) => listWhereAs<T>(path, value, "value", "listWhere"),
+    listWhereNarrowed: (path, value, projection) => listWhereAs<unknown>(path, value,
+      Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value"), "listWhereNarrowed"),
   });
 }
 
@@ -556,9 +563,9 @@ export function pgAppendOnlyRepository<T>(
   }
 
   const copies = options.copies ?? null;
-  const heldAll = (): Promise<T[]> => copies === null
-    ? readChangedSince(null).then(changed => changed.records.map(entry => entry.record))
-    : copies.logReadAll(table, readChangedSince);
+  const heldAll = <O>(out: (record: T) => O): Promise<O[]> => copies === null
+    ? readChangedSince(null).then(changed => changed.records.map(entry => out(entry.record)))
+    : copies.logReadAll(table, readChangedSince, out);
 
   return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
@@ -746,7 +753,8 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    readAll: () => heldAll(),
+    readAll: () => heldAll(record => record),
+    readAllNarrowed: projection => heldAll(record => projectRecord(record, projection)),
     readChangedSince,
 
     async readRecent(key, limit) {
@@ -1015,6 +1023,17 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
     readMany: base.readMany!,
     async retireInstructions() {
       await run("retireInstructions", "DOCUMENT", retireInstructionsSql(), []);
+    },
+    async insertNew(entries, now) {
+      const inserted = new Set<string>();
+      for (let at = 0; at < entries.length; at += AGGREGATE_LIST_READ_PAGE) {
+        const page = entries.slice(at, at + AGGREGATE_LIST_READ_PAGE);
+        const rows = (await run("insertNew", "PAGE", `INSERT INTO cp_field_manual_entries (id, revision, updated_at, value)
+          SELECT e->>'id', 1, $2::timestamptz, e FROM jsonb_array_elements($1::jsonb) AS e
+          ON CONFLICT (id) DO NOTHING RETURNING id`, [JSON.stringify(page), now])) as Record<string, unknown>[];
+        for (const row of rows) inserted.add(String(row.id));
+      }
+      return inserted;
     },
     async slice(query) {
       if (copies !== null) {
@@ -1301,6 +1320,7 @@ export async function createPgRepositories(
     ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests", bounded),
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions", bounded),
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
+    spendWindow: pgAggregateRepository<SpendWindow>(sql, "SpendWindow", "cp_spend_window", bounded),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
     boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),
@@ -1347,6 +1367,11 @@ export async function createPgRepositories(
     if (setup !== null && (setup.created > 0 || setup.retired)) {
       console.log(`  role instructions: ${setup.created} created, ${setup.present} already held${setup.retired ? ", old instruction rows retired" : ""}`);
     }
+    const notes = await seedFieldManualNotes(repositories, nowIso).catch((error: unknown) => {
+      console.error(`  field manual notes: not loaded this start; the next start tries again (${error instanceof Error ? error.message : String(error)})`);
+      return null;
+    });
+    if (notes !== null && notes.created > 0) console.log(`  field manual notes: ${notes.created} loaded, ${notes.present} already held`);
   }
   return repositories;
 }
@@ -1361,17 +1386,6 @@ export function pgSingleDocumentManual(sql: Sql, options: PgRepositoryBounds = {
       const moved = (await run("retire", "DOCUMENT", "UPDATE cp_field_manual SET id = $3 WHERE id = $1 AND revision = $2 RETURNING id",
         [id, revision, as])) as unknown[];
       return moved.length === 1;
-    },
-    async insertNew(entries, now) {
-      const inserted = new Set<string>();
-      for (let at = 0; at < entries.length; at += AGGREGATE_LIST_READ_PAGE) {
-        const page = entries.slice(at, at + AGGREGATE_LIST_READ_PAGE);
-        const rows = (await run("insertNew", "PAGE", `INSERT INTO cp_field_manual_entries (id, revision, updated_at, value)
-          SELECT e->>'id', 1, $2::timestamptz, e FROM jsonb_array_elements($1::jsonb) AS e
-          ON CONFLICT (id) DO NOTHING RETURNING id`, [JSON.stringify(page), now])) as Record<string, unknown>[];
-        for (const row of rows) inserted.add(String(row.id));
-      }
-      return inserted;
     },
   };
 }

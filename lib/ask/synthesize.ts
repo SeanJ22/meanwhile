@@ -1,6 +1,5 @@
 import { askPlaybook, askSettings } from "./runtime-settings.ts";
 import { writerSelection } from "./writer-selection.ts";
-import { stanceAnswerability } from "./stance-answerability.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelSettings } from "./model.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
@@ -39,7 +38,7 @@ export type SynthesisOutcome =
     }
   | {
       kind: "UNAVAILABLE";
-      why: "no-key" | "ceiling" | "no-evidence" | "unverified-stance" | "error";
+      why: "no-key" | "ceiling" | "no-evidence" | "error";
       ms: number;
       detail?: string;
     };
@@ -153,8 +152,8 @@ export function synthesisRequestBody(
   };
   if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
   const fields = modelRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
-  const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] = shape.cached
-    ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.cacheControl }]
+  const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.stableCacheControl }[] = shape.cached
+    ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.stableCacheControl }]
     : synthesisPrompt(pack);
 
   return {
@@ -231,9 +230,6 @@ async function synthesizeOnRung(
 
   if (!packHasEvidence(pack)) {
     return { kind: "UNAVAILABLE", why: "no-evidence", ms: elapsed() };
-  }
-  if (stanceAnswerability(pack) === "UNVERIFIED_PERSONAL_STANCE") {
-    return { kind: "UNAVAILABLE", why: "unverified-stance", ms: elapsed() };
   }
 
   const apiKey = options.apiKey ?? process.env.ANTHROPIC_API_KEY;

@@ -1,0 +1,2920 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "DE:de-2026-11-03-general": {
+      "election": {
+        "id": "de-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "DE"
+      },
+      "contests": [
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-u-s-senator",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de",
+          "divisionVintage": "2022",
+          "title": "U.S. Senator",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-representative-in-congress",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/cd:at-large",
+          "divisionVintage": "2022",
+          "title": "Representative in Congress",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-attorney-general",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de",
+          "divisionVintage": "2022",
+          "title": "Attorney General",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-auditor-of-accounts",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de",
+          "divisionVintage": "2022",
+          "title": "Auditor of Accounts",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-treasurer",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de",
+          "divisionVintage": "2022",
+          "title": "State Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-1",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:1",
+          "divisionVintage": "2022",
+          "title": "State Senator District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-5",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:5",
+          "divisionVintage": "2022",
+          "title": "State Senator District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-7",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:7",
+          "divisionVintage": "2022",
+          "title": "State Senator District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-8",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:8",
+          "divisionVintage": "2022",
+          "title": "State Senator District 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-9",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:9",
+          "divisionVintage": "2022",
+          "title": "State Senator District 9",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-12",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:12",
+          "divisionVintage": "2022",
+          "title": "State Senator District 12",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-13",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:13",
+          "divisionVintage": "2022",
+          "title": "State Senator District 13",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-14",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:14",
+          "divisionVintage": "2022",
+          "title": "State Senator District 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-15",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:15",
+          "divisionVintage": "2022",
+          "title": "State Senator District 15",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-19",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:19",
+          "divisionVintage": "2022",
+          "title": "State Senator District 19",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-senator-district-20",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldu:20",
+          "divisionVintage": "2022",
+          "title": "State Senator District 20",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-1",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:1",
+          "divisionVintage": "2022",
+          "title": "State Representative District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-2",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:2",
+          "divisionVintage": "2022",
+          "title": "State Representative District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-3",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:3",
+          "divisionVintage": "2022",
+          "title": "State Representative District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-4",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:4",
+          "divisionVintage": "2022",
+          "title": "State Representative District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-5",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:5",
+          "divisionVintage": "2022",
+          "title": "State Representative District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-6",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:6",
+          "divisionVintage": "2022",
+          "title": "State Representative District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-7",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:7",
+          "divisionVintage": "2022",
+          "title": "State Representative District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-8",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:8",
+          "divisionVintage": "2022",
+          "title": "State Representative District 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-9",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:9",
+          "divisionVintage": "2022",
+          "title": "State Representative District 9",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-10",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:10",
+          "divisionVintage": "2022",
+          "title": "State Representative District 10",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-11",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:11",
+          "divisionVintage": "2022",
+          "title": "State Representative District 11",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-12",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:12",
+          "divisionVintage": "2022",
+          "title": "State Representative District 12",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-13",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:13",
+          "divisionVintage": "2022",
+          "title": "State Representative District 13",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-14",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:14",
+          "divisionVintage": "2022",
+          "title": "State Representative District 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-15",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:15",
+          "divisionVintage": "2022",
+          "title": "State Representative District 15",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-16",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:16",
+          "divisionVintage": "2022",
+          "title": "State Representative District 16",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-17",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:17",
+          "divisionVintage": "2022",
+          "title": "State Representative District 17",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-18",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:18",
+          "divisionVintage": "2022",
+          "title": "State Representative District 18",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-19",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:19",
+          "divisionVintage": "2022",
+          "title": "State Representative District 19",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-20",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:20",
+          "divisionVintage": "2022",
+          "title": "State Representative District 20",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-21",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:21",
+          "divisionVintage": "2022",
+          "title": "State Representative District 21",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-22",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:22",
+          "divisionVintage": "2022",
+          "title": "State Representative District 22",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-23",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:23",
+          "divisionVintage": "2022",
+          "title": "State Representative District 23",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-24",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:24",
+          "divisionVintage": "2022",
+          "title": "State Representative District 24",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-25",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:25",
+          "divisionVintage": "2022",
+          "title": "State Representative District 25",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-26",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:26",
+          "divisionVintage": "2022",
+          "title": "State Representative District 26",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-27",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:27",
+          "divisionVintage": "2022",
+          "title": "State Representative District 27",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-28",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:28",
+          "divisionVintage": "2022",
+          "title": "State Representative District 28",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-29",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:29",
+          "divisionVintage": "2022",
+          "title": "State Representative District 29",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-30",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:30",
+          "divisionVintage": "2022",
+          "title": "State Representative District 30",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-31",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:31",
+          "divisionVintage": "2022",
+          "title": "State Representative District 31",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-32",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:32",
+          "divisionVintage": "2022",
+          "title": "State Representative District 32",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-33",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:33",
+          "divisionVintage": "2022",
+          "title": "State Representative District 33",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-34",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:34",
+          "divisionVintage": "2022",
+          "title": "State Representative District 34",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-35",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:35",
+          "divisionVintage": "2022",
+          "title": "State Representative District 35",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-36",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:36",
+          "divisionVintage": "2022",
+          "title": "State Representative District 36",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-37",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:37",
+          "divisionVintage": "2022",
+          "title": "State Representative District 37",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-38",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:38",
+          "divisionVintage": "2022",
+          "title": "State Representative District 38",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-39",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:39",
+          "divisionVintage": "2022",
+          "title": "State Representative District 39",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-40",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:40",
+          "divisionVintage": "2022",
+          "title": "State Representative District 40",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "de-2026-general-state-representative-district-41",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/sldl:41",
+          "divisionVintage": "2022",
+          "title": "State Representative District 41",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "de-2026-general-u-s-senator:chris-coons",
+          "contestId": "de-2026-general-u-s-senator",
+          "familyName": "Coons",
+          "givenName": "Chris",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://chriscoons.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-u-s-senator:michael-dr-mike-katz",
+          "contestId": "de-2026-general-u-s-senator",
+          "familyName": "Katz",
+          "givenName": "Michael \"Dr. Mike\"",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.drmikekatz.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-representative-in-congress:sarah-mcbride",
+          "contestId": "de-2026-general-representative-in-congress",
+          "familyName": "McBride",
+          "givenName": "Sarah",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://sarahmcbride.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-representative-in-congress:joseph-dr-joe-arminio",
+          "contestId": "de-2026-general-representative-in-congress",
+          "familyName": "Arminio",
+          "givenName": "Joseph \"Dr. Joe\"",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://drjoeforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-attorney-general:kathy-jennings",
+          "contestId": "de-2026-general-attorney-general",
+          "familyName": "Jennings",
+          "givenName": "Kathy",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.kathyfordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-attorney-general:david-c-dave-graham",
+          "contestId": "de-2026-general-attorney-general",
+          "familyName": "Graham",
+          "givenName": "David C. \"Dave\"",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-auditor-of-accounts:lydia-york",
+          "contestId": "de-2026-general-auditor-of-accounts",
+          "familyName": "York",
+          "givenName": "Lydia",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.lydiayork.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-auditor-of-accounts:april-callaway",
+          "contestId": "de-2026-general-auditor-of-accounts",
+          "familyName": "Callaway",
+          "givenName": "April",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-auditor-of-accounts:austin-cassidy",
+          "contestId": "de-2026-general-auditor-of-accounts",
+          "familyName": "Cassidy",
+          "givenName": "Austin",
+          "partyLabel": "Ind Pty of DE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.votecassidy.org",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-treasurer:ted-lauzen",
+          "contestId": "de-2026-general-state-treasurer",
+          "familyName": "Lauzen",
+          "givenName": "Ted",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://tedlauzen.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-treasurer:michael-ramone",
+          "contestId": "de-2026-general-state-treasurer",
+          "familyName": "Ramone",
+          "givenName": "Michael",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-1:dan-cruce",
+          "contestId": "de-2026-general-state-senator-district-1",
+          "familyName": "Cruce",
+          "givenName": "Dan",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.dancruce.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-1:hildi-bachtle",
+          "contestId": "de-2026-general-state-senator-district-1",
+          "familyName": "Bachtle",
+          "givenName": "Hildi",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-1:steven-washington",
+          "contestId": "de-2026-general-state-senator-district-1",
+          "familyName": "Washington",
+          "givenName": "Steven",
+          "partyLabel": "Ind Pty of DE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.votestevewashington.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-5:shay-frisby",
+          "contestId": "de-2026-general-state-senator-district-5",
+          "familyName": "Frisby",
+          "givenName": "Shay",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://TogetherwithShay.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-5:brent-burdge",
+          "contestId": "de-2026-general-state-senator-district-5",
+          "familyName": "Burdge",
+          "givenName": "Brent",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-5:carolyn-frank",
+          "contestId": "de-2026-general-state-senator-district-5",
+          "familyName": "Frank",
+          "givenName": "Carolyn",
+          "partyLabel": "Ind Pty of DE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-7:spiros-mantzavinos",
+          "contestId": "de-2026-general-state-senator-district-7",
+          "familyName": "Mantzavinos",
+          "givenName": "Spiros",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.spiros4statesenate.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-7:chris-rowe",
+          "contestId": "de-2026-general-state-senator-district-7",
+          "familyName": "Rowe",
+          "givenName": "Chris",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-8:mara-gorman",
+          "contestId": "de-2026-general-state-senator-district-8",
+          "familyName": "Gorman",
+          "givenName": "Mara",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.marafordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-8:shane-cavanaugh",
+          "contestId": "de-2026-general-state-senator-district-8",
+          "familyName": "Cavanaugh",
+          "givenName": "Shane",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://shane4senate.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-9:jack-walsh",
+          "contestId": "de-2026-general-state-senator-district-9",
+          "familyName": "Walsh",
+          "givenName": "Jack",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://senatorjackwalsh.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-12:nicole-poore",
+          "contestId": "de-2026-general-state-senator-district-12",
+          "familyName": "Poore",
+          "givenName": "Nicole",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://nicolepoore.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-12:mark-esposito",
+          "contestId": "de-2026-general-state-senator-district-12",
+          "familyName": "Esposito",
+          "givenName": "Mark",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-13:marie-pinkney",
+          "contestId": "de-2026-general-state-senator-district-13",
+          "familyName": "Pinkney",
+          "givenName": "Marie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-14:kyra-l-hoffner",
+          "contestId": "de-2026-general-state-senator-district-14",
+          "familyName": "Hoffner",
+          "givenName": "Kyra L.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://KyraHoffner4Senate.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-14:mark-pugh",
+          "contestId": "de-2026-general-state-senator-district-14",
+          "familyName": "Pugh",
+          "givenName": "Mark",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.commonsense302.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-15:nisha-lodhavia",
+          "contestId": "de-2026-general-state-senator-district-15",
+          "familyName": "Lodhavia",
+          "givenName": "Nisha",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://nishaforsenate.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-15:emily-a-thompson",
+          "contestId": "de-2026-general-state-senator-district-15",
+          "familyName": "Thompson",
+          "givenName": "Emily A.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://thompsonfordelaware.org/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-19:brian-g-pettyjohn",
+          "contestId": "de-2026-general-state-senator-district-19",
+          "familyName": "Pettyjohn",
+          "givenName": "Brian G.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://BrianPettyjohn.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-20:harry-s-gold",
+          "contestId": "de-2026-general-state-senator-district-20",
+          "familyName": "Gold",
+          "givenName": "Harry S.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-senator-district-20:gerald-w-hocker",
+          "contestId": "de-2026-general-state-senator-district-20",
+          "familyName": "Hocker",
+          "givenName": "Gerald W.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-1:nnamdi-o-chukwuocha",
+          "contestId": "de-2026-general-state-representative-district-1",
+          "familyName": "Chukwuocha",
+          "givenName": "Nnamdi O.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-1:lisa-mcinnis",
+          "contestId": "de-2026-general-state-representative-district-1",
+          "familyName": "McInnis",
+          "givenName": "Lisa",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-2:michelle-h-booker",
+          "contestId": "de-2026-general-state-representative-district-2",
+          "familyName": "Booker",
+          "givenName": "Michelle H.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.michellebooker.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-3:branden-fletcher-dominguez",
+          "contestId": "de-2026-general-state-representative-district-3",
+          "familyName": "Fletcher-Dominguez",
+          "givenName": "Branden",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-3:shawn-l-dottery",
+          "contestId": "de-2026-general-state-representative-district-3",
+          "familyName": "Dottery",
+          "givenName": "Shawn L.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.thequietcoalition.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-3:dexter-dizzy-bland",
+          "contestId": "de-2026-general-state-representative-district-3",
+          "familyName": "Bland",
+          "givenName": "Dexter \"Dizzy\"",
+          "partyLabel": "Ind Pty of DE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-4:gregg-lindner",
+          "contestId": "de-2026-general-state-representative-district-4",
+          "familyName": "Lindner",
+          "givenName": "Gregg",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://lindner4delaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-4:dan-zitofsky",
+          "contestId": "de-2026-general-state-representative-district-4",
+          "familyName": "Zitofsky",
+          "givenName": "Dan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://votezitofsky.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-5:kendra-johnson",
+          "contestId": "de-2026-general-state-representative-district-5",
+          "familyName": "Johnson",
+          "givenName": "Kendra",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://kendrafordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-6:rachel-rae-krantz",
+          "contestId": "de-2026-general-state-representative-district-6",
+          "familyName": "Krantz",
+          "givenName": "Rachel \"Rae\"",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.raefordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-6:tanya-hettler",
+          "contestId": "de-2026-general-state-representative-district-6",
+          "familyName": "Hettler",
+          "givenName": "Tanya",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-7:larry-lambert",
+          "contestId": "de-2026-general-state-representative-district-7",
+          "familyName": "Lambert",
+          "givenName": "Larry",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://larryfordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-7:shane-stoneman",
+          "contestId": "de-2026-general-state-representative-district-7",
+          "familyName": "Stoneman",
+          "givenName": "Shane",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-8:sherae-a-rae-moore",
+          "contestId": "de-2026-general-state-representative-district-8",
+          "familyName": "Moore",
+          "givenName": "Sherae'a \"Rae\"",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.mooreforde.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-8:gary-taylor",
+          "contestId": "de-2026-general-state-representative-district-8",
+          "familyName": "Taylor",
+          "givenName": "Gary",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.Taylor4de.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-9:ayanna-khan-flowers",
+          "contestId": "de-2026-general-state-representative-district-9",
+          "familyName": "Khan-Flowers",
+          "givenName": "Ayanna",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://ElectAyanna.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-9:jamar-money",
+          "contestId": "de-2026-general-state-representative-district-9",
+          "familyName": "Money",
+          "givenName": "Jamar",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.jamarforde.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-10:melanie-ross-levin",
+          "contestId": "de-2026-general-state-representative-district-10",
+          "familyName": "Levin",
+          "givenName": "Melanie Ross",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.MelanieRossLevin.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-10:dolores-dunleavy",
+          "contestId": "de-2026-general-state-representative-district-10",
+          "familyName": "Dunleavy",
+          "givenName": "Dolores",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-11:tori-parker",
+          "contestId": "de-2026-general-state-representative-district-11",
+          "familyName": "Parker",
+          "givenName": "Tori",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.pleasevoteparker.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-11:jeffrey-n-spiegelman",
+          "contestId": "de-2026-general-state-representative-district-11",
+          "familyName": "Spiegelman",
+          "givenName": "Jeffrey N.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.jeffderepresentative.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-12:krista-griffith",
+          "contestId": "de-2026-general-state-representative-district-12",
+          "familyName": "Griffith",
+          "givenName": "Krista",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.kristagriffith.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-12:steve-pickering",
+          "contestId": "de-2026-general-state-representative-district-12",
+          "familyName": "Pickering",
+          "givenName": "Steve",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.picksteve4delaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-13:deshanna-u-neal",
+          "contestId": "de-2026-general-state-representative-district-13",
+          "familyName": "Neal",
+          "givenName": "DeShanna U.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.deshanna4district13.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-14:claire-snyder-hall",
+          "contestId": "de-2026-general-state-representative-district-14",
+          "familyName": "Snyder-Hall",
+          "givenName": "Claire",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://clairesnyderhall.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-14:mike-simpler",
+          "contestId": "de-2026-general-state-representative-district-14",
+          "familyName": "Simpler",
+          "givenName": "Mike",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://MikeforDelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-15:kamela-t-smith",
+          "contestId": "de-2026-general-state-representative-district-15",
+          "familyName": "Smith",
+          "givenName": "Kamela T.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.kamelasmithfordelaware.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-16:pamela-salaam",
+          "contestId": "de-2026-general-state-representative-district-16",
+          "familyName": "Salaam",
+          "givenName": "Pamela",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-16:enala-a-mwashitete",
+          "contestId": "de-2026-general-state-representative-district-16",
+          "familyName": "Mwashitete",
+          "givenName": "Enala A.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-17:melissa-minor-brown",
+          "contestId": "de-2026-general-state-representative-district-17",
+          "familyName": "Brown",
+          "givenName": "Melissa Minor",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-18:sophie-phillips",
+          "contestId": "de-2026-general-state-representative-district-18",
+          "familyName": "Phillips",
+          "givenName": "Sophie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.sophiekp4de.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-19:kim-williams",
+          "contestId": "de-2026-general-state-representative-district-19",
+          "familyName": "Williams",
+          "givenName": "Kim",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://kimwilliamsforstaterep.weebly.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-19:janyce-colmery",
+          "contestId": "de-2026-general-state-representative-district-19",
+          "familyName": "Colmery",
+          "givenName": "Janyce",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-20:alonna-berry",
+          "contestId": "de-2026-general-state-representative-district-20",
+          "familyName": "Berry",
+          "givenName": "Alonna",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://alonnaberry.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-20:gene-dvornick",
+          "contestId": "de-2026-general-state-representative-district-20",
+          "familyName": "Dvornick",
+          "givenName": "Gene",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-21:frank-burns",
+          "contestId": "de-2026-general-state-representative-district-21",
+          "familyName": "Burns",
+          "givenName": "Frank",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.changeforthe21st.org",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-22:alex-green",
+          "contestId": "de-2026-general-state-representative-district-22",
+          "familyName": "Green",
+          "givenName": "Alex",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.alexgreenfordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-22:mike-smith",
+          "contestId": "de-2026-general-state-representative-district-22",
+          "familyName": "Smith",
+          "givenName": "Mike",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.MikeSmithforDelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-23:dave-redlawsk",
+          "contestId": "de-2026-general-state-representative-district-23",
+          "familyName": "Redlawsk",
+          "givenName": "Dave",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.davefor23.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-24:ed-osienski",
+          "contestId": "de-2026-general-state-representative-district-24",
+          "familyName": "Osienski",
+          "givenName": "Ed",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://GoEddieO.org",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-24:stephen-p-ondich",
+          "contestId": "de-2026-general-state-representative-district-24",
+          "familyName": "Ondich",
+          "givenName": "Stephen P.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-25:cyndie-romer",
+          "contestId": "de-2026-general-state-representative-district-25",
+          "familyName": "Romer",
+          "givenName": "Cyndie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.romerfordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-26:madinah-wilson-anton",
+          "contestId": "de-2026-general-state-representative-district-26",
+          "familyName": "Wilson-Anton",
+          "givenName": "Madinah",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.madinahfordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-27:eric-morrison",
+          "contestId": "de-2026-general-state-representative-district-27",
+          "familyName": "Morrison",
+          "givenName": "Eric",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-27:mary-penny-kubin",
+          "contestId": "de-2026-general-state-representative-district-27",
+          "familyName": "Kubin",
+          "givenName": "Mary \"Penny\"",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-28:tyeisha-tye-grier",
+          "contestId": "de-2026-general-state-representative-district-28",
+          "familyName": "Grier",
+          "givenName": "Tyeisha \"Tye\"",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.tyeishagrier.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-29:william-bush",
+          "contestId": "de-2026-general-state-representative-district-29",
+          "familyName": "Bush",
+          "givenName": "William",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-30:wm-shannon-morris",
+          "contestId": "de-2026-general-state-representative-district-30",
+          "familyName": "Morris",
+          "givenName": "Wm Shannon",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-31:sean-m-lynn",
+          "contestId": "de-2026-general-state-representative-district-31",
+          "familyName": "Lynn",
+          "givenName": "Sean M.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://WinWithLynn.org",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-31:anton-brogden",
+          "contestId": "de-2026-general-state-representative-district-31",
+          "familyName": "Brogden",
+          "givenName": "Anton",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-32:kerri-evelyn-harris",
+          "contestId": "de-2026-general-state-representative-district-32",
+          "familyName": "Harris",
+          "givenName": "Kerri Evelyn",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.kerrifordelaware.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-33:joshua-pennington",
+          "contestId": "de-2026-general-state-representative-district-33",
+          "familyName": "Pennington",
+          "givenName": "Joshua",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-33:morgan-hudson",
+          "contestId": "de-2026-general-state-representative-district-33",
+          "familyName": "Hudson",
+          "givenName": "Morgan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-34:annie-norman",
+          "contestId": "de-2026-general-state-representative-district-34",
+          "familyName": "Norman",
+          "givenName": "Annie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-34:lyndon-d-yearick",
+          "contestId": "de-2026-general-state-representative-district-34",
+          "familyName": "Yearick",
+          "givenName": "Lyndon D.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://lyearickfordelaware.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-35:jesse-r-vanderwende",
+          "contestId": "de-2026-general-state-representative-district-35",
+          "familyName": "Vanderwende",
+          "givenName": "Jesse R.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-36:andrew-andy-gorlich",
+          "contestId": "de-2026-general-state-representative-district-36",
+          "familyName": "Gorlich",
+          "givenName": "Andrew \"Andy\"",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.andygorlich.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-36:bryan-william-shupe",
+          "contestId": "de-2026-general-state-representative-district-36",
+          "familyName": "Shupe",
+          "givenName": "Bryan William",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://BryanShupe.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-37:valerie-jones-giltner",
+          "contestId": "de-2026-general-state-representative-district-37",
+          "familyName": "Giltner",
+          "givenName": "Valerie Jones",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://valeriefor37th.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-38:maureen-madden",
+          "contestId": "de-2026-general-state-representative-district-38",
+          "familyName": "Madden",
+          "givenName": "Maureen",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://maddenfordelaware.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-38:carlie-carey",
+          "contestId": "de-2026-general-state-representative-district-38",
+          "familyName": "Carey",
+          "givenName": "Carlie",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.carliecarey38th.com/",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-39:daniel-b-short",
+          "contestId": "de-2026-general-state-representative-district-39",
+          "familyName": "Short",
+          "givenName": "Daniel B.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-40:timothy-dale-dukes",
+          "contestId": "de-2026-general-state-representative-district-40",
+          "familyName": "Dukes",
+          "givenName": "Timothy Dale",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-41:ryan-stuckey",
+          "contestId": "de-2026-general-state-representative-district-41",
+          "familyName": "Stuckey",
+          "givenName": "Ryan",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://RyanStuckey.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-41:john-atkins",
+          "contestId": "de-2026-general-state-representative-district-41",
+          "familyName": "Atkins",
+          "givenName": "John",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.066098Z",
+            "verifiedAt": "2026-10-14T05:01:26.066098Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-u-s-senator:william-mcvay",
+          "contestId": "de-2026-general-u-s-senator",
+          "familyName": "McVay",
+          "givenName": "William",
+          "partyLabel": null,
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": "https://conservativede.org",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.262934Z",
+            "verifiedAt": "2026-10-14T05:01:26.262934Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-u-s-senator:john-shulli",
+          "contestId": "de-2026-general-u-s-senator",
+          "familyName": "Shulli",
+          "givenName": "John",
+          "partyLabel": null,
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": "https://shulli.org",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.262934Z",
+            "verifiedAt": "2026-10-14T05:01:26.262934Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-u-s-senator:travis-jack-stevens",
+          "contestId": "de-2026-general-u-s-senator",
+          "familyName": "Stevens",
+          "givenName": "Travis Jack",
+          "partyLabel": null,
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.262934Z",
+            "verifiedAt": "2026-10-14T05:01:26.262934Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-representative-in-congress:earl-cooper",
+          "contestId": "de-2026-general-representative-in-congress",
+          "familyName": "Cooper",
+          "givenName": "Earl",
+          "partyLabel": null,
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": "https://earlcooperforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.262934Z",
+            "verifiedAt": "2026-10-14T05:01:26.262934Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-attorney-general:phil-dyer-jr",
+          "contestId": "de-2026-general-attorney-general",
+          "familyName": "Dyer, Jr.",
+          "givenName": "Phil",
+          "partyLabel": null,
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.262934Z",
+            "verifiedAt": "2026-10-14T05:01:26.262934Z",
+            "doorId": "fec-de-chief"
+          }
+        },
+        {
+          "id": "de-2026-general-state-representative-district-35:jeremy-breeding",
+          "contestId": "de-2026-general-state-representative-district-35",
+          "familyName": "Breeding",
+          "givenName": "Jeremy",
+          "partyLabel": null,
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-14T05:01:26.262934Z",
+            "verifiedAt": "2026-10-14T05:01:26.262934Z",
+            "doorId": "fec-de-chief"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "coverageNotes": [
+        "The Department of Elections' full November 3 general-election list supplies every Qualified candidate in the covered federal, statewide and legislative contests. Its separate declared write-in list supplies six additional Qualified candidates. Withdrawn entries are excluded.",
+        "Scott Walker is listed as a Provisional declared write-in for Representative in Congress and is not included among Qualified candidates. The Department says submitted residency materials remain under review by the State Election Commissioner.",
+        "Statewide ballot-measure coverage remains unverified because the Department's linked 2026 General Election Sample Ballots page returns Request Rejected."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedBy": "Codex",
+    "reviewedAt": "2026-10-14T16:13:21.019634Z",
+    "sources": [
+      {
+        "requestedUrl": "https://elections.delaware.gov/",
+        "finalUrl": "https://elections.delaware.gov/index.html",
+        "httpStatus": 200,
+        "rawHash": "24eef021f39e34038100a030daa659d2ce0113d76d2bcd08d383b9559a407fee",
+        "retrievedAt": "2026-10-14T05:00:46.262968Z",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state election-office discovery root links to candidate and general election pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.delaware.gov/candidates/candidatelist/",
+        "finalUrl": "https://elections.delaware.gov/candidates/candidatelist/",
+        "httpStatus": 200,
+        "rawHash": "9fc5c7ca194619a791dedbcbfeef91a90440c0e4690e565a319a45151d025127",
+        "retrievedAt": "2026-10-14T05:01:14.903342Z",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official ballot-qualified candidate index links the November 3, 2026 general-election list and declared write-in list.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.delaware.gov/elections/general/general.html",
+        "finalUrl": "https://elections.delaware.gov/elections/general/general.html",
+        "httpStatus": 200,
+        "rawHash": "31757bf433bb24055036944acbd1ba8d276d86ce49dd11dbb7ea3f5025ce6671",
+        "retrievedAt": "2026-10-14T05:01:04.830669Z",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general election page links the sample ballots and candidate list.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "finalUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "httpStatus": 200,
+        "rawHash": "ce26a09a1ed2ad283d836065e7f63ca6f2b9aa657ac39162a237676839b655e8",
+        "retrievedAt": "2026-10-14T05:01:26.066098Z",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Parsed every Qualified federal, statewide, State Senate and State House candidate row; excluded Withdrawn rows. Preserved names, printed parties and candidate websites. All 41 House districts and the 11 Senate districts published on the list are included.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+        "finalUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+        "httpStatus": 200,
+        "rawHash": "98da456d5cb5526902ceb6d554acd9465154cc6698942ba3f575b62bf18b47e9",
+        "retrievedAt": "2026-10-14T05:01:26.262934Z",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Parsed every Qualified declared write-in in the covered contests. Preserved the Provisional status gap and official status explanation.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

@@ -8,11 +8,15 @@ import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
+import { makeGranicusSource } from "../../sources/granicus/index.ts";
+import { makeNovusAgendaSource } from "../../sources/novusagenda/index.ts";
 import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
 import { makePrimeGovSource } from "../../sources/primegov/index.ts";
 import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
+import { makeEscribeSource } from "../../sources/escribe/index.ts";
 import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
 import { makeIqm2Source } from "../../sources/iqm2/index.ts";
+import { makeSwagitSource } from "../../sources/swagit/index.ts";
 import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/index.ts";
 import { legistarClientsFromWiring } from "../../sources/legistar/client-registry.ts";
 import type { LegistarEvent } from "../../sources/legistar/types.ts";
@@ -41,20 +45,12 @@ export type HeldCalendarReadings =
 
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-/**
- * What an adapter's throw says about a held calendar. Its zero-row extraction is the publisher's calendar selecting
- * nothing for the reviewed filter: CALENDAR_CHANGED. Anything else is ours: ADAPTER_REFUSED, no review triggered.
- */
 export function adapterThrowVerification(error: unknown, route: string): WiringVerification {
   return error instanceof ZeroRowExtractionError
     ? { changed: `the reviewed filter selects none of ${route}'s events: ${error.message}` }
     : { refused: `the adapter could not read ${route}: ${message(error)}` };
 }
 
-/**
- * Read every held calendar. The Reader projections the adapters resolve through are read first, so no adapter
- * reading ever runs against an unread projection.
- */
 export async function readHeldCalendars(input: {
   readonly options: PromotedCivicDataReadOptions;
   readonly now: string;
@@ -100,12 +96,18 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "PRIMEGOV", "IQM2"].includes(row.kind)) {
+    } else if (row.kind === "SWAGIT") {
+      meetings = makeSwagitSource([wiring]).normalizeWithDrops([{ wiring, pages: [{ url: row.route, text }], collectedAt: reading.evidence.retrievedAt }], new Date(now)).meetings;
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "PRIMEGOV"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
-      if (row.kind === "CIVICPLUS") {
-        meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaCenter: text, collectedAt }], new Date(now)).meetings;
+      if (row.kind === "GRANICUS") {
+        meetings = makeGranicusSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "ESCRIBE") {
+        meetings = makeEscribeSource([wiring]).normalizeWithDrops([{ wiring, text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "CIVICPLUS") {
+        meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaPages: [{ url: wiring.config.agendaCenterUrl, text, collectedAt }], collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "CIVICCLERK") {
         const events = JSON.parse(text)?.value;
         if (!Array.isArray(events)) return { changed: "The CivicClerk route no longer returns a list of events" };
@@ -114,6 +116,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
         meetings = makeBoardBookSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "PRIMEGOV") {
         meetings = makePrimeGovSource([wiring]).normalizeWithDrops([{ wiring, text, sourceUrl: row.route, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "NOVUSAGENDA") {
+        meetings = makeNovusAgendaSource([wiring]).normalizeWithDrops([{ wiring, pages: [{ url: row.route, html: text }], collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "IQM2") {
         meetings = makeIqm2Source([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
       } else {
@@ -133,7 +137,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
     return adapterThrowVerification(error, row.route);
   }
   const own = meetings.filter((m) => m.bodyId === row.bodyId);
-  if (own.length === 0) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
+  const emptyBody = total === 0 && ((row.kind === "LEGISTAR" && /^\d+$/.test(row.config.eventBodyId)) || (row.kind === "BOARDDOCS" && row.config.committeeId) || (row.kind === "CIVICCLERK" && row.config.bodyMatch && /eventCategoryId eq \d+/.test(new URL(row.route).searchParams.get("$filter") ?? "")));
+  if (own.length === 0 && !emptyBody) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
   const name = row.bodyName.toLowerCase();
   const foreign = own.find((m) => !m.title.toLowerCase().includes(name) && reading.others.some((o) => m.title.toLowerCase().includes(o.toLowerCase())));
   if (foreign !== undefined) {

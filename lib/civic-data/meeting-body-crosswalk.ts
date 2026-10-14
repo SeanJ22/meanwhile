@@ -59,8 +59,16 @@ export function subBodyId(ocdId: string, bodyName: string): string {
   return `${ocdId}#body:${crosswalkSlug(bodyName)}`;
 }
 
+export function meetingRouteIdentity(kind: string, route: string): string {
+  if (kind === "LEGISTAR" || kind === "CIVICCLERK") {
+    const url = new URL(route);
+    return `${url.origin}${url.pathname}`;
+  }
+  return route;
+}
+
 export function crosswalkRowId(bodyId: string, kind: CrosswalkKind, route?: string): string {
-  return `${bodyId}|${kind}${typeof route === "string" && route ? `|${createHash("sha256").update(route).digest("hex").slice(0, 16)}` : ""}`;
+  return `${bodyId}|${kind}${typeof route === "string" && route ? `|${createHash("sha256").update(meetingRouteIdentity(kind, route)).digest("hex").slice(0, 16)}` : ""}`;
 }
 
 /** A `feedScope: "category"` filter stands only on a CivicPlus category feed, and never beside another filter. */
@@ -127,13 +135,14 @@ export function crosswalkRowIssue(value: unknown): string | null {
   const calendar = evidence?.calendar;
   if (!page || !calendar || !text(evidence?.readAt) || !Number.isFinite(Date.parse(evidence.readAt))) return `${who} carries no dated evidence`;
   const pageHost = httpsHost(page.url);
-  if (pageHost === null || (bareHost(pageHost) !== bareHost(routeHost) && !["LEGISTAR", "DILIGENT", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "PRIMEGOV"].includes(kind))) {
+  if (pageHost === null || (bareHost(pageHost) !== bareHost(routeHost) && !["LEGISTAR", "DILIGENT", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind))) {
     return `${who}: the page naming the body is not on the government's own host ${routeHost}`;
   }
   if (!SHA256.test(page.sha256) || !SHA256.test(calendar.sha256)) return `${who}: evidence is cited by its sha256, bare hex`;
   if (!text(page.quote) || !flat(page.quote).includes(flat(row.bodyName))) return `${who}: the quoted page does not print "${row.bodyName}"`;
   if (calendar.url !== row.route) return `${who}: the calendar evidence is not the calendar`;
-  if (!Number.isInteger(calendar.selected) || !Number.isInteger(calendar.total) || calendar.selected < 1 || calendar.total < calendar.selected) {
+  if (!Number.isInteger(calendar.selected) || !Number.isInteger(calendar.total) || calendar.selected < 0 || calendar.total < calendar.selected ||
+    (calendar.selected === 0 && !(calendar.total === 0 && ((kind === "LEGISTAR" && /^\d+$/.test(filter.eventBodyId)) || (kind === "BOARDDOCS" && text(filter.committeeId)) || (kind === "CIVICCLERK" && text(filter.bodyMatch) && /eventCategoryId eq \d+/.test(new URL(row.route!).searchParams.get("$filter") ?? "")))))) {
     return `${who}: the reviewed filter selected no meeting from the calendar`;
   }
   if (row.status !== "ACTIVE" && row.status !== "WITHDRAWN") return `${who} has no status`;

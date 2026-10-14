@@ -196,13 +196,8 @@ export async function applyManualSourceGaps(
   if (applicable.length === 0) return { created, carried, deferred };
   const heldIds = new Set((await repos.workItems.list()).map(row => row.id));
   for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
-    if (row.mode !== "REVIEWED_INPUT" && row.mode !== "SCOPED_ADAPTER_OWED") continue;
-    const receipts = [...row.instructionIds];
-    // An unscoped adapter gap is owed by every resolved hunt, irrespective of ZIP.
-    if (row.mode === "SCOPED_ADAPTER_OWED") {
-      receipts.push(...applicable.map(scope => scope.decision.receiptId));
-    }
-    for (const receipt of new Set(receipts)) {
+    if (row.mode !== "SCOPED_ADAPTER_OWED") continue;
+    for (const receipt of row.instructionIds) {
       const scope = applicable.find(candidate => candidate.decision.receiptId === receipt);
       if (!scope) continue;
       const work = createWorkItem({ project: "freshness", subject: `manual-source:${scope.decision.key}`,

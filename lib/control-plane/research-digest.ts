@@ -116,15 +116,12 @@ export const METRIC_GROUP_MEANING: Readonly<Record<keyof ResearchDigestRows, str
 export const OUTCOME_LABEL: Readonly<Record<string, string>> = {
   ROUTE_CANDIDATE: "new way in",
   EVIDENCE_FOUND: "document obtained",
-  CONFIRMED: "confirmed record",
   GRADUATED_ROUTE: "method added to the toolbox",
 };
 
 export const FUNNEL_LABEL: Readonly<Record<string, string>> = {
   SCOUTED: "Found by a hunter",
-  CONFIRMED: "Confirmed a second time",
   VERIFIED: "Checked against the source",
-  AUDITED: "Survived an audit",
   APPROVED: "Cleared to publish",
   VALIDATED: "Methods that passed validation",
   ADMITTED: "Methods admitted to the toolbox",
@@ -133,9 +130,7 @@ export const FUNNEL_LABEL: Readonly<Record<string, string>> = {
 
 const FUNNEL_DENOMINATOR: Readonly<Record<string, string>> = {
   SCOUTED: "counted from the separate jobs where a hunter came back with something real rather than a refusal",
-  CONFIRMED: "counted by the promotion pipeline once it is connected to this view",
   VERIFIED: "counted by the promotion pipeline once it is connected to this view",
-  AUDITED: "counted by the promotion pipeline once it is connected to this view",
   APPROVED: "counted by the promotion pipeline once it is connected to this view",
   VALIDATED: "counted from the methods hunters proposed and validators passed",
   ADMITTED: "counted from the methods a work session admitted into the toolbox",
@@ -171,10 +166,8 @@ function funnelWhyZero(stage: string, count: number, source: string, m: Research
 
 const FUNNEL_MEANING: Readonly<Record<string, string>> = {
   SCOUTED: "Obligations where a scout found something real — a route or evidence — rather than refusing.",
-  CONFIRMED: "Scouted records a second, independent step confirmed.",
-  VERIFIED: "Confirmed records a verifier checked against the contract and an outside authority.",
-  AUDITED: "Verified records an adversarial auditor tried and failed to break.",
-  APPROVED: "Audited records approved for the nightly window to promote to readers.",
+  VERIFIED: "Scouted records whose values code confirmed on their saved source page.",
+  APPROVED: "Verified records approved to publish to readers.",
   VALIDATED: "Scout-proposed methods that passed validation and await a session's admission into the method store.",
   ADMITTED: "Methods a session admitted; deterministic code can now walk that route without a model.",
   DETERMINISTIC_REPLAYS: "Times plain code re-walked a route an admitted method taught it — the payoff of the funnel.",
@@ -303,9 +296,7 @@ export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
         ? "What each newly found route has cost, spreading the whole measured scout spend over the routes found."
         : o.outcome === "EVIDENCE_FOUND"
           ? "What each piece of found evidence has cost, over the whole measured scout spend."
-          : o.outcome === "CONFIRMED"
-            ? "What each confirmed record has cost. Not recorded until the promotion pipeline confirms something."
-            : "What each method that graduated into the toolbox has cost — the spend that keeps paying back.",
+          : "What each method that graduated into the toolbox has cost — the spend that keeps paying back.",
   }));
   return { capacity, queueBands, funnel, share, cache, costPerOutcome };
 }

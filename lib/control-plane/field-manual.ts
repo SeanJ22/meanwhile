@@ -1,24 +1,8 @@
-/**
- * The field manual: learned discovery knowledge every worker reads and writes
- * live, with no admission step. One row per entry (`cp_field_manual_entries`),
- * so a write touches only the entries it names and a read takes only the rows
- * that could apply to one job.
- *
- * Every entry keeps its original record verbatim in `payload`; `summary` and
- * the typed hints (`role`, `states`, `recordClasses`, `platforms`, places) are
- * the index over it. `reach` says where an entry applies; a merge only ever
- * widens it.
- *
- * `readFieldManual(repos, query)` and `writeFieldManual(repos, entries, now)`
- * are the whole interface.
- */
-
 import { createHash } from "node:crypto";
 
 import { stateOfPlace, type FixMapRow, type MethodWorks } from "../method/fix-map.ts";
 import { recordAttempts, type MethodAttempt } from "../method/fix-map-record.ts";
 import { methodPlaceOf } from "../method/method-places.ts";
-import { sortRung } from "./field-manual-rungs.ts";
 import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type PlaceResult } from "./field-manual-places.ts";
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
@@ -59,12 +43,6 @@ export interface FieldManualReach {
   readonly method?: boolean;
 }
 
-/**
- * One piece of learned knowledge, in a common envelope. `payload` is the
- * original record, preserved whole; everything else is the index over it. A
- * "dead door" is an entry with outcome FAILED/BLOCKED — kept, never deleted,
- * because knowing a door is dead is itself learned knowledge.
- */
 export interface FieldManualEntry {
   /** Deterministic from (source, key): a re-import updates rather than duplicates. */
   readonly id: string;
@@ -126,7 +104,7 @@ function lower(values: readonly string[]): string[] {
 export const JOB_COST_KIND = "JOB_COST";
 
 /** Kinds that hold bookkeeping rather than lessons; no worker is shown them. */
-export const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT"]);
+const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT", "PLATFORM_CENSUS_CHECK", "PLATFORM_CENSUS_REFERENCE", "PLATFORM_CENSUS_RUN"]);
 
 /** Reusable ways in: a method from one place is offered wherever it could apply, ranked by where it has worked. */
 export const TRANSFERABLE_METHOD_KINDS: ReadonlySet<string> = new Set(["METHOD", "ROUTE", "MANIFEST_BRANCH"]);
@@ -157,11 +135,6 @@ export function fieldManualPlaceHints(payload: unknown): { states: string[]; ocd
   return { states, ocdIds, bodyIds };
 }
 
-/**
- * Where an observation applies, from what it records: a door tied to a place
- * stays with that place; a lesson about a platform applies on that platform in
- * any state; otherwise its states; everywhere only when its writer says so.
- */
 export function reachOf(entry: Pick<FieldManualEntry, "ocdIds" | "bodyIds" | "states" | "platforms" | "url" | "portable">): FieldManualReach {
   const places = [...(entry.ocdIds ?? []), ...(entry.bodyIds ?? []).map((id) => `body:${id}`)];
   const everywhere = entry.portable === true;
@@ -195,16 +168,9 @@ export function normalizeEntry(entry: FieldManualEntry): FieldManualEntry {
     platforms: lower(entry.platforms),
     summary: entry.summary.replace(/\s+/g, " ").trim().slice(0, 320),
   };
-  const sorted = sortRung(normalized)?.entry ?? normalized;
-  return { ...sorted, reach: unionReach(sorted.reach, reachOf(sorted)) };
+  return { ...normalized, reach: unionReach(normalized.reach, reachOf(normalized)) };
 }
 
-/**
- * Fold one observation into what is held for its id. The newer observation's
- * fields win; reach, places, states, platforms and per-place results union, an
- * entry for any record class stays for any, and an entry once portable stays
- * portable, so a merge never narrows where a lesson applies.
- */
 export function mergeEntry(prior: FieldManualEntry | null, raw: FieldManualEntry): FieldManualEntry {
   const entry = normalizeEntry(raw);
   if (prior === null) return entry;
@@ -409,14 +375,6 @@ export function rankEntry(entry: FieldManualEntry, query: FieldManualQuery, evid
   return { entry, tier: 3, note: "" };
 }
 
-/**
- * Project a read down to what applies to this worker and job, ranked: this
- * place; proven in its state (or the same kind of website); proven in three or
- * more states, and what applies everywhere; worked elsewhere but untried here,
- * with where it worked; then methods not yet proven anywhere. A method that
- * fails in this place is left out here only. Within a rank, a stopped walk on
- * this subject comes first, then results that yielded, then fresher ones.
- */
 export function projectFieldManual(store: FieldManualStore, query: FieldManualQuery = {}, evidence?: MethodEvidence): FieldManualProjection {
   const limit = query.limit ?? 40;
   const applicable = store.entries.filter((e) => !BOOKKEEPING_KINDS.has(e.kind) && entryInSlice(e, query) &&
@@ -502,11 +460,6 @@ export async function readFieldManualRows(repos: FieldManualRepos, query: FieldM
   }
 }
 
-/**
- * Many jobs' reads at once, as a cycle briefs every due place: the manual is read once for `covering`, which takes
- * in every query's rows, and each job's rows are those same row objects narrowed by `entryInSlice`. Each job gets
- * what `readFieldManualRows` would give it, and a thousand places hold one copy of the rows, not a thousand.
- */
 export async function readFieldManualForPlaces(
   repos: FieldManualRepos,
   covering: FieldManualQuery,
@@ -533,11 +486,6 @@ export async function readFieldManualForPlaces(
   }));
 }
 
-/**
- * The one read: the rows that could apply to `query`'s job, ranked for it. A
- * worker process asks the shared tools host, which reads the store for it. A
- * read failure comes back as `error` with an empty projection.
- */
 export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
   if (!process.env.WTP_WORKER_TOOLS_URL) return readFieldManualRows(repos, query);
   try {
@@ -644,11 +592,6 @@ export function methodAttemptsOf(entry: FieldManualEntry, now: string): MethodAt
   }));
 }
 
-/**
- * Record in the fix map what saved methods did in each place. A new result
- * also goes on the fix list and the method's standing when the store has them;
- * results copied from the old manual do not. Never throws.
- */
 export async function recordMethodResults(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string,
   keepHistory = true): Promise<{ readonly written: number; readonly failed: number }> {
   if (!repos.fixMap) return { written: 0, failed: 0 };
@@ -665,11 +608,6 @@ export async function recordMethodResults(repos: FieldManualRepos, entries: read
   }
 }
 
-/**
- * The one write: fold what a role learned into the manual, entry by entry,
- * each under its own row's compare-and-set, so concurrent writers never lose
- * each other's lessons. A failure is returned, never thrown.
- */
 export async function writeFieldManual(
   repos: FieldManualRepos,
   entries: readonly FieldManualEntry[],

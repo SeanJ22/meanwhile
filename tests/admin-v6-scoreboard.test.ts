@@ -56,7 +56,7 @@ const readings = (over: Partial<ScoreboardReadings> = {}): ScoreboardReadings =>
 
 test("the Scoreboard has one row for every number in the design, in order, and unread rows say so with no value", () => {
   const view = buildScoreboard(readings());
-  assert.equal(view.rows.length, 23);
+  assert.equal(view.rows.length, 25);
   assert.deepEqual(view.rows.map((r) => r.id).slice(0, 3), ["Orders", "Mission progress", "Checklist completeness"]);
   for (const r of view.rows) {
     assert.equal(r.value, null, `${r.id} shows — with nothing read`);
@@ -205,3 +205,20 @@ test("the replacement learning panel retains failed Bank writes and unknown coun
     assert.equal(view.readings.find(r => r.bigNote === "Bank write errors")!.big, count === null ? "—" : String(count));
   }
 });
+
+test("the fact store's facts live per hour sit beside the older count, and its blanks say where each stopped in plain words", () => {
+  const view = buildScoreboard(readings({ factStore: {
+    hours: [{ hour: "2026-10-13T17:00:00.000Z", live: 4 }, { hour: "2026-10-13T18:00:00.000Z", live: 12 }],
+    lastHour: 12, last24: 16, liveNow: 340,
+    blanks: [{ stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", n: 3 }, { stage: "ACQUIRE", reason: "NOT_YET_ACQUIRED", n: 2 }],
+  } }));
+  const ids = view.rows.map((r) => r.id);
+  assert.equal(ids.indexOf("Facts live per hour (fact store)"), ids.indexOf("Facts live per hour") + 1);
+  const live = view.rows.find((r) => r.id === "Facts live per hour (fact store)")!;
+  assert.equal(live.value, "12");
+  assert.equal(live.counts, "16 facts went live in the last 24 hours · 340 live now");
+  const stuck = view.rows.find((r) => r.id === "Stuck facts by reason")!;
+  assert.deepEqual(stuck.items, ["3 failed the source check: the quoted words are not on the saved page", "2 not found yet"]);
+  assert.ok(!stuck.items!.some((line) => /[A-Z]{2,}_/.test(line)), "no codes on the screen");
+});
+

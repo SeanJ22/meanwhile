@@ -1,20 +1,3 @@
-/**
- * Robots.txt is recorded, not blocking; access controls are never bypassed. Against recorded fake transports
- * (no network):
- *
- * 1. The rule has one home, and the host lists carry no robots-only entry.
- * 2. Every fetcher that reads robots.txt reads it first and records the verdict, and a `Disallow: /` never
- *    stops the public page: the research fetch, the adapter permission gate, and the unpaid discovery walk.
- *    (The scout tools are held the same way in tests/scout-tools.test.ts.)
- * 3. An access control is never pushed through: a 401, a 403, a challenge page and a 429 are named as walls,
- *    a 429 backs the host off, nothing is re-sent under another identity, and no request carries a credential
- *    or a cookie. The shared source client (`lib/sources/http.ts`) sends the project's own name, and when a
- *    filter refuses Node's client it asks once more as the same identity through `curl`; no wiring row may ask
- *    for a browser profile, and no production module carries a borrowed browser identity.
- * 4. Every module that consumes the robots evaluator is named here with the test that holds it to the rule,
- *    and the old refusal messages do not return in code.
- */
-
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -148,9 +131,11 @@ test("THE DISCOVERY WALK reads robots.txt first, records a Disallow: / on the st
     "https://closedtown.gov/meetings.ics": { status: 200, body: ics, contentType: "text/calendar" },
   });
   const attempt = await walkMeetingsDiscoveryNeed(need("az:town:closedtown", "closedtown.gov"), runtime);
-  assert.deepEqual(seen, ["https://closedtown.gov/robots.txt", "https://closedtown.gov/", "https://closedtown.gov/meetings.ics"]);
+  assert.deepEqual(seen.slice(0, 2), ["https://closedtown.gov/robots.txt", "https://closedtown.gov/"]);
+  for (const path of ["/agendas", "/meetings", "/calendar", "/sitemap.xml", "/meetings.ics"]) assert.ok(seen.includes(`https://closedtown.gov${path}`));
   assert.equal(attempt.outcome, "FOUND");
-  assert.ok(attempt.steps.filter((s) => s.purpose !== "robots").every((s) => s.permission === "DISALLOWED" && s.status === 200));
+  assert.ok(attempt.steps.filter((s) => s.purpose !== "robots").every((s) => s.permission === "DISALLOWED"));
+  for (const path of ["/", "/meetings.ics"]) assert.ok(attempt.steps.some(step => step.url === `https://closedtown.gov${path}` && step.status === 200));
 });
 
 /* ------------------------------------------- 3. access controls stay walls */
@@ -302,10 +287,6 @@ test("A PORTAL'S SESSION COOKIE GOES BACK ONLY TO THE HOST THAT SET IT, never to
   assert.deepEqual(sent.map((s) => s.cookie), [null, null, "ASP.NET_SessionId=abc"]);
 });
 
-/**
- * A borrowed browser identity or a User-Agent that is not ours. A second client (`curl`) is allowed when it
- * says who we are (held to that by the tests above).
- */
 const DISGUISES: readonly RegExp[] = [
   /Mozilla\/5\.0 \((Windows|Macintosh|X11|Linux|iPhone|iPad)/,
   /\bChrome\/\d{2,3}\./,
@@ -345,13 +326,9 @@ function code(text: string): string {
   return text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:"'`])\/\/.*$/gm, "$1");
 }
 
-/**
- * Every production module that reads robots.txt through the shared evaluator, the sweep, the gate or the
- * research fetch, and the test that holds it to "recorded, not blocking". A new consumer fails this guard until
- * it is named here with its test.
- */
 const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/scheduler/robots.ts": "the evaluator itself (tests/scout-tools.test.ts evaluator cases)",
+  "lib/ballot/voting-source-fetch.ts": "VS-01 honors robots.txt: tests/voting-source-readers.test.ts blocks disallowed pages and keeps their hunter blanks open",
   "lib/hunt/robots-first-fetch.ts": "tests/robots-first-fetch.test.ts, this file",
   "lib/sources/permission-gate.ts": "this file, tests/pima-edu-source.test.ts",
   "lib/sources/pima-edu/index.ts": "via the gate: tests/pima-edu-source.test.ts",
@@ -380,7 +357,7 @@ test("EVERY ROBOTS CONSUMER IS NAMED with the test that holds it to the rule, an
     .map((f) => f.replace(/\\/g, "/"))
     .filter((f) => CONSUMES.test(code(readFileSync(join(ROOT, f), "utf8"))));
   const unnamed = found.filter((f) => !(f in ROBOTS_CONSUMERS));
-  assert.deepEqual(unnamed, [], `name each new robots consumer in ROBOTS_CONSUMERS with the test that holds it to "recorded, not blocking": ${unnamed.join(", ")}`);
+  assert.deepEqual(unnamed, [], `name each new robots consumer in ROBOTS_CONSUMERS with the test that holds it to its applicable acquisition rule: ${unnamed.join(", ")}`);
   const stale = Object.keys(ROBOTS_CONSUMERS).filter((f) => !found.includes(f));
   assert.deepEqual(stale, [], `these no longer consume the evaluator; drop them from the list: ${stale.join(", ")}`);
 });

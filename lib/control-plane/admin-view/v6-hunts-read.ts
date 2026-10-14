@@ -92,11 +92,40 @@ export interface AdminV6HuntView {
   readonly heldUsd: number;
   /** Anthropic requests charged to this allowance with no price. Unknown, never zero dollars. */
   readonly unpricedEntries: number;
-  /** "paused" exactly when the hunt's budget is $0 (how a pause is saved, so Resume can offer itself); otherwise the run state is not reported. */
+  /** "paused" when the hunt's budget is $0 or the owner has paused paid work or the runner; otherwise not reported. */
   readonly status: "unreported" | "paused";
+  /** Why a paused hunt is paused, and since when: the owner's own pause wins over a $0 budget. Null when not paused. */
+  readonly pause: HuntPause | null;
   readonly researchWorkers: null;
   readonly basis: "lifetime";
   readonly availableUsd: number | null;
+}
+
+/** A pause the owner set: all paid work, the whole runner, or this hunt's own budget set to $0. */
+interface HuntPause {
+  readonly kind: "paid-work" | "runner" | "budget";
+  readonly since: string | null;
+  /** The owner's own words with the pause, when they gave any. */
+  readonly note: string | null;
+}
+
+/** The latest owner record for each pause action in the research intent log, as read. */
+export interface OwnerPauseRecords {
+  readonly PAUSE: OwnerPauseRecord | null;
+  readonly RESUME: OwnerPauseRecord | null;
+  readonly PAUSE_RUNNER: OwnerPauseRecord | null;
+  readonly RESUME_RUNNER: OwnerPauseRecord | null;
+}
+export interface OwnerPauseRecord { readonly requestedAt: string; readonly note: string | null }
+
+/** The pause in force over every hunt: the runner pause first (it stops everything), then the paid-work pause. */
+export function ownerPauseOf(records: OwnerPauseRecords | null): HuntPause | null {
+  if (!records) return null;
+  const inForce = (pause: OwnerPauseRecord | null, resume: OwnerPauseRecord | null) =>
+    pause !== null && (resume === null || resume.requestedAt < pause.requestedAt);
+  if (inForce(records.PAUSE_RUNNER, records.RESUME_RUNNER)) return { kind: "runner", since: records.PAUSE_RUNNER!.requestedAt, note: records.PAUSE_RUNNER!.note };
+  if (inForce(records.PAUSE, records.RESUME)) return { kind: "paid-work", since: records.PAUSE!.requestedAt, note: records.PAUSE!.note };
+  return null;
 }
 
 export interface AdminV6SectionEnvelope<T> {
@@ -116,6 +145,8 @@ export interface V6MoneySources {
   readonly attribution: BillingAttribution | null | undefined;
   readonly snapshotGap: string | null;
   readonly readAt: string;
+  /** The owner's paid-work and runner pauses as last recorded; null when the log was not read. */
+  readonly pauses?: OwnerPauseRecords | null;
 }
 
 export type HuntAttributionRow = NonNullable<BillingAttribution["hunts"]>[number];
@@ -140,7 +171,7 @@ export function huntName(decision: Pick<ExpansionScopeDecision, "geography">): s
   return `${decision.geography.label} hunt`;
 }
 
-function huntView(decision: ExpansionScopeDecision & { readonly budgetStartedAt: string }, row: CompleteRow): AdminV6HuntView {
+function huntView(decision: ExpansionScopeDecision & { readonly budgetStartedAt: string }, row: CompleteRow, owner: HuntPause | null): AdminV6HuntView {
   const spent = cents6(row.budgetConsumedKnownUsd), held = cents6(row.reservedUsd);
   return {
     id: `${decision.key}#${decision.receiptId}`,
@@ -153,7 +184,8 @@ function huntView(decision: ExpansionScopeDecision & { readonly budgetStartedAt:
     spentUsd: spent,
     heldUsd: held,
     unpricedEntries: row.budgetUnpriced,
-    status: decision.budgetUsd === 0 ? "paused" : "unreported",
+    status: owner !== null || decision.budgetUsd === 0 ? "paused" : "unreported",
+    pause: owner ?? (decision.budgetUsd === 0 ? { kind: "budget", since: decision.decidedAt, note: decision.note } : null),
     researchWorkers: null,
     basis: "lifetime",
     availableUsd: row.budgetUnpriced > 0 ? null : cents6(Math.max(0, decision.budgetUsd - spent - held)),
@@ -207,9 +239,11 @@ export function v6HuntsSection(input: { readonly scopeKey: string; readonly scop
   if (missing.length > 0) return { kind: "refused", status: 503, code: "HUNT_ACCOUNTING_UNAVAILABLE",
     says: `${input.sources.snapshotGap ?? "The published billing attribution has no complete receipt-linked row"} for ${missing.map(({ decision }) => huntName(decision)).join(", ")}. Spent and set-aside money are unknown, not zero.`,
     dependency: "DEP-HUNTS" };
-  const data = ready.map(({ decision, row }) => huntView(decision, row));
+  const owner = ownerPauseOf(input.sources.pauses ?? null);
+  const data = ready.map(({ decision, row }) => huntView(decision, row, owner));
   const missingParts = [
-    ...(data.length > 0 ? ["Whether paid work is running for each hunt right now, and how many research workers it has, is not published to this section."] : []),
+    ...(data.length > 0 && owner === null ? ["Whether paid work is running for each hunt right now, and how many research workers it has, is not published to this section."] : []),
+    ...(data.length > 0 && input.sources.pauses === null ? ["Whether you have paused paid work or the runner could not be read, so a pause would not show here."] : []),
     ...data.filter(h => h.unpricedEntries > 0).map(h =>
       `${h.unpricedEntries} Anthropic request${h.unpricedEntries === 1 ? "" : "s"} charged to the ${h.name} ${h.unpricedEntries === 1 ? "has" : "have"} no price yet, so its spent amount is a lower bound and the amount left is unknown.`),
     ...(data.length > 1 ? ["A request shared by overlapping hunts counts against each hunt's own limit. Hunt figures are never added together."] : []),

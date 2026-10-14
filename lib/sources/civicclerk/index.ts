@@ -1,9 +1,4 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps here are minted by the code path that performs the read: `collectedAt` is taken at
- * the moment of the fetch.
- */
+/** @freshness-reads-here */
 import {
   MEETING_HELD_HORIZON_DAYS,
   MEETING_HELD_LOOKBACK_DAYS,
@@ -16,6 +11,7 @@ import {
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetJson } from "../http.ts";
+import { sittingStatus, saysCanceled } from "../sitting-status.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -23,33 +19,15 @@ import {
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
-
-/**
- * CivicClerk: the meeting portal behind an embed script, read through its own public OData API. The
- * host page carries the tenant slug in a script block:
- *
- * ```js
- * window.clerkEmbedProps = { "tenant": "<slug>", "categoryIds": "26,27,…" };
- * ```
- *
- * With it the portal answers a plain unauthenticated GET at `https://<tenant>.api.civicclerk.com/v1/Events`
- * (OData: `$filter`, `$orderby`, `$top`), returning date, start time, body name, category, venue with
- * street address, and agenda/minutes flags. Any CivicClerk tenant is one `clerkEmbedProps` read away.
- *
- * Distinct from `CIVICPLUS`, a different product. Reads are clipped to the serving window derived from
- * the serving constants.
- */
 
 const SOURCE_NAME = "civicclerk";
 
 const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
-/** The subset of the OData row this adapter reads. The API sends ~90 fields. */
 export interface CivicClerkEvent {
   id: number;
   eventName: string | null;
@@ -59,7 +37,11 @@ export interface CivicClerkEvent {
   categoryName?: string | null;
   hasAgenda?: boolean;
   isDeleted?: boolean;
-  isPublished?: boolean;
+  isPublished?: boolean | string;
+  categoryId?: number;
+  eventDescription?: string | null;
+  eventNotice?: string | null;
+  publishedFiles?: { fileId: number; fileType?: number; name?: string; type?: string; streamUrl?: string | null }[];
   eventLocation?: {
     locationName?: string | null;
     address1?: string | null;
@@ -76,14 +58,6 @@ export interface CivicClerkRaw {
   collectedAt: string;
 }
 
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
-}
-
-/**
- * The venue string, assembled from the published address parts. A row with no usable part yields an
- * empty string and is counted as an unknown venue: kept, with the portal's silence as its named gap.
- */
 function locationTextOf(e: CivicClerkEvent): string {
   const L = e.eventLocation;
   if (!L) return "";
@@ -94,19 +68,63 @@ function locationTextOf(e: CivicClerkEvent): string {
     .trim();
 }
 
-/**
- * The body this sitting belongs to. CivicClerk files every sitting under a category that is the body,
- * so the category is the body name and the event name is the sitting's title. Where the tenant sends no
- * category the event name stands in; where it sends neither the row is dropped rather than filed under
- * the district at large.
- */
 function bodyNameFor(e: CivicClerkEvent): string {
   return (
     e.eventCategoryName?.trim() ||
     e.categoryName?.trim() ||
-    e.eventName?.trim() ||
     ""
   );
+}
+
+function civicClerkPublished(event: CivicClerkEvent): boolean {
+  return event.isPublished === undefined || event.isPublished === true || event.isPublished === "Published";
+}
+
+function civicClerkMatches(event: CivicClerkEvent, config: Readonly<Record<string, string>>): boolean {
+  const words = (value: string) => value.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  return /^[1-9]\d*$/.test(config.categoryId ?? "") && Number(config.categoryId) === event.categoryId &&
+    (!config.titleMatch || ` ${words(event.eventName ?? "")} `.includes(` ${words(config.titleMatch)} `));
+}
+
+function documentLinks(event: CivicClerkEvent, apiBase: string): { label: string; type: string; href: string }[] {
+  return (event.publishedFiles ?? []).filter(file => Number.isSafeInteger(file.fileId) && file.fileId > 0).map(file => ({
+    label: file.name || file.type || "Document", type: file.type ?? "",
+    href: file.streamUrl && /^https?:\/\//.test(file.streamUrl) ? file.streamUrl
+      : `${apiBase}/v1/Meetings/${file.fileType === 3 ? `GetAttachmentFile(fileId=${file.fileId})` : `GetMeetingFileStream(fileId=${file.fileId},plainText=false)`}`,
+  }));
+}
+
+export interface CivicClerkPage<T> {
+  value?: T[];
+  "@odata.nextLink"?: string;
+}
+
+export async function readCivicClerkPages<T extends { id: number } = CivicClerkEvent>(
+  url: string, readPage: (url: string) => Promise<CivicClerkPage<T>>, signal?: AbortSignal,
+): Promise<T[]> {
+  const start = new URL(url), rows: T[] = [], ids = new Set<number>(), pages = new Set<string>();
+  let next: string | null = start.href;
+  let blockCount = 0, offset = Number(start.searchParams.get("$skip") ?? 0);
+  while (next !== null) {
+    signal?.throwIfAborted();
+    const pageUrl: URL = new URL(next, start);
+    if (pageUrl.origin !== start.origin || pageUrl.pathname !== start.pathname || pages.has(pageUrl.href)) throw new Error("CIVICCLERK_PAGING_INVALID");
+    pages.add(pageUrl.href);
+    const page = await readPage(pageUrl.href);
+    if (!Array.isArray(page.value)) throw new Error("CIVICCLERK_EVENTS_NOT_A_LIST");
+    for (const event of page.value) {
+      if (!Number.isSafeInteger(event.id) || event.id <= 0 || ids.has(event.id)) throw new Error("CIVICCLERK_PAGING_NOT_ADVANCING");
+      ids.add(event.id); rows.push(event); blockCount++;
+    }
+    if (page["@odata.nextLink"]) {
+      if (page.value.length === 0) throw new Error("CIVICCLERK_PAGING_NOT_ADVANCING");
+      next = new URL(page["@odata.nextLink"], start).href;
+    } else if (blockCount === 200) {
+      offset += blockCount; blockCount = 0;
+      const page = new URL(start); page.searchParams.set("$skip", String(offset)); next = page.href;
+    } else next = null;
+  }
+  return rows;
 }
 
 export function makeCivicClerkSource(
@@ -131,17 +149,11 @@ export function makeCivicClerkSource(
     for (const { wiring, events, collectedAt } of raw) {
       considered += events.length;
       for (const e of events) {
-        if (e.isDeleted) {
+        if (e.isDeleted || !civicClerkPublished(e)) {
           drops.notConfigured++;
           continue;
         }
 
-        /*
-         * `startDateTime` carries the wall clock the portal displays. It is
-         * read as local wall time in the body's zone rather than trusted as
-         * an instant, because the API also ships secondaryIanaTimeZone and a
-         * row that is off by an hour puts a reader outside a meeting.
-         */
         const clock = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(
           e.startDateTime ?? e.eventDate ?? "",
         );
@@ -158,8 +170,8 @@ export function makeCivicClerkSource(
           wiring.timeZone,
         );
 
-        const bodyName = bodyNameFor(e);
-        if (wiring.config.bodyMatch && bodyName?.trim().toLowerCase() !== wiring.config.bodyMatch.trim().toLowerCase()) {
+        const bodyName = wiring.config.titleMatch ? wiring.config.bodyName : bodyNameFor(e);
+        if (!civicClerkMatches(e, wiring.config)) {
           drops.notConfigured++;
           continue;
         }
@@ -170,7 +182,6 @@ export function makeCivicClerkSource(
 
         const location = locationTextOf(e);
 
-        /* A meeting held online is KEPT (D18) — it is a real public meeting. */
         const online = location && isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
@@ -181,21 +192,19 @@ export function makeCivicClerkSource(
         const venue = online || !location
           ? null
           : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug) ?? null;
-        // No reviewed venue never suppresses the sitting: it is published with no pin and its gap named (the
-        // published address parts verbatim, or the portal's silence), counted as `unknownVenue`.
+
         const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
         if (venueGap) {
           drops.unknownVenue++;
           keptButPlaceless += 1;
         }
 
-        /* The portal's own permalink for one event. */
         const meetingUrl = `${wiring.config.portalBase}/event/${e.id}`;
 
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${e.id}`,
           ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+
           bodyId: wiring.bodyId,
           bodyName,
           title: (e.eventName ?? bodyName).trim(),
@@ -211,10 +220,11 @@ export function makeCivicClerkSource(
             : null,
           ...(online ? { online } : {}),
           ...(venueGap ? { venueGap } : {}),
-          /* `hasAgenda` is the portal's own flag for a published agenda. */
-          agendaUrl: e.hasAgenda ? meetingUrl : null,
+
+          agendaUrl: documentLinks(e, wiring.config.apiBase).find(link => link.type === "Agenda")?.href ?? (e.hasAgenda ? meetingUrl : null),
+          publishedLinks: documentLinks(e, wiring.config.apiBase).map(({ label, href }) => ({ label, href })),
           jurisdiction: wiring.jurisdiction,
-          status: statusOf(startsAt, now),
+          status: sittingStatus(startsAt, saysCanceled([e.eventName, e.eventDescription, e.eventNotice].filter(Boolean).join(" ")), now),
           provenance: {
             sourceUrl: meetingUrl,
             sourceOrg: wiring.publishingOrg,
@@ -246,24 +256,32 @@ export function makeCivicClerkSource(
         .slice(0, 19);
 
       const collected: CivicClerkRaw[] = [];
+      const tenants = new Map<string, BodySourceWiring[]>();
       for (const wiring of wiringRows) {
-        // OData, clipped at the server: the archive is oldest-first, so an unfiltered read would spend its page
-        // on years-old meetings.
+        const base = new URL(wiring.config.apiBase).origin;
+        tenants.set(base, [...(tenants.get(base) ?? []), wiring]);
+      }
+      for (const [base, rows] of tenants) {
         const query = new URLSearchParams({
           $filter: `eventDate ge ${from}Z and eventDate le ${to}Z`,
-          $orderby: "eventDate asc",
-          $top: "200",
+          $orderby: "id asc", $top: "200",
         });
-        const url = `${wiring.config.apiBase}/v1/Events?${query}`;
-        const body = await politeGetJson<{ value?: CivicClerkEvent[] }>(url, {
-          fetchImpl,
-          signal: meetingQuery?.signal,
-        });
-        collected.push({
-          wiring,
-          events: Array.isArray(body?.value) ? body.value : [],
-          collectedAt: new Date().toISOString(),
-        });
+        // No complete event revision is exposed; an unchanged latest id cannot rule out cancellations or new documents.
+        await politeGetJson(`${base}/v1/Events?${new URLSearchParams({ $top: "1", $orderby: "id desc" })}`, { fetchImpl, signal: meetingQuery?.signal });
+        const readPages = <T extends { id: number }>(url: string) => readCivicClerkPages<T>(url,
+          page => politeGetJson<CivicClerkPage<T>>(page, { fetchImpl, signal: meetingQuery?.signal }), meetingQuery?.signal);
+        const categories = await readPages<{ id: number; categoryDesc: string }>(`${base}/v1/EventCategories`);
+        for (const wiring of rows) {
+          if (wiring.config.categoryId) continue;
+          const name = wiring.config.bodyMatch ?? wiring.config.bodyName;
+          const matches = categories.filter(category => category.categoryDesc?.trim().toLowerCase() === name?.trim().toLowerCase());
+          if (matches.length !== 1) throw new Error(`CIVICCLERK_CATEGORY_UNRESOLVED:${wiring.bodyId}`);
+          wiring.config = { ...wiring.config, categoryId: String(matches[0].id) };
+        }
+        query.set("$filter", `${query.get("$filter")} and categoryId in (${[...new Set(rows.map(row => row.config.categoryId))].join(",")})`);
+        const events = await readPages<CivicClerkEvent>(`${base}/v1/Events?${query}`);
+        const collectedAt = new Date().toISOString();
+        for (const wiring of rows) collected.push({ wiring, events: events.filter(event => civicClerkMatches(event, wiring.config)), collectedAt });
       }
       return collected;
     },

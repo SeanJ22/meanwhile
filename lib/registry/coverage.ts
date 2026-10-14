@@ -344,7 +344,7 @@ export function summarizeCoverage(
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
         : null,
       ...(body.officeAddress || body.officePhone
-        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.provenance } }
+        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.fieldSources?.officeAddress ?? body.fieldSources?.officePhone ?? body.provenance } }
         : {}),
       lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       ...(historyGap ? { historyGap } : {}),

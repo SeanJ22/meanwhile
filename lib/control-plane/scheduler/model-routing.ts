@@ -58,7 +58,7 @@ export const SCOUT_STEPS = {
   /** HTML/JSON/PDF -> title, visible text, links, extracted text. Code, in scout-tools.ts. */
   "page-to-representation": {
     kind: "DETERMINISTIC",
-    implementedIn: "lib/control-plane/scheduler/scout-tools.ts (visibleText, extractLinks, htmlTitle, extractPdf, JSON pretty-print)",
+    implementedIn: "lib/control-plane/scheduler/scout-tools.ts and lib/extract/visible-text.ts (visibleText, extractLinks, htmlTitle, extractPdf, JSON pretty-print)",
     why: "deriving the sanitized representation from vaulted bytes is string work; no model runs and none may",
   },
   /** robots.txt -> ALLOWED / DISALLOWED / NO_ROBOTS / CANNOT_TELL. Code, in robots.ts. */
@@ -292,10 +292,11 @@ assertModelClassesWithinCeiling();
 
 /** The outer byte bound on a whole tool result handed to the model. Past it the result is truncated with a stated truncation and the artifact id(s). */
 export const REPRESENTATION_BUDGETS: Readonly<Record<string, number>> = {
-  fetch_public: 64_000,
-  browse: 96_000,
-  read_permission: 12_000,
-  read_inherited: 48_000,
+  fetch_public: 16_000,
+  browse: 16_000,
+  read_permission: 4_000,
+  read_inherited: 12_000,
+  read_held: 16_000,
   // A ranked pointer list (URLs + titles), no page content — small by construction.
   search: 12_000,
 };
@@ -329,10 +330,11 @@ export function fitRepresentation(tool: string, text: string, artifactIds: reado
 }
 
 
-/** Five-minute TTL: turns of one Attempt are seconds apart, and Attempts on one obligation are at least a cycle apart, so a 1-hour TTL buys nothing. */
+/** Share the role's stable prefix across jobs for an hour; conversation turns keep a moving five-minute breakpoint. */
 export const SCOUT_CACHE_POLICY = {
   ttl: "5m",
   cacheControl: { type: "ephemeral" } as const,
+  stableCacheControl: { type: "ephemeral", ttl: "1h" } as const,
   /** `TOP_LEVEL`: the API places and moves the breakpoint. `LAST_BLOCK`: fallback that marks the last block of the newest user turn. */
   movingBreakpoint: "TOP_LEVEL" as "TOP_LEVEL" | "LAST_BLOCK",
   /**

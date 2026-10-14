@@ -2,13 +2,6 @@ import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
 
-/**
- * A derived routine authority: each version is computed only from what is already promoted or vaulted, and is
- * authentic only as those exact inputs. `planDerivedVersion` holds the rule: a row promotes only with its inputs,
- * host attestation, adapter binding and the reader adapter's own verification; an outage or access control holds a
- * row and never removes it; evidence that the connection may be wrong suspends it until a later review; only vaulted
- * ROUTE_WITHDRAWN_BY_PUBLISHER evidence removes it; a hand-wired route shadows a derived row.
- */
 export type DerivedInputRef =
   | {
       readonly kind: "PROMOTED_VERSION";
@@ -80,7 +73,7 @@ export const DERIVED_INPUT_KINDS = [
 export type HostAttestation =
   | {
       readonly kind: "RECORDED_ADDRESS";
-      readonly source: "OPERATIONAL_REFERENCE" | "GAP_LEDGER" | "REGISTRATION";
+      readonly source: "OPERATIONAL_REFERENCE" | "GAP_LEDGER" | "REGISTRATION" | "WEBSITE_EVIDENCE";
       readonly versionId: string;
     }
   | { readonly kind: "REDIRECT_FROM_ATTESTED"; readonly fromUrl: string; readonly from: HostAttestation }
@@ -93,10 +86,6 @@ export function promotedInputRef(recordClass: string, scope: string, versionId: 
     : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex"), promotedAt };
 }
 
-/**
- * The reader adapter a row wires, pinned to the adapter's own closure digest,
- * so a parser change re-keys the row instead of silently re-validating it.
- */
 export interface AdapterBinding {
   readonly adapter: string;
   readonly closureDigest: string;
@@ -229,10 +218,6 @@ export type DerivedPlanRefusal =
 
 const inputKey = (input: DerivedInputRef): string => canonicalCivicDataJson(input);
 
-/**
- * **THE RULE.** Plan the next version from the previous one and this
- * version's decisions. Pure: it reads nothing and writes nothing.
- */
 export function planDerivedVersion<Row>(
   previous: readonly DerivedVersionEntry<Row>[],
   decisions: readonly DerivedRowDecision<Row>[],
@@ -344,14 +329,6 @@ export function planDerivedVersion<Row>(
   };
 }
 
-/**
- * The retrieval a derived candidate carries in place of an HTTP read.
- *
- * - `rawHash` is the sha256 (bare hex) of the canonical input list, so the same
- *   inputs always give the same hash and a changed input always changes it.
- * - `retrievedAt` is the newest input's own time: the version cannot claim to
- *   be fresher than the newest thing it was computed from.
- */
 export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
   readonly rawHash: string;
   readonly retrievedAt: string | null;

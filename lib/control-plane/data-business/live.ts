@@ -197,7 +197,11 @@ const sharedCache = new Map<string, CapturedEvent[]>();
 export function liveSources(options: { readonly query?: Query | null; readonly history?: HistoryStore } = {}): Sources {
   const query = options.query === undefined ? readerQuery() : options.query;
   const events = historyEvents(options.history ?? netlifyHistoryStore(), options.history === undefined ? sharedCache : new Map());
-  return { totals: liveTotals(query), cohorts: liveCohorts(query), events, places: liveZipPlaceIndex };
+  return { totals: liveTotals(query), cohorts: liveCohorts(query), events, places: liveZipPlaceIndex,
+    populations: async keys => {
+      const { populationDenominators } = await import("./population.ts");
+      return populationDenominators(keys, query ? async statements => Promise.all(statements.map(statement => query(statement.text, statement.params))) : null);
+    } };
 }
 
 /* ------------------------------------------------------------------------------------------ did anything fail to record */

@@ -1,17 +1,5 @@
-/**
- * A method that worked is saved, retrieved for another government by body class and state, and used by the runner;
- * a template slot the identity lacks leaves the query unsent, and a standing failure is not paid for twice. Every
- * test that writes runs on the in-memory double and the durable file store.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
-
-import {
-  runMeetingsDiscovery,
-  type DiscoveryOpen,
-  type DiscoveryRuntime,
-} from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import {
   RECIPE_KIND,
@@ -28,11 +16,9 @@ import {
   substitute,
   type MeetingsRecipe,
 } from "../lib/hunt/meetings-recipes.ts";
-import { eachStore } from "./control-plane-fixtures.ts";
 
 const NOW = "2026-09-24T02:00:00.000Z";
 const LATER = "2026-09-24T03:00:00.000Z";
-const ICS = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nSUMMARY:Regular meeting\r\nDTSTART:20261005T010000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
 const WP_HOME = `<html><head><link rel="stylesheet" href="/wp-content/plugins/the-events-calendar/src/resources/css/tribe-events.css"></head>
   <body><a href="/events/">Events</a><a href="/parks">Parks</a></body></html>`;
 
@@ -44,30 +30,6 @@ const WP = SEED_RECIPES.find((r) => r.recipeId === "wordpress-events-calendar-li
 
 function recipe(over: Partial<MeetingsRecipe>): MeetingsRecipe {
   return { ...WP, ...over };
-}
-
-function fakeOpen(map: Readonly<Record<string, { status: number; body?: string }>>): { open: DiscoveryOpen; seen: string[] } {
-  const seen: string[] = [];
-  return {
-    seen,
-    open: async ({ url }) => {
-      seen.push(url);
-      const r = map[url] ?? { status: 404, body: "not found" };
-      const body = r.body ?? "";
-      return { status: r.status, body, bytes: body.length, contentType: "text/html", location: null, transportError: null };
-    },
-  };
-}
-
-function runtime(open: DiscoveryOpen, recipes: readonly MeetingsRecipe[], now = NOW): DiscoveryRuntime {
-  return {
-    open,
-    spaceOut: async () => {},
-    vault: async () => ({ stored: true, where: "vault", why: "stored" }),
-    now: () => now,
-    budget: { spent: () => false },
-    recipes,
-  };
 }
 
 test("SUBSTITUTION: a template is filled from the government's identity; a missing slot leaves the query unsent", () => {
@@ -187,110 +149,4 @@ test("A CORRECTED SEED REACHES THE RUNNER: a stored seed keeps its counts and fa
     "a learned recipe has no seed: the store is its method",
   );
   assert.equal(known.length, SEED_RECIPES.length + 1);
-});
-
-test("THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes it back; cycle 2 reads it and applies it in another state", async () => {
-  for (const [label, repos] of await eachStore("wtp-recipes-")) {
-    /* Cycle 1: an Arizona town on WordPress whose homepage links no feed. */
-    const cycle1 = fakeOpen({
-      "https://benson.gov/robots.txt": { status: 404 },
-      "https://benson.gov/": { status: 200, body: WP_HOME },
-      "https://benson.gov/events/list/?ical=1": { status: 200, body: ICS },
-    });
-    const first = await runMeetingsDiscovery(repos, {
-      needs: [need("az:city:city-of-benson", "benson.gov")],
-      runtime: runtime(cycle1.open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(first.walked[0].outcome, "FOUND", label);
-    assert.deepEqual(first.walked[0].found.map((f) => [f.basis, f.url]), [["RECIPE", "https://benson.gov/events/list/?ical=1"]]);
-    assert.deepEqual(first.recipesUpdated, [WP.recipeId]);
-
-    const stored = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
-    assert.equal(stored.successes, 1, `${label}: the success is saved in the field manual, which outlives the process`);
-    assert.equal(stored.lastSuccess?.jurisdictionId, "az:city:city-of-benson");
-
-    /* Cycle 2, a later process: a New Mexico school district, retrieved from the store, not the seed. */
-    const cycle2 = fakeOpen({
-      "https://www.sfps.k12.nm.us/robots.txt": { status: 200, body: "User-agent: *\nAllow: /\n" },
-      "https://www.sfps.k12.nm.us/": { status: 200, body: WP_HOME },
-      "https://www.sfps.k12.nm.us/events/list/?ical=1": { status: 200, body: ICS },
-    });
-    const second = await runMeetingsDiscovery(repos, {
-      needs: [need("nm:district:santa-fe-public-schools", "www.sfps.k12.nm.us", "NM", "SCHOOL_DISTRICT", "Santa Fe Public Schools")],
-      runtime: runtime(cycle2.open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), LATER),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(second.walked[0].outcome, "FOUND", label);
-    assert.deepEqual(second.walked[0].recipes.applied.map((a) => [a.recipeId, a.verdict]), [[WP.recipeId, "YIELDED"]]);
-    const after = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
-    assert.equal(after.successes, 2, `${label}: the second cycle used the saved method and added to it`);
-  }
-});
-
-test("A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorded, and the next cycle does not request it again here", async () => {
-  for (const [label, repos] of await eachStore("wtp-recipes-")) {
-    const site = {
-      "https://shell.gov/robots.txt": { status: 404 },
-      "https://shell.gov/": { status: 200, body: WP_HOME },
-      "https://shell.gov/events/list/?ical=1": { status: 200, body: "<!DOCTYPE html><html>Events</html>" },
-    };
-    const one = fakeOpen(site);
-    const first = await runMeetingsDiscovery(repos, {
-      needs: [need("az:town:shell", "shell.gov")],
-      runtime: runtime(one.open, knownRecipes([])),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(first.walked[0].recipes.applied[0].verdict, "NOT_CONFIRMED", label);
-    assert.ok(one.seen.includes("https://shell.gov/events/list/?ical=1"));
-    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
-    assert.equal(saved.failures, 1);
-    assert.match(saved.lastFailure?.limit ?? "", /content check/);
-
-    /* The need is re-walked (its own recheck aside); the recipe's standing failure keeps its path unrequested. */
-    const two = fakeOpen(site);
-    await repos.discoveryAttempts.append("az:town:shell", "force-due", { ...first.walked[0], attemptId: "force-due", recheckAfter: "2026-09-01T00:00:00.000Z" }, NOW);
-    const second = await runMeetingsDiscovery(repos, {
-      needs: [need("az:town:shell", "shell.gov")],
-      runtime: runtime(two.open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), LATER),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(two.seen.includes("https://shell.gov/events/list/?ical=1"), false, `${label}: the same unchanged failure is not paid for twice`);
-    assert.match(second.walked[0].recipes.skipped[0].why, /not paid for again/);
-  }
-});
-
-test("THE TIME RAN OUT, NOT THE METHOD: a saved method the walk did not reach is neither credited nor charged", async () => {
-  for (const [label, repos] of await eachStore("wtp-recipes-")) {
-    let left = 60_000;
-    const site = fakeOpen({
-      "https://timed.gov/robots.txt": { status: 404 },
-      "https://timed.gov/": { status: 200, body: WP_HOME.replace(`<a href="/parks">Parks</a>`, `<a href="/calendar/m.ics">Meetings</a>`) },
-      "https://timed.gov/calendar/m.ics": { status: 200, body: ICS },
-      "https://timed.gov/events/list/?ical=1": { status: 200, body: ICS },
-    });
-    const spendAfterFeed: DiscoveryOpen = async (input) => {
-      const reply = await site.open(input);
-      if (input.url.endsWith("/m.ics")) left = 0;
-      return reply;
-    };
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [need("az:town:timed", "timed.gov")],
-      runtime: { ...runtime(spendAfterFeed, knownRecipes([])), budget: { spent: () => left <= 0, remainingMs: () => left } },
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(pass.walked[0].outcome, "FOUND", `${label}: the route the page linked was confirmed before the time ran out`);
-    assert.deepEqual(pass.walked[0].found.map((f) => f.url), ["https://timed.gov/calendar/m.ics"]);
-    assert.equal(site.seen.includes("https://timed.gov/events/list/?ical=1"), false, `${label}: the saved method's route was never requested`);
-    assert.deepEqual(pass.walked[0].recipes.applied, [], `${label}: a method not reached is not applied`);
-    assert.equal(pass.walked[0].leads.some((l) => l.basis === "RECIPE"), false, `${label}: a method's guess is never a lead`);
-    assert.deepEqual(pass.recipesUpdated, [], label);
-    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === WP.recipeId)!;
-    assert.equal(saved.failures, 0, `${label}: the time ran out, not the method`);
-  }
 });

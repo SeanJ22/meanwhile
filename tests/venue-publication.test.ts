@@ -68,7 +68,7 @@ test("a pass with no new match, or a refused one, changes nothing and never thro
   assert.notEqual(read.kind, "PROMOTED");
 });
 
-test("venue-resolutions is no longer a reviewed-input contract", () => {
+test("venue-resolutions publishes through its existing derived pass", () => {
   const row = manualProducerInvocationMatrix([], T1).find((entry) => entry.id === "venue-resolutions");
   assert.equal(row?.mode, "EXISTING_DERIVED");
 });

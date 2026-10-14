@@ -436,6 +436,21 @@ export function sameCitedAuthority(candidate: RoutineCandidate, pointed: Routine
   return cited(candidate) === cited(pointed);
 }
 
+function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  if (candidate.recordClass === "MEETING_OUTCOME") {
+    const checks = (value: RoutineCandidate) => canonicalCivicDataJson((value.readModel as {
+      sittings?: { meetingId: string; minutesDocument?: { readAt?: string } }[]
+    }).sittings?.map(row => [row.meetingId, row.minutesDocument?.readAt ?? null]) ?? []);
+    return checks(candidate) === checks(pointed);
+  }
+  if (!["FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"].includes(candidate.recordClass)) return true;
+  const progress = (value: RoutineCandidate) => {
+    const payload = value.readModel as { refreshAttempts?: unknown; acquisitionCursors?: unknown };
+    return canonicalCivicDataJson([payload.refreshAttempts ?? null, payload.acquisitionCursors ?? null]);
+  };
+  return progress(candidate) === progress(pointed);
+}
+
 export async function processRoutineCandidate(
   store: RoutineDataStore,
   inputCandidate: RoutineCandidate,
@@ -489,9 +504,13 @@ export async function processRoutineCandidate(
         );
   const candidate: RoutineCandidate = {
     ...inputCandidate,
+    // A receiptless curated base contributes no verified records to the change set.
     changeSet: candidateChangeSet(
       inputCandidate,
-      preloadedBaseChanged ? exactDeclaredBase?.candidate.readModel ?? null : current?.payload ?? null,
+      inputCandidate.recordClass === "CURATED_READER_RECORD" && inputCandidate.retrieval.manualSourceReceipt &&
+        !(preloadedBaseChanged ? exactDeclaredBase : lkg)?.candidate.retrieval.manualSourceReceipt
+        ? null
+        : preloadedBaseChanged ? exactDeclaredBase?.candidate.readModel ?? null : current?.payload ?? null,
     ),
   };
   const initialState: CandidateState = candidate.retrieval.succeeded ? "FETCHED" : "SOURCE_BLOCKED";
@@ -531,7 +550,8 @@ export async function processRoutineCandidate(
     candidate.changeSet?.outcome === "UNCHANGED" &&
     typeof lkg.candidate.normalization.normalizedHash === "string" &&
     sameHeldRecords(candidate, lkg.candidate) &&
-    sameCitedAuthority(candidate, lkg.candidate)
+    sameCitedAuthority(candidate, lkg.candidate) &&
+    sameAcquisitionProgress(candidate, lkg.candidate)
   ) {
     const retained = (candidate as { readonly retainedSourceResponses?: readonly unknown[] }).retainedSourceResponses;
     const confirmed = await store.confirmUnchanged({

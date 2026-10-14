@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { ZERO_COST } from "../control-plane/attempt.ts";
 import { costEntryWithModel, modelRequestBoundFor, type CostEntry } from "../control-plane/cost.ts";
-import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
+import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import { canonicalModelId } from "../models.ts";
@@ -23,7 +23,7 @@ export function meteredAskFetch(impl: typeof fetch, lane: string, write: AskCost
     const params = JSON.parse(String(init?.body ?? "{}")) as { model?: string; max_tokens?: number; system?: unknown; cache_control?: unknown };
     const ttl = (JSON.stringify(params.system) ?? "").includes('"ttl":"1h"') ? "1h" : "5m";
     const requestBody = JSON.stringify({ ...params,
-      cache_control: params.cache_control ?? { type: "ephemeral", ...(ttl === "1h" ? { ttl } : {}) } });
+      cache_control: params.cache_control ?? { type: "ephemeral" } });
     const requestBound = typeof params.model === "string" && typeof params.max_tokens === "number"
       ? modelRequestBoundFor(params.model, Buffer.byteLength(requestBody), params.max_tokens) : null;
     let body: { model?: string; usage?: unknown } | null = null;
@@ -36,15 +36,19 @@ export function meteredAskFetch(impl: typeof fetch, lane: string, write: AskCost
     } finally {
       const metering = readMeteredUsage(body?.usage);
       const model = typeof body?.model === "string" ? body.model : params.model ?? null;
+      const usd = model === null ? null : priceMeteredUsage(canonicalModelId(model), metering, ttl).usd;
       const entry = costEntryWithModel({ attemptId: id, workItemId: "ask", routeTaskId: null,
+        costPolicy: "R7",
         requestedModel: params.model ?? null, servedModel: typeof body?.model === "string" ? body.model : null,
-        ...(requestBound ? { modelRequestBound: requestBound } : {}),
+        ...(requestBound && usd === null ? { modelRequestBound: requestBound } : {}),
         routeId: `ask:${lane}`, source: "api.anthropic.com", jurisdiction: null, project: "ask", role: "ASK",
         resultKind: status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`, recordedAt: new Date().toISOString(),
         cost: { ...ZERO_COST, ...meteredCostFields(metering), inputTokens: metering.uncachedInputTokens === null ? null
           : metering.uncachedInputTokens + (metering.cacheReadInputTokens ?? 0) + (metering.cacheCreationInputTokens ?? 0),
-          outputTokens: metering.outputTokens, usd: model === null ? null : priceMeteredUsage(canonicalModelId(model), metering, ttl).usd,
-          durationMs: Math.round(performance.now() - started), requestCount: 1 } }, model);
+          outputTokens: metering.outputTokens, usd,
+          durationMs: Math.round(performance.now() - started), requestCount: 1,
+          listPriceUsd: model === null ? null : listPriceUsdForUsage(model, metering),
+          modelRequestCount: 1, batchEligibleRequestCount: 0, batchRequestCount: 0 } }, model);
       try { await write(entry); }
       catch (error) { repositories = undefined; console.error(`Ask cost recording unavailable: ${id}; ${error instanceof Error ? error.name : "Error"}`); }
     }

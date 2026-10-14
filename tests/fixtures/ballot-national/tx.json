@@ -1,0 +1,44 @@
+{
+  "ballots": {
+    "TX:fixture-2026-general": {
+      "election": { "id": "fixture-2026-general", "state": "TX", "name": "Fixture General Election", "date": "2026-11-03" },
+      "contests": [
+        {
+          "id": "fixture-tx-governor", "electionId": "fixture-2026-general", "ocdId": "ocd-division/country:us/state:tx",
+          "divisionVintage": "fixture", "title": "Governor", "type": "CANDIDACY", "candidateListComplete": true,
+          "voteFor": 1, "termYears": null, "scopeNote": null,
+          "provenance": { "sourceUrl": "https://elections.example.gov/tx/candidates", "sourceOrg": "Fixture Texas election authority", "collectedAt": "2026-10-13T00:00:00.000Z", "verifiedAt": "2026-10-13T00:00:00.000Z" }
+        },
+        {
+          "id": "fixture-tx-senate", "electionId": "fixture-2026-general", "ocdId": "ocd-division/country:us/state:tx",
+          "divisionVintage": "fixture", "title": "U.S. Senator", "type": "CANDIDACY", "candidateListComplete": true,
+          "voteFor": 1, "termYears": null, "scopeNote": null,
+          "provenance": { "sourceUrl": "https://elections.example.gov/tx/candidates", "sourceOrg": "Fixture Texas election authority", "collectedAt": "2026-10-13T00:00:00.000Z", "verifiedAt": "2026-10-13T00:00:00.000Z" }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fixture-tx-alice", "contestId": "fixture-tx-governor", "familyName": "Adams", "givenName": "Alice",
+          "partyLabel": null, "slogan": null, "incumbent": null, "websiteUrl": "https://ALICE.Example.org/",
+          "provenance": { "sourceUrl": "https://elections.example.gov/tx/candidates", "sourceOrg": "Fixture Texas election authority", "collectedAt": "2026-10-13T00:00:00.000Z", "verifiedAt": "2026-10-13T00:00:00.000Z" }
+        },
+        {
+          "id": "fixture-tx-bob", "contestId": "fixture-tx-senate", "familyName": "Baker", "givenName": "Bob",
+          "partyLabel": null, "slogan": null, "incumbent": null, "websiteUrl": null,
+          "provenance": { "sourceUrl": "https://elections.example.gov/tx/candidates", "sourceOrg": "Fixture Texas election authority", "collectedAt": "2026-10-13T00:00:00.000Z", "verifiedAt": "2026-10-13T00:00:00.000Z" }
+        }
+      ],
+      "measures": [], "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1, "reviewedAt": "2026-10-13T00:00:00.000Z", "reviewedBy": "fixture-state-session",
+    "sources": [{
+      "requestedUrl": "https://elections.example.gov/tx/candidates", "finalUrl": "https://elections.example.gov/tx/candidates",
+      "publisher": "Fixture Texas election authority", "sourceClass": "ELECTION_AUTHORITY",
+      "retrievedAt": "2026-10-13T00:00:00.000Z", "httpStatus": 200,
+      "rawHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reviewedEvidence": "Fixture General Election: Governor, Alice Adams; U.S. Senator, Bob Baker. Complete fixture list."
+    }]
+  }
+}

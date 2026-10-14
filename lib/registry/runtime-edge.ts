@@ -40,9 +40,9 @@ export interface MeetingOutcomesEdgeValue {
   readonly value: OutcomeSnapshot;
   readonly versionId: string;
 }
-/** The promoted comment-access rules, a curated reader projection like campaign sites. */
+/** The comment rules composed from facts. */
 export interface CommentAccessEdgeValue {
-  readonly value: CuratedReaderProjection;
+  readonly value: import("./comment-access.ts").CommentAccessProjection;
   readonly versionId: string;
 }
 /** A request loads only the jurisdictions it serves. Missing bytes fall back to the typed reader. */

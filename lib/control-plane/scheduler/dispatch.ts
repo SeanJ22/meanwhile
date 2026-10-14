@@ -20,7 +20,7 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/typ
 import type { RouteDisposition } from "../route-task.ts";
 import { completeWorkerTask, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
 import { PolicyRefusal } from "../capability.ts";
-import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare } from "../cost.ts";
+import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare, type ModelRequestBound } from "../cost.ts";
 import { questionOfObligation } from "../work-question.ts";
 
 import { currentAssignmentRefs, type FreshnessObligation, type ScheduledObligation } from "./obligation.ts";
@@ -204,6 +204,8 @@ export interface WorkOutcome {
   readonly spendHoldJobId?: string;
   /** The per-model split of `cost` when the worker ran more than one model; written to the ledger as `byModel`. */
   readonly costByModel?: readonly CostModelShare[];
+  /** A sent model request whose usage never came back, at its send limit; `cost` holds the answered ones. */
+  readonly unansweredRequest?: ModelRequestBound;
   readonly detail: string;
 }
 
@@ -294,6 +296,12 @@ export const DEFAULT_WORKER_FOR: WorkerFor = ({ executor, holder }) =>
         version: "unspecified-model",
         instance: holder,
       };
+
+/** The ledger fields for an outcome's unanswered request; its model is the one requested. */
+function unanswered(outcome: WorkOutcome | undefined): Pick<CostEntry, "modelRequestBound" | "requestedModel"> {
+  const bound = outcome?.unansweredRequest;
+  return bound ? { modelRequestBound: bound, requestedModel: bound.model } : {};
+}
 
 /**
  * Claim one obligation's due work and run it through the canonical lifecycle: claim, begin Attempt, run,
@@ -447,6 +455,7 @@ export async function dispatchOne(
         model: worker.provider === "anthropic" ? (byModel?.[0]?.model ?? worker.version) : null,
         cost,
         spendHoldJobId: outcome?.spendHoldJobId,
+        ...unanswered(outcome),
         recordedAt: at,
         ...purpose,
         resultKind,
@@ -703,6 +712,7 @@ export async function dispatchOne(
         model: worker.provider === "anthropic" ? (outcome.costByModel?.[0]?.model ?? worker.version) : null,
         cost: outcome.cost,
         spendHoldJobId: outcome.spendHoldJobId,
+        ...unanswered(outcome),
         recordedAt: terminalAt,
         ...purpose,
         resultKind: disposition.disposition,

@@ -1,9 +1,3 @@
-/**
- * Workers and Now screens show the real `admin-v6/workers@1` reading.
- *
- * The section bodies below are production-shaped readings for three scopes, served to `LiveSync`
- * by a fake fetch.
- */
 import assert from "node:assert/strict";
 import { mock, test } from "node:test";
 import { createElement as h } from "react";
@@ -26,6 +20,7 @@ import { readV6WorkersSources, v6WorkersSection } from "../../lib/control-plane/
 import { createMemoryRepositories } from "../../lib/control-plane/repository/memory.ts";
 import { liveCycleHeartbeat } from "../../lib/control-plane/runner-standing.ts";
 import { runDbApply } from "../../scripts/db-apply.mts";
+import { CandidateCard } from "../../components/ballot/candidate-card.tsx";
 
 /* -------------------------------------------------- the saved readback */
 
@@ -131,6 +126,31 @@ async function livePage(scopeKey: string) {
 
 /* ---------------------------------------------------------------- tests */
 
+test("Workers displays the runner's merged states and every skipped state's reason beside the ballot publication control", async () => {
+  const sync = new LiveSync({ scope: "us", schedule: () => () => {}, fetch: async () => ({ status: 200, json: async () => ({
+    contract: "admin-v6/publication@1", scope: "us", revision: "fixture-ballots", asOf: READ_AT, missingParts: [],
+    data: { total: 1, counts: [], latestAttemptFailing: 0, notVisible: [], notVisibleHidden: 0,
+      ballotPublication: { kind: "BALLOT_PUBLICATION", inputHash: "a".repeat(64), at: READ_AT, status: "PUBLISHED", versionId: "fixture",
+        merged: ["ak.json", "tx.json"], skipped: [{ file: "ca.json", reason: "Official candidate list is incomplete." },
+          { file: "nd.json", reason: "The source records a blocked response." }], reason: null } },
+  }) }) });
+  const p = pulse(null);
+  sync.onPulse({ ...p, v6: { ...p.v6, sections: { publication: { contract: "admin-v6/publication@1", href: "/api/admin/v6/publication", revision: "fixture-ballots" } } } });
+  await settle(sync);
+  const html = page(sync, { kind: "all" }, "us", "workers");
+  assert.match(text(html), /Merged: AK, TX/);
+  assert.match(text(html), /Skipped CA: Official candidate list is incomplete\./);
+  assert.match(text(html), /Skipped ND: The source records a blocked response\./);
+  assert.match(text(html), /Publish ballots/);
+});
+
+test("a candidate website's displayed host is lowercase while its filed link is preserved", () => {
+  const url = "https://ALICE.Example.org/Campaign";
+  const html = renderToStaticMarkup(h(CandidateCard, { name: "Fixture Alice", partyLine: "", card: null, links: null, filedSiteUrl: url }));
+  assert.match(html, /href="https:\/\/ALICE.Example.org\/Campaign"/);
+  assert.match(text(html), /alice.example.org \(as filed\)/);
+});
+
 test("parent cycle metadata reaches the existing Workers round through bounded reads and live sync", async () => {
   mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });
   try {
@@ -152,13 +172,17 @@ test("parent cycle metadata reaches the existing Workers round through bounded r
       b.set(() => ({ status: 200, body: reading }));
       sync.onPulse(pulse(ended ? "cycle-finished" : "cycle-live"));
       await settle(sync);
-      const rendered = text(page(sync, { kind: "all" }, "us", "workers"));
+      const html = page(sync, { kind: "all" }, "us", "workers");
+      const rendered = text(html);
+      const face = text(html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, ""));
       if (!ended) {
         assert.match(rendered, /Running since 6:05 PM ET/);
-        assert.doesNotMatch(rendered, /signal SIGTERM|Last round error/);
+        assert.doesNotMatch(rendered, /stopped from outside|ended with an error|SOURCE_READ_FAILED/);
       } else {
-        assert.match(rendered, /Started Sep 28, 6:05 PM ET; finished Sep 28, 6:12 PM ET; signal SIGTERM/);
-        assert.match(rendered, /Last round error: SOURCE_READ_FAILED/);
+        assert.match(face, /Started Sep 28, 6:05 PM ET; finished Sep 28, 6:12 PM ET; it was stopped from outside\./);
+        assert.match(face, /The last round ended with an error\./);
+        assert.doesNotMatch(face, /SOURCE_READ_FAILED|SIGTERM/, "the error text is not on the face");
+        assert.match(rendered, /SOURCE_READ_FAILED/, "it is kept behind Technical details");
         assert.doesNotMatch(rendered, /Running since/);
       }
     }
@@ -184,10 +208,14 @@ test("a migration failure reaches the existing Workers card through saved histor
   const b = backend(); b.set(() => ({ status: 200, body: reading }));
   const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
   sync.onPulse(pulse("migration-failed")); await settle(sync);
-  const rendered = text(page(sync, { kind: "all" }, "us", "workers"));
-  assert.match(rendered, /Production migrations/);
-  assert.match(rendered, /expand: failed/);
-  assert.match(rendered, /Engineering repairs the expand migration failure/);
+  const html = page(sync, { kind: "all" }, "us", "workers");
+  const rendered = text(html);
+  const face = text(html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, ""));
+  assert.match(face, /The latest database update/);
+  assert.match(face, /The latest database update did not finish: the step that runs before new code goes live failed\./);
+  assert.match(face, /Engineering repairs the step that runs before new code goes live/);
+  assert.doesNotMatch(face, /expand: failed|\[private\]/, "the migration's own output is not on the face");
+  assert.match(rendered, /expand: failed/, "the migration output is kept behind Technical details");
   assert.match(rendered, /\[private\]/);
   assert.doesNotMatch(rendered, /s13-private-token|password|postgresql:\/\//);
   assert.doesNotMatch(rendered, /Fix this/);

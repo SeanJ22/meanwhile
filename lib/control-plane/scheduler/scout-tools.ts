@@ -93,6 +93,7 @@ import {
   type ScoutToolkit,
 } from "./scout-contract.ts";
 import { SCOUT_LADDER } from "./scout-result.ts";
+import { decodeEntities, visibleText } from "../../extract/visible-text.ts";
 
 
 export const TEXT_CAP_CHARS = 12_000;
@@ -197,9 +198,7 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
 ];
 
 /**
- * The `search` spec, APPENDED to the toolkit's specs only when a search seam is
- * configured (a provider key is present). A runtime with no key never offers it,
- * so the tool is fully inert without configuration.
+ * Stable search definition. The call still requires its configured seam and the owner's live spending controls.
  */
 export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
   name: "search",
@@ -250,9 +249,9 @@ export const REPORT_FINDING_TOOL_SPEC: ScoutToolSpec = {
   },
 };
 
-/** The research tool list for one setting of the search switch, the one answer the toolkit and the pre-warm both read (it is the cached prefix). */
-export function scoutToolSpecsFor(search: boolean, reportFinding = false): readonly ScoutToolSpec[] {
-  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : []), ...(reportFinding ? [REPORT_FINDING_TOOL_SPEC] : [])];
+/** One byte-identical tool list across jobs; unavailable tools return their existing refusal without calling a service. */
+export function scoutToolSpecsFor(_search: boolean, _reportFinding = false): readonly ScoutToolSpec[] {
+  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, SEARCH_TOOL_SPEC, REPORT_FINDING_TOOL_SPEC];
 }
 
 
@@ -330,45 +329,11 @@ function decodeText(bytes: Uint8Array, contentType: string): string {
 }
 
 
-const ENTITIES: Readonly<Record<string, string>> = {
-  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", hellip: "…",
-  rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", copy: "©", reg: "®", times: "×",
-};
-
-export function decodeEntities(text: string): string {
-  return text
-    .replace(/&#x([0-9a-f]+);/gi, (_, hex: string) => safeCodePoint(parseInt(hex, 16)))
-    .replace(/&#(\d+);/g, (_, dec: string) => safeCodePoint(Number(dec)))
-    .replace(/&([a-z]+);/gi, (whole, name: string) => ENTITIES[name.toLowerCase()] ?? whole);
-}
-
-function safeCodePoint(n: number): string {
-  try {
-    return Number.isFinite(n) && n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : "";
-  } catch {
-    return "";
-  }
-}
-
 export function htmlTitle(html: string): string | null {
   const m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html);
   if (!m) return null;
   const title = decodeEntities(m[1]).replace(/\s+/g, " ").trim();
   return title === "" ? null : title;
-}
-
-/** Visible text: scripts, styles, noscript, templates and comments removed; block ends become newlines. */
-export function visibleText(html: string): string {
-  const stripped = html
-    .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<(script|style|noscript|template|svg)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ")
-    .replace(/<\s*(br|\/p|\/div|\/li|\/tr|\/h[1-6]|\/section|\/article|\/table|\/ul|\/ol|\/header|\/footer|\/nav|\/dd|\/dt|\/blockquote|\/pre)\b[^>]*>/gi, "\n")
-    .replace(/<[^>]+>/g, " ");
-  return decodeEntities(stripped)
-    .split(/\n/)
-    .map((line) => line.replace(/[ \t\r\f\v ]+/g, " ").trim())
-    .filter((line) => line !== "")
-    .join("\n");
 }
 
 export interface DerivedLink {

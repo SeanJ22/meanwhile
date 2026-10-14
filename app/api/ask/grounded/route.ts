@@ -1,5 +1,7 @@
+import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
 import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
 import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
@@ -13,6 +15,7 @@ import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { readCommentAccessFacts } from "@/lib/registry/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
@@ -45,7 +48,6 @@ import {
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
 import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { statementEvidenceFor } from "@/lib/ask/statements";
-import { stanceAnswerability } from "@/lib/ask/stance-answerability";
 import { fetchThroughKey, composeFinanceDetail } from "@/lib/ask/fetch-through-key";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
@@ -102,9 +104,6 @@ import {
   settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
 import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
-import {
-  refreshCommentAccessFromPromoted,
-} from "@/lib/civic-data/curated-reader-read-model";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
@@ -532,7 +531,7 @@ async function answerWithSettings(request: Request) {
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
-    ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
+    ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
@@ -905,8 +904,7 @@ async function answerWithSettings(request: Request) {
     try {
       const path = await answerPath(structuredClone(reading.interpretation), emptyTrace());
       if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack) ||
-        path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 ||
-        stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
+        path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0) return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
       const cached = synthesisCache.get(synthesisCacheKey(path.pack, writerCacheModel, ladderKey.effort));
       const controller = new AbortController();
@@ -1237,6 +1235,11 @@ async function answerWithSettings(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    if (populationQuestion(question)) {
+      const division = bound?.ocdId ?? (subject?.kind === "BODY" ? canonicalBodyIdentity(subject.id)?.ocdId : null);
+      const ids = populationEvidenceIds(subject?.kind ?? null, division, ballotZip, ocdIds);
+      records.push(...await readPopulationEvidence(ids, subject?.kind === "BODY" ? subject.id : undefined));
+    }
     /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
        recorded actions are not retrieved. */
     const financeAsked = financeQuestionAskedFor(question, subject?.kind ?? null);
@@ -1298,7 +1301,7 @@ async function answerWithSettings(request: Request) {
       Object.assign(denominators, profile.denominators);
     }
     const candidateSeats = ballotRecord?.kind === "PERSON"
-      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))
+      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(id=>seatHolderById(id))))
         .flatMap((result) => result.status === "fulfilled" && result.value ? [result.value] : [])
       : [];
     for (const seat of candidateSeats) canonicalSubjectKeys.add(seat.id);
@@ -1972,18 +1975,18 @@ async function answerWithSettings(request: Request) {
       denominators.financeDetailRowsReturned = financeDetail.records.length;
       denominators.financeDetailComplete = financeDetail.complete ? 1 : 0;
     }
+    if (isBillQuestion(question)) {
+      const person = subject?.kind === "PERSON" ? await seatHolderById(subject.id).catch(() => null) : null;
+      const billStates = person?.id.startsWith("congress:") ? ["US"] : person?.state ? [person.state] :
+        [...new Set([...statesOf(ocdIds), ...statesOf(subject ? [subject.id] : [])])];
+      const bills = await legiscanBillEvidence({question,subject,person,states:billStates});
+      records.push(...bills.records); gaps.push(...bills.gaps); Object.assign(denominators,bills.denominators);
+    }
     const relevant = gateRecordsToSubject(subject, records, comparedIds);
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
 
     const ownWordsComposed = composeOwnWordsAnswer({ subject, question, records: packRecords });
-    if (!ownWordsComposed && stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
-      const pageMatches = packRecords.filter((record) => record.kind === "SOURCE_PASSAGE").length;
-      denominators.personalStanceVerified = 0;
-      denominators.linkedSourcePassages = pageMatches;
-      gaps.push({ whose: "OURS", statement: `We have not verified a statement by ${subject!.name} that establishes their personal stance.` +
-        (pageMatches > 0 ? " The linked page passages below show only what the pages say." : "") });
-    }
 
     /* One named gap is said once, even when two same-day sittings carry it. */
     const packGaps = gaps.filter((gap, index) =>
@@ -2180,8 +2183,10 @@ async function answerWithSettings(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const populationSettled = settleSittingComposition(composePopulationAnswer(question, packRecords),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"
@@ -2231,8 +2236,7 @@ async function answerWithSettings(request: Request) {
   const synthesisKey = composed ? null : synthesisCacheKey(pack, writerCacheModel, ladderKey.effort);
   const missingMeasureMeaning = subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 &&
     !composeMeasureMeaningAnswer({ subject, question, records: packRecords });
-  const cachedSynthesis = !missingMeasureMeaning && synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"
-    ? synthesisCache.get(synthesisKey) : null;
+  const cachedSynthesis = !missingMeasureMeaning && synthesisKey ? synthesisCache.get(synthesisKey) : null;
   const keepSpeculative = settleSpeculation(outcome?.kind !== "READ" ? "MODEL_READING_UNAVAILABLE"
     : composed ? "MODEL_READING_NEEDS_NO_WRITER" : readingOutcome(path));
   const written = composed || missingMeasureMeaning ? null : cachedSynthesis ?? (keepSpeculative && speculation?.started ? await speculation.writing : await synthesizeWithLadder(pack, {

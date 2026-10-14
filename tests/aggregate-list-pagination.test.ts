@@ -106,6 +106,18 @@ test("listNarrowed reads the same bounded pages and projects each row exactly as
   assert.deepEqual((await pgAggregateRepository(empty.sql, "WorkItem", "cp_work_items").listNarrowed({})).map(row => row.value), [{}, {}]);
 });
 
+test("listWhereNarrowed() pages like listWhere() and has the database project each row instead of sending its value", async () => {
+  const { sql, calls } = fakeAggregateSql(tagged(AGGREGATE_LIST_READ_PAGE + 3, () => true));
+  const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "WorkItem", "cp_work_items");
+  const out = await repo.listWhereNarrowed(["routeTaskId"], "rt-want", { seq: true });
+  assert.equal(out.length, AGGREGATE_LIST_READ_PAGE + 3);
+  assert.equal(calls.length, 2, "two bounded pages");
+  for (const statement of calls) {
+    assert.match(statement, /jsonb_each\(cp_work_items\.value\)/, "the projection is computed in the database");
+    assert.doesNotMatch(statement, /updated_at, value AS value FROM/);
+  }
+});
+
 test("list() of exactly one full page still terminates on the short second page", async () => {
   const { sql, calls } = fakeAggregateSql(seq(AGGREGATE_LIST_READ_PAGE));
   const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");

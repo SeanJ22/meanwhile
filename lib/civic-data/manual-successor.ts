@@ -47,23 +47,22 @@ export async function prepareManualProjectionSuccessor(
     throw new Error("MANUAL_SUCCESSOR_EXACT_BASE_UNAVAILABLE");
   }
   const priorReceipt = base.candidate.retrieval.manualSourceReceipt;
-  if (priorReceipt) {
-    const earlier = exactMembers(read.value);
-    const resolved = (fresh.readModel as CuratedReaderProjection).records.map(record => {
-      const old = earlier.get(record.id);
-      return old ? resolveRecordConflicts(record, old, input.sourceReceipt, priorReceipt) : { record, conflicts: [] };
-    });
-    const conflicts = resolved.flatMap(result => result.conflicts);
-    if (conflicts.length) {
-      // The current review wins receipt deduplication for identical bytes; losing
-      // facts retain their actual earlier date in the conflict provenance.
-      const sources = [...priorReceipt.sources.filter(source => source.reviewOutcome !== "BLOCKED"), ...input.sourceReceipt.sources];
-      const merged = { ...input, sourceReceipt: { ...input.sourceReceipt,
-        sources: sources.filter((source, index) => sources.findIndex(other => canonicalCivicDataJson(other) === canonicalCivicDataJson(source)) === index) },
-        payload: { ...(input.payload as CuratedReaderProjection), records: resolved.map(result => result.record) } };
-      fresh = manualProjectionCandidate(merged);
-      fresh = { ...fresh, excludedFacts: [...(fresh.excludedFacts ?? []), ...conflicts] };
-    }
+  if (!priorReceipt) return { candidate: fresh, expectedBaseVersionId: base.candidate.id };
+  const earlier = exactMembers(read.value);
+  const resolved = (fresh.readModel as CuratedReaderProjection).records.map(record => {
+    const old = earlier.get(record.id);
+    return old ? resolveRecordConflicts(record, old, input.sourceReceipt, priorReceipt) : { record, conflicts: [] };
+  });
+  const conflicts = resolved.flatMap(result => result.conflicts);
+  if (conflicts.length) {
+    // The current review wins receipt deduplication for identical bytes; losing
+    // facts retain their actual earlier date in the conflict provenance.
+    const sources = [...priorReceipt.sources.filter(source => source.reviewOutcome !== "BLOCKED"), ...input.sourceReceipt.sources];
+    const merged = { ...input, sourceReceipt: { ...input.sourceReceipt,
+      sources: sources.filter((source, index) => sources.findIndex(other => canonicalCivicDataJson(other) === canonicalCivicDataJson(source)) === index) },
+      payload: { ...(input.payload as CuratedReaderProjection), records: resolved.map(result => result.record) } };
+    fresh = manualProjectionCandidate(merged);
+    fresh = { ...fresh, excludedFacts: [...(fresh.excludedFacts ?? []), ...conflicts] };
   }
   const current = exactMembers(fresh.readModel as CuratedReaderProjection);
   const prior = exactMembers(read.value);

@@ -17,9 +17,7 @@ import {
 } from "../lib/sources/legistar-insite/clerk-schedule.ts";
 import { parseCalendarRows, parseGridPager } from "../lib/sources/legistar-insite/calendar.ts";
 import {
-  GRANICUS_LIVE_PROCEEDINGS_ROUTE,
   MEETING_PRODUCING_ROUTES,
-  granicusRouteObservation,
   intersectionOfRoutes,
   openObligations,
   richerRouteLink,
@@ -421,34 +419,6 @@ test("a route this tenant has not declared says NOBODY LOOKED, not that nothing 
 
   // And the union is unchanged: losing a corroborating route loses no sitting.
   assert.equal(unread.union.length, 14);
-});
-
-test("the Granicus route is unbuilt, not walled — its robots.txt recorded with a date, and a NULL claim about content", () => {
-  const route = granicusRouteObservation();
-  // robots.txt is recorded and blocks nothing, so the route's zero is ours, never a permission wall.
-  assert.equal(route.enumeration, "NOT_BUILT");
-  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule, "User-agent: * / Disallow: /");
-  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt, "2026-08-28");
-  assert.equal(
-    GRANICUS_LIVE_PROCEEDINGS_ROUTE.claimAboutContent,
-    null,
-    "a route nobody read entitles us to NO claim about what is behind it",
-  );
-  assert.match(route.note ?? "", /NOT BUILT: no adapter reads this route yet/);
-  assert.match(route.note ?? "", /not blocking since the owner decision of 2026-09-25/);
-  assert.match(route.note ?? "", /NO claim is made about what the route publishes/);
-
-  // The counts are OUR action, not the route's contents.
-  assert.equal(route.rawFutureCount, 0);
-  assert.notEqual(
-    route.enumeration,
-    "PUBLISHER_STATED_EMPTY",
-    "an unread route is never the publisher stating emptiness",
-  );
-
-  // And the whole horizon is reachable without it.
-  const result = normalizeWithDrops([pimaReading()], NOW);
-  assert.equal(result.union.length, 14, "nothing we owe a reader depends on the unbuilt route");
 });
 
 test("UNNAMED TENANT: Mesa's asymmetry runs BOTH ways, so neither route may win", () => {

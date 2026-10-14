@@ -170,7 +170,7 @@ function censusReferenceCandidate(id: string): RoutineCandidate {
     scope: "acs-population",
     sourceProjectionEvidence: sourceProjectionEvidence("census-data-api", "CENSUS_REFERENCE", "acs-population"),
     retrieval: { succeeded: true, requestedUrl: "https://api.census.gov/data/2024/acs/acs5", finalUrl: "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E", httpStatus: 200, retrievedAt: NOW, rawHash: HASH },
-    normalization: { succeeded: true, parserVersion: "census-data-api/2", schemaVersion: "ACSDT5Y2024:B01003", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    normalization: { succeeded: true, parserVersion: "census-data-api/3", schemaVersion: "ACSDT5Y2024:B01003", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
     identities: [{ subjectId: "04000US04", jurisdiction: "US", identifiers: { product: "acs5", vintage: "2024", geography: "state:04" }, matchBasis: "OFFICIAL_ID", ambiguous: false }],
     temporal: { version: "2024", expectedVersion: "2024", sourceThrough: "2024", staleAtRetrieval: false },
     semantics: { factKind: "ACS 5-year population estimate", violations: [] },
@@ -1104,6 +1104,17 @@ test("zero without absence evidence is CANNOT_TELL and holds LKG", async () => {
   }), "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE");
 });
 
+test("LegiScan bill authority cannot promote state roll calls", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    sourceId: "legiscan-bills",
+    recordClass: "STATE_ROLL_CALL",
+    scope: "US-AZ:2026",
+    retrieval: { ...base.retrieval, finalUrl: "https://api.legiscan.com/?op=getDatasetList" },
+    normalization: { ...base.normalization, parserVersion: "legiscan-bulk/1" },
+  }), "SOURCE_BLOCKED", "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
+});
+
 test("attributed LegiScan projections require exact state-specific source and identity verification", async () => {
   const store = new MemoryRoutineDataStore();
   const base = candidate("unverified-vendor-projection"), scope = "US-AZ:legiscan-votes:v1";
@@ -1120,7 +1131,8 @@ test("all standing routine-source destructive classes are enumerated by the cont
   const covered = new Set<RoutineRecordClass>([
     "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
     "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
-    "STATE_LEGISLATOR_VOTES", "REGISTRATION", "MEETING_OUTCOME",
+    "STATE_LEGISLATOR_VOTES", "STATE_BILL", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
+    "GOOGLE_CIVIC_VOTERINFO",
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
     "CURATED_READER_RECORD",

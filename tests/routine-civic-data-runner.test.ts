@@ -25,9 +25,10 @@ import {
   routineTaskDue,
   routineTaskFromContract,
   routineTaskSelection,
-  routinePreSpawnMemoryDeferral,
+  routinePreSpawnDeferral,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -49,53 +50,70 @@ import {
   routineSupervisorCycleIsolationIssue,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 
-test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure", async t => {
+test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure or a rewritten progress row", async t => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const progressStart = source.indexOf("let sourceProgressRepos");
+  const progressEnd = source.indexOf("\n}\n", progressStart) + 3;
   const start = source.indexOf("async function settlePendingRunResult(");
   const end = source.indexOf("\n// Reader delivery", start);
+  const repos = createMemoryRepositories();
   const failures: unknown[] = [];
   const lines: string[] = [];
-  const progress: string[] = [];
   const context = {
-    laneLastEndedMs: new Map(), unsettledSourceRuns: new Set(["deferred"]),
+    laneLastEndedMs: new Map(), unsettledSourceRuns: new Set<string>(),
     startedSourceChildren: new Set(), attempted: 1,
     supervisorFailures: failures,
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
     safeFailure: (message: string) => message,
     boundedExecutionFailure: () => ({ taskId: "deferred", code: "CHILD_SPAWN_FAILED", detail: "WORKER_MEMORY_DEADLINE: work remains owed" }),
-    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnMemoryDeferral,
-    recordHuntSourceProgress: async (_task: unknown, stage: string) => { progress.push(stage); },
+    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnDeferral,
+    controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
+    RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
+    RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
-  const settle = runInNewContext(transpileModule(source.slice(start, end), {
+  const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + source.slice(start, end), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
-  }).outputText + "\nsettlePendingRunResult;", context) as (pending: unknown, run: unknown) => Promise<void>;
+  }).outputText + "\n({ recordHuntSourceProgress, settle: settlePendingRunResult });", context) as {
+    recordHuntSourceProgress: (task: unknown, stage: string, detail: string) => Promise<void>;
+    settle: (pending: unknown, run: unknown) => Promise<void>;
+  };
   for (const kind of ["SINGLE", "MEETING_PARTITION"]) {
-    context.attempted = 1; progress.length = 0; lines.length = 0;
-    await settle({ id: "deferred", kind, task: { id: "deferred", acquisitionFailureDomain: "held-source" } }, {
-      id: "deferred", termination: "SPAWN_FAILED", status: null, signal: null,
+    const id = `worker-publication:ballot-navigation:${kind}`;
+    const task = { id, sourceId: "source", scope: "US", acquisitionFailureDomain: id, contract: {},
+      ownerInvocation: { publicationPending: true, requestedAt: context.RUN_STARTED_AT, instructions: ["section3-publication"] } };
+    context.attempted = 1; lines.length = 0; context.unsettledSourceRuns.add(id);
+    await recordHuntSourceProgress(task, "QUEUED", "Admitted to the existing source worker pool.");
+    await settle({ id, kind, task }, {
+      id, termination: "SPAWN_FAILED", status: null, signal: null,
       stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: memory wait deferred; work remains owed",
     });
+    const progress = (await repos.ownerDigests.read(HUNT_SOURCE_PROGRESS_LOG_KEY))
+      .filter(row => row.huntSourceProgress?.taskId === id).map(row => row.huntSourceProgress?.stage);
     t.diagnostic(JSON.stringify({ supervisorFailures: failures.length, progress, lines, attempted: context.attempted }));
     assert.equal(failures.length, 0);
     assert.deepEqual(progress, ["QUEUED"]);
     assert.equal(context.attempted, 0);
     assert.equal(lines.some(line => line.includes("RECEIPT_COUNT_INVALID")), false);
+    assert.ok(lines.some(line => line.startsWith(`RCD_DEFER ${id}: WORKER_MEMORY_DEADLINE`)));
   }
 });
 
-test("only an unstarted empty-output memory deadline is an unsent deferral", () => {
+test("only an unstarted empty-output memory deadline or spent pass budget is an unsent deferral", () => {
   const run = { id: "held", termination: "SPAWN_FAILED" as const, status: null, signal: null,
     stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: work remains owed" };
-  assert.equal(routinePreSpawnMemoryDeferral(run, false), run.errorMessage);
-  assert.equal(routinePreSpawnMemoryDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
+  assert.equal(routinePreSpawnDeferral(run, false), run.errorMessage);
+  const budget = { ...run, errorMessage: "PASS_TIME_BUDGET: this pass's time is spent" };
+  assert.equal(routinePreSpawnDeferral(budget, false), budget.errorMessage, "a pass out of time leaves the rest owed for the next pass");
+  assert.equal(routinePreSpawnDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
   for (const changed of [
     { ...run, termination: "EXITED" as const }, { ...run, termination: "TIMED_OUT" as const },
     { ...run, stdout: "RCD_RECEIPT={}" }, { ...run, stderr: "child emitted output" },
     { ...run, status: 0 }, { ...run, signal: "SIGTERM" as const },
     { ...run, errorMessage: "HTTP status 429" }, { ...run, errorMessage: "child mentioned WORKER_MEMORY_DEADLINE: later" },
-  ]) assert.equal(routinePreSpawnMemoryDeferral(changed, false), null);
+  ]) assert.equal(routinePreSpawnDeferral(changed, false), null);
 });
 
 test("source refreshes are admitted daily without a Send and retry failed sources hourly", () => {
@@ -162,14 +180,14 @@ test("ordinary registered doors reject authority-transfer markers without changi
     await assert.rejects(processRegisteredRoutineCandidate(store, "fec-funding", {...good, bootstrapImport: marker} as unknown as RoutineCandidate, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
     assert.deepEqual(await store.readPromotion(good.recordClass, good.scope), before);
   }
-  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "comment-access")!;
+  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "ballot-navigation")!;
   const manualStore = new MemoryRoutineDataStore();
   const marked = {
     ...good, sourceId: manual.sourceId, recordClass: manual.recordClass, scope: manual.scope,
     normalization: {...good.normalization, parserVersion: manual.parserNormalizerVersion},
     bootstrapImport: {kind: "RETIRED_TRANSFER", contractId: manual.id},
   } as unknown as RoutineCandidate;
-  await assert.rejects(processRegisteredManualCandidate(manualStore, "comment-access", marked, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
+  await assert.rejects(processRegisteredManualCandidate(manualStore, "ballot-navigation", marked, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
   assert.equal(await manualStore.readPromotion(manual.recordClass, manual.scope), null);
 });
 
@@ -207,7 +225,7 @@ test("the standing parent durably accounts for a routine child killed outside so
   // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
   // records carrying that exact digestId (a targeted content query, not a scan
   // of the whole log) and then confirms the supervisor kind.
-  assert.match(pilot, /readWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId\)/);
+  assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
 
@@ -289,6 +307,9 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
+    "legiscan-bulk",
+    "google-civic-voterinfo",
+    ...PEOPLE_SOURCE_CONTRACTS.map(contract => contract.id),
     "socrata-discovery",
     "epa-echo",
     "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
@@ -344,6 +365,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "az-legislature",
     "nj-legislature",
     "legiscan",
+    "legiscan-bills",
     "plural-openstates",
     "meetings-history",
     "door-outcomes",
@@ -372,6 +394,10 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   assert.equal(arbitrary.ok, false);
   if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
+  // Bill datasets are their own source and are not competent for roll calls.
+  const billIntermediary = authorityFor("legiscan-bills", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
+  assert.equal(billIntermediary.ok, false);
+  if (!billIntermediary.ok) assert.equal(billIntermediary.code, "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
   assert.equal(intermediary.ok, true);
   assert.equal(SOURCE_AUTHORITIES.legiscan.routineAutoPromotion, true);
   assert.ok(SOURCE_AUTHORITIES.legiscan.competentFacts.includes("exact native member positions"));
@@ -923,6 +949,9 @@ test("national and publication source commands retain the progress-renewed timeo
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", `
     ${snippet} return sourceChildCommand;`)(() => process.env, () => null);
+  const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id === "people-portraits-federal")!;
+  assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
+    "standing portrait work overrides the parent's quiet interval so every due person finishes");
   const commands = ["national-place:85635", "worker-publication:registry-runtime-bindings:fixture"].map(id => ({
     ...commandFor({ id, kind: "SOURCE", task: { id, ownerInvocation: true, registeredContractId: id }, command: [] }),
     executable: process.execPath, args: ["-e", "setTimeout(()=>{},400)"],
@@ -1223,7 +1252,7 @@ test("--only selection refuses typos and empty tokens before store access", () =
   ]);
   assert.equal(publication.ok, true, "targeted publication must stay selectable beside automatic refresh tasks");
   if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime-bindings"]);
-  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(\);/,
+  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(store, supervisorFailures\);/,
     "a selected publication door must read its owed work; readHuntSourceTasks skips selected source-only passes itself");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");

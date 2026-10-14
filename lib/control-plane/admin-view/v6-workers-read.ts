@@ -70,7 +70,15 @@ export interface V6WorkerStatus {
   readonly runnerState: string | null;
   readonly cycle?: RunnerCycle | null;
   readonly lanes: readonly { readonly name: string; readonly active: number | null; readonly waiting: number; readonly blockedBy: string | null }[] | null;
+  readonly databaseReads?: V6DatabaseReads | null;
   readonly unread: readonly string[];
+}
+/** The database bytes the runner's processes read in its last full hour, largest callers first, from its check-in. */
+interface V6DatabaseReads {
+  readonly hour: string;
+  readonly controlPlaneBytes: number;
+  readonly readerBytes: number;
+  readonly byCaller: readonly { readonly caller: string; readonly bytes: number }[];
 }
 export interface V6WaitingItem {
   readonly kind: string; readonly title: string; readonly why: string; readonly nextTime: string; readonly owner: string;
@@ -148,6 +156,14 @@ async function point<T>(read: () => Promise<{ readonly revision: number; readonl
   } catch { return { state: "UNREAD" }; }
 }
 
+export function databaseReadsOf(hour: unknown): V6DatabaseReads | null {
+  const h = hour as Partial<V6DatabaseReads> | null | undefined;
+  if (!h || !clock(h.hour) || !count(h.controlPlaneBytes) || !count(h.readerBytes) || !Array.isArray(h.byCaller)) return null;
+  const byCaller = h.byCaller.filter((row): row is { caller: string; bytes: number } => row !== null && typeof row === "object" &&
+    text((row as { caller?: unknown }).caller, 400) && count((row as { bytes?: unknown }).bytes));
+  return { hour: h.hour, controlPlaneBytes: h.controlPlaneBytes, readerBytes: h.readerBytes, byCaller };
+}
+
 export function runningScoutsOf(research: unknown): readonly RunningScout[] | null {
   const running = (research as { running?: unknown } | null)?.running;
   if (!Array.isArray(running) || running.length > WORKERS_RUNNING_MAX) return null;
@@ -160,7 +176,7 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string, scope: V6PlaceScope | null = null): Promise<V6WorkersSources> {
   const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration, scopeZips] = await Promise.all([
     readAdminConfig(repos),
-    point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, RUNNER_PROGRESS_HEARTBEAT_FIELDS)),
+    point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, { ...RUNNER_PROGRESS_HEARTBEAT_FIELDS, neonBytes: ["lastFullHour"] })),
     point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
     repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, WORKERS_SOURCE_EVENT_LIMIT)
       .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
@@ -476,6 +492,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     runnerState: hb ? livenessOf(hb, now).state : sources.heartbeat.state === "MISSING" ? "NEVER_BEAT" : null,
     cycle,
     lanes: gauges?.map(g => ({ name: g.name, active: g.active, waiting: g.waiting, blockedBy: g.blockedBy })) ?? null,
+    databaseReads: databaseReadsOf(hb?.neonBytes?.lastFullHour),
     unread,
   };
 
@@ -581,18 +598,25 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     .find(outcome => outcome && outcome.state !== "SUCCEEDED");
   const migrationAt = clock(migrationRecord?.writtenAt) ? migrationRecord.writtenAt : null;
   if (sources.migration && !Array.isArray(sources.migration)) missing.push("The production migration outcome could not be read.");
+  // The face says what happened in words; the migration's own output lines are kept behind "Technical details".
+  const stepWords = (phase: string) => phase === "expand" ? "the step that runs before new code goes live" : phase === "contract" ? "the step that runs after new code is serving" : `the ${phase} step`;
   const update: UpdateCard | null = migration && migrationAt ? {
-    title: "Production migrations", checkedAt: migrationAt,
-    what: migrationRecords.map(record => {
-      const outcome = migrationOutcomeOf(record?.migration);
-      return outcome ? `${outcome.phase}: ${outcome.state.toLowerCase()}. ${outcome.summary}` : "Unread migration outcome.";
-    }).join("\n"),
-    impact: "Expand runs before a deploy; contract runs after the matching code is serving.",
+    title: "The latest database update", checkedAt: migrationAt,
+    what: migrationFailure
+      ? `The latest database update did not finish: ${stepWords(migrationFailure.phase)} ${migrationFailure.state === "FAILED" ? "failed" : "was refused"}.`
+      : "The latest database update finished.",
+    impact: "Database changes new code needs run before it goes live; changes that remove old parts run after the new code is serving.",
     owner: "Deployment and runner", next: migrationFailure
-      ? `Engineering repairs the ${migrationFailure.phase} migration ${migrationFailure.state === "FAILED" ? "failure" : "refusal"}; that release step remains held.`
-      : "The recorded migration phases succeeded; the runner follows deployed updates automatically.",
+      ? `Engineering repairs ${stepWords(migrationFailure.phase)}; that part of the release stays on hold until then.`
+      : "Nothing is waiting. The workers pick up each new release on their own.",
     youNeedToAct: "No action needed.", fixId: null, status: migrationFailure?.state ?? migration.state,
-    technical: [`Approved endpoint: ${migration.targetHost}`],
+    technical: [
+      ...migrationRecords.map(record => {
+        const outcome = migrationOutcomeOf(record?.migration);
+        return outcome ? `${outcome.phase}: ${outcome.state.toLowerCase()}. ${outcome.summary}` : "Unread migration outcome.";
+      }),
+      `Approved endpoint: ${migration.targetHost}`,
+    ],
   } : null;
   const data: AdminV6WorkersView = {
     status, jobs, running,

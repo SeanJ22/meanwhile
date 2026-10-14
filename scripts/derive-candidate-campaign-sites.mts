@@ -1,29 +1,14 @@
-/**
- * Verified campaign sites, published by the standing runner with no owner step.
- *
- *   node --experimental-strip-types scripts/derive-candidate-campaign-sites.mts --promote
- *
- * The standing runner's child for the `candidate-campaign-sites-derived`
- * routine contract. It fetches nothing from any publisher and calls no model.
- * It reads:
- *
- * - every APPROVED campaign-site record in the control plane's promotion
- *   pipeline log (read only; the research cycle's campaign-site pass made them);
- * - the vault, read only (`lib/control-plane/evidence/read-only-vault.ts`): the
- *   bytes of each approval's verifying read, proved against their sidecar;
- * - the promoted `candidate-profiles` version, so a working reviewed campaign
- *   link is preserved when independently verified documents attach;
- * - this contract's prior GOOD version, preserving facts and quoted history
- *   exactly when unrelated older source captures are unavailable locally.
- *
- * `derivedCampaignSitesPass` (lib/civic-data/derived-campaign-site-writer.ts)
- * verifies each approval's vaulted bytes again for its own canonical identity
- * and plans the version; it promotes through
- * `processRegisteredRoutineCandidate`, whose door checks the promoted input
- * against the store. Anything it cannot read refuses the pass by name and
- * leaves the last known good sites live. The profile Reader composes the
- * published sites with `candidate-profiles` on its next read.
- */
+import { readGenericBallotProjection, GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
+import { deriveCandidateUniverse } from "../lib/hunt/candidate-universe.ts";
+import { campaignSiteSubjects } from "../lib/candidates/campaign-site-subjects.ts";
+import { publishCandidateFindings } from "../lib/civic-data/candidate-profile-findings.ts";
+import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
+import type { CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
+import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { CANDIDATE_PROFILE_LEAD } from "../lib/facts/finding-slots.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/campaign-site-portraits.ts";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
@@ -34,9 +19,11 @@ import { DERIVED_CAMPAIGN_SITES_CONTRACT_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS
 import {
   derivedCampaignSitesFailedCandidate,
   derivedCampaignSitesPass,
+  derivedCampaignSitesCandidate,
   isPublishableCampaignSiteApproval,
   heldCampaignSiteReads,
   type HeldVerifyingRead,
+  type DerivedCampaignSitesPlan,
   type HeldLinkedPublicationRead,
   type PublishableCampaignSiteApproval,
 } from "../lib/civic-data/derived-campaign-site-writer.ts";
@@ -177,6 +164,53 @@ async function main(): Promise<void> {
   for (const p of pass.plan?.published ?? []) console.log(`  published ${p.key}: ${p.url} (${p.approvalRecordId})`);
   for (const h of pass.plan?.held ?? []) console.log(`  held ${h.key}: ${h.code}: ${h.detail}`);
   await finish(pass.candidate);
+  const readablePrior = prior && !("unreadable" in prior) ? prior : null;
+  let plan: DerivedCampaignSitesPlan | null = pass.plan ?? (prior && "unreadable" in prior ? null : {
+    records: readablePrior?.projection.records ?? [], portraits: readablePrior?.projection.portraits ?? [],
+    inputs: readablePrior ? [readablePrior.input] : [], published: [], held: [],
+    ...(readablePrior ? { prior: readablePrior } : {}),
+  });
+  let subjects: ReturnType<typeof campaignSiteSubjects> = new Map();
+  try {
+    const national = await readGenericBallotProjection({ store, bypassCache: true, now });
+    if (national.kind === "PROMOTED") {
+      const groups = new Map<string, BallotSet[]>();
+      for (const ballot of Object.values(national.value.ballots)) {
+        const key = `${ballot.election.state}:${ballot.election.date.slice(0, 4)}`;
+        groups.set(key, [...(groups.get(key) ?? []), ballot]);
+      }
+      subjects = campaignSiteSubjects({ universes: [...groups.values()].map(ballots => deriveCandidateUniverse({
+        stateCode: ballots[0].election.state, cycle: Number(ballots[0].election.date.slice(0, 4)),
+        generatedBy: "published national ballots", generatedOn: now.slice(0, 10),
+        documents: ballots.map(ballot => ({ path: ballot.election.id, contests: ballot.contests, candidacies: ballot.candidacies })),
+        stores: { huntState: {}, cards: {}, links: {}, linkHunts: [] } })) });
+      const reference = promotedInputRef("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, national.metadata.versionId,
+        national.value, national.metadata.promotedAt);
+      if (reference && plan) plan = { ...plan, inputs: [...plan.inputs, reference] };
+    }
+  } catch (error) { console.error(`National candidate portrait subjects could not be read: ${error instanceof Error ? error.message : String(error)}`); }
+  if (plan) await publishCampaignSitePortraits({
+    plan, approvals: "unreadable" in approvals ? [] : approvals, subjects: [...subjects.values()], held: record => held.get(record.recordId) ?? null, now,
+    onPublished: published => finish(derivedCampaignSitesCandidate(published, now)),
+  });
+  await publishHuntedCandidateFields([...subjects.values()], "unreadable" in approvals ? [] : approvals);
+}
+
+/** Hunters' candidate bios, campaign contacts and portraits from the Box, published on profile cards once each holds on its saved page. */
+async function publishHuntedCandidateFields(subjects: readonly CampaignSiteSubject[], approvals: readonly PublishableCampaignSiteApproval[]): Promise<void> {
+  const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+  if (!controlPlane || !subjects.length) return;
+  const repos = await createPgRepositories(controlPlane, now, { skipBootstrap: true });
+  const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).filter(row => row.value.waitingFor?.reason === CANDIDATE_PROFILE_LEAD);
+  if (!waiting.length) return;
+  const held = await heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"),
+    waiting.flatMap(row => row.value.origins.flatMap(origin => origin.artifactIds)), controlPlane);
+  const campaignHosts = new Map<string, string[]>();
+  for (const approval of approvals) campaignHosts.set(approval.campaignSite.candidacyId,
+    [...campaignHosts.get(approval.campaignSite.candidacyId) ?? [], approval.campaignSite.host]);
+  const report = await publishCandidateFindings({ boxFindings: repos.boxFindings, held, store, subjects, campaignHosts,
+    clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), now });
+  console.log(`RCD_CANDIDATE_FINDINGS=${JSON.stringify(report)}`);
 }
 
 await main();

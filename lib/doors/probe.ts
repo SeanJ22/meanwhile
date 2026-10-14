@@ -1,10 +1,3 @@
-/**
- * One cheap first look per feed before a scheduled read: a conditional request
- * (stored ETag or Last-Modified) or, when the publisher offers neither, a hash
- * of the page bytes. Probes are keyed by URL, so one covers every door behind
- * a feed. `fetchFn` is injected so pacing and Retry-After stay with the caller.
- */
-
 import { createHash } from "node:crypto";
 
 import { WebsiteWait } from "./probe-fetch.ts";
@@ -20,7 +13,7 @@ export interface ProbeResponse {
 export type ProbeFetch = (url: string, headers: Readonly<Record<string, string>>) => Promise<ProbeResponse>;
 
 /** Settings that name the one page or feed a door's read starts from, most specific first. */
-const PROBE_URL_KEYS = ["feedUrl", "icalUrl", "pageUrl", "schedulePage", "documentsPage", "documentsUrl", "portalUrl", "serviceBase", "apiBase", "baseUrl", "base"] as const;
+const PROBE_URL_KEYS = ["feedUrl", "icalUrl", "pageUrl", "schedulePage", "documentsPage", "documentsUrl", "portalUrl", "serviceBase", "apiBase", "baseUrl", "base", "route", "url"] as const;
 
 export function probeUrlFor(door: DoorRecord): string | null {
   for (const key of PROBE_URL_KEYS) {
@@ -72,10 +65,6 @@ export async function firstLook(url: string, previous: DoorValidators | null | u
   return { url, verdict: changed ? "CHANGED" : "UNCHANGED", validators, requests: 1, detail: changed ? "the page's content changed since the last look" : "the page's content is the same as the last look" };
 }
 
-/**
- * Look once per distinct URL across a set of doors. Doors with no readable
- * start page are NOT_PROBEABLE, which means "read as scheduled", never "skip".
- */
 export async function probeDoors(
   doors: readonly DoorRecord[],
   fetchFn: ProbeFetch,

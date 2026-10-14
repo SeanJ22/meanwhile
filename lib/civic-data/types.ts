@@ -16,12 +16,14 @@ export const ROUTINE_RECORD_CLASSES = [
   "STATE_LEGISLATOR",
   "STATE_ROLL_CALL",
   "STATE_LEGISLATOR_VOTES",
+  "STATE_BILL",
   "FEDERAL_ROLL_CALL",
   "FEDERAL_KEY_VOTE",
   "FEDERAL_DIRECTORY",
   "FEDERAL_CIVIC_RECORD",
   "REGISTRY_RUNTIME_BINDING",
   "VOTING_SITE",
+  "GOOGLE_CIVIC_VOTERINFO",
   "PRL_PROFILE",
   "PRL_ARCHIVE",
   "CENSUS_REFERENCE",
@@ -311,7 +313,14 @@ export type RoutineRemovalEvidence =
   | CensusPlaceholderBodyRemovalEvidence
   | RosterDepartureRemovalEvidence
   | AuditPullRemovalEvidence
-  | MovedToHistoryRemovalEvidence;
+  | MovedToHistoryRemovalEvidence
+  | MovedToFactStoreRemovalEvidence;
+
+/** A roster row the registry partition no longer carries because each member is now its own fact. */
+export interface MovedToFactStoreRemovalEvidence {
+  readonly key: string;
+  readonly code: "MOVED_TO_FACT_STORE";
+}
 
 /** A published member an auditor broke; the candidate must also hold it as an `AUDIT_PULLED_FROM_VERSION` excluded fact. */
 export interface AuditPullRemovalEvidence {

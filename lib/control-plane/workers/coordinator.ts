@@ -1,6 +1,7 @@
 import { BOX_PARSER_IMPLEMENTATION } from "./quoted-proof.ts";
 import { adapterWaitReasonFromKnowledge, DETECTIVE_SHUT_THRESHOLD, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
-import { readScoutResultsForSubjects, readSpendWindowCosts, readSubjectScoutHistoryScoped } from "./scoped-history.ts";
+import { readScoutResultsForSubjects, readSubjectScoutHistoryScoped } from "./scoped-history.ts";
+import { readSpendWindow } from "../spend-window.ts";
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST, type Attempt } from "../attempt.ts";
@@ -16,7 +17,7 @@ import { workerTaskAdmission } from "./scheduling.ts";
 import { autonomousScoutHistory, eligibleHeldProtocolRecovery, guardRecheckAt, scoutTransientDenial, scoutWalkedToNothing, unchangedScoutFailure } from "./scout-scheduling.ts";
 import { absenceExpiry, absenceUnlockFrom, isArguedAbsence } from "../scheduler/absence.ts";
 import { recordArguedAbsence } from "../scheduler/durable.ts";
-import { selectStandingLineages } from "./standing-lineage.ts";
+import { LINEAGE_ARTIFACT_FIELDS, selectStandingLineages, type LineageArtifact } from "./standing-lineage.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
@@ -308,7 +309,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       ? (guardRecheckAtIso===null || Date.parse(guardRecheckAtIso)<=Date.parse(now))
       : Boolean(debt && Date.parse(debt.retryAt)<=Date.parse(now));
     if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && dueForRecheck) {
-      const spend=researchSpendInWindow(await readSpendWindowCosts(repos,now,runtime.scopedReads===true),now);
+      const spend=researchSpendInWindow(await readSpendWindow(repos,now),now);
       const conditionChanged=deniedCondition==="GUARD"||(deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,(runtime.rollingCeilingUsd ?? 0)).permits);
       if(conditionChanged) {
         const row=await repos.routeTasks.mustRead(task.id); const {policyDenial,...rest}=row.value;
@@ -469,6 +470,8 @@ export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: Re
   const sequences = ordered.map(([send, group]) => {
     group.items.sort((a, b) =>
       (lastServed.get(a.id) ?? "").localeCompare(lastServed.get(b.id) ?? "") ||
+      (a.autonomousPlan?.capability === "voting-source-blanks" && b.autonomousPlan?.capability === "voting-source-blanks"
+        ? (b.autonomousPlan.subjectPopulation ?? -1) - (a.autonomousPlan.subjectPopulation ?? -1) : 0) ||
       a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
     const byPart = new Map<string, WorkItem[]>();
     for (const item of group.items) {
@@ -489,7 +492,7 @@ export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: Re
 export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRuntime, task: RouteTask): Promise<DispatchResult> {
   if (task.workerTask) return dispatchWorkerTask(runtime, task);
   const now = runtime.now ?? (() => new Date().toISOString());
-        const spend=researchSpendInWindow(await readSpendWindowCosts(runtime.repos,now(),runtime.scopedReads===true),now());
+        const spend=researchSpendInWindow(await readSpendWindow(runtime.repos,now()),now());
         const item=(await runtime.repos.workItems.mustRead(task.workItemId)).value; const plan=item.autonomousPlan!;
         const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!ceilingPermits(spend.windowUsd,runtime.rollingCeilingUsd ?? 0).permits?"SCOUT_COST_CEILING":null;
         const history=await readSubjectScoutHistoryScoped(runtime.repos,[{subjectId:item.subject,recordClass:plan.contract.recordClass}],runtime.scopedReads===true);
@@ -572,7 +575,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   }
   const occurrenceRows=(await runtime.repos.occurrences.list()).map(row=>row.value);
   const lineages=selectStandingLineages({occurrences:occurrenceRows,
-    workItems:allItems,artifacts:await runtime.repos.artifacts.readAll(),attempts,
+    workItems:allItems,artifacts:await runtime.repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS) as LineageArtifact[],attempts,
     workerResults:workerRecords});
   const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
   const byItem=new Map(allItems.map(item=>[item.id,item] as const));

@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import {
-  BODY_ROSTERS,
-  divisionOcdIdForRosterHolder,
-} from "../lib/registry/body-rosters.ts";
+import { divisionOcdIdForRosterHolder } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { EVERYDAY_CONTACTS, everydayContactsFor } from "../lib/routing/everyday.ts";
 import { TOPIC_ROUTES } from "../lib/routing/topics.ts";

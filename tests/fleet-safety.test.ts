@@ -1062,15 +1062,16 @@ test('HTTP provider outage backs off concurrent subjects, survives restart and r
   const failed: typeof fetch = async (_url, init) => { calls++; assert.equal(new Headers(init?.headers).get('range'),null);
     return new Response('gateway timeout',{status:504,headers:{'retry-after':'1200'}}); };
   const responses = await Promise.all(Array.from({length:20},(_,i)=>controller.guardedOpenOne('public-web','candidate-'+i,failed)(input(String(i)))));
-  assert.equal(calls,1);
-  assert.equal(responses.reduce((n,r)=>n+(r.requestCount??0),0),1);
-  assert.equal(responses[0].status,504);
-  assert.ok(responses.slice(1).every(r=>r.requestCount===0 && /latched/.test(r.transportError??'')));
+  // A healthy source runs up to the in-flight cap (8); the first failure holds every request still queued.
+  assert.equal(calls,8);
+  assert.equal(responses.reduce((n,r)=>n+(r.requestCount??0),0),8);
+  assert.ok(responses.slice(0,8).every(r=>r.status===504));
+  assert.ok(responses.slice(8).every(r=>r.requestCount===0 && /latched/.test(r.transportError??'')));
   const circuits=controller.snapshot().providerCircuits;
   assert.equal(circuits.length,1);assert.equal(circuits[0].provider,'https://api.marginalia.nu');
   const restarted=fundedController({now:NIGHT,charges: [],clock:()=>time,circuits});
   const blocked=await restarted.guardedOpenOne('public-web','later',failed)(input('later'));
-  assert.equal(blocked.requestCount,0);assert.equal(calls,1);
+  assert.equal(blocked.requestCount,0);assert.equal(calls,8);
   const healthy: typeof fetch=async()=>new Response('{"pages":[{"id":1}]}',{status:200});
   const other=await restarted.guardedOpenOne('public-web','other',healthy)({...input('other'),url:'https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=other'});
   assert.equal(other.status,200);

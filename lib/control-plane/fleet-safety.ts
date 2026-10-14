@@ -18,6 +18,7 @@ import { httpProviderFailure, type FetchOutcome } from "./scheduler/http-executo
 import { sourceReliabilityKey } from "./scheduler/scout-reliability.ts";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "./scheduler/host-supervision.ts";
 import { memoryWebsitePacing, websiteOf, type WebsitePacing } from "./website-pacing.ts";
+import { enterHostGate, HOST_CONCURRENCY_DEFAULT, providerConcurrency } from "./scheduler/provider-limits.ts";
 import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
 import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
 
@@ -408,6 +409,8 @@ export class FleetSafetyController {
   /** Providers whose breaker wait ran out with no answer since: half-open until a response closes it or a failure reopens it. */
   private readonly probing = new Set<string>();
   private readonly httpPending = new Map<string, Promise<void>>();
+  private readonly hostConcurrency: () => number;
+  private readonly sleep: (ms: number) => Promise<unknown>;
   /** Every reader's shared count and holds per website; this process's own when the store cannot answer. */
   private readonly pacing: WebsitePacing;
   private readonly localPacing = memoryWebsitePacing();
@@ -446,6 +449,9 @@ export class FleetSafetyController {
     readonly websiteSize?: WebsiteSizeForUrl;
     /** The store every reader shares (`repos.websitePacing`); absent, this process paces alone. */
     readonly websitePacing?: WebsitePacing;
+    /** Requests in flight at once to one provider (the Admin setting), read per request. */
+    readonly hostConcurrency?: () => number;
+    readonly sleep?: (ms: number) => Promise<unknown>;
   }) {
     const ceiling = resolveRollingCeiling(input.rollingCeilingUsd);
     this.bounds =
@@ -460,6 +466,8 @@ export class FleetSafetyController {
     this.clock = input.clock ?? Date.now;
     this.websiteSize = input.websiteSize;
     this.pacing = input.websitePacing ?? this.localPacing;
+    this.hostConcurrency = input.hostConcurrency ?? (() => HOST_CONCURRENCY_DEFAULT);
+    this.sleep = input.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
     const nightSpend = aggregatePricedSpend(input.charges, this.night.start, input.now, input.spendHolds);
     const rollingSpend = aggregatePricedSpend(
@@ -808,27 +816,27 @@ export class FleetSafetyController {
     await this.pacing.hold(site, until, now).catch(() => this.localPacing.hold(site, until, now));
   }
 
+  /** One request's place at its provider: under the in-flight cap (one while half-open), at its published pace, never while open. */
+  private async enterProvider(provider: string, url: string, work: string): Promise<() => void> {
+    const release = await enterHostGate({ provider, pacing: this.pacing, clock: this.clock, sleep: this.sleep,
+      limit: () => providerConcurrency(this.providerState(url), this.hostConcurrency()) });
+    const held = this.providerHold(url);
+    if (held === null) return release;
+    release();
+    this.refuse(work, "PROVIDER_CIRCUIT_BROKEN", `${held.provider} is latched until ${held.eligibleAt}: ${held.condition}`);
+  }
+
   /** A fetch seam that hard-caps application payload consumption by streaming. */
   guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
     return async ({ url, method, headers, body, timeoutMs }) => {
-      // Worker processes broker requests through this shared parent. Serialize
-      // one source so queued subjects see the first failure before sending.
-      const source = sourceReliabilityKey(url);
-      const preceding = this.httpPending.get(source);
-      let release!: () => void;
-      const pending = new Promise<void>(resolve => { release = resolve; });
-      this.httpPending.set(source, pending);
-      await preceding;
-      let sourceReleased = false;
-      const releaseSource = () => {
-        release(); sourceReleased = true;
-        if (this.httpPending.get(source) === pending) this.httpPending.delete(source);
-      };
+      // Worker processes broker requests through this shared parent, so every
+      // caller waits at one gate per provider.
       const started = Date.now();
       let requests = 0;
       let currentUrl = url;
-      let provider = source;
+      let provider = sourceReliabilityKey(url);
       let observed: ProviderCircuit | undefined;
+      let leave: (() => void) | null = null;
       const recoveries: [string, () => void][] = [];
       try {
         let currentMethod = method;
@@ -837,13 +845,15 @@ export class FleetSafetyController {
         let merged: Uint8Array;
         while (true) {
           provider = sourceReliabilityKey(currentUrl);
-          if ((provider !== source || sourceReleased) && !recoveries.some(([key]) => key === provider)) {
+          if (!recoveries.some(([key]) => key === provider)) {
             const recovery = await this.beginProviderRecovery(provider);
             if (recovery) recoveries.push([provider, recovery]);
           }
           this.expireProviderCircuits();
+          leave?.();
+          leave = await this.enterProvider(provider, currentUrl, work);
           observed = this.circuits.get(provider);
-          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) await this.admitWebsiteRequest(currentUrl, work);
+          await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
             requests++;
@@ -874,7 +884,6 @@ export class FleetSafetyController {
           if (![301, 302, 303, 307, 308].includes(response.status) || location === null) break;
           const nextUrl = new URL(location, currentUrl).toString();
           if (sourceReliabilityKey(nextUrl) !== provider) {
-            if (provider === source && !sourceReleased) releaseSource();
             const index = recoveries.findIndex(([key]) => key === provider);
             if (index !== -1) recoveries.splice(index, 1)[0][1]();
           }
@@ -907,7 +916,8 @@ export class FleetSafetyController {
           transportError: error instanceof Error ? error.message : String(error), requestCount: requests };
       } finally {
         recoveries.forEach(([, release]) => release());
-        releaseSource();
+        // Held until the answer is classified, so requests queued behind it see a failure before they send.
+        leave?.();
       }
     };
   }
@@ -928,6 +938,7 @@ export class FleetSafetyController {
       const recoveries: [string, () => void][] = [];
       let provider = sourceReliabilityKey(url);
       let observed: ProviderCircuit | undefined;
+      let leave: (() => void) | null = null;
       let sent = false;
       let partialFailureObserved = false;
       try {
@@ -941,8 +952,10 @@ export class FleetSafetyController {
             const recovery = await this.beginProviderRecovery(provider);
             if (recovery) recoveries.push([provider, recovery]);
           }
+          leave?.();
+          leave = await this.enterProvider(provider, currentUrl, work);
           observed = this.circuits.get(provider);
-          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) await this.admitWebsiteRequest(currentUrl, work);
+          await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work);
           try {
             sent = true;
@@ -1011,7 +1024,7 @@ export class FleetSafetyController {
           durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error),
         };
-      } finally { recoveries.forEach(([, release]) => release()); }
+      } finally { recoveries.forEach(([, release]) => release()); leave?.(); }
     };
   }
 

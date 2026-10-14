@@ -1790,8 +1790,10 @@ try {
 const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
 let standingDiscoveryWebsiteSize: ReturnType<typeof websiteSizeFromHoldings> | null = null;
 const sizeForDiscovery = (url: string) => standingDiscoveryWebsiteSize?.(url) ?? websiteSize(url);
+let hostConcurrency = readSetting(config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
 const fleetSafety = new FleetSafetyController({
   websiteSize: sizeForDiscovery,
+  hostConcurrency: () => hostConcurrency,
   now: NOW,
   charges: spendCharges,
   costLedgerReadable: ledgerUnreadable === null,
@@ -1812,7 +1814,6 @@ const fleetSafety = new FleetSafetyController({
  * never a higher one.
  */
 const SETTINGS_REFRESH_MIN_MS = 5_000;
-let hostConcurrency = readSetting(config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
 let settingsReadAt = 0;
 let settingsRead: Promise<void> | null = null;
 function refreshOwnerSettings(): Promise<void> {
@@ -3002,7 +3003,7 @@ const cycle = await runCycle({
     const url = routeUrl(row.obligation.id);
     if (url === null) return null;
     const key = sourceReliabilityKey(url);
-    return { key, limit: providerConcurrency(key, fleetSafety.providerState(url), hostConcurrency) };
+    return { key, limit: providerConcurrency(fleetSafety.providerState(url), hostConcurrency) };
   },
   /* The owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
@@ -3320,7 +3321,7 @@ async function runAutonomousWave() {
     childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
-      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, fundedSubjects: [...lifetimeHuntSubjects] },
+      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: guards.workerTransportFor,
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),

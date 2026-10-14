@@ -4,14 +4,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Montgomery, AL",
     "url": "https://www.sos.alabama.gov/alabama-votes",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "AL",
       "ocdId": "ocd-division/country:us/state:al",
       "name": "Alabama"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.alabama.gov/alabama-votes",
+    "electionPageUrl": "https://www.sos.alabama.gov/alabama-votes/voter/election-information/2026",
     "title": "Alabama chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Montgomery, AL",
@@ -27,7 +30,22 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.alabama.gov/alabama-votes\">https://www.sos.alabama.gov/alabama-votes</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofDemocraticCandidates.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofRepublicanCandidates.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElection-StateCertificationofIndependentCandidate.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/Amended_2026_Republican_Certification.pdf",
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+      "https://www.sos.alabama.gov/alabama-votes/voter/ballot-measures/statewide",
+      "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+      "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+      "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+      "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf"
+    ]
   },
   {
     "id": "fec-ak-chief",

@@ -5,16 +5,16 @@ owner: platform-civicplus
 writer: the platform-civicplus lane
 check: fold-conflict
 ready: no step ids unknown
-river: ac3ccf885d6de2934f43f931a3092f735f05f0e1
-at: 2026-10-13T22:18:37Z
+river: 5bb464f06e345165d6302377d20418f29d392409
+at: 2026-10-14T00:54:42Z
 state: returned
-fix_subject: fix:27bdef3e
-fix: River · stream/platform-civicplus — fold-conflict failed for platform-civicplus: platform-civicplus READY b6e5f89eca0f conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: lib/control-plane/discovery/auto-crosswalk.ts lib/control-plane/discovery/derived-wiring-reading.ts   Merge ri
+fix_subject: fix:1c8b3897
+fix: River · stream/platform-civicplus — fold-conflict failed for platform-civicplus: platform-civicplus READY b2576c548 conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-civicplus, resolve, and mark READY again.
 
 ## Failure
 
 ```
-platform-civicplus READY b6e5f89eca0f conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: lib/control-plane/discovery/auto-crosswalk.ts lib/control-plane/discovery/derived-wiring-reading.ts   Merge river into stream/platform-civicplus, resolve, and mark READY again.
+platform-civicplus READY b2576c548 conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-civicplus, resolve, and mark READY again.
 ```
 
 ## Repair

@@ -572,16 +572,19 @@
   {
     "id": "fec-la-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Baton Rouge, LA",
-    "url": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx",
+    "url": "https://www.sos.la.gov/elections-voting",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "LA",
       "ocdId": "ocd-division/country:us/state:la",
       "name": "Louisiana"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx",
+    "electionPageUrl": "https://www.sos.la.gov/elections-voting/election-dates",
     "title": "Louisiana chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Baton Rouge, LA",
@@ -589,15 +592,13 @@
       "url": "https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Failed to fetch https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx: (404) Not Found",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "checkedAt": "2026-10-14",
+      "detail": "Current official election root and public statewide candidate inquiry reached; the legacy root returns 404."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
-    "officialLinkingPage": {
-      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx\">https://www.sos.la.gov/ElectionsAndVoting/Pages/default.aspx</a>"
-    }
+    "candidateListUrl": "https://voterportal.sos.la.gov/CandidateInquiry/StatewideCandidate/Print?electionId=344&officeIds=67997%2C70195%2C70196%2C70197%2C70198%2C70199%2C70200%2C70161&electionDate=11%2F03%2F2026",
+    "ballotMeasuresUrl": "https://www.sos.la.gov/media/jo2die1s/proposed-constitutional-amendments-2026-nov.pdf"
   },
   {
     "id": "fec-me-chief",

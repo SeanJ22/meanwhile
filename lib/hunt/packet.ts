@@ -45,6 +45,9 @@ export interface HuntPacket {
   readonly blanks: readonly PacketField[];
 }
 
+/** A candidate is hunted for their campaign site, contact, positions, bio and photo. */
+const CANDIDATE_BLANKS = new Set(["CAN-04", "CAN-05", "CAN-06", "CAN-07", "CAN-16", "CAN-17"]);
+
 /** Items an agent can find on a public page: not system, process, delivery or ZIP geography work. */
 export function huntableItem(checklistId: string): boolean {
   const rule = checklistItem(checklistId);
@@ -86,7 +89,10 @@ export function packetsFrom(input: {
     const packet = byGovernment.get(government) ?? { held: [], blanks: [] };
     byGovernment.set(government, packet);
     // A stale value is held: its known source is refreshed by plain code, never hunted again.
-    if (item.state === "missing" && isOpenBlank(item)) { packet.blanks.push(fieldOf(item)); continue; }
+    if (item.state === "missing" && isOpenBlank(item)) {
+      if (item.subject.captureKind !== "candidate" || CANDIDATE_BLANKS.has(item.checklistId)) packet.blanks.push(fieldOf(item));
+      continue;
+    }
     for (const field of item.held) {
       if (field.state === "unpublished") continue;
       packet.held.push({ ...fieldOf(item), value: valueText(field.value), sourceUrl: field.sourceUrl, checkedAt: field.checkedAt });

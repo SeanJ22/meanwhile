@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import type { HeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
+import { projectHeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
 import { blankFingerprint, huntableItem, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, reportableSubjects } from "../lib/hunt/packet.ts";
 
 const NOW = "2026-10-14T12:00:00.000Z";
@@ -93,4 +95,26 @@ test("a question Ask could not answer about a body becomes a blank on its calend
   assert.ok(!withAsked.held.some(f => f.subjectId === calendar && f.checklistId === "MTG-04"), "it is no longer listed as never-look-again");
   assert.ok(!withAsked.blanks.some(b => b.subjectId.startsWith(CITY)), "another government's question stays with that government");
   assert.notEqual(blankFingerprint(withAsked), blankFingerprint(heldCadence), "a new question makes the packet due again");
+});
+
+test("each candidacy on a published ballot is a subject of its contest's government, owing its six candidate blanks minus a filed website", () => {
+  const CD1 = "ocd-division/country:us/state:az/cd:1";
+  const provenance = { sourceUrl: "https://azsos.gov/2026/candidates", sourceOrg: "Arizona Secretary of State", collectedAt: "2026-10-01T00:00:00.000Z" };
+  const ballot = {
+    election: { id: "az-2026-general", date: "2026-11-03", name: "General", state: "AZ" },
+    contests: [{ id: "az-us-house-1", electionId: "az-2026-general", ocdId: CD1, divisionVintage: "2024", title: "U.S. House, District 1", type: "CANDIDACY",
+      voteFor: 1, termYears: 2, scopeNote: null, provenance }],
+    candidacies: [
+      { id: "cand-a", contestId: "az-us-house-1", familyName: "Alpha", givenName: "Ann", partyLabel: null, slogan: null, incumbent: null, websiteUrl: "https://annalpha.example", provenance },
+      { id: "cand-b", contestId: "az-us-house-1", familyName: "Bravo", givenName: "Ben", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance },
+    ],
+    measures: [], absences: [],
+  } as unknown as BallotSet;
+  const capture = projectHeldPlaceFamilies([CD1], null, { ballots: [ballot] });
+  const items = buildPlaceOwedList({ divisions: [{ id: CD1, label: "Congressional District 1" }], subjects: capture.subjects, held: capture.held, now: NOW });
+  const [packet] = packetsFrom({ divisions: [{ id: CD1, label: "Congressional District 1" }], items });
+  const blanksOf = (id: string) => packet!.blanks.filter(b => b.subjectId === id).map(b => b.checklistId).sort();
+  assert.deepEqual(blanksOf("cand-b"), ["CAN-04", "CAN-05", "CAN-06", "CAN-07", "CAN-16", "CAN-17"]);
+  assert.deepEqual(blanksOf("cand-a"), ["CAN-06", "CAN-07", "CAN-16", "CAN-17"], "the filed website is held");
+  assert.ok(packet!.held.some(f => f.subjectId === "cand-a" && f.checklistId === "CAN-05" && /annalpha/.test(f.value)));
 });

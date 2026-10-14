@@ -5,16 +5,16 @@ owner: platform-legistar-members
 writer: the platform-legistar-members lane
 check: fold-conflict
 ready: no step ids unknown
-river: ac3ccf885d6de2934f43f931a3092f735f05f0e1
-at: 2026-10-13T22:18:22Z
+river: 5bb464f06e345165d6302377d20418f29d392409
+at: 2026-10-14T00:54:46Z
 state: returned
-fix_subject: fix:9012de56
-fix: River · stream/platform-legistar-members — fold-conflict failed for platform-legistar-members: platform-legistar-members READY 245acda948a7 conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: tests/door-kinds-data-rows.test.ts   Merge river into stream/platform-legistar-members, resolve, and ma
+fix_subject: fix:233dcad8
+fix: River · stream/platform-legistar-members — fold-conflict failed for platform-legistar-members: platform-legistar-members READY 8f4ee1cbe conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-legistar-members, resolve, and mark READY again.
 
 ## Failure
 
 ```
-platform-legistar-members READY 245acda948a7 conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: tests/door-kinds-data-rows.test.ts   Merge river into stream/platform-legistar-members, resolve, and mark READY again.
+platform-legistar-members READY 8f4ee1cbe conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-legistar-members, resolve, and mark READY again.
 ```
 
 ## Repair

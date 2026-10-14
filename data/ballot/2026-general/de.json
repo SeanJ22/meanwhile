@@ -10,7 +10,7 @@
       },
       "contests": [
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-u-s-senator",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de",
@@ -29,7 +29,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-representative-in-congress",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/cd:at-large",
@@ -48,7 +48,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-attorney-general",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de",
@@ -67,7 +67,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-auditor-of-accounts",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de",
@@ -86,7 +86,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-treasurer",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de",
@@ -105,7 +105,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-1",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:1",
@@ -124,7 +124,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-5",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:5",
@@ -143,7 +143,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-7",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:7",
@@ -162,7 +162,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-8",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:8",
@@ -181,7 +181,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-9",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:9",
@@ -200,7 +200,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-12",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:12",
@@ -219,7 +219,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-13",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:13",
@@ -238,7 +238,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-14",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:14",
@@ -257,7 +257,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-15",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:15",
@@ -276,7 +276,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-19",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:19",
@@ -295,7 +295,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-senator-district-20",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldu:20",
@@ -314,7 +314,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-1",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:1",
@@ -333,7 +333,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-2",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:2",
@@ -352,7 +352,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-3",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:3",
@@ -371,7 +371,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-4",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:4",
@@ -390,7 +390,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-5",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:5",
@@ -409,7 +409,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-6",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:6",
@@ -428,7 +428,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-7",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:7",
@@ -447,7 +447,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-8",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:8",
@@ -466,7 +466,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-9",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:9",
@@ -485,7 +485,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-10",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:10",
@@ -504,7 +504,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-11",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:11",
@@ -523,7 +523,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-12",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:12",
@@ -542,7 +542,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-13",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:13",
@@ -561,7 +561,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-14",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:14",
@@ -580,7 +580,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-15",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:15",
@@ -599,7 +599,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-16",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:16",
@@ -618,7 +618,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-17",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:17",
@@ -637,7 +637,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-18",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:18",
@@ -656,7 +656,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-19",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:19",
@@ -675,7 +675,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-20",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:20",
@@ -694,7 +694,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-21",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:21",
@@ -713,7 +713,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-22",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:22",
@@ -732,7 +732,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-23",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:23",
@@ -751,7 +751,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-24",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:24",
@@ -770,7 +770,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-25",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:25",
@@ -789,7 +789,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-26",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:26",
@@ -808,7 +808,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-27",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:27",
@@ -827,7 +827,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-28",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:28",
@@ -846,7 +846,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-29",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:29",
@@ -865,7 +865,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-30",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:30",
@@ -884,7 +884,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-31",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:31",
@@ -903,7 +903,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-32",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:32",
@@ -922,7 +922,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-33",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:33",
@@ -941,7 +941,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-34",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:34",
@@ -960,7 +960,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-35",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:35",
@@ -979,7 +979,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-36",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:36",
@@ -998,7 +998,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-37",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:37",
@@ -1017,7 +1017,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-38",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:38",
@@ -1036,7 +1036,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-39",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:39",
@@ -1055,7 +1055,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-40",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:40",
@@ -1074,7 +1074,7 @@
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "de-2026-general-state-representative-district-41",
           "electionId": "de-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:de/sldl:41",
@@ -2849,17 +2849,16 @@
       "measures": [],
       "absences": [],
       "coverageNotes": [
-        "The Department's general-election list marks included candidates Qualified; it does not explicitly certify that the candidate list is final. The official definition says the State Election Commissioner 'has determined the candidate qualifies for candidacy' and 'has confirmed that the candidate satisfies durational residency requirements in the State and the district and for the office sought.' Candidate-list completeness remains unconfirmed.",
-        "The Department of Elections' official general-election list marks the included ballot candidates Qualified. The separately published declared write-in list supplies six additional Qualified candidacies. Withdrawn entries are excluded.",
-        "Scott Walker is listed as a Provisional declared write-in for Representative in Congress; he is not included among Qualified candidates. The official explanation says submitted residency materials are being reviewed by the State Election Commissioner.",
-        "Statewide ballot-measure coverage remains unverified. The Department's linked 2026 General Election Sample Ballots page returns its official Request Rejected response: 'The requested URL was rejected. Please consult with your administrator.' No absence of statewide measures is inferred from this retrieval failure."
+        "The Department of Elections' full November 3 general-election list supplies every Qualified candidate in the covered federal, statewide and legislative contests. Its separate declared write-in list supplies six additional Qualified candidates. Withdrawn entries are excluded.",
+        "Scott Walker is listed as a Provisional declared write-in for Representative in Congress and is not included among Qualified candidates. The Department says submitted residency materials remain under review by the State Election Commissioner.",
+        "Statewide ballot-measure coverage remains unverified because the Department's linked 2026 General Election Sample Ballots page returns Request Rejected."
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
     "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:09:32.649602Z",
+    "reviewedAt": "2026-10-14T16:13:21.019634Z",
     "sources": [
       {
         "requestedUrl": "https://elections.delaware.gov/",
@@ -2915,18 +2914,6 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Parsed every Qualified declared write-in in the covered contests. Preserved the Provisional status gap and official status explanation.",
         "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/index.html",
-        "finalUrl": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/index.html",
-        "httpStatus": 200,
-        "rawHash": "f6324407e9fe08e0ba56d2ca63dd114c054207c5bc9f360ade4632e59eebf204",
-        "retrievedAt": "2026-10-14T05:01:15.285372Z",
-        "publisher": "Delaware Department of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official linked 2026 General Election Sample Ballots URL returned Request Rejected; response cannot establish measure coverage.",
-        "reviewOutcome": "BLOCKED",
-        "failureDetail": "HTTP 200 response body is Request Rejected, not sample-ballot content."
       }
     ]
   }

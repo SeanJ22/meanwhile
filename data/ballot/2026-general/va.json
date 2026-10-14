@@ -1,0 +1,1165 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "VA:va-2026-11-03-general": {
+      "election": {
+        "id": "va-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VA"
+      },
+      "contests": [
+        {
+          "id": "va-sbe-2026-us-senate",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va",
+          "divisionVintage": "2026",
+          "title": "Member, United States Senate",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, United States Senate | Statewide | Democratic | Mark R. Warner | Yes | markwarnerva.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-1",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:1",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 1st District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 1st District | Democratic | Shannon L. Taylor | No | shannontaylorva.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-2",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:2",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 2nd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 2nd District | Democratic | Elaine G. Luria | No | elaineforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-3",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:3",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 3rd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 3rd District | Democratic | Robert C. \"Bobby\" Scott | Yes | www.bobbyscottforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-4",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:4",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 4th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 4th District | Democratic | Jennifer L. McClellan | Yes | www.jennifermcclellan.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-5",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:5",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 5th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 5th District | Democratic | Tom S. P. Perriello | No | TomPerriello.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-6",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:6",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 6th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 6th District | Democratic | Beth A. Macy | No | bethmacyforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-7",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:7",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 7th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 7th District | Democratic | Eugene S. Vindman | Yes | vindmanforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-8",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:8",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 8th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 8th District | Democratic | Donald S. Beyer, Jr. | Yes | friendsofdonbeyer.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-9",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:9",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 9th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 9th District | Democratic | Joy A. Powers | No | www.joyforva.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-10",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:10",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 10th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 10th District | Democratic | Suhas Subramanyam | Yes | www.suhasforvirginia.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-11",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/cd:11",
+          "divisionVintage": "2026",
+          "title": "Member, House of Representatives — 11th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 11th District | Democratic | James R. Walkinshaw | Yes | www.jameswalkinshaw.org"
+          }
+        },
+        {
+          "id": "va-sbe-2026-state-house-20-special",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/sldl:20",
+          "divisionVintage": "2026",
+          "title": "Member, House of Delegates — 20th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Special election for the unexpired term ending 2028-01-11.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:05:51.273419+00:00",
+            "verifiedAt": "2026-10-14T05:05:51.273419+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Delegates | 20th District | Democratic | Sonia Ruth Vasquez Luna | No | www.soniavasquezluna.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-amendment-1",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va",
+          "divisionVintage": "2026",
+          "title": "Proposed Constitutional Amendment Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Proposed Constitutional Amendment Question 1 | Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?"
+          }
+        },
+        {
+          "id": "va-sbe-2026-amendment-2",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va",
+          "divisionVintage": "2026",
+          "title": "Proposed Constitutional Amendment Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Proposed Constitutional Amendment Question 2 | Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?"
+          }
+        },
+        {
+          "id": "va-sbe-2026-amendment-3",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va",
+          "divisionVintage": "2026",
+          "title": "Proposed Constitutional Amendment Question 3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Proposed Constitutional Amendment Question 3 | Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "va-sbe-2026-us-senate:mark-r-warner:democratic",
+          "contestId": "va-sbe-2026-us-senate",
+          "givenName": "Mark R.",
+          "familyName": "Warner",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "markwarnerva.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, United States Senate | Statewide | Democratic | Mark R. Warner | Yes | markwarnerva.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-senate:bert-mizusawa:republican",
+          "contestId": "va-sbe-2026-us-senate",
+          "givenName": "Bert",
+          "familyName": "Mizusawa",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "bertforsenate.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, United States Senate | Statewide | Republican | Bert Mizusawa | No | bertforsenate.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-1:shannon-l-taylor:democratic",
+          "contestId": "va-sbe-2026-us-house-1",
+          "givenName": "Shannon L.",
+          "familyName": "Taylor",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "shannontaylorva.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 1st District | Democratic | Shannon L. Taylor | No | shannontaylorva.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-1:robert-j-rob-wittman:republican",
+          "contestId": "va-sbe-2026-us-house-1",
+          "givenName": "Robert J. \"Rob\"",
+          "familyName": "Wittman",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "robwittman.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 1st District | Republican | Robert J. \"Rob\" Wittman | Yes | robwittman.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-2:elaine-g-luria:democratic",
+          "contestId": "va-sbe-2026-us-house-2",
+          "givenName": "Elaine G.",
+          "familyName": "Luria",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "elaineforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 2nd District | Democratic | Elaine G. Luria | No | elaineforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-2:jen-a-kiggans:republican",
+          "contestId": "va-sbe-2026-us-house-2",
+          "givenName": "Jen A.",
+          "familyName": "Kiggans",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.jenforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 2nd District | Republican | Jen A. Kiggans | Yes | www.jenforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-2:geral-d-bishop-staten:independent",
+          "contestId": "va-sbe-2026-us-house-2",
+          "givenName": "Geral D. \"Bishop\"",
+          "familyName": "Staten",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 2nd District | Independent | Geral D. \"Bishop\" Staten | No | "
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-2:j-matt-baker:independent",
+          "contestId": "va-sbe-2026-us-house-2",
+          "givenName": "J. Matt",
+          "familyName": "Baker",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "mattbakerindependent.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 2nd District | Independent | J. Matt Baker | No | mattbakerindependent.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-3:robert-c-bobby-scott:democratic",
+          "contestId": "va-sbe-2026-us-house-3",
+          "givenName": "Robert C. \"Bobby\"",
+          "familyName": "Scott",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.bobbyscottforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 3rd District | Democratic | Robert C. \"Bobby\" Scott | Yes | www.bobbyscottforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-3:edwin-rivera-jr:republican",
+          "contestId": "va-sbe-2026-us-house-3",
+          "givenName": "Edwin",
+          "familyName": "Rivera, Jr.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.edwinriveraforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 3rd District | Republican | Edwin Rivera, Jr. | No | www.edwinriveraforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-3:makiba-a-gaines:independent",
+          "contestId": "va-sbe-2026-us-house-3",
+          "givenName": "Makiba A.",
+          "familyName": "Gaines",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "makibagaines4congress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 3rd District | Independent | Makiba A. Gaines | No | makibagaines4congress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-3:stephen-c-woll:independent",
+          "contestId": "va-sbe-2026-us-house-3",
+          "givenName": "Stephen C.",
+          "familyName": "Woll",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.stevewoll.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 3rd District | Independent | Stephen C. Woll | No | www.stevewoll.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-4:jennifer-l-mcclellan:democratic",
+          "contestId": "va-sbe-2026-us-house-4",
+          "givenName": "Jennifer L.",
+          "familyName": "McClellan",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.jennifermcclellan.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 4th District | Democratic | Jennifer L. McClellan | Yes | www.jennifermcclellan.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-4:robert-p-family-man-murray-jr:republican",
+          "contestId": "va-sbe-2026-us-house-4",
+          "givenName": "Robert P. \"Family Man\"",
+          "familyName": "Murray, Jr.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "murrayforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 4th District | Republican | Robert P. \"Family Man\" Murray, Jr. | No | murrayforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-4:joan-e-andrews-bell:independent",
+          "contestId": "va-sbe-2026-us-house-4",
+          "givenName": "Joan E. \"Andrews\"",
+          "familyName": "Bell",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "joan.vote",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 4th District | Independent | Joan E. \"Andrews\" Bell | No | joan.vote"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-5:tom-s-p-perriello:democratic",
+          "contestId": "va-sbe-2026-us-house-5",
+          "givenName": "Tom S. P.",
+          "familyName": "Perriello",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "TomPerriello.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 5th District | Democratic | Tom S. P. Perriello | No | TomPerriello.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-5:john-j-mcguire-iii:republican",
+          "contestId": "va-sbe-2026-us-house-5",
+          "givenName": "John J.",
+          "familyName": "McGuire III",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "McGuireVA.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 5th District | Republican | John J. McGuire III | Yes | McGuireVA.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-5:cooke-c-harvey:independent",
+          "contestId": "va-sbe-2026-us-house-5",
+          "givenName": "Cooke C.",
+          "familyName": "Harvey",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 5th District | Independent | Cooke C. Harvey | No | "
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-6:beth-a-macy:democratic",
+          "contestId": "va-sbe-2026-us-house-6",
+          "givenName": "Beth A.",
+          "familyName": "Macy",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "bethmacyforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 6th District | Democratic | Beth A. Macy | No | bethmacyforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-6:ben-l-cline:republican",
+          "contestId": "va-sbe-2026-us-house-6",
+          "givenName": "Ben L.",
+          "familyName": "Cline",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.bencline.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 6th District | Republican | Ben L. Cline | Yes | www.bencline.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-7:eugene-s-vindman:democratic",
+          "contestId": "va-sbe-2026-us-house-7",
+          "givenName": "Eugene S.",
+          "familyName": "Vindman",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "vindmanforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 7th District | Democratic | Eugene S. Vindman | Yes | vindmanforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-7:doug-a-ollivant:republican",
+          "contestId": "va-sbe-2026-us-house-7",
+          "givenName": "Doug A.",
+          "familyName": "Ollivant",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "dougforvirginia.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 7th District | Republican | Doug A. Ollivant | No | dougforvirginia.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-7:taner-e-demirci-lopez:libertarian",
+          "contestId": "va-sbe-2026-us-house-7",
+          "givenName": "Taner E. Demirci",
+          "familyName": "Lopez",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "Lopezforva.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 7th District | Libertarian | Taner E. Demirci Lopez | No | Lopezforva.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-7:alaha-ahrar:independent",
+          "contestId": "va-sbe-2026-us-house-7",
+          "givenName": "Alaha",
+          "familyName": "Ahrar",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "alahaahrarforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 7th District | Independent | Alaha Ahrar | No | alahaahrarforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-7:joshua-e-ertle:independent",
+          "contestId": "va-sbe-2026-us-house-7",
+          "givenName": "Joshua E.",
+          "familyName": "Ertle",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.joshua.vote",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 7th District | Independent | Joshua E. Ertle | No | www.joshua.vote"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-7:randall-a-terry:independent",
+          "contestId": "va-sbe-2026-us-house-7",
+          "givenName": "Randall A.",
+          "familyName": "Terry",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.terry.vote",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 7th District | Independent | Randall A. Terry | No | www.terry.vote"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-8:donald-s-beyer-jr:democratic",
+          "contestId": "va-sbe-2026-us-house-8",
+          "givenName": "Donald S.",
+          "familyName": "Beyer, Jr.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "friendsofdonbeyer.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 8th District | Democratic | Donald S. Beyer, Jr. | Yes | friendsofdonbeyer.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-8:tony-a-sabio:republican",
+          "contestId": "va-sbe-2026-us-house-8",
+          "givenName": "Tony A.",
+          "familyName": "Sabio",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.sabioforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 8th District | Republican | Tony A. Sabio | No | www.sabioforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-8:shelly-m-arnoldi:libertarian",
+          "contestId": "va-sbe-2026-us-house-8",
+          "givenName": "Shelly M.",
+          "familyName": "Arnoldi",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "shellyarnoldi4va.org",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 8th District | Libertarian | Shelly M. Arnoldi | No | shellyarnoldi4va.org"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-8:tim-s-sharman:independent",
+          "contestId": "va-sbe-2026-us-house-8",
+          "givenName": "Tim S.",
+          "familyName": "Sharman",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.timsharmanforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 8th District | Independent | Tim S. Sharman | No | www.timsharmanforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-9:joy-a-powers:democratic",
+          "contestId": "va-sbe-2026-us-house-9",
+          "givenName": "Joy A.",
+          "familyName": "Powers",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.joyforva.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 9th District | Democratic | Joy A. Powers | No | www.joyforva.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-9:h-morgan-griffith:republican",
+          "contestId": "va-sbe-2026-us-house-9",
+          "givenName": "H. Morgan",
+          "familyName": "Griffith",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.morgangriffithforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 9th District | Republican | H. Morgan Griffith | Yes | www.morgangriffithforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-10:suhas-subramanyam:democratic",
+          "contestId": "va-sbe-2026-us-house-10",
+          "givenName": "Suhas",
+          "familyName": "Subramanyam",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.suhasforvirginia.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 10th District | Democratic | Suhas Subramanyam | Yes | www.suhasforvirginia.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-10:dave-t-beckwith:republican",
+          "contestId": "va-sbe-2026-us-house-10",
+          "givenName": "Dave T.",
+          "familyName": "Beckwith",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "beckwithforcongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 10th District | Republican | Dave T. Beckwith | No | beckwithforcongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-10:ahsen-mujeeb-malik:independent",
+          "contestId": "va-sbe-2026-us-house-10",
+          "givenName": "Ahsen Mujeeb",
+          "familyName": "Malik",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "ahsenmalik.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 10th District | Independent | Ahsen Mujeeb Malik | No | ahsenmalik.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-11:james-r-walkinshaw:democratic",
+          "contestId": "va-sbe-2026-us-house-11",
+          "givenName": "James R.",
+          "familyName": "Walkinshaw",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.jameswalkinshaw.org",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 11th District | Democratic | James R. Walkinshaw | Yes | www.jameswalkinshaw.org"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-11:arthur-g-purves:republican",
+          "contestId": "va-sbe-2026-us-house-11",
+          "givenName": "Arthur G.",
+          "familyName": "Purves",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.votepurves.org",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 11th District | Republican | Arthur G. Purves | No | www.votepurves.org"
+          }
+        },
+        {
+          "id": "va-sbe-2026-us-house-11:dianne-l-blais:green",
+          "contestId": "va-sbe-2026-us-house-11",
+          "givenName": "Dianne L.",
+          "familyName": "Blais",
+          "partyLabel": "Green",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "DianneforCongress.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.611494+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.611494+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Representatives | 11th District | Green | Dianne L. Blais | No | DianneforCongress.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-state-house-20-special:sonia-ruth-vasquez-luna:democratic",
+          "contestId": "va-sbe-2026-state-house-20-special",
+          "givenName": "Sonia Ruth Vasquez",
+          "familyName": "Luna",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.soniavasquezluna.com",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:05:51.273419+00:00",
+            "verifiedAt": "2026-10-14T05:05:51.273419+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Delegates | 20th District | Democratic | Sonia Ruth Vasquez Luna | No | www.soniavasquezluna.com"
+          }
+        },
+        {
+          "id": "va-sbe-2026-state-house-20-special:nathaniel-nate-fritzen:republican",
+          "contestId": "va-sbe-2026-state-house-20-special",
+          "givenName": "Nathaniel \"Nate\"",
+          "familyName": "Fritzen",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:05:51.273419+00:00",
+            "verifiedAt": "2026-10-14T05:05:51.273419+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Member, House of Delegates | 20th District | Republican | Nathaniel \"Nate\" Fritzen | No | "
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "va-sbe-2026-amendment-1:measure",
+          "contestId": "va-sbe-2026-amendment-1",
+          "officialNumber": "Question 1",
+          "questionText": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Proposed Constitutional Amendment Question 1 | Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?"
+          }
+        },
+        {
+          "id": "va-sbe-2026-amendment-2:measure",
+          "contestId": "va-sbe-2026-amendment-2",
+          "officialNumber": "Question 2",
+          "questionText": "Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Proposed Constitutional Amendment Question 2 | Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?"
+          }
+        },
+        {
+          "id": "va-sbe-2026-amendment-3:measure",
+          "contestId": "va-sbe-2026-amendment-3",
+          "officialNumber": "Question 3",
+          "questionText": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "doorId": "fec-va-chief",
+            "quote": "Proposed Constitutional Amendment Question 3 | Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?"
+          }
+        }
+      ],
+      "absences": [],
+      "coverageNotes": [
+        "The statewide All Offices list includes a special election for House of Delegates District 20. No other state legislative or statewide executive offices are listed for November 3, 2026."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T05:08:19.030107+00:00",
+    "reviewedBy": "Codex BL-16",
+    "sources": [
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+        "retrievedAt": "2026-10-14T05:06:24.611494+00:00",
+        "httpStatus": 200,
+        "rawHash": "e5a0ee87a35961198e5b501c4211474b07b025c8d8f8ef99d42f5476c3f60f68",
+        "publisher": "Virginia Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 Federal Offices Candidate List; all 38 candidate rows converted, including party, incumbency and filed website."
+      },
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+        "retrievedAt": "2026-10-14T05:05:51.273419+00:00",
+        "httpStatus": 200,
+        "rawHash": "e137497e53f51438352dcd3105eba22f6cfe93fe4109fb00804a8a4a65d0f51b",
+        "publisher": "Virginia Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official House of Delegates District 20 special election list; three locality copies independently match the two candidate records."
+      },
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx",
+        "retrievedAt": "2026-10-14T05:06:25.899840+00:00",
+        "httpStatus": 200,
+        "rawHash": "16e41ebd8a81b493c470139e3954e5ed005969a4e5a3c869f3e6ce556b45a4fe",
+        "publisher": "Virginia Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official All Offices Candidate List revised October 9, 2026 identifies the only state legislative contest on the November ballot."
+      },
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "retrievedAt": "2026-10-14T05:06:24.951694+00:00",
+        "httpStatus": 200,
+        "rawHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+        "publisher": "Virginia Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 2026 Proposed Constitutional Amendments and Local Referendums list; all three active statewide questions converted verbatim."
+      },
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "finalUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "retrievedAt": "2026-10-14T05:08:19.030107+00:00",
+        "httpStatus": 200,
+        "rawHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+        "publisher": "Virginia Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official proposed constitutional amendments brochure includes the complete constitutional amendment text and explanations for all three questions."
+      }
+    ]
+  }
+}

@@ -23,7 +23,7 @@ export function votingDoorRefreshCadence(electionDate: string): RoutineCadencePo
 }
 
 export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
-  "voting-sites", "az-sos-campaign-finance", "nh-sos-campaign-finance",
+  "voting-sites", "ballot-contests", "az-sos-campaign-finance", "nh-sos-campaign-finance",
   "nj-elec-campaign-finance", "az-pima-local-finance",
   "member-offices", "prl", "prl-archives",
   "congress-bulk-roster", "congress-rollcalls", "federal-key-votes",

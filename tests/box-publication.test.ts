@@ -87,7 +87,9 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("ELE-20", "https://my.arizona.vote", null, "Visit the state's site"), { class: "ballot navigation", waiting: "LOOKUP_KIND_NOT_STATED" });
   assert.deepEqual(slot("ELE-08", "October 5, 2026", null, "The deadline to register is October 5, 2026."), { class: "ballot navigation", election: "registration_deadline" });
   assert.deepEqual(slot("CAN-04", "https://example-campaign.com"), { class: "campaign sites", lead: "campaign-site" });
-  assert.deepEqual(slot("CAN-16", "x"), { class: "candidates", waiting: "NO_READER_FIELD" });
+  assert.deepEqual(slot("CAN-16", "x"), { class: "candidates", waiting: "NO_PUBLICATION_PATH_YET" });
+  assert.deepEqual(slot("MTG-08", "x"), { class: "meetings", waiting: "SITTING_FIELDS_COME_FROM_ITS_DOOR" });
+  assert.deepEqual(slot("PAR-04", "x"), { class: "taking part", waiting: "NO_READER_FIELD" });
   assert.deepEqual(slot("FIN-03", "x"), { class: "government money", waiting: "TAKES_WHOLE_RECORDS_ONLY" });
   assert.deepEqual(slot("ELE-10", "x"), { class: "elections", waiting: "HELD_IN_CODE_NOT_ON_A_PAGE" });
   assert.deepEqual(slot("MTG-04", "first Tuesday"), { class: "schedules", slot: "meeting_cadence" });

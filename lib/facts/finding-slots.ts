@@ -72,14 +72,21 @@ const WHOLE_RECORDS = new Set(("GEO-07 GEO-08 GEO-10 GOV-03 GOV-05 GOV-06 OFF-11
   "DOC-02 DOC-03 DOC-06 DOC-08 DOC-09 DOC-10 DOC-17 PAR-07 LEG-02 LEG-03 LEG-04 LEG-05 LEG-06 LEG-07 LEG-09 LEG-11 LEG-17 LEG-18 LEG-20 LEG-21 " +
   "ELE-01 ELE-04 ELE-07 ELE-11 ELE-16 ELE-21 ELE-22 ELE-25 ELE-26 CAN-01 CAN-02 CAN-03 CAN-07 CAN-12 CAN-17 CAN-21 " +
   "CAM-01 CAM-02 CAM-03 CAM-05 CAM-06 CAM-07 CAM-13 CAM-14 FIN-01 FIN-02 FIN-03 FIN-04 FIN-05 FIN-06 FIN-07 FIN-08 FIN-09 FIN-10 " +
-  "FIN-11 FIN-12 FIN-13 FIN-14 FIN-15 PRL-01 PRL-02 PRL-03 REF-01").split(" "));
+  "FIN-11 FIN-12 FIN-13 FIN-14 FIN-15 PRL-01 PRL-02 PRL-03 REF-01 EXE-01 EXE-02 EXE-03 EXE-04 EXE-05").split(" "));
 /** Ids our own code decides (a constant, a derived count, a reader rule), so no page can fill them. */
-const CODE_HELD = new Set(("GEO-09 GEO-11 GOV-12 OFF-03 OFF-05 MTG-16 DOC-14 DOC-15 LEG-01 LEG-14 LEG-22 ELE-10 ELE-13 ELE-23 CAN-14 FIN-16 " +
-  "REF-03 REF-10").split(" "));
+const CODE_HELD = new Set(("GEO-09 GEO-11 GOV-12 OFF-03 OFF-05 MTG-16 DOC-14 DOC-15 LEG-01 LEG-14 LEG-22 ELE-06 ELE-10 ELE-12 ELE-13 ELE-23 " +
+  "CAN-14 FIN-16 REF-03 REF-10").split(" "));
+/** A sitting's time, place and source come from reading its door, which a sentence about it cannot stand in for. */
+const SITTING_READ = new Set("MTG-06 MTG-07 MTG-08 MTG-12".split(" "));
+/** Definitions are written from the saved page by the translation step, never copied from a hunter's quote. */
+const TRANSLATED = new Set("GOV-07 GOV-09 REF-04 REF-05".split(" "));
+/** Readers have a place for these, but nothing publishes them yet. */
+const UNPRODUCED = new Set("GOV-13 CAN-06 CAN-16 CAM-15".split(" "));
 
-/** Why a checklist id has no route: its record imports whole, our code holds it, or no reader shows it. */
 function checklistWait(id: string): string {
-  return WHOLE_RECORDS.has(id) ? "TAKES_WHOLE_RECORDS_ONLY" : CODE_HELD.has(id) ? "HELD_IN_CODE_NOT_ON_A_PAGE" : "NO_READER_FIELD";
+  return WHOLE_RECORDS.has(id) ? "TAKES_WHOLE_RECORDS_ONLY" : CODE_HELD.has(id) ? "HELD_IN_CODE_NOT_ON_A_PAGE"
+    : SITTING_READ.has(id) ? "SITTING_FIELDS_COME_FROM_ITS_DOOR" : TRANSLATED.has(id) ? "WRITTEN_BY_TRANSLATION_FROM_THE_SAVED_PAGE"
+    : UNPRODUCED.has(id) ? "NO_PUBLICATION_PATH_YET" : "NO_READER_FIELD";
 }
 
 const PERSON = /^(officeholder|member|boardmember|councilmember|(governingboard|governingbody|board|council)\.member)(\.(mayor|vicemayor|superintendent|chair|vicechair|president|vicepresident|member|councilmember))?$/;

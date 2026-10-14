@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { readRoutinePublicationStatus } from "../../civic-data/observability-server.ts";
+import { readLatestBallotPublication } from "../../civic-data/ballot-publication.ts";
+import { openControlPlane } from "../admin-data.ts";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { ADMIN_V6_PUBLICATION_CONTRACT, publicationView, type AdminV6Publication } from "./v6-publication-read.ts";
@@ -17,12 +19,14 @@ export async function v6PublicationGet(request: NextRequest): Promise<NextRespon
   const query = validateV6Query(request.nextUrl.searchParams);
   if (!query.ok) return NextResponse.json({ code: query.code }, { status: 400, headers: NO_STORE });
   if (!memo || Date.now() - memo.at > MEMO_MS) {
-    const read = await readRoutinePublicationStatus();
+    const [read, opened] = await Promise.all([readRoutinePublicationStatus(), openControlPlane()]);
     if (read.kind !== "HELD") return NextResponse.json({ state: "UNREAD", says: `${read.detail} No publication count is claimed.` }, { status: 503, headers: NO_STORE });
-    memo = { at: Date.now(), asOf: read.asOf, view: publicationView(read.view) };
+    if (!opened.ok) return NextResponse.json({ state: "UNREAD", says: opened.detail }, { status: 503, headers: NO_STORE });
+    const ballotPublication = await readLatestBallotPublication(opened.repos);
+    memo = { at: Date.now(), asOf: read.asOf, view: { ...publicationView(read.view), ballotPublication } };
   }
   const { view, asOf } = memo;
   return NextResponse.json({ contract: ADMIN_V6_PUBLICATION_CONTRACT, scope: query.scopeKey,
-    revision: `publication:${view.counts.map((c) => c.count).join("-")}:${view.latestAttemptFailing}:${view.notVisible[0]?.publishedAt ?? "none"}`,
+    revision: `publication:${view.counts.map((c) => c.count).join("-")}:${view.latestAttemptFailing}:${view.notVisible[0]?.publishedAt ?? "none"}:${view.ballotPublication?.at ?? "none"}`,
     asOf, data: view, missingParts: [] }, { headers: NO_STORE });
 }

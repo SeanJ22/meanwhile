@@ -5,10 +5,6 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import { refreshDoorsForPass } from "../doors/install.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 
-/**
- * Brings one registered meeting partition's next due instant forward; the ordinary pass then reads it. A request never
- * writes a source clock, a candidate or an event, and is spent by the partition's first durable attempt after it.
- */
 export interface RoutineDueRequest {
   readonly id: string;
   readonly contractId: string;
@@ -28,8 +24,8 @@ const DEFAULT_REASON = "controlled refresh verification (owner instruction 2026-
 
 export const DOOR_DERIVE_CONTRACT_IDS = ["meeting-body-crosswalk-derived", "meeting-source-wiring"] as const;
 
-function requestablePartition(contractId: string): boolean {
-  return MEETING_PARTITION_CONTRACTS.some((contract) =>
+function requestableContract(contractId: string): boolean {
+  return contractId === "ballot-contests" || MEETING_PARTITION_CONTRACTS.some((contract) =>
     contract.id === contractId && contract.recordClass === "MEETING" && contract.schedule?.kind === "SITTING_WINDOW");
 }
 
@@ -54,10 +50,6 @@ export type RoutineDueCommand =
   | { readonly kind: "REQUEST"; readonly contractId: string; readonly dueInMs: number; readonly expiresInMs: number; readonly reason: string }
   | { readonly kind: "WITHDRAW"; readonly requestId: string };
 
-/**
- * `--contract=<partition> [--due-in-minutes=0..60] [--expires-in-minutes=1..120] [--reason=<text>]`,
- * or `--withdraw=<request id>`. Anything else refuses.
- */
 export function routineDueCommand(args: readonly string[]): RoutineDueCommand {
   const known = ["--contract=", "--due-in-minutes=", "--expires-in-minutes=", "--reason=", "--withdraw="];
   if (args.length === 0 || args.some((arg) => !known.some((prefix) => arg.startsWith(prefix)))) {
@@ -74,7 +66,7 @@ export function routineDueCommand(args: readonly string[]): RoutineDueCommand {
   const contracts = args.filter((arg) => arg.startsWith("--contract="));
   if (contracts.length !== 1) throw new Error("ROUTINE_DUE_REQUEST_ONE_CONTRACT_REQUIRED");
   const contractId = contracts[0]!.slice("--contract=".length);
-  if (!requestablePartition(contractId)) throw new Error("ROUTINE_DUE_REQUEST_MEETING_PARTITION_REQUIRED");
+  if (!requestableContract(contractId)) throw new Error("ROUTINE_DUE_REQUEST_REGISTERED_CONTRACT_REQUIRED");
   const dueInMs = minutesArg(args, "due-in-minutes", 0, 0, ROUTINE_DUE_REQUEST_MAX_DELAY_MS / 60_000);
   const expiresInMs = minutesArg(args, "expires-in-minutes", ROUTINE_DUE_REQUEST_DEFAULT_LIFETIME_MS / 60_000, 1, ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS / 60_000);
   if (dueInMs >= expiresInMs) throw new Error("ROUTINE_DUE_REQUEST_EXPIRES_BEFORE_DUE");
@@ -138,7 +130,7 @@ export function routineDueRequestFor(
   requests: readonly RoutineDueRequest[],
 ): RoutineDueRequest | null {
   const doorDerive = (DOOR_DERIVE_CONTRACT_IDS as readonly string[]).includes(task.id);
-  if (!doorDerive && (task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW")) return null;
+  if (task.id !== "ballot-contests" && !doorDerive && (task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW")) return null;
   return requests.find((request) => request.contractId === task.id && routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
 }
 
@@ -153,17 +145,17 @@ function openAt(request: RoutineDueRequest, nowMs: number): boolean {
 }
 
 export async function requestRoutineDue(repos: ControlPlaneRepositories, args: readonly string[], now: string): Promise<RoutineDueRequest> {
-  await refreshDoorsForPass(repos.doors);
   const command = routineDueCommand(args);
   if (command.kind !== "REQUEST") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_REQUEST");
+  if (command.contractId !== "ballot-contests") await refreshDoorsForPass(repos.doors);
   const nowMs = Date.parse(now);
   if (!canonicalInstant(now)) throw new Error("ROUTINE_DUE_REQUEST_CLOCK_INVALID");
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   const config = row?.value ?? defaultAdminConfig();
   const prior = parseRoutineDueRequests(config.routineDueRequests);
   if (prior.issues.length > 0) throw new Error(`ROUTINE_DUE_REQUEST_HISTORY_INVALID:${prior.issues.join("; ")}`);
-  const open = prior.requests.find((request) => openAt(request, nowMs));
-  if (open) throw new Error(`ROUTINE_DUE_REQUEST_ALREADY_OPEN:${open.id}`);
+  const open = prior.requests.find((request) => request.contractId === command.contractId && openAt(request, nowMs));
+  if (open && command.contractId !== "ballot-contests") throw new Error(`ROUTINE_DUE_REQUEST_ALREADY_OPEN:${open.id}`);
   const request: RoutineDueRequest = {
     id: `routine-due:${randomUUID()}`,
     contractId: command.contractId,

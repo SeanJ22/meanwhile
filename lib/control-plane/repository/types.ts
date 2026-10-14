@@ -258,6 +258,8 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** The rows one job could use (`entryInSlice`); a store may return more, never fewer. */
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
+  /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
+  insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
   /**
    * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
    * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.

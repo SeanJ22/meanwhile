@@ -5,7 +5,9 @@ import { workerPublicationContext } from "../lib/civic-data/worker-publication-c
 import { readHeldBallotInputs } from "../lib/civic-data/worker-held-elections.ts";
 /* @freshness-reads-here */
 import { hostname } from "node:os";
+import { resolve } from "node:path";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
+import { ballotInputHash, ballotPublicationDue, parseBallotPublicationResult, readLatestBallotPublication, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
 import { neon } from "@neondatabase/serverless";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, CAMPAIGN_PUBLICATION_TASK, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
@@ -493,6 +495,7 @@ function newestConsideredAt(
 }
 
 async function persistSupervisorOutcome(input: {
+  readonly ballotPublication?: BallotPublicationResult;
   readonly readerEdge: ReaderEdgePublicationOutcome;
   readonly campaignPublicationApprovalsAttempted?: number;
   readonly failures: readonly SupervisorFailure[];
@@ -524,6 +527,7 @@ async function persistSupervisorOutcome(input: {
   assertDurableRepositories(repos, "routine civic-data supervisor outcomes");
   const cycleId = SUPERVISOR_CYCLE_ID;
   const outcome = routineCivicDataSupervisorOutcome({
+    ...(input.ballotPublication ? { ballotPublication: input.ballotPublication } : {}),
     lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
     ...(input.campaignPublicationApprovalsAttempted !== undefined ? { campaignPublicationApprovalsAttempted: input.campaignPublicationApprovalsAttempted } : {}),
     cycleId,
@@ -747,6 +751,18 @@ if (!FORCE && selectedTasks.some(task => task.id === "meeting-body-crosswalk-der
 // read changes no data; admission uses the same frontier and publication child.
 let campaignPublicationInputs: CampaignPublicationInputs | null = null;
 const publicationInputLines: string[] = [];
+let ballotHash: string | null = null;
+let priorBallotPublication: BallotPublicationResult | null = null;
+let ballotPublication: BallotPublicationResult | null = null;
+if (selectedTasks.some(task => task.id === "ballot-contests")) {
+  try {
+    ballotHash = await ballotInputHash(resolve(ROOT, "data/ballot/2026-general"));
+    const connection = controlPlaneUrlFromEnv();
+    if (connection) priorBallotPublication = await readLatestBallotPublication(await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true }));
+  } catch (error) {
+    console.error(`RCD_INPUT_CHANGED ballot-contests: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
+  }
+}
 if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK)) {
   try {
     const connection = controlPlaneUrlFromEnv();
@@ -798,14 +814,15 @@ for (const read of clockReads) {
     continue;
   }
   const durableClock = routineAdmissionClock(read.clock, supervisorAttempts.get(task.id), admissionNowMs);
-  if (!FORCE && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
+  const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
+  const ballotsDue = ballotPublicationDue(task.id, ballotHash, priorBallotPublication);
+  if (!FORCE && !ballotsDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     console.log(`RCD_SKIP ${task.id}: unchanged receipt failure; awaiting changed code, Send or source evidence`);
     continue;
   }
   const sittingHot = sittingSignals.get(task.id);
   const observedChange = observedChangeRates.get(task.id) ?? observedChangeRates.get(`feed:${task.id}`);
   const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
-  const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
   const discoveryDue = meetingDiscoveryInputsDue(task.id, durableClock, meetingDiscoveryInputs, admissionNowMs);
   if (task.ownerInvocation) {
@@ -814,7 +831,7 @@ for (const read of clockReads) {
     const reused = !task.ownerInvocation.publicationPending && Number.isFinite(succeeded) && succeeded >= Date.parse(task.ownerInvocation.requestedAt) && succeeded <= admissionNowMs;
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs) && dueRequest === null && !publicationDue && !discoveryDue) {
+  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs) && dueRequest === null && !publicationDue && !ballotsDue && !discoveryDue) {
     console.log(`RCD_SKIP ${task.id}: cadence not due${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
     }`);
@@ -1061,6 +1078,12 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
+  if (pending.task.id === "ballot-contests") {
+    const report = parseBallotPublicationResult(output);
+    if (report) ballotPublication = child.kind === "VERIFIED_SOURCE_SUCCESS"
+      ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
+      : { ...report, status: "HELD", versionId: null, reason: child.detail };
+  }
   await recordHuntSourceProgress(pending.task,
     child.kind === "VERIFIED_SOURCE_SUCCESS" ? child.receipt.confirmedAt ? "REUSED" : "PUBLISHED" : child.kind === "VERIFIED_SOURCE_FAILURE" ? "HELD" : "FAILED",
     child.kind === "VERIFIED_SOURCE_SUCCESS" ? child.receipt.confirmedAt
@@ -1359,6 +1382,7 @@ for (const reference of readerReadbackReferences) {
 step = "persisting the supervisor outcome";
 try {
   const cycleId = await persistSupervisorOutcome({
+    ...(ballotPublication ? { ballotPublication } : {}),
     ...(campaignPublicationInputs !== null && verifiedTaskReceipts.some(row => row.taskId === CAMPAIGN_PUBLICATION_TASK)
       ? { campaignPublicationApprovalsAttempted: campaignPublicationInputs.approvals } : {}),
     readerEdge,

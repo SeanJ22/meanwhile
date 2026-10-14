@@ -73,6 +73,7 @@ export interface RoutineCivicDataReaderReadbackOutcomeInput {
 }
 
 export interface RoutineCivicDataSupervisorOutcomeInput {
+  readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
   readonly campaignPublicationApprovalsAttempted?: number;

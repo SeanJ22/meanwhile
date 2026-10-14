@@ -137,6 +137,16 @@ export interface ManualProjectionPrior {
   readonly sourceReceipt: ManualSourceSetReceipt;
 }
 
+export function completeOfficialBallotContests(payload: GenericBallotProjection, receipt: ManualSourceSetReceipt) {
+  return Object.values(payload.ballots).flatMap(ballot => ballot.contests.filter(contest =>
+    contest.candidateListComplete === true && receipt.sources.some(source =>
+      ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass) && source.reviewOutcome !== "BLOCKED" &&
+      source.httpStatus === 200 && /^[a-f0-9]{64}$/.test(source.rawHash) &&
+      [source.requestedUrl, source.finalUrl].includes(contest.provenance.sourceUrl ?? "") &&
+      source.retrievedAt === contest.provenance.collectedAt))
+    .map(contest => ({ ballot, contest })));
+}
+
 export interface ManualProjectionCandidateOptions {
   readonly prior?: ManualProjectionPrior | null;
 }
@@ -567,11 +577,6 @@ function sourceScopedProjection(
   };
 }
 
-/**
- * Read the exact current GOOD package used as the source-scoped merge base.
- * An unreachable/corrupt pointer is never treated as an empty set: without a
- * proven base, omission could erase LKG and the owner promotion must stop.
- */
 export async function readManualProjectionPrior(
   contractId: ManualProjectionContractId,
   store: CivicDataReadStore,

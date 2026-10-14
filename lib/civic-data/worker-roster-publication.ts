@@ -232,7 +232,7 @@ export async function publishOwedRosterFacts(input: {
         artifacts: (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat(), readHeld, now: input.now });
       const tally = await publishBodyRoster(input.facts, { body, division, state: plan.jurisdiction.toUpperCase().slice(0, 2), reading, schedule, clocks, now: new Date(input.now) });
       const live = tally.live + tally.confirmed + tally.held;
-      outcome = withPageDoor({ at: input.now, workerResultId: reading.id, status: live === 0 ? "HELD" : tally.blanks ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
+      outcome = await withPageDoor(input.repos, { at: input.now, workerResultId: reading.id, status: live === 0 ? "HELD" : tally.blanks ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: live === 0 ? "ROSTER_FACTS_BLANK" : tally.live ? "VERIFIED_RESULT_PUBLISHED" : "VERIFIED_RESULT_REUSED",
         detail: `${tally.live} new and ${tally.confirmed} confirmed facts from ${reading.capture.evidence.canonicalUrl}; ${tally.blanks} stay open as blanks with their reasons` +
           (tally.departed ? `; ${tally.departed} no longer on the official roster.` : "."),
@@ -245,7 +245,8 @@ export async function publishOwedRosterFacts(input: {
     const current = await input.repos.workItems.mustRead(id);
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
-    if (outcome.code !== "VERIFIED_RESULT_REUSED" && reading) await recordPublishedPageDoor({ repos: input.repos, page: reading.capture, recordClass: plan.contract.recordClass, bodyId, published: outcome.status === "HELD" ? 0 : 1, now: input.now });
+    if (outcome.code !== "VERIFIED_RESULT_REUSED" && reading) await recordPublishedPageDoor({ repos: input.repos, page: reading.capture, recordClass: plan.contract.recordClass, bodyId,
+      ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id, published: outcome.status === "HELD" ? 0 : 1, now: input.now });
   }
   return report;
 }
@@ -355,10 +356,10 @@ export async function publishWorkerDirectoryResults(input: {
     }
     const current = await input.repos.workItems.mustRead(id);
     const pages = captures.length ? captures : [heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
-    outcome = withPageDoor(outcome, pages[0], plan.contract.recordClass);
+    outcome = await withPageDoor(input.repos, outcome, pages[0], plan.contract.recordClass);
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
-    if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, published: wentLive, now: input.now });
+    if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id, published: wentLive, now: input.now });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));
   }
   await writeValidatorLessons(input.repos, learned, input.now);

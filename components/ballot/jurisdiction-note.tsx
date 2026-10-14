@@ -1,12 +1,5 @@
 import { AddressPrompt } from "@/components/address/address-prompt";
 
-/**
- * One page-level note naming the jurisdictions this zip only partly covers,
- * with the address prompt, instead of a pill on every affected contest. Each
- * affected contest carries a short mark tying it back here. It never gates
- * anything: every contest still renders in full.
- */
-
 /** The mark an affected contest heading carries, tying it to the block. */
 export const JURISDICTION_MARK = "◆";
 
@@ -29,31 +22,22 @@ export function JurisdictionMark() {
   );
 }
 
-/**
- * The page-level block. Rendered once, above the contests, and only when at
- * least one contest is affected — a note about nothing is noise.
- *
- * `jurisdictions` is the list of body names this zip only partly covers, in the
- * order they appear on the page, deduplicated by the caller.
- */
 export function JurisdictionNote({
   jurisdictions,
   unplaceable = 0,
   zip,
+  electionDate,
   onResolved,
   onPoint,
 }: {
   /** Scopes the address prompt that ends the block. */
   zip: string;
+  electionDate?: string | null;
   onResolved?: React.ComponentProps<typeof AddressPrompt>["onResolved"];
   onPoint?: React.ComponentProps<typeof AddressPrompt>["onPoint"];
   /** Bodies MEASURED as covering only part of this zip. Named outright. */
   jurisdictions: readonly string[];
-  /**
-   * Contests on a division with no boundary measurement for this zip
-   * (`UNKNOWN`, not `AMBIGUOUS`). Counted, never named: naming them would
-   * claim a partial coverage we never measured.
-   */
+
   unplaceable?: number;
 }) {
   if (jurisdictions.length === 0 && unplaceable === 0) return null;
@@ -88,6 +72,7 @@ export function JurisdictionNote({
       <div className="mt-3">
         <AddressPrompt
           zip={zip}
+          selection={electionDate ? { purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate } : undefined}
           trigger="Want to narrow it? Put in your address"
           onResolved={onResolved}
           onPoint={onPoint}

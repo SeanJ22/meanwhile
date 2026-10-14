@@ -57,7 +57,7 @@ export async function publishOwedCommentFacts(input: {
         reused += outcomes.filter(row => "decision" in row && row.decision === "CONFIRM").length;
         blanks += outcomes.filter(row => "blank" in row).length;
       }
-      outcome = withPageDoor({ at: input.now, workerResultId: parser.id, status: live === 0 ? "HELD" : blanks ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
+      outcome = await withPageDoor(input.repos, { at: input.now, workerResultId: parser.id, status: live === 0 ? "HELD" : blanks ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: live === 0 ? "COMMENT_FACTS_BLANK" : "VERIFIED_RESULT_PUBLISHED",
         detail: `${live} comment rule facts checked against ${capture.evidence.canonicalUrl}; ${blanks} stay open as blanks with their reasons.`,
         records: { added, changed: 0, reused },
@@ -70,6 +70,7 @@ export async function publishOwedCommentFacts(input: {
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
     await recordPublishedPageDoor({ repos: input.repos, page: captures[0], recordClass: plan.contract.recordClass, bodyId: plan.publication.bodyId,
+      ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id,
       published: outcome.status === "HELD" ? 0 : 1, now: input.now });
   }
   return report;

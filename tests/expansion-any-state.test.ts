@@ -1,24 +1,5 @@
-/**
- * A Send in any registered state creates work, and the work reaches readers with no code change. A state with no
- * reviewed registry reads its registration as one (`lib/registration/jurisdictions.ts`).
- *
- * Every step is the production path on the in-memory stores, against the committed Ohio and Puerto Rico registration
- * references and a small, explicit published-geography fixture. Nothing reaches the network and no model is called.
- * Government identity comes from native source IDs; the council fixture has its own official-page evidence:
- *
- * 1. Admin's preview counts the governments a county Send would create work for, from registration, by the runner's
- *    rule;
- * 2. the owner's Send (`expansion.scope.set`) is read by the runner, which reads the promoted registration, places the
- *    county's governments and creates exactly that many obligations, each labelled as coming from registration;
- * 3. the next cycle's providers keep that work in the corpus;
- * 4. the free discovery walk takes a city first, at the web address the Census of Governments records for it, robots
- *    first, while the paid lane remains governed by the owner's separate pause and budgets;
- * 5. it finds the city's iCal feed on the city's own host; the automatic reviewer accepts it for the city's
- *    separately reviewed body; the crosswalk, the wiring and the state's derived family promote; and the Reader shows the
- *    sittings under the city council;
- * 6. a Send for a Puerto Rico municipio creates discovery needs that say `find-own-site`: the territory's
- *    governments carry no web address.
- */
+import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -49,7 +30,7 @@ import { deriveWiringDecisions, wiringRowFor } from "../lib/control-plane/discov
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
-import { runMeetingsDiscovery, walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { applyDispatchWork, dispatchWorkReading, planDispatchWork, requirementsFor, scopeWorkTarget, type DispatchWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
 import type { PlannedScope } from "../lib/control-plane/expansion/membership.ts";
 import { loadExpansionPlan, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
@@ -203,10 +184,6 @@ async function previewCodes(geoid: string): Promise<PreviewCode[]> {
   }));
 }
 
-/**
- * One runner cycle's Send step, as scripts/freshness-shadow.mts runs it: scopes, registration, territory, plan, and
- * apply — or, for a cycle that may not write (a dry run), the plan alone: the runner's own preview.
- */
 async function runnerCycle(
   repos: ControlPlaneRepositories,
   store: MemoryRoutineDataStore,
@@ -394,11 +371,8 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects)), null);
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
-  const walked = await runMeetingsDiscovery(repos, {
-    needs,
-    cycleIndex: 0,
-    maxWalks: 1,
-    firstIds: new Set([COLUMBUS]),
+  await runCensusState({
+    repos, state: "OH", needs: [columbus],
     runtime: {
       open: recordedDiscoveryOpen({
         [`https://${COLUMBUS_HOST}/robots.txt`]: ALLOW,
@@ -417,10 +391,12 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
       budget: { spent: () => false },
     },
   });
-  assert.deepEqual(walked.walked.map((a) => [a.jurisdictionId, a.outcome]), [[COLUMBUS, "FOUND"]], "the free walk took the Send's city first");
-  const [attempt] = walked.walked;
+  const walked = await repos.discoveryAttempts.read(columbus.jurisdictionId);
+  assert.deepEqual(walked.map((a) => [a.jurisdictionId, a.outcome]), [[COLUMBUS, "FOUND"]], "the free walk took the Send's city first");
+  const [attempt] = walked;
   assert.equal(attempt!.found[0]?.url, COLUMBUS_ROUTE);
-  assert.deepEqual(attempt!.site?.address, { source: "REGISTRATION", versionId }, "the host is attested by the registration it was recorded in");
+  assert.equal(attempt!.site?.address?.source, "WEBSITE_EVIDENCE");
+  assert.ok(vault.has(attempt!.site!.address!.versionId!), "the host is attested by its saved source copy");
   assert.match(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects))?.why ?? "", /already found/);
 
   /* 5. The automatic crosswalk, the wiring, Ohio's family and the Reader. */

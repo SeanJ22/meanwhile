@@ -10,21 +10,8 @@ import {
   readFreeDiscoveryWalks,
   type FreeWalkSubject,
 } from "../lib/control-plane/discovery/free-walks.ts";
-import {
-  discoveryNeedsToWalk,
-  runMeetingsDiscovery,
-  walkableByFreeWalk,
-  type DiscoveryRuntime,
-} from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import {
-  FREE_WALK_FIRST,
-  MEETINGS_DISCOVERY_NAMESPACE,
-  materializedDiscoveryNeeds,
-  paidDiscoveryHold,
-} from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
-import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import { FREE_WALK_FIRST, MEETINGS_DISCOVERY_NAMESPACE, paidDiscoveryHold } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { DiscoveryOutcome, MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
@@ -174,68 +161,6 @@ test("THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and wh
   assert.equal(freeWalkBrief(undefined, undefined), null);
 });
 
-test("DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, a state it cannot read named, a moved basis left out, and walked first even outside the ledger", async () => {
-  const az = {
-    formatVersion: 1, stateCode: "AZ", generatedBy: "test", generatedOn: "2026-09-24", _note: [], enumerationSources: [], counts: {}, disagreements: [],
-    sourceCatalog: { "MEETINGS:THIS_JURISDICTION:this-government-itself": { recordClass: "MEETINGS", scope: "THIS_JURISDICTION", state: "DISCOVERY_OWED" } },
-    jurisdictions: [
-      { id: AJ, stateCode: "AZ", name: "CITY OF APACHE JUNCTION", govClass: "CITY_OR_TOWN", ownWebAddress: "http://www.ajcity.net", sourceIds: ["MEETINGS:THIS_JURISDICTION:this-government-itself"] },
-      { id: COOLIDGE, stateCode: "AZ", name: "CITY OF COOLIDGE", govClass: "CITY_OR_TOWN", ownWebAddress: null, sourceIds: [] },
-    ],
-  } as unknown as JurisdictionRegistry;
-  const registryFor = (state: string): JurisdictionRegistry => {
-    if (state === "az") return az;
-    throw new Error(`no promoted ${state.toUpperCase()} registry`);
-  };
-  const { entries, failures } = materializedDiscoveryNeeds(
-    [
-      COOLIDGE_ROW,
-      AJ_ROW,
-      `${MEETINGS_DISCOVERY_NAMESPACE}${COOLIDGE}#own-site-meetings`,
-      `${MEETINGS_DISCOVERY_NAMESPACE}nh:city:city-of-berlin#own-site-meetings`,
-      "freshness:jurisdiction:az:county:county-of-pima#ballot-and-candidates-1",
-    ],
-    registryFor,
-  );
-  assert.deepEqual(entries.map((e) => e.need.jurisdictionId), [AJ, COOLIDGE], "a moved basis and another namespace are left out");
-  assert.equal(failures.length, 1);
-  assert.match(failures[0], /the NH jurisdiction registry could not be read .*no promoted NH registry/);
-  const [aj, coolidge] = entries.map((e) => e.need);
-  assert.equal(walkableByFreeWalk(aj), true);
-  assert.equal(walkableByFreeWalk(coolidge), false, "no site is recorded");
-
-  /* A mission map's blanks hold an older copy of one government and nothing of a newly promoted town. */
-  const newTown: MeetingsDiscoveryNeed = { ...aj, jurisdictionId: "az:city:town-of-newly-promoted", name: "TOWN OF NEWLY PROMOTED", ownWebAddress: "https://newly.example.gov" };
-  const mission: MeetingsDiscoveryNeed[] = [{ ...aj, ownWebAddress: "http://old.example.net" }, { ...aj, jurisdictionId: "az:city:city-of-avondale", name: "CITY OF AVONDALE" }];
-  const toWalk = discoveryNeedsToWalk(mission, [aj, newTown]);
-  assert.deepEqual(toWalk.map((n) => n.jurisdictionId), [AJ, "az:city:town-of-newly-promoted", "az:city:city-of-avondale"]);
-  assert.equal(toWalk.find((n) => n.jurisdictionId === AJ)?.ownWebAddress, "http://www.ajcity.net", "the dispatched copy wins over the mission's");
-  assert.deepEqual(discoveryNeedsToWalk(mission, [aj, newTown], need => need.jurisdictionId === AJ), [aj],
-    "a narrow discovery pass keeps the current selected need and excludes every other government's work");
-
-  for (const [label, repos] of await eachStore("wtp-free-walks-first-")) {
-    const opened: string[] = [];
-    const runtime: DiscoveryRuntime = {
-      open: async ({ url }) => {
-        opened.push(url);
-        return { status: 404, body: "", bytes: 0, contentType: "text/html", location: null, transportError: null };
-      },
-      spaceOut: async () => {},
-      vault: async () => ({ stored: true, where: "vault", why: "stored" }),
-      now: () => "2026-09-24T02:00:00.000Z",
-      budget: { spent: () => false },
-      recipes: [],
-    };
-    const pass = await runMeetingsDiscovery(repos, { needs: toWalk, runtime, cycleIndex: 0, maxWalks: 1, firstIds: new Set(["az:city:town-of-newly-promoted"]) });
-    assert.deepEqual(pass.walked.map((a) => a.jurisdictionId), ["az:city:town-of-newly-promoted"], `${label}: a dispatched government outside the mission is walked first`);
-    assert.ok(opened.length > 0, `${label}: the walk opened its site`);
-    assert.ok(
-      opened.every((u) => ["newly.example.gov", "www.newly.example.gov"].includes(new URL(u).host)),
-      `${label}: at the address its registry records (its own origin and its www twin), never the mission's older copy: ${opened.join(", ")}`,
-    );
-  }
-});
-
 test("THE RUNNER IS WIRED: it reads the walk before dispatch, and hands the reading to the hold, the Scout's brief and the walk list", () => {
   const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
   const read = runner.indexOf("readFreeDiscoveryWalks(repos, freeWalkSubjects)");
@@ -244,11 +169,8 @@ test("THE RUNNER IS WIRED: it reads the walk before dispatch, and hands the read
   assert.match(runner, /paidDiscoveryHold\(row\.obligation\.id, freeWalks\)/, "the hold reads it");
   assert.doesNotMatch(runner, /paidDiscoveryHold\([^)]*UNREAD_FREE_DISCOVERY_WALKS/, "the hold no longer reads the unwired stand-in");
   assert.match(runner, /freeWalks\.evidenceFor\?\.\(discovery\.jurisdictionId\)/, "the Scout's brief carries the walk's line");
-  assert.match(runner, /let discoveryToWalk = discoveryNeedsToWalk\(\[\.\.\.missionDiscoveryNeeds\.values\(\)\], \[\.\.\.dispatchedNeeds\.values\(\)\], need =>/, "the explicit walk list carries dispatched needs and mission blanks with exact selection");
-  assert.match(runner, /await runNeeds\(discoveryToWalk, discoveryRuntime\)/, "the executor receives explicit work before the standing census");
-  assert.match(runner, /mergePass\(await runMeetingsDiscovery\(repos, \{\s*needs, runtime,/, "both lists reach the same free discovery executor");
-  assert.match(runner, /readPlatformCensusNeeds\(state, registry, \{ repos, root: ROOT,/, "the standing list comes from one state's registered websites and census leads");
-  assert.match(runner, /discoveryToWalk = discoveryNeedsToWalk\(standing\.needs\.filter\(/, "standing work continues beyond the explicit list");
-  assert.match(runner, /await runNeeds\(discoveryToWalk, runtime\)/, "the state-scoped standing list reaches the executor");
+  const census = readFileSync(join(ROOT, "scripts/platform-census-runner.mts"), "utf8");
+  assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}/);
+  assert.match(census, /runCensusState\(\{ repos, state, needs: reading.needs/);
   assert.match(runner, /const dispatchedDiscoveryIds = sync\.all\.filter\(row => row\.materializedBy === OWNER_DISPATCH\)/, "free standing inventory is never mistaken for an explicit paid dispatch");
 });

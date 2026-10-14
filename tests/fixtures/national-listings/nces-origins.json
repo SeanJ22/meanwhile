@@ -1,13 +1,13 @@
 {
   "nces-lea-catalog.json": {
     "url": "https://nces.ed.gov/ccd/datatables/api/File/2/5/0/0/0/0",
-    "retrievedAt": "2026-10-12",
+    "retrievedAt": "2026-10-13",
     "responseSha256": "a5bb18d7a013f437a5edd432f6a18fce642d914d1cbeddbe21de935a9855effb",
     "sample": "First 3 selectionGroupModels, unchanged publisher fields."
   },
   "nces-f33-catalog.json": {
     "url": "https://nces.ed.gov/ccd/datatables/api/File/1/5/0/0/0/0",
-    "retrievedAt": "2026-10-12",
+    "retrievedAt": "2026-10-13",
     "responseSha256": "3122802550ea7ba3578769bfbd122eadd46dae3a9cfce9dd710539370100bb7a",
     "sample": "First 2 selectionGroupModels, unchanged publisher fields."
   },
@@ -20,11 +20,9 @@
     "sample": "Exact header and rows: first NCES LEAID matching a held Census school GEOID per state, plus first charter and first state-operated agency. Also the exact native LEA rows for five ZIPs across regions."
   },
   "nces-f33.txt": {
-    "url": "https://nces.ed.gov/ccd/Data/zip/sdf23_1a_txt.zip",
-    "member": "sdf23_1a.txt",
-    "retrievedAt": "2026-10-12",
-    "archiveSha256": "7e281689097536e181df20f2252c845d22a2070e8d4112961f13e479a077ed5a",
-    "memberSha256": "afd00cae9d207bae28e5ee167e937e550b7b16e7150dfb8b5fd0f98a83230ac2",
-    "sample": "Exact header and all rows for LEAIDs in the directory fixture."
+    "url": "https://nces.ed.gov/ccd/Data/txt/sdf24_1a.txt",
+    "retrievedAt": "2026-10-13",
+    "responseSha256": "54546684eb18e9c8066b11a2d67265ce17091cb2cf553488849135cdeb2099d6",
+    "sample": "Exact header and rows for LEAIDs in the directory fixture."
   }
 }

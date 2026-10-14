@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { divisionsAt } from "@/lib/registry/server";
@@ -9,7 +10,7 @@ const NO_STORE = {
   "cache-control": "no-store, no-cache, must-revalidate",
 } as const;
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/ballot/scope", async function POST(request: Request) {
   let lat: number;
   let lng: number;
   try {
@@ -50,4 +51,4 @@ export async function POST(request: Request) {
   }
   if (failed) return Response.json({ ok: false }, { status: 503, headers: NO_STORE });
   return Response.json({ ok: true, contestIds: [] }, { headers: NO_STORE });
-}
+}, ["registry-runtime","census-districts","ballot-contests","ballot-az","ballot-nh"]);

@@ -26,6 +26,8 @@ export interface WorkCost {
 }
 export interface ScoutOutcomeLine { readonly recordClass: string; readonly found: number; readonly route: number; readonly total: number }
 export interface NeonTransfer {
+  readonly readerReads?: readonly { readonly day: string; readonly route: string; readonly read: string;
+    readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
   readonly kind: "recorded" | "not-recorded";
   readonly detail: string | null;
   readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[];
@@ -118,7 +120,13 @@ export function neonTransferOf(read: DailyDatabaseTransferRead | null): NeonTran
     d.responseBytes += row.responseBytes; d.requestBytes += row.requestBytes; d.requests += row.requests;
     by.set(row.day, d);
   }
-  return { kind: "recorded", detail: null, days: [...by.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1)).map(([day, d]) => ({ day, ...d })) };
+  const readerReads = read.rows.filter(row => row.database === "reader" && row.client === "reader")
+    .flatMap(row => Object.entries(row.reads ?? {}).map(([key, [requests, requestBytes, responseBytes]]) => {
+      const [route, ...parts] = key.split("\t");
+      return { day: row.day, route, read: parts.join("\t"), requests, requestBytes, responseBytes };
+    })).sort((a, b) => b.day.localeCompare(a.day) || b.responseBytes - a.responseBytes);
+  return { kind: "recorded", detail: null, readerReads,
+    days: [...by.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1)).map(([day, d]) => ({ day, ...d })) };
 }
 
 export const SPEND_SQL = `WITH rows AS (

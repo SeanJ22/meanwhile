@@ -14,7 +14,10 @@ import {
 } from "./runtime-data-plane.ts";
 import type { BodyRoster } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE } from "./census-placeholders.ts";
+import { currentReaderRoute, currentReaderSelection } from "../db/reader-route.ts";
+import { currentRegistryRuntimeEdge, currentReaderAuthorityEdge } from "./runtime-edge.ts";
 
+const selectedStates = new WeakMap<object, CivicDataReadResult<RegistryRuntimeReadModel>>();
 let cache: RegistryRuntimeReadModel | null = null;
 let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotInitialized(
   "REGISTRY_RUNTIME_BINDING",
@@ -22,13 +25,11 @@ let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotI
   "The Reader registry runtime pointer has not been read for this process.",
 );
 
-/*
- * A read validates structure; a promotion validates everything. A body on a Census placeholder
- * division is refused at promotion (`registryRuntimeProjectionIssues` via `registryRuntimeCandidate`)
- * but does not fail a read, so a counting defect never becomes a reader outage.
- */
+
 function validate(value: RegistryRuntimeReadModel, versionId: string): void {
-  const issues = registryRuntimeProjectionIssues(value).filter((issue) => !issue.startsWith(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:`));
+  const sliced = currentReaderSelection() !== undefined;
+  const empty = new Set(["REGISTRY_EMPTY", "BODY_ROSTERS_EMPTY", "ROSTER_DISPOSITIONS_EMPTY", "STATEWIDE_EXECUTIVES_EMPTY", "OFFICIAL_CANDIDACY_BRIDGE_EMPTY"]);
+  const issues = registryRuntimeProjectionIssues(value).filter(issue => !issue.startsWith(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:`) && !(sliced && empty.has(issue)));
   if (issues.length) throw new Error(`Registry runtime projection ${versionId} is invalid: ${issues.join(", ")}.`);
 }
 
@@ -36,13 +37,20 @@ function validate(value: RegistryRuntimeReadModel, versionId: string): void {
 export async function readRegistryRuntimeProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
+  const edge = currentRegistryRuntimeEdge();
+  if (!options.store && edge && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
+    primeRegistryRuntimeFromValue(edge.value, edge.versionId);
+    return readState;
+  }
   const result = await readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, options);
   readState = result;
+  const selection = currentReaderSelection();
+  if (selection) selectedStates.set(selection, result);
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     validate(result.value, result.metadata.versionId ?? result.kind);
-    cache = result.value;
+    if (!selection) cache = result.value;
   } else {
-    cache = null;
+    if (!selection) cache = null;
   }
   return result;
 }
@@ -54,17 +62,11 @@ export async function refreshRegistryRuntimeFromPromoted(options: PromotedCivicD
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
-/**
- * Prime the registry-runtime cache from a validated edge serving artifact, with no database read: the
- * reader's normal path (request-scoped, see `lib/registry/runtime-edge.ts`). The database reader above
- * stays the authoritative path for the runner and workers. Validated once per edge object and version.
- */
+
 export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, versionId: string): void {
   validateOnce("registry-runtime", value, versionId, () => validate(value, versionId));
-  cache = value;
-  // BOOTSTRAP, not PROMOTED: the serving copy carries the validated value and its
-  // version but not the promotion receipt. The version drives the registry
-  // authority cache key.
+  const selection = currentReaderSelection();
+  if (!selection) cache = value;
   readState = {
     kind: "BOOTSTRAP",
     value,
@@ -83,13 +85,23 @@ export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, v
     },
     detail: `Served from the registry-runtime edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
   };
+  if (selection) selectedStates.set(selection, readState);
 }
 
 export function registryRuntimeReadState(): CivicDataReadResult<RegistryRuntimeReadModel> {
-  return readState;
+  const selection = currentReaderSelection();
+  return selection ? selectedStates.get(selection) ?? readState : readState;
 }
 
 export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
+  const selection = currentReaderSelection();
+  if (selection) {
+    const edge = currentRegistryRuntimeEdge();
+    if (edge) return edge.value;
+    const state = selectedStates.get(selection);
+    if (state?.kind === "PROMOTED" || state?.kind === "BOOTSTRAP") return state.value;
+    if (state) throw new Error("The requested authority could not be read for this request.");
+  }
   if (!cache) throw new Error(`Registry runtime bindings are ${readState.kind}; call readRegistryRuntimeProjection before using the synchronous projection.`);
   return cache;
 }

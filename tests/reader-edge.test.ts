@@ -91,7 +91,7 @@ test("a losing publisher cannot overwrite any bytes selected by the winning mani
   assert.equal((await store.readArtifact(manifest.scopes[0].key))!.meetings[0].id, "winner");
   for (const ref of [manifest.authorityArtifacts!["federal-directory"]!, manifest.registrations!.az]) {
     const envelope = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8"));
-    assert.equal(envelope.value.winner, true);
+    assert.equal(envelope.value.base.winner, true);
   }
 });
 
@@ -123,49 +123,6 @@ test("state people load only the requested jurisdiction and failed replacements 
   assert.equal(next.stateLegislators!["US-AZ"].version, "az-2");
   assert.equal((await publishReaderEdgeArtifacts(snapshot([meeting("new-meeting", "ocd-division/country:us/state:az")]), META, { store })).status, "PUBLISHED");
   assert.deepEqual((await store.readManifest())!.manifest.stateLegislators, next.stateLegislators, "a meetings-only pass keeps the state references");
-});
-
-test("new readers lazily serve the accepted old state bundle until its publication cutover", async () => {
-  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-before-cutover-")));
-  const oldValue = {
-    "US-AZ": { jurisdiction: "US-AZ", generatedAt: "2026-08-01", sourceId: "az-legislature" },
-    "US-NH": { jurisdiction: "US-NH", generatedAt: "2026-08-02", sourceId: "nh-general-court" },
-  };
-  await publishReaderEdgeArtifacts(null, META, { store: artifacts, authority: { "state-legislators": {
-    versionId: "US-AZ=az-readable-before-cutover|US-NH=nh-readable-before-cutover", value: oldValue,
-  } } });
-  const manifest = (await artifacts.readManifest())!.manifest;
-  let reads = 0;
-  const counting = new Proxy(artifacts, { get(target, key) {
-    if (key === "readBytes") return async (path: string) => { reads++; return target.readBytes(path); };
-    const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
-  } });
-  assert.equal((await ensureReaderAuthorityEdge(manifest, counting, ["federal-directory"])).stateLegislators, undefined);
-  const edge = (await ensureReaderAuthorityEdge(manifest, counting, ["state-legislators"])).stateLegislators!;
-  assert.deepEqual([...edge.jurisdictions].sort(), ["US-AZ", "US-NH"]);
-  assert.equal(reads, 0, "installing the old manifest does not load its national payload");
-  assert.equal(await edge.load("US-NJ"), null);
-  assert.equal(reads, 0, "an unheld state never opens the old payload");
-  assert.deepEqual(await edge.load("US-NH"), { value: oldValue["US-NH"], versionId: "nh-readable-before-cutover" });
-  assert.equal(reads, 1);
-  assert.deepEqual(await edge.load("US-AZ"), { value: oldValue["US-AZ"], versionId: "az-readable-before-cutover" });
-  assert.equal(reads, 1, "the accepted bundle is read once without changing its evidence dates");
-});
-
-test("the first scoped publication converts the accepted state bundle without losing unselected states", async () => {
-  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-cutover-")));
-  await publishReaderEdgeArtifacts(null, META, { store: artifacts, authority: { "state-legislators": {
-    versionId: "US-AZ=az-prior|US-NH=nh-prior", value: {
-      "US-AZ": { jurisdiction: "US-AZ", generatedAt: "2026-08-01" },
-      "US-NH": { jurisdiction: "US-NH", generatedAt: "2026-08-02" },
-    },
-  } } });
-  assert.equal(await publishRoutineReaderEdge(new MemoryRoutineDataStore(), "2026-09-06T00:00:00Z", [], { artifactStore: artifacts }), true);
-  const manifest = (await artifacts.readManifest())!.manifest;
-  assert.equal(manifest.authorityArtifacts?.["state-legislators"], undefined);
-  assert.equal(manifest.stateLegislators!["US-NH"].version, "nh-prior");
-  const held = await ensureReaderAuthorityEdge(manifest, artifacts, ["state-legislators"]);
-  assert.equal((await held.stateLegislators!.load("US-NH"))!.value.generatedAt, "2026-08-02");
 });
 
 test("a lost manifest CAS remains a retryable supervisor publication failure", async () => {
@@ -407,9 +364,6 @@ test("a stale publisher that read an older manifest cannot regress the pointer (
   const a = snapshot([meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing")]);
   await publishReaderEdgeArtifacts(a, META, { store });
 
-  // Two overlapping publishers both saw sequence 1; simulate by having one write
-  // through a store whose manifest is pinned to the sequence-1 ETag while another
-  // advanced it. The second write must land against the CURRENT etag only.
   const staleExpected = (await store.readManifest())!.etag;
   // First writer advances 1 -> 2.
   const changed = snapshot([

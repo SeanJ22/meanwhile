@@ -52,7 +52,7 @@ test("a runner process's bytes reach the daily table once, from its hour reports
     assert.ok(rows[0]!.requestBytes > first!.sent!["control-plane"].bytes);
     assert.equal(await flushDatabaseTransfer(), true);
     assert.match(writes.at(-1)![0]!.query, /INSERT INTO database_transfer_daily/);
-    assert.deepEqual(writes.at(-1)![0]!.params.slice(2).map(String), ["runner", "2", String(rows[0]!.requestBytes), String(2 * Buffer.byteLength(answer))]);
+    assert.deepEqual(writes.at(-1)![0]!.params.slice(2, 6).map(String), ["runner", "2", String(rows[0]!.requestBytes), String(2 * Buffer.byteLength(answer))]);
   } finally {
     delete process.env[VITAL_SIGNS_REPORT_ENV];
   }

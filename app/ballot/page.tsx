@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { stateOfficesForDivisions } from "../../lib/reference/state-offices.ts";
 import { StateOfficeContacts } from "../../components/state-office-contacts.tsx";
 import { Card } from "@/components/ui/card";
@@ -465,7 +466,7 @@ async function readBallotReaderEdge(): Promise<ReaderAuthorityEdgeBundle | null>
   return ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(() => null);
 }
 
-export default async function BallotPage({
+export default readerRoute("/ballot", async function BallotPage({
   searchParams,
 }: {
   searchParams: Promise<{ zip?: string }>;
@@ -1732,4 +1733,4 @@ export default async function BallotPage({
       </p>
     </main>
   );
-}
+});

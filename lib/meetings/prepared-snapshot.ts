@@ -291,14 +291,12 @@ async function readPreparedRowOnceUnchanged(
 export const COMPOSED_PLACES_TTL_MS = 60_000;
 let composedPlaces: { readonly at: number; readonly places: ReadonlyMap<string, readonly string[]> } | null = null;
 
-/**
- * The places each source serves in the composition the publisher last prepared, read from its own partition ids, in
- * its order: a failed source is attributed to every place it serves whatever doors this process has installed. A
- * route held for a retired one is not a source of the composition, and a body with no division has no place. Null
- * when the composition cannot be read.
- */
+
 export async function readComposedSourcePlaces(options: { readonly store?: RoutineDataStore; readonly clock?: () => number } = {}):
   Promise<ReadonlyMap<string, readonly string[]> | null> {
+  const { currentReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
+  const edge = currentReaderAuthorityEdge();
+  if (!options.store && edge?.meetingPlaces) return edge.meetingPlaces;
   const now = (options.clock ?? Date.now)();
   if (options.store === undefined && composedPlaces !== null && now - composedPlaces.at < COMPOSED_PLACES_TTL_MS) return composedPlaces.places;
   let coupling: Awaited<ReturnType<RoutineDataStore["readPreparedReaderProjectionCoupling"]>>;
@@ -367,7 +365,8 @@ export async function readPreparedMeetingsProjection(
     // Constructed inside the try: the Postgres store throws when DATABASE_URL is unset, which must fall through to
     // the composing reader rather than escape.
     store = options.store ?? new PostgresRoutineDataStore();
-    prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE);
+    const { currentReaderSelection } = await import("../db/reader-route.ts");
+    prepared = await readPreparedRowOnceUnchanged(store, options.store ?? currentReaderSelection() ?? DEFAULT_PREPARED_STORE);
   } catch {
     prepared = null;
   }

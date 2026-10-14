@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { readerPositionsForKeys, type ReaderPositionAnswer } from "@/lib/corpus/reader-positions";
 import { ReaderPersonIdentityError } from "@/lib/identity/reader-person";
 import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
@@ -12,16 +13,10 @@ import {
 } from "@/lib/civic-data/manual-read-models";
 import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
 import { currentOfficeholderStatements } from "@/lib/corpus/data-plane";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
-import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 
-/**
- * GET /api/positions/<subject>/<topic>
- *
- * Subject and topic are path segments because both vary the body and every cache keys on the path; the
- * response is also `no-store`. Returns the corpus's own words with URL and read date, or a named gap. No model.
- */
+
 
 export const runtime = "nodejs";
 
@@ -41,8 +36,8 @@ export type PositionHoldingSettlement =
 
 function currentPositionIdentityKeys(subject: string): Promise<string[]> {
   return positionIdentityKeys(subject, {
-    refreshRegistry: () => refreshRegistryRuntimeFromPromoted(),
-    refreshFederal: () => refreshFederalDirectoryFromPromoted(),
+    refreshRegistry: () => settleRegistryAuthorityReads("REGISTRY"),
+    refreshFederal: settleFederalDirectoryRead,
     refreshAz: () => refreshAzBallotFromPromoted(),
     relatedAuthorities: (id) => {
       const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
@@ -113,7 +108,7 @@ export async function settlePositionHoldingAnswer(
   };
 }
 
-export async function GET(
+export const GET = readerRoute("/api/positions/[subject]/[topic]", async function GET(
   _request: Request,
   { params }: { params: Promise<{ subject: string; topic: string }> },
 ) {
@@ -151,4 +146,4 @@ export async function GET(
       },
     },
   );
-}
+}, ["registry-runtime","federal-directory","ballot-az","candidate-publications","officeholder-statements"]);

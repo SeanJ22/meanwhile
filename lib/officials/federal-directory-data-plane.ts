@@ -21,6 +21,7 @@ export interface FederalDirectoryAcquisition {
 }
 
 export interface FederalDirectoryReadModel {
+  readonly partyLabels?: Readonly<Record<string, string | null>>;
   readonly formatVersion: 1;
   readonly currentMembershipComplete?: boolean;
   readonly sourceSha: string;

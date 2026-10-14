@@ -474,7 +474,10 @@
     "publisher": "Illinois State Board of Elections, Springfield, IL",
     "url": "https://www.elections.il.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "IL",
       "ocdId": "ocd-division/country:us/state:il",
@@ -490,14 +493,41 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "Failed to fetch https://www.elections.il.gov/: (403) Forbidden",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "The Illinois State Board of Elections public root and general-election candidate-list pages returned HTTP 403 with the statement: Please contact the site owner for access. The statewide certified candidate file and statewide measure list remain unacquired; this is an access gap, not a statement that certification has not occurred."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.il.gov/\">https://www.elections.il.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
+      "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+      "https://shelbycounty-il.gov/documents/CountyClerk/Election%20information/2026%20General%20Election%2011.3.2026/2026%20Nov%203%20countywide%20sample%20ballot.pdf",
+      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+      "https://applications.kanecountyil.gov/ElectionWebsite/en-US/Candidates/List/31/NP",
+      "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List?bidId=",
+      "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+      "https://mcleancountyil.gov/DocumentCenter/View/32912/2026-General-McLean-County-Specimen-Ballot",
+      "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+      "https://www.co.st-clair.il.us/webdocuments/departments/countyclerk/elections/2026%20General%20Election%20Voters%20Guide.pdf",
+      "https://cms3.revize.com/revize/grundycounty/County%20Clerk/Elections/2026%20General/ALLCONTESTBALLOT_Style1_English_8.5x14_Paper.pdf?t=202609141300590",
+      "https://effinghamcountyil.gov/wp-content/uploads/2026/09/FULL-SPECIMEN-General-Election-November-3-2026.pdf",
+      "https://www.pikecountyil.org/wp-content/uploads/2026/09/2026-General-Election-Publication-Ballot-1.pdf",
+      "https://www.williamsoncountyil.gov/wp-content/uploads/2026/09/sample-ballot-001.pdf",
+      "https://maconcounty.illinois.gov/download/specimen-ballot/?wpdmdl=14661&ind=1789592172553&refresh=19e0973f&filename=2026-General-Specimen-Ballot.pdf",
+      "https://www.lasallecountyil.gov/DocumentCenter/View/4565/Specimen-Ballot-PDF",
+      "https://cms4files.revize.com/madisoncountyilus/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
+      "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-08/Candidate%20List_20260819-1_0.pdf",
+      "https://douglas.wp.webfoot.io/wp-content/uploads/2026/09/Publication.pdf",
+      "https://douglascountyil.gov/clerk-recorder/elections"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.lakecountyil.gov//DocumentCenter/View/21161/Referenda",
+      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Proposition%20Listing.pdf?t=202609300917350"
+    ],
+    "publicationMessage": "County and city sources cover part of the statewide ballot; statewide candidate and measure inventories remain an access gap."
   },
   {
     "id": "fec-in-chief",

@@ -14,14 +14,14 @@ import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.t
 import { saveCaptureCopy } from "./source-copy.ts";
 
 /** How far back the Box is read for findings to publish. */
-export const HUNTER_FINDING_DAYS = 30;
+const HUNTER_FINDING_DAYS = 30;
 
 interface Finding {
   readonly row: BoxFinding; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
   readonly exactQuote: string; readonly sourceUrl: string; readonly recordClass: string | null;
 }
 
-export interface BoxPublicationReport {
+interface BoxPublicationReport {
   readonly looked: number;
   readonly published: number;
   readonly refused: number;

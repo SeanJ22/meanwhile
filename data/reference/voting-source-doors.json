@@ -1487,7 +1487,10 @@
     "publisher": "State Election Commission, Columbia, SC",
     "url": "https://www.scvotes.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "SC",
       "ocdId": "ocd-division/country:us/state:sc",
@@ -1503,14 +1506,18 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official root and public statewide Candidate Tracking and Referendum Tracking reached with HTTP 200. General-election candidate and referendum searches use electionId=22596; the November 3 state Senate District 15 special-election candidate search uses electionId=22758. Identity-locked voter sample-ballot lookup is not used."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.scvotes.gov/\">https://www.scvotes.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://vrems.scvotes.sc.gov/Candidate/CandidateSearch?electionId=22596",
+    "candidateListExportUrl": "https://vrems.scvotes.sc.gov/Candidate/ExportSearchResults",
+    "specialCandidateListUrl": "https://vrems.scvotes.sc.gov/Candidate/CandidateSearch?electionId=22758",
+    "ballotMeasuresUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch?electionId=22596"
   },
   {
     "id": "fec-sd-chief",

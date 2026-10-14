@@ -2499,5 +2499,77 @@
     "tested_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
     "gates": "pass",
     "at": "2026-10-14T08:48:29Z"
+  },
+  {
+    "lane": "ballot-bl-11",
+    "steps": [
+      "BL-11"
+    ],
+    "ready_sha": "ad655d56a6c9d0295558f182bf1b7e6a880fdeec",
+    "merge_sha": "5deff186c9ca356cfee96ccede5cf005a97765ea",
+    "river_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "tested_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "gates": "pass",
+    "at": "2026-10-14T09:48:49Z"
+  },
+  {
+    "lane": "ballot-bl-12",
+    "steps": [
+      "BL-12"
+    ],
+    "ready_sha": "48e015c5701dc30c8be99d818acc28c26adf5b30",
+    "merge_sha": "2fd62a9390be750ed9b3ff50219ed53d018dfd7f",
+    "river_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "tested_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "gates": "pass",
+    "at": "2026-10-14T09:48:49Z"
+  },
+  {
+    "lane": "ballot-bl-14",
+    "steps": [
+      "BL-14"
+    ],
+    "ready_sha": "01e15b15899ed6e0f176afa110e13bf23bf58312",
+    "merge_sha": "327bf3fb7c93d896f071e29ce043b42cd06dc14e",
+    "river_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "tested_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "gates": "pass",
+    "at": "2026-10-14T09:48:49Z"
+  },
+  {
+    "lane": "ballot-bl-15",
+    "steps": [
+      "BL-15"
+    ],
+    "ready_sha": "70371cc50529d58b0fcf5052098295d182f74ecf",
+    "merge_sha": "2e34a53dd202c84ca33bdeaa2b4042d04aaae88d",
+    "river_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "tested_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "gates": "pass",
+    "at": "2026-10-14T09:48:49Z"
+  },
+  {
+    "lane": "ballot-national",
+    "steps": [
+      "BL-10"
+    ],
+    "ready_sha": "f0b7d08891bf490463757006507ee3bb3853dd74",
+    "merge_sha": "14eef9b5d8d3483720882ee52f7d2547ce9dc703",
+    "river_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "tested_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "gates": "pass",
+    "at": "2026-10-14T09:48:49Z"
+  },
+  {
+    "lane": "ballot-parity",
+    "steps": [
+      "BL-20"
+    ],
+    "ready_sha": "9e1b506235e84cc5fdcc1334918315b79ba46bfa",
+    "merge_sha": "ac454fa81379d68e817b6c531231daf272180986",
+    "river_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "tested_sha": "769af8244a8da5e360291c8e55dcb9b9f8363b20",
+    "gates": "pass",
+    "at": "2026-10-14T09:48:49Z"
   }
 ]

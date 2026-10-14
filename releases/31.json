@@ -1,0 +1,35 @@
+{
+  "n": 31,
+  "branch": "release/31",
+  "river_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+  "tested_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+  "steps": [
+    "R3-CIVICCLERK",
+    "R3-CIVICPLUS",
+    "R0",
+    "SL-03",
+    "BL-11",
+    "BL-12",
+    "BL-15",
+    "SRC-AC",
+    "VS-01"
+  ],
+  "lanes": [
+    "platform-civicclerk",
+    "platform-civicplus",
+    "road",
+    "statewide-and-portraits",
+    "ballot-bl-11",
+    "ballot-bl-12",
+    "ballot-bl-15",
+    "src-census",
+    "src-civic"
+  ],
+  "integration_from": 162,
+  "integration_count": 172,
+  "pr": {
+    "number": 740,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/740"
+  },
+  "at": "2026-10-14T06:42:27Z"
+}

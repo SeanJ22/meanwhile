@@ -9,6 +9,7 @@ import { buildCompositeSource } from "../lib/sources/composite/wiring.ts";
 
 const text = (path: string) => readFileSync(new URL(`./fixtures/civicclerk/${path}`, import.meta.url), "utf8");
 const json = (path: string) => JSON.parse(text(path));
+const pageReader = (fetchImpl: typeof fetch) => async (url: string) => (await fetchImpl(url)).json();
 const tenants = [["avondaleaz", "AZ", "America/Phoenix"], ["mandannd", "ND", "America/Chicago"], ["franklintn", "TN", "America/Chicago"]] as const;
 const wiring = (tenant: string, state: string, zone: string, categoryId: number): BodySourceWiring => ({
   bodyId: `ocd-division/country:us/state:${state.toLowerCase()}/place:${tenant}#body:${categoryId}`,
@@ -52,7 +53,7 @@ test("the recorded Franklin continuation chain retains all 215 events beyond 200
     assert.ok(replies.has(url), url);
     return new Response(replies.get(url), { headers: { "content-type": "application/json" } });
   }) as typeof fetch;
-  const rows = await readCivicClerkPages(manifest.pages[0].sourceUrl, fetchImpl);
+  const rows = await readCivicClerkPages(manifest.pages[0].sourceUrl, pageReader(fetchImpl));
   assert.equal(rows.length, 215); assert.equal(new Set(rows.map(row => row.id)).size, 215);
   assert.equal(seen.length, 15);
 });
@@ -64,11 +65,11 @@ test("offset paging handles a full 200-row page and refuses repeated or external
     const skip = Number(new URL(String(input)).searchParams.get("$skip"));
     return Response.json({ value: Array.from({ length: skip === 0 ? 200 : 3 }, (_, i) => ({ ...template, id: skip + i + 1 })) });
   }) as typeof fetch;
-  assert.equal((await readCivicClerkPages(base, fetchImpl)).length, 203);
+  assert.equal((await readCivicClerkPages(base, pageReader(fetchImpl))).length, 203);
   for (const next of [base, "https://other.example/Events"]) {
-    await assert.rejects(readCivicClerkPages(base, (async () => Response.json({ value: [template], "@odata.nextLink": next })) as typeof fetch), /PAGING/);
+    await assert.rejects(readCivicClerkPages(base, async () => ({ value: [template], "@odata.nextLink": next })), /PAGING/);
   }
-  await assert.rejects(readCivicClerkPages(base, (async () => Response.json({ value: Array.from({ length: 200 }, () => template) })) as typeof fetch), /NOT_ADVANCING/);
+  await assert.rejects(readCivicClerkPages(base, async () => ({ value: Array.from({ length: 200 }, () => template) })), /NOT_ADVANCING/);
 });
 
 test("composite transport checks change first and shares one category feed across its bodies", async () => {
@@ -139,7 +140,54 @@ test("the reader advances $skip after fifteen-row continuations exhaust the 200-
     next.searchParams.set("$skip", String(skip + count)); next.searchParams.set("$top", String(remaining - count));
     return Response.json({ value, ...(count === 15 && remaining > count ? { "@odata.nextLink": next.href } : {}) });
   }) as typeof fetch;
-  const rows = await readCivicClerkPages("https://franklintn.api.civicclerk.com/v1/Events?$top=200&$orderby=id%20desc", fetchImpl);
+  const rows = await readCivicClerkPages("https://franklintn.api.civicclerk.com/v1/Events?$top=200&$orderby=id%20desc", pageReader(fetchImpl));
   assert.equal(rows.length, 215);
   assert.ok(seen.some(url => url.searchParams.get("$skip") === "200" && url.searchParams.get("$top") === "200"));
+});
+
+test("the single discovery enumerator vaults category pages beyond 200, including cancellations", async () => {
+  const manifest = json("franklintn/paging/manifest.json");
+  const category = json("franklintn/EventCategories.json").value.find((row: { id: number }) => row.id === 26);
+  // Category assignment controls the transport cap; event contents come from the recorded Franklin pages.
+  const events: CivicClerkEvent[] = manifest.pages.flatMap((page: { file: string }) => json(`franklintn/paging/${page.file}`).value)
+    .map((event: CivicClerkEvent) => ({ ...event, categoryId: category.id, eventCategoryName: category.categoryDesc }));
+  const seen: URL[] = [];
+  const held = new Map<string, string>();
+  const attempt = await walkMeetingsDiscoveryNeed({ jurisdictionId: "tn:city:franklin", stateCode: "TN", name: "Franklin", govClass: "MUNICIPALITY",
+    ownWebAddress: "https://www.franklintn.gov/", basis: "SOURCE_DISCOVERY_OWED", sources: [], addressSource: { source: "GAP_LEDGER", versionId: "fixture" } }, {
+    open: async input => {
+      const url = new URL(input.url); seen.push(url);
+      let body = "";
+      if (url.pathname === "/robots.txt") body = "User-agent: *\nAllow: /\n";
+      else if (url.hostname === "www.franklintn.gov" && url.pathname === "/") body = '<a href="https://franklintn.portal.civicclerk.com">Meetings</a>';
+      else if (url.pathname === "/v1/EventCategories") body = JSON.stringify({ value: [category] });
+      else if (url.pathname === "/v1/Events") {
+        if (!url.searchParams.has("$filter")) body = JSON.stringify({ value: events.slice(0, 1) });
+        else {
+          assert.equal(url.searchParams.get("$filter"), "categoryId eq 26");
+          const skip = Number(url.searchParams.get("$skip") ?? 0), remaining = Number(url.searchParams.get("$top") ?? 200);
+          const value = events.slice(skip, skip + Math.min(15, remaining));
+          const next = new URL(url);
+          next.searchParams.set("$skip", String(skip + value.length)); next.searchParams.set("$top", String(remaining - value.length));
+          body = JSON.stringify({ value, ...(value.length === 15 && remaining > value.length ? { "@odata.nextLink": next.href } : {}) });
+        }
+      }
+      return { status: body ? 200 : 404, body, bytes: body.length, contentType: url.hostname.endsWith(".api.civicclerk.com") ? "application/json" : "text/html", location: null, transportError: null };
+    }, maxRequestsPerWalk: 100, now: () => "2026-10-13T19:00:00Z", spaceOut: async () => {}, budget: { spent: () => false },
+    vault: async (artifact, body) => {
+      held.set(artifact.id, body);
+      return { stored: true, where: `fixture/${artifact.id}`, why: "Recorded events with controlled category paging" };
+    },
+  });
+  assert.equal(seen.filter(url => url.pathname === "/v1/EventCategories").length, 1);
+  assert.ok(seen.some(url => url.searchParams.get("$skip") === "200" && url.searchParams.get("$top") === "200"));
+  const discovered: CivicClerkEvent[] = attempt.found.filter(found => new URL(found.url).searchParams.has("$filter"))
+    .flatMap(found => JSON.parse(held.get(found.artifactId!)!).value);
+  assert.equal(discovered.length, 215);
+  assert.equal(new Set(discovered.map(event => event.id)).size, 215);
+  assert.equal(discovered.filter(event => /cancelled/i.test(event.eventName ?? "")).length, 18);
+  const canceled = discovered.find(event => /cancelled/i.test(event.eventName ?? ""))!;
+  const row = wiring("franklintn", "TN", "America/Chicago", category.id);
+  const meeting = makeCivicClerkSource([row]).normalize([{ wiring: row, events: [canceled], collectedAt: "2026-10-13T19:00:00Z" }], new Date(`${canceled.startDateTime}Z`))[0];
+  assert.equal(meeting.status, "CANCELED");
 });

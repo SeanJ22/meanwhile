@@ -1,3 +1,5 @@
+import { ROUTE_PLAN_CAPABILITY_PREFIX } from "../../workers/route-plan.ts";
+import type { WorkItem } from "../../work-item.ts";
 /** Each SHUT door becomes an obligation owed since it shut, worked by the existing detective path from the door record's own words. A registry that cannot be read is a named read failure. */
 
 import { listDoors, type DoorRecord, type DoorRepository } from "../../../doors/registry.ts";
@@ -38,6 +40,10 @@ export function parseShutDoorId(id: string): string | null {
 }
 
 /** What the door record says broke, in one paragraph a detective starts from. */
+export function shutDoorForWork(item: Pick<WorkItem, "id" | "subject" | "autonomousPlan">): string | null {
+  return parseShutDoorId(item.id) ?? (item.autonomousPlan?.capability === `${ROUTE_PLAN_CAPABILITY_PREFIX}${SHUT_DOORS_PROVIDER_ID}` ? item.subject : null);
+}
+
 export function shutDoorEvidence(door: DoorRecord): string {
   return [
     `Door ${door.doorId} (${door.kind}) went shut ${door.shutSince ?? "at an unrecorded time"}: ${door.shutReason ?? "no reason was recorded"}.`,
@@ -76,7 +82,8 @@ export function shutDoorsProvider(input: ShutDoorsInput): ObligationProvider {
         return { obligations: [], readFailure: `the door registry could not be read (${reading.unreadable})`, emptyReason: null };
       }
       const shut = reading.doors
-        .filter((door) => door.status === "SHUT")
+        .filter((door) => door.status === "SHUT" && Date.parse(door.validators?.checkedAt ?? "") >=
+          Math.max(Date.parse(door.shutSince ?? "1970-01-01"), Date.parse(door.editedAt ?? "1970-01-01")))
         // The longest shut first.
         .sort((a, b) => (a.shutSince ?? "").localeCompare(b.shutSince ?? "") || a.doorId.localeCompare(b.doorId));
       const obligations: ProvidedObligation[] = shut.map((door) => ({
@@ -90,7 +97,7 @@ export function shutDoorsProvider(input: ShutDoorsInput): ObligationProvider {
       return {
         obligations,
         readFailure: null,
-        emptyReason: obligations.length === 0 ? "no door in the registry is shut" : null,
+        emptyReason: obligations.length === 0 ? (reading.doors.some(door => door.status === "SHUT") ? "the runner transport checks the shut doors first" : "no door in the registry is shut") : null,
       };
     },
   };

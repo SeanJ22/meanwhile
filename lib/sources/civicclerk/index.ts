@@ -94,7 +94,14 @@ function documentLinks(event: CivicClerkEvent, apiBase: string): { label: string
   }));
 }
 
-export async function readCivicClerkPages<T extends { id: number } = CivicClerkEvent>(url: string, fetchImpl?: typeof fetch, signal?: AbortSignal): Promise<T[]> {
+export interface CivicClerkPage<T> {
+  value?: T[];
+  "@odata.nextLink"?: string;
+}
+
+export async function readCivicClerkPages<T extends { id: number } = CivicClerkEvent>(
+  url: string, readPage: (url: string) => Promise<CivicClerkPage<T>>, signal?: AbortSignal,
+): Promise<T[]> {
   const start = new URL(url), rows: T[] = [], ids = new Set<number>(), pages = new Set<string>();
   let next: string | null = start.href;
   let blockCount = 0, offset = Number(start.searchParams.get("$skip") ?? 0);
@@ -103,7 +110,7 @@ export async function readCivicClerkPages<T extends { id: number } = CivicClerkE
     const pageUrl: URL = new URL(next, start);
     if (pageUrl.origin !== start.origin || pageUrl.pathname !== start.pathname || pages.has(pageUrl.href)) throw new Error("CIVICCLERK_PAGING_INVALID");
     pages.add(pageUrl.href);
-    const page: { value?: T[]; "@odata.nextLink"?: string } = await politeGetJson<{ value?: T[]; "@odata.nextLink"?: string }>(pageUrl.href, { fetchImpl, signal });
+    const page = await readPage(pageUrl.href);
     if (!Array.isArray(page.value)) throw new Error("CIVICCLERK_EVENTS_NOT_A_LIST");
     for (const event of page.value) {
       if (!Number.isSafeInteger(event.id) || event.id <= 0 || ids.has(event.id)) throw new Error("CIVICCLERK_PAGING_NOT_ADVANCING");
@@ -261,7 +268,9 @@ export function makeCivicClerkSource(
         });
         // No complete event revision is exposed; an unchanged latest id cannot rule out cancellations or new documents.
         await politeGetJson(`${base}/v1/Events?${new URLSearchParams({ $top: "1", $orderby: "id desc" })}`, { fetchImpl, signal: meetingQuery?.signal });
-        const categories = await readCivicClerkPages<{ id: number; categoryDesc: string }>(`${base}/v1/EventCategories`, fetchImpl, meetingQuery?.signal);
+        const readPages = <T extends { id: number }>(url: string) => readCivicClerkPages<T>(url,
+          page => politeGetJson<CivicClerkPage<T>>(page, { fetchImpl, signal: meetingQuery?.signal }), meetingQuery?.signal);
+        const categories = await readPages<{ id: number; categoryDesc: string }>(`${base}/v1/EventCategories`);
         for (const wiring of rows) {
           if (wiring.config.categoryId) continue;
           const name = wiring.config.bodyMatch ?? wiring.config.bodyName;
@@ -270,7 +279,7 @@ export function makeCivicClerkSource(
           wiring.config = { ...wiring.config, categoryId: String(matches[0].id) };
         }
         query.set("$filter", `${query.get("$filter")} and categoryId in (${[...new Set(rows.map(row => row.config.categoryId))].join(",")})`);
-        const events = await readCivicClerkPages(`${base}/v1/Events?${query}`, fetchImpl, meetingQuery?.signal);
+        const events = await readPages<CivicClerkEvent>(`${base}/v1/Events?${query}`);
         const collectedAt = new Date().toISOString();
         for (const wiring of rows) collected.push({ wiring, events: events.filter(event => civicClerkMatches(event, wiring.config)), collectedAt });
       }

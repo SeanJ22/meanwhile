@@ -31,9 +31,6 @@ import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 
-/** The most bodies one calendar carries: the family reads each member's calendar on its own each pass. */
-export const AUTO_CROSSWALK_ROUTE_CAP = 10;
-
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
 /** Bytes the vault holds, as text, with their citation. */
@@ -240,7 +237,7 @@ function canonical(name: string, jurisdictionId: string): string {
 
 /** The body a calendar category names, by the reviewer's own rules, or why it names none this government registers. */
 export type CategoryBody =
-  | { readonly role: "GOVERNING"; readonly name: string }
+  | { readonly role: "GOVERNING" | "SUB_BODY"; readonly name: string }
   | { readonly unmatched: string };
 
 export function categoryBodyOf(category: string, jurisdictionId: string): CategoryBody {
@@ -259,7 +256,7 @@ export function categoryBodyOf(category: string, jurisdictionId: string): Catego
     SEPARATE_GOVERNMENT_WORDS.some((w) => words.includes(w) && !OWN_CLASS_WORD[kind].includes(w))) {
     return { unmatched: `"${shown}" reads as another government's body` };
   }
-  return { unmatched: `"${shown}" names a sub-body; the registration pairs this government with its governing body only, and the reviewer takes sub-bodies from event titles` };
+  return { role: "SUB_BODY", name: shown };
 }
 
 /* --------------------------------------------------------------- events */
@@ -605,8 +602,6 @@ function deadEnd(reason: AutoCrosswalkHoldReason, name: string | null, route: st
       return { ruledOut: "guessing the wall clock of the body's sittings", wouldSettle: "a reviewing agent session confirming the sittings' local times against the government's own page, through the manual crosswalk", whoMovesNext: "a reviewing agent session" };
     case "CONFLICTING_SELECTION":
       return { ruledOut: "two bodies claiming the same event", wouldSettle: "a reviewing agent session deciding whose event it is, through the manual crosswalk", whoMovesNext: "a reviewing agent session" };
-    case "ROUTE_CAP":
-      return { ruledOut: `reading ${route} more than ${AUTO_CROSSWALK_ROUTE_CAP} times a pass`, wouldSettle: "the family reading one shared calendar once a pass for all its bodies", whoMovesNext: "engineering" };
     case "ROW_CHECK_FAILED":
       return { ruledOut: "promoting a row that fails a C16 check", wouldSettle: "a fix to the reviewer, or a reviewing agent session's row", whoMovesNext: "engineering" };
   }
@@ -707,7 +702,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     } else if (kind === "LEGISTAR") {
       let rows: { EventId: number; EventBodyId: number; EventBodyName: string; EventDate: string; EventInSiteURL?: string }[];
       try { rows = JSON.parse(calendar.text); } catch { rows = []; }
-      if (!Array.isArray(rows) || !rows.length) { hold(route, "CALENDAR_UNREADABLE", "The Legistar response holds no events"); continue; }
+      if (!Array.isArray(rows)) { hold(route, "CALENDAR_UNREADABLE", "The Legistar response holds no events"); continue; }
       events = rows.filter(r => Number.isInteger(r.EventBodyId) && r.EventBodyName && r.EventDate)
         .map(r => ({ title: flat(r.EventBodyName), context: "", categories: [String(r.EventBodyId)],
           identity: `${r.EventId}|${r.EventDate}`, tzid: stateZone, utc: false, floating: true, url: r.EventInSiteURL ?? route }));
@@ -755,6 +750,58 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         hold(route, "CALENDAR_UNREADABLE", "the page states no dated event");
         continue;
       }
+    }
+    const addListedBody = (name: string, filter: Readonly<Record<string, string>>, page: HeldBytes, pageUrl: string, selected: number, suffix = ""): void => {
+      if (!stateZone || !name) return;
+      const governing = governingNames(governmentKind(jurisdictionId)).some(label => low(name) === low(label) || low(name).endsWith(` ${low(label)}`));
+      const role = governing ? (registered.bodyId.endsWith("#board") ? "BOARD" : "GOVERNING") : "SUB_BODY";
+      const bodyId = role === "SUB_BODY" ? `${subBodyId(registered.ocdId, name)}${suffix}` : registered.bodyId;
+      if (input.handWired(bodyId)) return;
+      const row: MeetingBodyCrosswalkRow = { id: crosswalkRowId(bodyId, kind, route), jurisdictionId, bodyId,
+        ocdId: registered.ocdId, bodyName: name, bodyRole: role, kind, route, officialHost: routeHost,
+        publishingOrg: registered.publishingOrg, timeZone: stateZone, filter,
+        evidence: { bodyPage: { url: pageUrl, sha256: page.sha256, quote: name },
+          calendar: { url: route, sha256: calendar.sha256, selected, total: selected }, readAt: attempt.finishedAt },
+        status: "ACTIVE", reviewedBy: input.reviewer, reviewedAt: input.now, authorization: CROSSWALK_CITATION };
+      if (crosswalkRowIssue(row) === null) accepted.push({ row, inputs: [attemptInput, registered.input, calendar.evidence, page.evidence] });
+    };
+    if (kind === "LEGISTAR" && /EventBodyId eq \d+/.test(new URL(route).searchParams.get("$filter") ?? "")) {
+      const bodyId = /^EventBodyId eq (\d+)(?: and|$)/.exec(new URL(route).searchParams.get("$filter") ?? "")?.[1];
+      const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
+      if (bodyId && via) {
+        let bodies: { BodyId: number; BodyName: string }[] = [];
+        try { bodies = JSON.parse(via.text); } catch { bodies = []; }
+        const body = Array.isArray(bodies) ? bodies.find(body => String(body.BodyId) === bodyId) : null;
+        if (body && typeof body.BodyName === "string") {
+          const allSelected = events.every(event => event.categories.includes(bodyId));
+          const duplicates = bodies.filter(other => other.BodyName === body.BodyName).length > 1;
+          if (allSelected) addListedBody(body.BodyName, { eventBodyId: bodyId }, via, find.via!.page, events.length, duplicates ? `-legistar-${bodyId}` : "");
+          else hold(route, "AMBIGUOUS_TITLE", "the native body filter returned another body's events", body.BodyName);
+        }
+      }
+      continue;
+    }
+    if (kind === "CIVICCLERK" && /^categoryId eq \d+$/.test(new URL(route).searchParams.get("$filter") ?? "")) {
+      const categoryId = /^categoryId eq (\d+)$/.exec(new URL(route).searchParams.get("$filter") ?? "")?.[1];
+      const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
+      if (categoryId && via) {
+        let categories: { id: number; categoryDesc: string }[] = [];
+        try { categories = JSON.parse(via.text).value; } catch { categories = []; }
+        const category = Array.isArray(categories) ? categories.find(category => String(category.id) === categoryId) : null;
+        const name = category?.categoryDesc;
+        if (name && !("unmatched" in categoryBodyOf(name, jurisdictionId)) &&
+          categories.filter(category => category.categoryDesc === name).length === 1 && events.every(event => event.scopeId === categoryId && event.categories.includes(name))) {
+          addListedBody(name, { categoryId, bodyMatch: name, portalBase: `https://${new URL(route).hostname.replace(".api.", ".portal.")}` }, via, find.via!.page, events.length);
+          continue;
+        }
+      }
+    }
+    if (kind === "BOARDDOCS") {
+      const committeeId = new URL(route).searchParams.get("current_committee_id");
+      const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
+      const committee = via && committeeId ? parseBoardDocsCommittees(via.text).find(row => row.id === committeeId) : null;
+      if (via && committee && committeeId) addListedBody(committee.name, { committeeId }, via, find.via!.page, events.length);
+      continue;
     }
     if (events.length === 0) {
       hold(route, "CALENDAR_UNREADABLE", `the held ${kind} response has no dated meetings filed under a published body`);
@@ -840,12 +887,13 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       proposals.push({ role, bodyId: registered.bodyId, spellings: [listed], key: governing[0]!, category: null });
     } else if (kind === "ICAL" && (scope = categoryScopeOf(find, route, routeHost)) !== null) {
       /* No title names the body, and the site's own category for this feed is exactly its name: the whole feed is its. */
-      proposals.push({ role, bodyId: registered.bodyId, spellings: [scope.name], key: canonical(scope.name, jurisdictionId), category: null, scope });
+      const categoryBody = categoryBodyOf(scope.name, jurisdictionId);
+      if ("role" in categoryBody) proposals.push({ role: categoryBody.role === "SUB_BODY" ? "SUB_BODY" : role, bodyId: registered.bodyId, spellings: [scope.name], key: canonical(scope.name, jurisdictionId), category: null, scope });
     } else {
       hold(route, "NO_EVENT_NAMES_BODY", `no event on ${route} names ${registered.bodyId} by ${governingNames(kindOfGovernment).slice(0, 4).map((n) => `"${n}"`).join(", ")} or another governing-body name of its kind`, null, registered.bodyId);
     }
     for (const [key, entry] of [...named.entries()].sort(([a], [b]) => (a < b ? -1 : 1))) {
-      if (governingKeys.has(key)) continue;
+      if (governingKeys.has(key) || proposals.some(proposal => proposal.key === key)) continue;
       const spellings = [...entry.spellings].sort();
       const shown = spellings[0] ?? entry.category ?? key;
       if (tokenize(shown).length < 2 || BODY_NOUNS.has(key)) continue;
@@ -872,6 +920,10 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         continue;
       }
       /* A category feed's naming page is the index that files the feed under the body's name, and no other. */
+      if (kind === "CIVICCLERK" && !selection.filter.titleMatch && attempt.found.some(other => other.url !== route && other.vendor === "civicclerk-api" &&
+        /^categoryId eq \d+$/.test(new URL(other.url).searchParams.get("$filter") ?? "") && other.evidence.endsWith(`: ${selection.filter.bodyMatch}`))) continue;
+      if (kind === "LEGISTAR" && attempt.found.some(other => other.url !== route && other.vendor === "legistar-api" &&
+        /^EventBodyId eq (\d+)(?: and|$)/.exec(new URL(other.url).searchParams.get("$filter") ?? "")?.[1] === selection.filter.eventBodyId)) continue;
       const names = proposal.category !== null ? [proposal.category, ...proposal.spellings] : proposal.spellings;
       const printed = proposal.scope !== undefined ? printedOn(proposal.spellings, [proposal.scope.page])
         : printedOn(names) ?? printedOn(names, [calendarStep]);
@@ -947,11 +999,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     const standing = routeAccepted
       .filter((a) => !conflicted.has(a.row.id))
       .sort((a, b) => Number(a.row.bodyRole === "SUB_BODY") - Number(b.row.bodyRole === "SUB_BODY") || b.count - a.count || (a.row.id < b.row.id ? -1 : 1));
-    for (const [index, a] of standing.entries()) {
-      if (kind !== "ESCRIBE" && index >= AUTO_CROSSWALK_ROUTE_CAP) {
-        hold(route, "ROUTE_CAP", `${standing.length} bodies on one calendar; ${AUTO_CROSSWALK_ROUTE_CAP} are read from it each pass`, a.row.bodyName, a.row.bodyId);
-        continue;
-      }
+    for (const a of standing) {
       accepted.push({ row: a.row, inputs: a.inputs });
     }
   }

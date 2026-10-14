@@ -1,0 +1,11 @@
+{
+  "captureManifest": "vt-native-capture.json",
+  "rootReference": "data/reference/voting-source-doors.json",
+  "state": "VT",
+  "beforeRevision": "2fb4737b6",
+  "before": { "doors": 6, "evidence": 0, "skips": 0, "linkBlanks": 1, "placeBlanks": 3, "blanks": 4 },
+  "after": { "doors": 4, "evidence": 3, "skips": 532, "linkBlanks": 0, "placeBlanks": 3, "blanks": 3 },
+  "heldTargetCaptures": 7,
+  "uncapturedTargets": 532,
+  "reportedProductionPass": { "doors": 2744, "blanks": 1144, "captureHeld": false }
+}

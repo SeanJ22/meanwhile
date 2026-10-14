@@ -122,6 +122,7 @@ for (const [device, viewport] of [
       holders: [holder("Fixture District Three Member")],
     });
     else if (path === "/api/reader/settings") json({ available: true, values: {} });
+    else if (path === "/api/open-data") json({ records: [], unavailable: [], nextOffset: null, checkedAt: {} });
     else if (path === "/api/demand-signal") { demandCalls += 1; response.writeHead(demandCalls === 1 ? 202 : 204).end(); }
     else if (path === "/api/ask/grounded") { askCalls += 1; json({ mode: "STRUCTURED_GROUNDED",
       answer: "The fixture council adopts a budget at public meetings.", records: [], gaps: [], contacts: [], meetings: [] },

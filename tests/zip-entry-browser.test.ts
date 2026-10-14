@@ -41,8 +41,8 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
     else if (request.url === "/api/address/resolve") {
       let body = ""; for await (const chunk of request) body += chunk;
       requests.push(JSON.parse(body));
-      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ ok: true,
-        resolution: { status: "RESOLVED", levels: [] }, contestIds: [], point: { lat: coordinates.y, lng: coordinates.x } }));
+      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ ok: true, basis: "STREET_SAMPLE",
+        resolution: { status: "FAILED", reason: "NOT_FOUND" }, contestIds: [], excludedContestIds: [], point: { lat: coordinates.y, lng: coordinates.x } }));
     } else if (request.url === "/") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><link rel="stylesheet" href="/entry.css"><style>.hidden{display:none}body{margin:0;background:#0f1117;color:white}#root{height:100vh}</style><div id="root"></div><script src="/entry.js"></script>');
     else response.writeHead(200, { "content-type": "application/json" }).end("{}");
   });

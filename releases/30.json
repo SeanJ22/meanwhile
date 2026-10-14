@@ -1,0 +1,24 @@
+{
+  "n": 30,
+  "branch": "release/30",
+  "river_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+  "tested_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+  "steps": [
+    "R2B",
+    "R2",
+    "R0"
+  ],
+  "lanes": [
+    "src-legiscan",
+    "acquisition-leftovers",
+    "census-lane",
+    "road"
+  ],
+  "integration_from": 155,
+  "integration_count": 162,
+  "pr": {
+    "number": 738,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/738"
+  },
+  "at": "2026-10-14T02:28:24Z"
+}

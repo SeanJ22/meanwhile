@@ -2319,5 +2319,77 @@
     "tested_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
     "gates": "pass",
     "at": "2026-10-14T04:47:56Z"
+  },
+  {
+    "lane": "ballot-bl-11",
+    "steps": [
+      "BL-11"
+    ],
+    "ready_sha": "aa25991614542bb4879e1fa963af2c50e76d88a7",
+    "merge_sha": "cc21814aee26098aff4630d77dc205a64ccc9659",
+    "river_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "tested_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "gates": "pass",
+    "at": "2026-10-14T06:42:17Z"
+  },
+  {
+    "lane": "ballot-bl-12",
+    "steps": [
+      "BL-12"
+    ],
+    "ready_sha": "f70d716c1e260a831f3c9715b95f7c07904d1a6c",
+    "merge_sha": "9b9718ca26aac3566165829ce76ad980cff28756",
+    "river_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "tested_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "gates": "pass",
+    "at": "2026-10-14T06:42:17Z"
+  },
+  {
+    "lane": "ballot-bl-15",
+    "steps": [
+      "BL-15"
+    ],
+    "ready_sha": "8e3f7bda167d137004b1dfc229291fbf88297fc2",
+    "merge_sha": "c2dbd1107d2c2422b6615fca62971fdde5fa9718",
+    "river_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "tested_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "gates": "pass",
+    "at": "2026-10-14T06:42:17Z"
+  },
+  {
+    "lane": "road",
+    "steps": [
+      "R0"
+    ],
+    "ready_sha": "e9468c4a5ed83ec2d5194648c78207c08167c4f2",
+    "merge_sha": "c26a9f18eafcada311e7f8434bcc0c70fad7f6ef",
+    "river_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "tested_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "gates": "pass",
+    "at": "2026-10-14T06:42:17Z"
+  },
+  {
+    "lane": "src-census",
+    "steps": [
+      "SRC-AC"
+    ],
+    "ready_sha": "aa3747f3c16068d69e8343aa7a4fcd597121857d",
+    "merge_sha": "b1c83e36a565bb055ac686971885375c0247c724",
+    "river_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "tested_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "gates": "pass",
+    "at": "2026-10-14T06:42:17Z"
+  },
+  {
+    "lane": "src-civic",
+    "steps": [
+      "VS-01"
+    ],
+    "ready_sha": "d1db579d958d741ed3695f651b43fecc04d7b472",
+    "merge_sha": "55a6fd57a7f977f71093eb55780f687fd72d14f2",
+    "river_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "tested_sha": "0a0daac9af64ce2d9546863cd13ffedaf16f745b",
+    "gates": "pass",
+    "at": "2026-10-14T06:42:17Z"
   }
 ]

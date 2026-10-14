@@ -2271,5 +2271,53 @@
     "tested_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
     "gates": "pass",
     "at": "2026-10-14T02:28:13Z"
+  },
+  {
+    "lane": "platform-civicclerk",
+    "steps": [
+      "R3-CIVICCLERK"
+    ],
+    "ready_sha": "59540bf2b474e1b1567e7f48c3dda0942ab91f37",
+    "merge_sha": "749c2a9ba5e5451097f5fc5f78eb61a3f18feda4",
+    "river_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "tested_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "gates": "pass",
+    "at": "2026-10-14T04:47:56Z"
+  },
+  {
+    "lane": "platform-civicplus",
+    "steps": [
+      "R3-CIVICPLUS"
+    ],
+    "ready_sha": "6974f285fe1be881a1c4e82810cc1a6cab3a772e",
+    "merge_sha": "442ed237f84567089b46481e48b202eea61ebc94",
+    "river_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "tested_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "gates": "pass",
+    "at": "2026-10-14T04:47:56Z"
+  },
+  {
+    "lane": "road",
+    "steps": [
+      "R0"
+    ],
+    "ready_sha": "53860604fce7652325a3c4545efb31faf0f5ba43",
+    "merge_sha": "84d2de2d8332f197ce834a42fbaca1d07bc71b37",
+    "river_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "tested_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "gates": "pass",
+    "at": "2026-10-14T04:47:56Z"
+  },
+  {
+    "lane": "statewide-and-portraits",
+    "steps": [
+      "SL-03"
+    ],
+    "ready_sha": "d7f52659bc97aeb364af2a0e33dbcc2cc47ca350",
+    "merge_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "river_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "tested_sha": "e9fe05f910befcb1935f3cc4d72575db3ac13ec3",
+    "gates": "pass",
+    "at": "2026-10-14T04:47:56Z"
   }
 ]

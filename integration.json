@@ -2883,5 +2883,17 @@
     "tested_sha": "ab2f2cce6489dc307c3810b6cbb6ea71df8e42cb",
     "gates": "pass",
     "at": "2026-10-14T22:53:43Z"
+  },
+  {
+    "lane": "platform-granicus",
+    "steps": [
+      "R3-GRANICUS"
+    ],
+    "ready_sha": "941e4faa7b1a14b8ff40fdb29e65ac24e24f87b2",
+    "merge_sha": "cace8a4c118540c9f450c9c9f137541b1d2d93bd",
+    "river_sha": "cace8a4c118540c9f450c9c9f137541b1d2d93bd",
+    "tested_sha": "cace8a4c118540c9f450c9c9f137541b1d2d93bd",
+    "gates": "pass",
+    "at": "2026-10-14T23:28:59Z"
   }
 ]

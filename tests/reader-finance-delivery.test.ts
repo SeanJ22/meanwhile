@@ -16,16 +16,11 @@ import { resetAzIdentityCache } from "../lib/identity/az-2026.ts";
 import { readAzBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
+import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
 import { installAzBallot, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticAzBallot, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
-/*
- * The canonical candidacy keys the registry's official-candidacy bridge names (Hobbs and two federal members
- * for Governor, Yee for Superintendent, Ayotte for NH Governor, Selen for Morris County), each with one
- * synthetic FILED committee in its state's finance holding, and an Arizona ballot whose certified lineup
- * reconciles "Katie Hobbs" to her candidacy.
- */
 const HOBBS_RECEIPTS = 2_000_000;
 function filed(state: StateCampaignFinanceJurisdiction, key: string, office: string, receipts = 1000): StateMoneyRecord {
   const record = syntheticFiledStateMoneyRecord(state, key, receipts);
@@ -119,7 +114,7 @@ test("Katie Hobbs ballot, official API, and shared Ask selector use one canonica
 });
 
 test("every resolved official, including NJ county and NH governor, preserves its full canonical finance answer", () => {
-  const rows = bridge.rows.filter(row => row.status === "RESOLVED");
+  const rows = bridge.rows.filter(officialCandidacySeatMatches);
   assert.ok(rows.some(row => row.holder.id === "roster:morris#6"));
   assert.ok(rows.some(row => row.holder.id === "statewide:nh/governor"));
   for (const row of rows) {
@@ -130,24 +125,19 @@ test("every resolved official, including NJ county and NH governor, preserves it
   }
 });
 
-test("a candidacy for another office stays explicitly identified as that candidacy", () => {
+test("a current treasurer never inherits a candidacy for another office", () => {
   const yee = campaignMoneyForTarget("statewide:az/state-treasurer");
-  assert.equal(yee.state.resolvedTargetKey, "ballot-az-pima:superintendent:yee-kimberly");
-  assert.ok(yee.state.records.every(r => /Superintendent/i.test(r.match.officeOnBallot ?? "")));
+  assert.equal(yee.state.resolvedTargetKey, null);
+  assert.equal(yee.state.records.length, 0);
+  assert.equal(resolvedCandidacyForOfficial("statewide:az/state-treasurer"), null);
 });
 
-test("federal officeholders' held state candidacies project without inventing federal records", () => {
-  for (const [officialId, candidacyId] of [
-    ["congress:B001302", "ballot-az-pima:governor:biggs-andy"],
-    ["congress:S001183", "ballot-az-pima:governor:schweikert-david"],
-  ]) {
+test("federal officeholders never inherit a state candidacy for another office", () => {
+  for (const officialId of ["congress:B001302", "congress:S001183"]) {
     const answer = campaignMoneyApiAnswer(officialId);
-    assert.equal(answer.kind, "state", officialId);
+    assert.equal(answer.kind, "none", officialId);
     assert.equal(fundingAnswerForTarget(officialId).kind, "none");
-    if (answer.kind !== "state") continue;
-    assert.equal(answer.data.resolvedTargetKey, candidacyId);
-    assert.deepEqual(answer.data.records, stateMoneyForTarget(candidacyId));
-    assert.ok(answer.data.records.every(r => /Governor/i.test(r.match.officeOnBallot ?? "")));
+    assert.equal(resolvedCandidacyForOfficial(officialId), null);
   }
   assert.equal(campaignMoneyForTarget("congress:B001325").state.records.length, 0, "Sheri Biggs cannot inherit Andy Biggs' candidacy");
 });

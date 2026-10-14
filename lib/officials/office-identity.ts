@@ -1,146 +1,108 @@
-/** An office is not a geography: a canonical office key, so incumbency matches a seat by office as well as division. */
-
-/**
- * A canonical office. Two titles carrying the same key name the same office.
- *
- * The keys are internal join keys and never reach a reader — the reader sees
- * the source's own title, which is the one their government publishes.
- */
 export type OfficeKey = string;
 
 interface OfficeRule {
   key: OfficeKey;
-  /** Matched against the title with district/ward/term furniture stripped. */
   pattern: RegExp;
-  /** Why this rule exists, where the mapping is not self-evident. */
-  note?: string;
+  blurbType?: string;
+  stateBlurbTypes?: Readonly<Record<string, string>>;
 }
 
-/** Strip everything that names which seat rather than which office (district, ward, unexpired term). */
 export function stripSeatFurniture(title: string): string {
   return String(title ?? "")
     .replace(/—|–/g, "-")
     .replace(/\s*\(\s*\d+\s*(?:st|nd|rd|th)?\s*(?:congressional\s+)?district[^)]*\)/gi, " ")
-    .replace(/\s*\([^)]*seats?[^)]*\)/gi, " ")
-    .replace(/[,\-\s]*\b(?:district|ward|position|seat|division)\b[\s:#]*[0-9ivxlc]+\b/gi, " ")
-    .replace(/[,\-\s]*\b(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\s+district\b/gi, " ")
-    .replace(/\bunexpired\s+term\b/gi, " ")
+    .replace(/\s*\([^)]*(?:seats?|unexpired|full term)[^)]*\)/gi, " ")
+    .replace(/[,\-\s]*\b(?:district|ward|position|seat|division|group)\b[\s:#-]*(?:no\.?\s*)?[0-9ivxlc]+[a-z]?\b/gi, " ")
+    .replace(/[,\-\s]*\b(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d+(?:st|nd|rd|th))\s+(?:congressional\s+)?district\b/gi, " ")
+    .replace(/\b(?:unexpired|full)\s+term\b/gi, " ")
     .replace(/\bat[-\s]large\b/gi, " ")
+    .replace(/\s*(?:,\s*|\(\s*)(?:(?:vice|deputy)\s+)?(?:chair(?:man)?|president|clerk|secretary)\s*\)?$/i, "")
+    .replace(/^[\s,\-]+/g, "")
     .replace(/[\s,\-]+$/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-/** The rules, most specific first; order matters. */
 const RULES: OfficeRule[] = [
-  {
-    key: "us_senator",
-    pattern: /^(?:member of the )?(?:u\.?s\.?|united states) senat(?:or|e)$/i,
-    note: "AZ/NH write 'United States Senator'; NJ writes 'Member of the United States Senate'; the officeholder index writes 'U.S. Senator'. One office.",
-  },
-  {
-    key: "us_representative",
-    pattern:
-      /^(?:member of the )?(?:u\.?s\.?|united states) (?:representative|house of representatives)$|^representative in congress$|^member of the house of representatives$/i,
-    note: "NH writes 'Representative in Congress', NJ 'Member of the House of Representatives', AZ 'U.S. Representative'.",
-  },
-
-  { key: "governor", pattern: /^governor$/i },
-  { key: "lieutenant_governor", pattern: /^lieutenant governor$/i },
-  { key: "secretary_of_state", pattern: /^secretary of state$/i },
-  { key: "attorney_general", pattern: /^(?:state )?attorney general$/i },
-  { key: "state_treasurer", pattern: /^(?:state )?treasurer$/i },
-  {
-    key: "superintendent_of_public_instruction",
-    pattern: /^superintendent of public instruction$/i,
-    note: "ELECTED statewide in Arizona. Checked before any generic superintendent rule; see elected-role.ts, where the plain title is on the APPOINTED list.",
-  },
-  {
-    key: "state_mine_inspector",
-    pattern: /^(?:arizona )?(?:state )?mine inspector$/i,
-    note: "The BALLOT writes 'State Mine Inspector' and the OFFICE writes both 'Arizona State Mine Inspector' (asmi.az.gov masthead) and, on its own team page, the bare role. `State` was required here until 2026-08-28, so a holder recorded under the office's own shorter spelling classified as null and silently failed to join its own seat — the failure mode this vocabulary exists to make loud.",
-  },
-  { key: "corporation_commissioner", pattern: /^corporation commissioner$/i },
-  { key: "state_auditor", pattern: /^state auditor$/i },
-  { key: "state_comptroller", pattern: /^(?:state )?comptroller$/i },
-  { key: "insurance_commissioner", pattern: /^insurance commissioner$/i },
+  { key: "us_senator", blurbType: "us-senator", pattern: /^(?:member of (?:the )?)?(?:u\.?s\.?|united states) senat(?:or|e)$|^senator in congress$/i },
+  { key: "us_representative", blurbType: "us-representative", pattern: /^(?:member of (?:the )?)?(?:u\.?s\.?|united states) (?:representative|house(?: of representatives)?)$|^(?:representative (?:in|to) congress|member of (?:the )?congress|member of the house of representatives|congress(?:ional representative|man|woman|person))$/i },
+  { key: "governor_and_lieutenant_governor", pattern: /^governor (?:and|&) (?:lieutenant|lt\.?) governor$/i },
+  { key: "lieutenant_governor", pattern: /^(?:lieutenant|lt\.?) governor$/i },
+  { key: "governor", blurbType: "governor", pattern: /^(?:state )?governor$/i },
+  { key: "secretary_of_state", blurbType: "secretary-of-state", pattern: /^(?:state )?secretary of state$/i },
+  { key: "attorney_general", blurbType: "attorney-general", pattern: /^(?:state )?attorney general$/i },
+  { key: "state_treasurer", blurbType: "state-treasurer", pattern: /^(?:state )?treasurer$/i },
+  { key: "superintendent_of_public_instruction", blurbType: "superintendent-public-instruction", pattern: /^(?:state )?superintendent of public instruction$/i },
+  { key: "state_mine_inspector", blurbType: "mine-inspector", pattern: /^(?:arizona )?(?:state )?mine inspector$/i },
+  { key: "corporation_commissioner", blurbType: "corporation-commissioner", pattern: /^(?:state )?corporation commissioner$/i },
+  { key: "state_auditor", pattern: /^(?:state )?auditor$/i },
+  { key: "state_comptroller", pattern: /^(?:state )?(?:comptroller|controller)$/i },
+  { key: "insurance_commissioner", pattern: /^(?:state )?(?:insurance commissioner|commissioner of insurance)$/i },
   { key: "chief_election_officer", pattern: /^chief election officer$/i },
-
-  {
-    key: "state_senator",
-    pattern: /^state senator$/i,
-  },
-  {
-    key: "state_lower_house",
-    pattern: /^(?:state representative|state assembly ?(?:member|man|woman)?|assembly ?member|member of the (?:general )?assembly|state representative, [a-z ]+ county)$/i,
-    note: "The lower chamber, whatever the state calls it. NJ's officeholder index records 'Assemblymember'; NH and AZ record 'State Representative'. A New Jersey assembly seat and an Arizona house seat are never compared to each other — they cannot share a division — so one key is safe and stops NJ failing to match its own members.",
-  },
-  {
-    key: "executive_councilor",
-    pattern: /^executive council(?:or|lor)$/i,
-    note: "New Hampshire's Executive Council. It shares place divisions with county offices, which is exactly why it needs its own key.",
-  },
-
-  { key: "county_commissioner", pattern: /^(?:member of the )?(?:board of )?county commissioners?$|^[a-z ]+ county commissioner$/i },
-  { key: "county_supervisor", pattern: /^(?:member of the )?(?:board of )?(?:county )?supervisors?$|^county supervisor$/i },
-  { key: "county_sheriff", pattern: /^(?:[a-z ]+ county )?sheriff$/i },
-  { key: "county_attorney", pattern: /^(?:[a-z ]+ county )?(?:county )?attorney$/i },
-  { key: "county_treasurer", pattern: /^[a-z ]+ county treasurer$/i },
-  { key: "register_of_deeds", pattern: /^(?:[a-z ]+ county )?register of deeds$/i },
-  { key: "register_of_probate", pattern: /^(?:[a-z ]+ county )?register of probate$/i },
-  { key: "county_clerk", pattern: /^(?:[a-z ]+ county )?(?:county )?clerk$/i },
-  { key: "county_assessor", pattern: /^(?:[a-z ]+ county )?assessor$/i },
-  { key: "county_recorder", pattern: /^(?:[a-z ]+ county )?recorder$/i },
-
-  { key: "mayor", pattern: /^mayor$/i },
-  {
-    key: "municipal_council",
-    pattern:
-      /^(?:member of the )?(?:borough|town|township|city|village|common) council$|^(?:member of the )?(?:township|town) committee$|^council ?(?:member|man|woman)$|^alder(?:man|woman|person)$|^(?:member of the )?board of (?:selectmen|aldermen|trustees)$|^select ?(?:board|man|woman|person)$/i,
-    note: "New Jersey alone writes this five ways across Morris County: Borough Council, Town Council, Township Council, Township Committee, and Board of Education is deliberately NOT among them. All five are the municipality's governing council, and a mayor is not one of them — that separation is Red Control 1's municipal half.",
-  },
-
-  {
-    key: "school_board",
-    pattern: /^(?:member of the )?(?:regional )?board of education$|^(?:member of the )?school (?:board|committee)$|^(?:member of the )?governing board$/i,
-  },
+  { key: "agriculture_commissioner", pattern: /^(?:state )?(?:agriculture commissioner|commissioner of agriculture)$/i },
+  { key: "public_lands_commissioner", pattern: /^(?:state )?(?:public lands commissioner|commissioner of (?:public )?lands?|land commissioner)$/i },
+  { key: "labor_commissioner", pattern: /^(?:state )?(?:labor commissioner|commissioner of labor)$/i },
+  { key: "public_service_commissioner", pattern: /^(?:state )?(?:public service commissioner|public service commission|public utilities commissioner|public utilities commission|railroad commissioner|railroad commission)$/i },
+  { key: "state_senator", blurbType: "state-senator", pattern: /^(?:(?:member of (?:the )?)?(?:state )?senat(?:or|e)|state senate member|sen\.?)$/i },
+  { key: "state_lower_house", blurbType: "state-representative", pattern: /^(?:state representative|representative|rep\.?|state house representative|member of (?:the )?state house of representatives|representative in (?:the )?general (?:court|assembly)|state house(?: of representatives)?|house of representatives|state assembly ?(?:member|man|woman)?|assembly ?(?:member|man|woman)|member of the (?:general )?assembly|member of (?:the )?(?:state )?house of delegates|house of delegates|delegate|house member|state representative, [a-z ]+ county)$/i },
+  { key: "executive_councilor", blurbType: "executive-councilor", pattern: /^executive council(?:or|lor)$/i },
+  { key: "county_commissioner", blurbType: "county-commissioner", pattern: /^(?:member of the )?(?:board of )?county commissioners?$|^[a-z ]+ county commissioner$/i },
+  { key: "county_supervisor", blurbType: "county-commissioner", pattern: /^(?:member of the )?(?:board of )?(?:county )?supervisors?$/i },
+  { key: "county_sheriff", blurbType: "county-sheriff", pattern: /^(?:[a-z ]+ county )?sheriff$|^county sheriff$/i },
+  { key: "county_attorney", blurbType: "county-attorney", pattern: /^(?:(?:[a-z ]+ )?county )?attorney$|^(?:county )?prosecuting attorney$/i },
+  { key: "county_treasurer", blurbType: "county-treasurer", pattern: /^(?:[a-z ]+ )?county treasurer$/i },
+  { key: "register_of_deeds", blurbType: "register-of-deeds", pattern: /^(?:[a-z ]+ county )?register of deeds$/i },
+  { key: "register_of_probate", blurbType: "register-of-probate", pattern: /^(?:[a-z ]+ county )?register of probate$/i },
+  { key: "county_surrogate", blurbType: "county-surrogate", pattern: /^(?:(?:[a-z ]+ )?county )?surrogate$/i },
+  { key: "county_clerk", blurbType: "county-clerk", pattern: /^(?:[a-z ]+ county )?(?:county )?clerk$/i },
+  { key: "county_assessor", pattern: /^(?:[a-z ]+ county )?assessor$|^county assessor$/i },
+  { key: "county_recorder", pattern: /^(?:[a-z ]+ county )?recorder$|^county recorder$/i },
+  { key: "county_coroner", pattern: /^(?:[a-z ]+ county )?coroner$|^county coroner$/i },
+  { key: "county_engineer", pattern: /^(?:[a-z ]+ )?county engineer$/i },
+  { key: "county_tax_collector", pattern: /^(?:county )?tax collector$/i },
+  { key: "mayor", blurbType: "mayor", pattern: /^(?:city |town |village )?mayor$/i },
+  { key: "municipal_council", blurbType: "select-board", pattern: /^(?:member of the )?(?:board of selectmen|select ?(?:board(?: (?:member|chair|vice chair))?|man|woman|person))$/i },
+  { key: "municipal_council", blurbType: "city-council", stateBlurbTypes: { nj: "nj-municipal-governing-body" }, pattern: /^(?:member of the )?(?:borough|town|township) council$|^(?:member of the )?(?:township|town) committee$/i },
+  { key: "municipal_council", blurbType: "city-council", pattern: /^(?:member of the )?(?:city|village|common) council$|^(?:city |town |village )?council ?(?:member|man|woman|president|vice president)$|^alder(?:man|woman|person)$|^(?:member of the )?board of (?:aldermen|trustees)$/i },
+  { key: "school_board", blurbType: "school-board", pattern: /^(?:member of the )?(?:regional )?board of education$|^(?:member of the )?school (?:board(?: (?:member|chair|vice chair))?|committee)$|^(?:member of the )?governing board(?: (?:member|president|vice president|clerk))?$|^school (?:district )?(?:trustee|director)$/i },
+  { key: "library_trustee", pattern: /^library (?:board )?(?:trustee|board member)$/i },
+  { key: "school_superintendent", blurbType: "superintendent", pattern: /^(?:school |district |school district )?superintendent$/i },
+  { key: "state_supreme_court", pattern: /^(?:(?:chief |associate )?justice(?: of (?:the )?)?(?:state )?supreme court|(?:state )?supreme court(?: (?:chief |associate )?(?:justice|judge))?)$/i },
+  { key: "state_appeals_court", pattern: /^(?:judge(?: of (?:the )?)?(?:state )?court of appeals|(?:state )?court of appeals(?: judge)?|(?:state )?appeals court(?: judge)?)$/i },
+  { key: "circuit_court_judge", pattern: /^(?:circuit court judge|judge of (?:the )?circuit court)$/i },
+  { key: "district_court_judge", pattern: /^(?:district court judge|judge of (?:the )?district court)$/i },
+  { key: "superior_court_judge", pattern: /^(?:superior court judge|judge of (?:the )?superior court)$/i },
+  { key: "probate_court_judge", pattern: /^(?:probate (?:court )?judge|judge of (?:the )?probate court)$/i },
+  { key: "justice_of_the_peace", pattern: /^justice of the peace$/i },
 ];
 
-/** The canonical office a title names, or null (rendered UNKNOWN). A ballot measure is not an office. */
-export function officeIdentity(title: string | null | undefined): OfficeKey | null {
+const MEASURE_TITLE = /^(?:proposition|question|measure|referendum|public question|amendment|bond)\b/i;
+
+function officeRule(title: string | null | undefined): OfficeRule | null {
   const stripped = stripSeatFurniture(title ?? "");
-  if (!stripped) return null;
-  // A ballot measure must not fall through to an office rule on a stray word in its long title.
-  if (/^(?:proposition|question|measure|referendum|public question|amendment|bond)\b/i.test(stripped)) {
-    return null;
-  }
-  for (const rule of RULES) {
-    if (rule.pattern.test(stripped)) return rule.key;
-  }
-  return null;
+  return !stripped || MEASURE_TITLE.test(stripped) ? null : RULES.find(rule => rule.pattern.test(stripped)) ?? null;
 }
 
-/** True when two titles name the same office. Neither may be unclassified. */
+export function officeIdentity(title: string | null | undefined): OfficeKey | null {
+  return officeRule(title)?.key ?? null;
+}
+
+export function officeBlurbType(title: string | null | undefined, divisionOcdId?: string | null): string | null {
+  const rule = officeRule(title);
+  const state = /\/state:([a-z]{2})\b/.exec(divisionOcdId ?? "")?.[1];
+  return state && rule?.stateBlurbTypes?.[state] || rule?.blurbType || rule?.key.replace(/_/g, "-") || null;
+}
+
 export function sameOffice(a: string | null | undefined, b: string | null | undefined): boolean {
   const left = officeIdentity(a);
-  if (left === null) return false;
-  return left === officeIdentity(b);
+  return left !== null && left === officeIdentity(b);
 }
 
-/** Which titles the vocabulary does not classify: the offices whose incumbency renders UNKNOWN until a rule exists. */
 export function unclassifiedOfficeTitles(titles: readonly (string | null | undefined)[]): string[] {
-  const out = new Set<string>();
-  for (const t of titles) {
-    const stripped = stripSeatFurniture(t ?? "");
-    if (!stripped) continue;
-    if (officeIdentity(t) === null && !/^(?:proposition|question|measure|referendum|public question|amendment|bond)\b/i.test(stripped)) {
-      out.add(stripped);
-    }
-  }
-  return [...out].sort();
+  return [...new Set(titles.map(title => stripSeatFurniture(title ?? ""))
+    .filter(title => title && !MEASURE_TITLE.test(title) && officeIdentity(title) === null))].sort();
 }
 
-/** Every office key the vocabulary currently knows. */
 export function knownOfficeKeys(): OfficeKey[] {
-  return [...new Set(RULES.map((r) => r.key))].sort();
+  return [...new Set(RULES.map(rule => rule.key))].sort();
 }

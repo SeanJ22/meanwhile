@@ -86,12 +86,12 @@ test("a SHUT iCal door is reopened from recorded publisher bytes using the runne
 
 test("a page carries its government and its own plain reread clock", async () => {
   const repos = createMemoryRepositories();
-  const ocdId = "ocd-division/country:us/state:mi/place:grand_rapids";
-  const url = "https://go.boarddocs.com/mi/grand/Board.nsf/Public";
-  await recordPublishedPages(repos.doors, [{ url, retrievedAt: NOW, recordClass: "OFFICIAL_ROSTER", bodyId: `${ocdId}#board`, ocdId, foundBy: "SCOUT" }], NOW);
+  const ocdId = "ocd-division/country:us/state:vt/place:bennington";
+  const url = "https://www.benningtonvt.org/services/town_clerk/elections___voter_information/index.php";
+  await recordPublishedPages(repos.doors, [{ url, retrievedAt: NOW, recordClass: "OFFICIAL_ROSTER", bodyId: `${ocdId}#board`, ocdId, foundBy: "SCOUT", content: { text: readFileSync("tests/fixtures/voting-sources/vt-bennington-elections-original.html", "utf8"), contentType: "text/html", names: ["Bennington"] } }], NOW);
   const [row] = await repos.doors.list();
   assert.equal(row.value.ocdId, ocdId);
-  const body = fixture("boarddocs-grand-rapids-meeting.html");
+  const body = readFileSync("tests/fixtures/voting-sources/vt-bennington-elections-original.html", "utf8");
   const hash = (await import("node:crypto")).createHash("sha256").update(body).digest("hex");
   await repos.doors.compareAndSet(row.id, row.revision, { ...row.value, validators: { contentHash: hash, checkedAt: "2026-09-01T00:00:00.000Z", changedAt: null, etag: null, lastModified: null } }, NOW);
   const report = await runPageDoorChecks(repos, runtime({ open: recordedDiscoveryOpen({ [url]: { status: 200, body } }) }), [(await repos.doors.mustRead(row.id)).value]);

@@ -2361,7 +2361,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         const heldJobId = jobSpend.get(amended.obligationId)?.jobId;
         if (heldJobId !== undefined) amended = { ...amended, spendHoldJobId: heldJobId };
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
-        await recordFoundSources(repos.doors, [amended], nowIso());
+        await recordFoundSources(repos, [amended], nowIso(), readScoutEvidence);
         const shutDoorId = parseShutDoorId(amended.obligationId);
         if (shutDoorId) await applyDetectiveFind(repos, shutDoorId, amended, nowIso());
         scoutResultsThisCycle.push(amended);

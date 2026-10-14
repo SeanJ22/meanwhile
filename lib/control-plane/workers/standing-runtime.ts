@@ -357,7 +357,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
           payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
-        await recordFoundSources(input.repos.doors,[recorded],recorded.recordedAt);
+        await recordFoundSources(input.repos,[recorded],recorded.recordedAt, async id => {
+          const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
+          return { canonicalUrl: evidence.canonicalUrl, text: evidence.text, contentType: artifact.contentType };
+        });
         const shutDoorId = parseShutDoorId(recorded.obligationId) ?? shutDoorForWork(item);
         if (shutDoorId) await applyDetectiveFind(input.repos, shutDoorId, recorded, recorded.recordedAt);
         if (indexFindings) await indexScoutFindings(input.repos.boxFindings, recorded, now());

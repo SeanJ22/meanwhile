@@ -324,7 +324,7 @@ export async function publishWorkerReaderResults(input: {
       outcome = { at: input.now, workerResultId: parser.id, status: "HELD", code: detail.split(":")[0],
         detail: `${detail}. ${recovery === "WORKER" ? "Automatic evidence or contract repair remains owed" : "The existing publisher retries the retained result"}; no manual approval is required.`, recovery, candidateId, versionId };
     }
-    if (plan) outcome = withPageDoor(outcome, captures[0], plan.contract.recordClass);
+    if (plan) outcome = await withPageDoor(input.repos, outcome, captures[0], plan.contract.recordClass);
     const latest = await input.repos.workItems.mustRead(id);
     await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });

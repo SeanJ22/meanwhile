@@ -101,9 +101,12 @@ export interface VotingSourceRead {
 }
 export interface VotingAddressInput { address: string; streetNumber?: string; street?: string; city?: string; state?: string; zip?: string; }
 export interface VotingSourceRuntime {
+  captureCache?: Map<string, Promise<import("./voting-source-fetch.ts").VotingCapture[]>>;
+  discoverySeen?: Set<string>;
   fetch: typeof fetch;
   deadlineMs?: number;
   onDiscoveredDoor?: (door: VotingSourceDoor, captures: { url: string; contentType: string; bytes: Uint8Array }[]) => Promise<void>;
+  onDiscoveredSource?: (source: import("./voting-source-discovery.ts").ClassifiedVotingSource) => Promise<void>;
   resolveAiannhGeoid?: (tribalNation: string, reservation: string, state: string) => string | null;
   resolveCountyFips?: (countyName: string, state: string) => string | null;
   resolveScope?: (label: string, url: string, parent: VotingDoorScope) => VotingDoorScope | null;

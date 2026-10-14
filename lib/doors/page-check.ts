@@ -10,6 +10,10 @@ import { verifyEndpointBody } from "../hunt/meetings-site-discovery.ts";
 import { enqueueWorkerTask } from "../control-plane/workers/runtime.ts";
 import { loadRegistrationReference } from "../registration/reference.ts";
 import { createHash } from "node:crypto";
+import { classifySourceContent, SOURCE_FAMILIES } from "./source-content.ts";
+import { recordSourceObservation } from "./source-capture.ts";
+import { cycleVault, VAULT_DIR } from "../control-plane/scheduler/vault.ts";
+import { join } from "node:path";
 
 export async function bindPageGovernment(repos: ControlPlaneRepositories, door: DoorRecord, now: string, root = process.cwd()): Promise<DoorRecord> {
   if (door.kind !== "page") return door;
@@ -71,7 +75,15 @@ export async function runPageDoorChecks(repos: ControlPlaneRepositories, runtime
       const changed = contentHash !== door.validators?.contentHash;
       const pending = changed || Boolean(door.validators?.changedAt && Date.parse(door.validators.changedAt) > Date.parse(door.lastSuccessAt ?? "1970-01-01"));
       const changedAt = changed ? at : door.validators!.changedAt!;
-      if (pending) await queuePageRead(repos, door, at, changedAt);
+      if (pending) {
+        if (typeof door.config.sourceScopes === "string") {
+          const scopes = JSON.parse(door.config.sourceScopes) as { ocdId: string; state: string; names: string[] }[];
+          for (const scope of scopes) await recordSourceObservation(repos, { url, ...scope,
+            disposition: classifySourceContent({ url, text: page.body, contentType: page.contentType ?? "", names: scope.names, owed: SOURCE_FAMILIES }),
+            capture: { bytes: new TextEncoder().encode(page.body), contentType: page.contentType ?? "" } }, at, cycleVault(join(root, ...VAULT_DIR)));
+          await recordDoorOutcome(repos.doors, door.doorId, "SUCCESS", at);
+        } else await queuePageRead(repos, door, at, changedAt);
+      }
       const row = await repos.doors.mustRead(door.doorId);
       await repos.doors.compareAndSet(door.doorId, row.revision, { ...row.value, readNow: false,
         validators: { etag: null, lastModified: null, contentHash, checkedAt: at, changedAt: changed ? at : door.validators?.changedAt ?? null } }, at);

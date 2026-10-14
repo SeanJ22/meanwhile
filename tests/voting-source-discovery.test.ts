@@ -31,10 +31,11 @@ test("the real county drop-box page's polling-PDF link does not inherit its box 
   const result = await discoverVotingDoors(parent, {
     fetch: fixtureFetch(parent.url, "cochise-voter-information-official-extract.html"),
   });
-  const child = result.doors.find(door => door.url === "https://www.cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF");
+  const child = result.sources.map(row => row.source).find(door => door.url === "https://www.cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF");
   assert.ok(child);
+  assert.ok(!result.doors.includes(child), "an unread target does not become a publishing door");
   assert.equal(child.shape, "file");
-  assert.deepEqual(child.covers, ["ELECTION_DAY", "VOTE_CENTER"]);
+  assert.deepEqual(child.covers, ["ELECTION_DAY"], "an unread link cannot establish a vote-center service");
   assert.deepEqual(child.scope, parent.scope);
   assert.equal(child.discoveredFrom, parent.url);
   assert.equal(child.electionDate, "2026-11-03");
@@ -50,17 +51,18 @@ test("the native chief-office page keeps its official link chain without stampin
   const discovered: VotingSourceDoor[] = [];
   const result = await discoverVotingDoors(parent, {
     fetch: fixtureFetch(parent.url, "mt-chief-election-native.html"),
-    onDiscoveredDoor: async door => { discovered.push(door); },
+    onDiscoveredSource: async ({ source }) => { discovered.push(source); },
   });
-  const child = result.doors.find(door => door.url === named("mt-statewide-polling-2026").url);
+  const child = result.sources.map(row => row.source).find(door => door.url === named("mt-statewide-polling-2026").url);
   assert.ok(child);
   assert.ok(discovered.includes(child), "the independently attributed route reaches immediate publication");
   assert.equal(child.publisher, parent.publisher);
   assert.equal(child.electionDate, parent.electionDate);
   assert.equal(child.officialLinkingPage?.url, parent.url);
   assert.deepEqual(child.officialLinkingPage?.linkingPage, parent.officialLinkingPage);
-  for (const door of discovered) for (const field of sourceOnlyFields) {
+  for (const door of discovered.filter(door => door.id !== parent.id)) for (const field of sourceOnlyFields) {
     assert.equal(field in door, false, `${field} must not migrate from a chief-office page`);
   }
-  assert.strictEqual(result.doors[0], parent, "the root keeps its own verified metadata");
+  const root = result.sources.find(row => row.source.id === parent.id);
+  assert.deepEqual(root?.source, { ...parent, url: parent.url.replace(/\/$/, "") }, "the root keeps its own verified metadata");
 });

@@ -3,11 +3,10 @@ import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
 import { normalizeText } from "./check.ts";
 import { ensureEntity, learnDoorChannel } from "./entities.ts";
+import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
-
-export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 

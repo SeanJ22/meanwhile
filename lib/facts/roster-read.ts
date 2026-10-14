@@ -1,6 +1,5 @@
 import type { BodyRoster, RosterReaderDisposition } from "../registry/body-rosters.ts";
 import type { Query } from "./publish.ts";
-import { rosterMemberId } from "./roster-facts.ts";
 
 const ROSTER_FACTS_SQL = `WITH members AS (
     SELECT f.entity_id AS body_id, substr(f.field, 8) AS person_id, f.value, f.quote, f.checked_at, f.provenance_kind, s.url
@@ -60,3 +59,6 @@ export async function readFactRosters(query: Query, bodyIds: readonly string[] |
   }
   return { rosters: [...byBody.values()], dispositions };
 }
+
+/** The id readers see for a seated person: the id already shown to readers, or one minted from the body and person. */
+export const rosterMemberId = (bodyId: string, personId: string, legacyId?: string | null) => legacyId || `roster:${bodyId}#${personId}`;

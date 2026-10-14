@@ -12,7 +12,7 @@ import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/wor
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { readFactCommentAccess } from "../lib/facts/comment-facts.ts";
+import { readFactCommentAccess } from "../lib/facts/comment-read.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 
 const RULES = { commentPeriod: "YES", commentPeriodDetail: "Call to the Public is held at every regular meeting.",

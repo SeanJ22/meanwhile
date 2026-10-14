@@ -126,6 +126,3 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
   }
   return out;
 }
-
-/** The id readers see for a seated person: the id already shown to readers, or one minted from the body and person. */
-export const rosterMemberId = (bodyId: string, personId: string, legacyId?: string | null) => legacyId || `roster:${bodyId}#${personId}`;

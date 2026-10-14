@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { factReader } from "../facts/db.ts";
 import { readFactRosters } from "../facts/roster-read.ts";
-import { readFactCommentAccess } from "../facts/comment-facts.ts";
+import { readFactCommentAccess } from "../facts/comment-read.ts";
 import type { Page } from "playwright";
 import type { WorkItem } from "./work-item.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";

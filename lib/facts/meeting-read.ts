@@ -1,6 +1,7 @@
 import type { Meeting, Provenance } from "../sources/types.ts";
-import { meetingEntityId } from "./meeting-facts.ts";
 import type { Query } from "./publish.ts";
+
+export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
 const MEETING_FACTS_SQL = `SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
   WHERE f.status = 'live' AND f.entity_id = ANY($1::text[]) AND f.field IN ('title', 'starts_at', 'location', 'agenda_url', 'video_url')`;

@@ -1,5 +1,5 @@
 import type { OcdId } from "../sources/types.ts";
-import { readFactCommentAccess } from "../facts/comment-facts.ts";
+import { readFactCommentAccess } from "../facts/comment-read.ts";
 import { factReader, factsVersion } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import {

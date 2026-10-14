@@ -8,7 +8,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { readFactCommentAccess } from "../lib/facts/comment-facts.ts";
+import { readFactCommentAccess } from "../lib/facts/comment-read.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import type { BodyRoster } from "../lib/registry/body-rosters.ts";

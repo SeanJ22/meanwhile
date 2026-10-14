@@ -1,0 +1,63 @@
+[
+  {
+    "tenant": "coalinga",
+    "state": "CA",
+    "file": "coalinga-ca.html",
+    "sourceUrl": "https://coalinga.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx",
+    "retrievedAt": "2026-10-13T19:28:56.723363+00:00",
+    "method": "POST",
+    "form": {
+      "ctl00$ContentPlaceHolder1$ddlDateRange": "cus",
+      "ctl00$ContentPlaceHolder1$txtCalendarFrom": "06/15/2026",
+      "ctl00$ContentPlaceHolder1$txtCalendarTo": "02/10/2027",
+      "ctl00$ContentPlaceHolder1$btnSearch": "Search"
+    },
+    "sourceSha256": "693fb03df6fa1cf1e807511571ffeb628bd5e2c008fad3691cbd4a47b9854444",
+    "normalization": "script and style blocks omitted; LF newlines; trailing whitespace removed"
+  },
+  {
+    "tenant": "plano",
+    "state": "TX",
+    "file": "plano-tx.html",
+    "sourceUrl": "https://plano.novusagenda.com/agendapublic/meetingsresponsive.aspx?Date=cus&From=06%2F15%2F2026&To=02%2F10%2F2027",
+    "retrievedAt": "2026-10-13T19:24:31.861674+00:00",
+    "method": "GET",
+    "sourceSha256": "e9cad50c87312f38a0e4a761ea9143f130a1f531f81269e734ec90db0abb410a",
+    "normalization": "script and style blocks omitted; LF newlines; trailing whitespace removed"
+  },
+  {
+    "tenant": "peoriaaz",
+    "state": "AZ",
+    "file": "peoria-az.html",
+    "sourceUrl": "https://peoriaaz.novusagenda.com/agendapublic/meetingsgeneral.aspx?Date=cus&From=01%2F01%2F2025&To=12%2F31%2F2026",
+    "retrievedAt": "2026-10-13T19:25:39.833245+00:00",
+    "method": "GET",
+    "sourceSha256": "d402d7be94248cfa0acde06c3e14f59a09f47b3fd8825af42cd6ae559a13d1a2",
+    "normalization": "script and style blocks omitted; LF newlines; trailing whitespace removed"
+  },
+  {
+    "file": "coalinga-ca-page2.html",
+    "sourceUrl": "https://coalinga.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx",
+    "method": "POST",
+    "eventTarget": "ctl00$ContentPlaceHolder1$btnNextMeeting",
+    "retrievedAt": "2026-10-13T19:28:58.976016+00:00",
+    "sourceSha256": "c29a0d0d5b2ee6e75403d38fedbdbfe2da62eea846016797353fae095698ed39",
+    "normalization": "script and style blocks omitted; LF newlines; trailing whitespace removed"
+  },
+  {
+    "file": "coalinga-ca-agenda-718.html",
+    "sourceUrl": "https://coalinga.novusagenda.com/AgendaPublic/MeetingView.aspx?MeetingID=718&MinutesMeetingID=1210&doctype=Agenda",
+    "retrievedAt": "2026-10-13T19:25:12.574091+00:00",
+    "sourceSha256": "c9b621f174f0324b4bdd0e60f0beb207d3b3aeaf4710600539062b679d131e04",
+    "normalization": "script and style blocks omitted; LF newlines; trailing whitespace removed"
+  },
+  {
+    "file": "peoria-az-page2.html",
+    "sourceUrl": "https://peoriaaz.novusagenda.com/agendapublic/meetingsgeneral.aspx?Date=cus&From=01%2F01%2F2025&To=12%2F31%2F2026",
+    "method": "POST",
+    "eventTarget": "SearchAgendasMeetings$radGridMeetings$ctl00$ctl03$ctl01$ctl18",
+    "retrievedAt": "2026-10-13T19:32:04.854892+00:00",
+    "sourceSha256": "1663f27e12eafcd1a7e3681e401a99e5d56a0c409242be0318a14cd583c6c63a",
+    "normalization": "script and style blocks omitted; LF newlines; trailing whitespace removed"
+  }
+]

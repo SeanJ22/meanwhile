@@ -72,13 +72,14 @@ test("FOUND: robots first, then the homepage, then the route it links; confirmed
   const rt = runtime(open);
   const attempt = await walkMeetingsDiscoveryNeed(need("az:city:city-of-avondale", "http://avondale.org"), rt);
 
-  assert.deepEqual(seen, ["https://avondale.org/robots.txt", "https://avondale.org/", ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://avondale.org/${path}`), "https://avondale.org/calendar/meetings.ics"]);
+  assert.deepEqual(seen, ["https://avondale.org/robots.txt", "https://avondale.org/", ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://avondale.org/${path}`), "https://avondale.org/calendar/meetings.ics",
+    "https://x.novusagenda.com/robots.txt", "https://x.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx"]);
   assert.equal(attempt.outcome, "FOUND");
   assert.deepEqual(attempt.found.map((f) => [f.vendor, f.url, f.count]), [["ical", "https://avondale.org/calendar/meetings.ics", 1]]);
-  assert.deepEqual(attempt.leads.map((l) => l.vendor), ["novusagenda"], "a vendor we cannot read is a lead and is never requested");
-  assert.equal(attempt.requestCount, 7);
+  assert.deepEqual(attempt.leads.map((l) => l.vendor), ["novusagenda"], "an unconfirmed public list remains a lead");
+  assert.equal(attempt.requestCount, 9);
   assert.ok(Date.parse(attempt.recheckAfter) > Date.parse(attempt.finishedAt));
-  assert.equal(rt.vaulted.length, 7, "robots, homepage and the route are all evidence");
+  assert.equal(rt.vaulted.length, 9, "every source response is saved as evidence");
   for (const a of rt.vaulted) {
     assert.equal(a.workItemId, discoveryWorkId("az:city:city-of-avondale"));
     assert.equal(a.attemptId, attempt.attemptId);

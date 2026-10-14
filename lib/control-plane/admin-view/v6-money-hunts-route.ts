@@ -25,7 +25,7 @@ export interface V6ReadSources extends V6MoneySources {
 const PAUSE_ACTIONS = ["PAUSE", "RESUME", "PAUSE_RUNNER", "RESUME_RUNNER"] as const;
 
 /** The latest owner intent for each pause action: four one-row reads, never the whole log. Null when unreadable. */
-export async function readOwnerPauses(repos: Pick<ControlPlaneRepositories, "researchIntents">): Promise<OwnerPauseRecords | null> {
+async function readOwnerPauses(repos: Pick<ControlPlaneRepositories, "researchIntents">): Promise<OwnerPauseRecords | null> {
   try {
     const latest = await Promise.all(PAUSE_ACTIONS.map(async (action) => {
       // The runner's HONORED record repeats the action; only the owner's INTENT says when and why.

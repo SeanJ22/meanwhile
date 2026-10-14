@@ -2607,5 +2607,89 @@
     "tested_sha": "e06723d0f904ae6123d9c3d8f63b124c67b27ba2",
     "gates": "pass",
     "at": "2026-10-14T10:49:58Z"
+  },
+  {
+    "lane": "office-pins",
+    "steps": [
+      "DS-03"
+    ],
+    "ready_sha": "1ab8cad9ab935448d3c7b70f80fe197f39a8815e",
+    "merge_sha": "ec43ad40d7d7ca233d22c0df7a437d90557cb18b",
+    "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "gates": "pass",
+    "at": "2026-10-14T16:35:47Z"
+  },
+  {
+    "lane": "platform-civicclerk",
+    "steps": [
+      "R3-CIVICCLERK"
+    ],
+    "ready_sha": "57116101626282eebb94830a1e810404509d0a53",
+    "merge_sha": "384885a2bc389fb82fb11467ec1e7985f94767b3",
+    "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "gates": "pass",
+    "at": "2026-10-14T16:35:47Z"
+  },
+  {
+    "lane": "platform-civicplus",
+    "steps": [
+      "R3-CIVICPLUS"
+    ],
+    "ready_sha": "5d90f1bf48cd0a7932fb35965ce43962bbef05ab",
+    "merge_sha": "cc13ee0b138027e3a5dc0d6167994c905d1c6bbd",
+    "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "gates": "pass",
+    "at": "2026-10-14T16:35:47Z"
+  },
+  {
+    "lane": "platform-escribe",
+    "steps": [
+      "R3-ESCRIBE"
+    ],
+    "ready_sha": "ce53b8bf536a28dcc271b272c984699da3b05492",
+    "merge_sha": "8e52eacd4248960835ffdb51b4468d9519050b42",
+    "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "gates": "pass",
+    "at": "2026-10-14T16:35:47Z"
+  },
+  {
+    "lane": "platform-novusagenda",
+    "steps": [
+      "R3-NOVUS"
+    ],
+    "ready_sha": "6d8ba4a1a5824a9b37dba97bd590c2e297abafc6",
+    "merge_sha": "626ea72ecd068883790bb2e2be8f1a2fe446ad55",
+    "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "gates": "pass",
+    "at": "2026-10-14T16:35:47Z"
+  },
+  {
+    "lane": "state-votes",
+    "steps": [
+      "SV-01"
+    ],
+    "ready_sha": "5b126678f6a92683689604ad815a604a3f4cb7b5",
+    "merge_sha": "75dbbd0b56e46b4ead9a04adc62b5b9f59137d96",
+    "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "gates": "pass",
+    "at": "2026-10-14T16:35:47Z"
+  },
+  {
+    "lane": "token-cost",
+    "steps": [
+      "R7"
+    ],
+    "ready_sha": "88328d939d415c407c7c7286e623d40010944677",
+    "merge_sha": "d01ccdbfc7bc6f3b320282892460b57a57cd3483",
+    "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+    "gates": "pass",
+    "at": "2026-10-14T16:35:47Z"
   }
 ]

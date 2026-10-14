@@ -15,11 +15,11 @@ registerSetting({
 const PUBLISHED_HOURLY_LIMITS: ReadonlyMap<string, number> = new Map(Object.values(FEDERAL_SOURCES)
   .filter(source => source.paceMs > 0).map(source => [new URL(source.url).origin, 3_600_000 / source.paceMs] as const));
 
-export function publishedHourlyLimit(provider: string): number | null {
+function publishedHourlyLimit(provider: string): number | null {
   return PUBLISHED_HOURLY_LIMITS.get(provider) ?? null;
 }
 
-export type ProviderState = "CLOSED" | "HALF_OPEN" | "OPEN";
+type ProviderState = "CLOSED" | "HALF_OPEN" | "OPEN";
 
 /* One probe while half-open; an open provider's rows reach admission one at a time to be held there. */
 export function providerConcurrency(state: ProviderState, hostConcurrency: number): number {
@@ -32,7 +32,7 @@ const waiting = new Map<string, (() => void)[]>();
 /* This process's own pace, when there is no shared store or it cannot answer. */
 const localPacing = new Map<string, number>();
 
-export interface HostGateInput {
+interface HostGateInput {
   readonly provider: string;
   /** Read on every wait, so a breaker that opens or half-opens meanwhile applies to requests already queued. */
   readonly limit: () => number;

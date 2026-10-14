@@ -435,14 +435,17 @@
     "publisher": "Board of Elections, Washington, DC",
     "url": "https://www.dcboe.org/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "DC",
       "ocdId": "ocd-division/country:us/district:dc",
       "name": "District of Columbia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.dcboe.org/",
+    "electionPageUrl": "https://www.dcboe.org/elections/2026-elections",
     "title": "District of Columbia chief election office discovery root",
     "office": {
       "name": "Board of Elections, Washington, DC",
@@ -458,7 +461,16 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.dcboe.org/\">https://www.dcboe.org/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+      "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.dcboe.org/ballot-measures/current-measures",
+      "https://www.dcboe.org/getContentAsset/bf78fba0-50f2-40c4-ad32-0f78255d725a/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward1C.pdf?language=en",
+      "https://www.dcboe.org/getmedia/05df694b-6e6a-44af-93d5-d7266bd6cd4c/Notice-of-Meeting-on-Bird-I86-formulations.pdf"
+    ]
   },
   {
     "id": "fec-fl-chief",

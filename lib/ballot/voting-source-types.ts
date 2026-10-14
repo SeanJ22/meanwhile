@@ -2,7 +2,7 @@ import type { SiteKind, VotingOfficeContact, VotingRule, VotingSite, VotingSourc
 
 export type VotingDoorShape = "file" | "list-page" | "address-lookup" | "identity-locked-lookup" | "county-directory" | "vendor-platform" | "map-service" | "json";
 export type VotingPlatform = "voterfocus" | "voterview" | "where-to-vote" | "civix" | "power-bi";
-export type VotingDoorCoverage = SiteKind | "CANDIDATE_LIST" | "BALLOT_MEASURES";
+type VotingDoorCoverage = SiteKind | "CANDIDATE_LIST" | "BALLOT_MEASURES";
 export const isVotingSiteKind = (kind: VotingDoorCoverage): kind is SiteKind => kind !== "CANDIDATE_LIST" && kind !== "BALLOT_MEASURES";
 export type VotingColumn = "id" | "name" | "address" | "room" | "kind" | "days" | "hours" | "precinct" | "town" | "countyName" | "countyFips" | "countySubdivisionGeoid" | "ward" | "districtOcdIds" | "tribalNation" | "reservation" | "aiannhGeoid" | "locationNotes" | "accessibilityNotes" | "rules" | "phone" | "email" | "officeName" | "officeAddress" | "lastUpdated" | "election" | "lat" | "lng";
 export interface VotingDoorScope {

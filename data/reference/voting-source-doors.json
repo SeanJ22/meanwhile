@@ -1100,7 +1100,10 @@
     "publisher": "Office of the Secretary of State, Santa Fe, NM",
     "url": "https://www.sos.state.nm.us/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NM",
       "ocdId": "ocd-division/country:us/state:nm",
@@ -1123,7 +1126,15 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.nm.us/\">https://www.sos.state.nm.us/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+      "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+      "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf"
+    ]
   },
   {
     "id": "fec-ny-chief",

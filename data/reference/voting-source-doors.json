@@ -634,14 +634,17 @@
     "publisher": "Office of the Secretary of State, Frankfort, KY",
     "url": "https://www.sos.ky.gov/Pages/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "KY",
       "ocdId": "ocd-division/country:us/state:ky",
       "name": "Kentucky"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.ky.gov/Pages/default.aspx",
+    "electionPageUrl": "https://web.sos.ky.gov/CandidateFilings/",
     "title": "Kentucky chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Frankfort, KY",
@@ -649,15 +652,22 @@
       "url": "https://www.sos.ky.gov/Pages/default.aspx"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "detail": "The official root and public 2026 General Election List All Candidates form were acquired with HTTP 200; no voter identity lookup is needed. The amendment question and full enacted text were acquired from public official pages.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ky.gov/Pages/default.aspx\">https://www.sos.ky.gov/Pages/default.aspx</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://web.sos.ky.gov/CandidateFilings/"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+      "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf"
+    ]
   },
   {
     "id": "fec-ky-board",

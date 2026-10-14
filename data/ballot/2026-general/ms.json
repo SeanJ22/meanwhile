@@ -1,0 +1,634 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "MS:ms-2026-11-03": {
+      "election": {
+        "id": "ms-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Mississippi General and Special Election",
+        "state": "MS"
+      },
+      "contests": [
+        {
+          "id": "ms-2026-general-us-senate",
+          "electionId": "ms-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ms",
+          "divisionVintage": "2026",
+          "title": "For United States Senate",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "For United States Senate; Vote for ONE"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-1",
+          "electionId": "ms-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ms/cd:1",
+          "divisionVintage": "2026",
+          "title": "For US House of Representatives, 1st Congressional District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "For US House of Representatives, 1st Congressional District; Vote for ONE"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-2",
+          "electionId": "ms-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ms/cd:2",
+          "divisionVintage": "2026",
+          "title": "For US House of Representatives, 2nd Congressional District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "For US House of Representatives, 2nd Congressional District; Vote for ONE"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-3",
+          "electionId": "ms-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ms/cd:3",
+          "divisionVintage": "2026",
+          "title": "For US House of Representatives, 3rd Congressional District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "For US House of Representatives, 3rd Congressional District; Vote for ONE"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-4",
+          "electionId": "ms-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ms/cd:4",
+          "divisionVintage": "2026",
+          "title": "For US House of Representatives, 4th Congressional District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "For US House of Representatives, 4th Congressional District; Vote for ONE"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-70",
+          "electionId": "ms-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ms/sldl:70",
+          "divisionVintage": "2026",
+          "title": "For State House Of Rep 70, District 70",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Special election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "For State House Of Rep 70, District 70; Vote for ONE"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-77",
+          "electionId": "ms-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ms/sldl:77",
+          "divisionVintage": "2026",
+          "title": "For State House Of Rep 77, District 77",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Special election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "For State House Of Rep 77, District 77; Vote for ONE"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ms-2026-general-us-senate-candidate-1",
+          "contestId": "ms-2026-general-us-senate",
+          "familyName": "Scott Colom",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Scott Colom Democrat"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-senate-candidate-2",
+          "contestId": "ms-2026-general-us-senate",
+          "familyName": "Cindy Hyde-Smith",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Cindy Hyde-Smith Republican"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-senate-candidate-3",
+          "contestId": "ms-2026-general-us-senate",
+          "familyName": "Ty Pinkins",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Ty Pinkins Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-1-candidate-1",
+          "contestId": "ms-2026-general-us-house-1",
+          "familyName": "Johnny Baucom",
+          "givenName": "",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Johnny Baucom Libertarian"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-1-candidate-2",
+          "contestId": "ms-2026-general-us-house-1",
+          "familyName": "Cliff Johnson",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Cliff Johnson Democrat"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-1-candidate-3",
+          "contestId": "ms-2026-general-us-house-1",
+          "familyName": "Trent Kelly",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Trent Kelly Republican"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-2-candidate-1",
+          "contestId": "ms-2026-general-us-house-2",
+          "familyName": "Ron Eller",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Ron Eller Republican"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-2-candidate-2",
+          "contestId": "ms-2026-general-us-house-2",
+          "familyName": "Bennie G. Thompson",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Bennie G. Thompson Democrat"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-2-candidate-3",
+          "contestId": "ms-2026-general-us-house-2",
+          "familyName": "Bennie Foster",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Bennie Foster Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-3-candidate-1",
+          "contestId": "ms-2026-general-us-house-3",
+          "familyName": "Michael A. Chiaradio",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Michael A. Chiaradio Democrat"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-3-candidate-2",
+          "contestId": "ms-2026-general-us-house-3",
+          "familyName": "Michael Guest",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Michael Guest Republican"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-3-candidate-3",
+          "contestId": "ms-2026-general-us-house-3",
+          "familyName": "Erik Kiehle",
+          "givenName": "",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Erik Kiehle Libertarian"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-4-candidate-1",
+          "contestId": "ms-2026-general-us-house-4",
+          "familyName": "Mike Ezell",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Mike Ezell Republican"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-4-candidate-2",
+          "contestId": "ms-2026-general-us-house-4",
+          "familyName": "Jeffrey Hulum III",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Jeffrey Hulum III Democrat"
+          }
+        },
+        {
+          "id": "ms-2026-general-us-house-4-candidate-3",
+          "contestId": "ms-2026-general-us-house-4",
+          "familyName": "Carl Boyanton",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Carl Boyanton Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-70-candidate-1",
+          "contestId": "ms-2026-general-state-house-70",
+          "familyName": "Imelda A. Brown",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Imelda A. Brown Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-70-candidate-2",
+          "contestId": "ms-2026-general-state-house-70",
+          "familyName": "Marcus A. Cheatham",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Marcus A. Cheatham Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-70-candidate-3",
+          "contestId": "ms-2026-general-state-house-70",
+          "familyName": "James Lott III",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "James Lott III Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-77-candidate-1",
+          "contestId": "ms-2026-general-state-house-77",
+          "familyName": "Christopher 'Chris' Dunn",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Christopher 'Chris' Dunn Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-77-candidate-2",
+          "contestId": "ms-2026-general-state-house-77",
+          "familyName": "Dianne McNair Gaddis",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Dianne McNair Gaddis Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-77-candidate-3",
+          "contestId": "ms-2026-general-state-house-77",
+          "familyName": "Melissa C. Sullivan",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Melissa C. Sullivan Independent"
+          }
+        },
+        {
+          "id": "ms-2026-general-state-house-77-candidate-4",
+          "contestId": "ms-2026-general-state-house-77",
+          "familyName": "Craig T. Williams",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceOrg": "Mississippi Secretary of State",
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "collectedAt": "2026-10-14T05:09:21.150Z",
+            "verifiedAt": "2026-10-14T05:09:21.150Z",
+            "doorId": "fec-ms-chief",
+            "quote": "Craig T. Williams Independent"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "coverageNotes": [
+        "The statewide November 3, 2026 SAMPLE Official Election Ballot supplies all listed candidates for U.S. Senate, all four U.S. House districts, and State House special elections in districts 70 and 77. Names and party labels follow the ballot. Incumbency and candidate websites are not stated.",
+        "State Senate District 34 remains unverified for November 3: the Candidate Qualifying List has a State Senate 34 card with six names but supplies no election date, and that contest does not appear on the dated November sample ballot.",
+        "A certified November 3, 2026 statewide measure list was not found in the captured official sources. The dated statewide sample ballot has no measure question. The initiatives page labels its entries Proposed Ballot Title and requires certified petition signatures before placement on a statewide general-election ballot; those proposals are not treated as certified November measures.",
+        "The qualifying-list page states that its entries reflect submitted papers and that the State Board of Election Commissioners determines qualifications before general-election ballot placement. Candidate completeness here is supported by the dated statewide official sample ballot."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T05:09:22.746Z",
+    "reviewedBy": "Codex BL-13",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+        "finalUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+        "httpStatus": 200,
+        "rawHash": "36752cfc3c7b44da74a42e9d49571221f4f8d48381259ab2f6b7ebed723bd67f",
+        "retrievedAt": "2026-10-14T05:09:21.150Z",
+        "publisher": "Mississippi Secretary of State",
+        "reviewedEvidence": "Statewide SAMPLE Official Election Ballot for Tuesday, November 3, 2026; page 1 supplies all candidates for U.S. Senate, all four U.S. House districts, and State House special elections in districts 70 and 77. This statewide sample covers each listed contest’s whole territory.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos.ms.gov/content/CandidateQualifying/default.aspx",
+        "finalUrl": "https://www.sos.ms.gov/content/CandidateQualifying/default.aspx",
+        "httpStatus": 200,
+        "rawHash": "71e15b85fbee0828e089659943fa259c4a22ca0ae851b281486d77b7327c6c02",
+        "retrievedAt": "2026-10-14T05:09:21.774Z",
+        "publisher": "Mississippi Secretary of State",
+        "reviewedEvidence": "Public Candidate Qualifying List identifies November 3, 2026 for federal contests and State House districts 70 and 77; the State Senate 34 card supplies no election date.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.ms.gov/elections-voting/candidate-qualifying-list",
+        "finalUrl": "https://www.sos.ms.gov/elections-voting/candidate-qualifying-list",
+        "httpStatus": 200,
+        "rawHash": "0a607b3771c8553df55833e1f75e58bc5c45ae859a664fd1b81fc29454c8bf59",
+        "retrievedAt": "2026-10-14T05:09:21.529Z",
+        "publisher": "Mississippi Secretary of State",
+        "reviewedEvidence": "The Secretary of State states that qualifying papers alone do not establish general-election qualification: the State Board of Election Commissioners determines qualifications before ballot placement.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.ms.gov/elections-voting/initiatives",
+        "finalUrl": "https://www.sos.ms.gov/elections-voting/initiatives",
+        "httpStatus": 200,
+        "rawHash": "4027fb834af5bc83d2f2fe9535522207a470d712bd4cb0b7ce2cc47940922e24",
+        "retrievedAt": "2026-10-14T05:09:22.243Z",
+        "publisher": "Mississippi Secretary of State",
+        "reviewedEvidence": "The initiatives page lists proposed measures and petition requirements; it does not identify a certified November 3, 2026 statewide measure list.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.ms.gov/content/documents/elections/2026%20Elections%20Calendar.pdf",
+        "finalUrl": "https://www.sos.ms.gov/content/documents/elections/2026%20Elections%20Calendar.pdf",
+        "httpStatus": 200,
+        "rawHash": "f8a705a969025d4a248146f6ccbdd0e9f628ee16b1819afbc20ce218ddecf8e9",
+        "retrievedAt": "2026-10-14T05:09:22.746Z",
+        "publisher": "Mississippi Secretary of State",
+        "reviewedEvidence": "2026 Elections Calendar, last revised September 8, 2026: General Election Sample Ballot Deadline requires MSOS to publish a sample of the official November General Election Ballot in SEMS under section 23-15-367(3).",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://governorreeves.ms.gov/governor-tate-reeves-sets-two-special-elections/",
+        "finalUrl": "https://governorreeves.ms.gov/governor-tate-reeves-sets-two-special-elections/",
+        "httpStatus": 200,
+        "rawHash": "6e3ef1a2071bb68f4df83c4cc57ea572925ec73252b0059414d412e3765bf516",
+        "retrievedAt": "2026-10-14T05:07:13.256Z",
+        "publisher": "Office of Governor Tate Reeves",
+        "reviewedEvidence": "Governor’s June 24, 2026 announcement sets State House districts 70 and 77 special elections for November 3, 2026.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

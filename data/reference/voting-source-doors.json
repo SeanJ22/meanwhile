@@ -1063,7 +1063,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Jackson, MS",
     "url": "https://www.sos.ms.gov/index.php/elections-voting",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MS",
       "ocdId": "ocd-division/country:us/state:ms",
@@ -1079,14 +1082,26 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official statewide November 3, 2026 sample ballot and public candidate qualifying list read successfully. Senate District 34 lacks an election date on the qualifying list; a certified November statewide measure list remains unverified."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ms.gov/index.php/elections-voting\">https://www.sos.ms.gov/index.php/elections-voting</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+    "candidateListUrls": [
+      "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+      "https://www.sos.ms.gov/content/CandidateQualifying/default.aspx",
+      "https://www.sos.ms.gov/elections-voting/candidate-qualifying-list"
+    ],
+    "ballotMeasuresUrl": "https://www.sos.ms.gov/elections-voting/initiatives",
+    "ballotMeasuresUrls": [
+      "https://www.sos.ms.gov/elections-voting/initiatives",
+      "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mo-chief",

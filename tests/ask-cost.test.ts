@@ -93,7 +93,7 @@ test("historical Ask failures use the known provider context/output maxima at th
   assert.equal(costEntryModelRequestBound({ ...row, model: "unknown-served", cost: { ...row.cost, inputTokens: 1, outputTokens: 1 } }), .000028);
 });
 
-test("stored bounds cannot price multiple sends or malformed/foreign request metadata", () => {
+test("a stored bound prices only its one unpriced send and never malformed/foreign request metadata", () => {
   const bound = modelRequestBoundFor(MODELS.haiku.model, 100, 1024)!;
   const row: CostEntry = { requestedModel: MODELS.haiku.model, modelRequestBound: bound,
     attemptId: "future", workItemId: "ask", routeTaskId: null, routeId: "ask:interpret", source: "api.anthropic.com",
@@ -102,7 +102,7 @@ test("stored bounds cannot price multiple sends or malformed/foreign request met
   assert.equal(costEntryModelRequestBound({ ...row, modelRequestBound: { ...bound, usd: 0 } }), bound.usd, "recompute from central rates rather than trusting a caller's dollar scalar");
   assert.equal(costEntryModelRequestBound({ ...row, requestedModel: MODELS.opus.model }), null);
   assert.equal(costEntryModelRequestBound({ ...row, requestedModel: undefined }), null);
-  assert.equal(costEntryModelRequestBound({ ...row, cost: { ...row.cost, requestCount: 2 } }), null);
+  assert.equal(costEntryModelRequestBound({ ...row, cost: { ...row.cost, requestCount: 2 } }), bound.usd, "the bound covers its own send; the others are measured");
   for (const bad of [-1, NaN, Infinity, 1.5]) {
     assert.equal(costEntryModelRequestBound({ ...row, modelRequestBound: { ...bound, inputTokens: bad } }), null);
     assert.equal(modelRequestBoundFor(MODELS.haiku.model, 100, bad), null);

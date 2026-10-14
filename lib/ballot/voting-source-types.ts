@@ -2,6 +2,8 @@ import type { SiteKind, VotingOfficeContact, VotingRule, VotingSite, VotingSourc
 
 export type VotingDoorShape = "file" | "list-page" | "address-lookup" | "identity-locked-lookup" | "county-directory" | "vendor-platform" | "map-service" | "json";
 export type VotingPlatform = "voterfocus" | "voterview" | "where-to-vote" | "civix" | "power-bi";
+type VotingDoorCoverage = SiteKind | "CANDIDATE_LIST" | "BALLOT_MEASURES";
+export const isVotingSiteKind = (kind: VotingDoorCoverage): kind is SiteKind => kind !== "CANDIDATE_LIST" && kind !== "BALLOT_MEASURES";
 export type VotingColumn = "id" | "name" | "address" | "room" | "kind" | "days" | "hours" | "precinct" | "town" | "countyName" | "countyFips" | "countySubdivisionGeoid" | "ward" | "districtOcdIds" | "tribalNation" | "reservation" | "aiannhGeoid" | "locationNotes" | "accessibilityNotes" | "rules" | "phone" | "email" | "officeName" | "officeAddress" | "lastUpdated" | "election" | "lat" | "lng";
 export interface VotingDoorScope {
   state: string;
@@ -49,7 +51,7 @@ export interface VotingSourceDoor {
   publisher: string;
   url: string;
   shape: VotingDoorShape;
-  covers: SiteKind[];
+  covers: VotingDoorCoverage[];
   scope: VotingDoorScope;
   electionDate: string;
   electionPageUrl: string;
@@ -84,7 +86,7 @@ export interface VotingSourceBlank {
   reason: "access" | "unpublished" | "extraction" | "earlier-election" | "missing-sites" | "geocode";
 }
 export interface VotingSourceAttempt { url: string; route: "direct" | "browser-ua"; outcome: string; }
-export interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
+interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
 export interface VotingSourceRead {
   doorId: string;
   contacts?: VotingSourceContact[];
@@ -101,9 +103,12 @@ export interface VotingSourceRead {
 }
 export interface VotingAddressInput { address: string; streetNumber?: string; street?: string; city?: string; state?: string; zip?: string; }
 export interface VotingSourceRuntime {
+  captureCache?: Map<string, Promise<import("./voting-source-fetch.ts").VotingCapture[]>>;
+  discoverySeen?: Set<string>;
   fetch: typeof fetch;
   deadlineMs?: number;
   onDiscoveredDoor?: (door: VotingSourceDoor, captures: { url: string; contentType: string; bytes: Uint8Array }[]) => Promise<void>;
+  onDiscoveredSource?: (source: import("./voting-source-discovery.ts").ClassifiedVotingSource) => Promise<void>;
   resolveAiannhGeoid?: (tribalNation: string, reservation: string, state: string) => string | null;
   resolveCountyFips?: (countyName: string, state: string) => string | null;
   resolveScope?: (label: string, url: string, parent: VotingDoorScope) => VotingDoorScope | null;

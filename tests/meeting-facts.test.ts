@@ -16,12 +16,6 @@ import {
 } from "../lib/control-plane/promotion/meeting-facts.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
-/**
- * Held Legistar bytes run through the parser and then the fact bridge, which hands them to the canonical Legistar
- * adapter and cross-checks every scalar against the extraction. A CivicClerk tenant with no wiring row yields no
- * fact and a named refusal.
- */
-
 const TEXT = PIMA_EVENTS_TEXT;
 const artifact = pimaArtifact;
 const HASH = contentHash(TEXT);
@@ -178,7 +172,7 @@ test("PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on t
   const wiring: BodySourceWiring = {
     bodyId: "ocd-division/country:us/state:az/place:avondale#governing", ocdId: "ocd-division/country:us/state:az/place:avondale",
     agendaSourceType: "CIVICCLERK", jurisdiction: "Avondale, AZ", publishingOrg: "City of Avondale", timeZone: "America/Phoenix",
-    config: { slug: "avondaleaz", apiBase: "https://avondaleaz.api.civicclerk.com", portalBase: "https://avondaleaz.portal.civicclerk.com" },
+    config: { slug: "avondaleaz", categoryId: "4", apiBase: "https://avondaleaz.api.civicclerk.com", portalBase: "https://avondaleaz.portal.civicclerk.com" },
     verifiedAt: "2026-09-06",
   };
   const parser = parserRecord(AVONDALE_TEXT, AVONDALE_CONTRACT, AVONDALE_ARTIFACT);

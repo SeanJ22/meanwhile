@@ -8,7 +8,6 @@ import { STATEWIDE_SOURCE_ID, STATEWIDE_PARSER_VERSION, STATEWIDE_REFERENCE_SOUR
 import { parseStatewideAssociation, parseWikidataStatewide, statewideOfficeTitle, statewidePageLinks, statewideRoster, verifyStatewideOfficialPage, type StatewideLead, type StatewideGap } from "./parse.ts";
 import { acquireWikidataPortraitLicense, discoverWikidataIdentifierProperties, WIKIDATA_IDENTIFIER_PROPERTIES } from "../people/wikidata.ts";
 export { STATEWIDE_SOURCE_ID, STATEWIDE_PARSER_VERSION } from "./reference.ts";
-export type { StatewideLead } from "./parse.ts";
 
 const DAY=86_400_000;
 type SharedOptions=Pick<KnownReleaseOptions,"store"|"locks"|"fetchImpl"|"now">&{
@@ -16,13 +15,13 @@ type SharedOptions=Pick<KnownReleaseOptions,"store"|"locks"|"fetchImpl"|"now">&{
   /** Controlled tests/replays use the same saved-byte acquisition API. */
   readonly acquire?:typeof acquireKnownRelease;
 };
-export interface NationalStatewideLeads {
+interface NationalStatewideLeads {
   readonly leads:readonly StatewideLead[];
   readonly acquisitions:readonly StatePeopleAcquisition[];
   readonly gaps:readonly StatewideGap[];
   readonly coverage:readonly {sourceId:string;leads:number}[];
 }
-export interface StatewidePeopleRelease {
+interface StatewidePeopleRelease {
   readonly state:string;
   readonly releaseId:string;
   readonly roster:OfficeholderSet;

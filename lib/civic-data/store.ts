@@ -1298,6 +1298,15 @@ const LATEST_CONFIRMATION_DETAIL = sql<string | null>`(
   limit 1
 )`;
 
+/* Names the latest confirmation without carrying its text, so a held identity is re-read only when it moved. */
+const LATEST_CONFIRMATION_SEQUENCE = sql<number | null>`(
+  select confirmation.sequence from civic_data_candidate_events as confirmation
+  where confirmation.candidate_id = "civic_data_promotions"."current_version_id"
+    and left(confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+  order by confirmation.sequence desc
+  limit 1
+)`;
+
 const PROMOTED_POINTER_READ_COLUMNS = {
   ...PROMOTED_POINTER_IDENTITY_COLUMNS,
   latestConfirmation: LATEST_CONFIRMATION_DETAIL,
@@ -1596,7 +1605,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
-    const stored = ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL"].includes(record.candidate.recordClass)
+    const stored = ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(record.candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"]) as RoutineCandidate
       : record.candidate;
@@ -1713,8 +1722,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
     // (record_class, scope) is unique, so this names at most one pointer.
-    const [row] = await promotedPointerIdentityRead(this.db, recordClass, [scope]).limit(1);
-    return row ? postgresPromotedPointerIdentity(row) : null;
+    const [identity] = await this.readPromotionIdentities(recordClass, [scope]);
+    return identity ?? null;
   }
 
   async readPromotionIdentities(
@@ -1722,7 +1731,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     scopes: readonly string[],
   ): Promise<readonly PromotedPointerIdentity[]> {
     if (scopes.length === 0) return [];
-    const rows = await promotedPointerIdentityRead(this.db, recordClass, scopes);
+    const values = async (keys: readonly string[]) => promotedPointerIdentityRead(this.db, recordClass, keys.map(key => key.slice(recordClass.length + 1)));
+    const keys = scopes.map(scope => projectionKey(recordClass, scope));
+    const rows = this.readCache ? await this.readCache.rows({ namespace: "promotion-identity", keys, values, keyOf: row => row.key,
+      versions: async selected => this.db.select({ key: civicDataPromotions.key,
+        etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text, '/', coalesce(${LATEST_CONFIRMATION_SEQUENCE}, 0))`,
+      }).from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.key, [...selected]))),
+    }) : await values(keys);
     return rows.map(postgresPromotedPointerIdentity);
   }
 
@@ -2064,7 +2079,22 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map(postgresCandidateEventRowToEvent);
   }
 
+  /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
+    const key = [sourceId, recordClass, scope, parserVersion ?? ""].join("\u0000");
+    if (!this.readCache) return this.readClock(sourceId, recordClass, scope, parserVersion);
+    const [held] = await this.readCache.rows({ namespace: "routine-clock", keys: [key], keyOf: row => row.key,
+      values: async () => [{ key, clock: await this.readClock(sourceId, recordClass, scope, parserVersion) }],
+      versions: async () => (await this.db.execute(sql`select concat(
+          (select concat(count(*), '/', max(e.at)::text, '/', max(c.xmin::text::bigint)) from ${civicDataCandidates} c
+            join ${civicDataCandidateEvents} e on e.candidate_id = c.id where c.record_class = ${recordClass} and c.scope = ${scope}),
+          '/', (select concat(p.xmin::text, '/', p.ctid::text) from ${civicDataPromotions} p where p.record_class = ${recordClass} and p.scope = ${scope})
+        ) as etag`)).rows.map(row => ({ key, etag: String((row as { etag: unknown }).etag) })),
+    });
+    return held!.clock;
+  }
+
+  private async readClock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     // Successful retained-byte replay records processing, but no newer provider attempt.
     // These fields occur only on validated promotions; failures keep their local retry clock.
     const attemptAt = sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED'

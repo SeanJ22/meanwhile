@@ -260,7 +260,7 @@ test("a link plain code is turned away from goes to paid work only inside a plac
 
 /** A round's guarded fetch, as the runner builds it: the controller paces every reader through the shared store. */
 function roundSafety(pacing: WebsitePacing, clock: () => number, small: (host: string) => boolean): FleetSafetyController {
-  return new FleetSafetyController({ now: new Date(clock()).toISOString(), costs: [], clock, websitePacing: pacing,
+  return new FleetSafetyController({ now: new Date(clock()).toISOString(), charges: [], clock, websitePacing: pacing,
     websiteSize: (url) => (small(new URL(url).hostname) ? { kind: "local-government", population: 4_000 } : { kind: "federal" }) });
 }
 /** A website answering from a table of pages, robots.txt allowing everything, and counting what it was asked. */

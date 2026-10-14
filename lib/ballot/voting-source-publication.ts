@@ -1,30 +1,42 @@
 import { createHash } from "node:crypto";
 import { recordDoorOutcome } from "../doors/outcome.ts";
+import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
 import { listDoors, upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
 import type { VotingJurisdiction, VotingSitesFile, VotingSource } from "./voting-sites.ts";
-import type { VotingSourceDoor, VotingSourceRead } from "./voting-source-types.ts";
+import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
 
 export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
 
-/** Doors stay editable in the standing registry. Reference rows seed missing doors only. */
-export async function seedVotingSourceDoors(repo: DoorRepository, seeds: readonly VotingSourceDoor[], now: string): Promise<void> {
-  for (const door of seeds) if (!await repo.read(door.id)) await saveVotingSourceDoor(repo, door, now);
-}
-
 export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSourceDoor, now: string): Promise<void> {
+  const address = pageAddress(door.url);
+  if (!address) throw new Error("Voting source has no public URL");
+  const matches = (await repo.listWhere(["kind"], VOTING_SOURCE_DOOR_KIND)).filter(row => row.value.kind === VOTING_SOURCE_DOOR_KIND &&
+    pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
+  const heldPages = await repo.listWhere(["config", "url"], address.url);
+  const prior = matches.find(row => row.value.status !== "SUSPENDED") ?? matches[0] ?? heldPages.find(row => row.value.status !== "SUSPENDED");
+  const mappings = [...new Map([...matches.flatMap(row => [JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor,
+    ...JSON.parse(String(row.value.config.votingMappings ?? "[]")) as VotingSourceDoor[]]), door].map(source => [source.id, source])).values()];
+  const primary = mappings[0]!;
+  const holds = mappings.flatMap(source => source.covers.map(kind => isVotingSiteKind(kind) ? "voting-sites" :
+    kind === "CANDIDATE_LIST" ? "ballot-contests" : "ballot-measures"));
   await upsertDerivedDoor(repo, {
-    doorId: door.id, kind: VOTING_SOURCE_DOOR_KIND, ocdId: door.scope.ocdId,
-    hosts: [...new Set([new URL(door.url).hostname, ...(door.extraction?.dataUrl ? [new URL(door.extraction.dataUrl, door.url).hostname] : [])])],
-    config: { votingSource: JSON.stringify(door) }, holds: ["voting-sites"],
-    checkEveryMinutes: null, notes: `${door.publisher}: ${door.shape}; ${door.electionDate}`,
+    doorId: prior?.id ?? pageDoorId(address), kind: VOTING_SOURCE_DOOR_KIND, ocdId: primary.scope.ocdId,
+    hosts: [...new Set([address.host, ...mappings.flatMap(source => source.extraction?.dataUrl ? [new URL(source.extraction.dataUrl, source.url).hostname] : [])])],
+    config: { ...prior?.value.config, url: address.url, votingSource: JSON.stringify(primary), votingMappings: JSON.stringify(mappings.slice(1)) }, holds: [...new Set([...(prior?.value.holds ?? []), ...holds])],
+    checkEveryMinutes: checkEveryFor("VOTING_SITE"), notes: `${primary.publisher}: ${primary.shape}; ${primary.electionDate}`,
   }, now, now);
+  for (const duplicate of matches.filter(row => row.id !== prior?.id && row.value.status !== "SUSPENDED")) {
+    await repo.compareAndSet(duplicate.id, duplicate.revision, { ...duplicate.value, status: "SUSPENDED", readNow: false,
+      notes: `Publishing source is read through ${prior!.id}`, updatedAt: now }, now);
+  }
 }
 
 export async function registeredVotingSourceDoors(repo: DoorRepository): Promise<VotingSourceDoor[]> {
-  return (await listDoors(repo)).doors.filter(row => row.kind === VOTING_SOURCE_DOOR_KIND && row.status !== "SUSPENDED").map(row => {
-    const door = JSON.parse(String(row.config.votingSource)) as VotingSourceDoor;
-    if (door.id !== row.doorId || !door.scope?.ocdId || !door.url || !door.publisher) throw new Error(`Unreadable voting source door ${row.doorId}`);
-    return door;
+  return (await listDoors(repo)).doors.filter(row => row.kind === VOTING_SOURCE_DOOR_KIND && row.status !== "SUSPENDED").flatMap(row => {
+    const sources = [JSON.parse(String(row.config.votingSource)) as VotingSourceDoor,
+      ...JSON.parse(String(row.config.votingMappings ?? "[]")) as VotingSourceDoor[]];
+    for (const source of sources) if (!source.scope?.ocdId || !source.url || !source.publisher) throw new Error(`Unreadable voting source door ${row.doorId}`);
+    return sources;
   });
 }
 
@@ -75,11 +87,15 @@ export function votingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">): st
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {
   const hash = createHash("sha256").update(read.rawBodies.map(body => createHash("sha256").update(body.bytes).digest("hex")).join("\n")).digest("hex");
-  const old = await repo.read(door.id);
-  await recordDoorOutcome(repo, door.id, read.blanks.some(blank => blank.reason === "access") ? "FAILURE" : "SUCCESS", now,
+  const address = pageAddress(door.url)!;
+  const old = (await repo.listWhere(["kind"], VOTING_SOURCE_DOOR_KIND)).find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&
+    pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
+  if (!old) return;
+  const doorId = old.id;
+  await recordDoorOutcome(repo, doorId, read.blanks.some(blank => blank.reason === "access") ? "FAILURE" : "SUCCESS", now,
     Boolean(old?.value.validators?.contentHash && old.value.validators.contentHash !== hash));
-  const current = await repo.read(door.id);
-  if (current && read.rawBodies.length) await repo.compareAndSet(door.id, current.revision, { ...current.value,
+  const current = await repo.read(doorId);
+  if (current && read.rawBodies.length) await repo.compareAndSet(doorId, current.revision, { ...current.value,
     validators: { etag: null, lastModified: read.fileUpdatedAt ?? null, contentHash: hash, checkedAt: now,
       changedAt: old?.value.validators?.contentHash === hash ? old.value.validators.changedAt : now } }, now);
 }

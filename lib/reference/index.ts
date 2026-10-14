@@ -40,7 +40,7 @@ export const REFERENCE_JSON_DATASETS = [
   "voting-root-discovery",
   "voting-source-doors",
 ] as const;
-export type ReferenceJsonDataset = (typeof REFERENCE_JSON_DATASETS)[number];
+type ReferenceJsonDataset = (typeof REFERENCE_JSON_DATASETS)[number];
 
 /**
  * The Census of Governments does not enumerate the territories, so their registration reads
@@ -76,13 +76,8 @@ export function notePath(dataset: ReferenceDataset | ReferenceJsonDataset): stri
   return join(REFERENCE_DIR, `${dataset}.md`);
 }
 
-export function jsonDataPath(dataset: ReferenceJsonDataset): string {
+function jsonDataPath(dataset: ReferenceJsonDataset): string {
   return join(REFERENCE_DIR, `${dataset}.json`);
-}
-
-/** Read on demand, so imported acquisition modules do not turn references into build-time data. */
-export function readJsonReference<T = unknown>(dataset: ReferenceJsonDataset): T {
-  return JSON.parse(readFileSync(jsonDataPath(dataset), "utf8")) as T;
 }
 
 /** Everything actually in the directory, for the inventory gate. */

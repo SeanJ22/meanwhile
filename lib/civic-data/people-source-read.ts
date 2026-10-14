@@ -2,10 +2,8 @@ import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { isPeopleSource, peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 
-/**
- * The read side of the people sources, kept apart from publication on purpose: readers import this, and publication
- * pulls in the statewide and legislature crawlers, whose file reads must never enter a reader route's bundle.
- */
+/** The read side of the people sources, apart from publication so the crawlers'
+ * file reads never enter a reader route's bundle. */
 export interface PeopleSourceReadModel extends Omit<OfficialStateLegislatorReadModel,"jurisdiction"> {
   readonly jurisdiction: "US" | `US-${string}`;
 }

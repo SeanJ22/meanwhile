@@ -1,6 +1,7 @@
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
+import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
@@ -86,7 +87,6 @@ export function pageLinks(html: string, pageUrl: string): readonly string[] {
     } catch {
       continue;
     }
-    if (out.size >= 2000) break;
   }
   return [...out];
 }
@@ -100,7 +100,7 @@ function isIcalLink(url: URL): boolean {
 
 const OWN_SITE_MEETINGS = /agenda|minutes|meetings?\b|public-?notices?|boards?-?and-?commissions/i;
 
-export function meetingEndpointCandidates(html: string, pageUrl: string, now?: string): readonly EndpointCandidate[] {
+export function meetingEndpointCandidates(html: string, pageUrl: string, now?: string, entries?: readonly FieldManualEntry[]): readonly EndpointCandidate[] {
   const page = new URL(pageUrl);
   const origin = `${page.protocol}//${page.host}`;
   const found = new Map<string, EndpointCandidate>();
@@ -175,7 +175,7 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
   }
 
   /* SERVED_BY: CivicPlus hosts under the government's own name; its AgendaCenter route is CivicPlus-wide. */
-  if (detectTenancy(html, pageUrl).some((hit) => hit.platform === "civicplus" && hit.strength === "SERVED_BY")) {
+  if (detectTenancy(html, pageUrl, entries).some((hit) => hit.platform === "civicplus" && hit.strength === "SERVED_BY")) {
     add({ vendor: "civicplus-agendacenter", url: `${origin}/AgendaCenter`, basis: "SERVED_BY", evidence: "CivicPlus markup on the government's own domain", verifiable: true });
   }
 
@@ -186,7 +186,7 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
   }
 
   const all = [...found.values()];
-  const leadsOwnSite = all.filter((c) => c.vendor === "own-site-meetings-page").slice(0, 5);
+  const leadsOwnSite = all.filter((c) => c.vendor === "own-site-meetings-page");
   return [
     ...all.filter((c) => c.verifiable),
     ...all.filter((c) => !c.verifiable && c.vendor !== "own-site-meetings-page"),

@@ -2,12 +2,15 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
-import { mergeVotingSourceRead, replaceVotingJurisdiction, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { checkEveryFor } from "../lib/doors/page-doors.ts";
+import { listDoors } from "../lib/doors/registry.ts";
 
 const at = "2026-10-13T00:00:00.000Z";
 const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
@@ -54,4 +57,27 @@ test("source rows replace themselves while independently published site kinds re
   const next = mergeVotingSourceRead({ ...prior, sites: [...prior.sites, otherSource] }, door, read, at);
   assert.equal(next.sites.length, prior.sites.length + 1);
   assert.deepEqual(next.sites.find(site => site.id === otherSource.id), otherSource);
+});
+
+test("candidate and measure doors retain shared mappings and reread their official source bytes", async () => {
+  const repos = createMemoryRepositories();
+  const candidateDoor: VotingSourceDoor = { ...door, id: "candidate-list", url: "https://elections.example.gov/ballot",
+    electionPageUrl: "https://elections.example.gov/ballot", covers: ["CANDIDATE_LIST"] };
+  const measureDoor: VotingSourceDoor = { ...candidateDoor, id: "measure-list", covers: ["BALLOT_MEASURES"] };
+  await saveVotingSourceDoor(repos.doors, candidateDoor, at);
+  await saveVotingSourceDoor(repos.doors, measureDoor, at);
+  const registered = await registeredVotingSourceDoors(repos.doors);
+  assert.deepEqual(registered.map(row => row.covers), [["CANDIDATE_LIST"], ["BALLOT_MEASURES"]]);
+  const [saved] = (await listDoors(repos.doors)).doors;
+  assert.deepEqual([...saved.holds].sort(), ["ballot-contests", "ballot-measures"]);
+  assert.equal(saved.checkEveryMinutes, checkEveryFor("BALLOT_CONTEST"));
+  const read = await readVotingSource(candidateDoor, { fetch: fetchSource, now: () => at });
+  assert.deepEqual(read.sites, []);
+  assert.deepEqual(read.blanks, []);
+  assert.equal(read.sources[0].url, candidateDoor.url);
+  assert.ok(read.rawBodies.some(body => body.url === candidateDoor.url));
+  await recordVotingSourceRead(repos.doors, candidateDoor, read, at);
+  const [checked] = (await listDoors(repos.doors)).doors;
+  assert.equal(checked.lastSuccessAt, at);
+  assert.equal(checked.validators?.checkedAt, at);
 });

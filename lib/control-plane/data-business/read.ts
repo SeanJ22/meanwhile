@@ -23,6 +23,7 @@ import { parseSlice, sliceEvents, type ZipPlaces } from "./slice.ts";
 import { recipeById, RECIPES, type Recipe } from "./recipes.ts";
 import type { PlaceIndex } from "./places.ts";
 import { confineToBuyer } from "./buyer.ts";
+import { populationKeys, type PopulationDenominator } from "./population.ts";
 
 /** Which rows of the store's totals to load. Families are the store's own: all (no place), by ZIP, by district. */
 export interface TotalsQuery {
@@ -49,6 +50,7 @@ export interface CohortQuery {
 export type Loaded<T> = { readonly kind: "ROWS"; readonly rows: readonly T[]; readonly truncated?: boolean } | { readonly kind: "NOT_INSTALLED"; readonly detail: string };
 
 export interface Sources {
+  readonly populations?: (keys: readonly string[]) => Promise<readonly PopulationDenominator[]>;
   readonly totals: (query: TotalsQuery) => Promise<Loaded<TotalsRow>>;
   readonly cohorts: (query: CohortQuery) => Promise<Loaded<CohortRow>>;
   /** The captured events for the days from..to, the day only, never the time. */
@@ -70,7 +72,7 @@ export type Refusal =
   | "BAD_AUDIENCE" | "UNKNOWN_RECIPE" | "BAD_SLICE" | "SWITCH_OFF" | "OUTSIDE_HELD_SLICE" | "SLICE_UNSUPPORTED" | "TOO_WIDE" | "PLACE_UNKNOWN";
 
 export type ReadResult =
-  | { readonly kind: "READ"; readonly recipe: { readonly id: string; readonly label: string; readonly says: string; readonly shape: ResultBody["shape"] }; readonly slice: Slice; readonly observedAt: string; readonly body: ResultBody }
+  | { readonly kind: "READ"; readonly recipe: { readonly id: string; readonly label: string; readonly says: string; readonly shape: ResultBody["shape"] }; readonly slice: Slice; readonly observedAt: string; readonly body: ResultBody; readonly population?: readonly PopulationDenominator[] }
   | { readonly kind: "REFUSED"; readonly why: Refusal; readonly says: string }
   | { readonly kind: "NOT_INSTALLED"; readonly says: string };
 
@@ -145,7 +147,9 @@ export async function readRecipe(request: { readonly recipe: string; readonly sl
   const loaded = await load(recipe, slice, deps);
   if ("stopped" in loaded) return loaded.stopped;
   const body = leavable(loaded.run(), recipe.shape);
-  return { kind: "READ", recipe: { id: recipe.id, label: recipe.label, says: recipe.says, shape: recipe.shape }, slice, observedAt: (deps.now?.() ?? new Date()).toISOString(), body };
+  const keys = populationKeys(slice, body, recipe.id);
+  const population = deps.sources.populations ? await deps.sources.populations(keys).catch(() => keys.map(place => ({ place, fact: null }))) : undefined;
+  return { kind: "READ", recipe: { id: recipe.id, label: recipe.label, says: recipe.says, shape: recipe.shape }, slice, observedAt: (deps.now?.() ?? new Date()).toISOString(), body, ...(population ? { population } : {}) };
 }
 
 type Prepared = { readonly run: () => ResultBody } | { readonly stopped: ReadResult };

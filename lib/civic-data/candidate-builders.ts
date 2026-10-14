@@ -4,6 +4,9 @@ import { createHash } from "node:crypto";
 import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
+import type { AcsNationalLoad, AcsLoadCounts } from "../sources/census-acs-population/national.ts";
+import { acsPayloadHash } from "../sources/census-acs-population/hash.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { AcsFetch, AcsPopulationRow } from "../sources/census-acs-population/index.ts";
 import { BASE as CENSUS_ACS_BASE, VINTAGE_YEAR, normalize as normalizeAcs } from "../sources/census-acs-population/index.ts";
 import type { MembersExtraction } from "../../scripts/nh-gencourt-members.mts";
@@ -120,61 +123,46 @@ export interface PromotedAcsPopulation {
   readonly vintage: number;
   readonly zcta: readonly AcsPopulationRow[];
   readonly state: readonly AcsPopulationRow[];
+  readonly geographies?: readonly AcsPopulationRow[];
+  readonly counts?: readonly AcsLoadCounts[];
 }
 
-export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch): RoutineCandidate {
-  const zcta = normalizeAcs(zctaFetch);
-  const state = normalizeAcs(stateFetch);
-  const readModel: PromotedAcsPopulation = { formatVersion: 1, vintage: VINTAGE_YEAR, zcta, state };
-  const normalizedPayload = { product: "ACSDT5Y2024", table: "B01003", zcta, state };
-  const rawZcta = zctaFetch.rawText ?? JSON.stringify(zctaFetch.rows);
-  const rawState = stateFetch.rawText ?? JSON.stringify(stateFetch.rows);
-  const rawHash = sha256(`${sha256(rawZcta)}\n${sha256(rawState)}`);
-  const retrievedAt = [zctaFetch.fetchedAt, stateFetch.fetchedAt].sort().at(-1)!;
-  const duplicates = (rows: readonly AcsPopulationRow[]) => rows.length - new Set(rows.map((row) => row.code)).size;
+export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch, national?: AcsNationalLoad): RoutineCandidate {
+  const vintage = national?.release.vintage ?? zctaFetch.vintage ?? VINTAGE_YEAR;
+  const product = `ACSDT5Y${vintage}`;
+  const rows = national?.rows ?? [...normalizeAcs(zctaFetch), ...normalizeAcs(stateFetch)];
+  const zcta = national ? rows.filter(row => row.geography === "zcta") : normalizeAcs(zctaFetch);
+  const state = national ? rows.filter(row => row.geography === "state") : normalizeAcs(stateFetch);
+  const readModel: PromotedAcsPopulation = { formatVersion: 1, vintage, zcta, state,
+    ...(national ? { geographies: rows.filter(row => !["zcta", "state"].includes(row.geography!)), counts: national.counts } : {}) };
+  const normalizedPayload = { product, table: "B01003", ...readModel };
+  const captures = national?.captures ?? [zctaFetch, stateFetch];
+  const rawHash = sha256(captures.map(capture => sha256(capture.rawText ?? JSON.stringify(capture.rows))).join("\n"));
+  const retrievedAt = captures.map(capture => capture.fetchedAt).sort().at(-1)!;
   const violations: string[] = [];
-  if (duplicates(zcta) > 0 || duplicates(state) > 0) violations.push("Census geography identifiers are not unique within scope.");
-  if (zcta.some((row) => !/^\d{5}$/.test(row.code))) violations.push("A ZCTA row does not carry a five-digit geography identifier.");
-  if (state.some((row) => !/^\d{2}$/.test(row.code))) violations.push("A state row does not carry a two-digit FIPS identifier.");
-  const count = zcta.length + state.length;
+  const expectedStates = Object.entries(FIPS_TO_STATE).filter(([, value]) => value.prefix === "state" || ["DC", "PR"].includes(value.postal)).map(([fips]) => fips);
+  if (expectedStates.some(fips => !state.some(row => row.code === fips))) violations.push("The ACS state table is missing a state, DC or Puerto Rico.");
+  if (new Set(rows.map(row => `${row.geography ?? (row.code.length === 2 ? "state" : "zcta")}:${row.code}`)).size !== rows.length) violations.push("Census geography identifiers repeat within a scope.");
+  const count = rows.length;
   return {
     id: candidateId("census-data-api", "acs-population", rawHash, retrievedAt),
-    sourceId: "census-data-api",
-    recordClass: "CENSUS_REFERENCE",
-    scope: "acs-population",
+    sourceId: "census-data-api", recordClass: "CENSUS_REFERENCE", scope: "acs-population",
     sourceProjectionEvidence: sourceProjectionEvidence("census-data-api", "CENSUS_REFERENCE", "acs-population"),
-    retrieval: {
-      succeeded: true,
-      requestedUrl: CENSUS_ACS_BASE,
-      finalUrl: zctaFetch.finalUrl ?? CENSUS_ACS_BASE,
-      httpStatus: zctaFetch.status === 200 && stateFetch.status === 200 ? 200 : null,
-      retrievedAt,
-      rawHash,
-    },
-    normalization: {
-      succeeded: true,
-      parserVersion: "census-data-api/2",
-      schemaVersion: "ACSDT5Y2024:B01003_001E+B01003_001M",
-      normalizedHash: normalizedHash(readModel),
-      normalizedPayloadHash: normalizedHash(normalizedPayload),
-      inputRecords: count,
-      outputRecords: count,
-      droppedRecords: 0,
-      missingRequiredFields: [],
-    },
-    identities: [
-      ...zcta.map((row) => ({ subjectId: `zcta:${row.code}`, jurisdiction: "US", identifiers: { product: "ACSDT5Y2024", vintage: String(VINTAGE_YEAR), geography: row.code }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
-      ...state.map((row) => ({ subjectId: `state-fips:${row.code}`, jurisdiction: "US", identifiers: { product: "ACSDT5Y2024", vintage: String(VINTAGE_YEAR), geography: row.code }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
-    ],
-    temporal: { version: String(VINTAGE_YEAR), expectedVersion: String(VINTAGE_YEAR), sourceThrough: String(VINTAGE_YEAR), staleAtRetrieval: false },
-    semantics: { factKind: "ACS 5-year B01003 population estimate and 90% margin for the exact returned geography", violations },
-    horizon: { kind: "BOUNDED", query: "all ZCTAs plus all states/DC/Puerto Rico in ACSDT5Y2024", returnedRecords: count, declaredTotal: 33_824, paginationComplete: true, claimsComplete: true },
+    retrieval: { succeeded: true, requestedUrl: zctaFetch.url, finalUrl: zctaFetch.finalUrl ?? CENSUS_ACS_BASE,
+      httpStatus: captures.every(capture => capture.status === 200 || capture.status === 204) ? 200 : null, retrievedAt, rawHash },
+    normalization: { succeeded: true, parserVersion: "census-data-api/3", schemaVersion: `${product}:B01003_001E+B01003_001M`,
+      normalizedHash: acsPayloadHash(readModel), normalizedPayloadHash: acsPayloadHash(normalizedPayload),
+      inputRecords: count, outputRecords: count, droppedRecords: 0, missingRequiredFields: [] },
+    identities: rows.map(row => ({ subjectId: `${row.geography ?? (row.code.length === 2 ? "state-fips" : "zcta")}:${row.code}`,
+      jurisdiction: "US", identifiers: { product, vintage: String(vintage), geography: row.code }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
+    temporal: { version: String(vintage), expectedVersion: String(vintage), sourceThrough: String(vintage), staleAtRetrieval: false },
+    semantics: { factKind: "ACS five-year population estimate and 90% margin for the exact Census geography", violations },
+    horizon: { kind: "BOUNDED", query: `Complete wildcard ACS5 ${vintage} geography tables; all returned rows retained`, returnedRecords: count,
+      declaredTotal: count, paginationComplete: true, claimsComplete: true },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [
-      { consumer: "lib/reference/acs-population.ts", passed: zcta.length === 33_772 && state.length === 52, detail: `${zcta.length} ZCTA + ${state.length} state rows.` },
-    ],
-    normalizedPayload,
-    readModel,
+    dependentChecks: [{ consumer: "lib/reference/acs-population.ts", passed: zcta.length >= 30_000 && state.length >= 50 && violations.length === 0,
+      detail: `${count} rows; ${national?.counts.reduce((sum, row) => sum + row.unjoined, 0) ?? "unmeasured"} unjoined rows retained.` }],
+    normalizedPayload, readModel,
   };
 }
 

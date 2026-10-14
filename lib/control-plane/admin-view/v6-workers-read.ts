@@ -70,7 +70,15 @@ export interface V6WorkerStatus {
   readonly runnerState: string | null;
   readonly cycle?: RunnerCycle | null;
   readonly lanes: readonly { readonly name: string; readonly active: number | null; readonly waiting: number; readonly blockedBy: string | null }[] | null;
+  readonly databaseReads?: V6DatabaseReads | null;
   readonly unread: readonly string[];
+}
+/** The database bytes the runner's processes read in its last full hour, largest callers first, from its check-in. */
+interface V6DatabaseReads {
+  readonly hour: string;
+  readonly controlPlaneBytes: number;
+  readonly readerBytes: number;
+  readonly byCaller: readonly { readonly caller: string; readonly bytes: number }[];
 }
 export interface V6WaitingItem {
   readonly kind: string; readonly title: string; readonly why: string; readonly nextTime: string; readonly owner: string;
@@ -148,6 +156,14 @@ async function point<T>(read: () => Promise<{ readonly revision: number; readonl
   } catch { return { state: "UNREAD" }; }
 }
 
+export function databaseReadsOf(hour: unknown): V6DatabaseReads | null {
+  const h = hour as Partial<V6DatabaseReads> | null | undefined;
+  if (!h || !clock(h.hour) || !count(h.controlPlaneBytes) || !count(h.readerBytes) || !Array.isArray(h.byCaller)) return null;
+  const byCaller = h.byCaller.filter((row): row is { caller: string; bytes: number } => row !== null && typeof row === "object" &&
+    text((row as { caller?: unknown }).caller, 400) && count((row as { bytes?: unknown }).bytes));
+  return { hour: h.hour, controlPlaneBytes: h.controlPlaneBytes, readerBytes: h.readerBytes, byCaller };
+}
+
 export function runningScoutsOf(research: unknown): readonly RunningScout[] | null {
   const running = (research as { running?: unknown } | null)?.running;
   if (!Array.isArray(running) || running.length > WORKERS_RUNNING_MAX) return null;
@@ -160,7 +176,7 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string, scope: V6PlaceScope | null = null): Promise<V6WorkersSources> {
   const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration, scopeZips] = await Promise.all([
     readAdminConfig(repos),
-    point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, RUNNER_PROGRESS_HEARTBEAT_FIELDS)),
+    point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, { ...RUNNER_PROGRESS_HEARTBEAT_FIELDS, neonBytes: ["lastFullHour"] })),
     point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
     repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, WORKERS_SOURCE_EVENT_LIMIT)
       .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
@@ -476,6 +492,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     runnerState: hb ? livenessOf(hb, now).state : sources.heartbeat.state === "MISSING" ? "NEVER_BEAT" : null,
     cycle,
     lanes: gauges?.map(g => ({ name: g.name, active: g.active, waiting: g.waiting, blockedBy: g.blockedBy })) ?? null,
+    databaseReads: databaseReadsOf(hb?.neonBytes?.lastFullHour),
     unread,
   };
 

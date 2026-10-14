@@ -1,11 +1,3 @@
-/**
- * Meetings discovery follows the mission map (the owed rows). A jurisdiction is owed meetings discovery when every
- * MEETINGS source its registry row carries is DISCOVERY_OWED, or it carries none; a body holds a calendar route when
- * its calendar row or a meeting captured from it holds a source. An old meetings row retires only when its
- * government's exact body holds a calendar route, and the occurrence closes unresolved, never with a disposition.
- * Every test that writes runs on the in-memory double and the durable file store.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -180,11 +172,14 @@ test("MISSION BLANKS: every government in a mission place whose body holds no ro
   assert.deepEqual(unjoined.entries.map((e) => e.need.jurisdictionId), [OH_CITY], "with no exact body join nothing shows a route, so the blank stays open");
 });
 
-test("THE RUNNER IS WIRED: the walk takes the mission's blanks, retirement reads held routes, and the gap ledger is gone", async () => {
+test("the census reads all state governments independently; research retirement still reads held routes", async () => {
   const { readFileSync, existsSync } = await import("node:fs");
   const runner = readFileSync("scripts/freshness-shadow.mts", "utf8");
-  assert.match(runner, /const mission = missionMeetingsDiscoveryNeeds\(\{\n\s+jurisdictionIds: scopes\.flatMap\(scope => \[\.\.\.scope\.members\]\),/, "each wave reads every Send's places");
-  assert.match(runner, /heldRoutes: heldCalendarRouteBodies\(places\.flatMap\(place => place\.items\)\),/, "from the same owed rows the place order reads");
+  const census = readFileSync("scripts/platform-census-runner.mts", "utf8");
+  assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}\)/);
+  assert.match(census, /runCensusState\(\{ repos, state, needs: reading\.needs/);
+  assert.doesNotMatch(runner, /runMeetingsDiscovery|MEETINGS_DISCOVERY_MAX_WALKS|missionMeetingsDiscoveryNeeds/);
+  assert.match(runner, /const held = heldCalendarRouteBodies\(rows\)/);
   assert.match(runner, /: planHeldRouteRetirement\(\{/, "old meetings rows retire on held routes");
   assert.doesNotMatch(runner, /gapLedger|GAP_LEDGER|gap-ledger/, "the runner no longer reads the ledger");
   for (const path of ["scripts/build-gap-ledger.mts", "docs/gap-ledger.md", "data/derived/gap-ledger.json"]) {

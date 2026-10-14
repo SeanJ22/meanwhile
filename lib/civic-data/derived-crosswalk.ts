@@ -12,11 +12,6 @@ import {
 } from "./read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
-/**
- * Calendar-to-body rows the runner's deterministic reviewer accepted, kept like reviewed rows. An accepted row is
- * never dropped: it is carried until a later review of a newer walk renews it. Holds are excluded facts, not rows,
- * and a manually reviewed row wins over an automatic one (`composeCrosswalk`).
- */
 export const DERIVED_CROSSWALK_CONTRACT_ID = "meeting-body-crosswalk-derived" as const;
 export const DERIVED_CROSSWALK_SOURCE_ID = "meeting-source-wiring" as const;
 export const DERIVED_CROSSWALK_RECORD_CLASS = "CURATED_READER_RECORD" as const;
@@ -138,15 +133,6 @@ export interface DerivedCrosswalkPlan {
 const inputKey = (input: DerivedInputRef): string => canonicalCivicDataJson(input);
 const byKey = <T>(key: (value: T) => string) => (a: T, b: T): number => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0);
 
-/**
- * **THE RULE.** Plan the next version from the previous one and this pass's reviews. Pure.
- *
- * - An accepted row new to the store enters.
- * - An accepted row the store holds is carried byte-exactly while its substance and its evidence are the same
- *   (the same walk reviewed again); a newer walk's evidence, or a changed filter or name, renews it with the new
- *   evidence and review time.
- * - A row this pass did not accept (no walk, an outage, a hold) is carried byte-exactly. A row is never dropped.
- */
 export function planDerivedCrosswalk(input: {
   readonly previous: readonly MeetingBodyCrosswalkRow[];
   readonly reviews: readonly AutoCrosswalkReview[];
@@ -327,12 +313,6 @@ export interface ComposedCrosswalk {
   readonly shadowed: readonly { readonly id: string; readonly why: string }[];
 }
 
-/**
- * **MANUAL ROWS WIN.** The rows the wiring derive decides: every well-formed manual row, and every automatic row no
- * manual row shadows. A manual row shadows an automatic one for the same body, kind and route, whatever its status (a
- * withdrawal by review is never undone by the reviewer), and an automatic row claiming a manual ACTIVE row's
- * calendar and filter for another body.
- */
 export function composeCrosswalk(
   manual: readonly MeetingBodyCrosswalkRow[] | null,
   automatic: readonly MeetingBodyCrosswalkRow[] | null,

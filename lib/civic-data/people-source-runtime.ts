@@ -13,7 +13,7 @@ import { statePeopleDivisions } from "../sources/plural/acquisition.ts";
 import type { RegistryDivisionLite } from "../sources/plural/index.ts";
 import type { Slice } from "../control-plane/admin-view/promoted-slices.ts";
 
-export interface PeopleSourceAcquired {
+interface PeopleSourceAcquired {
   readonly state: string;
   readonly releaseId: string;
   readonly roster: OfficeholderSet;
@@ -22,7 +22,7 @@ export interface PeopleSourceAcquired {
   readonly coverage?: unknown;
 }
 
-export const PEOPLE_SOURCE_FAILURE_ROUTES: Readonly<Record<StandingPeopleSourceId, string>> = {
+const PEOPLE_SOURCE_FAILURE_ROUTES: Readonly<Record<StandingPeopleSourceId, string>> = {
   "legiscan-api": "https://api.legiscan.com/?op=getSessionList",
   "official-state-people": "https://v3.openstates.org/jurisdictions",
   "statewide-executive-sources": "https://www.nga.org/governors/",

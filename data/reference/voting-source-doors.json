@@ -951,7 +951,10 @@
     "publisher": "Office of the Secretary of State, Helena, MT",
     "url": "https://sosmt.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MT",
       "ocdId": "ocd-division/country:us/state:mt",
@@ -974,14 +977,27 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sosmt.gov/elections/\">https://sosmt.gov/elections/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987"
+    ],
+    "ballotMeasureUrls": [
+      "https://sosmt.gov/elections/ballot_issues/proposed-2026-ballot-issues/",
+      "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/2026-Voter-Information-Pamphlet(4da3e0648bb79f45284a2c4d162c51cf).pdf",
+      "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-132(3a70e31b2fe58baa619ffb1d9b23c8ff).pdf",
+      "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-133(ba9d97da675a9f26f24b5f9e333b35b7).pdf",
+      "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/I-194(d4249530242056d948420c5212f6f750).pdf"
+    ]
   },
   {
     "id": "fec-ne-chief",
     "publisher": "Office of the Secretary of State, Lincoln, NE",
     "url": "https://sos.nebraska.gov/index",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NE",
       "ocdId": "ocd-division/country:us/state:ne",
@@ -1004,14 +1020,25 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.nebraska.gov/index\">https://sos.nebraska.gov/index</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+      "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+      "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf"
+    ]
   },
   {
     "id": "fec-nv-chief",
     "publisher": "Office of the Secretary of State, Carson City, NV",
     "url": "https://www.nvsos.gov/sos/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NV",
       "ocdId": "ocd-division/country:us/state:nv",
@@ -1034,7 +1061,14 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.nvsos.gov/sos/elections\">https://www.nvsos.gov/sos/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
+      "https://www.washoecounty.gov/voters/files/Washoe%20County%202026%20General%20Election%20Contests.xlsx"
+    ],
+    "ballotMeasureUrls": [
+      "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf"
+    ]
   },
   {
     "id": "fec-nh-chief",

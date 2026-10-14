@@ -2034,14 +2034,17 @@
     "publisher": "State Board of Elections, Richmond, VA",
     "url": "https://www.elections.virginia.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "VA",
       "ocdId": "ocd-division/country:us/state:va",
       "name": "Virginia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.elections.virginia.gov/",
+    "electionPageUrl": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/",
     "title": "Virginia chief election office discovery root",
     "office": {
       "name": "State Board of Elections, Richmond, VA",
@@ -2050,14 +2053,46 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official federal, special legislative and statewide measure workbooks acquired as HTTP 200 and converted with a script."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.virginia.gov/\">https://www.elections.virginia.gov/</a>"
-    }
+    },
+    "discoveredSources": [
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      }
+    ]
   },
   {
     "id": "fec-wa-chief",

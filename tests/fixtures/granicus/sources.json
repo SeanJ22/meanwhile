@@ -1,0 +1,31 @@
+[
+  {
+    "tenant": "sanfrancisco",
+    "state": "CA",
+    "url": "https://sanfrancisco.granicus.com/ViewPublisher.php?view_id=10",
+    "capturedAt": "2026-10-13",
+    "originalSha256": "7616b00434ad07187c6c51d9a93aa11e3faa53095c226bc79002e7c50e2dbae1",
+    "sample": "Published meeting table fragments",
+    "rows": 10
+  },
+  {
+    "tenant": "alexandria",
+    "state": "VA",
+    "url": "https://alexandria.granicus.com/ViewPublisher.php?view_id=57",
+    "capturedAt": "2026-10-13",
+    "originalSha256": "de42db3d21d78136546d57013c4ea02e7d8c393f9ac85ab328c07e521653f95b",
+    "sample": "Published meeting table fragments",
+    "rows": 224
+  },
+  {
+    "tenant": "miamidade",
+    "state": "FL",
+    "url": "https://miamidade.granicus.com/ViewPublisher.php?view_id=2",
+    "capturedAt": "2026-10-13",
+    "originalSha256": "b771344025978497b177e350f0950df231f965a813a1728913bf7d2e8ca99331",
+    "sample": "Published meeting table fragments",
+    "rows": 16,
+    "archiveSearchUrl": "https://miamidade.granicus.com/ViewSearchResults.php?keywords=&view_id=2",
+    "archiveSampleRows": 220
+  }
+]

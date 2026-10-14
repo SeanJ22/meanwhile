@@ -560,7 +560,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       key: { space: "OPAQUE_HANDLE", why: "A record-class/scope projection key minted by the routine data plane." },
       current_version_id: { space: "OPAQUE_HANDLE" },
       last_known_good_version_id: { space: "OPAQUE_HANDLE" },
-      payload: { space: "CIVIC_IDENTIFIER", why: "The promoted public civic read model; it contains no reader data." },
+      payload: { space: "CIVIC_IDENTIFIER", why: "The promoted public civic read model, including official Census GEOIDs, population estimates, margins, publication dates and source attribution; it contains no reader data." },
     },
   },
 

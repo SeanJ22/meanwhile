@@ -51,7 +51,7 @@ function siteInPlace(site: VotingSite, place: VotingReaderPlace, jurisdiction: V
 }
 
 /** Official precinct polygons supersede the Census fallback, including an unresolved official boundary. */
-export function precinctsFor(j: VotingJurisdiction, place: VotingReaderPlace): VotingReaderPlace["precincts"] {
+function precinctsFor(j: VotingJurisdiction, place: VotingReaderPlace): VotingReaderPlace["precincts"] {
   if (place.precision !== "ADDRESS" || !place.point) return [];
   const relevant = (j.boundaries ?? []).filter(b => !b.countyFips || place.countyFips.includes(b.countyFips));
   const official = relevant.filter(b => b.kind === "OFFICIAL_PRECINCT");
@@ -88,7 +88,7 @@ export function projectVotingJurisdiction(j: VotingJurisdiction, place: VotingRe
 
 export const GOOGLE_VOTING_DATA_LABEL = "from Google's election data (Voting Information Project)";
 
-export interface VotingAnswerDependencies {
+interface VotingAnswerDependencies {
   readOfficialAddress?: (door: VotingSourceDoor, address: string) => Promise<VotingSourceRead>;
   readGoogle?: (address: string, place: VotingReaderPlace) => Promise<VotingJurisdiction[]>;
 }

@@ -1,9 +1,3 @@
-/**
- * One job must never end the others. In the standing hunter lane each worker process has its own progress
- * clock; a stuck one is ended alone with what it held and what it was waiting on, and the others keep running.
- * A queue the round writes mid-wave joins the running workers. The runner's heartbeat carries the host's
- * memory and reservations.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ChildProcess } from "node:child_process";
@@ -187,7 +181,7 @@ test("isolation: a queue written mid-wave joins the running workers instead of w
 
 test("isolation: a worker past its retirement age takes no further task, and a fresh worker takes its remaining ones", async () => {
   const root = await fixture("retire", `${TAKES_FIRST}
-    import { existsSync, writeFileSync } from 'node:fs';
+    import { appendFileSync, existsSync, writeFileSync } from 'node:fs';
     process.once('message', config => {
       const first = !existsSync('first');
       if (first) writeFileSync('first', '');
@@ -195,7 +189,8 @@ test("isolation: a worker past its retirement age takes no further task, and a f
         const replies = new Map();
         process.on('message', m => replies.get(m.id)?.(m.body));
         replies.set('o1', order => {
-          if (!order.length) { writeFileSync('retired', String(process.pid)); process.send({ kind: 'finished', id: '', body: config.taskIds }); process.disconnect(); return; }
+          if (!order.length) { appendFileSync('retired', String(process.pid) + '\\n'); process.send({ kind: 'finished', id: '', body: config.taskIds }); process.disconnect(); return; }
+          writeFileSync('worked', String(process.pid));
           process.send({ kind: 'task-start', id: '', taskId: order[0], body: order[0] });
           done(config, order[0]);
         });
@@ -207,9 +202,13 @@ test("isolation: a worker past its retirement age takes no further task, and a f
     const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 60_000, config: config(root, ["owed"]),
       capacity: () => 1, transportFor: noModel, standing: { quietMs: 10_000, retireAfterMs: 200 },
       onStarted: pid => started.push(pid) });
-    assert.equal(started.length, 2);
-    assert.equal(Number(await readFile(join(root, "retired"), "utf8")), started[0], "the old worker retired");
+    const retired = (await readFile(join(root, "retired"), "utf8")).trim().split("\n").map(Number);
+    assert.ok(started.length >= 2);
+    assert.equal(retired[0], started[0], "the old worker retired");
+    assert.deepEqual(retired, started.slice(0, -1), "every earlier worker retired without taking the task");
+    assert.equal(Number(await readFile(join(root, "worked"), "utf8")), started.at(-1), "the final worker accepted the task");
     assert.equal(results.length, 1);
+    assert.equal(results[0]!.routeTaskId, "owed");
     assert.equal(results[0]!.outcome, "WORKED", "the fresh worker did the task the retired one left");
   } finally { await rm(root, { recursive: true, force: true }); }
 });

@@ -348,6 +348,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   boarddocs: "boarddocs",
   granicus: "granicus-vp",
   novusagenda: "novusagenda",
+  swagit: "swagit",
   escribe: "escribe",
   "official-page-events": null,
 };
@@ -365,6 +366,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   escribe: "a public eScribe calendar list with meeting identities, types, local dates and document links",
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
   novusagenda: "a public NovusAgenda meeting grid with published meeting ids, dates and body labels",
+  swagit: "a public Swagit meeting list with dated event or video links and published body titles or category headings",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 

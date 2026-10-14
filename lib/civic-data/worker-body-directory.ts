@@ -13,13 +13,16 @@ import { pageWords, section3Page, section3Record } from "../control-plane/promot
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
+import { ensureEntity, learnOfficialHost } from "../facts/entities.ts";
+import type { Clocks, FactDb, PublishOutcome, Query } from "../facts/publish.ts";
+import { publishBodyFacts } from "../facts/roster-facts.ts";
 import { createHash } from "node:crypto";
 import { subBodyId } from "./meeting-body-crosswalk.ts";
 import type { JurisdictionRouteHints } from "../hunt/meetings-route-hints.ts";
-import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import type { RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
 import { DEFAULT_KINDS, kindFromSource, type KindTable } from "../registry/kinds.ts";
 
-export function directoryMeetingHints(items: readonly WorkItem[], registry: RegistryRuntimeReadModel,
+export function directoryMeetingHints(items: readonly WorkItem[], registry: RegistryRuntimeCarton,
   baseline: readonly JurisdictionRouteHints[]): readonly JurisdictionRouteHints[] {
   const hints = new Map(baseline.map(hint => [hint.jurisdictionId, hint]));
   for (const item of items) {
@@ -42,8 +45,18 @@ export function directoryMeetingHints(items: readonly WorkItem[], registry: Regi
 
 const words = (value: unknown) => typeof value === "string" ? value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim() : "";
 
+interface BodyOfficeContact { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly address: string | null; readonly phone: string | null }
+
+/** A directory body's office address and phone, each a fact on the body checked against the page that listed it. */
+export async function publishBodyOffice(facts: FactDb & { readonly query: Query }, body: Body, contact: BodyOfficeContact, producedBy: string, clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
+  await ensureEntity(facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: /\/state:([a-z]{2})/.exec(body.id)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId });
+  await learnOfficialHost(facts.query, body.id, contact.capture.evidence.canonicalUrl);
+  return publishBodyFacts(facts, { bodyId: body.id, capture: contact.capture, producedBy, facts: [["office_address", contact.address], ["office_phone", contact.phone]]
+    .flatMap(([field, value]) => value ? [{ field: field as "office_address" | "office_phone", value, quote: value }] : []) }, clocks, now);
+}
+
 export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWorkerRecords>[0] | { plan: AutonomousWorkPlan; now: string; held: DirectoryReading }) & { prior: RegistryRuntimePrior; kinds?: KindTable }): {
-  prepared: RegistryRuntimePackage; unresolved: readonly string[];
+  prepared: RegistryRuntimePackage; unresolved: readonly string[]; contacts: readonly BodyOfficeContact[];
 } {
   const checked: DirectoryChecked = "held" in input ? input.held.checked : verifiedWorkerRecords(input);
   const readingId = "held" in input ? input.held.id : input.parser.id;
@@ -52,7 +65,7 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
     subject.jurisdiction.id === checked.contract.subjectId, "DIRECTORY_SCOPE_MISSING");
   const division = input.prior.payload.registry.divisions.find(d => d.ocdId === subject.divisionId);
   requirePublication(division, "DIRECTORY_CENSUS_DIVISION_UNRESOLVED");
-  const bodies: Body[] = [], unresolved: string[] = [];
+  const bodies: Body[] = [], unresolved: string[] = [], contacts: BodyOfficeContact[] = [];
   for (const record of checked.extraction.records) {
     try {
       const f = record.fields;
@@ -60,8 +73,8 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
       // An office address and phone attach only as plain text found on the body's own page.
       const address = typeof f.officeAddress === "string" ? f.officeAddress.replace(/\s+/g, " ").trim() : "";
       const phone = typeof f.officePhone === "string" ? f.officePhone.replace(/\s+/g, " ").trim() : "";
-      requirePublication(f.officeAddress === undefined || (address.length >= 8 && address.length <= 200 && /\d/.test(address)), "DIRECTORY_OFFICE_ADDRESS_INVALID");
-      requirePublication(f.officePhone === undefined || (phone.length <= 40 && (phone.match(/\d/g) ?? []).length >= 7), "DIRECTORY_OFFICE_PHONE_INVALID");
+      const office = { address: address.length >= 8 && address.length <= 200 && /\d/.test(address) ? address : null,
+        phone: phone.length <= 40 && (phone.match(/\d/g) ?? []).length >= 7 ? phone : null };
       const classification = kindFromSource(input.kinds ?? DEFAULT_KINDS, "body", f.bodyClass) as BodyClass | null;
       requirePublication(classification && words(f.bodyName), "DIRECTORY_BODY_IDENTITY_MISSING");
       const url = typeof f.homepageUrl === "string" ? new URL(f.homepageUrl) : null;
@@ -94,22 +107,22 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
         alsoServesOcdIds: territoryIds.filter(id => id !== primaryDivision),
         homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
         ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence } : {}),
-        ...(address ? { officeAddress: address } : {}), ...(phone ? { officePhone: phone } : {}),
         ...("held" in input ? {} : { fieldSources: parserFieldSources(record.id, f,
           input.parser.result.role === "PARSER" ? input.parser.result.spans : [], input.captures, input.now) }),
         provenance: { kind: checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)
           ? receiptSourceKind(checked.sourceReceipt.sources.find(source => source.finalUrl === (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl)!.sourceClass) : undefined,
           sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
+      if (office.address || office.phone) contacts.push({ bodyId: id, capture: checked.sourceOf?.get(record.id) ?? checked.primary, ...office });
     } catch (error) {
       unresolved.push(`${record.id}: ${error instanceof Error ? error.message : "DIRECTORY_ROW_REQUIRES_REPAIR"}`);
     }
   }
   requirePublication(bodies.length > 0, `DIRECTORY_NO_ADMISSIBLE_BODY:${unresolved.join("; ")}`);
-  return { unresolved, prepared: { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`worker-directory:${readingId}`),
+  return { unresolved, contacts, prepared: { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`worker-directory:${readingId}`),
     sourceThrough: input.now, sourceReceipt: checked.sourceReceipt,
     payload: { ...input.prior.payload, registry: { ...input.prior.payload.registry, divisions: [], bodies },
-      bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+      statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
       officialCandidacies: { ...input.prior.payload.officialCandidacies, rows: [] } } } };
 }
 

@@ -840,8 +840,6 @@ crowding.
 
 ## Reference bookmarks — recorded here so they are NOT registered as civic sources
 
-(Added 2026-08-26, the sources-and-incumbency session, draining docs/sources/inbox.md.)
-
 A design link that arrives in a bag of civic links needs somewhere to land that
 is not the source registry. Registering it there would put a marketing blog in a
 file whose whole claim is that every row is a government publication or a

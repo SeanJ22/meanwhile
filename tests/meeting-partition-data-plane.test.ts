@@ -512,8 +512,8 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   const row = await store.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE);
   assert.deepEqual(
     new Set(row?.composedFrom.map(({ contractId }) => contractId)),
-    new Set([legistar.id, insite.id]),
-    "the published row is coupled to the versions that composition read",
+    new Set([legistar.id, insite.id, "meeting-facts"]),
+    "the published row is coupled to the versions and the meeting facts that composition read",
   );
 });
 

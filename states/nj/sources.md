@@ -46,7 +46,7 @@ it to an authoritative host is `NJ26`.
 | **Licence** | **NONE STATED.** US state government work |
 | **Access** | Open page, plain GET, no key |
 | **Carries** | The official website of every county and every municipality |
-| **Coverage** | **All 21 counties named and 618 outbound links, measured 2026-08-26.** `docs/sources.md` records 624 entities on 2026-08-22 from the committed walk — the difference is a page that changes, not a disagreement between instruments, and both numbers are stated rather than one being chosen |
+| **Coverage** | **All 21 counties named and 618 outbound links, measured 2026-08-26.** the source registry records 624 entities on 2026-08-22 from the committed walk — the difference is a page that changes, not a disagreement between instruments, and both numbers are stated rather than one being chosen |
 | **Freshness** | **Last walked 2026-08-26**, HTTP 200, 114,118 bytes. Rockaway Township present |
 | **Points to** | itself |
 | **Do we use it** | **YES — WIRED**, `pnpm tier:directory --route nj-localgov` |

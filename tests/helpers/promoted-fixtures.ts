@@ -54,6 +54,8 @@ import { readFederalKeyVotesProjection } from "../../lib/votes/key-votes-project
 import { federalKeyVoteSelectionV1Snapshot } from "../../lib/votes/key-vote-selection-v1.ts";
 import type { MemberVote, RollCallVote, VotePosition } from "../../lib/votes/types.ts";
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
+import { rosterFactReader } from "./roster-fact-reader.ts";
+import { installFactReader } from "../../lib/facts/db.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");
@@ -184,6 +186,7 @@ export async function installRegistryRuntime(): Promise<{ readonly value: Regist
     value: projection.payload,
   }) as PromotedEdgeEntry);
   enter();
+  installFactReader(rosterFactReader(projection.payload.bodyRosters));
   primeRegistryRuntimeFromValue(installed.value, installed.versionId);
   served(await readRegistryRuntimeProjection(), "Registry runtime");
   primeRegistryRuntimeFromValue(installed.value, installed.versionId);

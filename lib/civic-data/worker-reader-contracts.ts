@@ -4,7 +4,6 @@ export const WORKER_READER_CLASSES = {
   "government-budgets": "ADOPTED_BUDGET",
   "public-records": "PUBLIC_RECORD",
   "ballot-contests": "BALLOT_CONTEST",
-  "comment-access": "PUBLIC_COMMENT_RULE",
   "everyday-routing": "SERVICE_CONTACT",
   "ballot-navigation": "VOTER_ACCESS_ROUTE",
   "official-filings": "CANDIDATE_FILING_DOCUMENT",
@@ -20,11 +19,13 @@ export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
   return Object.hasOwn(WORKER_READER_CLASSES, id);
 }
 
-export const WORKER_PUBLICATION_TASK_IDS: readonly string[] = ["registry-runtime-bindings", ...Object.keys(WORKER_READER_CLASSES)];
+/** Comment rules publish as facts; their work items keep this publication name. */
+export const COMMENT_RULE_PUBLICATION = "comment-access" as const;
+export const WORKER_PUBLICATION_TASK_IDS: readonly string[] = ["registry-runtime-bindings", COMMENT_RULE_PUBLICATION, ...Object.keys(WORKER_READER_CLASSES)];
 
 export const CHECKLIST_PUBLICATION_DOORS = checklist.publicationDoors as readonly {
   readonly family: string; readonly fields: readonly string[]; readonly recordClasses: readonly string[];
-  readonly contractId: "registry-runtime-bindings" | WorkerReaderContract;
+  readonly contractId: "registry-runtime-bindings" | typeof COMMENT_RULE_PUBLICATION | WorkerReaderContract;
 }[];
 export function workerDoorForRecord(recordClass: string) {
   return CHECKLIST_PUBLICATION_DOORS.find(row => row.recordClasses.includes(recordClass))?.contractId ?? null;

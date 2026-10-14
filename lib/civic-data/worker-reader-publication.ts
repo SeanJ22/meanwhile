@@ -23,7 +23,6 @@ import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderCont
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
-import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { publishHeldElectionOffices } from "./worker-held-elections.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
@@ -49,42 +48,6 @@ function ownSiteHostsFromHeld(personId: string): readonly string[] {
   const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords().filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
   return urls.flatMap(url => url ? [hostOf(url)].filter((h): h is string => h !== null) : []);
 }
-const COMMENT_FIELDS = ["commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"] as const;
-
-export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, prior: ManualProjectionPrior | null): ManualProjectionPackage {
-  requirePublication(input.contractId === "comment-access", "COMMENT_CONTRACT_MISMATCH");
-  const current = (input.payload as CuratedReaderProjection).records;
-  const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
-  const retainedUrls = new Set<string>();
-  const records = current.map(row => {
-    const matches = before.filter(old => old.bodyId === row.bodyId);
-    requirePublication(matches.length <= 1, "PRIOR_BODY_IDENTITY_CONFLICT");
-    const old = matches[0];
-    const fields: Record<string, unknown> = { ...row, id: old?.id ?? row.id };
-    const fieldSources: NonNullable<CommentAccess["fieldSources"]> = {};
-    for (const field of COMMENT_FIELDS) {
-      const missing = row[field] === null || row[field] === undefined || (field === "commentPeriod" && row[field] === "UNKNOWN");
-      if (missing && old?.[field] !== undefined && old[field] !== null && !(field === "commentPeriod" && old[field] === "UNKNOWN")) {
-        const priorField = (old.fieldSources as CommentAccess["fieldSources"])?.[field];
-        const sourceUrl = priorField?.sourceUrl ?? String(old.sourceUrl);
-        requirePublication(prior?.sourceReceipt.sources.some(source => source.reviewOutcome !== "BLOCKED" &&
-          [source.requestedUrl, source.finalUrl].includes(sourceUrl)), "PRIOR_FIELD_AUTHORITY_MISSING");
-        fields[field] = old[field];
-        fieldSources[field] = { ...priorField, sourceUrl, collectedAt: priorField?.collectedAt ?? String(old.collectedAt),
-          verifiedAt: priorField?.verifiedAt ?? (typeof old.verifiedAt === "string" ? old.verifiedAt : null), retainedFromVersion: prior!.versionId };
-        retainedUrls.add(sourceUrl);
-      } else if (row[field] !== null && row[field] !== undefined) {
-        fieldSources[field] = { ...(row.fieldSources as CommentAccess["fieldSources"])?.[field], sourceUrl: String(row.sourceUrl), collectedAt: String(row.collectedAt), verifiedAt: String(row.verifiedAt) };
-      }
-    }
-    return { ...fields, id: String(fields.id), fieldSources };
-  });
-  const retained = prior?.sourceReceipt.sources.filter(source => [source.requestedUrl, source.finalUrl].some(url => retainedUrls.has(url))) ?? [];
-  const sources = [...input.sourceReceipt.sources, ...retained];
-  return { ...input, payload: { kind: "comment-access", records }, sourceReceipt: { ...input.sourceReceipt,
-    sources: sources.filter((source, index) => sources.findIndex(other => canonicalJson(other) === canonicalJson(source)) === index) } };
-}
-
 export interface StancesInput {
   readonly stanceTopicIds?: readonly string[];
   readonly ownSiteHosts?: (personId: string) => readonly string[];
@@ -213,13 +176,7 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
           note: f.note ?? "", sourceOrg: checked.primary.evidence.sourceId,
           verification: `Source and independent authority verified at ${input.now}.`, verifiedAt: input.now } };
     }
-      requirePublication(["YES", "NO", "UNKNOWN"].includes(text(f.commentPeriod)) && text(f.commentPeriodDetail).trim(), "COMMENT_RULE_MISSING");
-      const allowed = new Set(["bodyName", "commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"]);
-      requirePublication(Object.keys(f).every(field => allowed.has(field)), "COMMENT_FIELD_UNSUPPORTED");
-      return { id: `comment:${body!.id}`, bodyId: body!.id, ocdId: body!.ocdId ?? null,
-        commentPeriod: f.commentPeriod, commentPeriodDetail: f.commentPeriodDetail,
-        signup: f.signup ?? null, writtenComment: f.writtenComment ?? null, attend: f.attend ?? null, timeLimit: f.timeLimit ?? null,
-        sourceUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now };
+    throw new Error(`WORKER_PUBLICATION_CONTRACT_UNSUPPORTED:${contractId}`);
   };
   const records = checked.extraction.records.map(record => ({ ...rowFor(record),
     fieldSources: parserFieldSources(record.id, record.fields, checked.extraction.spans, input.captures, input.now) }));
@@ -283,13 +240,12 @@ export async function publishWorkerReaderResults(input: {
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now,
         manualPayloadScope(input.contractId, requiredManualProductionContract(input.contractId).scope, checked.payload));
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
-      const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;
-      const requested = (prepared.payload as CuratedReaderProjection).records;
+      const requested = (checked.payload as CuratedReaderProjection).records;
       const delivered = requested.map(record => {
         const old = before.find(row => row.id === record.id);
-        return old && prior ? resolveRecordConflicts(record, old, prepared.sourceReceipt, prior.sourceReceipt).record : record;
+        return old && prior ? resolveRecordConflicts(record, old, checked.sourceReceipt, prior.sourceReceipt).record : record;
       });
-      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now, built.pulledMemberIds);
+      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(checked, input.store, input.now, built.pulledMemberIds);
       const composed = candidate.readModel as CuratedReaderProjection;
       requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
         `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);

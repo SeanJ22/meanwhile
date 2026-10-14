@@ -8,6 +8,7 @@
 
 import {
   candidateCounts,
+  emptyCandidateStore,
   introducedIssues,
   markAdmitted,
   markRejected,
@@ -140,10 +141,8 @@ export async function proposeScoutCandidates(input: {
 }): Promise<ProposalReport> {
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const knowledge = await readMethodKnowledge(input.repos);
-    const current = await readLiveCandidates(input.repos);
-    if (current === null) {
-      throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED: refusing to treat an absent canonical store as an empty candidate population");
-    }
+    const current = await readLiveCandidates(input.repos) ??
+      (await input.repos.methodCandidates.put(METHOD_CANDIDATE_STORE_ID, emptyCandidateStore(), input.stamp)).persisted;
     let store: CandidateStore = current.value;
     const proposed: ProposedCandidate[] = [];
     const notProposed: { routeId: string; why: string }[] = [];
@@ -269,10 +268,10 @@ export async function proposeScoutCandidates(input: {
   throw new Error("METHOD_CANDIDATE_CAS_RETRY_EXHAUSTED");
 }
 
-/** The one canonical store; absence is not an empty candidate population. */
+/** The one canonical store; an absent store holds no candidates yet. */
 export async function readMethodCandidateStore(repos: ControlPlaneRepositories): Promise<CandidateStore> {
   const current = await readLiveCandidates(repos);
-  if (current === null) throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED");
+  if (current === null) return emptyCandidateStore();
   if (current.value.storeVersion !== 1 || !Array.isArray(current.value.candidates)) {
     throw new Error("METHOD_CANDIDATE_STORE_UNREADABLE");
   }

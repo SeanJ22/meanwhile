@@ -1,4 +1,4 @@
-/** A read confirms only as a COMPLETED Attempt by a deterministic ACQUIRER, never the Scout's, whose artifact is in the log and vault. */
+/** A lead with no saved page is read as a COMPLETED Attempt by a deterministic ACQUIRER, whose artifact enters the log and vault. */
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";
 import { putArtifact } from "../evidence/store.ts";

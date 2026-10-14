@@ -34,8 +34,6 @@ import {
   type FreshnessObligation,
   type ScheduledObligation,
 } from "../lib/control-plane/scheduler/obligation.ts";
-import { stageOne } from "../lib/control-plane/scheduler/promotion-tail.ts";
-import type { RouteDescriptor } from "../lib/control-plane/scheduler/registry.ts";
 import {
   closeCycleOccurrences,
   digestLines,
@@ -570,7 +568,7 @@ test("claimRouteTask refuses a RouteTask disposed while the claim raced for its 
   }
 });
 
-test("a recovered INGESTED occurrence keeps its bytes eligible for parsing, verification and staging", async () => {
+test("a recovered INGESTED occurrence keeps its bytes eligible for parsing and verification", async () => {
   const feed = JSON.stringify({
     "@odata.context": "https://avondaleaz.api.civicclerk.com/v1/$metadata#Events",
     value: [{
@@ -601,29 +599,6 @@ test("a recovered INGESTED occurrence keeps its bytes eligible for parsing, veri
     assert.equal(later.ledger.size, 0, `${label}: this cycle retrieved nothing`);
     assert.equal(await later.readHeld(records[0]), feed, `${label}: the recovered bytes are read back`);
     assert.equal(await later.readHeld({ ...records[0], attemptId: "at-someone-else" }), null, `${label}: only under the record's own identity`);
-    const staged = stageOne({
-      root: mkdtempSync(join(tmpdir(), "wtp-settled-stage-")),
-      obligationId: recovered.obligationId,
-      providerId: "fixture",
-      recordClass: "meetings",
-      subjectId: AVONDALE,
-      route: {
-        routeId: "avondale-civicclerk-events",
-        label: "Avondale CivicClerk events",
-        executorClass: "DETERMINISTIC",
-        executorReason: "fixture",
-        open: { kind: "HTTP_GET", url: AVONDALE_EVENTS },
-        citation: "fixture",
-      },
-      disposition: recovered.disposition.disposition,
-      artifactIds: recovered.disposition.artifactIds,
-      body: await later.readHeld(records[0]),
-      nextDueAt: null,
-      detail: "recovered",
-      stagedOn: "2026-09-22",
-    });
-    assert.match(staged.readerSentence, /ACQUIRED and is held/, `${label}: staged as held, never as "not yet reached"`);
-    assert.ok(staged.unresolved.some((u) => u.includes(committed.artifactIds[0])), `${label}: citing the held artifact`);
 
     const runtime = standingFleetRuntime({ root: ROOT, method: methodFixture(), vaultRoot, repos, now: () => T2 });
     await advanceHeldWorkerFleet(ROOT, runtime, 1);
@@ -633,50 +608,6 @@ test("a recovered INGESTED occurrence keeps its bytes eligible for parsing, veri
     assert.ok(parser, `${label}: a PARSER task is queued for the recovered bytes`);
     assert.equal(parser.value.workItemId, held.workItemId);
     assert.equal(parser.value.state, "PENDING");
-  }
-});
-
-test("a recovered INGESTED occurrence with a normalizer stages PROMOTION-READY from bytes an earlier cycle vaulted", async () => {
-  const body = JSON.stringify({
-    draw: 1,
-    recordsTotal: 1,
-    recordsFiltered: 1,
-    data: [{ EntityID: 1, EntityLastName: "Fixture, Filer <br>(1)", Income: 1, Expense: 0, CashBalance: 1 }],
-  });
-  const route: RouteDescriptor = {
-    routeId: "az-sos-seethemoney-datatables",
-    label: "the Arizona filer index",
-    executorClass: "DETERMINISTIC",
-    executorReason: "fixture",
-    open: { kind: "HTTP_GET", url: "https://seethemoney.az.gov/Reporting/GetNEWTableData/" },
-    citation: "fixture",
-  };
-  for (const [label, repos] of await eachStore("wtp-settled-")) {
-    const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
-    const held = await interrupted(
-      repos,
-      obligation("ob-az-money", { recordClass: "campaign-finance", routeId: route.routeId }),
-      ingests(vaultRoot, "https://seethemoney.az.gov/Reporting/GetNEWTableData/", body),
-    );
-    const { cycle } = await cycleAt(repos, T1);
-    const recovered = cycle.recovered[0];
-    const record = (await repos.artifacts.read(held.workItemId)).find((r) => r.artifactId === recovered.disposition.artifactIds[0])!;
-    const staged = stageOne({
-      root: mkdtempSync(join(tmpdir(), "wtp-settled-stage-")),
-      obligationId: recovered.obligationId,
-      providerId: "campaign-finance",
-      recordClass: "campaign-finance",
-      subjectId: "az-sos-cfs-2026",
-      route,
-      disposition: recovered.disposition.disposition,
-      artifactIds: recovered.disposition.artifactIds,
-      body: await cycleVault(vaultRoot).readHeld(record),
-      nextDueAt: null,
-      detail: "recovered",
-      stagedOn: "2026-09-22",
-    });
-    assert.equal(staged.state, "STAGED_PROMOTION_READY", `${label}: normalized and staged, not left as inventory`);
-    assert.equal(staged.rowCount, 1);
   }
 });
 

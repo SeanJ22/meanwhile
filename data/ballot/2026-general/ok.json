@@ -16,15 +16,15 @@
           "divisionVintage": "2022",
           "title": "GOVERNOR",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "GOVERNOR"
           }
@@ -36,15 +36,15 @@
           "divisionVintage": "2022",
           "title": "LIEUTENANT GOVERNOR",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "LIEUTENANT GOVERNOR"
           }
@@ -56,15 +56,15 @@
           "divisionVintage": "2022",
           "title": "ATTORNEY GENERAL",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ATTORNEY GENERAL"
           }
@@ -76,15 +76,15 @@
           "divisionVintage": "2022",
           "title": "STATE TREASURER",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE TREASURER"
           }
@@ -96,15 +96,15 @@
           "divisionVintage": "2022",
           "title": "SUPERINTENDENT OF PUBLIC INSTRUCTION",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SUPERINTENDENT OF PUBLIC INSTRUCTION"
           }
@@ -116,15 +116,15 @@
           "divisionVintage": "2022",
           "title": "COMMISSIONER OF LABOR",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "COMMISSIONER OF LABOR"
           }
@@ -136,15 +136,15 @@
           "divisionVintage": "2022",
           "title": "INSURANCE COMMISSIONER",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "INSURANCE COMMISSIONER"
           }
@@ -156,15 +156,15 @@
           "divisionVintage": "2022",
           "title": "CORPORATION COMMISSIONER",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CORPORATION COMMISSIONER"
           }
@@ -176,15 +176,15 @@
           "divisionVintage": "2022",
           "title": "UNITED STATES SENATOR",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "UNITED STATES SENATOR"
           }
@@ -196,15 +196,15 @@
           "divisionVintage": "2022",
           "title": "UNITED STATES REPRESENTATIVE - DISTRICT 02",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "UNITED STATES REPRESENTATIVE - DISTRICT 02"
           }
@@ -216,15 +216,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 4",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 4"
           }
@@ -236,15 +236,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 86",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 86"
           }
@@ -256,15 +256,15 @@
           "divisionVintage": "2022",
           "title": "UNITED STATES REPRESENTATIVE - DISTRICT 03",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "UNITED STATES REPRESENTATIVE - DISTRICT 03"
           }
@@ -276,15 +276,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 58",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 58"
           }
@@ -296,15 +296,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 6",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 6"
           }
@@ -316,15 +316,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 56",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 56"
           }
@@ -336,15 +336,15 @@
           "divisionVintage": "2022",
           "title": "UNITED STATES REPRESENTATIVE - DISTRICT 05",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "UNITED STATES REPRESENTATIVE - DISTRICT 05"
           }
@@ -356,15 +356,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 18",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 18"
           }
@@ -376,15 +376,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 22",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 22"
           }
@@ -396,15 +396,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 41",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 41"
           }
@@ -416,15 +416,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 47",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 47"
           }
@@ -436,15 +436,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 60",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 60"
           }
@@ -456,15 +456,15 @@
           "divisionVintage": "2022",
           "title": "UNITED STATES REPRESENTATIVE - DISTRICT 04",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "UNITED STATES REPRESENTATIVE - DISTRICT 04"
           }
@@ -476,15 +476,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 49",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 49"
           }
@@ -496,15 +496,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 4",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 4"
           }
@@ -516,15 +516,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 14",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 14"
           }
@@ -536,15 +536,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 17 (Unexpired Term)",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": "Unexpired Term",
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 17 (Unexpired Term)"
           }
@@ -556,15 +556,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 24",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 24"
           }
@@ -576,15 +576,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 20",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 20"
           }
@@ -596,15 +596,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 27",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 27"
           }
@@ -616,15 +616,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 36",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 36"
           }
@@ -636,15 +636,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 45",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 45"
           }
@@ -656,15 +656,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 53",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 53"
           }
@@ -676,15 +676,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 54",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 54"
           }
@@ -696,15 +696,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 90",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 90"
           }
@@ -716,15 +716,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 91",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 91"
           }
@@ -736,15 +736,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 95",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 95"
           }
@@ -756,15 +756,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 32",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 32"
           }
@@ -776,15 +776,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 62",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 62"
           }
@@ -796,15 +796,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 63",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 63"
           }
@@ -816,15 +816,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 64",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 64"
           }
@@ -836,15 +836,15 @@
           "divisionVintage": "2022",
           "title": "UNITED STATES REPRESENTATIVE - DISTRICT 01",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "UNITED STATES REPRESENTATIVE - DISTRICT 01"
           }
@@ -856,15 +856,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 8",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 8"
           }
@@ -876,15 +876,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 12",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 12"
           }
@@ -896,15 +896,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 24",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 24"
           }
@@ -916,15 +916,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 30",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 30"
           }
@@ -936,15 +936,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 68",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 68"
           }
@@ -956,15 +956,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 38",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 38"
           }
@@ -976,15 +976,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 10",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 10"
           }
@@ -996,15 +996,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 3",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 3"
           }
@@ -1016,15 +1016,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 28",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 28"
           }
@@ -1036,15 +1036,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 32",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 32"
           }
@@ -1056,15 +1056,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 33",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 33"
           }
@@ -1076,15 +1076,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 16",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 16"
           }
@@ -1096,15 +1096,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 10",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 10"
           }
@@ -1116,15 +1116,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 42",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 42"
           }
@@ -1136,15 +1136,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 81",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 81"
           }
@@ -1156,15 +1156,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 82",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 82"
           }
@@ -1176,15 +1176,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 83",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 83"
           }
@@ -1196,15 +1196,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 84",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 84"
           }
@@ -1216,15 +1216,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 85",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 85"
           }
@@ -1236,15 +1236,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 87",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 87"
           }
@@ -1256,15 +1256,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 96",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 96"
           }
@@ -1276,15 +1276,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 99",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 99"
           }
@@ -1296,15 +1296,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 100",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 100"
           }
@@ -1316,15 +1316,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 66",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 66"
           }
@@ -1336,15 +1336,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 34",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 34"
           }
@@ -1356,15 +1356,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 26",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 26"
           }
@@ -1376,15 +1376,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 28",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 28"
           }
@@ -1396,15 +1396,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 2",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 2"
           }
@@ -1416,15 +1416,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 9",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 9"
           }
@@ -1436,15 +1436,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 23",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 23"
           }
@@ -1456,15 +1456,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 74",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 74"
           }
@@ -1476,15 +1476,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 34",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 34"
           }
@@ -1496,15 +1496,15 @@
           "divisionVintage": "2022",
           "title": "STATE SENATOR - DISTRICT 36",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE SENATOR - DISTRICT 36"
           }
@@ -1516,15 +1516,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 69",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 69"
           }
@@ -1536,15 +1536,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 72",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 72"
           }
@@ -1556,15 +1556,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 75",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 75"
           }
@@ -1576,15 +1576,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 76",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 76"
           }
@@ -1596,15 +1596,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 78",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 78"
           }
@@ -1616,15 +1616,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 79",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 79"
           }
@@ -1636,15 +1636,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 80",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 80"
           }
@@ -1656,15 +1656,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 98",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 98"
           }
@@ -1676,15 +1676,15 @@
           "divisionVintage": "2022",
           "title": "STATE REPRESENTATIVE - DISTRICT 12",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STATE REPRESENTATIVE - DISTRICT 12"
           }
@@ -1696,17 +1696,17 @@
           "divisionVintage": "2022",
           "title": "SUPREME COURT DISTRICT 1",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall M. JOHN KANE IV of the OKLAHOMA SUPREME COURT be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "SUPREME COURT DISTRICT 1"
+            "quote": "Shall M. JOHN KANE IV of the OKLAHOMA SUPREME COURT be retained in office?"
           }
         },
         {
@@ -1716,17 +1716,17 @@
           "divisionVintage": "2022",
           "title": "SUPREME COURT DISTRICT 4",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall TRAVIS V. JETT of the OKLAHOMA SUPREME COURT be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "SUPREME COURT DISTRICT 4"
+            "quote": "Shall TRAVIS V. JETT of the OKLAHOMA SUPREME COURT be retained in office?"
           }
         },
         {
@@ -1736,17 +1736,17 @@
           "divisionVintage": "2022",
           "title": "SUPREME COURT DISTRICT 6",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall DANA KUEHN of the OKLAHOMA SUPREME COURT be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "SUPREME COURT DISTRICT 6"
+            "quote": "Shall DANA KUEHN of the OKLAHOMA SUPREME COURT be retained in office?"
           }
         },
         {
@@ -1756,17 +1756,17 @@
           "divisionVintage": "2022",
           "title": "SUPREME COURT DISTRICT 9",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall RICHARD B. DARBY of the OKLAHOMA SUPREME COURT be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "SUPREME COURT DISTRICT 9"
+            "quote": "Shall RICHARD B. DARBY of the OKLAHOMA SUPREME COURT be retained in office?"
           }
         },
         {
@@ -1776,17 +1776,17 @@
           "divisionVintage": "2022",
           "title": "COURT OF CRIMINAL APPEALS DISTRICT 2",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall ROBERT L. HUDSON of the OKLAHOMA COURT OF CRIMINAL APPEALS be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "COURT OF CRIMINAL APPEALS DISTRICT 2"
+            "quote": "Shall ROBERT L. HUDSON of the OKLAHOMA COURT OF CRIMINAL APPEALS be retained in office?"
           }
         },
         {
@@ -1796,17 +1796,17 @@
           "divisionVintage": "2022",
           "title": "COURT OF CIVIL APPEALS DISTRICT 1 - OFFICE 1",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall STACIE L. HIXON of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "COURT OF CIVIL APPEALS DISTRICT 1 - OFFICE 1"
+            "quote": "Shall STACIE L. HIXON of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
           }
         },
         {
@@ -1816,17 +1816,17 @@
           "divisionVintage": "2022",
           "title": "COURT OF CIVIL APPEALS DISTRICT 1 - OFFICE 2",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall JANE P. WISEMAN of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "COURT OF CIVIL APPEALS DISTRICT 1 - OFFICE 2"
+            "quote": "Shall JANE P. WISEMAN of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
           }
         },
         {
@@ -1836,17 +1836,17 @@
           "divisionVintage": "2022",
           "title": "COURT OF CIVIL APPEALS DISTRICT 2 - OFFICE 1",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall DEBORAH B. BARNES of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "COURT OF CIVIL APPEALS DISTRICT 2 - OFFICE 1"
+            "quote": "Shall DEBORAH B. BARNES of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
           }
         },
         {
@@ -1856,17 +1856,17 @@
           "divisionVintage": "2022",
           "title": "COURT OF CIVIL APPEALS DISTRICT 2 - OFFICE 2",
           "type": "RETENTION",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "Shall JAMES R. HUBER of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?",
           "provenance": {
-            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
-            "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
             "doorId": "fec-ok-chief",
-            "quote": "COURT OF CIVIL APPEALS DISTRICT 2 - OFFICE 2"
+            "quote": "Shall JAMES R. HUBER of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
           }
         },
         {
@@ -1921,8 +1921,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MIKE MAZZEI, REPUBLICAN"
           }
@@ -1939,8 +1939,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CYNDI MUNSON, DEMOCRAT"
           }
@@ -1957,8 +1957,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ORLANDO LYNN BUSH, INDEPENDENT"
           }
@@ -1975,8 +1975,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ROBERT E BROOKS SR, INDEPENDENT"
           }
@@ -1993,8 +1993,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JERRY GRIFFIN, INDEPENDENT"
           }
@@ -2011,8 +2011,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "T. W. SHANNON, REPUBLICAN"
           }
@@ -2029,8 +2029,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KELLY FORBES, DEMOCRAT"
           }
@@ -2047,8 +2047,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JON ECHOLS, REPUBLICAN"
           }
@@ -2065,8 +2065,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "NICK COFFEY, DEMOCRAT"
           }
@@ -2083,8 +2083,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CINDY BYRD, REPUBLICAN"
           }
@@ -2101,8 +2101,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KIEFER PERRY, LIBERTARIAN"
           }
@@ -2119,8 +2119,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ROBERT FRANKLIN, REPUBLICAN"
           }
@@ -2137,8 +2137,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JENNETTIE MARSHALL, DEMOCRAT"
           }
@@ -2155,8 +2155,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KEVIN WEST, REPUBLICAN"
           }
@@ -2173,8 +2173,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KEVIN DAWSON, DEMOCRAT"
           }
@@ -2191,8 +2191,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MIKE HALL, LIBERTARIAN"
           }
@@ -2209,8 +2209,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BOB SULLIVAN, REPUBLICAN"
           }
@@ -2227,8 +2227,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CRAIG MacINTYRE, DEMOCRAT"
           }
@@ -2245,8 +2245,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BRAD BOLES, REPUBLICAN"
           }
@@ -2263,8 +2263,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "RHONDA EASTMAN, DEMOCRAT"
           }
@@ -2281,8 +2281,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KEVIN HERN, REPUBLICAN"
           }
@@ -2299,8 +2299,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "N'KIYLA JASMINE THOMAS, DEMOCRAT"
           }
@@ -2317,8 +2317,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SEVIER WHITE, LIBERTARIAN"
           }
@@ -2335,8 +2335,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "RON MEINHARDT, INDEPENDENT"
           }
@@ -2353,8 +2353,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CURTIS STINNETT, INDEPENDENT"
           }
@@ -2371,8 +2371,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOSH BRECHEEN, REPUBLICAN"
           }
@@ -2389,8 +2389,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BRANDON WADE, DEMOCRAT"
           }
@@ -2407,8 +2407,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "RONNIE HOPKINS, INDEPENDENT"
           }
@@ -2425,8 +2425,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TOM WOODS, REPUBLICAN"
           }
@@ -2443,8 +2443,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ELLEN CUFF, DEMOCRAT"
           }
@@ -2461,8 +2461,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DAVID HARDIN, REPUBLICAN"
           }
@@ -2479,8 +2479,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "HANNAH COLE, DEMOCRAT"
           }
@@ -2497,8 +2497,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "FRANK D. LUCAS, REPUBLICAN"
           }
@@ -2515,8 +2515,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SUZIE BYRD, DEMOCRAT"
           }
@@ -2533,8 +2533,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CARL NEWTON, REPUBLICAN"
           }
@@ -2551,8 +2551,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ALBERT BORRIE, DEMOCRAT"
           }
@@ -2569,8 +2569,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DAVID BULLARD, REPUBLICAN"
           }
@@ -2587,8 +2587,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "PATRICK SOUTHERLAND, DEMOCRAT"
           }
@@ -2605,8 +2605,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DICK LOWE, REPUBLICAN"
           }
@@ -2623,8 +2623,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "LINDA PEDRO, DEMOCRAT"
           }
@@ -2641,8 +2641,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STEPHANIE BICE, REPUBLICAN"
           }
@@ -2659,8 +2659,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JENA NELSON, DEMOCRAT"
           }
@@ -2677,8 +2677,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ROBERT P. HENRI, INDEPENDENT"
           }
@@ -2695,8 +2695,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "AUSTIN NIEVES, INDEPENDENT"
           }
@@ -2713,8 +2713,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TYLER HERRING, REPUBLICAN"
           }
@@ -2731,8 +2731,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MEREDITH McGINNIS, DEMOCRAT"
           }
@@ -2749,8 +2749,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KRISTEN THOMPSON, REPUBLICAN"
           }
@@ -2767,8 +2767,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KENNY KEMPER, DEMOCRAT"
           }
@@ -2785,8 +2785,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DENISE CROSSWHITE HADER, REPUBLICAN"
           }
@@ -2803,8 +2803,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MIKE BOCKUS, DEMOCRAT"
           }
@@ -2821,8 +2821,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TOBY THOMPSON, REPUBLICAN"
           }
@@ -2839,8 +2839,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "INDIGO OLIVER, DEMOCRAT"
           }
@@ -2857,8 +2857,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MIKE KELLEY, REPUBLICAN"
           }
@@ -2875,8 +2875,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SHARON K TAYLOR, DEMOCRAT"
           }
@@ -2893,8 +2893,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TOM COLE, REPUBLICAN"
           }
@@ -2911,8 +2911,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MITCHELL JACOB, DEMOCRAT"
           }
@@ -2929,8 +2929,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ROCCO BONACCI, INDEPENDENT"
           }
@@ -2947,8 +2947,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOSH CANTRELL, REPUBLICAN"
           }
@@ -2965,8 +2965,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DUSTY JO JONES, DEMOCRAT"
           }
@@ -2983,8 +2983,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BOB ED CULVER, REPUBLICAN"
           }
@@ -3001,8 +3001,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHRISTOPHER WIER, DEMOCRAT"
           }
@@ -3019,8 +3019,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHRIS SNEED, REPUBLICAN"
           }
@@ -3037,8 +3037,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JEREMIAH GANTZ, DEMOCRAT"
           }
@@ -3055,8 +3055,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JUSTIN FREELAND WOOD, REPUBLICAN"
           }
@@ -3073,8 +3073,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ED BOLT, DEMOCRAT"
           }
@@ -3091,8 +3091,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JON PAINTER, REPUBLICAN"
           }
@@ -3109,8 +3109,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JONATHAN MORALES, DEMOCRAT"
           }
@@ -3127,8 +3127,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MELISSA ELDER, INDEPENDENT"
           }
@@ -3145,8 +3145,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JONATHAN WILK, REPUBLICAN"
           }
@@ -3163,8 +3163,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHRIS MAY, DEMOCRAT"
           }
@@ -3181,8 +3181,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DANNY STERLING, REPUBLICAN"
           }
@@ -3199,8 +3199,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MEMORY TAYLOR, DEMOCRAT"
           }
@@ -3217,8 +3217,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOHN GEORGE, REPUBLICAN"
           }
@@ -3235,8 +3235,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "LESLIE HELLEBUYCK, DEMOCRAT"
           }
@@ -3253,8 +3253,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CAROLYN WOMACK-BIELICH, REPUBLICAN"
           }
@@ -3271,8 +3271,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ANNIE MENZ, DEMOCRAT"
           }
@@ -3289,8 +3289,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JASON BLAIR, REPUBLICAN"
           }
@@ -3307,8 +3307,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CARROLL ASSÉO, DEMOCRAT"
           }
@@ -3325,8 +3325,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "HEATH KUFAHL, REPUBLICAN"
           }
@@ -3343,8 +3343,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CRYSTAL ABRAM-GARCIA, DEMOCRAT"
           }
@@ -3361,8 +3361,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "EMILY GISE, REPUBLICAN"
           }
@@ -3379,8 +3379,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KYMBERLY WARD, DEMOCRAT"
           }
@@ -3397,8 +3397,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ROBERTO SEDA, REPUBLICAN"
           }
@@ -3415,8 +3415,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHRIS FOWLER, DEMOCRAT"
           }
@@ -3433,8 +3433,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MAX WOLFLEY, REPUBLICAN"
           }
@@ -3451,8 +3451,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TEGAN MALONE, DEMOCRAT"
           }
@@ -3469,8 +3469,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "RYAN GARDNER, INDEPENDENT"
           }
@@ -3487,8 +3487,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CURTIS W. ERWIN, REPUBLICAN"
           }
@@ -3505,8 +3505,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BOOKER T. NEWTON, DEMOCRAT"
           }
@@ -3523,8 +3523,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "VALENTIN PEÑA, INDEPENDENT"
           }
@@ -3541,8 +3541,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DANIEL PAE, REPUBLICAN"
           }
@@ -3559,8 +3559,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BLAKE MUNOZ, DEMOCRAT"
           }
@@ -3577,8 +3577,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TREY CALDWELL, REPUBLICAN"
           }
@@ -3595,8 +3595,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SHYKIRA SMITH, DEMOCRAT"
           }
@@ -3613,8 +3613,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "LOUIS JACKSON, REPUBLICAN"
           }
@@ -3631,8 +3631,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KATHY SUTTLES, DEMOCRAT"
           }
@@ -3649,8 +3649,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MARK TEDFORD, REPUBLICAN"
           }
@@ -3667,8 +3667,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOHN CROISANT, DEMOCRAT"
           }
@@ -3685,8 +3685,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BRYAN LOGAN, REPUBLICAN"
           }
@@ -3703,8 +3703,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "NATHAN BREWER, DEMOCRAT"
           }
@@ -3721,8 +3721,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TODD GOLLIHARE, REPUBLICAN"
           }
@@ -3739,8 +3739,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ERICA WATKINS, DEMOCRAT"
           }
@@ -3757,8 +3757,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHRIS BANNING, REPUBLICAN"
           }
@@ -3775,8 +3775,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOSHUA CONANT, INDEPENDENT"
           }
@@ -3793,8 +3793,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MARK LAWSON, REPUBLICAN"
           }
@@ -3811,8 +3811,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SONYA AMLING, DEMOCRAT"
           }
@@ -3829,8 +3829,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MIKE LAY, REPUBLICAN"
           }
@@ -3847,8 +3847,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MICHELLE LaFLEUR, DEMOCRAT"
           }
@@ -3865,8 +3865,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MADISON BOLAY, REPUBLICAN"
           }
@@ -3883,8 +3883,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DOYLE LEWIS, DEMOCRAT"
           }
@@ -3901,8 +3901,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BILL COLEMAN, REPUBLICAN"
           }
@@ -3919,8 +3919,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHAYELYNN MOORE, DEMOCRAT"
           }
@@ -3937,8 +3937,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "RICK WEST, REPUBLICAN"
           }
@@ -3955,8 +3955,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STEVE GLINSKI, DEMOCRAT"
           }
@@ -3973,8 +3973,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "GRANT GREEN, REPUBLICAN"
           }
@@ -3991,8 +3991,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KEVIN M. CONNOR, DEMOCRAT"
           }
@@ -4009,8 +4009,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JIM SHAW, REPUBLICAN"
           }
@@ -4027,8 +4027,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ANDY BROWN, INDEPENDENT"
           }
@@ -4045,8 +4045,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MOLLY JENKINS, REPUBLICAN"
           }
@@ -4063,8 +4063,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MAX E. BURCHETT JR, DEMOCRAT"
           }
@@ -4081,8 +4081,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DAVID NELSON, REPUBLICAN"
           }
@@ -4099,8 +4099,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ROSE ROSIE LYNCH, DEMOCRAT"
           }
@@ -4117,8 +4117,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JUDD STROM, REPUBLICAN"
           }
@@ -4135,8 +4135,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ISAAC D MATTOX, DEMOCRAT"
           }
@@ -4153,8 +4153,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BRENDA STANLEY, REPUBLICAN"
           }
@@ -4171,8 +4171,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHRIS JONES, DEMOCRAT"
           }
@@ -4189,8 +4189,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TROY TALLEY, REPUBLICAN"
           }
@@ -4207,8 +4207,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MEGAN HORNBEEK ALLEN, DEMOCRAT"
           }
@@ -4225,8 +4225,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "NICOLE MILLER, REPUBLICAN"
           }
@@ -4243,8 +4243,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TRAVIS HEADD, DEMOCRAT"
           }
@@ -4261,8 +4261,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ERIC ROBERTS, REPUBLICAN"
           }
@@ -4279,8 +4279,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DALTON GAU, DEMOCRAT"
           }
@@ -4297,8 +4297,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TAMMY WEST, REPUBLICAN"
           }
@@ -4315,8 +4315,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JEFFREY PEREZ, DEMOCRAT"
           }
@@ -4333,8 +4333,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOE FALLIN, REPUBLICAN"
           }
@@ -4351,8 +4351,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHELSEY BRANHAM, DEMOCRAT"
           }
@@ -4369,8 +4369,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CODEY BARTLE, REPUBLICAN"
           }
@@ -4387,8 +4387,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ELLYN HEFNER, DEMOCRAT"
           }
@@ -4405,8 +4405,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "PRESTON STINSON, REPUBLICAN"
           }
@@ -4423,8 +4423,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ASHTYN SMITH, DEMOCRAT"
           }
@@ -4441,8 +4441,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MELVIN LATHAM, REPUBLICAN"
           }
@@ -4459,8 +4459,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "HERSCHEL L. BROWN, DEMOCRAT"
           }
@@ -4477,8 +4477,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MARILYN STARK, REPUBLICAN"
           }
@@ -4495,8 +4495,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHAUNTÉ GILMORE, DEMOCRAT"
           }
@@ -4513,8 +4513,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CLAY STAIRES, REPUBLICAN"
           }
@@ -4531,8 +4531,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KENNY BLEVINS, LIBERTARIAN"
           }
@@ -4549,8 +4549,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "AARON MEANS, REPUBLICAN"
           }
@@ -4567,8 +4567,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TRISH RANSON, DEMOCRAT"
           }
@@ -4585,8 +4585,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "LEAH LONGEST, REPUBLICAN"
           }
@@ -4603,8 +4603,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CHRIS ODNEAL, DEMOCRAT"
           }
@@ -4621,8 +4621,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DANNY WILLIAMS, REPUBLICAN"
           }
@@ -4639,8 +4639,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "BLAKE CUMMINGS, DEMOCRAT"
           }
@@ -4657,8 +4657,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ALLY SEIFRIED, REPUBLICAN"
           }
@@ -4675,8 +4675,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "RANDY COWLING, DEMOCRAT"
           }
@@ -4693,8 +4693,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SCOTTY STOKES, REPUBLICAN"
           }
@@ -4711,8 +4711,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ANDREA BISCARDI, DEMOCRAT"
           }
@@ -4729,8 +4729,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "DERRICK R. HILDEBRANT, REPUBLICAN"
           }
@@ -4747,8 +4747,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CATHERINE PETERS, DEMOCRAT"
           }
@@ -4765,8 +4765,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "KEVIN W. NORWOOD, REPUBLICAN"
           }
@@ -4783,8 +4783,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "AARON BRENT, INDEPENDENT"
           }
@@ -4801,8 +4801,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "AARON FORST, REPUBLICAN"
           }
@@ -4819,8 +4819,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "AMY HOSSAIN, DEMOCRAT"
           }
@@ -4837,8 +4837,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOHN HASTE, REPUBLICAN"
           }
@@ -4855,8 +4855,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "RICK LARSEN, DEMOCRAT"
           }
@@ -4873,8 +4873,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "SHEILA DILLS, REPUBLICAN"
           }
@@ -4891,8 +4891,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TYLER PRICE, DEMOCRAT"
           }
@@ -4909,8 +4909,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ADAM MARTIN, REPUBLICAN"
           }
@@ -4927,8 +4927,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MICHELLE McCANE, DEMOCRAT"
           }
@@ -4945,8 +4945,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "T. J. MARTI, REPUBLICAN"
           }
@@ -4963,8 +4963,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JOE WATKINS, DEMOCRAT"
           }
@@ -4981,8 +4981,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "ROSS FORD, REPUBLICAN"
           }
@@ -4999,8 +4999,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MICHAEL TINSLEY, DEMOCRAT"
           }
@@ -5017,8 +5017,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MELOYDE BLANCETT, DEMOCRAT"
           }
@@ -5035,8 +5035,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TONY OLIVA, INDEPENDENT"
           }
@@ -5053,8 +5053,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "PAUL HASSINK, REPUBLICAN"
           }
@@ -5071,8 +5071,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MELISSA PROVENZANO, DEMOCRAT"
           }
@@ -5089,8 +5089,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "STAN MAY, REPUBLICAN"
           }
@@ -5107,8 +5107,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "JEREMY FOUNDS, DEMOCRAT"
           }
@@ -5125,8 +5125,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "GABE WOOLLEY, REPUBLICAN"
           }
@@ -5143,8 +5143,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "CATHY SMYTHE, DEMOCRAT"
           }
@@ -5161,8 +5161,8 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "MARK CHAPMAN, REPUBLICAN"
           }
@@ -5179,10 +5179,172 @@
           "provenance": {
             "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
             "sourceOrg": "Oklahoma State Election Board",
-            "collectedAt": "2026-10-14T05:11:30.320352+00:00",
-            "verifiedAt": "2026-10-14T05:11:30.320352+00:00",
+            "collectedAt": "2026-10-14T16:12:11.749951+00:00",
+            "verifiedAt": "2026-10-14T16:12:11.749951+00:00",
             "doorId": "fec-ok-chief",
             "quote": "TIFFANY PRATER, DEMOCRAT"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-supreme-court-district-1-5b314858f5bc1e35",
+          "contestId": "ok-2026-general-retention-supreme-court-district-1",
+          "givenName": "M. JOHN",
+          "familyName": "KANE IV",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall M. JOHN KANE IV of the OKLAHOMA SUPREME COURT be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-supreme-court-district-4-1bf29731d6caaef7",
+          "contestId": "ok-2026-general-retention-supreme-court-district-4",
+          "givenName": "TRAVIS V.",
+          "familyName": "JETT",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall TRAVIS V. JETT of the OKLAHOMA SUPREME COURT be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-supreme-court-district-6-7b3fa383401b71cc",
+          "contestId": "ok-2026-general-retention-supreme-court-district-6",
+          "givenName": "DANA",
+          "familyName": "KUEHN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall DANA KUEHN of the OKLAHOMA SUPREME COURT be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-supreme-court-district-9-7155e26b05d97d80",
+          "contestId": "ok-2026-general-retention-supreme-court-district-9",
+          "givenName": "RICHARD B.",
+          "familyName": "DARBY",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall RICHARD B. DARBY of the OKLAHOMA SUPREME COURT be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-court-of-criminal-appeals-district-2-c1d27752a42a6f5b",
+          "contestId": "ok-2026-general-retention-court-of-criminal-appeals-district-2",
+          "givenName": "ROBERT L.",
+          "familyName": "HUDSON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall ROBERT L. HUDSON of the OKLAHOMA COURT OF CRIMINAL APPEALS be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-court-of-civil-appeals-district-1-office-1-fe6bd2e3751535d8",
+          "contestId": "ok-2026-general-retention-court-of-civil-appeals-district-1-office-1",
+          "givenName": "STACIE L.",
+          "familyName": "HIXON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall STACIE L. HIXON of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-court-of-civil-appeals-district-1-office-2-041e642d568081a8",
+          "contestId": "ok-2026-general-retention-court-of-civil-appeals-district-1-office-2",
+          "givenName": "JANE P.",
+          "familyName": "WISEMAN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall JANE P. WISEMAN of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-court-of-civil-appeals-district-2-office-1-0380f4fcdb665fb6",
+          "contestId": "ok-2026-general-retention-court-of-civil-appeals-district-2-office-1",
+          "givenName": "DEBORAH B.",
+          "familyName": "BARNES",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall DEBORAH B. BARNES of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
+          }
+        },
+        {
+          "id": "ok-2026-general-retention-court-of-civil-appeals-district-2-office-2-39d00de8ee3f0823",
+          "contestId": "ok-2026-general-retention-court-of-civil-appeals-district-2-office-2",
+          "givenName": "JAMES R.",
+          "familyName": "HUBER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+            "sourceOrg": "Cleveland County Election Board",
+            "collectedAt": "2026-10-14T16:13:46.829331+00:00",
+            "verifiedAt": "2026-10-14T16:13:46.829331+00:00",
+            "doorId": "fec-ok-chief",
+            "quote": "Shall JAMES R. HUBER of the OKLAHOMA COURT OF CIVIL APPEALS be retained in office?"
           }
         }
       ],
@@ -5232,8 +5394,8 @@
         }
       ],
       "coverageNotes": [
-        "The State Election Board publishes its November 2026 candidate list by county. These state, congressional and legislative candidates were converted from all 77 county sections. The list does not state that it is certified; candidate-list completeness remains unconfirmed.",
-        "The State Election Board lists nine statewide judicial-retention offices without the judges’ names in its November 2026 list. Those names and retention question wording remain unavailable in this source; the Board directs voters to the OK Voter Portal to view their precinct sample ballot.",
+        "The State Election Board publishes its November 2026 list by county. All 77 county sections were converted and deduplicated, yielding the full printed choice list for every held statewide, congressional and legislative contest.",
+        "The Cleveland County Election Board’s official November 3, 2026 sample ballot supplies all nine statewide judicial-retention names and exact questions.",
         "Unopposed candidates do not appear on an Oklahoma ballot, according to the State Election Board. Unopposed offices are excluded from this ballot projection.",
         "State Question 845 uses the Secretary of State’s August 13 corrected CLEAN final ballot title. The county list labels its legislative referendum 378; the State Election Board’s question page and corrected final title identify referendum 379."
       ]
@@ -5241,8 +5403,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:11:30.320352+00:00",
-    "reviewedBy": "Codex BL-15 official-file conversion",
+    "reviewedAt": "2026-10-14T16:15:17.641547+00:00",
+    "reviewedBy": "Codex BL-15 official-list completeness correction",
     "sources": [
       {
         "requestedUrl": "https://oklahoma.gov/elections.html",
@@ -5293,10 +5455,10 @@
         "finalUrl": "https://hosting.okelections.gov/electionlist.html",
         "httpStatus": 200,
         "rawHash": "4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf",
-        "retrievedAt": "2026-10-14T05:11:30.320352+00:00",
+        "retrievedAt": "2026-10-14T16:12:11.749951+00:00",
         "publisher": "Oklahoma State Election Board",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 2026 list, created September 24, 2026, has all 77 county sections; converted and deduplicated all listed statewide, congressional and legislative candidates, and statewide retention offices.",
+        "reviewedEvidence": "Official November 2026 list, created September 24, 2026. All 77 county sections were parsed and deduplicated; every printed candidate for each statewide, congressional and legislative contest matches the saved list for its whole territory.",
         "reviewOutcome": "SUPPORTED"
       },
       {
@@ -5319,6 +5481,39 @@
         "publisher": "Oklahoma Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official State Question 847 supporting documents and certified final ballot title; exact printed wording extracted from its Final Ballot Title page.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+        "finalUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+        "httpStatus": 200,
+        "rawHash": "79aabd1c7cbc0c617654d1d9a31cbec485b7125057ec8a250143d6f0e29b1c36",
+        "retrievedAt": "2026-10-14T16:13:46.829331+00:00",
+        "publisher": "Cleveland County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot for precinct 140100. Its nine statewide judicial-retention contests contain the complete printed judicial names and exact retention questions. No county or legislative contest is widened from this precinct.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.clevelandcountyelectionboard.com/sample-ballots-november-3-2026-general-election",
+        "finalUrl": "https://www.clevelandcountyelectionboard.com/sample-ballots-november-3-2026-general-election",
+        "httpStatus": 200,
+        "rawHash": "3b265007c034c757f3371e3a949415108302c55f53793c9fb566342b91a93d9e",
+        "retrievedAt": "2026-10-14T16:13:33.514951+00:00",
+        "publisher": "Cleveland County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Cleveland County Election Board sample-ballot index links the November 3, 2026 precinct 140100 general ballot used for statewide retention contests.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.clevelandcountyelectionboard.com/about-us",
+        "finalUrl": "https://www.clevelandcountyelectionboard.com/about-us",
+        "httpStatus": 200,
+        "rawHash": "663b779a9fa9b92daabfa484ce649567c1f1788936d6090bcfaffc449cf63eb6",
+        "retrievedAt": "2026-10-14T16:15:17.641547+00:00",
+        "publisher": "Cleveland County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The page identifies this domain as the official site of the Cleveland County Election Board, Norman, Oklahoma.",
         "reviewOutcome": "SUPPORTED"
       }
     ]

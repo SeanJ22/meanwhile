@@ -140,7 +140,7 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
     disposition: "WALKED",
     note:
       "The tenant's own list of its bodies. `webapi.legistar.com` publishes no " +
-      "robots.txt (HTTP 404 → NO_ROBOTS, docs/sources.md 2026-08-28).",
+      "robots.txt (HTTP 404 → NO_ROBOTS, 2026-08-28).",
   },
   {
     id: "WEBAPI_EVENTS",
@@ -153,7 +153,7 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
       "Returns only sittings whose InSite detail page is publicly viewable, which " +
       "is why it is NOT a complete enumeration and why INSITE_CALENDAR is a " +
       "distinct route rather than a fallback (measured on Mesa: the grid held 15 " +
-      "where this route held 3, docs/sources.md 2026-08-28).",
+      "where this route held 3, 2026-08-28).",
   },
   {
     id: "WEBAPI_EVENT",
@@ -340,7 +340,7 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
     note:
       "Prior years behind an ASP.NET postback. The grid pages at 100 rows and a " +
       "GUESSED page index returns the WRONG page with a clean HTTP 200, so page " +
-      "targets are read off the pager (docs/sources.md 2026-08-28).",
+      "targets are read off the pager (2026-08-28).",
   },
 ];
 

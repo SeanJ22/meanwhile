@@ -149,7 +149,7 @@ function marginaliaRoute(c: CanonicalCandidacy): RouteDescriptor {
       zeroRowsIsMiss: true,
     },
     citation:
-      "docs/sources.md — api.marginalia.nu/public/search, walked 2026-08-24, control: an impossible " +
+      "source registry — api.marginalia.nu/public/search, walked 2026-08-24, control: an impossible " +
       "term returns a `license` field and an empty `results` array. CC-BY-NC-SA 4.0 — DISCOVERY ONLY, " +
       "so it may point at a URL and may never be a source of record here. PERMISSION RE-READ " +
       "2026-09-01 BEFORE THIS ROUTE WAS REGISTERED: `https://marginalia.nu/robots.txt` answers 301 " +
@@ -183,7 +183,7 @@ function generalIndexWall(stateCode: string): RouteDescriptor {
         "are DISALLOWED, which is a different fact and is never re-walked on a clock. This row is the " +
         "WALL, and its dated reading expires and sends a session back to it.",
     },
-    citation: "docs/sources.md — the search-pool table, re-measured 2026-08-26",
+    citation: "source registry — the search pool, re-measured 2026-08-26",
   };
 }
 

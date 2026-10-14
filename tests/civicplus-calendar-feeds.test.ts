@@ -32,7 +32,7 @@ test("THE INDEX: every category calendar feed the county lists, with the name it
   assert.deepEqual(extra.map((f) => [f.catId, f.name]), [["6", "City Council"]], "another host's feed, a news feed and a nameless feed are not calendars to match");
 });
 
-test("THE MATCH: only a category that is exactly the governing body's name of its kind of government names a registered body; every other is unmatched, with its reason", () => {
+test("a category names the governing body or an exact sub-body; departments and other governments remain unmatched", () => {
   const feeds = civicPlusCategoryFeeds(INDEX, INDEX_URL);
   const matched = feeds.flatMap((f) => {
     const named = categoryBodyOf(f.name, COUNTY);
@@ -49,7 +49,7 @@ test("THE MATCH: only a category that is exactly the governing body's name of it
   assert.match(why("Clerk of the Board"), /bare "Board"|more than one body's name/);
   assert.match(why("Housing Authority"), /another government's body/);
   assert.match(why("Cochise County Justice and Care Collective"), /prints no body's name/);
-  assert.match(why("Planning and Zoning Commission"), /names a sub-body/);
+  assert.deepEqual(categoryBodyOf("Planning and Zoning Commission", COUNTY), { role: "SUB_BODY", name: "Planning and Zoning Commission" });
   assert.match(why("Board of Supervisors Meetings"), /more than one body's name/, "a category saying more than the name is not guessed at");
   assert.match(why("City Council"), /another government's body/, "a city's governing name is not a county's");
   assert.deepEqual(categoryBodyOf("County Board of Supervisors", COUNTY), { role: "GOVERNING", name: "Board of Supervisors" });
@@ -102,7 +102,7 @@ for (const smallPublisher of [false, true]) test(`THE WALK: a CivicPlus site's c
     addressSource: { source: "GAP_LEDGER", versionId: "b".repeat(64) },
   };
   const attempts: Awaited<ReturnType<typeof walkMeetingsDiscoveryNeed>>[] = [];
-  for (let pass = 0; pass < 4; pass++) attempts.push(await walkMeetingsDiscoveryNeed(need, {
+  for (let pass = 0; pass < feeds.length && !feeds.every(feed => seen.includes(feed.url)); pass++) attempts.push(await walkMeetingsDiscoveryNeed(need, {
     ...rt,
     // Synthetic size metadata exercises both policies against the same recorded routes.
     websiteSize: smallPublisher ? () => ({ kind: "local-government", population: 9999 }) : undefined,
@@ -111,7 +111,9 @@ for (const smallPublisher of [false, true]) test(`THE WALK: a CivicPlus site's c
   const attempt = attempts[0];
   if (smallPublisher) assert.ok(attempts.every(a => a.requestCount <= 10), "known small publishers retain the ten-request limit");
   else assert.ok(attempt.requestCount > 10, "unknown publishers can read beyond ten requests in one walk");
-  assert.deepEqual(seen.slice(0, 3), ["https://www.cochise.az.gov/robots.txt", "https://www.cochise.az.gov/", INDEX_URL]);
+  assert.deepEqual(seen.slice(0, 2), ["https://www.cochise.az.gov/robots.txt", "https://www.cochise.az.gov/"]);
+  assert.ok(["/agendas", "/meetings", "/calendar", "/sitemap.xml"].every(path => seen.includes(`https://www.cochise.az.gov${path}`)));
+  assert.ok(seen.includes(INDEX_URL));
   assert.ok(feeds.every(f => seen.includes(f.url)), "later walks read every category, including those beyond the original cutoffs");
   if (smallPublisher) assert.equal(attempt.recheckAfter, attempt.finishedAt, "unread source routes remain due instead of waiting for the successful feed's recheck");
   const departmentFind = attempts.flatMap(a => a.found).find(f => f.url === department.url);
@@ -128,7 +130,7 @@ for (const smallPublisher of [false, true]) test(`THE WALK: a CivicPlus site's c
   assert.deepEqual(feed.via, { page: INDEX_URL, artifactId: indexStep.artifactId }, "the feed names the index that linked it");
   const index = attempt.leads.find((l) => l.vendor === "civicplus-icalendar");
   assert.ok(index !== undefined, "the index is recorded, so the feed's attestation chains through it");
-  assert.match(index.detail, /25 category feed\(s\); proposed as the governing body's: "Board of Supervisors" \(catID 31\)/);
+  assert.match(index.detail, /25 category feed\(s\); proposed bodies: "Board of Supervisors" \(catID 31\)/);
   assert.match(index.detail, /"Housing Authority" reads as another government's body \(catID 41\)/);
   assert.match(index.detail, /"Assessor" prints no body's name/);
 

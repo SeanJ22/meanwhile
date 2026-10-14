@@ -29,7 +29,7 @@ test("real BoardBook source markup supplies the published tenant and route on th
   const observation = observePlatformCensus(html, "https://meetings.boardbook.org/Public/Organization/2065", "capture", NOW);
   assert.ok(observation.matches.some(row => row.platform === "boardbook" && row.tenant === "2065"));
   assert.equal(observation.artifactId, "capture");
-  assert.equal(observation.recheckAfter, "2026-11-11T12:00:00.000Z");
+  assert.equal(observation.recheckAfter, "2026-10-13T00:00:00.000Z");
 });
 test("held Census websites are walked before a state's registration is promoted", async () => {
   const needs = heldCensusWebsiteNeeds("AL");

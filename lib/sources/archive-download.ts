@@ -18,6 +18,7 @@ export interface ArchiveSourceOpen {
   readonly member: string; readonly retrievedAt: string; readonly publishedAt: string | null;
   readonly checkedAt: string; readonly lastCheckStatus: number;
   readonly byteLength: number; readonly unchanged?: boolean;
+  readonly outage?: string;
   readonly accept?: () => Promise<void>; readonly dispose: () => Promise<void>;
 }
 
@@ -28,9 +29,6 @@ interface HeldSource {
   retrievedAt: string; etag: string | null; lastModified: string | null; chunks: string[];
 }
 
-/** The complete compressed source is staged on disk, never held in a worker's heap.
- * Captured source bytes survive parser refusals. Only fully decoded, validated
- * sources may later move the canonical civic-data publication pointer. */
 export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl: typeof fetch = fetch,
   archive?: ArchiveObjectStore, reuseIfSha256?: string): Promise<ArchiveSourceOpen> {
   const root = await mkdtemp(join(tmpdir(), "prl-source-"));
@@ -48,16 +46,26 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
     const headers: Record<string, string> = { "user-agent": OUTBOUND_USER_AGENT };
     if (held?.etag) headers["if-none-match"] = held.etag;
     else if (held?.lastModified) headers["if-modified-since"] = held.lastModified;
-    const response = await fetchImpl(dataset.url, { headers, redirect: "follow", signal: AbortSignal.timeout(180_000) });
-    const checkedAt = new Date().toISOString();
-    if (response.status === 206) throw new Error("PRL_SOURCE_TRUNCATED");
-    if (response.status === 304 && held && held.sha256 === reuseIfSha256) {
+    let response: Response | null = null, outage: string | undefined;
+    try {
+      response = await fetchImpl(dataset.url, { headers, redirect: "follow", signal: AbortSignal.timeout(180_000) });
+      if (!response.ok && response.status !== 304) throw new Error(`PRL_SOURCE_HTTP_${response.status}`);
+    } catch (error) {
+      if (!held || !archive) throw error;
+      await response?.body?.cancel().catch(() => {});
+      outage = error instanceof Error ? error.message : String(error);
+      response = null;
+    }
+    const checkedAt = response ? new Date().toISOString() : held!.retrievedAt;
+    const lastCheckStatus = response?.status ?? 200;
+    if (response?.status === 206) throw new Error("PRL_SOURCE_TRUNCATED");
+    if (response?.status === 304 && held && held.sha256 === reuseIfSha256) {
       return { textChunks: (async function* () {})(), sourceSha256: held.sha256, finalUrl: held.finalUrl,
         member: dataset.file, publishedAt: held.lastModified ? new Date(held.lastModified).toISOString() : null, retrievedAt: held.retrievedAt, checkedAt, lastCheckStatus: response.status, byteLength: held.bytes, unchanged: true, dispose };
     }
     const hash = createHash("sha256");
     let size = 0, source: HeldSource;
-    if (response.status === 304 && held && archive) {
+    if ((!response || response.status === 304) && held && archive) {
       const sourceChunks = held.chunks;
       async function* restoredChunks() {
         for (const key of sourceChunks) {
@@ -71,7 +79,7 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
       if (size !== held.bytes || hash.digest("hex") !== held.sha256) throw new Error("PRL_HELD_SOURCE_HASH_MISMATCH");
       source = held;
     } else {
-      if (!response.ok || !response.body) throw new Error(`PRL_SOURCE_HTTP_${response.status}${response.headers.get("retry-after") ? `:Retry-After=${response.headers.get("retry-after")}` : ""}`);
+      if (!response?.ok || !response.body) throw new Error(`PRL_SOURCE_HTTP_${response?.status}`);
       const stated = Number(response.headers.get("content-length"));
       if (stated > MAX_SOURCE_BYTES) throw new Error("PRL_SOURCE_TOO_LARGE");
       const reader = response.body.getReader();
@@ -107,7 +115,7 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
     if (source.sha256 === reuseIfSha256) {
       if (archive) await archive.put(sourceKey, new TextEncoder().encode(JSON.stringify(source)), "application/json");
       return { textChunks: (async function* () {})(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
-        member: dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus: response.status, byteLength: source.bytes, unchanged: true, dispose };
+        member: dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus, byteLength: source.bytes, unchanged: true, dispose, ...(outage ? { outage } : {}) };
     }
     const entries = dataset.format === "csv" ? null : await openZipFile(path, {
       maxEntries: 8, maxMemberBytes: 32 * 1024 ** 3, maxTotalBytes: 32 * 1024 ** 3, maxDirectoryBytes: 1024 * 1024,
@@ -122,7 +130,7 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
       complete = true;
     }
     return { textChunks: textChunks(), sourceSha256: source.sha256, finalUrl: source.finalUrl,
-      member: entries?.[0].name ?? dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus: response.status, byteLength: source.bytes, dispose,
+      member: entries?.[0].name ?? dataset.file, publishedAt: source.lastModified ? new Date(source.lastModified).toISOString() : null, retrievedAt: source.retrievedAt, checkedAt, lastCheckStatus, byteLength: source.bytes, dispose, ...(outage ? { outage } : {}),
       accept: async () => {
         if (!complete) throw new Error("PRL_SOURCE_NOT_FULLY_READ");
       } };

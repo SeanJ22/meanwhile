@@ -1,35 +1,4 @@
-/**
- * **THE STANDING PILOT RUNNER — THE MACHINE THAT KEEPS RUNNING.**
- *
- * A long-lived process that runs `pnpm freshness:shadow`'s cycle on an
- * interval, forever, with no operator choosing what to work. It registers every
- * obligation provider, lets the scheduler decide what is due, dispatches it,
- * records the lifecycle, runs the promotion tail to a STAGED state, and writes
- * one digest per cycle.
- *
- * **Shadow research promotion stays OFF.** `runCycle` has no parameter that
- * could change what a reader is told, and its tail writes only disposable host
- * diagnostics under `.runtime/control-plane/staging/`. Separately, after that
- * cycle, the routine civic-data child may validate and promote its supported
- * sources directly through the production data plane.
- *
- * The digest carries pilot health, cost (by role, by model, and the cache hit
- * rate from the cost ledger; a row written before the cache fields existed
- * prints NOT MEASURED, never 0%), the lane share, and what advanced. Its local
- * copy is written under `.mirror/` on the host.
- *
- * ## The owner's intents, and the console
- *
- * Between cycles the runner reads the owner's intent log once a minute.
- * PAUSE_RUNNER holds research cycles and keeps the heartbeat alive with `pause`
- * set, so a deliberate research pause reads as one and not as a red SILENT;
- * routine civic data and intake keep ticking independently; RESUME_RUNNER,
- * RUN_CYCLE_NOW and a DISPATCH end the sleep early, and the cycle puts the
- * dispatched units first in both lanes. After every cycle's digest the runner
- * publishes the admin console itself (`publish-owner-snapshot.mts`).
- *
- * Env var names only, never values.
- */
+import { CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
@@ -79,7 +48,7 @@ import {
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
-import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
+import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 import { keepRunnerTransfer } from "../lib/db/transfer.ts";
@@ -151,13 +120,6 @@ import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts
    for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
 installConnectAttemptWindow();
 
-/**
- * Every TypeScript child the runner starts loads the same way: type stripping
- * plus the `@/` alias resolver. The owner-snapshot publisher was started
- * without the resolver; from Oct 4 an import chain under it used `@/`, every
- * publish died at import, and the Admin money and cost screens read a snapshot
- * that stopped moving. One prefix for every child keeps them from diverging.
- */
 const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"] as const;
 
 /** How much of a failed cycle's stderr the digest carries (see runOneCycle). */
@@ -235,11 +197,7 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
 
 /** The parent's own loaded code, captured before a handoff can move the checkout. */
 const PARENT_CODE_SHA = headSha(ROOT);
-/**
- * The code new children start from. It is the parent's own until the quick
- * switch moves new children to a staged release whose change leaves the
- * parent's code alone; then it names that release and its checkout.
- */
+
 let RUNNING_CODE_SHA = PARENT_CODE_SHA;
 let CODE_ROOT = ROOT;
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
@@ -256,14 +214,7 @@ const canary = argv.includes("--canary");
 /** Host-local diagnostics: the digest's canonical copy is the control-plane digest log. */
 const DIGEST_DIR = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
-/**
- * The last-resort hang watchdog (scripts/runner-hang-watchdog.mts). The relaunch
- * trigger only recovers a DEAD process; a hung-but-alive event loop stays down
- * until a human kills it. This Worker-thread watchdog force-terminates the
- * process if the main thread stops pinging, so the trigger can restart it in
- * minutes instead of hours. Started here so it also covers the startup awaits
- * (release reconcile, method authority) before the first cycle.
- */
+
 let hangWatchdog: HangWatchdog | null = null;
 if (provider === "postgres") {
   // Install transport cancellation first; the circuit breaker composes around
@@ -272,12 +223,7 @@ if (provider === "postgres") {
   installNeonCircuitBreaker(ROOT);
   if (!canary && !hangWatchdogDisabled()) hangWatchdog = startHangWatchdog();
 }
-/**
- * Emergency recovery only: if Neon itself refuses billing/quota, it cannot
- * persist its own circuit. This host-local latch prevents an hourly retry
- * storm across runner restarts. It is not a spend ledger or control-plane
- * substitute; normal provider circuits remain in `research_state`.
- */
+
 interface RunRecord {
   readonly startedAt?: string;
   readonly finishedAt?: string;
@@ -335,12 +281,7 @@ interface RunRecord {
         readonly prewarm?: PrewarmOutcome | null;
       };
     } | null;
-    /**
-     * The cache-by-role rows for THIS cycle's cost-ledger rows,
-     * computed by the cycle from the same ledger the window metrics read, so the
-     * COST section and the RESEARCH METRICS section cannot disagree. Absent on a
-     * record written before.
-     */
+
     readonly cacheThisCycle?: readonly CacheHitRate[] | null;
     readonly scouts?: readonly {
       readonly obligationId: string;
@@ -367,10 +308,6 @@ interface RunRecord {
 
 /* ------------------------------------------------------------- one cycle --- */
 
-/**
- * `ownerIntentsUnreadable`: the read before this cycle failed, so the child is
- * told to keep its paid lane closed (`holdWhilePaused`).
- */
 async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }): Promise<{
   readonly ok: boolean;
   readonly recordPath: string | null;
@@ -454,9 +391,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     ok: run.status === 0,
     recordPath: supervisorRecordPath ?? (match ? match[1].trim() : null),
     stdout,
-    /* 40, not 12: a native abort prints its fatal line ("Assertion failed: …",
-       "FATAL ERROR: …") above a stack trace longer than 12 frames, and the
-       22:55Z cycle on c61dbc2d kept only frames 6–13 (2026-09-22). */
+
     stderrTail: stderrLines.slice(-STDERR_TAIL_LINES).join("\n"),
     signal: run.signal ?? null,
     exitCode: run.status,
@@ -665,36 +600,8 @@ function deliver(body: string, headline: string): { readonly where: string } {
 
 /* -------------------------------------------------------- console publish --- */
 
-/**
- * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE WHEN ITS INPUTS CHANGE.**
- *
- * The deployed admin pages read a PUBLISHED control-plane record, never this
- * host's files. Before these children were admitted to the standing runner,
- * publication depended on a person and the console went stale the moment that
- * person stopped: the readiness panel read
- * REQUIRES_REPUBLISH for a day while the runner cycled underneath it, doing
- * work the console could not show. The standing runner is the one process
- * that is always here, so it checks after every cycle's digest, succeeded
- * or failed. Changed execution facts and failures publish; another unchanged
- * idle reading does not reload the entire assignment history.
- *
- * Each publisher runs as its own child process until it finishes.
- * A failure is PRINTED with its exit and last stderr line, never thrown and
- * never silent, and never stops the loop: a console one cycle stale is a
- * defect the next cycle repairs; a runner that stopped cycling because the
- * console could not publish would be two defects.
- *
- * The file provider is a local proof with no deployed console to publish to;
- * it says so rather than publishing a proof run over production.
- */
 const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
-  /*
-   * Owner decision intents already live durably in the control plane. Applying
-   * one to the engineering tracker rewrites tracked software-project files, so
-   * it is an engineering sync and may not run from the immutable production
-   * runtime checkout. Doing so would dirty the checkout and permanently block
-   * the next exact-SHA handoff.
-   */
+
   { name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
 ];
 
@@ -721,9 +628,7 @@ async function publishConsole(): Promise<void> {
     console.log("  console publish: skipped — the file provider is a local proof with no deployed console to publish to");
     return;
   }
-  /* The publisher still reads the whole cost log and every assignment source
-   * (River's scoped-read list); it ran in no measured hour from Oct 4 to Oct 6.
-   * If its bytes put the hour over target, this turns it off without a release. */
+
   if (process.env.WTP_OWNER_SNAPSHOT_PUBLISH === "off") {
     console.log("  console publish: owner snapshot switched off (WTP_OWNER_SNAPSHOT_PUBLISH=off); Admin keeps the last snapshot");
     return;
@@ -859,13 +764,6 @@ async function runPublishNow(): Promise<void> {
   }
 }
 
-/**
- * A timeout, spawn failure, forced kill, or uncaught child exception cannot
- * disappear into this host's console. If the child already persisted its
- * incident, the append-only identity proves that and prevents a duplicate;
- * otherwise the parent records an explicitly non-attributing fallback in the
- * same canonical owner digest Admin already consumes.
- */
 async function persistOuterRoutineChildFailure(
   cycleId: string,
   startedAt: string,
@@ -927,14 +825,6 @@ async function persistOuterRoutineChildFailure(
   }
 }
 
-/**
- * The retired GitHub intake tripwire's permanent home. This child only reads
- * aggregate production intake facts and performs the existing sanctioned
- * limiter purge. Its receipt is appended to the canonical owner outcome log
- * before the heartbeat is updated as a latest-only projection; a flag or
- * failed read therefore cannot disappear on a later healthy beat. Neither
- * path commits a file, starts a deploy, or invokes software certification.
- */
 async function runIntakeRuntime(): Promise<void> {
   if (provider !== "postgres" || canary) {
     console.log("  intake runtime: skipped — only the standing production runner owns this observation");
@@ -1038,15 +928,6 @@ async function runIntakeRuntime(): Promise<void> {
 
 /* -------------------------------------------------------------- the loop --- */
 
-/**
- * (a) A FAILED cycle must still advance the heartbeat. `freshness-shadow` writes
- * the beat with `lastCycleOk: true` only when it reaches the end of a healthy
- * cycle, so a crash or a provider circuit break returns
- * here with `beatAt` frozen at the last SUCCESS — which reads as a dead runner
- * and cost real time on 2026-09-18. This records a beat on the non-success
- * outcome so `beatAt` tracks LIVENESS (with `lastCycleOk: false`), not just
- * success. Best effort: a beat that cannot be written never takes down the loop.
- */
 async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
   if (provider !== "postgres") return;
   try {
@@ -1082,12 +963,7 @@ let currentCycleErrors = "";
 /** The research child's stdout and stderr together, in arrival order, for a crash record. */
 let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
-/*
- * With WTP_RELEASE_QUICK_SWITCH=1 a staged release whose change leaves
- * the parent's own code alone is loaded by pointing new children at its
- * checkout; nothing drains and admissions never close. The drain-everything
- * path stays the default until this one is checked live.
- */
+
 const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
 const stagingAttempted = new Set<string>();
 let stagingInFlight: string | null = null;
@@ -1104,11 +980,6 @@ function startReleaseStaging(targetSha: string): void {
   }).finally(() => { stagingInFlight = null; });
 }
 
-/**
- * STAGING: the release is still installing beside the running one; keep working.
- * SWITCHED: new children start from the release; running ones finish on theirs.
- * DRAIN: the parent's own code changed, or staging failed; the old path applies it.
- */
 type StagedReleaseStep = "STAGING" | "SWITCHED" | "DRAIN";
 const parentChangeReported = new Set<string>();
 async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
@@ -1160,10 +1031,6 @@ function neonBytesReading(nowMs = Date.now()): NonNullable<RunnerHeartbeat["neon
   };
 }
 
-/* Every 10 minutes: the hour so far, as a journal line and a partial cp_vital_signs row, so a crash
-   keeps most of the hour. Each finished hour once its processes have flushed (2 minutes in): its
-   final row and line. Bytes, rounds and facts come from the local hour files; the database is read
-   once per row, for the hour's cost aggregate. */
 let vitalSignsFinalHour = "";
 let vitalSignsPartialAt = 0;
 let vitalSignsWork: Promise<void> | null = null;
@@ -1242,51 +1109,9 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
-/**
- * **THE OWNER'S STANDING INTENTS ARE READ BETWEEN CYCLES.**
- *
- * The interval sleep is taken in one-minute slices. Each minute the research
- * intent log is read ONCE and asked three things, in this order:
- *
- * ```
- *   HOLD       a PAUSE_RUNNER stands (no later RESUME_RUNNER). No cycle
- *              starts. The first time it is seen the runner prints the owner's
- *              reason and appends its own HONORED record beside the pause; every
- *              thirty minutes it re-writes the heartbeat with `pause` set, so
- *              the dashboard reads "alive, deliberately idle" rather than a red
- *              SILENT that cannot be told from a crash. The owner disabled the
- *              scheduled task on purpose once and the page called it a failure
- *              for a day; that is the defect this closes.
- *   START_NOW  a RESUME_RUNNER with no HONORED record (the pause is over, or
- *              `pnpm pilot:start` just wrote one), a pending RUN_CYCLE_NOW, or
- *              a pending DISPATCH. The sleep ends and the next cycle starts at
- *              once. RUN_CYCLE_NOW and DISPATCH are honored by the cycle that
- *              runs; RESUME_RUNNER is honored HERE, by the runner, because a
- *              resume is about the runner and not about any cycle.
- *   NOTHING    the ordinary interval stands.
- *   UNREADABLE the log could not be read, or the control plane could not be
- *              opened. An intent nobody can read is not an intent nobody sent,
- *              so this is never read as "not paused": the interval
- *              stands, and the next cycle is started with its paid model lane
- *              held closed (`--owner-intents-unreadable`). The cycle still
- *              runs because it also carries free work — plain-code refresh and
- *              the free discovery walks — which the owner's rule keeps running
- *              when a control cannot be read; only paid work fails closed. The
- *              failure is printed, once.
- * ```
- *
- * The file provider is a local proof and carries no owner intents: NOTHING.
- *
- * Window work runs after research and on an owner wakeup. PAUSE_RUNNER
- * holds it as it holds cycles.
- */
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
-/**
- * The runner polls source-owned durable clocks; polling is not acquisition.
- * Five-minute admission lets the 32-partition largest provider frontier drain
- * on their source cadences. Independent lanes settle without a parent wall.
- */
+
 const INTAKE_RUNTIME_TICK_MS = Math.max(POLL_MS, INTERVAL_MIN * 60_000);
 let intentRepos: ControlPlaneRepositories | null = null;
 let intentReposOpening: Promise<ControlPlaneRepositories> | null = null;
@@ -1310,12 +1135,6 @@ let lastPauseBeatMs = 0;
 const actedOn = new Set<string>();
 const honorFailurePrinted = new Set<string>();
 
-/*
- * With WTP_CONTINUOUS_HUNTERS=1 the standing hunter lane is the one process that admits paid
- * model work; the research round plans and queues it (lib/control-plane/workers/hunter-lane.ts). Off by default until it
- * is checked live; the round's own lease waves run as before while it is off. The round's reading and queue live under
- * this parent's root, so children started from a staged release checkout share them.
- */
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 if (!process.env.WTP_HUNTER_LANE_ARMING) process.env.WTP_HUNTER_LANE_ARMING = hunterLaneArmingPath(ROOT);
 let hunterLaneChild: ChildProcess | null = null;
@@ -1354,7 +1173,24 @@ const auditPasses = auditPassClock({
   env: () => standingChildEnvironment("CONSOLE_PUBLISHER"),
 });
 
+const censusMemory = routineProcessSlots();
+async function runPlatformCensus(): Promise<void> {
+  if (provider !== "postgres" || canary || runtimeAdmissionsHeld) return;
+  const release = await censusMemory.acquire("platform-census-runner.mts", Date.now() + 60_000);
+  try {
+    const [run] = await runRuntimeChildren([{
+      id: "platform-census", executable: process.execPath,
+      args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
+      env: standingChildEnvironment("ROUTINE_SUPERVISOR"),
+    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
+      onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
+      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
+    if (!run || run.status !== 0) throw new Error(`CENSUS_LANE_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
+  } finally { release(); }
+}
+
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
+  { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, run: runPlatformCensus },
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
   { id: "hunter-lane", everyMs: 60_000, run: runHunterLane },
@@ -1418,13 +1254,6 @@ async function readRunnerControls(repos: ControlPlaneRepositories, force = false
   return controlReader.read(force);
 }
 
-/**
- * The owner's scheduled orders fire on time from this parent process,
- * between rounds and during them, on a clock separate from the owner-control
- * read. It fires once as the clock opens (process start and after each release
- * handoff) so an order that came due while the runner was down goes at once.
- * Each occurrence carries one idempotency key, so a restart never sends twice.
- */
 const SCHEDULED_ORDER_POLL_MS = 60_000;
 function runScheduledOrderTick(): void {
   if (runtimeAdmissionsHeld || scheduledOrderWork || provider !== "postgres" || canary) return;
@@ -1452,13 +1281,6 @@ async function stopScheduledOrderClock(): Promise<void> {
   if (scheduledOrderWork) await scheduledOrderWork;
 }
 
-/*
- * Routine civic data and intake observations share this standing host, but
- * they do not share the research cycle's failure domain or pause control. The
- * source registry remains the cadence authority inside the child; this tick
- * merely guarantees that a paused, circuit-broken, or failed research cycle
- * cannot prevent due source contracts from being considered.
- */
 function runStandingRuntimeTick(reason: string, force = false): void {
   if (runtimeAdmissionsHeld) return;
   const launched = standingRuntimeScheduler.tick(Date.now(), force);
@@ -1601,11 +1423,6 @@ async function persistRuntimeBoundaryFailure(
   }
 }
 
-/**
- * Null means continue. A number means terminate with that exit code after the
- * caller releases the process singleton. Once a handoff is due or evidence is
- * unreadable, source admission never reopens in this process.
- */
 async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   if (!AUTO_RELEASE_HANDOFF) return null;
   const startedAt = new Date().toISOString();
@@ -1713,11 +1530,6 @@ function unhonoredResume(log: readonly ResearchIntent[]): ResearchIntentRequest 
   return latest !== null && !honored.has(latest.intentId) ? latest : null;
 }
 
-/**
- * The runner's own HONORED record beside an owner intent — the same shape the
- * cycle writes for RUN_CYCLE_NOW. Never edits the intent. A failed append is
- * printed once per intent and retried at the next poll.
- */
 async function honorRunnerIntent(
   repos: ControlPlaneRepositories,
   intent: ResearchIntentRequest,
@@ -1755,13 +1567,6 @@ async function honorRunnerIntent(
   }
 }
 
-/**
- * Keep the heartbeat alive while idling on the owner's pause: the SAME
- * fields as the last beat — or a minimal one naming this host and SHA when no
- * beat exists — with `beatAt` now and `pause` naming the intent. `put` is
- * create-only, so an existing beat is moved by `compareAndSet` against the
- * revision just read.
- */
 async function beatWhilePaused(repos: ControlPlaneRepositories, intent: ResearchIntentRequest): Promise<void> {
   const now = new Date().toISOString();
   const current = await repos.runnerHeartbeat.read(RUNNER_ID);
@@ -1901,11 +1706,7 @@ async function ownerSays(): Promise<OwnerSays> {
   }
   return "NOTHING";
 }
-/**
- * True unless the OS answers that no process has this pid (ESRCH). A live
- * pid, a reused one, or one whose existence cannot be read counts as existing,
- * so it keeps any lease it holds.
- */
+
 function processExists(pid: number): boolean {
   try {
     process.kill(pid, 0);
@@ -1915,14 +1716,6 @@ function processExists(pid: number): boolean {
   }
 }
 
-/**
- * Before a research cycle, release a window lease that a process on this host
- * left behind when it exited without its `finally`
- * (window.ts `releaseWindowLeaseOfExitedLocalHolder`), so a relaunched runner's
- * first cycle is not refused for the rest of the dead cycle's TTL. Best effort: an unreadable store
- * leaves the child's own acquisition to decide, exactly as before. Returns the
- * line the digest carries when a lease was released.
- */
 async function recoverExitedWindowHolder(before: string): Promise<string | null> {
   let repos: ControlPlaneRepositories | null;
   try {
@@ -2016,20 +1809,6 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
   }
 }
 
-/**
- * Before a cycle starts: while the owner's PAUSE_RUNNER stands, idle here —
- * polling once a minute, beating every thirty — and return the moment it is
- * lifted. Not paused: return at once and the cycle starts. Unreadable: the
- * cycle starts too, with `ownerIntentsUnreadable` set, so the child holds its
- * paid lane closed — a pause nobody could read is never assumed
- * lifted for paid work, and the cycle's free work still runs.
- *
- * A canary does not wait here: it is one operator-launched cycle, and idling
- * in this loop would hang the command. It is not a way past a pause for paid
- * work — the child reads the log itself, and its lane closes under either
- * owner pause or an unreadable log, with FleetSafety refusing model requests
- * on the same facts (freshness-shadow.mts, model-lane.ts).
- */
 async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boolean }> {
   if (canary) return { ownerIntentsUnreadable: false };
   let says = await ownerSays();
@@ -2051,11 +1830,6 @@ console.log(
     `  digest: ${DIGEST_DIR}`,
 );
 
-/**
- * The console is published before the first cycle, not only after one, so a
- * runner restarted onto new code republishes at once rather than at the end of
- * its first cycle. Each publisher is a read-derive-compare-and-set.
- */
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
 // This clock is independent of research and console children. All long-lived
 // children below are asynchronous, so the timer can keep admitting a due lane
@@ -2149,12 +1923,6 @@ while (cycle < CYCLES) {
     );
   }
 
-  /*
-   * THE HEADLINE CARRIES ITS DENOMINATORS. "4 discharged" is the
-   * shape that reads as health; "4 of 7 dispatched" is the shape that can be
-   * argued with, and a cycle that dispatched nothing says COULD NOT ASSERT
-   * rather than printing a measured-looking zero.
-   */
   const stagedRows = record.staged ?? [];
   const discharge = floored(
     "obligations DISCHARGED",
@@ -2173,12 +1941,6 @@ while (cycle < CYCLES) {
     stagedRows.length === 0 ? "this cycle staged nothing" : undefined,
   );
 
-  /*
-   * A cycle that ran out of dispatch budget dispatched little or nothing ON
-   * PURPOSE. Read from the record's own digest line (one derivation, three
-   * surfaces) so the headline says "budget spent" rather than letting a
-   * deliberate deferral read as an idle night.
-   */
   const budgetLine = (record.digest ?? []).find((l) => l.includes("dispatch budget"));
   const budgetSpent = budgetLine !== undefined && /SPENT/.test(budgetLine);
   const headline =
@@ -2188,11 +1950,6 @@ while (cycle < CYCLES) {
     (budgetSpent ? "dispatch budget SPENT, rest deferred by name - " : "") +
     `exit ${result.ok ? "clean" : "NON-ZERO"}`;
 
-  /*
-   * A FAILED CYCLE CARRIES ITS OWN DIAGNOSIS. Before this the child's stderr
-   * was discarded, so seven hours of NON-ZERO cycles left nothing to read but
-   * "0 providers". The last stderr lines and a child signal travel into the digest and onto the console.
-   */
   let failureSection = "";
   if (!result.ok) {
     failureSection =

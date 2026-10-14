@@ -117,4 +117,5 @@ test("each candidacy on a published ballot is a subject of its contest's governm
   assert.deepEqual(blanksOf("cand-b"), ["CAN-04", "CAN-05", "CAN-06", "CAN-07", "CAN-16", "CAN-17"]);
   assert.deepEqual(blanksOf("cand-a"), ["CAN-06", "CAN-07", "CAN-16", "CAN-17"], "the filed website is held");
   assert.ok(packet!.held.some(f => f.subjectId === "cand-a" && f.checklistId === "CAN-05" && /annalpha/.test(f.value)));
+  assert.ok(!packet!.blanks.some(b => b.subjectId === "az-us-house-1" && b.family === "CAN"), "the contest itself owes no candidate blank");
 });

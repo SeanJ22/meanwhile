@@ -2871,5 +2871,17 @@
     "tested_sha": "b9911b63edc727359da760ecc4c32fb25cb83ff8",
     "gates": "pass",
     "at": "2026-10-14T21:43:45Z"
+  },
+  {
+    "lane": "fact-store",
+    "steps": [
+      "R1"
+    ],
+    "ready_sha": "bff3d84a630fba7efe2620258c5d1c9ab5b5c9d4",
+    "merge_sha": "faa0b2b94711d84fab85c93083a40d48dfa113a7",
+    "river_sha": "ab2f2cce6489dc307c3810b6cbb6ea71df8e42cb",
+    "tested_sha": "ab2f2cce6489dc307c3810b6cbb6ea71df8e42cb",
+    "gates": "pass",
+    "at": "2026-10-14T22:53:43Z"
   }
 ]

@@ -270,3 +270,4 @@ One line per batch folded into river.
 - 2026-10-14T20:06:29Z · ballot-national · BL-10 · ready 0083f9d2b201 · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
 - 2026-10-14T20:06:29Z · field-manual · FM-07 · ready 9a0201f97ff2 · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
 - 2026-10-14T21:43:45Z · platform-swagit · R3-SWAGIT · ready 1359d8e5b632 · river b9911b63edc7 · pnpm gates pass on b9911b63edc7
+- 2026-10-14T22:53:43Z · fact-store · R1 · ready bff3d84a630f · river ab2f2cce6489 · pnpm gates pass on ab2f2cce6489

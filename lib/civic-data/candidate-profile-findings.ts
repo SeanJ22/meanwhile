@@ -33,7 +33,7 @@ const PROFILE_CLASSES = new Set<string>(sourceAuthority(PROFILES.sourceId)?.manu
 /** A candidate a finding can be about: its identity on the ballot and every key readers look its card up by. */
 export type CandidateFindingSubject = CampaignSiteIdentity & { readonly readerKeys: readonly string[] };
 
-export interface CandidateFindingsReport {
+interface CandidateFindingsReport {
   readonly published: Readonly<Record<string, number>>;
   readonly refused: Readonly<Record<string, number>>;
   /** Findings for a candidacy no promoted ballot holds yet; they stay in the Box. */

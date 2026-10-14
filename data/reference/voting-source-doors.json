@@ -1011,7 +1011,10 @@
     "publisher": "Elections Division, Office of the Secretary of the Commonwealth, Boston, MA",
     "url": "https://www.sec.state.ma.us/ele/eleidx.htm",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MA",
       "ocdId": "ocd-division/country:us/state:ma",
@@ -1027,14 +1030,17 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official full November 3 candidate list and nine statewide ballot questions captured through the public browser route; the official Information for Voters booklet supplies all nine full texts."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sec.state.ma.us/ele/eleidx.htm\">https://www.sec.state.ma.us/ele/eleidx.htm</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "ballotMeasuresUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-ballot-questions.htm",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mi-chief",

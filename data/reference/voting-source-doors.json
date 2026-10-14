@@ -651,13 +651,39 @@
       "https://cms4files.revize.com/madisoncountyilus/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
       "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-08/Candidate%20List_20260819-1_0.pdf",
       "https://douglas.wp.webfoot.io/wp-content/uploads/2026/09/Publication.pdf",
-      "https://douglascountyil.gov/clerk-recorder/elections"
+      "https://douglascountyil.gov/clerk-recorder/elections",
+      "https://www.dupagecounty.gov/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+      "https://lakecountyil.gov/DocumentCenter/View/13059",
+      "https://www.rockislandcountyil.gov/DocumentCenter/View/3377",
+      "https://www.grundycountyil.gov/County%20Clerk/Elections/2026%20General/ALLCONTESTBALLOT_Style1_English_8.5x14_Paper.pdf?t=202609141300590",
+      "https://www.madisoncountyil.gov/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
+      "https://vr.platinumvrms.com/county/rslrequest/103?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/13?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/10?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/21?t=2",
+      "https://il-coles.pollresults.net/",
+      "https://www.macoupinvotes.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=23&lang=en&callback=soeSampleBallotObj.processSampleBallot",
+      "https://vr.platinumvrms.com/county/RSLRequest/119?t=2",
+      "https://vr.platinumvrms.com/county/rslrequest/6?t=2",
+      "https://vr.platinumvrms.com/county/RSLRequest/66?t=2",
+      "https://il-macon.pollresults.net/",
+      "https://il-tazewell.pollresults.net/",
+      "https://il-bureau.pollresults.net/",
+      "https://il-livingston.pollresults.net/",
+      "https://il-whiteside.pollresults.net/",
+      "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026WriteIns.pdf",
+      "https://montgomerycountyil.gov/wp-content/uploads/MontgomeryCountyILGeneralElectionSpecimenBallot11032026-.pdf",
+      "https://www.henrycty.com/DocumentCenter/View/1202/HENRY-COUNTY-GENERAL-ELECTION-2026-SAMPLE-BALLOT",
+      "https://www.knoxcountyil.gov/Specimen%20Ballot%20-%20GE2026.pdf?t=202609241135070",
+      "https://cms2.revize.com/revize/knoxcounty/Specimen%20Ballot%20-%20GE2026.pdf?t=202609241135070",
+      "https://files-accl.zohoexternal.com/public/workdrive-external/download/7xc3r013726b9e9794986beae531fa69c0ec6?x-cli-msg=null"
     ],
     "ballotMeasureUrls": [
       "https://www.lakecountyil.gov//DocumentCenter/View/21161/Referenda",
-      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Proposition%20Listing.pdf?t=202609300917350"
+      "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Proposition%20Listing.pdf?t=202609300917350",
+      "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026ReferendaList.pdf"
     ],
-    "publicationMessage": "County and city sources cover part of the statewide ballot; statewide candidate and measure inventories remain an access gap."
+    "publicationMessage": "Official county and city sources provide 163 acquired contests and 255 candidates. Whole-territory nominee coverage remains unverified for Senate 36 and House 71, 79, and 118; Senate 27 and House 2, 17, 30, 37, 38, 44, 53, 54, 63, 80, 86, 97, 98, 99, 103, and 104 remain unacquired. The statewide measure inventory and write-in qualification outside acquired publishing jurisdictions remain gaps. The State Board public candidate and statewide-measure doors return HTTP 403."
   },
   {
     "id": "fec-in-chief",

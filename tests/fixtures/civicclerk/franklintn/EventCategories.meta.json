@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://franklintn.api.civicclerk.com/v1/EventCategories?$top=200&$orderby=id%20desc",
+  "state": "TN",
+  "retrievedAt": "2026-10-13T19:22:41.928859+00:00",
+  "sha256": "644e0d8efe6119f3614cb6b45a7a11c1aaf09136b3416606526d37783285bcc1",
+  "records": 24
+}

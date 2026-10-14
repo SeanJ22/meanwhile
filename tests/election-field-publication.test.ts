@@ -20,6 +20,38 @@ const make = (text: string, kind: ElectionFieldInput["kind"] = "registration_dea
 
 const verify: ElectionFieldVerifier = section3Record;
 
+test("official calendar shorthand and relative statutory rules resolve to the held election date", async () => {
+  for (const [text, dates] of [
+    ["5-Oct First day; 2-Nov Last day", ["2026-10-05", "2026-11-02"]],
+    ["October 19, 2026, to November 1, 2026; October 27 & 29, 2026", ["2026-10-19", "2026-11-01", "2026-10-27", "2026-10-29"]],
+    ["Mail registration closes on the 3rd Wednesday preceding the election.", ["2026-10-14"]],
+    ["Applications must arrive by the fifth day immediately preceding the election.", ["2026-10-29"]],
+    ["Voting begins fourteen days preceding the election and ends on the Sunday preceding the election.", ["2026-10-20", "2026-11-01"]],
+    ["Registration closes fifteen days before each election.", ["2026-10-19"]],
+    ["Online applications close at 5 p.m. the Friday before Election Day.", ["2026-10-30"]],
+    ["In-person applications close at 4 p.m. the day before Election Day.", ["2026-11-02"]],
+    ["30 days prior to election day for absentee voting in person;", ["2026-10-04"]],
+    ["Online registration closes eight days before Election Day; in-person registration continues through Election Day.", ["2026-10-26", "2026-11-03"]],
+  ] as const) {
+    const store = new MemoryRoutineDataStore();
+    const field = { ...make(text), electionDate: "2026-11-03", dates: [] };
+    const result = await publishElectionFields({ store, now, fields: [field], verify });
+    assert.ok(result.promotedVersionId, JSON.stringify(result.gaps));
+    const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+    assert.deepEqual(read.fields[0].value.dates, [...dates].sort());
+  }
+});
+
+test("a changed abbreviated calendar deadline replaces its existing contextual field", async () => {
+  const store = new MemoryRoutineDataStore();
+  const first = await publishElectionFields({ store, now, fields: [{ ...make("26-October Registration closes"), electionDate: "2026-11-03", dates: ["2026-10-26"] }], verify });
+  const next = await publishElectionFields({ store, now, fields: [{ ...make("27-October Registration closes"), electionDate: "2026-11-03", dates: ["2026-10-27"] }], verify });
+  assert.equal(first.fields[0], next.fields[0]);
+  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  assert.equal(read.fields.length, 1);
+  assert.deepEqual(read.fields[0].value.dates, ["2026-10-27"]);
+});
+
 test("the same election-field publication and Reader path accepts every national jurisdiction class", async () => {
   for (const [prefix, state] of [["state", "WI"], ["district", "DC"], ["territory", "PR"], ["territory", "GU"]]) {
     const divisionId = `ocd-division/country:us/${prefix}:${state.toLowerCase()}`;

@@ -27,8 +27,6 @@ import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.t
 import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
-import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
-import { REGISTRATION_LINKS } from "../lib/ballot/registration-links.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
@@ -50,8 +48,6 @@ import {
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
 import { azBallot as committedAzBallot, azDistricts } from "./helpers/ballot-district-fixtures.ts";
-
-/** The real /ballot page is rendered with no database: every Neon HTTP request is answered here with no rows and counted by record class. Async components are called from this test's context, as React calls them. */
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
@@ -90,8 +86,9 @@ const districts: CensusDistrictEdge = {
 const navigation = {
   kind: "ballot-navigation",
   records: [
-    ...REGISTRATION_LINKS.map((value) => ({ id: `registration:${value.state}`, kind: "REGISTRATION_LINK", value })),
-    ...POLLING_PLACE_LINKS.map((value) => ({ id: `polling-place:${value.state}`, kind: "POLLING_PLACE_LINK", value })),
+    { id: "registration:AZ", kind: "REGISTRATION_LINK", value: { state: "AZ", label: "Check your registration",
+      url: "https://my.arizona.vote/WhereToVote.aspx?s=individual", sourceOrg: "Arizona Secretary of State",
+      verification: "Saved official-page fixture", verifiedAt: "2026-10-14" } },
   ],
 };
 
@@ -163,9 +160,6 @@ const mapEdgeDir = await publishEdge(false);
 /** The whole ballot edge: the map's families and every proven pointer the page reads. */
 const ballotEdgeDir = await publishEdge(true);
 
-/** Publisher-shaped policy fixtures isolate Texas's map transition. Their
- * transformed Arizona candidates and boundaries make no claim about Texas's
- * actual ballot or the geography of this Houston ZIP. */
 function houstonPolicyBallot(): BallotSet {
   const election = { ...committedAzBallot.election, id: "tx-plan-policy-2026-11-03", state: "TX" };
   const kept = committedAzBallot.contests.filter(contest => contest.id.endsWith(":governor") || contest.id.endsWith(":us-house-7"));
@@ -266,12 +260,7 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
 }
 
 const MAP_FAMILIES = ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", "STATE_LEGISLATOR"];
-/*
- * What a cold /ballot render reads from the database with only the map's families on the edge. The fake
- * database holds no pointer, so the page stops at its missing ballot: the two ballot pointers and the derived
- * campaign sites read beside them.
- */
-const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CURATED_READER_RECORD"];
+const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CURATED_READER_RECORD", "CURATED_READER_RECORD"];
 
 test("React renders the page's async components outside the page's context: they see its edge only when handed it", () => {
   // Next's own compiled React Flight server, with the react-server condition it runs under.
@@ -311,7 +300,7 @@ test("React renders the page's async components outside the page's context: they
   assert.match(out, /card:none:flight-probe/, `a component sees the page's edge only through withReaderAuthorityEdge: ${out}`);
 });
 
-test("with only map families on the edge, a cold ballot reads exactly its missing ballot pointers, and never a map family", async () => {
+test("with only map families on the edge, a cold ballot reads its missing ballot and navigation pointers without a map read", async () => {
   process.env.WTP_READER_EDGE_DIR = mapEdgeDir;
   await renderBallot("85701");
   assert.deepEqual(databaseReads.filter((read) => MAP_FAMILIES.includes(read.recordClass)), [], "a family the edge publishes was read from the database");

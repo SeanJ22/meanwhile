@@ -19,6 +19,7 @@ import {
   type ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
+import { manualScopeTransferIssue } from "./manual-prior-authority.ts";
 import {
   UNCHANGED_CONFIRMATION_PREFIX,
   buildUnchangedConfirmation,
@@ -106,6 +107,15 @@ export interface CandidateTransitionOptions {
   readonly candidate?: RoutineCandidate;
 }
 
+export interface TransferredProjectionRetirement {
+  readonly recordClass: RoutineRecordClass;
+  readonly sourceScope: string;
+  readonly sourceVersionId: string;
+  readonly targetScope: string;
+  readonly targetVersionId: string;
+  readonly at: string;
+}
+
 export interface RoutineDataStore {
   readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
@@ -136,6 +146,7 @@ export interface RoutineDataStore {
     expectedSequence: number | null,
   ) => Promise<{ readonly published: boolean; readonly sequence: number }>;
   readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string) => Promise<PromotedProjection>;
+  readonly retireTransferredProjection?: (input: TransferredProjectionRetirement) => Promise<boolean>;
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
   readonly latestReaderReadbacks?: (candidateIds: readonly string[]) => Promise<readonly CandidateEvent[]>;
@@ -709,6 +720,32 @@ export async function routineEventObservedAt(
   return store.eventObservedAt ? store.eventObservedAt(recordClass, scope, requestedAt) : requestedAt;
 }
 
+async function transferredProjectionRetirementCandidate(store: RoutineDataStore, input: TransferredProjectionRetirement) {
+  const [source, target] = await Promise.all([store.readPromotion(input.recordClass, input.sourceScope),
+    store.readPromotion(input.recordClass, input.targetScope)]);
+  if (!source || !target || source.versionId !== input.sourceVersionId || target.versionId !== input.targetVersionId) return null;
+  const [sourceRecord, targetRecord] = await Promise.all([store.readCandidate(source.versionId), store.readCandidate(target.versionId)]);
+  if (!sourceRecord || !targetRecord || sourceRecord.state !== "PROMOTED" || targetRecord.state !== "PROMOTED" ||
+      !sourceRecord.receipt || !targetRecord.receipt || !receiptIsGoodForCandidate(sourceRecord.receipt, sourceRecord.candidate) ||
+      !receiptIsGoodForCandidate(targetRecord.receipt, targetRecord.candidate) || !receiptsEqual(source.receipt, sourceRecord.receipt) ||
+      !receiptsEqual(target.receipt, targetRecord.receipt) || manualScopeTransferIssue(targetRecord.candidate, sourceRecord.candidate) ||
+      canonicalCivicDataJson(source.payload) !== canonicalCivicDataJson(sourceRecord.candidate.readModel) ||
+      canonicalCivicDataJson(target.payload) !== canonicalCivicDataJson(targetRecord.candidate.readModel)) {
+    throw new Error("MANUAL_SCOPE_RETIREMENT_PROOF_INVALID");
+  }
+  const sourceRows = (source.payload as { records?: { id: string }[] }).records;
+  const targetRows = (target.payload as { records?: { id: string }[] }).records;
+  const targetMembers = new Map(targetRows?.map(row => [row.id, canonicalCivicDataJson(row)]));
+  if (!sourceRows?.length || !targetRows || sourceRows.some(row => targetMembers.get(row.id) !== canonicalCivicDataJson(row))) {
+    throw new Error("MANUAL_SCOPE_RETIREMENT_MEMBERS_NOT_TRANSFERRED");
+  }
+  const at = Date.parse(input.at);
+  if (!Number.isFinite(at) || at < Date.parse(target.promotedAt) || at > Date.now() + MAX_PROMOTION_CLOCK_SKEW_MS) {
+    throw new Error("MANUAL_SCOPE_RETIREMENT_TIME_INVALID");
+  }
+  return targetRecord.candidate;
+}
+
 export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
@@ -981,6 +1018,21 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       lastKnownGoodVersion: candidateId,
     });
     return structuredClone(projection);
+  }
+
+  async retireTransferredProjection(input: TransferredProjectionRetirement): Promise<boolean> {
+    if (!await transferredProjectionRetirementCandidate(this, input)) return false;
+    const sourceKey = projectionKey(input.recordClass, input.sourceScope);
+    const targetKey = projectionKey(input.recordClass, input.targetScope);
+    if (this.promotions.get(sourceKey)?.versionId !== input.sourceVersionId ||
+        this.promotions.get(targetKey)?.versionId !== input.targetVersionId) return false;
+    const { history, event } = this.nextEvent(input.targetVersionId, "PROMOTED", input.at,
+      `Transferred scope ${input.sourceScope} retired after exact members reached ${input.targetScope}.`);
+    this.promotions.delete(sourceKey);
+    this.preparedProjections.delete(sourceKey);
+    history.push(event);
+    this.history.set(input.targetVersionId, history);
+    return true;
   }
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {
@@ -2061,6 +2113,34 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       payload: candidate.readModel,
       receipt: promotedRows[0].validationReceipt as ValidationReceipt,
     };
+  }
+
+  async retireTransferredProjection(input: TransferredProjectionRetirement): Promise<boolean> {
+    this.assertMutationAuthority();
+    const target = await transferredProjectionRetirementCandidate(this, input);
+    if (!target) return false;
+    this.assertCandidateMutationAuthority(target);
+    const sourceKey = projectionKey(input.recordClass, input.sourceScope);
+    const targetKey = projectionKey(input.recordClass, input.targetScope);
+    const sequence = this.nextCandidateEventSequence(input.targetVersionId);
+    const [, result] = await this.db.batch([this.candidateEventLock(input.targetVersionId), this.db.execute(sql`
+      with destination as (
+        select key from civic_data_promotions
+        where key = ${targetKey} and current_version_id = ${input.targetVersionId} for update
+      ), retired as (
+        delete from civic_data_promotions
+        where key = ${sourceKey} and current_version_id = ${input.sourceVersionId}
+          and exists (select 1 from destination)
+        returning key
+      ), cleared as (
+        delete from civic_data_reader_projections where key in (select key from retired) returning key
+      )
+      insert into civic_data_candidate_events (candidate_id, sequence, state, at, detail)
+      select ${input.targetVersionId}, ${sequence}, 'PROMOTED', ${input.at}::timestamptz,
+        ${`Transferred scope ${input.sourceScope} retired after exact members reached ${input.targetScope}.`}
+      from retired returning id
+    `)]);
+    return result.rows.length > 0;
   }
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {

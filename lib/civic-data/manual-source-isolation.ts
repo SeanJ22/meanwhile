@@ -3,6 +3,7 @@ import type { ManualSourceReview, ManualSourceSetReceipt } from "./types.ts";
 import { manualSourceUrls as sourceUrls, mergeManualSourceCopies } from "./manual-source-urls.ts";
 
 const NON_POSITIVE_URL_CONTAINER = /^(?:superseded|failed|blocked|retired).*urls?$|^failures$/i;
+export const NO_SUPPORTED_CURRENT_MEMBER = "The current review supplied no valid member-scoped fact; retained LKG alone cannot turn a failed package into a successful refresh.";
 
 export interface SourceScopedMember<T = unknown> {
   readonly key: string;
@@ -35,10 +36,7 @@ function sourceOutcome(source: ManualSourceReview): "SUPPORTED" | "BLOCKED" {
   return source.reviewOutcome ?? "SUPPORTED";
 }
 
-/**
- * Exact HTTPS values asserted positively by one member. Negative attempt and
- * retired-URL containers are operational/history facts, not support claims.
- */
+/** Negative attempts and retired URLs are history, not source support claims. */
 export function directPositiveSourceUrls(value: unknown, found: Set<string> = new Set()): Set<string> {
   if (typeof value === "string") {
     if (/^https:\/\/[^\s]+$/.test(value)) found.add(value);
@@ -53,6 +51,13 @@ export function directPositiveSourceUrls(value: unknown, found: Set<string> = ne
     }
   }
   return found;
+}
+
+export function manualRecordSourceUrls(record: unknown): readonly string[] {
+  const row = record as { readonly kind?: string; readonly value?: { readonly url?: string; readonly sourceUrl?: string } } | null;
+  if (row?.kind === "ELECTION_FIELD") return row.value?.url ? [row.value.url] : [];
+  if ((row?.kind === "REGISTRATION_LINK" || row?.kind === "POLLING_PLACE_LINK") && row.value?.sourceUrl) return [row.value.sourceUrl];
+  return [...directPositiveSourceUrls(record)];
 }
 
 function sourceIdentity(source: ManualSourceReview): string {

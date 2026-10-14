@@ -1,9 +1,3 @@
-/**
- * Owner-surface records and the checks on them. Every number carries its denominator and contract
- * (`Measured`), a null renders as a `Gap` naming whose gap it is, stated counts equal rendered rows,
- * and no record may carry a reader-level field (`assertAggregateOnly`).
- */
-
 import type { CodeIdentity } from "./code-identity.ts";
 import type { CacheCallerHealth, MeteringCounts, MonthlySpendView, SpendByPlaceView } from "./cost-panel.ts";
 import type { ScoutCapacity } from "./research-metrics.ts";
@@ -417,6 +411,7 @@ export interface RoutineCivicDataReaderReadbackReference {
 
 export interface RoutineCivicDataSupervisorOutcome {
   readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
+  readonly ballotNavigationPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */

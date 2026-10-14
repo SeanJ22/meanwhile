@@ -36,7 +36,8 @@ test("the runner's ballot child assembles outside the checkout, publishes under 
     const run = spawnSync(command.executable, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",
       "tests/fixtures/ballot-national/publish-child.mts", directory], { env: command.env, encoding: "utf8", timeout: 60_000 });
     assert.equal(run.status, 0, run.stderr + run.stdout);
-    const report = parseBallotPublicationResult(run.stdout)!;
+    const report = parseBallotPublicationResult(run.stdout);
+    assert.ok(report, run.stderr + run.stdout);
     assert.equal(report.status, "PUBLISHED");
     assert.equal(report.inputHash, await ballotInputHash(directory));
     assert.deepEqual(report.merged, ["tx.json"]);
@@ -71,4 +72,27 @@ test("Admin's ballot control queues the normal runner task even before its next 
     merged: ["tx.json"], skipped: [{ file: "ak.json", reason: "Official list is incomplete." }], reason: null } as const;
   await repos.ownerDigests.append("owner-digest", "fixture-ballot-report", { runtimeOutcome: { ballotPublication: report } } as never, now);
   assert.deepEqual(await readLatestBallotPublication(repos), report);
+});
+
+
+test("a changed national navigation source input is due independently of the ballot input report", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "navigation-publication-input-"));
+  try {
+    const path = resolve(directory, "sources.json");
+    await writeFile(path, JSON.stringify({ electionDate: "2026-11-03", states: ["OH"] }));
+    const inputHash = await ballotInputHash(path);
+    const report = { kind: "BALLOT_PUBLICATION", inputHash, at: now, status: "PUBLISHED", versionId: "national-navigation",
+      merged: [], skipped: [], reason: null } as const;
+    const repos = await fixtureRepositories();
+    await repos.ownerDigests.append("owner-digest", "fixture-navigation-report", { runtimeOutcome: {
+      ballotPublication: { ...report, inputHash: "a".repeat(64), versionId: "national-ballots" }, ballotNavigationPublication: report,
+    } } as never, now);
+    assert.equal((await readLatestBallotPublication(repos))?.versionId, "national-ballots");
+    const prior = await readLatestBallotPublication(repos, "ballotNavigationPublication");
+    assert.deepEqual(prior, report);
+    assert.equal(ballotPublicationDue("ballot-navigation", inputHash, prior), false);
+    await writeFile(path, JSON.stringify({ electionDate: "2026-11-03", states: ["OH", "MI"] }));
+    assert.equal(ballotPublicationDue("ballot-navigation", await ballotInputHash(path), prior), true);
+    assert.equal(ballotPublicationDue("state-people", await ballotInputHash(path), null), false);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });

@@ -541,6 +541,7 @@ export function validateRoutineCandidate(
   lastKnownGood: CandidateVersionRecord | null,
   validatedAt: string = new Date().toISOString(),
   sourceScopedChecks: readonly DependentCheck[] = [],
+  additionalPriorBases: readonly CandidateVersionRecord[] = [],
 ): { readonly receipt: ValidationReceipt; readonly state: "VALIDATED" | CandidateState } {
   const checks: ValidationCheck[] = [];
   const derivedCivicRecords = civicRecordsFor(candidate.recordClass, candidate.readModel);
@@ -572,7 +573,7 @@ export function validateRoutineCandidate(
     : authority.ok
       ? authority.contract
       : null;
-  const inheritedAuthorityIssue = manualPriorAuthorityIssue(candidate, lastKnownGood);
+  const inheritedAuthorityIssue = manualPriorAuthorityIssue(candidate, lastKnownGood, additionalPriorBases);
   const inheritedAuthority = manualPriorAuthorityOf(candidate);
   const sourceCheck = candidate.retrieval.sourceCheck;
   const checkIssue = sourceCheckIssue(sourceCheck, validatedAt) ?? (sourceCheck &&
@@ -632,7 +633,7 @@ export function validateRoutineCandidate(
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "MANUAL_PRIOR_AUTHORITY_INVALID", inheritedAuthorityIssue));
   } else if (inheritedAuthority) {
     checks.push(result("SOURCE_AUTHENTICITY", "PASS", "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID",
-      `${authority.contract.publisher}; current acquired sources plus ${inheritedAuthority.retainedMembers.length} unchanged members inherited from GOOD version ${inheritedAuthority.versionId}. Inherited members retain their prior provenance; no fresh HTTP retrieval is asserted for them.`));
+      `${authority.contract.publisher}; current acquired sources plus ${[inheritedAuthority, ...(inheritedAuthority.additionalProjections ?? [])].reduce((total, prior) => total + prior.retainedMembers.length, 0)} unchanged members inherited from exact GOOD versions. Inherited members retain their prior provenance; no fresh HTTP retrieval is asserted for them.`));
   } else {
     checks.push(candidate.retrieval.derived
       ? result("SOURCE_AUTHENTICITY", "PASS", "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; derived from ${candidate.retrieval.derived.inputs.length} named input(s); raw ${candidate.retrieval.rawHash}.`)

@@ -77,8 +77,10 @@ import { derivedBlurbFor } from "@/lib/candidates/blurbs";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
-import { currentRegistrationLinks, registrationLinkFor } from "@/lib/ballot/registration-links";
+import { currentRegistrationLinks } from "@/lib/ballot/registration-links";
 import { currentElectionOffices } from "@/lib/ballot/election-offices";
+import { currentPollingPlaceLinks } from "@/lib/ballot/polling-place-links";
+import { electionFieldState } from "@/lib/civic-data/election-fields";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import { contestIncumbency } from "@/lib/ballot/incumbency-resolve";
@@ -126,11 +128,9 @@ import {
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { questionForTargetType } from "@/lib/signal/reactions";
-import { electionDatesFor } from "@/lib/ballot/election-dates";
+import { currentElectionDates, electionDatesFor } from "@/lib/ballot/election-dates";
 import {
   calendarableSteps,
-  isUpcoming,
-  windowOf,
 } from "@/lib/ballot/dated-events";
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
@@ -531,7 +531,7 @@ export default async function BallotPage({
   }
 
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
-  if (centroid) auxiliaryPreloads.set("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
+  if (centroid) auxiliaryPreloads.set("ballot-navigation", settleBallotNavigationRead);
   if (set && matched) {
     auxiliaryPreloads.set("candidate-profiles", settleCandidateProfilesRead);
     auxiliaryPreloads.set("candidate-publications", settleCandidateCorpusRead);
@@ -580,10 +580,14 @@ export default async function BallotPage({
 
   let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];
   let electionOffices: ReturnType<typeof currentElectionOffices> = [];
+  let pollingLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
+  let electionDates: ReturnType<typeof currentElectionDates> = [];
   if (auxiliaryPreloads.has("ballot-navigation") && !auxiliaryFailed.has("ballot-navigation")) {
     try {
       registrationLinks = currentRegistrationLinks();
       electionOffices = currentElectionOffices(askOcdIds);
+      pollingLinks = currentPollingPlaceLinks();
+      electionDates = currentElectionDates();
     } catch {
       auxiliaryFailures.push("ballot-navigation");
       auxiliaryFailed.add("ballot-navigation");
@@ -601,10 +605,7 @@ export default async function BallotPage({
   const availableDerivedBlurbFor = (candidateId: string) =>
     authorityAvailability.candidatePublications ? derivedBlurbFor(candidateId) : null;
 
-  const dates =
-    set && matched && matched.contests.length > 0
-      ? electionDatesFor(set.election.state)
-      : null;
+  const navigationStates = [...new Set(askOcdIds.map(electionFieldState).filter((state): state is string => state !== null))];
 
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
@@ -808,37 +809,64 @@ export default async function BallotPage({
 
       <div className="my-4"><WhereToVote /></div>
       <OfficialFilings rows={filingRows} />
-      <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
+      <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds).filter(office => office.kind === "CAMPAIGN_FINANCE_OFFICE")} />
 
-      {electionOffices.length > 0 && (
-        <section aria-label="Your election offices" className="my-6 space-y-2 lg:max-w-3xl" data-ballot-election-offices>
-          <h2 className="text-lg font-semibold">Your election offices</h2>
-          {electionOffices.map((office) => (
-            <p key={`${office.divisionId}:${office.phone}`}>
-              {office.text}
-              {office.phone && (
-                <>
-                  {", "}
-                  <a href={`tel:+1${office.phone.replace(/\D/g, "").slice(-10)}`}>{office.phone}</a>
-                </>
-              )}
-              <span className="text-paper-dim">
-                {" · as listed on "}
-                <a href={office.url}>{new URL(office.url).hostname.replace(/^www\./, "")}</a>
-              </span>
-            </p>
-          ))}
-        </section>
-      )}
-      {[...new Set(askOcdIds.flatMap(id => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase() ?? []))]
-        .filter(state => !(dates && set?.election.state === state)).map(state => {
-          const registration = registrationLinkFor(state, registrationLinks);
-          if (!registration) return null;
-          return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
-            <h2 className="text-lg font-semibold">{state} voting information</h2>
-            {registration && <p><a href={registration.url}>{registration.label}</a></p>}
-          </section>;
-        })}
+      {navigationStates.map(state => {
+        const dates = electionDatesFor(state, electionDates, set?.election.state === state ? set.election.date : "2026-11-03");
+        const registrationRequired = !dates?.steps.some(step => step.label === "Voter registration" &&
+          /\b(?:do(?:es)?(?:\s+not|n['’]t)\s+require\s+(?:voter\s+)?registration|(?:voter\s+)?registration\s+is\s+not\s+required)\b/i.test(step.detail ?? ""));
+        const offices = electionOffices.filter(office => office.state === state);
+        const links = [...registrationLinks, ...pollingLinks].filter(link => link.state === state);
+        const sources = [
+          ...offices.map(office => ({ what: "Election office", provenance: { sourceUrl: office.url, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: office.verifiedAt } })),
+          ...links.map(link => ({ what: link.label, provenance: { sourceUrl: link.sourceUrl ?? link.url, sourceOrg: link.sourceOrg, collectedAt: link.verifiedAt, verifiedAt: link.verifiedAt } })),
+          ...(dates?.steps ?? []).map(step => ({ what: step.label, provenance: { sourceUrl: step.sourceUrl, sourceOrg: step.sourceOrg, collectedAt: step.collectedAt, verifiedAt: step.verifiedAt } })),
+        ];
+        return <section key={state} className="my-6 lg:max-w-3xl" aria-label={`${state} voting information`}>
+          <Card title={`${state} voting information`} attrs={{ "data-ballot-navigation": state }} sources={sources}
+            gaps={[
+              ...(!offices.length ? [{ id: `election-office:${state}`, label: "election office" }] : []),
+              ...(!links.some(link => link.purpose === "registration_page") ? [{ id: `registration-page:${state}`, label: "voter registration" }] : []),
+              ...(registrationRequired && !links.some(link => link.purpose === "registration_lookup") ? [{ id: `registration-lookup:${state}`, label: "registration status" }] : []),
+              ...(!links.some(link => link.purpose === "polling_lookup") ? [{ id: `polling-lookup:${state}`, label: "polling-place lookup" }] : []),
+              ...(!links.some(link => link.purpose === "ballot_lookup") ? [{ id: `sample-ballot:${state}`, label: "sample-ballot lookup" }] : []),
+              ...["Voter registration", "Mail-ballot request", "Early voting"].flatMap(label => dates?.steps.some(step => step.label === label)
+                ? [] : [{ id: `election-dates:${state}:${label}`, label: `${label.toLowerCase()} deadlines` }]),
+            ]}>
+            {offices.map(office => <p key={`${office.divisionId}:${office.phone}`} className="mt-2" data-ballot-election-offices>
+              <a href={office.navigationUrl ?? office.url}>{office.text}</a>
+              {office.phone && <> · <a href={`tel:+1${office.phone.replace(/\D/g, "").slice(-10)}`}>{office.phone}</a></>}
+            </p>)}
+            {links.length > 0 && <div className="mt-3 flex flex-wrap gap-3">
+              {links.map(link => <a key={`${link.purpose}:${link.url}`} href={link.url} target="_blank" rel="noreferrer"
+                data-leaves-app data-registration-pill={link.purpose === "registration_lookup" ? true : undefined}
+                data-navigation-kind={link.purpose} className="voting-open-button"
+                aria-label={`${link.label} — opens the official site in a new tab`}>
+                {link.label}<span aria-hidden="true" className="ml-1.5">↗</span>
+              </a>)}
+            </div>}
+            {dates && <>
+              <h3 className="mt-4 font-semibold">Election Day: {formatDateMDY(dates.electionDay)}</h3>
+              <AddToCalendar event={{ id: `election-day-${state}-${dates.electionDay}`, title: `Election Day — vote (${state})`,
+                allDayDate: dates.electionDay, description: `Your ballot, with sources: found via ${PRODUCT_NAME}.` }} />
+              <ul className="mt-3 space-y-3">
+                {calendarableSteps(dates.steps).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
+                  <p className="font-semibold">{step.label}</p>
+                  {step.date && <p className="font-mono text-[0.875rem]" data-navigation-date>
+                    {formatDateMDY(step.date.replaceAll(" – ", ", "))}
+                  </p>}
+                  <p className="t-body">{step.detail}</p>
+                  {window && upcoming && !window.end && <AddToCalendar event={{
+                    id: `ballot-${state}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+                    title: `${step.label} (${state})`, allDayDate: window.start,
+                    description: step.detail ?? undefined,
+                  }} />}
+                </li>)}
+              </ul>
+            </>}
+          </Card>
+        </section>;
+      })}
       {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
         <section
           className="mt-4 rounded-[8px] border border-line bg-panel p-4 t-body leading-relaxed text-voice lg:max-w-3xl"
@@ -855,114 +883,6 @@ export default async function BallotPage({
           </ul>
         </section>
       )}
-
-      {dates &&
-        set &&
-        (() => {
-          const reg = registrationLinkFor(set.election.state, registrationLinks);
-          const regStep = dates.steps.find((s) =>
-            /registration deadline/i.test(s.label),
-          );
-          const earlyStep = dates.steps.find((s) =>
-            /early voting/i.test(s.label),
-          );
-          return (
-            <section className="mt-6 rounded-[10px] border border-[var(--signal)]/60 bg-[var(--signal)]/5 p-5 shadow-[var(--shadow-panel)] lg:max-w-3xl">
-              <h2 className="t-structure text-signal">The next election</h2>
-              <p className="mt-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="font-mono text-[1.375rem] font-semibold tracking-tight">
-                  {formatDateMDY(dates.electionDay)}
-                </span>
-                <AddToCalendar
-                  event={{
-                    id: `election-day-${set.election.state}-${dates.electionDay}`,
-                    title: `Election Day — vote (${set.election.state})`,
-                    allDayDate: dates.electionDay,
-                    description:
-                      `Your ballot, with sources: found via ${PRODUCT_NAME}.`,
-                  }}
-                />
-              </p>
-              <ul className="mt-2.5 space-y-1.5 text-[0.875rem]">
-                {regStep && (
-                  <li data-dated-event>
-                    Register to vote by{" "}
-                    <span className="font-mono t-body font-semibold">
-                      {formatDateMDY(regStep.date)}
-                    </span>
-
-                    {isUpcoming({ start: regStep.date, end: null }) && (
-                      <>
-                        {" "}
-                        <AddToCalendar
-                          event={{
-                            id: `ballot-${set.election.state}-${regStep.date}-registration-deadline`,
-                            title: `Voter registration deadline (${set.election.state})`,
-                            allDayDate: regStep.date,
-                            description:
-                              regStep.detail ??
-                              `Last day to register to vote in ${set.election.state} for the November 3rd, 2026 general election. Your ballot, with sources: found via ${PRODUCT_NAME}.`,
-                          }}
-                        />
-                      </>
-                    )}
-                  </li>
-                )}
-                {earlyStep && (
-                  <li data-dated-event>
-                    {earlyStep.label}:{" "}
-                    <span className="font-mono t-body font-semibold">
-                      {formatDateMDY(earlyStep.date)}
-                    </span>
-                    {(() => {
-                      const w = windowOf(earlyStep.date);
-                      if (!w || !isUpcoming(w)) return null;
-                      return (
-                        <>
-                          {" "}
-                          <AddToCalendar
-                            event={{
-                              id: `ballot-${set.election.state}-${w.start}-early-voting`,
-                              title: `${earlyStep.label} (${set.election.state})`,
-                              allDayDate: w.start,
-                              allDayEndDate: w.end ?? undefined,
-                              description: earlyStep.detail ?? undefined,
-                            }}
-                          />
-                        </>
-                      );
-                    })()}
-                  </li>
-                )}
-              </ul>
-
-              {(
-                <div className="mt-3 flex flex-col gap-3">
-
-                  {reg && (
-                    <div>
-                      <a
-                        href={reg.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        data-leaves-app
-                        data-registration-pill
-                        className="voting-open-button"
-                        title={`The ${reg.sourceOrg} is the only place this can be checked — that opens in a new tab and leaves this app.`}
-                        aria-label={`${reg.label} — the ${reg.sourceOrg} is the only place this can be checked, and that opens in a new tab and leaves this app`}
-                      >
-                        {reg.label}
-                        <span aria-hidden="true" className="ml-1.5">
-                          ↗
-                        </span>
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
-            </section>
-          );
-        })()}
 
       {set && matched && (
         <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
@@ -1008,57 +928,6 @@ export default async function BallotPage({
         currentJurisdictionKey={currentJurisdictionKey}
         pickable={pickableContests}
       />
-
-      {dates && (
-        <section className="mt-6 rounded-[10px] border border-[var(--panel-border)] p-5 lg:max-w-2xl">
-          <h2 className="t-structure text-paper-dim">
-            Dates that decide whether you can vote
-          </h2>
-          <ul className="mt-2.5 space-y-1.5">
-            {calendarableSteps(dates.steps).map(({ step, window, upcoming }) => (
-
-              <li
-                key={step.label}
-                className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1"
-              >
-                <span className="t-body">{step.label}</span>
-                <span className="ml-auto min-w-0 text-right" data-dated-event>
-                  <span className="font-mono text-[0.75rem] text-signal">
-                    {formatDateMDY(step.date)}
-                  </span>
-
-                  {window && upcoming && (
-                    <>
-                      {" "}
-                      <AddToCalendar
-                        event={{
-                          id: `ballot-${set?.election.state ?? "xx"}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-                          title: `${step.label} (${set?.election.state ?? ""})`,
-                          allDayDate: window.start,
-                          allDayEndDate: window.end ?? undefined,
-                          description: step.detail ?? undefined,
-                        }}
-                      />
-                    </>
-                  )}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-2 text-[0.6875rem] text-muted">
-            From the{" "}
-            <a
-              href={dates.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="underline decoration-dotted"
-            >
-              {dates.sourceOrg} official timeline
-            </a>
-            , read {formatDateMDY(dates.collectedAt)}.
-          </p>
-        </section>
-      )}
 
       {set && matched && certainty && (
         <JurisdictionNote

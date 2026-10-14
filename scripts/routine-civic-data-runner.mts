@@ -7,7 +7,7 @@ import { readHeldBallotInputs } from "../lib/civic-data/worker-held-elections.ts
 import { hostname } from "node:os";
 import { resolve } from "node:path";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
-import { ballotInputHash, ballotPublicationDue, parseBallotPublicationResult, readLatestBallotPublication, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
+import { BALLOT_NAVIGATION_INPUT_PATH, ballotInputHash, ballotPublicationDue, parseBallotPublicationResult, readLatestBallotPublication, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
 import { neon } from "@neondatabase/serverless";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, CAMPAIGN_PUBLICATION_TASK, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
@@ -496,6 +496,7 @@ function newestConsideredAt(
 
 async function persistSupervisorOutcome(input: {
   readonly ballotPublication?: BallotPublicationResult;
+  readonly ballotNavigationPublication?: BallotPublicationResult;
   readonly readerEdge: ReaderEdgePublicationOutcome;
   readonly campaignPublicationApprovalsAttempted?: number;
   readonly failures: readonly SupervisorFailure[];
@@ -528,6 +529,7 @@ async function persistSupervisorOutcome(input: {
   const cycleId = SUPERVISOR_CYCLE_ID;
   const outcome = routineCivicDataSupervisorOutcome({
     ...(input.ballotPublication ? { ballotPublication: input.ballotPublication } : {}),
+    ...(input.ballotNavigationPublication ? { ballotNavigationPublication: input.ballotNavigationPublication } : {}),
     lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
     ...(input.campaignPublicationApprovalsAttempted !== undefined ? { campaignPublicationApprovalsAttempted: input.campaignPublicationApprovalsAttempted } : {}),
     cycleId,
@@ -754,6 +756,9 @@ const publicationInputLines: string[] = [];
 let ballotHash: string | null = null;
 let priorBallotPublication: BallotPublicationResult | null = null;
 let ballotPublication: BallotPublicationResult | null = null;
+let ballotNavigationHash: string | null = null;
+let priorBallotNavigationPublication: BallotPublicationResult | null = null;
+let ballotNavigationPublication: BallotPublicationResult | null = null;
 if (selectedTasks.some(task => task.id === "ballot-contests")) {
   try {
     ballotHash = await ballotInputHash(resolve(ROOT, "data/ballot/2026-general"));
@@ -761,6 +766,16 @@ if (selectedTasks.some(task => task.id === "ballot-contests")) {
     if (connection) priorBallotPublication = await readLatestBallotPublication(await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true }));
   } catch (error) {
     console.error(`RCD_INPUT_CHANGED ballot-contests: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
+  }
+}
+if (selectedTasks.some(task => task.id === "ballot-navigation")) {
+  try {
+    ballotNavigationHash = await ballotInputHash(BALLOT_NAVIGATION_INPUT_PATH);
+    const connection = controlPlaneUrlFromEnv();
+    if (connection) priorBallotNavigationPublication = await readLatestBallotPublication(
+      await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true }), "ballotNavigationPublication");
+  } catch (error) {
+    console.error(`RCD_INPUT_CHANGED ballot-navigation: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
   }
 }
 if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK)) {
@@ -815,7 +830,9 @@ for (const read of clockReads) {
   }
   const durableClock = routineAdmissionClock(read.clock, supervisorAttempts.get(task.id), admissionNowMs);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
-  const ballotsDue = ballotPublicationDue(task.id, ballotHash, priorBallotPublication);
+  const ballotsDue = task.id === "ballot-contests"
+    ? ballotPublicationDue(task.id, ballotHash, priorBallotPublication)
+    : task.id === "ballot-navigation" && ballotPublicationDue(task.id, ballotNavigationHash, priorBallotNavigationPublication);
   if (!FORCE && !ballotsDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     console.log(`RCD_SKIP ${task.id}: unchanged receipt failure; awaiting changed code, Send or source evidence`);
     continue;
@@ -1078,11 +1095,15 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
-  if (pending.task.id === "ballot-contests") {
+  if (["ballot-contests", "ballot-navigation"].includes(pending.task.id)) {
     const report = parseBallotPublicationResult(output);
-    if (report) ballotPublication = child.kind === "VERIFIED_SOURCE_SUCCESS"
-      ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
-      : { ...report, status: "HELD", versionId: null, reason: child.detail };
+    if (report) {
+      const result: BallotPublicationResult = child.kind === "VERIFIED_SOURCE_SUCCESS"
+        ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
+        : { ...report, status: "HELD", versionId: null, reason: child.detail };
+      if (pending.task.id === "ballot-contests") ballotPublication = result;
+      else ballotNavigationPublication = result;
+    }
   }
   await recordHuntSourceProgress(pending.task,
     child.kind === "VERIFIED_SOURCE_SUCCESS" ? child.receipt.confirmedAt ? "REUSED" : "PUBLISHED" : child.kind === "VERIFIED_SOURCE_FAILURE" ? "HELD" : "FAILED",
@@ -1383,6 +1404,7 @@ step = "persisting the supervisor outcome";
 try {
   const cycleId = await persistSupervisorOutcome({
     ...(ballotPublication ? { ballotPublication } : {}),
+    ...(ballotNavigationPublication ? { ballotNavigationPublication } : {}),
     ...(campaignPublicationInputs !== null && verifiedTaskReceipts.some(row => row.taskId === CAMPAIGN_PUBLICATION_TASK)
       ? { campaignPublicationApprovalsAttempted: campaignPublicationInputs.approvals } : {}),
     readerEdge,

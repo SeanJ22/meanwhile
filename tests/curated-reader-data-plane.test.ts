@@ -20,8 +20,8 @@ import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.
 import { stanceId } from "../lib/civic-data/stance-rows.ts";
 import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
-import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
-import { registrationLinkFor } from "../lib/ballot/registration-links.ts";
+import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
+import { currentRegistrationLinks } from "../lib/ballot/registration-links.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -240,8 +240,8 @@ test("every state's registration and polling links publish through the national 
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.scope, "US:official-ballot-navigation");
   for (const { state } of REGISTRATION_TARGETS) {
-    assert.equal(pollingPlaceLinkFor(state)?.url, URLS["ballot-navigation"][0], state);
-    assert.equal(registrationLinkFor(state)?.url, URLS["ballot-navigation"][1], state);
+    assert.equal(currentPollingPlaceLinks().find(link => link.state === state)?.url, URLS["ballot-navigation"][0], state);
+    assert.equal(currentRegistrationLinks().find(link => link.state === state)?.url, URLS["ballot-navigation"][1], state);
   }
 });
 

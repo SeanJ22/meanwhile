@@ -1,8 +1,11 @@
 import { createHash } from "node:crypto";
-import { readFile, readdir } from "node:fs/promises";
-import { resolve } from "node:path";
+import { readFile, readdir, stat } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY } from "../control-plane/admin-data.ts";
+import { REFERENCE_DIR } from "../reference/index.ts";
+
+export const BALLOT_NAVIGATION_INPUT_PATH = join(REFERENCE_DIR, "..", "ballot", "2026-navigation.json");
 
 export interface BallotPublicationResult {
   readonly kind: "BALLOT_PUBLICATION";
@@ -17,6 +20,9 @@ export interface BallotPublicationResult {
 
 export async function ballotInputHash(directory: string): Promise<string> {
   const hash = createHash("sha256");
+  if ((await stat(directory).catch((error: NodeJS.ErrnoException) => { if (error.code === "ENOENT") return null; throw error; }))?.isFile()) {
+    return hash.update(await readFile(directory)).digest("hex");
+  }
   const files = await readdir(directory).catch((error: NodeJS.ErrnoException) => {
     if (error.code === "ENOENT") return [];
     throw error;
@@ -41,13 +47,14 @@ export function parseBallotPublicationResult(output: string): BallotPublicationR
   } catch { return null; }
 }
 
-export async function readLatestBallotPublication(repos: ControlPlaneRepositories): Promise<BallotPublicationResult | null> {
+export async function readLatestBallotPublication(repos: ControlPlaneRepositories,
+  field: "ballotPublication" | "ballotNavigationPublication" = "ballotPublication"): Promise<BallotPublicationResult | null> {
   const rows = await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY,
-    ["runtimeOutcome", "ballotPublication", "kind"], "BALLOT_PUBLICATION", 1, { runtimeOutcome: ["ballotPublication"] });
-  const report = (rows[0] as { runtimeOutcome?: { ballotPublication?: BallotPublicationResult } } | undefined)?.runtimeOutcome?.ballotPublication;
+    ["runtimeOutcome", field, "kind"], "BALLOT_PUBLICATION", 1, { runtimeOutcome: [field] });
+  const report = (rows[0] as { runtimeOutcome?: Partial<Record<typeof field, BallotPublicationResult>> } | undefined)?.runtimeOutcome?.[field];
   return report ? parseBallotPublicationResult("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(report)) : null;
 }
 
 export function ballotPublicationDue(taskId: string, inputHash: string | null, prior: BallotPublicationResult | null): boolean {
-  return taskId === "ballot-contests" && inputHash !== null && inputHash !== prior?.inputHash;
+  return ["ballot-contests", "ballot-navigation"].includes(taskId) && inputHash !== null && inputHash !== prior?.inputHash;
 }

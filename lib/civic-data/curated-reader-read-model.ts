@@ -30,6 +30,11 @@ export interface BallotNavigationProjectionRecord {
   readonly value: Readonly<Record<string, unknown>>;
 }
 
+export function currentElectionFields(): readonly PublishedElectionField[] {
+  return currentCuratedReaderRecords<{ readonly kind: string }>("ballot-navigation", [])
+    .filter((row): row is PublishedElectionField => row.kind === "ELECTION_FIELD" && electionFieldIssue(row) === null);
+}
+
 export interface CampaignSiteProjectionRecord {
   readonly id: string;
   readonly officeholderId: string;

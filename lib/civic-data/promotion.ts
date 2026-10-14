@@ -22,6 +22,7 @@ import type { RoutineReaderVerification } from "./reader-verification.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
+import { manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -527,6 +528,14 @@ export async function processRoutineCandidate(
   const nativeRetirementCheck=candidate.sourceId === "plural-openstates" && candidate.recordClass === "STATE_LEGISLATOR" &&
     (candidate.changeSet?.removed.length ?? 0)>0 && !candidate.horizon.claimsComplete
     ? (await import("../sources/plural/retirement.ts")).statePeopleRetirementSourceCheck(candidate,validationLkg,transitionAt) : null;
+  const additionalPriorBases = (await Promise.all((manualPriorAuthorityOf(candidate)?.additionalProjections ?? []).map(async authority => {
+    const [pointer, source] = await Promise.all([
+      store.readPromotion(candidate.recordClass, authority.scope), store.readCandidate(authority.versionId),
+    ]);
+    if (!pointer || !source || pointer.versionId !== authority.versionId ||
+        promotionProofIssue(candidate.recordClass, authority.scope, pointer, source) !== null) return null;
+    return source;
+  }))).filter((source): source is CandidateVersionRecord => source !== null);
   const validated = validateRoutineCandidate(
     candidate,
     validationLkg,
@@ -536,6 +545,7 @@ export async function processRoutineCandidate(
       passed: sourceProjectionVerification.status === "PASS",
       detail: sourceProjectionVerification.detail,
     }]),...(nativeRetirementCheck ? [nativeRetirementCheck] : [])],
+    additionalPriorBases,
   );
     // A re-check whose read model is exactly the pointed one is a receipted no-change; any refusal falls through to
     // the ordinary candidate and promotion below.

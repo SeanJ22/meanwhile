@@ -30,6 +30,8 @@ import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import {
   directPositiveSourceUrls,
+  manualRecordSourceUrls,
+  NO_SUPPORTED_CURRENT_MEMBER,
   reconcileSourceScopedMembers,
   type SourceScopedHeldFact,
   type SourceScopedMember,
@@ -196,13 +198,6 @@ function ballotProvenanceUrls(value: unknown): Set<string> {
   if (!row) return new Set();
   const url = string(object(row.provenance)?.sourceUrl);
   return new Set([...(url ? [url] : []), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
-}
-
-/** An official page's linked lookup is a fact on that page, not another acquired source. */
-function manualRecordSourceUrls(record: unknown): readonly string[] {
-  const row = object(record);
-  if (row?.kind === "ELECTION_FIELD") return [string(object(row.value)?.url)].filter(Boolean);
-  return [...directPositiveSourceUrls(record)];
 }
 
 function duplicateProblems(values: readonly string[], noun: string): string[] {
@@ -890,7 +885,7 @@ function officeholderStatementProjection(
   };
 }
 
-function curatedReaderProjection(
+export function curatedReaderProjection(
   contractId: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
@@ -1047,7 +1042,7 @@ export function manualProjectionCandidate(
     ...receiptCoverageProblems(built.payload, promotionReceipt),
     ...built.violations,
     ...(isolated && isolated.supportedCurrentSources > 0 && isolated.acceptedCurrentMembers === 0
-      ? ["The current review supplied no valid member-scoped fact; retained LKG alone cannot turn a failed package into a successful refresh."]
+      ? [NO_SUPPORTED_CURRENT_MEMBER]
       : []),
   ];
   const civicRecords = civicRecordsFor(contract.recordClass, built.payload);

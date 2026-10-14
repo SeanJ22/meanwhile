@@ -2,10 +2,11 @@ import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { createHash } from "node:crypto";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
-import { manualProjectionCandidate, readManualProjectionPrior, type CuratedReaderProjection, type ManualProjectionPackage } from "./manual-projections.ts";
+import { curatedReaderProjection, manualProjectionCandidate, readManualProjectionPrior, type CuratedReaderProjection, type ManualProjectionPackage } from "./manual-projections.ts";
+import { NO_SUPPORTED_CURRENT_MEMBER } from "./manual-source-isolation.ts";
 import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts";
 import type { AuditPullRemovalEvidence } from "./types.ts";
-import { manualPriorAuthorityIssue, type ManualSuccessorCandidate } from "./manual-prior-authority.ts";
+import { manualPriorAuthorityIssue, manualScopeTransferIssue, type ManualSuccessorCandidate } from "./manual-prior-authority.ts";
 import { everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
@@ -119,4 +120,67 @@ export async function prepareManualProjectionSuccessor(
   const issue = manualPriorAuthorityIssue(candidate, base);
   if (issue) throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${input.contractId}:${issue}`);
   return { candidate, expectedBaseVersionId: base.candidate.id };
+}
+
+export async function prepareManualProjectionScopeTransfer(
+  input: ManualProjectionPackage,
+  store: CivicDataReadStore,
+  sourceScope: string,
+  now: string,
+): Promise<{ readonly candidate: ManualSuccessorCandidate; readonly expectedBaseVersionId: string }> {
+  const contract = requiredManualProductionContract(input.contractId);
+  const sourceRead = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, sourceScope,
+    { store, now, bypassCache: true });
+  if (sourceRead.kind !== "PROMOTED") throw new Error(`MANUAL_SCOPE_TRANSFER_SOURCE_UNAVAILABLE:${sourceScope}`);
+  const source = await store.readCandidate(sourceRead.projection.versionId);
+  if (!source) throw new Error("MANUAL_SCOPE_TRANSFER_SOURCE_CANDIDATE_MISSING");
+  const originals = exactMembers(sourceRead.value);
+  const supplied = exactMembers(input.payload as CuratedReaderProjection);
+  for (const [id, row] of originals) {
+    if (supplied.has(id) && hash(supplied.get(id)) !== hash(row)) throw new Error(`MANUAL_SCOPE_TRANSFER_MEMBER_CHANGED:${id}`);
+  }
+  const prepared = await prepareManualProjectionSuccessor({ ...input,
+    payload: { ...(input.payload as CuratedReaderProjection), records: [...supplied].filter(([id]) => !originals.has(id)).map(([, row]) => row) },
+  }, store, now);
+  if (!prepared.expectedBaseVersionId) throw new Error("MANUAL_SCOPE_TRANSFER_TARGET_NOT_PROMOTED");
+  const target = await store.readCandidate(prepared.expectedBaseVersionId);
+  if (!target) throw new Error("MANUAL_SCOPE_TRANSFER_TARGET_CANDIDATE_MISSING");
+  const transferIssue = manualScopeTransferIssue(prepared.candidate, source.candidate);
+  if (transferIssue) throw new Error(`MANUAL_SCOPE_TRANSFER_INVALID:${transferIssue}`);
+  const current = exactMembers(prepared.candidate.readModel as CuratedReaderProjection);
+  const transferred = [...originals].filter(([id, row]) => {
+    if (!current.has(id)) return true;
+    if (hash(current.get(id)) !== hash(row)) throw new Error(`MANUAL_SCOPE_TRANSFER_TARGET_MEMBER_CHANGED:${id}`);
+    return false;
+  });
+  if (!transferred.length) return { candidate: target.candidate as ManualSuccessorCandidate, expectedBaseVersionId: prepared.expectedBaseVersionId };
+  const wanted = new Set(transferred.map(([id]) => id));
+  const identities = source.candidate.identities.filter(identity => wanted.has(identity.identifiers.record_id));
+  if (identities.length !== wanted.size || new Set(identities.map(identity => identity.identifiers.record_id)).size !== wanted.size) {
+    throw new Error("MANUAL_SCOPE_TRANSFER_IDENTITIES_UNAVAILABLE");
+  }
+  const payload = { ...(prepared.candidate.readModel as CuratedReaderProjection),
+    records: [...current, ...transferred].sort(([left], [right]) => left.localeCompare(right)).map(([, row]) => row) };
+  const normalizedHash = hash(payload), civicRecords = civicRecordsFor(contract.recordClass, payload);
+  const rebuilt = curatedReaderProjection(input.contractId as Parameters<typeof curatedReaderProjection>[0], payload, input.sourceReceipt);
+  const prior = prepared.candidate.manualPriorAuthority ?? { kind: "VALIDATED_PRIOR_PROJECTION" as const,
+    versionId: target.candidate.id, readModelSha256: hash(target.candidate.readModel), retainedMembers: [] };
+  const candidate: ManualSuccessorCandidate = { ...prepared.candidate,
+    id: `${prepared.candidate.sourceId}:${hash({ fresh: prepared.candidate.id, source: source.candidate.id, normalizedHash }).slice(0, 32)}`,
+    normalization: { ...prepared.candidate.normalization, normalizedHash, normalizedPayloadHash: normalizedHash,
+      inputRecords: civicRecords.length + prepared.candidate.normalization.droppedRecords, outputRecords: civicRecords.length,
+      missingRequiredFields: prepared.candidate.normalization.missingRequiredFields.filter(field => field !== "records" || civicRecords.length === 0) },
+    horizon: { ...prepared.candidate.horizon, returnedRecords: civicRecords.length },
+    semantics: { ...prepared.candidate.semantics,
+      violations: [...prepared.candidate.semantics.violations.filter(issue => issue !== NO_SUPPORTED_CURRENT_MEMBER), ...rebuilt.violations] },
+    dependentChecks: rebuilt.consumerChecks,
+    identities: [...prepared.candidate.identities, ...identities], normalizedPayload: payload, readModel: payload, civicRecords,
+    manualPriorAuthority: { ...prior, additionalProjections: [...(prior.additionalProjections ?? []), {
+      kind: "VALIDATED_PRIOR_PROJECTION", scope: sourceScope, versionId: source.candidate.id,
+      readModelSha256: hash(source.candidate.readModel), retainedMembers: transferred.map(([key, row]) => ({ key, sha256: hash(row) })),
+    }] },
+  };
+  const issue = manualPriorAuthorityIssue(candidate, target, [source]);
+  if (issue) throw new Error(`MANUAL_SCOPE_TRANSFER_PROOF_INVALID:${issue}`);
+  return { candidate, expectedBaseVersionId: prepared.expectedBaseVersionId };
 }

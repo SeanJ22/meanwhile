@@ -8,10 +8,15 @@ import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { ProbeFetch } from "../lib/doors/probe.ts";
+import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { projectCampaignSiteChains, type CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
 import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { ensureFactEntities } from "../lib/facts/entities.ts";
+import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
 import { slotFor } from "../lib/facts/finding-slots.ts";
+import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
+import type { RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -43,7 +48,7 @@ async function setup() {
 const B15 = readFileSync(join(ROOT, "tests", "fixtures", "clerksboards", "b15.html"), "utf8");
 
 test("hunter field names map to fact-store slots; a field with no slot names the class it waits for", () => {
-  const slot = (field: string, value: unknown = "x", recordClass: string | null = null) => slotFor(field, value, recordClass);
+  const slot = (field: string, value: unknown = "x", recordClass: string | null = null, quote = "") => slotFor(field, value, recordClass, quote);
   assert.deepEqual(slot("officeholder.name"), { class: "rosters", slot: "member_name" });
   assert.deepEqual(slot("boardMember.title"), { class: "rosters", slot: "member_office" });
   assert.deepEqual(slot("name"), { class: "rosters", slot: "member_name" });
@@ -70,10 +75,24 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("OFF-09", "(520) 791-4213"), { class: "contacts", slot: "phone" });
   assert.deepEqual(slot("GOV-08", "520-791-4213"), { class: "office contacts", slot: "office_phone" });
   assert.deepEqual(slot("GOV-08", "255 W. Alameda St., Tucson, AZ 85701"), { class: "office contacts", slot: "office_address" });
-  assert.deepEqual(slot("GOV-08", "https://www.tucsonaz.gov"), { class: "directory", waiting: "DIRECTORY_CLASS_NOT_MOVED" });
+  assert.deepEqual(slot("GOV-08", "https://www.tucsonaz.gov"), { class: "body links", slot: "homepage" });
+  assert.deepEqual(slot("GOV-08", "clerk@tucsonaz.gov"), { class: "body links", waiting: "NO_READER_FIELD" });
+  assert.deepEqual(slot("OFF-06", "January 2027", null, "Term expires January 2027"), { class: "rosters", slot: "term_end" });
+  assert.deepEqual(slot("OFF-06", "2023", null, "Appointed in 2023"), { class: "rosters", slot: "term_start" });
+  assert.deepEqual(slot("OFF-08", "https://tucsonaz.gov/ward2"), { class: "contacts", slot: "website" });
+  assert.deepEqual(slot("MTG-01", "https://tucsonaz.hylandcloud.com/221agendaonline"), { class: "meeting routes", slot: "agenda_url" });
+  assert.deepEqual(slot("MTG-02", "tenant 221"), { class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" });
+  assert.deepEqual(slot("DOC-07", "https://youtube.com/watch?v=x"), { class: "sittings", slot: "video_url" });
+  assert.deepEqual(slot("ELE-20", "https://my.arizona.vote", null, "Check your voter registration status"), { class: "ballot navigation", election: "registration_lookup" });
+  assert.deepEqual(slot("ELE-20", "https://my.arizona.vote", null, "Visit the state's site"), { class: "ballot navigation", waiting: "LOOKUP_KIND_NOT_STATED" });
+  assert.deepEqual(slot("ELE-08", "October 5, 2026", null, "The deadline to register is October 5, 2026."), { class: "ballot navigation", election: "registration_deadline" });
+  assert.deepEqual(slot("CAN-04", "https://example-campaign.com"), { class: "campaign sites", lead: "campaign-site" });
+  assert.deepEqual(slot("CAN-16", "x"), { class: "candidates", waiting: "NO_READER_FIELD" });
+  assert.deepEqual(slot("FIN-03", "x"), { class: "government money", waiting: "TAKES_WHOLE_RECORDS_ONLY" });
+  assert.deepEqual(slot("ELE-10", "x"), { class: "elections", waiting: "HELD_IN_CODE_NOT_ON_A_PAGE" });
   assert.deepEqual(slot("MTG-04", "first Tuesday"), { class: "schedules", slot: "meeting_cadence" });
   assert.deepEqual(slot("PAR-03", "3 minutes"), { class: "comment rules", slot: "comment:time_limit" });
-  assert.deepEqual(slot("ELE-04", "x"), { class: "elections", waiting: "CHECKLIST_ITEM_HAS_NO_SLOT" });
+  assert.deepEqual(slot("ELE-04", "x"), { class: "elections", waiting: "TAKES_WHOLE_RECORDS_ONLY" });
 });
 
 test("Box findings publish on their own page with no model turn: a held copy inside the clock, otherwise one fetch; the rest wait or refuse with reasons, once", async () => {
@@ -111,9 +130,10 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   await indexDetectiveFindings(repos.boxFindings, { id: "dr-1", workItemId: "wi-hunt", endedAt: NOW, result: { role: "DETECTIVE", findings: [], artifactIds: [tccc],
     spans: [{ artifactId: tccc, contentHash: "h", start: 0, end: 9, quote: "Ned Beman", offsetUnit: "UTF16_CODE_UNITS" }], question: { subjectId: TCCC } } }, new Map(), NOW);
 
-  const input = { repos, facts, vault, fetch, clocks: factClocks(null), now: NOW, limit: 100 };
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined,
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 0,
+    publishedByRoute: { "office contacts": 1, rosters: 3 },
     waitingByClass: { directory: 1, rosters: 1, candidates: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 3 });
   assert.deepEqual(report.byPlace[AGENDA], { published: 1, refused: 1, waiting: 0 });
@@ -149,7 +169,7 @@ test("a packet hunter's findings publish for the subject each names, not the job
   await report(`${TUCSON}#inventory:body`, "OFF-04", "Jose Jimenez", "Jose Jimenez Vice Chairperson Mayor");
   await report(TCCC, "OFF-04", "Pat Nobody", "Pat Nobody Chairperson");
 
-  const input = { repos, facts, vault, fetch, clocks: factClocks(null), now: NOW, limit: 100 };
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const first = await publishBoxFindings(input);
   assert.deepEqual(Object.keys(first.byPlace), [TUCSON], "every finding counts toward the packet's government");
   assert.deepEqual({ published: first.published, refused: first.refused, waitingByClass: first.waitingByClass, failuresByReason: first.failuresByReason },
@@ -166,5 +186,65 @@ test("a packet hunter's findings publish for the subject each names, not the job
   assert.equal((await readFactRosters(facts.query, [TCCC])).rosters[0]!.members.find(member => member.name === "Ned Beman")!.phone, "(520)791-4213",
     "a seat's contact joins its holder without the sentence naming them");
   const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
-  assert.deepEqual(waiting, ["CHECKLIST_ITEM_HAS_NO_SLOT", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
+  assert.deepEqual(waiting, ["SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE", "TAKES_WHOLE_RECORDS_ONLY"]);
+});
+
+test("each checklist id goes where its record publishes: body links, the agenda route, an official host, a sitting, ballot navigation and campaign-site leads", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const commission = await hold(TCCC_URL, B15, "2026-09-01T15:00:00.000Z");
+  const RECORDER = "https://recorder.pima.gov/voter-registration";
+  const recorder = await hold(RECORDER, "<html><body><h1>Tucson, Arizona voters</h1><p>Check your voter registration status: https://my.arizona.vote/</p></body></html>",
+    "2026-09-01T15:00:00.000Z");
+  const CAMPAIGN = "https://hobbs-for-governor.example.com/";
+  const campaign = await hold(CAMPAIGN, "<html><body><h1>Katie Hobbs for Governor</h1><p>Katie Hobbs is running for Governor of Arizona. Visit https://hobbs-for-governor.example.com/</p></body></html>",
+    "2026-09-01T15:00:00.000Z");
+  await ensureEntity(facts.query, { id: "meeting:tccc-2026-10-01", kind: "meeting", name: "Tucson Convention Center Commission", state: "AZ", parentId: TCCC });
+  const fetch: ProbeFetch = async () => { throw new Error("every cited page is held inside its clock"); };
+  let index = 0;
+  const report = (subjectId: string, field: string, value: string, sentence: string, page = commission, sourceUrl = TCCC_URL) =>
+    indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-packet", obligationId: `hunt:packet:${TUCSON}`, missionPart: null,
+      finding: { subjectId, field, value, exactQuote: sentence, sourceUrl, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  const agenda = "https://clerksboards.tucsonaz.gov/boards/15?run=currentagenda&board=15";
+  await report(TCCC, "GOV-01", "Tucson Convention Center Commission", "Tucson Convention Center Commission (TCCC)");
+  await report(TCCC, "GOV-08", "https://www.tucsonaz.gov/", "City of Tucson");
+  await report(`${TCCC}#calendar`, "MTG-01", agenda, "Current Agenda");
+  await report(TUCSON, "REF-07", "https://clerksboards.tucsonaz.gov", "Boards and Commissions City of Tucson");
+  await report("tccc-2026-10-01", "DOC-07", "https://www.youtube.com/user/CityofTucson", "Watch our YouTube Channel");
+  await report(TUCSON, "ELE-20", "https://public.govdelivery.com/accounts/AZTUCSON/subscriber/topics", "Sign up for Email Updates");
+  await report(TUCSON, "ELE-20", "https://my.arizona.vote/", "Check your voter registration status: https://my.arizona.vote/", recorder, RECORDER);
+  await report("ballot-az-pima:governor:hobbs-katie", "CAN-04", CAMPAIGN, "Visit https://hobbs-for-governor.example.com/", campaign, CAMPAIGN);
+  await report(TCCC, "GOV-05", "Advisory", "May recommend to Mayor and Council");
+
+  const store = new MemoryRoutineDataStore();
+  const first = await publishBoxFindings({ repos, facts, vault, fetch, store, clocks: factClocks(null), now: NOW, limit: 100 });
+  assert.deepEqual({ published: first.publishedByRoute, handed: first.handed, waiting: first.waitingByClass, failures: first.failuresByReason },
+    { published: { "body links": 2, "meeting routes": 1, "official hosts": 1, sittings: 1, "ballot navigation": 1 }, handed: 1,
+      waiting: { "ballot navigation": 1, governments: 1 }, failures: {} }, JSON.stringify(first));
+  const live = async (entityId: string, field: string) => (await facts.query("SELECT value FROM fact WHERE entity_id = $1 AND field = $2 AND status = 'live'", [entityId, field]))
+    .map(row => row.value);
+  assert.deepEqual(await live(TCCC, "name"), ["Tucson Convention Center Commission"]);
+  assert.deepEqual(await live(TCCC, "homepage"), ["https://www.tucsonaz.gov/"]);
+  assert.deepEqual(await live(TCCC, "agenda_url"), [agenda]);
+  const carton = { formatVersion: 1, registry: { bodies: [{ id: TCCC, name: null, homepageUrl: null, agendaSourceRef: null, fieldSources: {} }] } } as unknown as RegistryRuntimeCarton;
+  const [seen] = (await withFactRegistry(carton, facts.query)).registry.bodies;
+  assert.deepEqual([seen!.name, seen!.homepageUrl, seen!.agendaSourceRef, seen!.fieldSources?.homepageUrl?.sourceUrl],
+    ["Tucson Convention Center Commission", "https://www.tucsonaz.gov/", agenda, TCCC_URL], "readers see the body's sourced name, home page and agenda route");
+  assert.deepEqual(await live("meeting:tccc-2026-10-01", "video_url"), ["https://www.youtube.com/user/CityofTucson"]);
+  assert.ok((await facts.query("SELECT host FROM entity_host WHERE host LIKE 'clerksboards.tucsonaz.gov%'")).length > 0, "the government's official host is learned");
+  const navigation = await readElectionFieldsForDivisions([TUCSON], { store, now: NOW, bypassCache: true });
+  assert.deepEqual(navigation.fields.map(field => [field.value.fieldKind, field.value.navigationUrl]), [["registration_lookup", "https://my.arizona.vote/"]]);
+  const reasons = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
+  assert.deepEqual(reasons, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "LOOKUP_KIND_NOT_STATED", "TAKES_WHOLE_RECORDS_ONLY"]);
+
+  const hobbs: CampaignSiteSubject = { candidacyId: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs", officeTitle: "Governor",
+    ocdId: "ocd-division/country:us/state:az", stateCode: "AZ", cycle: 2026, readerKeys: [], filingDomains: [] };
+  const unread = async (): Promise<never> => { throw new Error("no lead is read in this pass"); };
+  const page = (artifact: { readonly canonicalUrl: string }) => ({ requestedUrl: artifact.canonicalUrl, finalUrl: artifact.canonicalUrl, httpStatus: 200, contentType: "text/html",
+    body: "<html><body><h1>Katie Hobbs for Governor</h1><p>Katie Hobbs is running for Governor of Arizona. Visit https://hobbs-for-governor.example.com/</p></body></html>",
+    sha256: "0".repeat(64), retrievedAt: "2026-09-01T15:00:00.000Z", permissions: [], redirects: [] });
+  const chain = await projectCampaignSiteChains(repos, { subjects: new Map([[hobbs.candidacyId, hobbs]]), readLead: unread, recordRead: unread,
+    heldPage: async artifact => page(artifact), now: NOW, maxReads: 0 });
+  assert.ok(chain.offers.some(offer => offer.stage === "SCOUTED" && offer.accepted), JSON.stringify(chain.offers));
+  const lead = (await repos.boxFindings.list()).find(row => row.value.subjectId === hobbs.candidacyId)!.value;
+  assert.equal(lead.state, "built", "the campaign-site chain took the checked lead");
 });

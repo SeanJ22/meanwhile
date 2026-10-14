@@ -445,7 +445,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     const selected = ONLY ? WORKER_PUBLICATION_TASK_IDS.filter(id => ONLY.has(id)) : WORKER_PUBLICATION_TASK_IDS;
     const items = await readWorkerPublicationItems((query, params) => sql.query(query, [...params]), selected);
     try {
-      const box = await publishBoxFindings({ repos, facts: readerFactDb(), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
+      const box = await publishBoxFindings({ repos, store, facts: readerFactDb(), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
         now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS });
       if (box.looked) console.log(`RCD_BOX_FACTS=${JSON.stringify(box)}`);

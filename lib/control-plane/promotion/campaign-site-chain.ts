@@ -4,6 +4,11 @@ import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } fro
 import type { WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
 import { appendTransition, contextFromRepositories, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
+import { finishBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
+import { checkFact, linkQuote } from "../../facts/check.ts";
+import { factClocks } from "../../facts/clocks.ts";
+import { CAMPAIGN_SITE_LEAD } from "../../facts/finding-slots.ts";
+import { pageCopy } from "../../facts/source-copy.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
   type ApprovalBurden,
@@ -172,6 +177,27 @@ export function discoveryPointerItemId(subjectId: string, url: string): string {
 }
 
 const displayName = candidateDisplayName;
+
+/** A hunter's reported campaign site, held to checkFact on the page it cited, as a SCOUTED lead; or why it is refused. */
+async function boxLead(repos: ControlPlaneRepositories, finding: BoxFinding, subject: CampaignSiteSubject,
+  options: Pick<CampaignSiteChainOptions, "heldPage" | "now">): Promise<ScoutedRecord | { readonly refused: string }> {
+  const origin = finding.origins.find(row => row.reported);
+  if (!origin?.reported || finding.exactQuote === null) return { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" };
+  const url = String(origin.reported.value);
+  const artifact = (await repos.artifacts.read(origin.workItemId)).find(row => origin.artifactIds.includes(row.artifactId));
+  const page = artifact ? await options.heldPage(artifact) : null;
+  if (page === null) return { refused: "CITED_PAGE_NOT_SAVED" };
+  const checked = checkFact({ entity: { id: subject.candidacyId, fullName: `${subject.givenName} ${subject.familyName}`, stateName: null, hosts: [], externalIds: [] },
+    fieldKind: "ballot", provenance: "CAMPAIGN", valueText: url, quote: linkQuote(url, finding.exactQuote),
+    copy: pageCopy({ finalUrl: page.finalUrl, body: page.body, contentType: page.contentType, fetchedAt: page.retrievedAt }) }, new Date(options.now), factClocks(null).windowHours);
+  if (!checked.ok) return { refused: checked.reason };
+  const itemId = `pp-${fingerprint(["box-finding", subject.candidacyId, url])}`;
+  return { formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:scouted`, itemId, at: origin.recordedAt,
+    actor: { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: origin.resultId }, stage: "SCOUTED",
+    source: { kind: "SCOUT_RESULT", attemptId: origin.resultId, obligationId: origin.resultKey ?? finding.subjectId, outcome: "EVIDENCE_FOUND", routeId: null },
+    recordClass: CAMPAIGN_SITE_RECORD_CLASS, subjectId: subject.candidacyId, canonicalUrl: url, artifactIds: [artifact!.artifactId],
+    scoutAttemptId: origin.resultId, summary: `A hunter found ${url} for ${displayName(subject)}: "${finding.exactQuote.slice(0, 200)}"` };
+}
 
 /** Leads a held Scout finding points at: its URL, or the pages its own Attempt vaulted. */
 async function scoutLeads(state: PipelineItemState, ctx: PipelineContext, subject: CampaignSiteSubject,
@@ -471,6 +497,18 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     for (const scouted of scoutedFromScoutResult(scout)) {
       if (!heldStates.get(scouted.itemId)?.byStage.SCOUTED) await offer(scouted);
     }
+  }
+
+  // A hunter's campaign-site finding becomes a lead once checkFact holds it on its own saved page; one for a candidacy no ballot holds waits.
+  for (const { value: finding } of await repos.boxFindings.listWhere(["state"], "waiting")) {
+    const subject = options.subjects.get(finding.subjectId);
+    if (finding.waitingFor?.reason !== CAMPAIGN_SITE_LEAD || subject === undefined) continue;
+    const scouted = await boxLead(repos, finding, subject, options);
+    const claim = await takeBoxFinding(repos.boxFindings, finding.id, "campaign-site-chain", options.now, new Date(Date.parse(options.now) + 120_000).toISOString());
+    if (claim === null) continue;
+    if ("refused" in scouted) { await finishBoxFinding(repos.boxFindings, finding.id, claim.token, { state: "refused", reason: scouted.refused }, options.now); continue; }
+    if (!heldStates.get(scouted.itemId)?.byStage.SCOUTED) await offer(scouted);
+    await finishBoxFinding(repos.boxFindings, finding.id, claim.token, { state: "built", publicationId: scouted.itemId }, options.now);
   }
 
   /* SCOUTED: every Marginalia pointer that is a lead becomes its own item, once: a later answer naming the same page is the same lead. */

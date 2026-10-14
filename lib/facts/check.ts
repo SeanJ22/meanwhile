@@ -88,6 +88,10 @@ function quoteHolds(copy: SavedCopy, quote: string, valueText: string): "ARCHIVE
   return start;
 }
 
+/** A link's own address is on the saved copy when the sentence beside it does not spell it out. */
+export const linkQuote = (value: string, quote: string): string =>
+  /^https?:\/\//i.test(value) && boundedIndexOf(normalizeText(quote), value) === -1 ? value : quote;
+
 /** The page is the entity's own site, carries one of its ids, or names it in its state. */
 function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
   if (entity.hosts.some(site => ownSite(copy.finalUrl, site))) return true;

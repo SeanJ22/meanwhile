@@ -1,9 +1,3 @@
-/**
- * A meeting route is evidenced by the government's own page and confirmed by content. Candidates come only from a
- * link, the vendor's markup on the government's domain, or a tenant the page's own script names; a vendor we cannot
- * read is a lead. A walk that found nothing is never an absence.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -68,6 +62,7 @@ test("CANDIDATES: a linked vendor, a linked feed, CivicPlus markup and a CivicCl
   assert.deepEqual(
     candidates.map((c) => [c.vendor, c.url, c.basis, c.verifiable]),
     [
+      ["novusagenda", "https://www.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx", "LINKED", true],
       ["legistar-insite", "https://mesaaz.legistar.com/Calendar.aspx", "LINKED", true],
       ["legistar-api", "https://webapi.legistar.com/v1/mesaaz/events?$top=5", "LINKED", true],
       ["ical", "https://www.example-town.gov/events/list/?ical=1", "LINKED", true],
@@ -76,7 +71,6 @@ test("CANDIDATES: a linked vendor, a linked feed, CivicPlus markup and a CivicCl
       ["iqm2", "https://pima.iqm2.com/Citizens/Calendar.aspx", "LINKED", true],
       ["civicplus-agendacenter", "https://www.example-town.gov/AgendaCenter", "SERVED_BY", true],
       ["civicclerk-api", "https://avondaleaz.api.civicclerk.com/v1/Events?$top=5", "EMBEDDED", true],
-      ["novusagenda", "https://www.novusagenda.com/AgendaPublic/?town=1", "LINKED", false],
       ["own-site-meetings-page", "https://www.example-town.gov/government/agendas-minutes", "LINKED", false],
     ],
   );

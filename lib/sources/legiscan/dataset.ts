@@ -56,7 +56,7 @@ export interface LegiscanDatasetEvidence {
   /** Exact decoded archive members are held only for this state's dataset. */
   members?: readonly { name: string; sha256: string }[];
 }
-export interface LegiscanPersonJoin {
+interface LegiscanPersonJoin {
   legiscanPeopleId: number; personId: string; basis: "NATIVE_ID" | "EXACT_MEMBER_PROFILE_URL"; sourceUrl: string; matchedUrl: string | null;
   openStatesProfileUrl: string | null; legiscanProfileUrl: string | null;
   /** The independently promoted native roster version survives later departures. */

@@ -919,47 +919,56 @@
   {
     "id": "fec-me-chief",
     "publisher": "Bureau of Corporations, Elections and Commissions, Office of the Secretary of State, Augusta, ME",
-    "url": "https://www.maine.gov/sos/cec/elec/index.html",
+    "url": "https://www.maine.gov/sos/elections-voting",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "ME",
       "ocdId": "ocd-division/country:us/state:me",
       "name": "Maine"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.maine.gov/sos/cec/elec/index.html",
+    "electionPageUrl": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
     "title": "Maine chief election office discovery root",
     "office": {
       "name": "Bureau of Corporations, Elections and Commissions, Office of the Secretary of State, Augusta, ME",
       "phone": "207/624-7650",
-      "url": "https://www.maine.gov/sos/cec/elec/index.html"
+      "url": "https://www.maine.gov/sos/elections-voting"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Failed to fetch https://www.maine.gov/sos/cec/elec/index.html: (404) Not Found",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "checkedAt": "2026-10-14",
+      "detail": "Current official November 3 general election page and FINAL candidate spreadsheet reached; legacy root returns 404. No certified November measure list was captured."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
-    "officialLinkingPage": {
-      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.maine.gov/sos/cec/elec/index.html\">https://www.maine.gov/sos/cec/elec/index.html</a>"
-    }
+    "candidateListUrl": "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
+    "candidateListUrls": [
+      "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
+      "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20Post%20Primary%20Withdrawals%20%26%20Replacement%20Candidates%20-%20Updated%209.22.26_0.pdf",
+      "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List.pdf"
+    ],
+    "ballotMeasuresUrl": "https://www.maine.gov/sos/news/secretary-state-issues-final-wording-referendum-question-1"
   },
   {
     "id": "fec-md-chief",
     "publisher": "State Board of Elections, Annapolis, MD",
     "url": "https://www.elections.maryland.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MD",
       "ocdId": "ocd-division/country:us/state:md",
       "name": "Maryland"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.elections.maryland.gov/",
-    "title": "Maryland chief election office discovery root",
+    "electionPageUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+    "title": "Maryland November 3, 2026 general election candidates and statewide questions",
     "office": {
       "name": "State Board of Elections, Annapolis, MD",
       "phone": "800/222-8683 410/269-2840",
@@ -967,21 +976,26 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official statewide candidate CSV and certified general-election ballots for all 24 election jurisdictions read successfully; the three statewide questions and full constitutional amendment text are public.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.maryland.gov/\">https://www.elections.maryland.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+    "ballotMeasuresUrl": "https://www.elections.maryland.gov/elections/2026/ballot_questions.html"
   },
   {
     "id": "fec-ma-chief",
     "publisher": "Elections Division, Office of the Secretary of the Commonwealth, Boston, MA",
     "url": "https://www.sec.state.ma.us/ele/eleidx.htm",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MA",
       "ocdId": "ocd-division/country:us/state:ma",
@@ -997,21 +1011,27 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official full November 3 candidate list and nine statewide ballot questions captured through the public browser route; the official Information for Voters booklet supplies all nine full texts."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sec.state.ma.us/ele/eleidx.htm\">https://www.sec.state.ma.us/ele/eleidx.htm</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "ballotMeasuresUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-ballot-questions.htm",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mi-chief",
     "publisher": "Elections Bureau, Office of the Secretary of State, Lansing, MI",
     "url": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MI",
       "ocdId": "ocd-division/country:us/state:mi",
@@ -1027,21 +1047,27 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official election office page links the statewide November 3, 2026 general-election candidate report and both November 2026 ballot questions. All requested whole-territory candidate lists and both measure texts were read."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html\">https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html</a>"
-    }
+    },
+    "candidateListUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+    "ballotMeasuresUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mn-chief",
     "publisher": "Elections Division, Office of the Secretary of State, St. Paul, MN",
     "url": "https://www.sos.state.mn.us/elections-voting/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MN",
       "ocdId": "ocd-division/country:us/state:mn",
@@ -1064,14 +1090,25 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.mn.us/elections-voting/\">https://www.sos.state.mn.us/elections-voting/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://candidates.sos.mn.gov/",
+      "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false&bl13=1791954750022338651"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.state.mn.us/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+      "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/"
+    ]
   },
   {
     "id": "fec-ms-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Jackson, MS",
     "url": "https://www.sos.ms.gov/index.php/elections-voting",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MS",
       "ocdId": "ocd-division/country:us/state:ms",
@@ -1087,14 +1124,26 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official statewide November 3, 2026 sample ballot and public candidate qualifying list read successfully. Senate District 34 lacks an election date on the qualifying list; a certified November statewide measure list remains unverified."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ms.gov/index.php/elections-voting\">https://www.sos.ms.gov/index.php/elections-voting</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+    "candidateListUrls": [
+      "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+      "https://www.sos.ms.gov/content/CandidateQualifying/default.aspx",
+      "https://www.sos.ms.gov/elections-voting/candidate-qualifying-list"
+    ],
+    "ballotMeasuresUrl": "https://www.sos.ms.gov/elections-voting/initiatives",
+    "ballotMeasuresUrls": [
+      "https://www.sos.ms.gov/elections-voting/initiatives",
+      "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mo-chief",

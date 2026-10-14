@@ -784,7 +784,10 @@
     "publisher": "Office of the Secretary of State, Jefferson City, MO",
     "url": "https://www.sos.mo.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MO",
       "ocdId": "ocd-division/country:us/state:mo",
@@ -800,14 +803,17 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official election root links the certified November 3, 2026 candidate list. The official 2026 Ballot Measures page lists the measures certified for that general election."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.mo.gov/elections/\">https://www.sos.mo.gov/elections/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+    "ballotMeasuresUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-mt-chief",

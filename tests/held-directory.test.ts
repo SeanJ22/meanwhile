@@ -8,7 +8,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { readHeldDirectory } from "../lib/civic-data/worker-held-directory.ts";
 import { heldDirectoryReading, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
-import { bodyDirectoryDiscoveryPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
+import { jurisdictionDiscoveryPlan, type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { Jurisdiction } from "../lib/hunt/jurisdiction-universe.ts";
@@ -46,7 +46,22 @@ async function prior(): Promise<RegistryRuntimePrior> {
 }
 const benson: Jurisdiction = { id: "az:city:city-of-benson", stateCode: "AZ", name: "City of Benson", govClass: "CITY", countyName: "Cochise",
   enumeratedFrom: "fixture", ownWebAddress: "https://www.bensonaz.gov/", sourceIds: [], ocdId: DIVISION } as unknown as Jurisdiction;
-const plan = bodyDirectoryDiscoveryPlan(benson, `${DIVISION}#governing`);
+/** A body-directory work item's plan, in the shape such items carry. */
+function directoryPlan(jurisdiction: Jurisdiction, bodyId: string): AutonomousWorkPlan {
+  const routeId = "coverage-discovery:body-directory";
+  const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
+    authorityBasis: "Discover governing and subordinate bodies from official directory and independent legal authority.",
+    scope: "THIS_JURISDICTION", routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED",
+    owed: "Identify every governing and subordinate body.", citation: `Registered government ${jurisdiction.id}.` }, routeId, bodyId)!;
+  if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
+  return { ...base, capability: "governments/body-directory",
+    directorySubject: { jurisdiction, divisionId: jurisdiction.ocdId ?? null },
+    publication: { contractId: "registry-runtime-bindings", bodyId },
+    contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
+      requiredFields: ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"],
+      identity: { namespace: `${jurisdiction.id}:body-directory`, keyFields: ["bodyName", "homepageUrl"] } } };
+}
+const plan = directoryPlan(benson, `${DIVISION}#governing`);
 
 test("plain code reads each body a saved Boards or Commissions page lists, and nothing from its navigation", () => {
   assert.deepEqual(readHeldDirectory(COMMISSIONS), [

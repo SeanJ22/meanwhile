@@ -19,7 +19,6 @@ import {
   ownerDispatchWorkOf,
   orderPlaceWork,
   planDispatchWork,
-  requirementsFor,
   scopeWorkTarget,
   type DispatchWorkContext,
   type DispatchWorkReading,
@@ -45,12 +44,11 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 import { modelLaneClosure } from "@/lib/control-plane/scheduler/model-lane.ts";
 import { OWNER_DISPATCH } from "@/lib/control-plane/scheduler/obligation.ts";
-import { openOccurrence, resumeOpenOccurrence, planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
+import { planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
 import { parseDispatchTarget } from "@/lib/control-plane/scheduler/dispatch-target.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { buildRegistry, type RegistryPass } from "@/lib/control-plane/scheduler/registry.ts";
 import {
-  UNREAD_FREE_DISCOVERY_WALKS,
   UNREAD_MEETING_PARTITIONS,
   promotedRegistries,
   trackedStatesFrom,
@@ -63,12 +61,10 @@ import {
   localJurisdictionsProvider,
 } from "@/lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
-  FREE_WALK_FIRST,
   MEETINGS_DISCOVERY_NAMESPACE,
   meetingsDiscoveryNeedFor,
   meetingsDiscoveryObligationId,
   meetingsDiscoveryProvider,
-  paidDiscoveryHold,
   parseMeetingsDiscoveryId,
 } from "@/lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import {
@@ -92,67 +88,7 @@ const T2 = "2026-09-23T23:00:00.000Z";
 
 const REGISTRIES = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>;
 
-test("a new hunt discovers missing information families without inventing publishers or duplicating a shared custodian", () => {
-  const reg = REGISTRIES.az;
-  const held = reg.jurisdictions.find(j => j.govClass === "SCHOOL_DISTRICT")!;
-  const unknown = { ...held, sourceIds: [] };
-  assert.equal(jurisdictionRequirements(reg, unknown).length, 0, "deploying the change does not expand old standing work");
-  const missing = jurisdictionRequirements(reg, unknown, UNREAD_MEETING_PARTITIONS, true);
-  const directory = missing.filter(r => r.route.routeId === "coverage-discovery:body-directory");
-  assert.equal(directory.length, 1, "body discovery has a separate denominator obligation; a roster cannot discharge it");
-  assert.deepEqual(missing.filter(r => !directory.includes(r)).map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS"]);
-  assert.ok(missing.every(r => r.route.executorClass === "BOUNDED_MODEL_WORKER" && r.source.state === "DISCOVERY_OWED"));
-  assert.ok(missing.filter(r => !directory.includes(r)).every(r => /not yet been established/.test(r.source.authorityBasis)));
-  const financeKey = held.sourceIds.find(key => sourcesOf(reg, { ...held, sourceIds: [key] })[0].recordClass === "CAMPAIGN_FINANCE");
-  assert.ok(financeKey, "the fixture carries its real shared filing route");
-  const shared = jurisdictionRequirements(reg, { ...held, sourceIds: [financeKey] }, UNREAD_MEETING_PARTITIONS, true);
-  assert.equal(shared.filter(r => r.source.recordClass === "CAMPAIGN_FINANCE").length, 0, "district finance stays with the recorded shared custodian");
-});
 installOperationalReferenceBundle(operationalReferenceBundle(REGISTRIES));
-
-test("owner-created family work reaches autonomous workers and survives registration and an interrupted occurrence", async () => {
-  const reg = REGISTRIES.az;
-  const government = { ...reg.jurisdictions.find(j => j.govClass === "SCHOOL_DISTRICT")!, sourceIds: [], bodyId: "fixture:registered-school-board" };
-  const requirements = requirementsFor(reg, government, null, UNREAD_MEETING_PARTITIONS, true);
-  const repos = createMemoryRepositories();
-  for (const requirement of requirements) {
-    const obligation = standing(requirement.obligation, T0);
-    const plan = obligation.autonomousPlan!;
-    assert.equal(plan.contract.schemaVersion, 2);
-    assert.equal(plan.contract.subjectId, government.id);
-    assert.deepEqual(plan.sources, [], "a registry address is not evidence of a source read");
-    if (plan.contract.schemaVersion === 2) {
-      assert.equal(plan.contract.extraction.format, "UNSUPPORTED");
-      assert.equal(plan.contract.verification.required, false, "no second source: these facts are not judgment calls (§3)");
-      assert.deepEqual(plan.contract.sourceScope.observationArtifactIds, []);
-    }
-    await repos.obligations.put(obligation.id, obligation, T0);
-    const occurrence = await openOccurrence(repos, { obligation, dueAt: T0, now: T0 });
-    assert.deepEqual(occurrence?.workItem.autonomousPlan, { ...plan, ownerInstructions: [] }, "normal scheduler-created work carries executable discovery/repair instructions");
-    const { autonomousPlan: _plan, ...providerReading } = requirement.obligation;
-    await syncObligations(repos, [providerReading], T1);
-    const retained = (await repos.obligations.mustRead(obligation.id)).value;
-    assert.deepEqual(retained.autonomousPlan, plan, "a fresh provider reading cannot erase the Send's instructions");
-    const item = await repos.workItems.mustRead(occurrence!.workItem.id);
-    const { autonomousPlan: _interrupted, ...withoutPlan } = item.value;
-    await repos.workItems.compareAndSet(item.id, item.revision, withoutPlan, T1);
-    await resumeOpenOccurrence(repos, retained);
-    assert.deepEqual((await repos.workItems.mustRead(item.id)).value.autonomousPlan, { ...plan, ownerInstructions: [] }, "already-open work is repaired without another occurrence or lost evidence");
-    if (plan.publication) {
-      const before = await repos.workItems.mustRead(item.id);
-      const { publication: _missingDoor, ...legacyPlan } = before.value.autonomousPlan!;
-      await repos.workItems.compareAndSet(item.id, before.revision, { ...before.value, autonomousPlan: legacyPlan }, T1);
-      const assigned = { ...retained, assignments: [{ assignmentKey: "isolated-send", ref: "receipt:isolated-send", relation: "REORDERED" as const, at: T1 }] };
-      await resumeOpenOccurrence(repos, assigned);
-      const connected = await repos.workItems.mustRead(item.id);
-      assert.deepEqual(connected.value.autonomousPlan!.publication, plan.publication, "new normal Send reconnects a retained result to its now-implemented publisher");
-      assert.deepEqual(connected.value.autonomousPlan!.contract, legacyPlan.contract, "retained extraction and verification evidence is not rewritten");
-      assert.deepEqual(connected.value.autonomousPlan!.ownerInstructions, ["receipt:isolated-send"]);
-      await resumeOpenOccurrence(repos, assigned);
-      assert.equal((await repos.workItems.mustRead(item.id)).revision, connected.revision, "the normal resume remains idempotent");
-    }
-  }
-});
 
 let territoryAll: TerritoryIndex | null = null;
 /** Synthetic bounded area observations exercise dispatch; saved lattice counts are not area evidence. */
@@ -245,8 +181,6 @@ test("sending the fleet to Pima County creates what the registry defines there a
   const target = scopeWorkTarget(await planned(decision(PIMA)));
   assert.equal(target.kind, "SCOPE");
   if (target.kind !== "SCOPE") throw new Error("Expected the gateway's scope target");
-  const legacyPlan = planDispatchWork({ targets: [{ ...target, sourceWorkVersion: undefined }], world });
-  assert.ok(legacyPlan.writes.every(write => write.instance.kind === "MEETINGS_DISCOVERY"), "an older instruction acquires no new information-family work merely because code deployed");
   const plan = planDispatchWork({ targets: [target], world });
   const applied = await applyDispatchWork(repos, plan, { now: T0 });
   const reading = dispatchWorkReading(plan, applied, CONTEXT);
@@ -261,9 +195,7 @@ test("sending the fleet to Pima County creates what the registry defines there a
   assert.equal(pima.requirements.created, pima.requirements.createdThisCycle, "nothing existed before this Send");
   assert.equal(pima.requirements.created, applied.written.length);
   assert.ok(pima.requirements.created > 0);
-  const familyDiscovery = applied.written.filter(id => id.includes("#coverage-discovery:"));
-  assert.ok(familyDiscovery.length > 0, "the new Send finds missing source families as well as meetings");
-  assert.equal(pima.requirements.createdMeetingsDiscovery + familyDiscovery.length, pima.requirements.created, "every newly created row is accounted for without redefining missing work as excluded");
+  assert.equal(pima.requirements.createdMeetingsDiscovery, pima.requirements.created, "every newly created row is accounted for");
   assert.equal(pima.units.blocked, 0, "every government the lookup puts in Pima is in the AZ registry");
   assert.equal(applied.failed.length, 0);
 
@@ -352,7 +284,7 @@ test("all missing requirements are created in one pass without a cycle window", 
   const pima = scopeWorkTarget(await planned(decision(PIMA)));
   const first = await cycleWorld(repos, T0);
   const plan = planDispatchWork({ targets: [pima], world: first.world });
-  assert.ok(plan.writes.length > 10);
+  assert.ok(plan.writes.length > 1);
   const applied = await applyDispatchWork(repos, plan, { now: T0 });
   assert.equal(applied.written.length, plan.writes.length);
   assert.equal(applied.deferred.length, 0);
@@ -504,7 +436,7 @@ test("reviewed dispatch identities retain exact saved aliases; names and conflic
     "an explicit native identifier still resolves independently of the ambiguous historical alias");
 });
 
-test("creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk", async () => {
+test("creating work opens no paid lane: the owner's PAUSE stands and nothing but obligations is written", async () => {
   const repos = createMemoryRepositories();
   const pause = buildResearchIntent("PAUSE", T0, "adm_owner", null);
   assert.equal((await appendResearchIntent(repos, pause, T0)).ok, true);
@@ -539,15 +471,8 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
   });
   assert.notEqual(closure, null, "the paid lane is closed");
 
-  /* Reuse prior free discoveries; no requirement to exhaust free routes before appropriate paid work. */
   const discovery = applied.written.find((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE))!;
   const jurisdictionId = parseMeetingsDiscoveryId(discovery)!.jurisdictionId;
-  assert.equal(paidDiscoveryHold(discovery, UNREAD_FREE_DISCOVERY_WALKS)?.code, FREE_WALK_FIRST);
-  const walks = (outcome: "FOUND" | "WALKED_NOT_FOUND" | "NOT_WALKED") => ({ latestFor: (id: string) => (id === jurisdictionId ? outcome : "NOT_WALKED" as const), source: "test" });
-  assert.equal(paidDiscoveryHold(discovery, walks("NOT_WALKED")), null, "the owner permits paid tools before exhausting free routes");
-  assert.equal(paidDiscoveryHold(discovery, walks("FOUND"))?.code, FREE_WALK_FIRST);
-  assert.equal(paidDiscoveryHold(discovery, walks("WALKED_NOT_FOUND")), null, "a failed free route does not end the obligation");
-  assert.equal(paidDiscoveryHold("freshness:jurisdiction:az:county:county-of-pima#ballot-and-candidates-1", UNREAD_FREE_DISCOVERY_WALKS), null, "no other work is held by it");
 
   /* When the lane opens, the scope's own budget binds the created subjects — a $0 budget holds all paid work there. */
   const gate = new ScopeBudgetGate({
@@ -633,7 +558,9 @@ function legacyIds(reg: JurisdictionRegistry): Set<string> {
     const scheduledHere = j.govClass === "STATE" || j.govClass === "COUNTY" || sources.some((s) => s.scope === "THIS_JURISDICTION" && s.recordClass !== "MEETINGS");
     if (!scheduledHere) continue;
     const kept = sources.filter((s) => s.recordClass !== "MEETINGS" && s.scope !== "STATEWIDE" && !(s.scope === "PER_COUNTY" && j.govClass !== "COUNTY"));
-    kept.forEach((s, n) => out.add(`freshness:jurisdiction:${j.id}#${s.routeId ?? `${s.recordClass.toLowerCase().replace(/_/g, "-")}-${n}`}`));
+    kept.forEach((s, n) => {
+      if (s.state === "ADAPTED" && s.url && /^https?:\/\//i.test(s.url)) out.add(`freshness:jurisdiction:${j.id}#${s.routeId ?? `${s.recordClass.toLowerCase().replace(/_/g, "-")}-${n}`}`);
+    });
   }
   return out;
 }
@@ -656,14 +583,14 @@ test("local-jurisdictions schedules the tracked states it is handed, keeps every
   assert.match(none.byProvider[0].readFailure ?? "", /names no tracked state — a failed read/, "an empty tracked set is a failed read, never 'track nothing'");
 
   /* A requirement the owner's dispatch materialized in an UNTRACKED state keeps the id tracking would give it. */
-  const nj = REGISTRIES.nj.jurisdictions.find((j) => j.govClass === "COUNTY")!;
-  const [req] = jurisdictionRequirements(REGISTRIES.nj, nj);
+  const pima = REGISTRIES.az.jurisdictions.find((j) => j.govClass === "COUNTY" && jurisdictionRequirements(REGISTRIES.az, j).length > 0)!;
+  const [req] = jurisdictionRequirements(REGISTRIES.az, pima);
   const materialized = buildRegistry(
-    [localJurisdictionsProvider({ trackedStates: trackedStatesFrom(["az"], "t"), materialized: () => ({ ids: new Set([req.obligationId]) }) })],
+    [localJurisdictionsProvider({ trackedStates: trackedStatesFrom(["nh"], "t"), materialized: () => ({ ids: new Set([req.obligationId]) }) })],
     { root: ROOT, nowIso: T0 },
   );
   assert.ok(materialized.units.some((u) => u.obligation.id === req.obligationId));
-  assert.ok(legacyIds(REGISTRIES.nj).has(req.obligationId), "the same id the tracked state's standing clock carries");
+  assert.ok(legacyIds(REGISTRIES.az).has(req.obligationId), "the same id the tracked state's standing clock carries");
 });
 
 test("a meetings route with a known address is carried by what the partition wiring says, and held when it cannot be read", () => {

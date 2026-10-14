@@ -2463,5 +2463,41 @@
     "tested_sha": "bb3a0d5d2e22ebefe84143958baa65e999f15b1b",
     "gates": "pass",
     "at": "2026-10-14T07:46:42Z"
+  },
+  {
+    "lane": "ballot-bl-12",
+    "steps": [
+      "BL-12"
+    ],
+    "ready_sha": "f5d8c17ef61de6df100076b98018cfd251409f7c",
+    "merge_sha": "846eba7ec0842030fad44e9c196d166e4f7f0972",
+    "river_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+    "tested_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+    "gates": "pass",
+    "at": "2026-10-14T08:48:29Z"
+  },
+  {
+    "lane": "ballot-bl-14",
+    "steps": [
+      "BL-14"
+    ],
+    "ready_sha": "2f69026893f9dc9577119d287eae6caace8cc8c4",
+    "merge_sha": "011390d8374874d8b1a409a2c90e36b9815aecbd",
+    "river_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+    "tested_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+    "gates": "pass",
+    "at": "2026-10-14T08:48:29Z"
+  },
+  {
+    "lane": "src-census",
+    "steps": [
+      "SRC-AC"
+    ],
+    "ready_sha": "457fd6f217f05dd9289f3528b2f7a524a7d22626",
+    "merge_sha": "0991bce5f5622e5d88acd83c966fe825cefb8e62",
+    "river_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+    "tested_sha": "c3cb7721cdfaa0ec288b29e3d83892893db3d24c",
+    "gates": "pass",
+    "at": "2026-10-14T08:48:29Z"
   }
 ]

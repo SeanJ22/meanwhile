@@ -236,3 +236,6 @@ One line per batch folded into river.
 - 2026-10-14T07:46:42Z · ballot-bl-16 · BL-16 · ready 2ed73460ceac · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
 - 2026-10-14T07:46:42Z · ballot-national · BL-10 · ready 78cbc5a56318 · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
 - 2026-10-14T07:46:42Z · ballot-parity · BL-20 · ready 1e530950acc2 · river bb3a0d5d2e22 · pnpm gates pass on bb3a0d5d2e22
+- 2026-10-14T08:48:29Z · ballot-bl-12 · BL-12 · ready f5d8c17ef61d · river c3cb7721cdfa · pnpm gates pass on c3cb7721cdfa
+- 2026-10-14T08:48:29Z · ballot-bl-14 · BL-14 · ready 2f69026893f9 · river c3cb7721cdfa · pnpm gates pass on c3cb7721cdfa
+- 2026-10-14T08:48:29Z · src-census · SRC-AC · ready 457fd6f217f0 · river c3cb7721cdfa · pnpm gates pass on c3cb7721cdfa

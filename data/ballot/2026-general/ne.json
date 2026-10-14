@@ -1,0 +1,2780 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "NE:ne-2026-11-03": {
+      "election": {
+        "id": "ne-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NE"
+      },
+      "contests": [
+        {
+          "id": "ne-sos-2026-general-for-united-states-senator",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "United States Senator",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-1",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/cd:1",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress — District 01",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-2",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/cd:2",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress — District 02",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-3",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/cd:3",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress — District 03",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-governor-and-lt-governor",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Governor and Lt. Governor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-secretary-of-state",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Secretary of State",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-state-treasurer",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "State Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-attorney-general",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Attorney General",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-auditor-of-public-accounts",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Auditor of Public Accounts",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-public-service-commissioner-district-2",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/public_service_commission:2",
+          "divisionVintage": "2026",
+          "title": "Public Service Commissioner — District 02",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-2",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:2",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 02",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-4",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:4",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 04",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-6",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:6",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 06",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-8",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:8",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 08",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-10",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:10",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 10",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-12",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:12",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 12",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-14",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:14",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-16",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:16",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 16",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-18",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:18",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 18",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-20",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:20",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 20",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-22",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:22",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 22",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-24",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:24",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 24",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-26",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:26",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 26",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-28",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:28",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 28",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-30",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:30",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 30",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-32",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:32",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 32",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-34",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:34",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 34",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-36",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:36",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 36",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-38",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:38",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 38",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-40",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:40",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 40",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-41",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:41",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 41",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-42",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:42",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 42",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-44",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:44",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 44",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-46",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:46",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 46",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-48",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/sldu:48",
+          "divisionVintage": "2026",
+          "title": "Member of the Legislature — District 48",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-5",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/board_of_education:5",
+          "divisionVintage": "2026",
+          "title": "Member of the State Board of Education — District 05",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-6",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/board_of_education:6",
+          "divisionVintage": "2026",
+          "title": "Member of the State Board of Education — District 06",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-7",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/board_of_education:7",
+          "divisionVintage": "2026",
+          "title": "Member of the State Board of Education — District 07",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-8",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/board_of_education:8",
+          "divisionVintage": "2026",
+          "title": "Member of the State Board of Education — District 08",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-1",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/board_of_regents:1",
+          "divisionVintage": "2026",
+          "title": "University of Nebraska Board of Regents — District 01",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-2",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/board_of_regents:2",
+          "divisionVintage": "2026",
+          "title": "University of Nebraska Board of Regents — District 02",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-4",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/board_of_regents:4",
+          "divisionVintage": "2026",
+          "title": "University of Nebraska Board of Regents — District 04",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Final Statewide General Candidate List; November 3, 2026 General Election"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-thomas-e-stine",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Judge of the Nebraska Workers' Compensation Court — Thomas E. Stine",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Shall Judge Thomas E. Stine be retained in office?",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:26.245989Z",
+            "verifiedAt": "2026-10-14T05:03:26.245989Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall Judge Thomas E. Stine be retained in office?"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-dirk-v-block",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Judge of the Nebraska Workers' Compensation Court — Dirk V. Block",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Shall Judge Dirk V. Block be retained in office?",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:26.245989Z",
+            "verifiedAt": "2026-10-14T05:03:26.245989Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall Judge Dirk V. Block be retained in office?"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-initiative-440",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Initiative Measure 440",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:24.807443Z",
+            "verifiedAt": "2026-10-14T05:03:24.807443Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall the Nebraska Constitution be amended to authorize the enactment of laws allowing persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska?"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-initiative-441",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Initiative Measure 441",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:24.807443Z",
+            "verifiedAt": "2026-10-14T05:03:24.807443Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall statutes be enacted that: (1) Allow persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska or the operator’s platform provider; and (2) Regulate such sports wagers?"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-initiative-442",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "Initiative Measure 442",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:24.807443Z",
+            "verifiedAt": "2026-10-14T05:03:24.807443Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall the Nebraska Constitution be amended to provide: (1) Schools must expressly designate each athletic team or sport as one of the following based on biological sex: (a) Males, men, or boys; (b) females, women, or girls; or (c) coed or mixed; and (2) Athletic teams or sports designated for females, women, or girls shall not be open to students of the male sex? The amendment would apply to all athletic teams or sports sponsored by public schools or postsecondary educational institutions, and private schools or educational institutions whose athletic teams or sports compete against public schools or institutions."
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-lr19ca",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne",
+          "divisionVintage": "2026",
+          "title": "LR19CA — Proposed Constitutional Amendment",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+          "provenance": {
+            "sourceUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+            "sourceOrg": "Nebraska Legislature",
+            "collectedAt": "2026-10-14T05:04:38.936128Z",
+            "verifiedAt": "2026-10-14T05:04:38.936128Z",
+            "doorId": "fec-ne-chief",
+            "quote": "A constitutional amendment to change the limit on legislative terms from two consecutive terms to three consecutive terms."
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ne-sos-2026-general-for-united-states-senator:pete-ricketts",
+          "contestId": "ne-sos-2026-general-for-united-states-senator",
+          "givenName": "Pete",
+          "familyName": "Ricketts",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Pete Ricketts"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-united-states-senator:mike-marvin",
+          "contestId": "ne-sos-2026-general-for-united-states-senator",
+          "givenName": "Mike",
+          "familyName": "Marvin",
+          "partyLabel": "Legal Marijuana NOW",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Mike Marvin"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-united-states-senator:robin-richards",
+          "contestId": "ne-sos-2026-general-for-united-states-senator",
+          "givenName": "Robin",
+          "familyName": "Richards",
+          "partyLabel": "Nebraska Working People",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Robin Richards"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-united-states-senator:chuck-conboy",
+          "contestId": "ne-sos-2026-general-for-united-states-senator",
+          "givenName": "Chuck",
+          "familyName": "Conboy",
+          "partyLabel": "America First",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Chuck Conboy"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-united-states-senator:dan-osborn",
+          "contestId": "ne-sos-2026-general-for-united-states-senator",
+          "givenName": "Dan",
+          "familyName": "Osborn",
+          "partyLabel": "By Petition",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Dan Osborn"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-1:mike-flood",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-1",
+          "givenName": "Mike",
+          "familyName": "Flood",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Mike Flood"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-1:chris-backemeyer",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-1",
+          "givenName": "Chris",
+          "familyName": "Backemeyer",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Chris Backemeyer"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-1:nik-sandman",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-1",
+          "givenName": "Nik",
+          "familyName": "Sandman",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Nik Sandman"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-1:dan-hartong",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-1",
+          "givenName": "Dan",
+          "familyName": "Hartong",
+          "partyLabel": "America First",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Dan Hartong"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-2:brinker-harding",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-2",
+          "givenName": "Brinker",
+          "familyName": "Harding",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Brinker Harding"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-2:denise-powell",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-2",
+          "givenName": "Denise",
+          "familyName": "Powell",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Denise Powell"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-2:eric-michael-foreman",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-2",
+          "givenName": "Eric Michael",
+          "familyName": "Foreman",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Eric Michael Foreman"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-3:adrian-smith",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-3",
+          "givenName": "Adrian",
+          "familyName": "Smith",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Adrian Smith"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-3:becky-kelly-stille",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-3",
+          "givenName": "Becky Kelly",
+          "familyName": "Stille",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Becky Kelly Stille"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-3:david-j-else",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-3",
+          "givenName": "David J.",
+          "familyName": "Else",
+          "partyLabel": "Legal Marijuana NOW",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "David J. Else"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-3:macey-budke",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-3",
+          "givenName": "Macey",
+          "familyName": "Budke",
+          "partyLabel": "Nebraska Working People",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Macey Budke"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-representative-in-congress-district-3:mark-cohen",
+          "contestId": "ne-sos-2026-general-for-representative-in-congress-district-3",
+          "givenName": "Mark",
+          "familyName": "Cohen",
+          "partyLabel": "By Petition",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Mark Cohen"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-governor-and-lt-governor:jim-pillen-and-joe-kelly",
+          "contestId": "ne-sos-2026-general-for-governor-and-lt-governor",
+          "givenName": "Jim Pillen and Joe",
+          "familyName": "Kelly",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jim Pillen and Joe Kelly"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-governor-and-lt-governor:lynne-walz-and-ben-steffen",
+          "contestId": "ne-sos-2026-general-for-governor-and-lt-governor",
+          "givenName": "Lynne Walz and Ben",
+          "familyName": "Steffen",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Lynne Walz and Ben Steffen"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-governor-and-lt-governor:rick-beard-and-keenya-barnes",
+          "contestId": "ne-sos-2026-general-for-governor-and-lt-governor",
+          "givenName": "Rick Beard and Keenya",
+          "familyName": "Barnes",
+          "partyLabel": "Legal Marijuana NOW",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Rick Beard and Keenya Barnes"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-governor-and-lt-governor:brett-lindstrom-and-michael-picard",
+          "contestId": "ne-sos-2026-general-for-governor-and-lt-governor",
+          "givenName": "Brett Lindstrom and Michael",
+          "familyName": "Picard",
+          "partyLabel": "America First",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Brett Lindstrom and Michael Picard"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-secretary-of-state:scott-petersen",
+          "contestId": "ne-sos-2026-general-for-secretary-of-state",
+          "givenName": "Scott",
+          "familyName": "Petersen",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Scott Petersen"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-secretary-of-state:sarah-j-slattery",
+          "contestId": "ne-sos-2026-general-for-secretary-of-state",
+          "givenName": "Sarah J.",
+          "familyName": "Slattery",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Sarah J. Slattery"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-secretary-of-state:paul-rumbaugh",
+          "contestId": "ne-sos-2026-general-for-secretary-of-state",
+          "givenName": "Paul",
+          "familyName": "Rumbaugh",
+          "partyLabel": "Nebraska Working People",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Paul Rumbaugh"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-secretary-of-state:bob-krist",
+          "contestId": "ne-sos-2026-general-for-secretary-of-state",
+          "givenName": "Bob",
+          "familyName": "Krist",
+          "partyLabel": "America First",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Bob Krist"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-state-treasurer:joey-spellerberg",
+          "contestId": "ne-sos-2026-general-for-state-treasurer",
+          "givenName": "Joey",
+          "familyName": "Spellerberg",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Joey Spellerberg"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-state-treasurer:daniel-ebers",
+          "contestId": "ne-sos-2026-general-for-state-treasurer",
+          "givenName": "Daniel",
+          "familyName": "Ebers",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Daniel Ebers"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-attorney-general:mike-hilgers",
+          "contestId": "ne-sos-2026-general-for-attorney-general",
+          "givenName": "Mike",
+          "familyName": "Hilgers",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Mike Hilgers"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-attorney-general:jocelyn-brasher",
+          "contestId": "ne-sos-2026-general-for-attorney-general",
+          "givenName": "Jocelyn",
+          "familyName": "Brasher",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jocelyn Brasher"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-auditor-of-public-accounts:mike-foley",
+          "contestId": "ne-sos-2026-general-for-auditor-of-public-accounts",
+          "givenName": "Mike",
+          "familyName": "Foley",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Mike Foley"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-auditor-of-public-accounts:john-knight",
+          "contestId": "ne-sos-2026-general-for-auditor-of-public-accounts",
+          "givenName": "John",
+          "familyName": "Knight",
+          "partyLabel": "America First",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "John Knight"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-public-service-commissioner-district-2:dennis-mccann",
+          "contestId": "ne-sos-2026-general-for-public-service-commissioner-district-2",
+          "givenName": "Dennis",
+          "familyName": "McCann",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Dennis McCann"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-public-service-commissioner-district-2:wendy-deboer",
+          "contestId": "ne-sos-2026-general-for-public-service-commissioner-district-2",
+          "givenName": "Wendy",
+          "familyName": "DeBoer",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Wendy DeBoer"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-2:dean-helmick",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-2",
+          "givenName": "Dean",
+          "familyName": "Helmick",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Dean Helmick"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-2:caitlin-knutson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-2",
+          "givenName": "Caitlin",
+          "familyName": "Knutson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Caitlin Knutson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-4:cindy-maxwell-ostdiek",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-4",
+          "givenName": "Cindy",
+          "familyName": "Maxwell-Ostdiek",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Cindy Maxwell-Ostdiek"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-4:r-brad-von-gillern",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-4",
+          "givenName": "R. Brad von",
+          "familyName": "Gillern",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "R. Brad von Gillern"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-6:patrick-leahy",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-6",
+          "givenName": "Patrick",
+          "familyName": "Leahy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Patrick Leahy"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-6:nate-ostdiek",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-6",
+          "givenName": "Nate",
+          "familyName": "Ostdiek",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Nate Ostdiek"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-8:josh-livingston",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-8",
+          "givenName": "Josh",
+          "familyName": "Livingston",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Josh Livingston"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-8:erin-feichtinger",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-8",
+          "givenName": "Erin",
+          "familyName": "Feichtinger",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Erin Feichtinger"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-10:cindy-johnson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-10",
+          "givenName": "Cindy",
+          "familyName": "Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Cindy Johnson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-10:rebecca-rens",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-10",
+          "givenName": "Rebecca",
+          "familyName": "Rens",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Rebecca Rens"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-12:merv-riepe",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-12",
+          "givenName": "Merv",
+          "familyName": "Riepe",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Merv Riepe"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-12:christy-knorr",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-12",
+          "givenName": "Christy",
+          "familyName": "Knorr",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Christy Knorr"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-14:bill-bowes",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-14",
+          "givenName": "Bill",
+          "familyName": "Bowes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Bill Bowes"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-14:suann-witt",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-14",
+          "givenName": "SuAnn",
+          "familyName": "Witt",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "SuAnn Witt"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-16:ted-japp",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-16",
+          "givenName": "Ted",
+          "familyName": "Japp",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Ted Japp"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-16:cindy-chatt",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-16",
+          "givenName": "Cindy",
+          "familyName": "Chatt",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Cindy Chatt"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-18:taylor-royal",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-18",
+          "givenName": "Taylor",
+          "familyName": "Royal",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Taylor Royal"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-18:jess-goldoni",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-18",
+          "givenName": "Jess",
+          "familyName": "Goldoni",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jess Goldoni"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-20:john-fredrickson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-20",
+          "givenName": "John",
+          "familyName": "Fredrickson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "John Fredrickson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-20:chris-anderson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-20",
+          "givenName": "Chris",
+          "familyName": "Anderson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Chris Anderson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-22:dawson-brunswick",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-22",
+          "givenName": "Dawson",
+          "familyName": "Brunswick",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Dawson Brunswick"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-24:jana-hughes",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-24",
+          "givenName": "Jana",
+          "familyName": "Hughes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jana Hughes"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-24:dan-winter",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-24",
+          "givenName": "Dan",
+          "familyName": "Winter",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Dan Winter"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-26:george-dungan",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-26",
+          "givenName": "George",
+          "familyName": "Dungan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "George Dungan"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-26:tobias-howard",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-26",
+          "givenName": "Tobias",
+          "familyName": "Howard",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Tobias Howard"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-28:patty-pansing-brooks",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-28",
+          "givenName": "Patty Pansing",
+          "familyName": "Brooks",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Patty Pansing Brooks"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-28:colby-l-woodson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-28",
+          "givenName": "Colby L.",
+          "familyName": "Woodson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Colby L. Woodson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-30:cally-ideus",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-30",
+          "givenName": "Cally",
+          "familyName": "Ideus",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Cally Ideus"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-30:janet-m-bock",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-30",
+          "givenName": "Janet M.",
+          "familyName": "Bock",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Janet M. Bock"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-32:mark-schoenrock",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-32",
+          "givenName": "Mark",
+          "familyName": "Schoenrock",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Mark Schoenrock"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-32:shay-smith",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-32",
+          "givenName": "Shay",
+          "familyName": "Smith",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shay Smith"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-34:loren-lippincott",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-34",
+          "givenName": "Loren",
+          "familyName": "Lippincott",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Loren Lippincott"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-34:ben-blodgett",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-34",
+          "givenName": "Ben",
+          "familyName": "Blodgett",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Ben Blodgett"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-36:darin-tompkins",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-36",
+          "givenName": "Darin",
+          "familyName": "Tompkins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Darin Tompkins"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-36:rick-holdcroft",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-36",
+          "givenName": "Rick",
+          "familyName": "Holdcroft",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Rick Holdcroft"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-38:tim-anderson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-38",
+          "givenName": "Tim",
+          "familyName": "Anderson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Tim Anderson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-38:janell-anderson-ehrke",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-38",
+          "givenName": "Janell Anderson",
+          "familyName": "Ehrke",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Janell Anderson Ehrke"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-40:barry-dekay",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-40",
+          "givenName": "Barry",
+          "familyName": "DeKay",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Barry DeKay"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-41:joe-johnson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-41",
+          "givenName": "Joe",
+          "familyName": "Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Joe Johnson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-41:jeremy-heneger",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-41",
+          "givenName": "Jeremy",
+          "familyName": "Heneger",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jeremy Heneger"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-42:mike-jacobson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-42",
+          "givenName": "Mike",
+          "familyName": "Jacobson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Mike Jacobson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-42:shaylee-s-scranton",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-42",
+          "givenName": "Shaylee S.",
+          "familyName": "Scranton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shaylee S. Scranton"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-44:teresa-ibach",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-44",
+          "givenName": "Teresa",
+          "familyName": "Ibach",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Teresa Ibach"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-46:danielle-conrad",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-46",
+          "givenName": "Danielle",
+          "familyName": "Conrad",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Danielle Conrad"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-48:brian-hardin",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-48",
+          "givenName": "Brian",
+          "familyName": "Hardin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Brian Hardin"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-legislature-district-48:jessica-m-landers",
+          "contestId": "ne-sos-2026-general-for-member-of-the-legislature-district-48",
+          "givenName": "Jessica M.",
+          "familyName": "Landers",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jessica M. Landers"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-5:michaela-conway",
+          "contestId": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-5",
+          "givenName": "Michaela",
+          "familyName": "Conway",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Michaela Conway"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-5:angie-eberspacher",
+          "contestId": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-5",
+          "givenName": "Angie",
+          "familyName": "Eberspacher",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Angie Eberspacher"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-6:sherry-jones",
+          "contestId": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-6",
+          "givenName": "Sherry",
+          "familyName": "Jones",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Sherry Jones"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-6:grady-erickson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-6",
+          "givenName": "Grady",
+          "familyName": "Erickson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Grady Erickson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-7:elizabeth-tegtmeier",
+          "contestId": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-7",
+          "givenName": "Elizabeth",
+          "familyName": "Tegtmeier",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Elizabeth Tegtmeier"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-8:lou-ann-goding",
+          "contestId": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-8",
+          "givenName": "Lou Ann",
+          "familyName": "Goding",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Lou Ann Goding"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-8:sherrye-hutcherson",
+          "contestId": "ne-sos-2026-general-for-member-of-the-state-board-of-education-district-8",
+          "givenName": "Sherrye",
+          "familyName": "Hutcherson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Sherrye Hutcherson"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-1:jeremy-hosein",
+          "contestId": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-1",
+          "givenName": "Jeremy",
+          "familyName": "Hosein",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jeremy Hosein"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-1:brent-comstock",
+          "contestId": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-1",
+          "givenName": "Brent",
+          "familyName": "Comstock",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Brent Comstock"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-2:jill-wolfe",
+          "contestId": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-2",
+          "givenName": "Jill",
+          "familyName": "Wolfe",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Jill Wolfe"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-2:elizabeth-butler",
+          "contestId": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-2",
+          "givenName": "Elizabeth",
+          "familyName": "Butler",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Elizabeth Butler"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-4:justin-solomon",
+          "contestId": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-4",
+          "givenName": "Justin",
+          "familyName": "Solomon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Justin Solomon"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-4:susanne-shore",
+          "contestId": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-4",
+          "givenName": "Susanne",
+          "familyName": "Shore",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:25.733599Z",
+            "verifiedAt": "2026-10-14T05:03:25.733599Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Susanne Shore"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-thomas-e-stine:thomas-e-stine",
+          "contestId": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-thomas-e-stine",
+          "givenName": "Thomas E.",
+          "familyName": "Stine",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:26.245989Z",
+            "verifiedAt": "2026-10-14T05:03:26.245989Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Thomas E. Stine"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-dirk-v-block:dirk-v-block",
+          "contestId": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-dirk-v-block",
+          "givenName": "Dirk V.",
+          "familyName": "Block",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:26.245989Z",
+            "verifiedAt": "2026-10-14T05:03:26.245989Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Dirk V. Block"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ne-sos-2026-general-measure-440",
+          "contestId": "ne-sos-2026-general-initiative-440",
+          "officialNumber": "440",
+          "questionText": "Shall the Nebraska Constitution be amended to authorize the enactment of laws allowing persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska?",
+          "officialStatement": "A vote “FOR” will amend the Nebraska Constitution to authorize the enactment of laws to allow persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska. A vote “AGAINST” means the Nebraska Constitution will not be amended in this manner.",
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:24.807443Z",
+            "verifiedAt": "2026-10-14T05:03:24.807443Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall the Nebraska Constitution be amended to authorize the enactment of laws allowing persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska?"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-measure-441",
+          "contestId": "ne-sos-2026-general-initiative-441",
+          "officialNumber": "441",
+          "questionText": "Shall statutes be enacted that: (1) Allow persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska or the operator’s platform provider; and (2) Regulate such sports wagers?",
+          "officialStatement": "A vote “FOR” will enact statutes allowing persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska or the operator’s platform provider, and regulating such sports wagers. A vote “AGAINST” means no such statutes will be enacted.",
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:24.807443Z",
+            "verifiedAt": "2026-10-14T05:03:24.807443Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall statutes be enacted that: (1) Allow persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska or the operator’s platform provider; and (2) Regulate such sports wagers?"
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-measure-442",
+          "contestId": "ne-sos-2026-general-initiative-442",
+          "officialNumber": "442",
+          "questionText": "Shall the Nebraska Constitution be amended to provide: (1) Schools must expressly designate each athletic team or sport as one of the following based on biological sex: (a) Males, men, or boys; (b) females, women, or girls; or (c) coed or mixed; and (2) Athletic teams or sports designated for females, women, or girls shall not be open to students of the male sex? The amendment would apply to all athletic teams or sports sponsored by public schools or postsecondary educational institutions, and private schools or educational institutions whose athletic teams or sports compete against public schools or institutions.",
+          "officialStatement": "A vote “FOR” will amend the Nebraska Constitution to provide: (1) Schools must expressly designate each athletic team or sport as one of the following based on biological sex: (a) Males, men, or boys; (b) females, women, or girls; or (c) coed or mixed; and (2) Athletic teams or sports designated for females, women, or girls shall not be open to students of the male sex. The amendment would apply to all athletic teams or sports sponsored by public schools or postsecondary educational institutions, and private schools or educational institutions whose athletic teams or sports compete against public schools or institutions. A vote “AGAINST” means the Nebraska Constitution will not be amended in this manner.",
+          "provenance": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceOrg": "Nebraska Secretary of State",
+            "collectedAt": "2026-10-14T05:03:24.807443Z",
+            "verifiedAt": "2026-10-14T05:03:24.807443Z",
+            "doorId": "fec-ne-chief",
+            "quote": "Shall the Nebraska Constitution be amended to provide: (1) Schools must expressly designate each athletic team or sport as one of the following based on biological sex: (a) Males, men, or boys; (b) females, women, or girls; or (c) coed or mixed; and (2) Athletic teams or sports designated for females, women, or girls shall not be open to students of the male sex? The amendment would apply to all athletic teams or sports sponsored by public schools or postsecondary educational institutions, and private schools or educational institutions whose athletic teams or sports compete against public schools or institutions."
+          }
+        },
+        {
+          "id": "ne-sos-2026-general-measure-lr19ca",
+          "contestId": "ne-sos-2026-general-lr19ca",
+          "officialNumber": "LR19CA",
+          "questionText": "A constitutional amendment to change the limit on legislative terms from two consecutive terms to three consecutive terms.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+            "sourceOrg": "Nebraska Legislature",
+            "collectedAt": "2026-10-14T05:04:38.936128Z",
+            "verifiedAt": "2026-10-14T05:04:38.936128Z",
+            "doorId": "fec-ne-chief",
+            "quote": "A constitutional amendment to change the limit on legislative terms from two consecutive terms to three consecutive terms."
+          }
+        }
+      ],
+      "absences": [],
+      "coverageNotes": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T05:04:38.936128Z",
+    "reviewedBy": "BL-14 scripted official-source conversion",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "d27a071715896b8c82b8cce8d48200b4207ba10c44f1778f56f92c4efcd7cf96",
+        "retrievedAt": "2026-10-14T05:03:25.733599Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed all federal and state office candidate rows in the final statewide November 3, 2026 general candidate list, including printed party and incumbency."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "1694277901e6c793d3ab0994e72a65293d9532a52e9f2b636140b2ec0a83cd67",
+        "retrievedAt": "2026-10-14T05:03:26.245989Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed both statewide Workers' Compensation Court retention rows and their exact ballot questions. Other listed retention judges are elected by judicial district."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+        "retrievedAt": "2026-10-14T05:03:24.807443Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted all three initiative numbers, ballot questions, official statements, and the official full-text PDF link."
+      },
+      {
+        "requestedUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "finalUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "httpStatus": 200,
+        "rawHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+        "retrievedAt": "2026-10-14T05:04:38.936128Z",
+        "publisher": "Nebraska Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted the enacted LR19CA ballot language and official full-text link for the November 2026 general election."
+      }
+    ]
+  }
+}

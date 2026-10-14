@@ -1,0 +1,23 @@
+{
+  "n": 35,
+  "branch": "release/35",
+  "river_sha": "e06723d0f904ae6123d9c3d8f63b124c67b27ba2",
+  "tested_sha": "e06723d0f904ae6123d9c3d8f63b124c67b27ba2",
+  "steps": [
+    "BL-12",
+    "BL-14",
+    "BL-15"
+  ],
+  "lanes": [
+    "ballot-bl-12",
+    "ballot-bl-14",
+    "ballot-bl-15"
+  ],
+  "integration_from": 187,
+  "integration_count": 190,
+  "pr": {
+    "number": 744,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/744"
+  },
+  "at": "2026-10-14T10:50:08Z"
+}

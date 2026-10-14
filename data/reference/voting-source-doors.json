@@ -397,10 +397,16 @@
     },
     "candidateListUrls": [
       "https://elections.hawaii.gov/candidates/candidate-reports/",
-      "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94"
+      "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+      "https://voterguide.hawaii.gov/view-sample-ballots/",
+      "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf"
     ],
     "ballotMeasureUrls": [
-      "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/"
+      "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+      "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
+      "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=secondCross_unammend&title=Senate+bills+that+have+passed+Third+Reading+and+were+unamended+by+the+nonoriginating+chamber&year=2025",
+      "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
+      "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=passLeg_finalDecking&title=Senate+bills+that+have+passed+the+Legislature+or+been+decked+for+Final+Reading&year=2026"
     ]
   },
   {

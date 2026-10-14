@@ -1,5 +1,15 @@
 # Returned: platform-civicplus
 
+## platform-civicplus — cleanup list (River's review at fold; delete in stream/platform-civicplus, then mark READY again)
+
+Lane platform-civicplus (R3-CIVICPLUS), READY 6974f285f. Measured effect against river 1caea1bd9c88: +11,301 / −435 lines across 18 files (10 added, 0 deleted, 8 modified); code and tests +529 / −435 in 10 files. The READY commit's "relative to current River" counts match; its first line (against its first parent) does not describe this merge.
+
+Delete:
+1. Remove the unused `export` keyword (nothing outside the file imports them, tests included): lib/sources/civicplus/index.ts:29 (isCancelledSummary) and :33 (locationWithoutNotice).
+
+Checked and clean otherwise: no commented-out code; every new code file and fixture is referenced.
+
+
 lane: platform-civicplus
 owner: platform-civicplus
 writer: the platform-civicplus lane

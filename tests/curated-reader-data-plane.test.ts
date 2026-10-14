@@ -18,6 +18,9 @@ import type { ManualSourceClass, ManualSourceSetReceipt } from "../lib/civic-dat
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
 import { stanceId } from "../lib/civic-data/stance-rows.ts";
 import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts";
+import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
+import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
+import { registrationLinkFor } from "../lib/ballot/registration-links.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -198,6 +201,31 @@ test("each mutable curated Reader family promotes and reads from its own canonic
     const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0 });
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
+  }
+});
+
+test("every state's registration and polling links publish through the national navigation pointer", async () => {
+  const store = new MemoryRoutineDataStore();
+  const records = REGISTRATION_TARGETS.flatMap(({ state }) =>
+    payloadFor("ballot-navigation", T0).records.map(record => ({
+      ...record,
+      id: `${record.kind}:${state}`,
+      value: { ...(record.value as Record<string, unknown>), state },
+    }))
+  );
+  const candidate = manualProjectionCandidate({ ...packageFor("ballot-navigation"),
+    payload: { kind: "ballot-navigation", records } });
+  assert.equal(candidate.scope, "US:official-ballot-navigation");
+  const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, T0);
+  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
+  assert.equal(outcome.readerReadback?.status, "PASS");
+  assert.equal((await store.readPromotion("CURATED_READER_RECORD", "US:official-ballot-navigation"))?.versionId, candidate.id);
+  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: T0, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(read.metadata.scope, "US:official-ballot-navigation");
+  for (const { state } of REGISTRATION_TARGETS) {
+    assert.equal(pollingPlaceLinkFor(state)?.url, URLS["ballot-navigation"][0], state);
+    assert.equal(registrationLinkFor(state)?.url, URLS["ballot-navigation"][1], state);
   }
 });
 

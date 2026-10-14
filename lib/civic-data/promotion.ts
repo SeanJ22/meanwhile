@@ -504,9 +504,13 @@ export async function processRoutineCandidate(
         );
   const candidate: RoutineCandidate = {
     ...inputCandidate,
+    // A receiptless curated base contributes no verified records to the change set.
     changeSet: candidateChangeSet(
       inputCandidate,
-      preloadedBaseChanged ? exactDeclaredBase?.candidate.readModel ?? null : current?.payload ?? null,
+      inputCandidate.recordClass === "CURATED_READER_RECORD" && inputCandidate.retrieval.manualSourceReceipt &&
+        !(preloadedBaseChanged ? exactDeclaredBase : lkg)?.candidate.retrieval.manualSourceReceipt
+        ? null
+        : preloadedBaseChanged ? exactDeclaredBase?.candidate.readModel ?? null : current?.payload ?? null,
     ),
   };
   const initialState: CandidateState = candidate.retrieval.succeeded ? "FETCHED" : "SOURCE_BLOCKED";

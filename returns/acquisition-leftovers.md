@@ -2,7 +2,7 @@
 
 ## acquisition-leftovers — cleanup list (River's review at fold; delete in stream/acquisition-leftovers, then mark READY again)
 
-Lane acquisition-leftovers (R2B), READY 3a142ab30, folded into river-next 5bb464f06e34. Measured effect against river 25ef70542f9b: +763 / −747 lines across 40 files (A12 / M28): code and tests +646 / −678 (2 added, 26 modified), fixtures +117 / −69 (10 added, 2 modified). The READY counts match.
+Lane acquisition-leftovers (R2B), READY 37080911d, folded into river-next 5bb464f06e34. Measured effect against river 25ef70542f9b: +763 / −747 lines across 40 files (A12 / M28): code and tests +646 / −678 (2 added, 26 modified), fixtures +117 / −69 (10 added, 2 modified). The READY counts match.
 
 Delete:
 1. tests/fixtures/prl/profiles-national-source.json (7 lines). No test, script or code reads it; the test loads only tests/fixtures/prl/profiles-national.csv.
@@ -26,7 +26,7 @@ fix: River · stream/acquisition-leftovers — cleanliness failed for acquisitio
 ```
 ## acquisition-leftovers — cleanup list (River's review at fold; delete in stream/acquisition-leftovers, then mark READY again)
 
-Lane acquisition-leftovers (R2B), READY 3a142ab30, folded into river-next 5bb464f06e34. Measured effect against river 25ef70542f9b: +763 / −747 lines across 40 files (A12 / M28): code and tests +646 / −678 (2 added, 26 modified), fixtures +117 / −69 (10 added, 2 modified). The READY counts match.
+Lane acquisition-leftovers (R2B), READY 37080911d, folded into river-next 5bb464f06e34. Measured effect against river 25ef70542f9b: +763 / −747 lines across 40 files (A12 / M28): code and tests +646 / −678 (2 added, 26 modified), fixtures +117 / −69 (10 added, 2 modified). The READY counts match.
 
 Delete:
 1. tests/fixtures/prl/profiles-national-source.json (7 lines). No test, script or code reads it; the test loads only tests/fixtures/prl/profiles-national.csv.

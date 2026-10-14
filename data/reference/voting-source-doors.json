@@ -1038,7 +1038,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, St. Paul, MN",
     "url": "https://www.sos.state.mn.us/elections-voting/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MN",
       "ocdId": "ocd-division/country:us/state:mn",
@@ -1061,7 +1064,15 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.mn.us/elections-voting/\">https://www.sos.state.mn.us/elections-voting/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://candidates.sos.mn.gov/",
+      "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false&bl13=1791954750022338651"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.state.mn.us/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+      "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/"
+    ]
   },
   {
     "id": "fec-ms-chief",

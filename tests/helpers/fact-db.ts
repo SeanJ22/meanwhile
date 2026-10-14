@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
 import type { FactDb, Query } from "../../lib/facts/publish.ts";
 
-const MIGRATION = join(import.meta.dirname, "..", "..", "lib", "db", "migrations", "R1_fact_store.sql");
+const MIGRATION = join(import.meta.dirname, "..", "..", "lib", "db", "migrations", "0035_r1_fact_store.sql");
 
 /** A real Postgres with the fact store migration applied. */
 export async function factDb(): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {

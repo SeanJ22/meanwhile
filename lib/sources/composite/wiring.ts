@@ -6,6 +6,7 @@ import {
 } from "../../registry/source-wiring.ts";
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
+import { makeGranicusSource } from "../granicus/index.ts";
 import { makeNovusAgendaSource } from "../novusagenda/index.ts";
 import { makeEscribeSource } from "../escribe/index.ts";
 import { makeBoardDocsSource } from "../boarddocs/index.ts";
@@ -56,6 +57,7 @@ export const CAPABILITIES: Array<{
   types: AgendaSourceType[];
   make: ChildFactory;
 }> = [
+  { name: "granicus", types: ["GRANICUS"], make: (rows, fetchImpl) => makeGranicusSource(rows, fetchImpl) as ReportingMeetingSource<unknown> },
   {
     name: "legistar",
     types: ["LEGISTAR"],

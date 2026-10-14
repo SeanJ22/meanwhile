@@ -27,8 +27,7 @@
 
 import type { AssignmentCompletion } from "../assignment-completion.ts";
 import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
-import type { CostEntry } from "../cost.ts";
-import { aggregateModelSpend } from "../fleet-safety.ts";
+import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
@@ -196,7 +195,7 @@ export interface AssignmentSpend {
 }
 
 /** One assignment's model-backed spend in a window, by the rule in the header. */
-export function assignmentSpend(costs: readonly CostEntry[], members: AssignmentMembers, since: string, until: string): AssignmentSpend {
+export function assignmentSpend(charges: readonly PricedCharge[], members: AssignmentMembers, since: string, until: string): AssignmentSpend {
   const joinedAt = new Map<string, number>();
   const subjectJoinedAt = new Map<string, number>();
   for (const m of [...members.created.values(), ...members.reordered.values()]) {
@@ -204,11 +203,11 @@ export function assignmentSpend(costs: readonly CostEntry[], members: Assignment
     joinedAt.set(m.obligationId, t);
     subjectJoinedAt.set(m.subjectId, Math.min(subjectJoinedAt.get(m.subjectId) ?? Number.POSITIVE_INFINITY, t));
   }
-  const byObligation: CostEntry[] = [];
-  const bySubject: CostEntry[] = [];
-  for (const entry of costs) {
-    const at = Date.parse(entry.recordedAt);
-    if (typeof entry.obligationId === "string") {
+  const byObligation: PricedCharge[] = [];
+  const bySubject: PricedCharge[] = [];
+  for (const entry of charges) {
+    const at = Date.parse(entry.at);
+    if (entry.obligationId !== null) {
       const joined = joinedAt.get(entry.obligationId);
       if (joined !== undefined && at >= joined) byObligation.push(entry);
       continue;
@@ -217,8 +216,8 @@ export function assignmentSpend(costs: readonly CostEntry[], members: Assignment
     if (joined !== undefined && at >= joined) bySubject.push(entry);
   }
   /* The Fleet's own model-backed and window rule, for both halves. */
-  const named = aggregateModelSpend(byObligation, since, until);
-  const unnamed = aggregateModelSpend(bySubject, since, until);
+  const named = aggregatePricedSpend(byObligation, since, until);
+  const unnamed = aggregatePricedSpend(bySubject, since, until);
   return {
     usd: named.usd === null || unnamed.usd === null ? null : named.usd + unnamed.usd,
     measured: named.measured + unnamed.measured,
@@ -474,10 +473,10 @@ export class AssignmentBudgetGate {
  * Arm the gate at cycle start: each budget's rolling-window spend from the
  * canonical ledger. `costs` null means the ledger could not be read.
  */
-function costsForInstruction(costs:readonly CostEntry[], spec:AssignmentBudgetSpec):readonly CostEntry[] {
+function chargesForInstruction(charges:readonly PricedCharge[], spec:AssignmentBudgetSpec):readonly PricedCharge[] {
   // A charge with a different exact receipt does not belong here. Older rows
   // without receipts are counted by membership and time.
-  return costs.filter(cost=>cost.assignmentRefs===undefined ||
+  return charges.filter(cost=>cost.assignmentRefs===undefined ||
     cost.assignmentRefs.some(mark=>mark.key===spec.key&&mark.ref===spec.ref));
 }
 
@@ -485,7 +484,7 @@ export function armAssignmentBudget(input: {
   readonly now: string;
   readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly costs: readonly CostEntry[] | null;
+  readonly charges: readonly PricedCharge[] | null;
   readonly worstCaseUsd: number;
   readonly intentsReadable: boolean;
   readonly malformed?: readonly MalformedAssignmentBudget[];
@@ -493,16 +492,16 @@ export function armAssignmentBudget(input: {
 }): AssignmentBudgetGate {
   const since = new Date(Date.parse(input.now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
   const historical = new Map<string, AssignmentSpend>();
-  if (input.costs !== null) {
+  if (input.charges !== null) {
     const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
-    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(costsForInstruction(input.costs,spec), input.membership.byInstruction.get(instructionReceiptKey(spec.key,spec.ref)) ?? empty, spec.budgetStartedAt ?? since, input.now));
+    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(chargesForInstruction(input.charges,spec), input.membership.byInstruction.get(instructionReceiptKey(spec.key,spec.ref)) ?? empty, spec.budgetStartedAt ?? since, input.now));
   }
   return new AssignmentBudgetGate({
     specs: input.specs,
     membership: input.membership,
     historical,
     worstCaseUsd: input.worstCaseUsd,
-    costsReadable: input.costs !== null,
+    costsReadable: input.charges !== null,
     intentsReadable: input.intentsReadable,
     malformed: input.malformed ?? [],
     reachedThisCycle: input.reachedThisCycle ?? new Map(),
@@ -571,7 +570,7 @@ export function assignmentCycleReading(input: {
   readonly gate: AssignmentBudgetGate;
   readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly costs: readonly CostEntry[] | null;
+  readonly charges: readonly PricedCharge[] | null;
   readonly intentsReadable: boolean;
   /** Labels for Sends with members and no budget in force (from this cycle's targets). */
   readonly labels?: ReadonlyMap<string, string>;
@@ -586,7 +585,7 @@ export function assignmentCycleReading(input: {
     const spec = specs.get(key) ?? null;
     const m = spec ? input.membership.byInstruction.get(instructionReceiptKey(key,spec.ref)) ?? empty : input.membership.byKey.get(key) ?? empty;
     const state = input.gate.state(key);
-    const spend = spec !== null && input.costs !== null ? assignmentSpend(costsForInstruction(input.costs,spec), m, spec.budgetStartedAt ?? since, input.now) : null;
+    const spend = spec !== null && input.charges !== null ? assignmentSpend(chargesForInstruction(input.charges,spec), m, spec.budgetStartedAt ?? since, input.now) : null;
     const kind = key.startsWith("dispatch:") ? "DISPATCH" : "SCOPE";
     return {
       key,
@@ -628,7 +627,7 @@ export function assignmentCycleReading(input: {
       completion: input.completionFor?.(key) ?? null,
     };
   });
-  return { formatVersion: ASSIGNMENT_BUDGET_FORMAT_VERSION, at: input.at, costsReadable: input.costs !== null, intentsReadable: input.intentsReadable, rule: SHARED_WORK_RULE, assignments };
+  return { formatVersion: ASSIGNMENT_BUDGET_FORMAT_VERSION, at: input.at, costsReadable: input.charges !== null, intentsReadable: input.intentsReadable, rule: SHARED_WORK_RULE, assignments };
 }
 
 /** A value on the research state that is not a reading reads as none, never as "no assignments". */

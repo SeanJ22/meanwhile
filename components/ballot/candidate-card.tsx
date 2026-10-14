@@ -116,7 +116,7 @@ export function CandidateCard({
                 rel="noreferrer"
                 className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
-                site (as filed)
+                {hostOf(filedSiteUrl)} (as filed)
               </a>
             )}
             {card?.phone && (

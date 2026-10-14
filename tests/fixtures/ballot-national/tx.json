@@ -19,7 +19,7 @@
       "candidacies": [
         {
           "id": "fixture-tx-alice", "contestId": "fixture-tx-governor", "familyName": "Adams", "givenName": "Alice",
-          "partyLabel": null, "slogan": null, "incumbent": null, "websiteUrl": null,
+          "partyLabel": null, "slogan": null, "incumbent": null, "websiteUrl": "https://ALICE.Example.org/",
           "provenance": { "sourceUrl": "https://elections.example.gov/tx/candidates", "sourceOrg": "Fixture Texas election authority", "collectedAt": "2026-10-13T00:00:00.000Z", "verifiedAt": "2026-10-13T00:00:00.000Z" }
         },
         {

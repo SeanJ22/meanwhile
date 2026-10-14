@@ -126,6 +126,8 @@ export interface ActionInputSource {
 export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Record<string, unknown>> {
   const limit = () => (s.amount.trim() === "" ? null : Number(s.amount));
   switch (kind) {
+    case "ballot-publish":
+      return {};
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {

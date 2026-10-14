@@ -1,6 +1,5 @@
 "use client";
 
-/** Ages and a late round are worked out from the clock on each draw; the pulse redraws the page about every 45 seconds. */
 import { Fragment, useState, useSyncExternalStore } from "react";
 
 import { useV6 } from "./context.tsx";
@@ -243,6 +242,18 @@ function Publication() {
     <Card title="Published versus reader-visible" aside={<span className={s.meta}>{p ? `${count(p.total)} routine contracts` : "—"}</span>}>
       {p && (
         <div className={s.stack}>
+          <div className={s.stack}>
+            <h3 className={s.h3}>State ballots</h3>
+            <Actions actions={[{ kind: "ballot-publish", target: "ballot-contests" }]} />
+            {p.ballotPublication ? <>
+              <p className={s.small}>{p.ballotPublication.status === "PUBLISHED" ? "Published" : "Held"} {when(p.ballotPublication.at)}</p>
+              <p className={s.small}>Merged: {p.ballotPublication.merged.map(file => file.slice(0, 2).toUpperCase()).join(", ") || "none"}</p>
+              {p.ballotPublication.reason && <p className={s.small}>{p.ballotPublication.reason}</p>}
+              {p.ballotPublication.skipped.length ? <ul className={s.stack}>
+                {p.ballotPublication.skipped.map(row => <li key={row.file} className={s.small}>Skipped {row.file.slice(0, 2).toUpperCase()}: {row.reason}</li>)}
+              </ul> : <p className={s.small}>Skipped: none</p>}
+            </> : <p className={s.small}>No ballot publication reported yet.</p>}
+          </div>
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {p.counts.map((c) => <li key={c.verdict} className={s.small}><strong>{count(c.count)} of {count(p.total)}</strong> {c.words.charAt(0).toLowerCase() + c.words.slice(1)}</li>)}
             <li className={s.small}><strong>{count(p.latestAttemptFailing)} of {count(p.total)}</strong> latest attempt failed</li>

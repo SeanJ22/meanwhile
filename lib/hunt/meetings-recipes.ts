@@ -346,6 +346,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   iqm2: "iqm2",
   boardbook: "boardbook",
   boarddocs: "boarddocs",
+  novusagenda: "novusagenda",
   escribe: "escribe",
   "official-page-events": null,
 };
@@ -361,6 +362,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   boardbook: "a BoardBook organization page with at least one meeting link",
   escribe: "a public eScribe calendar list with meeting identities, types, local dates and document links",
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
+  novusagenda: "a public NovusAgenda meeting grid with published meeting ids, dates and body labels",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 

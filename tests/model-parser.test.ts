@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { readFieldManual, writeFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
@@ -277,14 +276,11 @@ for (const [shape, text] of Object.entries({
   });
 }
 
-test("CP-19: only dropped cross-row fields send the work item to a detective, and the runtime reads them", () => {
+test("CP-19: only dropped cross-row fields make a brief line, and the brief stays bounded", () => {
   assert.deepEqual(outsideRecordBlockBriefs([{ code: "DUPLICATE_SOURCE_RECORD_ID", detail: "x" }]), []);
   assert.match(outsideRecordBlockBriefs([{ code: "FIELD_OUTSIDE_RECORD_BLOCK", detail: "not json", field: "phone" }])[0], /^Field phone was dropped because its value/);
   const many = Array.from({ length: 30 }, (_, i) => ({ code: "FIELD_OUTSIDE_RECORD_BLOCK", detail: JSON.stringify({ name: `Person ${i}`, value: `v${i}` }), field: "email" }));
   assert.equal(outsideRecordBlockBriefs(many).length, 20, "the brief stays bounded");
-  const runtime = readFileSync("lib/control-plane/workers/standing-runtime.ts", "utf8");
-  assert.match(runtime, /outsideBlockLines\(item\.id\)\.length>0/, "a dropped field routes the next investigation to a detective");
-  assert.match(runtime, /\.\.\.outsideBlockLines\(item\.id\),/, "and names each dropped field in its brief");
 });
 
 

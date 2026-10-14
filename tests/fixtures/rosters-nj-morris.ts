@@ -19,7 +19,7 @@
  * but a member's party is read from a certified election result (M62) and from
  * nothing else, so `partisanship` stays UNDETERMINED and nothing renders.
  */
-import type { BodyRoster } from "./body-rosters.ts";
+import type { BodyRoster } from "../../lib/registry/body-rosters.ts";
 
 export const NJ_MORRIS_ROSTERS: BodyRoster[] = [
   {

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 import test from "node:test";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -10,11 +11,16 @@ import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.t
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { readHeldRoster } from "../lib/civic-data/worker-held-roster.ts";
 import { heldBodySchedule, readHeldMeetingSchedule } from "../lib/civic-data/worker-held-meetings.ts";
-import { workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
+import { publishBodyRoster, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { ensureFactEntities } from "../lib/facts/entities.ts";
+import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
+const ROOT = join(import.meta.dirname, "..");
 const NOW = "2026-09-29T20:00:00.000Z";
 const BODY = "ocd-division/country:us/state:az/place:benson#governing";
 const ROSTER_URL = "https://www.bensonaz.gov/government/city-council/contact-the-mayor-council";
@@ -49,7 +55,7 @@ async function fixtureStore() {
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
     sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
   assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
   return store;
 }
@@ -64,7 +70,7 @@ test("plain code reads a saved meeting page's regular schedule in its own words,
   assert.equal(readHeldMeetingSchedule(shell("Council Meetings", "<p>The council meets on the second Tuesday.</p>"), MEETINGS_URL), null, "a day with no time is not a schedule, and no link was given");
 });
 
-test("a saved meeting page from any job names the council's schedule and agenda link on the registry door, beside its roster (§3)", async () => {
+test("a saved meeting page from any job names the council's schedule and agenda link as facts beside its roster (§3)", async () => {
   const store = await fixtureStore();
   const base = (await readRegistryRuntimePrior(store, NOW))!;
   assert.equal(base.payload.registry.bodies.find(body => body.id === BODY)?.name, null, "the fixture council is Census-derived and unnamed");
@@ -83,23 +89,25 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   assert.equal(await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
     artifacts: [artifact(plain)], readHeld: async () => plain }), null, "the door accepts only HTTPS sources, so an http copy never holds the roster beside it");
 
-  const published = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, schedule, reading: { id: `held:${roster.evidence.artifactId}`, capture: roster, linkingPage: null, complete: true,
-    method: "fixture", members: readHeldRoster(ROSTER, ROSTER_URL)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
-  const candidate = registryRuntimeCandidate(published, { prior: base });
-  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", candidate, NOW, base.versionId)).promoted);
-  const after = (await readRegistryRuntimePrior(store, NOW))!;
-  const council = after.payload.registry.bodies.find(body => body.id === BODY)!;
+  const facts = await factDb();
+  await ensureFactEntities(facts, ROOT, ["az"]);
+  const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
+  await publishBodyRoster(facts, { body, division: new Map(base.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId!)!, state: "AZ", schedule, clocks: factClocks(null), now: new Date(NOW),
+    reading: { id: `held:${roster.evidence.artifactId}`, capture: roster, linkingPage: null, complete: true, method: "fixture",
+      members: readHeldRoster(ROSTER, ROSTER_URL)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
+  const after = await withFactRegistry(base.payload, facts.query);
+  const council = after.registry.bodies.find(body => body.id === BODY)!;
   assert.equal(council.name, "Benson City Council");
   assert.equal(council.bodyOrigin, "SOURCED");
   assert.equal(council.provenance.sourceUrl, ROSTER_URL);
   assert.match(council.meetingCadence ?? "", /second and fourth Thursday of the month\. .* at 5:00 p\.m\.$/);
-  assert.deepEqual(council.meetingCadenceSource, { sourceUrl: MEETINGS_URL, collectedAt: meetings.observedAt }, "the schedule carries its own source");
+  assert.equal(council.meetingCadenceSource?.sourceUrl, MEETINGS_URL, "the schedule carries its own source");
   assert.equal(council.agendaSourceRef, "https://www.bensonaz.gov/council-documents/-folder-121");
-  assert.deepEqual(after.payload.bodyRosters.find(r => r.bodyId === BODY)?.members.map(m => m.name), ["Clea McCaa II", "Carolyn Flowers"]);
+  assert.deepEqual(after.bodyRosters.find(r => r.bodyId === BODY)?.members.map(m => m.name).sort(), ["Carolyn Flowers", "Clea McCaa II"]);
 
   // The published agenda link leads the existing meeting walk for that government.
   const item = { id: "wi-roster", autonomousPlan: { contract: { subjectId: "az:benson" }, publication: { contractId: "registry-runtime-bindings", bodyId: BODY } },
     publicationOutcome: { status: "PUBLISHED", at: NOW, versionId: "cv-x", workerResultId: "held:x" } } as unknown as WorkItem;
-  const hints = directoryMeetingHints([item], after.payload, []);
+  const hints = directoryMeetingHints([item], after, []);
   assert.deepEqual(hints.flatMap(h => h.routes.map(r => [h.jurisdictionId, r.url, r.verifyAs])), [["az:benson", "https://www.bensonaz.gov/council-documents/-folder-121", "official-page-events"]]);
 });

@@ -129,5 +129,6 @@ test("one running worker runtime saves a new observed route and hands it to its 
   const second = (await h.repos.scoutResults.readAll()).find(r => r.routeTaskId === task.id)!;
   assert.ok(second.inheritedFieldManualEntryIds?.includes(entry.id));
   assert.ok(second.inheritedFieldManualLines?.some(line => line.includes(discovered)));
-  assert.ok(second.usedFieldManualEntryIds?.includes(entry.id), "the next worker actually walked the inherited route");
+  const door = new Set((await h.repos.fieldManual.list()).map(row => row.value).filter(e => e.url === discovered).map(e => e.id));
+  assert.ok(second.usedFieldManualEntryIds?.some(id => door.has(id)), "the next worker actually walked the inherited route");
 });

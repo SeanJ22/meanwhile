@@ -28,8 +28,16 @@ test("a campaign page counts only for its own candidate", () => {
   assert.equal(call({ ...base, sourceKind: "VOTER_GUIDE" }, "https://guide.example/a", []).sourceKind, "VOTER_GUIDE");
 });
 
-test("a paraphrase is refused: it needs a second source", () => {
-  assert.throws(() => call({ ...base, statementSummary: "Supports housing." }), /STANCE_PARAPHRASE_NEEDS_SECOND_SOURCE/);
+test("an AI summary publishes with the statement it summarizes linked as its source", () => {
+  const row = call({ ...base, statementSummary: "Supports housing." });
+  assert.equal(row.summary, "Supports housing.");
+  assert.equal(row.sourceUrl, "https://www.aperson.example/issues");
+  assert.equal(stanceRowIssue(row), null);
+  assert.equal(call({ ...base, sourceKind: "VOTER_GUIDE", positionSummary: "Wants more homes." }, "https://guide.example/a", []).summary, "Wants more homes.");
+});
+
+test("an AI summary with no linked statement source is refused", () => {
+  assert.throws(() => call({ ...base, sourceKind: "VOTER_GUIDE", statementSummary: "Supports housing." }, "", []), /STANCE_SOURCE_NOT_HTTPS/);
 });
 
 test("an unknown topic, a future or malformed date, or an unknown source kind is refused", () => {

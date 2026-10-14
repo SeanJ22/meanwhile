@@ -4,7 +4,7 @@ import { directPositiveSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
-import { registryMemberCitedUrls, inheritedRosterSourceFacts } from "../registry/cited-urls.ts";
+import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
@@ -30,7 +30,6 @@ export interface ManualPriorAuthority {
   readonly versionId: string;
   readonly readModelSha256: string;
   readonly retainedMembers: readonly { readonly key: string; readonly sha256: string }[];
-  readonly retainedRosterSources?: readonly { readonly key: string; readonly url: string; readonly sha256: string }[];
 }
 export type ManualSuccessorCandidate = RoutineCandidate & { readonly manualPriorAuthority?: ManualPriorAuthority };
 export const manualPriorAuthorityOf = (candidate: RoutineCandidate): ManualPriorAuthority | undefined =>
@@ -42,8 +41,7 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   if (!prior) return null;
   if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || !INHERITING_CLASSES.has(candidate.recordClass) ||
       candidate.bootstrapImport || !candidate.retrieval.manualSourceReceipt ||
-      !Array.isArray(prior.retainedMembers) || (prior.retainedRosterSources !== undefined && !Array.isArray(prior.retainedRosterSources)) ||
-      (prior.retainedMembers.length === 0 && !prior.retainedRosterSources?.length)) {
+      !Array.isArray(prior.retainedMembers) || prior.retainedMembers.length === 0) {
     return "Inherited authority is valid only for unchanged members of a source-reviewed curated Reader or registry successor.";
   }
   const receipt = base ? parseValidationReceipt(base.receipt) : null;
@@ -82,21 +80,10 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   }
   const sourceUrls = new Set(candidate.retrieval.manualSourceReceipt.sources
     .filter((source) => source.reviewOutcome !== "BLOCKED").flatMap((source) => [source.requestedUrl, source.finalUrl]));
-  const retainedSources = new Set<string>();
-  for (const source of prior.retainedRosterSources ?? []) {
-    if (!source || typeof source.key !== "string" || typeof source.url !== "string") return "Invalid inherited roster source.";
-    const identity = `${source.key}\n${source.url}`;
-    const facts = inheritedRosterSourceFacts(before.get(source.key), after.get(source.key));
-    if (candidate.recordClass !== "REGISTRY_RUNTIME_BINDING" || !source.key.startsWith("body-roster:") ||
-        retainedSources.has(identity) || !facts.has(source.url) || hash(facts.get(source.url)) !== source.sha256) {
-      return "An inherited roster source changed its exact person identity or facts, or lacks the named prior evidence.";
-    }
-    retainedSources.add(identity);
-  }
   for (const [key, record] of after) {
     if (retained.has(key)) continue;
     for (const url of assertedSources(candidate.recordClass, key, record)) {
-      if (!sourceUrls.has(url) && !retainedSources.has(`${key}\n${url}`)) return `Changed or new member ${key} lacks an exact current source review for ${url}.`;
+      if (!sourceUrls.has(url)) return `Changed or new member ${key} lacks an exact current source review for ${url}.`;
     }
   }
   return null;

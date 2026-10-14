@@ -2,16 +2,21 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 import test from "node:test";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { readHeldRoster } from "../lib/civic-data/worker-held-roster.ts";
-import { heldRosterReading, pageIsAboutBody, publishRosterReading, workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
+import { heldRosterReading, pageIsAboutBody, publishBodyRoster, type RosterReading, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { ensureFactEntities } from "../lib/facts/entities.ts";
+import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
+import { readFactRosters } from "../lib/facts/roster-read.ts";
+import { factDb } from "./helpers/fact-db.ts";
 
+const ROOT = join(import.meta.dirname, "..");
 const NOW = "2026-09-29T20:00:00.000Z";
 const BODY = "ocd-division/country:us/state:az/place:benson#governing";
 const URL_ = "https://www.bensonaz.gov/government/city-council/contact-the-mayor-council";
@@ -24,6 +29,7 @@ const page = (title: string, rows = ROWS) => `<html><head><title>${title} | City
   `<nav>Government City Council Council Meetings Boards Commissions</nav><h1>${title}</h1>` +
   // CMS pages often repeat the directory table (desktop and mobile).
   `${table(rows)}${table(rows)}<p>Email the entire council at MayorandCouncil@BensonAZ.gov.</p></body></html>`;
+const clocks = factClocks(null);
 
 function capture(html: string, url = URL_, observedAt = "2026-09-28T22:06:04.940Z"): WorkerPublicationCapture {
   const contentHash = `sha256-${createHash("sha256").update(html).digest("hex")}`;
@@ -38,6 +44,19 @@ async function prior(): Promise<RegistryRuntimePrior> {
   return (await readRegistryRuntimePrior(store, NOW))!;
 }
 
+async function setup() {
+  const [base, facts] = await Promise.all([prior(), factDb()]);
+  await ensureFactEntities(facts, ROOT, ["az"]);
+  const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
+  const division = new Map(base.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId!)!;
+  const publish = (reading: RosterReading) => publishBodyRoster(facts, { body, division, state: "AZ", reading, clocks, now: new Date(NOW) });
+  return { base, facts, body, publish };
+}
+
+const reading = (saved: WorkerPublicationCapture, complete = true, id = `held:${saved.evidence.artifactId}`): RosterReading => ({ id, capture: saved, linkingPage: null, complete, method: "fixture",
+  members: readHeldRoster(saved.evidence.text, saved.evidence.canonicalUrl)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) });
+const names = async (facts: Awaited<ReturnType<typeof factDb>>) => (await readFactRosters(facts.query, [BODY])).rosters[0]?.members.map(m => m.name).sort() ?? [];
+
 test("plain code reads a CMS staff-directory roster once, with display names and relative bio links", () => {
   const roster = readHeldRoster(page("Contact the Mayor & Council"), URL_)!;
   assert.equal(roster.complete, true);
@@ -47,177 +66,102 @@ test("plain code reads a CMS staff-directory roster once, with display names and
   assert.equal(readHeldRoster("<table><tr><th>Name</th><th>Phone</th></tr><tr><td>A</td><td>1</td></tr></table>", URL_), null, "a table without a seat column is not a roster");
 });
 
-test("a saved official page puts an unnamed council live with seat, name, office phone and source link (§3)", async () => {
-  const base = await prior();
+test("a saved official page puts an unnamed council live with its name, seats, office phone and source link (§3)", async () => {
+  const { base, facts, publish } = await setup();
   assert.equal(base.payload.registry.bodies.find(body => body.id === BODY)?.name, null);
   const held = capture(page("Contact the Mayor & Council"));
-  const reading = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, readHeld: async () => held,
+  const found = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, readHeld: async () => held,
     artifacts: [{ artifactId: held.evidence.artifactId, workItemId: "wi-directory", routeTaskId: null, attemptId: "at-scout", tier: "RAW", contentHash: held.evidence.contentHash,
       byteLength: held.evidence.text.length, contentType: "text/html; charset=utf-8", canonicalUrl: URL_, partial: false, recordedAt: held.observedAt } as ArtifactRecord] });
-  assert.ok(reading);
-  const published = workerRosterPublication({ bodyId: BODY, reading, prior: base, now: NOW });
-  const roster = published.payload.bodyRosters[0];
-  assert.equal(roster.bodyName, "Benson City Council");
+  assert.ok(found);
+  const tally = await publish(found);
+  assert.deepEqual(await facts.query("SELECT entity_id, field, reason FROM blank"), []);
+  const seen = await withFactRegistry(base.payload, facts.query);
+  const council = seen.registry.bodies.find(body => body.id === BODY)!;
+  assert.equal(council.name, "Benson City Council");
+  assert.equal(council.bodyOrigin, "SOURCED");
+  assert.equal(council.provenance.sourceUrl, URL_);
+  const roster = seen.bodyRosters.find(row => row.bodyId === BODY)!;
   assert.equal(roster.sourceUrl, URL_);
-  assert.deepEqual(roster.members.map(m => [m.name, m.officeTitle, m.phone, m.contactScope]), [
-    ["Clea McCaa II", "Mayor", "(520) 555-1000", "SHARED_OFFICE"], ["Carolyn Flowers", "Vice Mayor", "(520) 555-1000", "SHARED_OFFICE"], ["Faye Jackson", "Council Member", "(520) 555-1000", "SHARED_OFFICE"]]);
+  assert.deepEqual(roster.members.map(m => [m.name, m.officeTitle, m.phone, m.contactScope]).sort(), [
+    ["Carolyn Flowers", "Vice Mayor", "(520) 555-1000", "SHARED_OFFICE"], ["Clea McCaa II", "Mayor", "(520) 555-1000", "SHARED_OFFICE"], ["Faye Jackson", "Council Member", "(520) 555-1000", "SHARED_OFFICE"]]);
   assert.ok(roster.members.every(m => m.websiteUrl?.startsWith("https://www.bensonaz.gov/Home/Components/StaffDirectory/")));
-  assert.ok(published.payload.officialCandidacies.rows.every(row => row.status === "NOT_CHECKED"), "holding office never asserts a candidacy");
-  assert.deepEqual(published.unresolved, []);
 });
 
-test("the wrong page, a stale page and an unlinked non-government page never publish", async () => {
-  const base = await prior();
-  const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
+test("another body's page and a stale page never publish; each leaves a blank with its reason", async () => {
+  const { facts, body, publish } = await setup();
   assert.equal(pageIsAboutBody(page("Boards"), body, "Benson"), false, "a boards page's members are not the council");
-  const reading = (c: WorkerPublicationCapture) => ({ id: `held:${c.evidence.artifactId}`, capture: c, linkingPage: null, complete: true, method: "fixture",
-    members: readHeldRoster(c.evidence.text, c.evidence.canonicalUrl)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) });
-  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Boards"))), prior: base, now: NOW }), /ROSTER_PAGE_NOT_THIS_BODY/);
-  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), URL_, "2026-07-01T00:00:00.000Z")), prior: base, now: NOW }), /OUTSIDE_FRESHNESS_WINDOW/);
-  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /LINKED_SOURCE_UNVERIFIED/);
+  await assert.rejects(publish(reading(capture(page("Boards")))), /ROSTER_PAGE_NOT_THIS_BODY/);
+  const stale = await publish(reading(capture(page("Contact the Mayor & Council"), URL_, "2026-07-01T00:00:00.000Z")));
+  assert.equal(stale.live, 0);
+  assert.deepEqual(await names(facts), []);
+  const reasons = new Set((await facts.query("SELECT reason FROM blank")).map(row => String(row.reason)));
+  assert.deepEqual([...reasons].sort(), ["CHECK_FAILED:COPY_OUTSIDE_FRESHNESS_WINDOW", "ROSTER_PAGE_NOT_THIS_BODY"]);
 });
 
-test("a complete official roster records a departure; a partial one keeps the prior member on its own source", async () => {
-  const base = await prior();
-  const first = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading: { id: "held:a", capture: capture(page("Contact the Mayor & Council")), linkingPage: null, complete: true, method: "fixture",
-    members: readHeldRoster(page("Contact the Mayor & Council"), URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
-  const withRoster = { ...base, payload: { ...base.payload, bodyRosters: [...base.payload.bodyRosters, first.payload.bodyRosters[0]] } };
-  const smaller = page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor"));
-  const rows = readHeldRoster(smaller, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } }));
-  const complete = workerRosterPublication({ bodyId: BODY, prior: withRoster, now: NOW, reading: { id: "held:b", capture: capture(smaller), linkingPage: null, complete: true, method: "fixture", members: rows } });
-  assert.deepEqual(complete.departed, ["Faye Jackson (Council Member)"]);
-  assert.equal(complete.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson"), false, "a complete official roster removes who it no longer lists");
-  const faye = first.payload.bodyRosters[0].members.find(m => m.name === "Faye Jackson")!;
-  assert.deepEqual(complete.departures, [{ bodyId: BODY, holderId: faye.id, sourceUrl: URL_ }]);
-  const partial = workerRosterPublication({ bodyId: BODY, prior: withRoster, now: NOW, reading: { id: "held:c", capture: capture(smaller), linkingPage: null, complete: false, method: "fixture", members: rows } });
-  assert.deepEqual(partial.departed, []);
-  assert.ok(partial.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson" && m.membershipSource), "retained on its earlier source");
-});
-
-test("a single official's profile page publishes through the same door without a work item, keeping the rest of the roster", async () => {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  // Replay the deployed Census placeholder correction the recorded fixture predates (as tests/worker-roster-publication.test.ts does).
-  const imported = (await readRegistryRuntimePrior(store, NOW))!;
-  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
-  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
-    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
-  const held = capture(page("Contact the Mayor & Council", member(9, "Rivera, Ana", "Council Member")));
-  const published = await publishRosterReading({ store, bodyId: BODY, now: NOW, reading: { id: `held:${held.evidence.artifactId}`, capture: held, linkingPage: null, complete: false,
-    method: "fixture profile page", members: [{ recordId: "p1", fields: { name: "Ana Rivera", nameAsWritten: "Rivera, Ana", office: "Council Member" } }] } });
-  assert.ok(published.versionId);
-  const after = (await readRegistryRuntimePrior(store, NOW))!;
-  assert.deepEqual(after.payload.bodyRosters.find(r => r.bodyId === BODY)?.members.map(m => m.name), ["Ana Rivera"]);
-});
-
-test("a departure publishes through the registry door: the holder's rows leave with removal evidence the validator accepts", async () => {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  const imported = (await readRegistryRuntimePrior(store, NOW))!;
-  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
-  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
-    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
-  const full = capture(page("Contact the Mayor & Council"));
-  let carried = (await readRegistryRuntimePrior(store, NOW))!;
-  await publishRosterReading({ store, bodyId: BODY, now: NOW, prior: carried, onPublished: next => { carried = next; }, reading: { id: "held:full", capture: full, linkingPage: null, complete: true, method: "fixture",
-    members: readHeldRoster(full.evidence.text, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
-  const before = carried;
-  assert.deepEqual(carried, await readRegistryRuntimePrior(store, NOW), "accepted snapshot exactly matches canonical readback without reloading between bodies");
-  const faye = before.payload.bodyRosters.find(r => r.bodyId === BODY)!.members.find(m => m.name === "Faye Jackson")!;
-  assert.ok(before.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id));
-  const smaller = capture(page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor")));
-  const published = await publishRosterReading({ store, bodyId: BODY, now: NOW, prior: carried, onPublished: next => { carried = next; }, reading: { id: "held:smaller", capture: smaller, linkingPage: null, complete: true, method: "fixture",
-    members: readHeldRoster(smaller.evidence.text, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
-  assert.deepEqual(published.departed, ["Faye Jackson (Council Member)"]);
-  const after = (await readRegistryRuntimePrior(store, NOW))!;
-  assert.deepEqual(carried, after, "the next accepted successor preserves the carried source authority and digest");
-  assert.deepEqual(after.payload.bodyRosters.find(r => r.bodyId === BODY)!.members.map(m => m.name).sort(), ["Carolyn Flowers", "Clea McCaa II"]);
-  assert.equal(after.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id), false);
-  assert.equal(after.payload.rosterReaderDispositions.some(row => row.sourceId === faye.id), false);
+test("a complete official roster retires who it no longer lists; a partial page or a single profile adds without retiring", async () => {
+  const { facts, publish } = await setup();
+  await publish(reading(capture(page("Contact the Mayor & Council"))));
+  const smaller = capture(page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor")), URL_, "2026-09-29T10:00:00.000Z");
+  assert.equal((await publish(reading(smaller, false))).departed, 0);
+  assert.deepEqual(await names(facts), ["Carolyn Flowers", "Clea McCaa II", "Faye Jackson"]);
+  const profile = capture(page("Contact the Mayor & Council", member(9, "Rivera, Ana", "Council Member")), URL_.replace("contact-the-mayor-council", "ana-rivera"));
+  await publish({ id: "held:profile", capture: profile, linkingPage: null, complete: false, method: "fixture profile page",
+    members: [{ recordId: "p1", fields: { name: "Ana Rivera", nameAsWritten: "Rivera, Ana", office: "Council Member" } }] });
+  assert.deepEqual(await names(facts), ["Ana Rivera", "Carolyn Flowers", "Clea McCaa II", "Faye Jackson"]);
+  assert.equal((await publish(reading(smaller))).departed, 1);
+  assert.deepEqual(await names(facts), ["Ana Rivera", "Carolyn Flowers", "Clea McCaa II"], "only the page that listed her retires her");
 });
 
 test("CP-08: a newer news phone cannot replace the official phone, and its losing value is kept", async () => {
-  const base = await prior();
-  const first = capture(page("Contact the Mayor & Council"));
-  const reading = (saved: WorkerPublicationCapture, nativeIds?: readonly string[]) => ({ id: `held:${saved.evidence.artifactId}`, capture: saved, linkingPage: null, complete: true, method: "fixture",
-    members: readHeldRoster(saved.evidence.text, saved.evidence.canonicalUrl)!.rows.map((member, i) => ({ recordId: `r${i}`, fields: { ...member, ...(nativeIds ? { id: nativeIds[i] } : {}) } })) });
-  const official = workerRosterPublication({ bodyId: BODY, reading: reading(first), prior: base, now: NOW });
-  const held = { ...base, sourceReceipt: { ...base.sourceReceipt, sources: [...base.sourceReceipt.sources, ...official.sourceReceipt.sources] },
-    payload: { ...base.payload, bodyRosters: official.payload.bodyRosters, registry: { ...base.payload.registry,
-      bodies: base.payload.registry.bodies.map(body => official.payload.registry.bodies.find(row => row.id === body.id) ?? body) } } };
-  // The news directory carries the exact previously published person IDs in
-  // each row. A matching name or office alone cannot join different sources.
-  const ids = official.payload.bodyRosters[0].members.map(member => member.id);
-  const newsRows = [member(1, "McCaa II, Clea", "Mayor"), member(2, "Flowers, Carolyn", "Vice Mayor"), member(3, "Jackson, Faye", "Council Member")]
-    .map((row, i) => row.replace("<tr>", `<tr data-person-id="${ids[i]}">`)).join("");
-  const news = { ...capture(page("Contact the Mayor & Council", newsRows).replaceAll("5205551000", "5205552000").replaceAll("555-1000", "555-2000"), "https://news.example/council", NOW),
+  const { facts, publish } = await setup();
+  await publish(reading(capture(page("Contact the Mayor & Council"))));
+  const news = { ...capture(page("Contact the Mayor & Council").replaceAll("5205551000", "5205552000").replaceAll("555-1000", "555-2000"), "https://news.example/council", NOW),
     sourcePolicy: { hosts: { "news.example": "NEWS" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
-  const result = workerRosterPublication({ bodyId: BODY, reading: reading(news, ids), prior: held, now: NOW });
-  assert.ok(result.payload.bodyRosters[0].members.every(member => member.phone === "(520) 555-1000"));
-  assert.equal(result.payload.bodyRosters[0].members[0].websiteUrl, official.payload.bodyRosters[0].members[0].websiteUrl);
-  assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.websiteUrl.sourceUrl, URL_);
-  assert.ok(result.excludedFacts?.some(fact => fact.code === "CONFLICT_SUPERSEDED" && (fact.record as { value: string }).value === "(520) 555-2000"));
+  await publish(reading(news));
+  const { rosters } = await readFactRosters(facts.query, [BODY]);
+  assert.ok(rosters[0]!.members.every(m => m.phone === "(520) 555-1000"));
+  assert.ok(rosters[0]!.members.every(m => m.fieldSources?.phone?.sourceUrl === URL_));
+  const lost = await facts.query("SELECT value, held_reason FROM fact WHERE field = 'phone' AND status = 'held'");
+  assert.ok(lost.length > 0 && lost.every(row => row.value === "(520) 555-2000" && row.held_reason === "LOSES_TO_CURRENT"));
 });
 
-test("a source-verified native ID preserves a person across parser row changes and never transfers a predecessor's contact to a successor", async () => {
-  const base = await prior();
-  const makeReading = (recordId: string, name: string, written: string, nativeId?: string) => {
-    const row = member(1, written, "Mayor").replace("<tr>", nativeId ? `<tr data-person-id="${nativeId}">` : "<tr>");
-    return { id: "held:native-person", capture: capture(page("Contact the Mayor & Council", row)), linkingPage: null, complete: true, method: "fixture",
-      members: [{ recordId, fields: { name, nameAsWritten: written, office: "Mayor", ...(nativeId ? { id: nativeId } : { phone: "(520) 555-1000" }) } }] };
-  };
-  const first = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading: makeReading("old-parser-row", "Clea McCaa II", "McCaa II, Clea") });
-  const held = { ...base, payload: { ...base.payload, bodyRosters: first.payload.bodyRosters } };
-  const original = first.payload.bodyRosters[0].members[0];
-  const linked = workerRosterPublication({ bodyId: BODY, prior: held, now: NOW,
-    reading: makeReading("reordered-parser-row", original.name, "McCaa II, Clea", original.id) });
-  const person = linked.payload.bodyRosters[0].members[0];
-  assert.equal(person.id, original.id, "the native source ID reaches the existing reader person");
-  assert.equal(person.phone, original.phone, "an optional omitted phone retains its prior proof");
-  assert.deepEqual(person.nativeIds?.[URL_], [original.id]);
-  assert.equal(person.retainedFieldSources?.phone?.collectedAt, first.payload.bodyRosters[0].collectedAt);
-
-  const nextPrior = { ...held, payload: { ...held.payload, bodyRosters: linked.payload.bodyRosters } };
-  const replay = workerRosterPublication({ bodyId: BODY, prior: nextPrior, now: NOW,
-    reading: makeReading("another-parser-row", original.name, "McCaa II, Clea", original.id) });
-  assert.equal(replay.payload.bodyRosters[0].members[0].id, original.id);
-  assert.deepEqual(replay.payload.bodyRosters[0].members[0].nativeIds, person.nativeIds);
-
-  const successor = workerRosterPublication({ bodyId: BODY, prior: nextPrior, now: NOW,
-    reading: makeReading("new-parser-row", "Ana Rivera", "Rivera, Ana", original.id) });
-  assert.notEqual(successor.payload.bodyRosters[0].members[0].id, original.id, "a reused source seat ID cannot rename the prior person");
-  assert.equal(successor.payload.bodyRosters[0].members[0].phone, null, "the predecessor's optional contact never crosses the identity boundary");
-  assert.equal(successor.payload.bodyRosters[0].members[0].nativeIds?.[URL_]?.includes(original.id) ?? false, false, "the successor cannot export the predecessor's ID as a person alias");
+test("a reused seat id on the page never renames the prior person or hands over their contact", async () => {
+  const { facts, publish } = await setup();
+  const row = (written: string) => member(1, written, "Mayor").replace("<tr>", `<tr data-person-id="seat-1">`);
+  const one = (written: string, name: string, extra: Record<string, unknown>) => ({ id: `held:${name}`, linkingPage: null, complete: true, method: "fixture",
+    capture: capture(page("Contact the Mayor & Council", row(written))), members: [{ recordId: name, fields: { name, nameAsWritten: written, office: "Mayor", id: "seat-1", ...extra } }] });
+  await publish(one("McCaa II, Clea", "Clea McCaa II", { phone: "(520) 555-1000" }));
+  const [clea] = (await readFactRosters(facts.query, [BODY])).rosters[0]!.members;
+  await publish(one("Rivera, Ana", "Ana Rivera", {}));
+  const members = (await readFactRosters(facts.query, [BODY])).rosters[0]!.members;
+  const ana = members.find(m => m.name === "Ana Rivera")!;
+  assert.notEqual(ana.personId, clea!.personId);
+  assert.equal(ana.phone, null, "the predecessor's contact never crosses to the successor");
+  assert.deepEqual(members.map(m => m.name), ["Ana Rivera"], "the complete page retires the predecessor");
 });
 
-
-test("CP-19/CP-05: another roster row's term cannot supply a date or a published quote", async () => {
-  const base = await prior();
+test("CP-19/CP-05: another roster row's term cannot supply a date", async () => {
+  const { facts, publish } = await setup();
   const held = capture(page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor").replace("</tr>", "<td>2030-12-31</td></tr>")));
   const first = readHeldRoster(held.evidence.text, URL_)!.rows[0];
-  const result = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading: { id: "held:wrong-term", capture: held, linkingPage: null, complete: false, method: "fixture",
-    members: [{ recordId: "person", fields: { ...first, termEnd: "2030-12-31" }, fieldSources: { termEnd: { sourceUrl: URL_, sourceOrg: "Clerk", collectedAt: held.observedAt, verifiedAt: NOW, quote: "2030-12-31", kind: "OFFICIAL" } } }] } });
-  assert.equal(result.payload.bodyRosters[0].members[0].termEnd, undefined);
-  assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.termEnd, undefined);
+  await publish({ id: "held:wrong-term", capture: held, linkingPage: null, complete: false, method: "fixture",
+    members: [{ recordId: "person", fields: { ...first, termEnd: "2030-12-31" }, fieldSources: { termEnd: { sourceUrl: URL_, sourceOrg: "Clerk", collectedAt: held.observedAt, verifiedAt: NOW, quote: "2030-12-31", kind: "OFFICIAL" } } }] });
+  const { rosters } = await readFactRosters(facts.query, [BODY]);
+  assert.equal(rosters[0]!.members[0]!.termEnd, null);
+  assert.deepEqual(await facts.query("SELECT stage, reason FROM blank WHERE field LIKE 'term_end:%'"), [{ stage: "CHECK", reason: "TERM_QUOTE_NOT_ABOUT_MEMBER" }]);
 });
 
-
-test("CP-03: a labeled voter-guide roster is considered from held evidence and keeps its kind", async () => {
-  const base = await prior();
-  const saved = { ...capture(page("Contact the Mayor & Council"), "https://vote411.org/council"), sourcePolicy: { hosts: { "vote411.org": "VOTER_GUIDE" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
+test("CP-03: a labeled voter-guide roster is considered from held evidence and publishes as reference, never as official", async () => {
+  const { base, facts, publish } = await setup();
+  await facts.query("UPDATE entity SET name = 'Benson City Council' WHERE id = $1", [BODY]);
+  const saved = { ...capture(page("Contact the Mayor & Council").replace("<h1>", "<p>Benson City Council, Arizona</p><h1>"), "https://vote411.org/council"), sourcePolicy: { hosts: { "vote411.org": "VOTER_GUIDE" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
   const artifacts = [{ artifactId: saved.evidence.artifactId, contentHash: saved.evidence.contentHash, contentType: "text/html", canonicalUrl: saved.evidence.canonicalUrl, recordedAt: saved.observedAt, partial: false } as ArtifactRecord];
-  const reading = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => saved });
-  assert.ok(reading);
-  const published = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading });
-  assert.equal(published.sourceReceipt.sources[0].sourceClass, "VOTER_GUIDE");
-  assert.equal(published.payload.bodyRosters[0].kind, "VOTER_GUIDE");
-  assert.equal(published.payload.bodyRosters[0].members.length, 3);
+  const found = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => saved });
+  assert.ok(found);
+  await publish(found);
+  assert.deepEqual([...new Set((await facts.query("SELECT provenance_kind FROM fact WHERE field LIKE 'member:%'")).map(row => row.provenance_kind))], ["REFERENCE"]);
+  assert.equal((await readFactRosters(facts.query, [BODY])).rosters[0]!.members.length, 3);
   const disabled = { ...saved, sourcePolicy: { ...saved.sourcePolicy, enabled: { ...saved.sourcePolicy.enabled, VOTER_GUIDE: false } } };
   assert.equal(await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => disabled }), null);
 });

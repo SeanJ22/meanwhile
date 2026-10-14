@@ -19,7 +19,7 @@ import { portraitHash, type PortraitCapture } from "../lib/photos/evidence.ts";
 import { pacedPortraitAcquire, storeStandingPortrait } from "../lib/photos/portrait-work.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { capturedText, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 
 export function parsePeoplePortraitArguments(args:readonly string[]):string {

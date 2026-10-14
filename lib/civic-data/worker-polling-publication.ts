@@ -14,7 +14,8 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import { holdRawCapture, rawCaptureVault } from "./raw-capture-vault.ts";
+import { holdRawCapture } from "./raw-capture-vault.ts";
+import { rawCaptureVault } from "./raw-capture-remote.ts";
 
 export async function publishPollingDoor(input: {
   readonly store: RoutineDataStore; readonly door: DoorRecord;
@@ -45,7 +46,7 @@ export async function publishPollingDoor(input: {
 
 export async function publishWorkerPollingResults(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
-  readonly workItemIds: readonly string[]; readonly now: string;
+  readonly workItemIds: readonly string[]; readonly now: string; readonly vault?: EvidenceStore;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
 }) {
   const [{ results, readCapture }, doors, registry] = await Promise.all([jobWorkerResults(input.repos, input.workItemIds, input.readCapture),

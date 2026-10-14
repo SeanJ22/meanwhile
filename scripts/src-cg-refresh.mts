@@ -1,7 +1,7 @@
 import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { isFederalSource } from "../lib/sources/congress/targets.ts";
 import { refreshFederalSource } from "../lib/sources/congress/refresh.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";

@@ -1,7 +1,8 @@
 import { normalize, yamlToPeople } from "./index.ts";
 import { pluralRetirementCheckConsumer } from "./targets.ts";
 import type { CandidateVersionRecord, DependentCheck, RoutineCandidate } from "../../civic-data/types.ts";
-import { capturedText, type StatePeopleCapture } from "../../civic-data/state-people-publication.ts";
+import type { StatePeopleCapture } from "../../civic-data/state-people-publication.ts";
+import { readRawCaptureText } from "../../civic-data/raw-capture-vault.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import type { Officeholder, OfficeholderSet, PersonMembership } from "../../officials/types.ts";
 import { sameOffice } from "../../officials/office-identity.ts";
@@ -24,7 +25,7 @@ export async function statePeopleRetirementSourceCheck(candidate:RoutineCandidat
       row.requestedUrl === `https://codeload.github.com/openstates/people/zip/${match[1]}`);
     if (!vault || !acquisition || !acquisition.capture.byteLength || acquisition.capture.byteLength>MAX_NATIVE_RECORD_BYTES) throw Error("The exact bounded native record capture is unavailable.");
     const state=source.scope.slice(3,5).toLowerCase();
-    const parsed=yamlToPeople(await capturedText(vault,acquisition),state,url,asOf,()=>{},true);
+    const parsed=yamlToPeople(await readRawCaptureText(vault,acquisition.capture),state,url,asOf,()=>{},true);
     const roster=normalize(parsed,new Map(),acquisition.retrievedAt,`US-${state.toUpperCase()}`);
     const result={memberships:[...roster.officeholders.flatMap(person=>person.memberships ?? []),...(roster.endedMemberships ?? [])],ended:roster.endedMemberships ?? []};
     cache.set(key,result); return result;

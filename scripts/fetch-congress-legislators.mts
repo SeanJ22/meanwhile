@@ -8,7 +8,7 @@ import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { acquireCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";

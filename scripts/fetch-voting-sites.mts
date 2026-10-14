@@ -23,7 +23,7 @@ import { votingSourcePopulations } from "../lib/ballot/voting-source-population.
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";

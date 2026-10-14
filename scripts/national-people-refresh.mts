@@ -2,7 +2,7 @@
 import { pathToFileURL } from "node:url";
 import { parsePeopleSourceArguments, runPeopleSourceRefresh } from "../lib/civic-data/people-source-runtime.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 

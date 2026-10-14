@@ -7,7 +7,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";

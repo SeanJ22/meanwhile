@@ -124,7 +124,7 @@ import {
 } from "../lib/civic-data/derived-meeting-family.ts";
 import { retainMeetingFetchBytes, holdMeetingSourceResponses, retainMeetingCandidateEvidence, readMeetingResearchWitness,
   type HeldSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 
 /*
  * The committed registry, read the same way lib/registry/server.ts reads it:

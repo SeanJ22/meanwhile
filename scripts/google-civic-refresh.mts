@@ -2,7 +2,7 @@ import { pathToFileURL } from "node:url";
 import { refreshGoogleCivic } from "../lib/sources/google-civic/refresh.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { GOOGLE_CIVIC_CONTRACT_ID } from "../lib/sources/google-civic/targets.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";

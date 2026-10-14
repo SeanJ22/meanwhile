@@ -6,7 +6,7 @@ import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisitio
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";

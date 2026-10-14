@@ -1,0 +1,1198 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "AR:ar-2026-11-03-general": {
+      "election": {
+        "id": "ar-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "AR"
+      },
+      "contests": [
+        {
+          "id": "ar-sos-2026-general-u-s-senate",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "U.S. Senate",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Senate Hallie Shoffner Democratic\nU.S. Senate Senator Tom Cotton Republican\nU.S. Senate Jeff Wadlin Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-congress-district-03",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/cd:3",
+          "divisionVintage": "2020",
+          "title": "U.S. Congress District 03",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Congress District 03 Robb Ryerse Democratic\nU.S. Congress District 03 Congressman Steve Womack Republican\nU.S. Congress District 03 Bobby Wilson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-congress-district-04",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/cd:4",
+          "divisionVintage": "2020",
+          "title": "U.S. Congress District 04",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Congress District 04 James \"Rus\" Russell, III Democratic\nU.S. Congress District 04 Congressman Bruce Westerman Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-governor",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "Governor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Governor State Senator Fred Love Democratic\nGovernor Governor Sarah Huckabee Sanders Republican\nGovernor Colt Shelby Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-lieutenant-governor",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "Lieutenant Governor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Lieutenant Governor Lieutenant Governor Leslie Rutledge Republican\nLieutenant Governor Michael Kalagias Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-attorney-general",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "Attorney General",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Attorney General Attorney General Tim Griffin Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-secretary-of-state",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "Secretary of State",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Secretary of State Senator Kim Hammer Republican\nSecretary of State Kelly Grappe Democratic\nSecretary of State Michael Pakko Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-treasurer",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "State Treasurer",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Treasurer State Treasurer John Thurston Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-auditor-of-state",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "Auditor of State",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Auditor of State Auditor of State Dennis Milligan Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-commissioner-of-state-lands",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "Commissioner of State Lands",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Commissioner of State Lands Secretary of State Cole Jester Republican\nCommissioner of State Lands Christopher Olson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-senate-district-27",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldu:27",
+          "divisionVintage": "2020",
+          "title": "State Senate District 27",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Senate District 27 State Senator Justin Boyd Republican\nState Senate District 27 Eduardo Guzman Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-46",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldl:46",
+          "divisionVintage": "2020",
+          "title": "State Representative District 46",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 46 Council Member Tonya Fletcher Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-47",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldl:47",
+          "divisionVintage": "2020",
+          "title": "State Representative District 47",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 47 State Representative Lee Johnson Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-48",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldl:48",
+          "divisionVintage": "2020",
+          "title": "State Representative District 48",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 48 State Representative Ryan Rose Republican\nState Representative District 48 Orion Jackson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-49",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldl:49",
+          "divisionVintage": "2020",
+          "title": "State Representative District 49",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 49 Rep. Jay Richardson Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-50",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldl:50",
+          "divisionVintage": "2020",
+          "title": "State Representative District 50",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 50 State Representative Zack Gramlich Republican\nState Representative District 50 Wendy Peer Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-51",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldl:51",
+          "divisionVintage": "2020",
+          "title": "State Representative District 51",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 51 State Representative Cindy Crawford Republican\nState Representative District 51 Jane-Ellen Udouj-Kutchka Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-52",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar/sldl:52",
+          "divisionVintage": "2020",
+          "title": "State Representative District 52",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 52 Justice Brent Montgomery Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-issue-1",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "A Constitutional Amendment to be Known as \"The Citizens Only Voting Amendment\" and Providing That Only a Citizen of the United States Meeting the Qualifications of an Elector Under the Arkansas Constitution May Vote in an Election in this State.",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:26.924395Z",
+            "verifiedAt": "2026-10-14T05:00:26.924395Z",
+            "quote": "CONSTITUTIONAL AMENDMENT (OR OTHER MEASURE) REFERRED TO THE PEOPLE BY THE GENERAL ASSEMBLY NOTICE TO THE PUBLIC Pursuant to Article 19, Section 22, of the Arkansas Constitution, the 95th General Assembly refers the following constitutional amendment to a vote of the people on November 3, 2026, and will appear on the ballot as Issue No. 1. Each elector upon voting his/her ballot shall vote for or against this amendment. Underlined language would be added to the present Constitution. Stricken language would be deleted from the present Constitution. This amendment was proposed in the Regular 2025 Session by Representative Ray and filed as HJR 1018. ISSUE NO. 1 Popular Name A Constitutional Amendment to be Known as \"The Citizens Only Voting Amendment\" and Providing That Only a Citizen of the United States Meeting the Qualifications of an Elector Under the Arkansas Constitution May Vote in an Election in this State. Ballot Title AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO CREATE \"THE CITIZENS ONLY VOTING AMENDMENT\"; TO PROVIDE THAT ONLY A CITIZEN OF THE UNITED STATES MEETING THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION MAY VOTE IN AN ELECTION IN THIS STATE; AND PROVIDING THAT A PERSON WHO DOES NOT MEET THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION SHALL NOT BE PERMITTED TO VOTE IN ANY STATE OR LOCAL ELECTION HELD IN THIS STATE. BE IT RESOLVED BY THE HOUSE OF REPRESENTATIVES OF THE NINETY-FIFTH GENERAL ASSEMBLY OF THE STATE OF ARKANSAS, AND BY THE SENATE, A MAJORITY OF ALL MEMBERS ELECTED TO EACH HOUSE AGREEING THERETO: THAT the following is proposed as an amendment to the Constitution of the State of Arkansas, and upon being submitted to the electors of the state for approval or rejection at the next general election for Representatives and Senators, if a majority of the electors voting thereon at the election adopt the amendment, the amendment shall become a part of the Constitution of the State of Arkansas, to wit:"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-issue-2",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "A Constitutional Amendment to Amend Arkansas Constitution, Article 2, § 5, to Protect the Right to Keep and Bear Arms.",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:27.039040Z",
+            "verifiedAt": "2026-10-14T05:00:27.039040Z",
+            "quote": "CONSTITUTIONAL AMENDMENT (OR OTHER MEASURE) REFERRED TO THE PEOPLE BY THE GENERAL ASSEMBLY NOTICE TO THE PUBLIC Pursuant to Article 19, Section 22, of the Arkansas Constitution, the 95th General Assembly refers the following constitutional amendment to a vote of the people on November 3, 2026, and will appear on the ballot as Issue No. 2. Each elector upon voting his/her ballot shall vote for or against this amendment. Underlined language would be added to the present Constitution. Stricken language would be deleted from the present Constitution. This amendment was proposed in the Regular 2025 Session by Senator J. Payton and filed as SJR 11. ISSUE NO. 2 Popular Name A Constitutional Amendment to Amend Arkansas Constitution, Article 2, § 5, to Protect the Right to Keep and Bear Arms. Ballot Title AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO PROVIDE THAT THE CITIZENS OF THE STATE OF ARKANSAS SHALL HAVE THE RIGHT TO KEEP AND BEAR ARMS FOR THEIR COMMON DEFENSE, FOR LAWFUL HUNTING AND RECREATIONAL USE, AND FOR ANY OTHER LAWFUL PURPOSE; PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS INCLUDES WITHOUT LIMITATION THE POSSESSION AND USE OF AMMUNITION, FIREARM ACCESSORIES, AND FIREARM COMPONENTS; AND PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS IS A NATURAL, FUNDAMENTAL, AND INDIVIDUAL RIGHT THAT SHALL NOT BE INFRINGED. BE IT RESOLVED BY THE SENATE OF THE NINETY-FIFTH GENERAL ASSEMBLY OF THE STATE OF ARKANSAS, AND BY THE HOUSE OF REPRESENTATIVES, A MAJORITY OF ALL MEMBERS ELECTED TO EACH HOUSE AGREEING THERETO: THAT the following is proposed as an amendment to the Constitution of the State of Arkansas, and upon being submitted to the electors of the state for approval or rejection at the next general election for Representatives and Senators, if a majority of the electors voting thereon at the election adopt the amendment, the amendment shall become a part of the Constitution of the State of Arkansas, to wit:"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-issue-3",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "A Constitutional Amendment Concerning Economic Development in the State of Arkansas; and Authorizing the General Assembly to Provide for the Creation of Economic Development Districts Within Cities, Counties, or Cooperative Areas to Promote Economic Development Within the Economic Development District.",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:27.130228Z",
+            "verifiedAt": "2026-10-14T05:00:27.130228Z",
+            "quote": "CONSTITUTIONAL AMENDMENT (OR OTHER MEASURE) REFERRED TO THE PEOPLE BY THE GENERAL ASSEMBLY NOTICE TO THE PUBLIC Pursuant to Article 19, Section 22, of the Arkansas Constitution, the 95th General Assembly refers the following constitutional amendment to a vote of the people on November 3, 2026, and will appear on the ballot as Issue No. 3. Each elector upon voting his/her ballot shall vote for or against this amendment. Underlined language would be added to the present Constitution. Stricken language would be deleted from the present Constitution. This amendment was proposed in the Regular 2025 Session by Senator J. Dismang and filed as SJR 15. ISSUE NO. 3 Popular Name A Constitutional Amendment Concerning Economic Development in the State of Arkansas; and Authorizing the General Assembly to Provide for the Creation of Economic Development Districts Within Cities, Counties, or Cooperative Areas to Promote Economic Development Within the Economic Development District. Ballot Title AN AMENDMENT TO THE ARKANSAS CONSTITUTION CONCERNING ECONOMIC DEVELOPMENT IN THE STATE OF ARKANSAS; AND AUTHORIZING THE GENERAL ASSEMBLY TO PROVIDE FOR THE CREATION OF ECONOMIC DEVELOPMENT DISTRICTS WITHIN CITIES, COUNTIES, OR COOPERATIVE AREAS TO PROMOTE ECONOMIC DEVELOPMENT WITHIN THE ECONOMIC DEVELOPMENT DISTRICT. BE IT RESOLVED BY THE SENATE OF THE NINETY-FIFTH GENERAL ASSEMBLY OF THE STATE OF ARKANSAS, AND BY THE HOUSE OF REPRESENTATIVES, A MAJORITY OF ALL MEMBERS ELECTED TO EACH HOUSE AGREEING THERETO: THAT the following is proposed as an amendment to the Constitution of the State of Arkansas, and upon being submitted to the electors of the state for approval or rejection at the next general election for Representatives and Senators, if a majority of the electors voting thereon at the election adopt the amendment, the amendment shall become a part of the Constitution of the State of Arkansas, to wit:"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-issue-4",
+          "electionId": "ar-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ar",
+          "divisionVintage": "2020",
+          "title": "Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025.",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:27.244077Z",
+            "verifiedAt": "2026-10-14T05:00:27.244077Z",
+            "quote": "Shall the Arkansas Natural Resources Commission be authorized to issue general obligation bonds under the authority of the Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025, for the financing and refinancing of the development of water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects to serve the citizens of the State of Arkansas, in total principal amount not to exceed five hundred million dollars ($500,000,000), with no more than one hundred sixty-five million dollars ($165,000,000) in total principal amount of such bonds to be issued to finance and refinance the development of irrigation facilities, in series from time to time in principal amounts not to exceed, without prior approval of the General Assembly, sixty million dollars ($60,000,000) in any two-year period beginning on July 1 of each odd-numbered year, which bonds shall be secured by a pledge of the full faith and credit of the State of Arkansas?"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ar-sos-2026-general-u-s-senate-hallie-shoffner",
+          "contestId": "ar-sos-2026-general-u-s-senate",
+          "familyName": "Shoffner",
+          "givenName": "Hallie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Senate Hallie Shoffner Democratic\nU.S. Senate Senator Tom Cotton Republican\nU.S. Senate Jeff Wadlin Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-senate-senator-tom-cotton",
+          "contestId": "ar-sos-2026-general-u-s-senate",
+          "familyName": "Cotton",
+          "givenName": "Senator Tom",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Senate Hallie Shoffner Democratic\nU.S. Senate Senator Tom Cotton Republican\nU.S. Senate Jeff Wadlin Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-senate-jeff-wadlin",
+          "contestId": "ar-sos-2026-general-u-s-senate",
+          "familyName": "Wadlin",
+          "givenName": "Jeff",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Senate Hallie Shoffner Democratic\nU.S. Senate Senator Tom Cotton Republican\nU.S. Senate Jeff Wadlin Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-congress-district-03-robb-ryerse",
+          "contestId": "ar-sos-2026-general-u-s-congress-district-03",
+          "familyName": "Ryerse",
+          "givenName": "Robb",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Congress District 03 Robb Ryerse Democratic\nU.S. Congress District 03 Congressman Steve Womack Republican\nU.S. Congress District 03 Bobby Wilson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-congress-district-03-congressman-steve-womack",
+          "contestId": "ar-sos-2026-general-u-s-congress-district-03",
+          "familyName": "Womack",
+          "givenName": "Congressman Steve",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Congress District 03 Robb Ryerse Democratic\nU.S. Congress District 03 Congressman Steve Womack Republican\nU.S. Congress District 03 Bobby Wilson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-congress-district-03-bobby-wilson",
+          "contestId": "ar-sos-2026-general-u-s-congress-district-03",
+          "familyName": "Wilson",
+          "givenName": "Bobby",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Congress District 03 Robb Ryerse Democratic\nU.S. Congress District 03 Congressman Steve Womack Republican\nU.S. Congress District 03 Bobby Wilson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-congress-district-04-james-rus-russell-iii",
+          "contestId": "ar-sos-2026-general-u-s-congress-district-04",
+          "familyName": "Russell, III",
+          "givenName": "James \"Rus\"",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Congress District 04 James \"Rus\" Russell, III Democratic\nU.S. Congress District 04 Congressman Bruce Westerman Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-u-s-congress-district-04-congressman-bruce-westerman",
+          "contestId": "ar-sos-2026-general-u-s-congress-district-04",
+          "familyName": "Westerman",
+          "givenName": "Congressman Bruce",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "U.S. Congress District 04 James \"Rus\" Russell, III Democratic\nU.S. Congress District 04 Congressman Bruce Westerman Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-governor-state-senator-fred-love",
+          "contestId": "ar-sos-2026-general-governor",
+          "familyName": "Love",
+          "givenName": "State Senator Fred",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Governor State Senator Fred Love Democratic\nGovernor Governor Sarah Huckabee Sanders Republican\nGovernor Colt Shelby Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-governor-governor-sarah-huckabee-sanders",
+          "contestId": "ar-sos-2026-general-governor",
+          "familyName": "Sanders",
+          "givenName": "Governor Sarah Huckabee",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Governor State Senator Fred Love Democratic\nGovernor Governor Sarah Huckabee Sanders Republican\nGovernor Colt Shelby Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-governor-colt-shelby",
+          "contestId": "ar-sos-2026-general-governor",
+          "familyName": "Shelby",
+          "givenName": "Colt",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Governor State Senator Fred Love Democratic\nGovernor Governor Sarah Huckabee Sanders Republican\nGovernor Colt Shelby Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-lieutenant-governor-lieutenant-governor-leslie-rutledge",
+          "contestId": "ar-sos-2026-general-lieutenant-governor",
+          "familyName": "Rutledge",
+          "givenName": "Lieutenant Governor Leslie",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Lieutenant Governor Lieutenant Governor Leslie Rutledge Republican\nLieutenant Governor Michael Kalagias Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-lieutenant-governor-michael-kalagias",
+          "contestId": "ar-sos-2026-general-lieutenant-governor",
+          "familyName": "Kalagias",
+          "givenName": "Michael",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Lieutenant Governor Lieutenant Governor Leslie Rutledge Republican\nLieutenant Governor Michael Kalagias Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-attorney-general-attorney-general-tim-griffin",
+          "contestId": "ar-sos-2026-general-attorney-general",
+          "familyName": "Griffin",
+          "givenName": "Attorney General Tim",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Attorney General Attorney General Tim Griffin Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-secretary-of-state-senator-kim-hammer",
+          "contestId": "ar-sos-2026-general-secretary-of-state",
+          "familyName": "Hammer",
+          "givenName": "Senator Kim",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Secretary of State Senator Kim Hammer Republican\nSecretary of State Kelly Grappe Democratic\nSecretary of State Michael Pakko Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-secretary-of-state-kelly-grappe",
+          "contestId": "ar-sos-2026-general-secretary-of-state",
+          "familyName": "Grappe",
+          "givenName": "Kelly",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Secretary of State Senator Kim Hammer Republican\nSecretary of State Kelly Grappe Democratic\nSecretary of State Michael Pakko Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-secretary-of-state-michael-pakko",
+          "contestId": "ar-sos-2026-general-secretary-of-state",
+          "familyName": "Pakko",
+          "givenName": "Michael",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Secretary of State Senator Kim Hammer Republican\nSecretary of State Kelly Grappe Democratic\nSecretary of State Michael Pakko Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-treasurer-state-treasurer-john-thurston",
+          "contestId": "ar-sos-2026-general-state-treasurer",
+          "familyName": "Thurston",
+          "givenName": "State Treasurer John",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Treasurer State Treasurer John Thurston Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-auditor-of-state-auditor-of-state-dennis-milligan",
+          "contestId": "ar-sos-2026-general-auditor-of-state",
+          "familyName": "Milligan",
+          "givenName": "Auditor of State Dennis",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Auditor of State Auditor of State Dennis Milligan Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-commissioner-of-state-lands-secretary-of-state-cole-jester",
+          "contestId": "ar-sos-2026-general-commissioner-of-state-lands",
+          "familyName": "Jester",
+          "givenName": "Secretary of State Cole",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Commissioner of State Lands Secretary of State Cole Jester Republican\nCommissioner of State Lands Christopher Olson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-commissioner-of-state-lands-christopher-olson",
+          "contestId": "ar-sos-2026-general-commissioner-of-state-lands",
+          "familyName": "Olson",
+          "givenName": "Christopher",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "Commissioner of State Lands Secretary of State Cole Jester Republican\nCommissioner of State Lands Christopher Olson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-senate-district-27-state-senator-justin-boyd",
+          "contestId": "ar-sos-2026-general-state-senate-district-27",
+          "familyName": "Boyd",
+          "givenName": "State Senator Justin",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Senate District 27 State Senator Justin Boyd Republican\nState Senate District 27 Eduardo Guzman Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-senate-district-27-eduardo-guzman",
+          "contestId": "ar-sos-2026-general-state-senate-district-27",
+          "familyName": "Guzman",
+          "givenName": "Eduardo",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Senate District 27 State Senator Justin Boyd Republican\nState Senate District 27 Eduardo Guzman Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-46-council-member-tonya-fletcher",
+          "contestId": "ar-sos-2026-general-state-representative-district-46",
+          "familyName": "Fletcher",
+          "givenName": "Council Member Tonya",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 46 Council Member Tonya Fletcher Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-47-state-representative-lee-johnson",
+          "contestId": "ar-sos-2026-general-state-representative-district-47",
+          "familyName": "Johnson",
+          "givenName": "State Representative Lee",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 47 State Representative Lee Johnson Republican"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-48-state-representative-ryan-rose",
+          "contestId": "ar-sos-2026-general-state-representative-district-48",
+          "familyName": "Rose",
+          "givenName": "State Representative Ryan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 48 State Representative Ryan Rose Republican\nState Representative District 48 Orion Jackson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-48-orion-jackson",
+          "contestId": "ar-sos-2026-general-state-representative-district-48",
+          "familyName": "Jackson",
+          "givenName": "Orion",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 48 State Representative Ryan Rose Republican\nState Representative District 48 Orion Jackson Libertarian"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-49-rep-jay-richardson",
+          "contestId": "ar-sos-2026-general-state-representative-district-49",
+          "familyName": "Richardson",
+          "givenName": "Rep. Jay",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 49 Rep. Jay Richardson Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-50-state-representative-zack-gramlich",
+          "contestId": "ar-sos-2026-general-state-representative-district-50",
+          "familyName": "Gramlich",
+          "givenName": "State Representative Zack",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 50 State Representative Zack Gramlich Republican\nState Representative District 50 Wendy Peer Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-50-wendy-peer",
+          "contestId": "ar-sos-2026-general-state-representative-district-50",
+          "familyName": "Peer",
+          "givenName": "Wendy",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 50 State Representative Zack Gramlich Republican\nState Representative District 50 Wendy Peer Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-51-state-representative-cindy-crawford",
+          "contestId": "ar-sos-2026-general-state-representative-district-51",
+          "familyName": "Crawford",
+          "givenName": "State Representative Cindy",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 51 State Representative Cindy Crawford Republican\nState Representative District 51 Jane-Ellen Udouj-Kutchka Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-51-jane-ellen-udouj-kutchka",
+          "contestId": "ar-sos-2026-general-state-representative-district-51",
+          "familyName": "Udouj-Kutchka",
+          "givenName": "Jane-Ellen",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 51 State Representative Cindy Crawford Republican\nState Representative District 51 Jane-Ellen Udouj-Kutchka Democratic"
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-state-representative-district-52-justice-brent-montgomery",
+          "contestId": "ar-sos-2026-general-state-representative-district-52",
+          "familyName": "Montgomery",
+          "givenName": "Justice Brent",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+            "sourceOrg": "Sebastian County Board of Election Commissioners",
+            "collectedAt": "2026-10-14T05:06:55.364623Z",
+            "verifiedAt": "2026-10-14T05:06:55.364623Z",
+            "quote": "State Representative District 52 Justice Brent Montgomery Republican"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ar-sos-2026-general-issue-1-text",
+          "contestId": "ar-sos-2026-general-issue-1",
+          "officialNumber": "ISSUE NO. 1",
+          "questionText": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO CREATE \"THE CITIZENS ONLY VOTING AMENDMENT\"; TO PROVIDE THAT ONLY A CITIZEN OF THE UNITED STATES MEETING THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION MAY VOTE IN AN ELECTION IN THIS STATE; AND PROVIDING THAT A PERSON WHO DOES NOT MEET THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION SHALL NOT BE PERMITTED TO VOTE IN ANY STATE OR LOCAL ELECTION HELD IN THIS STATE.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:26.924395Z",
+            "verifiedAt": "2026-10-14T05:00:26.924395Z",
+            "quote": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO CREATE \"THE CITIZENS ONLY VOTING AMENDMENT\"; TO PROVIDE THAT ONLY A CITIZEN OF THE UNITED STATES MEETING THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION MAY VOTE IN AN ELECTION IN THIS STATE; AND PROVIDING THAT A PERSON WHO DOES NOT MEET THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION SHALL NOT BE PERMITTED TO VOTE IN ANY STATE OR LOCAL ELECTION HELD IN THIS STATE."
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-issue-2-text",
+          "contestId": "ar-sos-2026-general-issue-2",
+          "officialNumber": "ISSUE NO. 2",
+          "questionText": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO PROVIDE THAT THE CITIZENS OF THE STATE OF ARKANSAS SHALL HAVE THE RIGHT TO KEEP AND BEAR ARMS FOR THEIR COMMON DEFENSE, FOR LAWFUL HUNTING AND RECREATIONAL USE, AND FOR ANY OTHER LAWFUL PURPOSE; PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS INCLUDES WITHOUT LIMITATION THE POSSESSION AND USE OF AMMUNITION, FIREARM ACCESSORIES, AND FIREARM COMPONENTS; AND PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS IS A NATURAL, FUNDAMENTAL, AND INDIVIDUAL RIGHT THAT SHALL NOT BE INFRINGED.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:27.039040Z",
+            "verifiedAt": "2026-10-14T05:00:27.039040Z",
+            "quote": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO PROVIDE THAT THE CITIZENS OF THE STATE OF ARKANSAS SHALL HAVE THE RIGHT TO KEEP AND BEAR ARMS FOR THEIR COMMON DEFENSE, FOR LAWFUL HUNTING AND RECREATIONAL USE, AND FOR ANY OTHER LAWFUL PURPOSE; PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS INCLUDES WITHOUT LIMITATION THE POSSESSION AND USE OF AMMUNITION, FIREARM ACCESSORIES, AND FIREARM COMPONENTS; AND PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS IS A NATURAL, FUNDAMENTAL, AND INDIVIDUAL RIGHT THAT SHALL NOT BE INFRINGED."
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-issue-3-text",
+          "contestId": "ar-sos-2026-general-issue-3",
+          "officialNumber": "ISSUE NO. 3",
+          "questionText": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION CONCERNING ECONOMIC DEVELOPMENT IN THE STATE OF ARKANSAS; AND AUTHORIZING THE GENERAL ASSEMBLY TO PROVIDE FOR THE CREATION OF ECONOMIC DEVELOPMENT DISTRICTS WITHIN CITIES, COUNTIES, OR COOPERATIVE AREAS TO PROMOTE ECONOMIC DEVELOPMENT WITHIN THE ECONOMIC DEVELOPMENT DISTRICT.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:27.130228Z",
+            "verifiedAt": "2026-10-14T05:00:27.130228Z",
+            "quote": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION CONCERNING ECONOMIC DEVELOPMENT IN THE STATE OF ARKANSAS; AND AUTHORIZING THE GENERAL ASSEMBLY TO PROVIDE FOR THE CREATION OF ECONOMIC DEVELOPMENT DISTRICTS WITHIN CITIES, COUNTIES, OR COOPERATIVE AREAS TO PROMOTE ECONOMIC DEVELOPMENT WITHIN THE ECONOMIC DEVELOPMENT DISTRICT."
+          }
+        },
+        {
+          "id": "ar-sos-2026-general-issue-4-text",
+          "contestId": "ar-sos-2026-general-issue-4",
+          "officialNumber": "Issue NO. 4",
+          "questionText": "Shall the Arkansas Natural Resources Commission be authorized to issue general obligation bonds under the authority of the Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025, for the financing and refinancing of the development of water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects to serve the citizens of the State of Arkansas, in total principal amount not to exceed five hundred million dollars ($500,000,000), with no more than one hundred sixty-five million dollars ($165,000,000) in total principal amount of such bonds to be issued to finance and refinance the development of irrigation facilities, in series from time to time in principal amounts not to exceed, without prior approval of the General Assembly, sixty million dollars ($60,000,000) in any two-year period beginning on July 1 of each odd-numbered year, which bonds shall be secured by a pledge of the full faith and credit of the State of Arkansas?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
+            "sourceOrg": "Arkansas Secretary of State",
+            "collectedAt": "2026-10-14T05:00:27.244077Z",
+            "verifiedAt": "2026-10-14T05:00:27.244077Z",
+            "quote": "Shall the Arkansas Natural Resources Commission be authorized to issue general obligation bonds under the authority of the Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025, for the financing and refinancing of the development of water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects to serve the citizens of the State of Arkansas, in total principal amount not to exceed five hundred million dollars ($500,000,000), with no more than one hundred sixty-five million dollars ($165,000,000) in total principal amount of such bonds to be issued to finance and refinance the development of irrigation facilities, in series from time to time in principal amounts not to exceed, without prior approval of the General Assembly, sixty million dollars ($60,000,000) in any two-year period beginning on July 1 of each odd-numbered year, which bonds shall be secured by a pledge of the full faith and credit of the State of Arkansas?"
+          }
+        }
+      ],
+      "absences": [],
+      "coverageNotes": [
+        "The November general-election candidates held here come from Sebastian County’s official Notice of Election, revised September 28, 2026, which states that the Board of Election Commissioners proclaims a General and Special Election in Sebastian County on Tuesday, November 3, 2026. The State Board of Election Commissioners’ 2026 coordinator manual says ballot-draw names come from counties and the Secretary of State’s certified candidate list, and county election commissions must publish election ballot information and sample ballots. The Secretary of State candidate search remains labeled “2026 Preferential Primary and Nonpartisan Judicial General Election”. A single statewide certified November candidate list was not found in the official state sources checked.",
+        "County-based acquisition leaves U.S. House districts 1 and 2 unacquired. State Senate districts in the official running-for-office handbook’s 2026 regular-election list that remain unacquired: 2, 7, 9, 10, 11, 13, 14, 15, 16, 21, 24, 28, 30, 31, 32, 35. State House districts that remain unacquired: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100. Later special-election additions outside the acquired county notice also remain unverified.",
+        "The Secretary of State lists four 2026 proposed initiatives as certified by the General Assembly. Its separate “2026 Proposed Initiatives as Certified by the Attorney General” section says “None for the 2026 General Election”; that section also warns that Attorney General certification would not establish certification for ballot placement.",
+        "Candidate names and parties preserve the official county notice, including printed office titles. The notice lists “State Representative Ryan Rose”; the county’s individual official sample ballot prints “State Representative Ryan A. Rose”. The notice’s candidate-list form is retained here."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedBy": "Codex",
+    "reviewedAt": "2026-10-14T05:09:39.762012Z",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/elections",
+        "finalUrl": "https://www.sos.arkansas.gov/elections",
+        "retrievedAt": "2026-10-14T05:02:50.133788Z",
+        "httpStatus": 200,
+        "rawHash": "7ebfae2a2617a0b328577c5196c0551351c0fe2f649e9fe67ea6ff7bda0d0989",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official election office root links Candidate Search and Ballot Issues."
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/elections/for-candidates",
+        "finalUrl": "https://www.sos.arkansas.gov/elections/for-candidates",
+        "retrievedAt": "2026-10-14T05:00:18.458482Z",
+        "httpStatus": 200,
+        "rawHash": "2c0b5543dba2a792e3c12f70c5fec0d7cd6696b264ed13048ae815b302d87f44",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The official candidate page links “2026 Candidate Search” to https://candidates.arkansas.gov/."
+      },
+      {
+        "requestedUrl": "https://candidates.arkansas.gov/",
+        "finalUrl": "https://candidates.arkansas.gov/",
+        "retrievedAt": "2026-10-14T05:00:57.410749Z",
+        "httpStatus": 200,
+        "rawHash": "7a8a1bfba8504203b46b8506f48793329c92c6c63d5dd7f721babfc1d58b09cb",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "2026 Preferential Primary and Nonpartisan Judicial General Election. Search Candidate Filings."
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/elections/initiatives-and-referenda/",
+        "finalUrl": "https://www.sos.arkansas.gov/elections/initiatives-and-referenda/",
+        "retrievedAt": "2026-10-14T05:00:08.527665Z",
+        "httpStatus": 200,
+        "rawHash": "0274ea9efa7dd5fef40688caef9cf8307cccd3470d605923bd9fc148af64351c",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "2026 Proposed Initiatives as Certified by the General Assembly: Issue 1, Issue 2, Issue 3, Issue 4. The Attorney General section says “None for the 2026 General Election” and warns that posting does not establish ballot-placement certification."
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+        "retrievedAt": "2026-10-14T05:00:26.924395Z",
+        "httpStatus": 200,
+        "rawHash": "a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO CREATE \"THE CITIZENS ONLY VOTING AMENDMENT\"; TO PROVIDE THAT ONLY A CITIZEN OF THE UNITED STATES MEETING THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION MAY VOTE IN AN ELECTION IN THIS STATE; AND PROVIDING THAT A PERSON WHO DOES NOT MEET THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION SHALL NOT BE PERMITTED TO VOTE IN ANY STATE OR LOCAL ELECTION HELD IN THIS STATE."
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+        "retrievedAt": "2026-10-14T05:00:27.039040Z",
+        "httpStatus": 200,
+        "rawHash": "e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO PROVIDE THAT THE CITIZENS OF THE STATE OF ARKANSAS SHALL HAVE THE RIGHT TO KEEP AND BEAR ARMS FOR THEIR COMMON DEFENSE, FOR LAWFUL HUNTING AND RECREATIONAL USE, AND FOR ANY OTHER LAWFUL PURPOSE; PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS INCLUDES WITHOUT LIMITATION THE POSSESSION AND USE OF AMMUNITION, FIREARM ACCESSORIES, AND FIREARM COMPONENTS; AND PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS IS A NATURAL, FUNDAMENTAL, AND INDIVIDUAL RIGHT THAT SHALL NOT BE INFRINGED."
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+        "retrievedAt": "2026-10-14T05:00:27.130228Z",
+        "httpStatus": 200,
+        "rawHash": "77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION CONCERNING ECONOMIC DEVELOPMENT IN THE STATE OF ARKANSAS; AND AUTHORIZING THE GENERAL ASSEMBLY TO PROVIDE FOR THE CREATION OF ECONOMIC DEVELOPMENT DISTRICTS WITHIN CITIES, COUNTIES, OR COOPERATIVE AREAS TO PROMOTE ECONOMIC DEVELOPMENT WITHIN THE ECONOMIC DEVELOPMENT DISTRICT."
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
+        "retrievedAt": "2026-10-14T05:00:27.244077Z",
+        "httpStatus": 200,
+        "rawHash": "55046ad3bcd40b0297973b1c1154053eb47ca672f3df688105537a7e49601416",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Shall the Arkansas Natural Resources Commission be authorized to issue general obligation bonds under the authority of the Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025, for the financing and refinancing of the development of water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects to serve the citizens of the State of Arkansas, in total principal amount not to exceed five hundred million dollars ($500,000,000), with no more than one hundred sixty-five million dollars ($165,000,000) in total principal amount of such bonds to be issued to finance and refinance the development of irrigation facilities, in series from time to time in principal amounts not to exceed, without prior approval of the General Assembly, sixty million dollars ($60,000,000) in any two-year period beginning on July 1 of each odd-numbered year, which bonds shall be secured by a pledge of the full faith and credit of the State of Arkansas?"
+      },
+      {
+        "requestedUrl": "https://www.arkleg.state.ar.us/Acts/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2F&file=578.pdf&ddBienniumSession=2025%2F2025R",
+        "finalUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+        "retrievedAt": "2026-10-14T05:02:04.711072Z",
+        "httpStatus": 200,
+        "rawHash": "487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa",
+        "publisher": "Arkansas General Assembly",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Act 578 of the Regular Session; official full act linked from the General Assembly act search."
+      },
+      {
+        "requestedUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+        "finalUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+        "retrievedAt": "2026-10-14T05:06:55.364623Z",
+        "httpStatus": 200,
+        "rawHash": "d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e",
+        "publisher": "Sebastian County Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Notice of Election, General Election, Tuesday November 3, 2026, revised 9-28-26; pages 3–4 list federal, state and county candidates and party labels. All 18 requested-scope contests and all 33 candidates in those contests were converted from the official scanned list by OCR script and checked against its rendered pages."
+      },
+      {
+        "requestedUrl": "https://sbec.arkansas.gov/wp-content/uploads/2026-Election-Coordinator-Manual.pdf",
+        "finalUrl": "https://sbec.arkansas.gov/wp-content/uploads/2026-Election-Coordinator-Manual.pdf",
+        "retrievedAt": "2026-10-14T05:05:32.827622Z",
+        "httpStatus": 200,
+        "rawHash": "9834affa8c2aaa67f09c64f4d373142c498a5c3a58390198f4ba39f8e8c469d4",
+        "publisher": "Arkansas State Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Page 43: ballot-draw names come from counties and the SOS’s certified candidate list. Page 87: the CBEC publishes ballot information including candidates and measures and uploads SAMPLE ballots, due October 14, 2026 for the general election."
+      },
+      {
+        "requestedUrl": "https://sbec.arkansas.gov/wp-content/uploads/2025-Running-for-Public-Office-8-13-25-FINAL-small.pdf",
+        "finalUrl": "https://sbec.arkansas.gov/wp-content/uploads/2025-Running-for-Public-Office-8-13-25-FINAL-small.pdf",
+        "retrievedAt": "2026-10-14T05:08:24.888116Z",
+        "httpStatus": 200,
+        "rawHash": "e6f036f74a53686ca948c1455495e89191b5c6ba4072cb7c370cbce52b143d4a",
+        "publisher": "Arkansas State Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Offices up for election and district composition: one U.S. Senate seat, all four U.S. House districts, seven state constitutional offices, 17 listed state Senate districts, all 100 state House districts."
+      },
+      {
+        "requestedUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026NovSampleBallots/9F127.1.pdf",
+        "finalUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026NovSampleBallots/9F127.1.pdf",
+        "retrievedAt": "2026-10-14T05:05:10.056108Z",
+        "httpStatus": 200,
+        "rawHash": "2f881cdc8a31ef630197a790baf1596e4a1ed537b228bc0fbbf59488987ac12a",
+        "publisher": "Sebastian County Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Individual official November 3, 2026 ballot for precinct 9F127.1 prints State Representative Ryan A. Rose, while the county notice lists State Representative Ryan Rose."
+      }
+    ]
+  }
+}

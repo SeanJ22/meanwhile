@@ -3,6 +3,7 @@ import { sourceCheckIssue } from "./source-check.ts";
 import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
+import { sameOffice } from "../officials/office-identity.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
@@ -197,7 +198,8 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
     for (const membership of memberships) {
       const matches=ended.filter(row=>row.id === membership.id), end=matches[0];
       if (matches.length !== 1 || end.current !== false || end.personId !== before.personId || end.personId !== membership.personId ||
-        end.officeId !== membership.officeId || end.jurisdiction !== membership.jurisdiction ||
+        !sameOffice(typeof end.officeTitle === "string" ? end.officeTitle : null,typeof membership.officeTitle === "string" ? membership.officeTitle : null) ||
+        (end.district ?? null) !== (membership.district ?? null) || end.jurisdiction !== membership.jurisdiction ||
         (end.termStart ?? null) !== (membership.termStart ?? null) || !nativeDate(end.termEnd) || end.termEnd >= day.slice(0,end.termEnd.length) ||
         end.termStart != null && (!nativeDate(end.termStart) || end.termStart.slice(0,Math.min(end.termStart.length,end.termEnd.length)) > end.termEnd.slice(0,Math.min(end.termStart.length,end.termEnd.length))) ||
         !captured(prior.candidate,membership.sourceUrl) || !captured(candidate,end.sourceUrl) ||

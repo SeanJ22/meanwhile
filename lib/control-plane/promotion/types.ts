@@ -1,4 +1,4 @@
-/** SCOUTED -> VERIFIED -> APPROVED_FOR_PROMOTION, or REFUSED at any stage; a refusal is appended as a record. */
+
 
 import type { WorkerRole } from "../attempt.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
@@ -53,6 +53,12 @@ interface RecordBase {
 }
 
 export type ScoutedSource =
+  | {
+      readonly kind: "PROMOTED_CANDIDACY";
+      readonly candidacyId: string;
+      readonly sourceUrl: string;
+      readonly websiteUrl: string;
+    }
   | {
       readonly kind: "SCOUT_RESULT";
       readonly attemptId: string;

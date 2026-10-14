@@ -1,3 +1,4 @@
+import { officeIdentity } from "../../officials/office-identity.ts";
 import type { Officeholder, OfficeholderSet } from "../../officials/types.ts";
 import { nativePersonIdFromUrl } from "../../officials/people-identity.ts";
 import { imagesIn, pickPortraits } from "../../hunt/portrait-pick.ts";
@@ -16,8 +17,6 @@ function rosterLabelName(label: string): string {
   const reversed=/,\s*(?:Jr\.?|Sr\.?|II|III|IV)$/i.test(observed)?null:/^([^,]+),\s*([^,]+)$/.exec(observed);
   return reversed?`${reversed[2]} ${reversed[1]}`:observed;
 }
-/** An explicitly inverted roster name is the same full name. No initials or
- * missing name parts are supplied by a matcher. */
 export function legislaturePageNamesPerson(html: string, name: string): boolean {
   const content=html.replace(/<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ").replace(/<a\b[^>]*\/>/gi,"");
   return key(textOf(content)).includes(key(name)) || [...content.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/gi)]
@@ -68,14 +67,13 @@ function personOnPage(holder:Officeholder,html:string,sourceUrl:string,options:P
   const district = /\bDistrict\s*(?:No\.?\s*)?[:#-]?\s*(\d+[a-z]?)\b/i.exec(text)?.[1]
     ?? /\b(?:title|aria-label)=["']District\s+(\d+[a-z]?)\b/i.exec(html)?.[1];
   const divisionId=known?.divisionId??(district&&holder.chamber?legislativeDivision(options,holder.chamber,district):undefined),membershipId=`${id}:${holder.chamber}:${district??known?.district??""}`;
-  result.memberships=[{id:membershipId,personId,officeId:known?.officeId??`official-legislature-office:${state.state}:${holder.chamber}:${district??""}`,jurisdiction:state.jurisdiction,
+  result.memberships=[{id:membershipId,personId,officeId:known?.officeId??`official-legislature-office:${state.state}:${officeIdentity(publishedTitle)}:${district??""}`,jurisdiction:state.jurisdiction,
     chamber:holder.chamber,district:district??known?.district,officeTitle:publishedTitle,level:"STATE",current:true,divisionId,sourceUrl}];
   const fields={...source};sourced(result,fields);
   // Exact known division identities are reusable geography, not a new claim by this page.
   if(!district&&known)result.fieldSources={...result.fieldSources,memberships:holder.fieldSources?.memberships??holder.provenance};
   return result;
 }
-/** Member pages already observed in nationally held records seed each legislature reader. */
 export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,options:PeopleAcquisitionOptions,collectedAt:string):OfficeholderSet {
   const roster=emptyRoster(options.state,options.asOf);
   const held=(options.roster?.officeholders??[]).filter(holder=>holder.level==="STATE"&&["upper","lower","legislature"].includes(holder.chamber??"")&&holder.state?.toLowerCase()===options.state.toLowerCase());

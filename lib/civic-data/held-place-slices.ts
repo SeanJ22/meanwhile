@@ -81,7 +81,7 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   } else if (recordClass === "CANDIDATE_PUBLICATION") {
     value = `jsonb_build_object('documents', ${array("payload->'documents'", "x->>'candidateKey'=ANY($5::text[])")})`;
   } else if (recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived")) {
-    value = `(payload - 'records') || jsonb_build_object('records', ${array("payload->'records'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])")})`;
+    value = `(payload - 'records' - 'portraits') || jsonb_build_object('records', ${array("payload->'records'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])" )}, 'portraits', ${array("payload->'portraits'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])")})`;
   } else if (recordClass === "FEC_FUNDING") {
     value = `(payload - 'candidates') || jsonb_build_object('candidates', ${array("payload->'candidates'", "x->'targetKeys' ?| $5::text[]")})`;
   } else if (recordClass === "STATE_CAMPAIGN_FINANCE") {

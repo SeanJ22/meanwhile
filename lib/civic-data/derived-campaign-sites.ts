@@ -7,13 +7,10 @@ import {
 import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
 import { createHash } from "node:crypto";
 import type { CampaignSiteSourceReference } from "../candidates/campaign-site-verifier.ts";
+import { portraitBindingMatches } from "../photos/binding.ts";
+import type { CandidatePortraitPatch } from "../ballot/candidate-portraits.ts";
 import type { CandidateDocument } from "../candidates/corpus.ts";
 
-/**
- * The Reader's link shapes (`VerifiedLink`, `CandidateLinks` in
- * lib/ballot/candidate-sites.ts), held structurally: the runner's writer child
- * imports this module, and its import closure may not reach the Reader.
- */
 export interface VerifiedLinkShape {
   readonly url: string;
   readonly verification: string;
@@ -25,11 +22,6 @@ export interface CandidateLinksShape {
   readonly campaign: VerifiedLinkShape | null;
 }
 
-/**
- * Campaign sites the standing runner publishes, in a store of their own so `candidate-profiles` keeps one writer.
- * The profile Reader composes the two: a derived link fills a missing campaign slot or refreshes the same URL with
- * newer verified evidence, and a conflicting URL keeps the prior link. A malformed version is never served.
- */
 export const DERIVED_CAMPAIGN_SITES_CONTRACT_ID = "candidate-campaign-sites-derived" as const;
 export const DERIVED_CAMPAIGN_SITES_SOURCE_ID = "candidate-campaign-site-chain" as const;
 export const DERIVED_CAMPAIGN_SITES_RECORD_CLASS = "CURATED_READER_RECORD" as const;
@@ -86,10 +78,18 @@ export interface DerivedCampaignSiteRecord {
   readonly publications?: readonly { readonly document: CandidateDocument; readonly evidence: DerivedCampaignSiteEvidence | DerivedLinkedPublicationEvidence }[];
 }
 
+export interface DerivedCandidatePortraitRecord {
+  readonly id: string;
+  readonly candidacyId: string;
+  readonly candidateName: string;
+  readonly portrait: CandidatePortraitPatch;
+}
+
 export interface DerivedCampaignSitesProjection {
   readonly kind: "candidate-campaign-sites-derived";
   readonly formatVersion: 1;
   readonly records: readonly DerivedCampaignSiteRecord[];
+  readonly portraits?: readonly DerivedCandidatePortraitRecord[];
 }
 
 export const CAMPAIGN_SITE_VERIFICATION_TEMPLATE = /^Fetched \d{4}-\d{2}-\d{2} \(campaign-site-verifier\/1\): '.+' — names .+, the (office|district) \(".+"\)(?:, and|; https:\/\/\S+ identifies) the \d{4} election\.$/;
@@ -202,6 +202,16 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
       }
     }
   }
+  const portraitIds = new Set<string>();
+  if (v.portraits !== undefined && !Array.isArray(v.portraits)) return "candidate portraits are not records";
+  for (const record of v.portraits ?? []) {
+    const portrait = record?.portrait;
+    if (!record || !text(record.id) || portraitIds.has(record.id) || !text(record.candidacyId) || !text(record.candidateName) ||
+        !portrait?.photoUrl || !portrait.photoSource || portrait.personId !== record.candidacyId ||
+        !portraitBindingMatches(record.candidacyId, { url: portrait.photoUrl, sourceUrl: portrait.photoVerification?.imageUrl,
+          verification: portrait.photoVerification }, "candidates")) return `${record?.id}: candidate portrait lacks its person and captured-byte binding`;
+    portraitIds.add(record.id);
+  }
   return null;
 }
 
@@ -223,11 +233,6 @@ export async function readDerivedCampaignSites(
   return result;
 }
 
-/**
- * Refresh this process's derived sites for the profile Reader, in their own
- * failure domain: whatever happens here, the profile read it accompanies is
- * unaffected, and a failure is kept as this store's read state.
- */
 async function refreshDerivedCampaignSitesOnce(options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
   try {
     return await readDerivedCampaignSites(options);
@@ -268,11 +273,6 @@ export interface ComposedCandidateLinks<L extends CandidateLinksShape> {
   readonly derivedKeys: ReadonlySet<string>;
 }
 
-/**
- * Compose fully verified links without a second approval step. Newer evidence
- * for the same URL may refresh all keys of a candidacy; a conflict or unproved
- * date preserves its profile links. Official links remain unchanged. Pure.
- */
 export function composeCampaignLinks<L extends CandidateLinksShape>(
   profiles: Readonly<Record<string, L>>,
   derived: readonly DerivedCampaignSiteRecord[],
@@ -300,4 +300,9 @@ export function currentDerivedCampaignSiteRecords(): readonly DerivedCampaignSit
 
 export function currentDerivedCandidateDocuments(): CandidateDocument[] {
   return currentDerivedCampaignSiteRecords().flatMap(record => (record.publications ?? []).map(row => row.document));
+}
+
+export function currentDerivedCandidatePortraits(): readonly DerivedCandidatePortraitRecord[] {
+  const state = derivedCampaignSitesReadState();
+  return state.kind === "PROMOTED" ? state.value.portraits ?? [] : [];
 }

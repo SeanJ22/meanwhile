@@ -1,3 +1,4 @@
+import { officeIdentity } from "../../officials/office-identity.ts";
 import type { OfficeholderSet } from "../../officials/types.ts";
 import { acquisition, array, emptyPerson, emptyRoster, gap, json, number, provenance, record, result, savedRead, sourced, stateIdentity, string, url, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
 
@@ -27,7 +28,7 @@ export function normalizeCongressMember(value: unknown, options: PeopleAcquisiti
   if (imageUrl) holder.portraitCandidate = { imageUrl, sourceUrl, collectedAt };
   const divisionId = chamber === "senate" ? state.root : district === null ? undefined : `${state.root}/cd:${district === 0 || !state.root.includes("/state:") ? "at-large" : district}`;
   const membershipId = `${id}:${chamber}:${district ?? "state"}:${holder.termStart}`;
-  holder.memberships = [{ id: membershipId, personId, officeId: `congress-office:${state.state}:${chamber}:${district ?? "state"}`,
+  holder.memberships = [{ id: membershipId, personId, officeId: `congress-office:${state.state}:${officeIdentity(chamber === "senate" ? "U.S. Senator" : "U.S. Representative")}:${district ?? "state"}`,
     jurisdiction: state.jurisdiction, chamber, district: district === null ? undefined : String(district), officeTitle: holder.officeTitle,
     level: "FEDERAL", current: true, divisionId, termStart: holder.termStart || null, termEnd: holder.termEnd || null, sourceUrl }];
   roster.officeholders.push(sourced(holder, source));
@@ -35,7 +36,6 @@ export function normalizeCongressMember(value: unknown, options: PeopleAcquisiti
   else roster.unmatched.push({ officeholderId: id, reason: "CONGRESS_MEMBER_DISTRICT_MISSING" });
   return roster;
 }
-/** National standing state jobs read this API's native state slice before constructing people. */
 export async function acquireCongressMembers(options: PeopleAcquisitionOptions): Promise<PeopleSourceRelease> {
   const acquisitions = [], gaps: { sourceUrl: string; detail: string }[] = [], roster = emptyRoster(options.state, options.asOf);
   let offset = 0, complete = false;

@@ -52,6 +52,7 @@ import type { GeographySelection } from "../census-geography/selection.ts";
 import { divisionsFromCensusGeographies, type CensusGeographies } from "../geo/census-geographies.ts";
 import {
   heldOfficialStateLegislatorsFromRead,
+  primeStatePeopleProjection,
   readStatePeopleProjection,
 } from "../state-rollcalls/legislators.ts";
 
@@ -594,6 +595,7 @@ const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) 
   const served = edge?.jurisdictions.has(scope) ? await edge.load(scope) : null;
   if (served) {
     const { value, versionId } = served;
+    primeStatePeopleProjection(value);
     return {
       kind: "BOOTSTRAP",
       value,

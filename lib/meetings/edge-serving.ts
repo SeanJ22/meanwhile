@@ -371,19 +371,6 @@ export async function ensureReaderAuthorityEdge(
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
-  // Every Reader route installs the published meeting doors here, beside its authority families: which partitions
-  // make up the meetings, which bodies a failed source serves, which publish no history.
-  const doors = import("../doors/meeting-doors.ts").then((module) => module.ensureMeetingDoors());
-  const bundle = await readerAuthorityEdge(manifest, store, families);
-  await doors;
-  return bundle;
-}
-
-async function readerAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
-  store: ReaderArtifactStore | null,
-  families: readonly AuthorityFamily[],
-): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
   const registrationRefs = manifest.registrations;
   const registrations = registrationRefs && store
@@ -672,7 +659,9 @@ const areaReads = new Map<string, MeetingsProjectionReadResult>();
 export async function readReaderEdgeMeetings(
   options: ReaderEdgeMeetingsOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
-  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings()]);
+  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings(),
+    import("../doors/meeting-doors.ts").then(module => module.ensureMeetingDoors()),
+  ]);
   return applyServedWindow(read, options.window ?? "SHOWN", options.now, settings);
 }
 

@@ -1,0 +1,4057 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "ND:nd-2026-11-03": {
+      "election": {
+        "id": "nd-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "ND"
+      },
+      "contests": [
+        {
+          "id": "nd-sos-2026-general:representative-in-congress",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/cd:0",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Representative in Congress"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-01",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:1",
+          "divisionVintage": "2026",
+          "title": "State Senator District 01",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 01"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-03",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:3",
+          "divisionVintage": "2026",
+          "title": "State Senator District 03",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 03"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-05",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:5",
+          "divisionVintage": "2026",
+          "title": "State Senator District 05",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 05"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-07",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:7",
+          "divisionVintage": "2026",
+          "title": "State Senator District 07",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 07"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-09",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:9",
+          "divisionVintage": "2026",
+          "title": "State Senator District 09",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 09"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-11",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:11",
+          "divisionVintage": "2026",
+          "title": "State Senator District 11",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 11"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-13",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:13",
+          "divisionVintage": "2026",
+          "title": "State Senator District 13",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 13"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-15",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:15",
+          "divisionVintage": "2026",
+          "title": "State Senator District 15",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 15"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-17",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:17",
+          "divisionVintage": "2026",
+          "title": "State Senator District 17",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 17"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-19",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:19",
+          "divisionVintage": "2026",
+          "title": "State Senator District 19",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 19"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-21",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:21",
+          "divisionVintage": "2026",
+          "title": "State Senator District 21",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 21"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-23",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:23",
+          "divisionVintage": "2026",
+          "title": "State Senator District 23",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 23"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-25",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:25",
+          "divisionVintage": "2026",
+          "title": "State Senator District 25",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 25"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-27",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:27",
+          "divisionVintage": "2026",
+          "title": "State Senator District 27",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 27"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-29",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:29",
+          "divisionVintage": "2026",
+          "title": "State Senator District 29",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 29"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-31",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:31",
+          "divisionVintage": "2026",
+          "title": "State Senator District 31",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 31"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-33",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:33",
+          "divisionVintage": "2026",
+          "title": "State Senator District 33",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 33"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-35",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:35",
+          "divisionVintage": "2026",
+          "title": "State Senator District 35",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 35"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-37",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:37",
+          "divisionVintage": "2026",
+          "title": "State Senator District 37",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 37"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-39",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:39",
+          "divisionVintage": "2026",
+          "title": "State Senator District 39",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 39"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-41",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:41",
+          "divisionVintage": "2026",
+          "title": "State Senator District 41",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 41"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-43",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:43",
+          "divisionVintage": "2026",
+          "title": "State Senator District 43",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 43"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-45",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:45",
+          "divisionVintage": "2026",
+          "title": "State Senator District 45",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 45"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-47",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldu:47",
+          "divisionVintage": "2026",
+          "title": "State Senator District 47",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Senator District 47"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-01",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:1",
+          "divisionVintage": "2026",
+          "title": "State Representative District 01",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 01"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-03",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:3",
+          "divisionVintage": "2026",
+          "title": "State Representative District 03",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 03"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-05",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:5",
+          "divisionVintage": "2026",
+          "title": "State Representative District 05",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 05"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-07",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:7",
+          "divisionVintage": "2026",
+          "title": "State Representative District 07",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 07"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-09",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:9",
+          "divisionVintage": "2026",
+          "title": "State Representative District 09",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 09"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-11",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:11",
+          "divisionVintage": "2026",
+          "title": "State Representative District 11",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 11"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-13",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:13",
+          "divisionVintage": "2026",
+          "title": "State Representative District 13",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 13"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-15",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:15",
+          "divisionVintage": "2026",
+          "title": "State Representative District 15",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 15"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-17",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:17",
+          "divisionVintage": "2026",
+          "title": "State Representative District 17",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 17"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-19",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:19",
+          "divisionVintage": "2026",
+          "title": "State Representative District 19",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 19"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-21",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:21",
+          "divisionVintage": "2026",
+          "title": "State Representative District 21",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 21"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-23",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:23",
+          "divisionVintage": "2026",
+          "title": "State Representative District 23",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 23"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-25",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:25",
+          "divisionVintage": "2026",
+          "title": "State Representative District 25",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 25"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-27",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:27",
+          "divisionVintage": "2026",
+          "title": "State Representative District 27",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 27"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-29",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:29",
+          "divisionVintage": "2026",
+          "title": "State Representative District 29",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 29"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-31",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:31",
+          "divisionVintage": "2026",
+          "title": "State Representative District 31",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 31"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-33",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:33",
+          "divisionVintage": "2026",
+          "title": "State Representative District 33",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 33"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-35",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:35",
+          "divisionVintage": "2026",
+          "title": "State Representative District 35",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 35"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-37",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:37",
+          "divisionVintage": "2026",
+          "title": "State Representative District 37",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 37"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-39",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:39",
+          "divisionVintage": "2026",
+          "title": "State Representative District 39",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 39"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-41",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:41",
+          "divisionVintage": "2026",
+          "title": "State Representative District 41",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 41"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-43",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:43",
+          "divisionVintage": "2026",
+          "title": "State Representative District 43",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 43"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-45",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:45",
+          "divisionVintage": "2026",
+          "title": "State Representative District 45",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 45"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-47",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:47",
+          "divisionVintage": "2026",
+          "title": "State Representative District 47",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative District 47"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-20",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:20",
+          "divisionVintage": "2026",
+          "title": "State Representative Unexpired 2-Year Term District 20",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative Unexpired 2-Year Term District 20"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-26",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:26",
+          "divisionVintage": "2026",
+          "title": "State Representative Unexpired 2-Year Term District 26",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative Unexpired 2-Year Term District 26"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-42",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/sldl:42",
+          "divisionVintage": "2026",
+          "title": "State Representative Unexpired 2-Year Term District 42",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "State Representative Unexpired 2-Year Term District 42"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:secretary-of-state",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Secretary of State",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Secretary of State"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:attorney-general",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Attorney General",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Attorney General"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:agriculture-commissioner",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Agriculture Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Agriculture Commissioner"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:public-service-commissioner",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Public Service Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Public Service Commissioner"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Public Service Commissioner Unexpired 2-Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Public Service Commissioner Unexpired 2-Year Term"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:tax-commissioner",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Tax Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tax Commissioner"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Superintendent of Public Instruction Unexpired 2-Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Superintendent of Public Instruction Unexpired 2-Year Term"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:justice-of-the-supreme-court-unexpired-8-year-term",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Justice of the Supreme Court Unexpired 8-Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 8,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Justice of the Supreme Court Unexpired 8-Year Term"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:justice-of-the-supreme-court",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Justice of the Supreme Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 10,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Justice of the Supreme Court"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:measure-1",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Constitutional Measure No. 1",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:04.328498+00:00",
+            "verifiedAt": "2026-10-14T05:05:04.328498+00:00",
+            "doorId": "fec-nd-chief"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:measure-2",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "divisionVintage": "2026",
+          "title": "Initiated Constitutional Measure No. 2",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:04.462169+00:00",
+            "verifiedAt": "2026-10-14T05:05:04.462169+00:00",
+            "doorId": "fec-nd-chief"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "nd-sos-2026-general:representative-in-congress:julie-fedorchak",
+          "contestId": "nd-sos-2026-general:representative-in-congress",
+          "familyName": "Fedorchak",
+          "givenName": "Julie",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Julie Fedorchak"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:representative-in-congress:trygve-hammer",
+          "contestId": "nd-sos-2026-general:representative-in-congress",
+          "familyName": "Hammer",
+          "givenName": "Trygve",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.hammerfornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Trygve Hammer"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:representative-in-congress:helene-neville",
+          "contestId": "nd-sos-2026-general:representative-in-congress",
+          "familyName": "Neville",
+          "givenName": "Helene",
+          "partyLabel": "independent nomination",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://HeleneforCongress.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Helene Neville"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:representative-in-congress:charles-tuttle",
+          "contestId": "nd-sos-2026-general:representative-in-congress",
+          "familyName": "Tuttle",
+          "givenName": "Charles",
+          "partyLabel": "independent nomination",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Charles Tuttle"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-01:brad-bekkedahl",
+          "contestId": "nd-sos-2026-general:state-senator-district-01",
+          "familyName": "Bekkedahl",
+          "givenName": "Brad",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Brad Bekkedahl"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-03:bob-paulson",
+          "contestId": "nd-sos-2026-general:state-senator-district-03",
+          "familyName": "Paulson",
+          "givenName": "Bob",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Bob Paulson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-03:michael-thiesen",
+          "contestId": "nd-sos-2026-general:state-senator-district-03",
+          "familyName": "Thiesen",
+          "givenName": "Michael",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Michael Thiesen"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-05:jay-fisher",
+          "contestId": "nd-sos-2026-general:state-senator-district-05",
+          "familyName": "Fisher",
+          "givenName": "Jay",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jay Fisher"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-07:michelle-axtman",
+          "contestId": "nd-sos-2026-general:state-senator-district-07",
+          "familyName": "Axtman",
+          "givenName": "Michelle",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Michelle Axtman"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-07:kevin-horneman",
+          "contestId": "nd-sos-2026-general:state-senator-district-07",
+          "familyName": "Horneman",
+          "givenName": "Kevin",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kevin Horneman"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-09:jayme-davis",
+          "contestId": "nd-sos-2026-general:state-senator-district-09",
+          "familyName": "Davis",
+          "givenName": "Jayme",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jayme Davis"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-11:tim-mathern",
+          "contestId": "nd-sos-2026-general:state-senator-district-11",
+          "familyName": "Mathern",
+          "givenName": "Tim",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://mathernforsenate.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tim Mathern"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-11:christine-o-riley",
+          "contestId": "nd-sos-2026-general:state-senator-district-11",
+          "familyName": "O'Riley",
+          "givenName": "Christine",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Christine O'Riley"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-13:landis-larson",
+          "contestId": "nd-sos-2026-general:state-senator-district-13",
+          "familyName": "Larson",
+          "givenName": "Landis",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Landis Larson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-13:judy-lee",
+          "contestId": "nd-sos-2026-general:state-senator-district-13",
+          "familyName": "Lee",
+          "givenName": "Judy",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Judy Lee"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-15:kristin-kenner",
+          "contestId": "nd-sos-2026-general:state-senator-district-15",
+          "familyName": "Kenner",
+          "givenName": "Kristin",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kristin Kenner"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-17:katie-benton",
+          "contestId": "nd-sos-2026-general:state-senator-district-17",
+          "familyName": "Benton",
+          "givenName": "Katie",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Katie Benton"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-17:jonathan-sickler",
+          "contestId": "nd-sos-2026-general:state-senator-district-17",
+          "familyName": "Sickler",
+          "givenName": "Jonathan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jonathan Sickler"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-19:jefferey-e-hermanson",
+          "contestId": "nd-sos-2026-general:state-senator-district-19",
+          "familyName": "Hermanson",
+          "givenName": "Jefferey E",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jefferey E Hermanson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-19:janne-myrdal",
+          "contestId": "nd-sos-2026-general:state-senator-district-19",
+          "familyName": "Myrdal",
+          "givenName": "Janne",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Janne Myrdal"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-21:mary-schneider",
+          "contestId": "nd-sos-2026-general:state-senator-district-21",
+          "familyName": "Schneider",
+          "givenName": "Mary",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mary Schneider"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-23:todd-beard",
+          "contestId": "nd-sos-2026-general:state-senator-district-23",
+          "familyName": "Beard",
+          "givenName": "Todd",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Todd Beard"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-25:bob-heitkamp",
+          "contestId": "nd-sos-2026-general:state-senator-district-25",
+          "familyName": "Heitkamp",
+          "givenName": "Bob",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Bob Heitkamp"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-25:larry-luick",
+          "contestId": "nd-sos-2026-general:state-senator-district-25",
+          "familyName": "Luick",
+          "givenName": "Larry",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Larry Luick"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-27:kristin-roers",
+          "contestId": "nd-sos-2026-general:state-senator-district-27",
+          "familyName": "Roers",
+          "givenName": "Kristin",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.voteforroers.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kristin Roers"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-29:john-kelly",
+          "contestId": "nd-sos-2026-general:state-senator-district-29",
+          "familyName": "Kelly",
+          "givenName": "John",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "John Kelly"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-29:terry-m-wanzek",
+          "contestId": "nd-sos-2026-general:state-senator-district-29",
+          "familyName": "Wanzek",
+          "givenName": "Terry M",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Terry M Wanzek"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-31:donald-schaible",
+          "contestId": "nd-sos-2026-general:state-senator-district-31",
+          "familyName": "Schaible",
+          "givenName": "Donald",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Donald Schaible"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-31:kelly-spilman",
+          "contestId": "nd-sos-2026-general:state-senator-district-31",
+          "familyName": "Spilman",
+          "givenName": "Kelly",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kelly Spilman"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-33:keith-boehm",
+          "contestId": "nd-sos-2026-general:state-senator-district-33",
+          "familyName": "Boehm",
+          "givenName": "Keith",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Keith Boehm"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-33:signe-snortland",
+          "contestId": "nd-sos-2026-general:state-senator-district-33",
+          "familyName": "Snortland",
+          "givenName": "Signe",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Signe Snortland"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-35:sean-cleary",
+          "contestId": "nd-sos-2026-general:state-senator-district-35",
+          "familyName": "Cleary",
+          "givenName": "Sean",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.clearyfornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Sean Cleary"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-35:dale-pittman",
+          "contestId": "nd-sos-2026-general:state-senator-district-35",
+          "familyName": "Pittman",
+          "givenName": "Dale",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Dale Pittman"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-37:dean-rummel",
+          "contestId": "nd-sos-2026-general:state-senator-district-37",
+          "familyName": "Rummel",
+          "givenName": "Dean",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://deanrummel.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Dean Rummel"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-39:greg-kessel",
+          "contestId": "nd-sos-2026-general:state-senator-district-39",
+          "familyName": "Kessel",
+          "givenName": "Greg",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Greg Kessel"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-41:kyle-davison",
+          "contestId": "nd-sos-2026-general:state-senator-district-41",
+          "familyName": "Davison",
+          "givenName": "Kyle",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kyle Davison"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-41:nyamal-dei",
+          "contestId": "nd-sos-2026-general:state-senator-district-41",
+          "familyName": "Dei",
+          "givenName": "Nyamal",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Nyamal Dei"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-43:mary-k-adams",
+          "contestId": "nd-sos-2026-general:state-senator-district-43",
+          "familyName": "Adams",
+          "givenName": "Mary K",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mary K Adams"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-43:jeff-barta",
+          "contestId": "nd-sos-2026-general:state-senator-district-43",
+          "familyName": "Barta",
+          "givenName": "Jeff",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://voteforbarta.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jeff Barta"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-45:dan-mitchell",
+          "contestId": "nd-sos-2026-general:state-senator-district-45",
+          "familyName": "Mitchell",
+          "givenName": "Dan",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Dan Mitchell"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-45:ronald-sorvaag",
+          "contestId": "nd-sos-2026-general:state-senator-district-45",
+          "familyName": "Sorvaag",
+          "givenName": "Ronald",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://sorvaagforsenate.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Ronald Sorvaag"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-47:mike-dwyer",
+          "contestId": "nd-sos-2026-general:state-senator-district-47",
+          "familyName": "Dwyer",
+          "givenName": "Mike",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mike Dwyer"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-senator-district-47:bill-patrie",
+          "contestId": "nd-sos-2026-general:state-senator-district-47",
+          "familyName": "Patrie",
+          "givenName": "Bill",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Bill Patrie"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-01:laurie-garbel",
+          "contestId": "nd-sos-2026-general:state-representative-district-01",
+          "familyName": "Garbel",
+          "givenName": "Laurie",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Laurie Garbel"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-01:alex-johnson",
+          "contestId": "nd-sos-2026-general:state-representative-district-01",
+          "familyName": "Johnson",
+          "givenName": "Alex",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Alex Johnson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-01:david-richter",
+          "contestId": "nd-sos-2026-general:state-representative-district-01",
+          "familyName": "Richter",
+          "givenName": "David",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "David Richter"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-01:steve-thoring",
+          "contestId": "nd-sos-2026-general:state-representative-district-01",
+          "familyName": "Thoring",
+          "givenName": "Steve",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Steve Thoring"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-03:blaine-deslauriers",
+          "contestId": "nd-sos-2026-general:state-representative-district-03",
+          "familyName": "DesLauriers",
+          "givenName": "Blaine",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://blainefornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Blaine DesLauriers"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-03:tara-hiatt",
+          "contestId": "nd-sos-2026-general:state-representative-district-03",
+          "familyName": "Hiatt",
+          "givenName": "Tara",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tara Hiatt"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-03:natalie-mclaughlin",
+          "contestId": "nd-sos-2026-general:state-representative-district-03",
+          "familyName": "Mclaughlin",
+          "givenName": "Natalie",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Natalie Mclaughlin"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-03:timothy-mihalick",
+          "contestId": "nd-sos-2026-general:state-representative-district-03",
+          "familyName": "Mihalick",
+          "givenName": "Timothy",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://timfornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Timothy Mihalick"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-05:roger-brabandt",
+          "contestId": "nd-sos-2026-general:state-representative-district-05",
+          "familyName": "Brabandt",
+          "givenName": "Roger",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Roger Brabandt"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-05:kyle-erickson",
+          "contestId": "nd-sos-2026-general:state-representative-district-05",
+          "familyName": "Erickson",
+          "givenName": "Kyle",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://D5DemNPL.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kyle Erickson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-05:scott-louser",
+          "contestId": "nd-sos-2026-general:state-representative-district-05",
+          "familyName": "Louser",
+          "givenName": "Scott",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Scott Louser"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-05:zach-raknerud",
+          "contestId": "nd-sos-2026-general:state-representative-district-05",
+          "familyName": "Raknerud",
+          "givenName": "Zach",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://D5DemNPL.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Zach Raknerud"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-07:steve-sauter",
+          "contestId": "nd-sos-2026-general:state-representative-district-07",
+          "familyName": "Sauter",
+          "givenName": "Steve",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Steve Sauter"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-07:jason-thoms",
+          "contestId": "nd-sos-2026-general:state-representative-district-07",
+          "familyName": "Thoms",
+          "givenName": "Jason",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://jasonthomsforndhouse.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jason Thoms"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-07:greg-vetter",
+          "contestId": "nd-sos-2026-general:state-representative-district-07",
+          "familyName": "Vetter",
+          "givenName": "Greg",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Greg Vetter"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-07:tiffany-williams-rice",
+          "contestId": "nd-sos-2026-general:state-representative-district-07",
+          "familyName": "Williams-Rice",
+          "givenName": "Tiffany",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tiffany Williams-Rice"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-09:collette-brown",
+          "contestId": "nd-sos-2026-general:state-representative-district-09",
+          "familyName": "Brown",
+          "givenName": "Collette",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Collette Brown"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-09:duane-poitra",
+          "contestId": "nd-sos-2026-general:state-representative-district-09",
+          "familyName": "Poitra",
+          "givenName": "Duane",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Duane Poitra"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-11:anastassiya-stass-andrianova",
+          "contestId": "nd-sos-2026-general:state-representative-district-11",
+          "familyName": "Andrianova",
+          "givenName": "Anastassiya (Stass)",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Anastassiya (Stass) Andrianova"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-11:cara-cody-braun",
+          "contestId": "nd-sos-2026-general:state-representative-district-11",
+          "familyName": "Cody-Braun",
+          "givenName": "Cara",
+          "partyLabel": "independent nomination",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Cara Cody-Braun"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-11:doug-sharbono",
+          "contestId": "nd-sos-2026-general:state-representative-district-11",
+          "familyName": "Sharbono",
+          "givenName": "Doug",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Doug Sharbono"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-13:maggi-gadaire",
+          "contestId": "nd-sos-2026-general:state-representative-district-13",
+          "familyName": "Gadaire",
+          "givenName": "Maggi",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Maggi Gadaire"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-13:brenda-jo-gillund",
+          "contestId": "nd-sos-2026-general:state-representative-district-13",
+          "familyName": "Gillund",
+          "givenName": "Brenda Jo",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Brenda Jo Gillund"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-13:jim-jonas",
+          "contestId": "nd-sos-2026-general:state-representative-district-13",
+          "familyName": "Jonas",
+          "givenName": "Jim",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jim Jonas"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-13:austen-schauer",
+          "contestId": "nd-sos-2026-general:state-representative-district-13",
+          "familyName": "Schauer",
+          "givenName": "Austen",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Austen Schauer"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-15:frances-drury",
+          "contestId": "nd-sos-2026-general:state-representative-district-15",
+          "familyName": "Drury",
+          "givenName": "Frances",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Frances Drury"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-15:kathy-frelich",
+          "contestId": "nd-sos-2026-general:state-representative-district-15",
+          "familyName": "Frelich",
+          "givenName": "Kathy",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kathy Frelich"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-15:corry-kenner",
+          "contestId": "nd-sos-2026-general:state-representative-district-15",
+          "familyName": "Kenner",
+          "givenName": "Corry",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Corry Kenner"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-17:don-aandal",
+          "contestId": "nd-sos-2026-general:state-representative-district-17",
+          "familyName": "Aandal",
+          "givenName": "Don",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Don Aandal"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-17:reed-johnson",
+          "contestId": "nd-sos-2026-general:state-representative-district-17",
+          "familyName": "Johnson",
+          "givenName": "Reed",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://reedfornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Reed Johnson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-17:mark-sanford",
+          "contestId": "nd-sos-2026-general:state-representative-district-17",
+          "familyName": "Sanford",
+          "givenName": "Mark",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mark Sanford"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-19:karen-a-anderson",
+          "contestId": "nd-sos-2026-general:state-representative-district-19",
+          "familyName": "Anderson",
+          "givenName": "Karen A",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Karen A Anderson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-19:jolene-l-hermanson",
+          "contestId": "nd-sos-2026-general:state-representative-district-19",
+          "familyName": "Hermanson",
+          "givenName": "Jolene L",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jolene L Hermanson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-19:david-monson",
+          "contestId": "nd-sos-2026-general:state-representative-district-19",
+          "familyName": "Monson",
+          "givenName": "David",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "David Monson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-21:laura-dronen",
+          "contestId": "nd-sos-2026-general:state-representative-district-21",
+          "familyName": "Dronen",
+          "givenName": "Laura",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Laura Dronen"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-21:lauriebeth-hager",
+          "contestId": "nd-sos-2026-general:state-representative-district-21",
+          "familyName": "Hager",
+          "givenName": "LaurieBeth",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "LaurieBeth Hager"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-23:corey-johnson",
+          "contestId": "nd-sos-2026-general:state-representative-district-23",
+          "familyName": "Johnson",
+          "givenName": "Corey",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://johnsonfornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Corey Johnson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-23:dennis-nehring",
+          "contestId": "nd-sos-2026-general:state-representative-district-23",
+          "familyName": "Nehring",
+          "givenName": "Dennis",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Dennis Nehring"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-25:terry-goerger",
+          "contestId": "nd-sos-2026-general:state-representative-district-25",
+          "familyName": "Goerger",
+          "givenName": "Terry",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Terry Goerger"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-25:alisa-mitskog",
+          "contestId": "nd-sos-2026-general:state-representative-district-25",
+          "familyName": "Mitskog",
+          "givenName": "Alisa",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Alisa Mitskog"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-25:kathy-skroch",
+          "contestId": "nd-sos-2026-general:state-representative-district-25",
+          "familyName": "Skroch",
+          "givenName": "Kathy",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kathy Skroch"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-27:jolene-bruce",
+          "contestId": "nd-sos-2026-general:state-representative-district-27",
+          "familyName": "Bruce",
+          "givenName": "Jolene",
+          "partyLabel": "independent nomination",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jolene Bruce"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-27:shawn-kessel",
+          "contestId": "nd-sos-2026-general:state-representative-district-27",
+          "familyName": "Kessel",
+          "givenName": "Shawn",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://friendsofkessel.org",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Shawn Kessel"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-27:greg-stemen",
+          "contestId": "nd-sos-2026-general:state-representative-district-27",
+          "familyName": "Stemen",
+          "givenName": "Greg",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://GregStemen.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Greg Stemen"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-29:craig-headland",
+          "contestId": "nd-sos-2026-general:state-representative-district-29",
+          "familyName": "Headland",
+          "givenName": "Craig",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Craig Headland"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-29:dianne-norris",
+          "contestId": "nd-sos-2026-general:state-representative-district-29",
+          "familyName": "Norris",
+          "givenName": "Dianne",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Dianne Norris"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-29:kevin-wolsky",
+          "contestId": "nd-sos-2026-general:state-representative-district-29",
+          "familyName": "Wolsky",
+          "givenName": "Kevin",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kevin Wolsky"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-31:dawson-holle",
+          "contestId": "nd-sos-2026-general:state-representative-district-31",
+          "familyName": "Holle",
+          "givenName": "Dawson",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Dawson Holle"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-31:karen-rohr",
+          "contestId": "nd-sos-2026-general:state-representative-district-31",
+          "familyName": "Rohr",
+          "givenName": "Karen",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Karen Rohr"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-31:tim-spilman",
+          "contestId": "nd-sos-2026-general:state-representative-district-31",
+          "familyName": "Spilman",
+          "givenName": "Tim",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tim Spilman"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-31:rissa-m-williams",
+          "contestId": "nd-sos-2026-general:state-representative-district-31",
+          "familyName": "Williams",
+          "givenName": "Rissa M",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Rissa M Williams"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-33:kimball-banks",
+          "contestId": "nd-sos-2026-general:state-representative-district-33",
+          "familyName": "Banks",
+          "givenName": "Kimball",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kimball Banks"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-33:mike-heger",
+          "contestId": "nd-sos-2026-general:state-representative-district-33",
+          "familyName": "Heger",
+          "givenName": "Mike",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mike Heger"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-33:stacie-kruckenberg",
+          "contestId": "nd-sos-2026-general:state-representative-district-33",
+          "familyName": "Kruckenberg",
+          "givenName": "Stacie",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Stacie Kruckenberg"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-33:anna-s-garrett-novak",
+          "contestId": "nd-sos-2026-general:state-representative-district-33",
+          "familyName": "Novak",
+          "givenName": "Anna S (Garrett)",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Anna S (Garrett) Novak"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-35:taylor-johnson",
+          "contestId": "nd-sos-2026-general:state-representative-district-35",
+          "familyName": "Johnson",
+          "givenName": "Taylor",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Taylor Johnson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-35:karen-karls",
+          "contestId": "nd-sos-2026-general:state-representative-district-35",
+          "familyName": "Karls",
+          "givenName": "Karen",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Karen Karls"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-35:lynne-m-lafer-halvorson",
+          "contestId": "nd-sos-2026-general:state-representative-district-35",
+          "familyName": "Lafer-Halvorson",
+          "givenName": "Lynne M",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Lynne M Lafer-Halvorson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-35:bob-martinson",
+          "contestId": "nd-sos-2026-general:state-representative-district-35",
+          "familyName": "Martinson",
+          "givenName": "Bob",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Bob Martinson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-37:susan-josephson",
+          "contestId": "nd-sos-2026-general:state-representative-district-37",
+          "familyName": "Josephson",
+          "givenName": "Susan",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Susan Josephson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-37:kylan-klauzer",
+          "contestId": "nd-sos-2026-general:state-representative-district-37",
+          "familyName": "Klauzer",
+          "givenName": "Kylan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Kylan Klauzer"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-37:shelley-lenz",
+          "contestId": "nd-sos-2026-general:state-representative-district-37",
+          "familyName": "Lenz",
+          "givenName": "Shelley",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Shelley Lenz"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-37:vicky-steiner",
+          "contestId": "nd-sos-2026-general:state-representative-district-37",
+          "familyName": "Steiner",
+          "givenName": "Vicky",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Vicky Steiner"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-39:sandy-baertsch",
+          "contestId": "nd-sos-2026-general:state-representative-district-39",
+          "familyName": "Baertsch",
+          "givenName": "Sandy",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Sandy Baertsch"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-39:keith-kempenich",
+          "contestId": "nd-sos-2026-general:state-representative-district-39",
+          "familyName": "Kempenich",
+          "givenName": "Keith",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Keith Kempenich"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-39:mike-schatz",
+          "contestId": "nd-sos-2026-general:state-representative-district-39",
+          "familyName": "Schatz",
+          "givenName": "Mike",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mike Schatz"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-41:jennifer-benson",
+          "contestId": "nd-sos-2026-general:state-representative-district-41",
+          "familyName": "Benson",
+          "givenName": "Jennifer",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jennifer Benson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-41:stacy-heidenreich",
+          "contestId": "nd-sos-2026-general:state-representative-district-41",
+          "familyName": "Heidenreich",
+          "givenName": "Stacy",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Stacy Heidenreich"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-41:rich-slagle",
+          "contestId": "nd-sos-2026-general:state-representative-district-41",
+          "familyName": "Slagle",
+          "givenName": "Rich",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Rich Slagle"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-41:chris-tiongson",
+          "contestId": "nd-sos-2026-general:state-representative-district-41",
+          "familyName": "Tiongson",
+          "givenName": "Chris",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Chris Tiongson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-43:jill-t-chandler",
+          "contestId": "nd-sos-2026-general:state-representative-district-43",
+          "familyName": "Chandler",
+          "givenName": "Jill T",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jill T Chandler"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-43:mike-holmes",
+          "contestId": "nd-sos-2026-general:state-representative-district-43",
+          "familyName": "Holmes",
+          "givenName": "Mike",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://holmesforND.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mike Holmes"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-43:lukas-arthur-maughan",
+          "contestId": "nd-sos-2026-general:state-representative-district-43",
+          "familyName": "Maughan",
+          "givenName": "Lukas Arthur",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Lukas Arthur Maughan"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-43:tyler-york",
+          "contestId": "nd-sos-2026-general:state-representative-district-43",
+          "familyName": "York",
+          "givenName": "Tyler",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tyler York"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-45:don-lippert",
+          "contestId": "nd-sos-2026-general:state-representative-district-45",
+          "familyName": "Lippert",
+          "givenName": "Don",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Don Lippert"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-45:ross-lockhart",
+          "contestId": "nd-sos-2026-general:state-representative-district-45",
+          "familyName": "Lockhart",
+          "givenName": "Ross",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://rosslockhart.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Ross Lockhart"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-45:carrie-mcleod",
+          "contestId": "nd-sos-2026-general:state-representative-district-45",
+          "familyName": "McLeod",
+          "givenName": "Carrie",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Carrie McLeod"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-45:scott-wagner",
+          "contestId": "nd-sos-2026-general:state-representative-district-45",
+          "familyName": "Wagner",
+          "givenName": "Scott",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Scott Wagner"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-47:rosann-jacobs-fode",
+          "contestId": "nd-sos-2026-general:state-representative-district-47",
+          "familyName": "Jacobs-Fode",
+          "givenName": "Rosann",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Rosann Jacobs-Fode"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-47:jon-lee",
+          "contestId": "nd-sos-2026-general:state-representative-district-47",
+          "familyName": "Lee",
+          "givenName": "Jon",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jon Lee"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-47:cole-montoya",
+          "contestId": "nd-sos-2026-general:state-representative-district-47",
+          "familyName": "Montoya",
+          "givenName": "Cole",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Cole Montoya"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-47:michael-motschenbacher",
+          "contestId": "nd-sos-2026-general:state-representative-district-47",
+          "familyName": "Motschenbacher",
+          "givenName": "Michael",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.mikemfornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Michael Motschenbacher"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-district-47:andrew-alexis-varvel",
+          "contestId": "nd-sos-2026-general:state-representative-district-47",
+          "familyName": "Varvel",
+          "givenName": "Andrew Alexis",
+          "partyLabel": "independent nomination",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Andrew Alexis Varvel"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-20:nikolaus-groenewold",
+          "contestId": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-20",
+          "familyName": "Groenewold",
+          "givenName": "Nikolaus",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Nikolaus Groenewold"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-20:david-rustebakke",
+          "contestId": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-20",
+          "familyName": "Rustebakke",
+          "givenName": "David",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "David Rustebakke"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-26:brent-schwan",
+          "contestId": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-26",
+          "familyName": "Schwan",
+          "givenName": "Brent",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://brentschwan.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Brent Schwan"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-42:nicole-derenne",
+          "contestId": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-42",
+          "familyName": "Derenne",
+          "givenName": "Nicole",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Nicole Derenne"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-42:connie-osowski",
+          "contestId": "nd-sos-2026-general:state-representative-unexpired-2-year-term-district-42",
+          "familyName": "Osowski",
+          "givenName": "Connie",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Connie Osowski"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:secretary-of-state:ryan-braunberger",
+          "contestId": "nd-sos-2026-general:secretary-of-state",
+          "familyName": "Braunberger",
+          "givenName": "Ryan",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Ryan Braunberger"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:secretary-of-state:michael-howe",
+          "contestId": "nd-sos-2026-general:secretary-of-state",
+          "familyName": "Howe",
+          "givenName": "Michael",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://howefornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Michael Howe"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:attorney-general:tim-lamb",
+          "contestId": "nd-sos-2026-general:attorney-general",
+          "familyName": "Lamb",
+          "givenName": "Tim",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tim Lamb"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:attorney-general:drew-wrigley",
+          "contestId": "nd-sos-2026-general:attorney-general",
+          "familyName": "Wrigley",
+          "givenName": "Drew",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Drew Wrigley"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:agriculture-commissioner:doug-goehring",
+          "contestId": "nd-sos-2026-general:agriculture-commissioner",
+          "familyName": "Goehring",
+          "givenName": "Doug",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Doug Goehring"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:agriculture-commissioner:vern-thompson",
+          "contestId": "nd-sos-2026-general:agriculture-commissioner",
+          "familyName": "Thompson",
+          "givenName": "Vern",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://thompson4nd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Vern Thompson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:public-service-commissioner:sheri-haugen-hoffart",
+          "contestId": "nd-sos-2026-general:public-service-commissioner",
+          "familyName": "Haugen-Hoffart",
+          "givenName": "Sheri",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://sherifornd.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Sheri Haugen-Hoffart"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:public-service-commissioner:john-m-pederson",
+          "contestId": "nd-sos-2026-general:public-service-commissioner",
+          "familyName": "Pederson",
+          "givenName": "John M",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "John M Pederson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term:scot-kelsh",
+          "contestId": "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term",
+          "familyName": "Kelsh",
+          "givenName": "Scot",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Scot Kelsh"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term:jill-kringstad",
+          "contestId": "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term",
+          "familyName": "Kringstad",
+          "givenName": "Jill",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://jillkringstad.com",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jill Kringstad"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:tax-commissioner:brian-kroshus",
+          "contestId": "nd-sos-2026-general:tax-commissioner",
+          "familyName": "Kroshus",
+          "givenName": "Brian",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Brian Kroshus"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:tax-commissioner:mark-nelson",
+          "contestId": "nd-sos-2026-general:tax-commissioner",
+          "familyName": "Nelson",
+          "givenName": "Mark",
+          "partyLabel": "Democratic-NPL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Mark Nelson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term:levi-bachmeier",
+          "contestId": "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term",
+          "familyName": "Bachmeier",
+          "givenName": "Levi",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Levi Bachmeier"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term:tracy-layne-foss",
+          "contestId": "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term",
+          "familyName": "Foss",
+          "givenName": "Tracy Layne",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Tracy Layne Foss"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:justice-of-the-supreme-court-unexpired-8-year-term:douglas-a-bahr",
+          "contestId": "nd-sos-2026-general:justice-of-the-supreme-court-unexpired-8-year-term",
+          "familyName": "Bahr",
+          "givenName": "Douglas A",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Douglas A Bahr"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:justice-of-the-supreme-court:ariston-e-johnson",
+          "contestId": "nd-sos-2026-general:justice-of-the-supreme-court",
+          "familyName": "Johnson",
+          "givenName": "Ariston E",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://johnsonforjustice.org",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Ariston E Johnson"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:justice-of-the-supreme-court:jerod-tufte",
+          "contestId": "nd-sos-2026-general:justice-of-the-supreme-court",
+          "familyName": "Tufte",
+          "givenName": "Jerod",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
+            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "doorId": "fec-nd-chief",
+            "quote": "Jerod Tufte"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "nd-sos-2026-general:measure-1:text",
+          "contestId": "nd-sos-2026-general:measure-1",
+          "officialNumber": "1",
+          "questionText": "This constitutional measure would amend and reenact section 9 of article III and section 16 of article IV of the Constitution of North Dakota. The proposed amendment would require constitutional amendments submitted to the electors, by resolution adopted by the legislative assembly proposing a constitutional amendment and each initiative petition and measure proposing a constitutional amendment, to receive an affirmative vote of at least sixty percent of those voting on the question for enactment.\n\nThe estimated fiscal impact of this measure is none.\n\nYes – Means you approve the measure as summarized above.\nNo – Means you reject the measure as summarized above.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:04.328498+00:00",
+            "verifiedAt": "2026-10-14T05:05:04.328498+00:00",
+            "doorId": "fec-nd-chief"
+          }
+        },
+        {
+          "id": "nd-sos-2026-general:measure-2:text",
+          "contestId": "nd-sos-2026-general:measure-2",
+          "officialNumber": "2",
+          "questionText": "This initiated measure amendment would amend and add a new section to article VIII of the North Dakota Constitution. It would mandate all public school districts, public schools, and public charter schools to provide one breakfast and one lunch each school day to enrolled students at no cost to the student, parent, or guardians. It would allow nonpublic schools, Bureau of Indian Education schools, and other tribal schools the option to provide the same. It would require the State of North Dakota to reimburse school districts and schools at one hundred percent of the current rates used by the state for free meals, and the rate shall be adjusted annually for inflation. It would require the legislative assembly to identify a source of funds for reimbursement and if a source of funds is unable to be identified, reimbursement funds would be appropriated from the legacy earnings fund. This amendment would supersede any other part of the constitution that conflicts with it.\n\nThe estimated fiscal impact of this measure is a $124.3 million to $134.3 million increase in ongoing biennial expenditures for the 2027–2029 biennium and will be adjusted for inflation every year after that.\n\nYes – Means you approve the measure as summarized above.\nNo – Means you reject the measure as summarized above.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-10-14T05:05:04.462169+00:00",
+            "verifiedAt": "2026-10-14T05:05:04.462169+00:00",
+            "doorId": "fec-nd-chief"
+          }
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T05:08:02.203479+00:00",
+    "reviewedBy": "BL-14 official-source conversion",
+    "sources": [
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "finalUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "httpStatus": 200,
+        "rawHash": "9abe90e9242918f692a16d53a15b6cd56baa71d93a964a0ff6f96ed22d5cb8c2",
+        "retrievedAt": "2026-10-14T05:05:21.988741+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "All-filter Search returned the full nonpaged official November 3, 2026 contest/candidate table; retained all 148 congressional, statewide and legislative candidate rows, including listed websites and separate unexpired-term contests."
+      },
+      {
+        "requestedUrl": "https://www.sos.nd.gov/elections",
+        "finalUrl": "https://www.sos.nd.gov/elections",
+        "httpStatus": 200,
+        "rawHash": "dac2aebd1e352a3c5eae6da29b253c8cd4e8ffaa116f055e7a2abbb78eb74bd1",
+        "retrievedAt": "2026-10-14T05:08:02.203479+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official chief election office labels the linked November 3, 2026 portal as the certified candidate list."
+      },
+      {
+        "requestedUrl": "https://www.sos.nd.gov/sites/www/files/documents/elections/election-candidate-filing-info.pdf",
+        "finalUrl": "https://www.sos.nd.gov/sites/www/files/documents/elections/election-candidate-filing-info.pdf",
+        "httpStatus": 200,
+        "rawHash": "151231735ff6d0de6fdea9cd5e916ed832069a0dca34582fe38b01b608b8da07",
+        "retrievedAt": "2026-10-14T05:06:30.518196+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 office schedule identifies 24 odd-district Senate seats, 48 odd-district House seats, and single unexpired House seats in districts 20, 26 and 42."
+      },
+      {
+        "requestedUrl": "https://www.sos.nd.gov/elections/voter/ballot-measures/measures-ballot",
+        "finalUrl": "https://www.sos.nd.gov/elections/voter/ballot-measures/measures-ballot",
+        "httpStatus": 200,
+        "rawHash": "ffc80593da09e04d804d858f1e5a99b99cc69e253c3265e507a25b0111612408",
+        "retrievedAt": "2026-10-14T05:04:36.862809+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 statewide measure list declares measures 1 and 2 approved to appear and links their official ballot language and full texts."
+      },
+      {
+        "requestedUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+        "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+        "httpStatus": 200,
+        "rawHash": "53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280",
+        "retrievedAt": "2026-10-14T05:05:04.328498+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot language for Constitutional Measure No. 1; question converted from these PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+        "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+        "httpStatus": 200,
+        "rawHash": "00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b",
+        "retrievedAt": "2026-10-14T05:05:04.462169+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot language for Initiated Constitutional Measure No. 2; question converted from these PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+        "finalUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+        "httpStatus": 200,
+        "rawHash": "0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca",
+        "retrievedAt": "2026-10-14T05:06:30.665438+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official full text of Constitutional Measure No. 1, House Concurrent Resolution No. 3003."
+      },
+      {
+        "requestedUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
+        "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
+        "httpStatus": 200,
+        "rawHash": "5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689",
+        "retrievedAt": "2026-10-14T05:06:31.030905+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official full text of Initiated Constitutional Measure No. 2."
+      }
+    ]
+  }
+}

@@ -11,9 +11,6 @@ import type {
   SocialAccount,
 } from "./types.ts";
 
-/** Turning the officeholder roster into an answer for a point; pure, separate from loading. */
-
-/** What a surface needs to render a person honestly: who they are and where that claim came from. */
 export interface SeatHolder {
   fieldSources?: Record<string, Provenance>;
   id: string;
@@ -24,43 +21,42 @@ export interface SeatHolder {
   selectionMethodSourceUrl?: string;
   name: string;
   officeTitle: string;
-  /** The jurisdiction owning this office when the holder came from a body-scoped roster; presentation context only. */
+
   officeJurisdictionOcdId?: string | null;
-  /** Display only. Never used to infer a position or a vote. */
+
   partyLabel: string | null;
-  /** The end of the current term as the source publishes it; never computed from an election cycle. */
+
   termEnd: string | null;
-  /** Where the source states one: the ISO date this term starts. */
+
   termStart?: string | null;
-  /** Verbatim sourced term/appointment wording; never parsed into a term date. */
+
   termNote?: string | null;
-  /** The only basis for an age: a date, so the age is computed at every render. */
+
   birthDate: string | null;
   websiteUrl: string | null;
-  /** Where the record was read from. Rendered, not just stored. */
+
   sourceUrl: string | null;
-  /** The full record behind this row; null only where a row has no publisher on record. */
+
   provenance: Provenance | null;
-  /** Published official contact (3a). Absences are absences. */
+
   email: string | null;
   phone: string | null;
-  /** Distinguishes a shared public office channel from a direct office line. */
+
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
   contactFormUrl: string | null;
-  /** Portrait on our origin (3b), from the licensed-photos manifest. */
+
   photoUrl: string | null;
-  /** The campaign or personal site, always labelled as such and never the primary link. */
+
   campaignUrl: string | null;
-  /** Official accounts; sitting federal members only, the source's scope. */
+
   social?: readonly SocialAccount[];
-  /** The state and chamber the member's own current term states; federal only. */
+
   state?: string;
   chamber?: string;
 }
 
 export type OfficeholderIndex = Map<string, SeatHolder[]>;
 
-/** Select a person's exact current office when several native memberships are held. */
 export function seatHolderForMembership(holder: SeatHolder, membershipId?: string): SeatHolder | null {
   const membership = membershipId ? holder.memberships?.find(row=>row.id === membershipId && row.current !== false) : undefined;
   if (!membership) return membershipId ? null : holder;
@@ -72,7 +68,6 @@ export function seatHolderForMembership(holder: SeatHolder, membershipId?: strin
     sourceUrl:membership.sourceUrl};
 }
 
-/** Person lookup is independent of whether their district geometry is held. */
 export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?: PhotoIndex): Map<string, SeatHolder> {
   const out = new Map<string, SeatHolder>();
   for (const set of sets) for (const person of set.officeholders) {
@@ -82,7 +77,6 @@ export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?:
   return out;
 }
 
-/** officeholderId → path on our origin, from the licensed-photos manifest. */
 export type PhotoIndex = Map<string, string>;
 
 function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
@@ -93,7 +87,10 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     memberships: person.memberships,
     selectionMethod: person.selectionMethod,
     selectionMethodSourceUrl: person.selectionMethodSourceUrl,
-    fieldSources: person.fieldSources ? { ...person.fieldSources } : undefined,
+    fieldSources: person.photo ? { ...person.fieldSources, photoUrl: person.fieldSources?.photoUrl ?? {
+      sourceUrl: person.photo.sourceUrl, sourceOrg: [person.provenance.sourceOrg, person.photo.attribution, person.photo.license].filter(Boolean).join(" · "),
+      collectedAt: person.photo.collectedAt, verifiedAt: person.photo.verification?.checkedAt ?? null,
+    } } : person.fieldSources ? { ...person.fieldSources } : undefined,
     name: person.name,
     officeTitle: person.officeTitle,
     partyLabel: person.partyLabel,
@@ -114,7 +111,6 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
   };
 }
 
-/** Index a roster by the division each person represents; many-to-many in both directions. */
 export function indexByDivision(
   sets: OfficeholderSet[],
   photos?: PhotoIndex,
@@ -126,8 +122,6 @@ export function indexByDivision(
 
     for (const link of set.divisions) {
       const person = byId.get(link.officeholderId);
-      // A link with no matching person is a broken artifact, not something to
-      // paper over. Skipping it is right; rendering an empty name is not.
       if (!person) continue;
       const holder = seatHolderForMembership(toSeatHolder(person, photos), link.membershipId);
       if (!holder) continue;
@@ -137,8 +131,6 @@ export function indexByDivision(
       else index.set(link.ocdId, [holder]);
     }
   }
-
-  // Alphabetical by name: any data-derived order would be an ordering a reader could read meaning into.
   for (const holders of index.values()) {
     holders.sort((a, b) => a.name.localeCompare(b.name));
   }
@@ -146,7 +138,6 @@ export function indexByDivision(
   return index;
 }
 
-/** Everyone holding a seat for this division. Empty is a real answer. */
 export function holdersFor(
   index: OfficeholderIndex,
   ocdId: string,
@@ -154,7 +145,6 @@ export function holdersFor(
   return index.get(ocdId) ?? [];
 }
 
-/** The senators for whichever state these divisions sit in. */
 export function senatorsFor(
   index: OfficeholderIndex,
   ocdIds: string[],
@@ -169,7 +159,6 @@ export function senatorsFor(
   const holders: SeatHolder[] = [];
   for (const state of states) {
     for (const holder of holdersFor(index, state)) {
-      // The sourced office is a minimum fact; optional chamber metadata may be absent.
       if (holder.officeTitle !== "U.S. Senator") continue;
       if (seen.has(holder.id)) continue;
       seen.add(holder.id);

@@ -7,6 +7,7 @@ import {
   blurbForTitle,
   officeTypeForTitle,
 } from "../lib/officials/office-blurbs.ts";
+import { officeIdentity, sameOffice, unclassifiedOfficeTitles } from "../lib/officials/office-identity.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 
@@ -43,7 +44,6 @@ test("every office blurb speaks the product's register", () => {
 });
 
 test("every roster office title maps to a blurb", () => {
-    // An unmapped title renders no blurb rather than a guessed one, but these must always map.
   for (const title of [
     "U.S. Senator",
     "U.S. Representative",
@@ -57,6 +57,39 @@ test("every roster office title maps to a blurb", () => {
     );
     assert.ok(blurbForTitle(title) !== null);
   }
+});
+
+
+test("national ballot titles and their incumbent office titles share the existing office explanation", () => {
+  const forms = [
+    ["United States Senator - District 1", "U.S. Senator"],
+    ["Representative to Congress (15th Congressional District)", "U.S. Representative"],
+    ["Member of the United States House of Representatives - District 8", "U.S. Representative"],
+    ["Member of the State Senate - District 6", "Senator"],
+    ["State House of Representatives - District 42", "State Representative"],
+    ["Member of the House of Delegates - District 12", "Delegate"],
+    ["State Assemblymember - District 1", "Assemblymember"],
+    ["County Treasurer", "County Treasurer"],
+    ["County Supervisor, District 2 (Vice Chair)", "County Supervisor"],
+    ["Board of Education (2 seats)", "Governing Board"],
+    ["Governing Board President", "Governing Board"],
+    ["School Board Chair", "Governing Board"],
+  ];
+  assert.deepEqual(unclassifiedOfficeTitles(forms.flat()), []);
+  for (const [ballot, incumbent] of forms) {
+    assert.ok(sameOffice(ballot, incumbent), `${ballot}: incumbent join`);
+    assert.deepEqual(blurbForTitle(ballot), blurbForTitle(incumbent), `${ballot}: held explanation`);
+  }
+  assert.notEqual(officeIdentity("County Treasurer"), officeIdentity("State Treasurer"));
+  assert.equal(officeIdentity("Deputy State Senator"), null);
+  assert.equal(blurbForTitle("Proposition 123: Board of Education"), null);
+});
+
+test("municipal explanations keep their held state-specific text in that state", () => {
+  const ohio = blurbForTitle("Town Council", "ocd-division/country:us/state:oh/place:alder");
+  const jersey = blurbForTitle("Town Council", "ocd-division/country:us/state:nj/place:alder");
+  assert.deepEqual(ohio, OFFICE_BLURBS["city-council"]);
+  assert.deepEqual(jersey, OFFICE_BLURBS["nj-municipal-governing-body"]);
 });
 
 test("every campaign site is verified, https, and never a social profile", () => {

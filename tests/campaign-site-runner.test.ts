@@ -3,6 +3,9 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import sharp from "sharp";
+import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/campaign-site-portraits.ts";
+import { cardForCandidacy } from "../lib/ballot/candidate-cards.ts";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -154,7 +157,7 @@ test("a persisted facts-only Scout with no parser reaches the existing campaign-
   const pass = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held, profiles, gateOpen: true, now: publishNow });
   const published = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate, publishNow);
   assert.equal(published.candidate.state, "PROMOTED", published.candidate.failureDetail ?? undefined);
-  assert.equal(published.readerReadback?.status, "PASS");
+  assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
   const reader = await readDerivedCampaignSites({ store, bypassCache: true, now: publishNow });
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind === "PROMOTED") {
@@ -376,7 +379,7 @@ test("a runner cycle over held results publishes a verified site through the der
   const outcome = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate, PUBLISH);
   assert.equal(outcome.candidate.state, "PROMOTED", `${outcome.candidate.failureCode ?? ""} ${outcome.candidate.failureDetail ?? ""} ${JSON.stringify(outcome.candidate.receipt?.checks.filter((c) => c.verdict !== "PASS"))}`);
   assert.equal(outcome.candidate.receipt?.decision, "GOOD");
-  assert.equal(outcome.readerReadback?.status, "PASS");
+  assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
   const oldHash = await promotePriorCorpus(store);
   await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: PUBLISH });
   assert.ok(documentsFor(tangKeys[0]).some(doc => doc.documentUrl === LILY && doc.text?.length && doc.sourceContentHash), "normal candidate Reader receives verified page text");
@@ -1183,4 +1186,48 @@ test("the Reader composes: a derived link fills an empty campaign slot beside th
   assert.equal(composed.links.r1, undefined, "the person's reviewed link under another key holds this key too");
   assert.equal(composed.links.r2?.campaign?.url, "https://reviewed.example/");
   assert.deepEqual([...composed.derivedKeys].sort(), ["k1", "k2"]);
+});
+
+test("national authority website URLs reach the verifier and publish candidate portraits to the Reader", async t => {
+  const p = await plane(t);
+  const profiles: CandidateProfilesProjection = { cards: { cards: {}, curatedAt: T0, note: "", hunts: [] },
+    links: { links: {}, curatedAt: T0, note: "", hunts: [] } };
+  const ballots = Object.fromEntries(["OH", "MI"].map(state => {
+    const contestId = `state-election:${state}:house-3`, candidateId = `${contestId}:doe-jane`;
+    const provenance = { sourceUrl: `https://elections.${state.toLowerCase()}.gov/candidates`, sourceOrg: "State election authority", collectedAt: T1, verifiedAt: T1 };
+    return [`${state}:2026-general`, { election: { id: "2026-general", date: "2026-11-03", name: "General election", state },
+      contests: [{ id: contestId, electionId: "2026-general", ocdId: `ocd-division/country:us/state:${state.toLowerCase()}/cd:3`,
+        title: "U.S. Representative", type: "CANDIDACY", candidateListComplete: true, voteFor: null, termYears: 2,
+        divisionVintage: "2020", scopeNote: null, provenance }],
+      candidacies: [{ id: candidateId, contestId, givenName: "Jane", familyName: "Doe", incumbent: null,
+        partyLabel: null, slogan: null, websiteUrl: `https://janedoe${state.toLowerCase()}.example/`, provenance }], measures: [] }];
+  }));
+  const holdings = campaignSiteSubjectsFromHoldings({ az: null, nh: null, nj: null, profiles, corpus: { documents: [] } as never,
+    failures: [], general: { kind: "ballot-contests", ballots } as never }, T1);
+  assert.equal(holdings.subjects.size, 2);
+  const pages = Object.fromEntries([...holdings.subjects.values()].flatMap(subject => {
+    const url = subject.filingWebsites![0].url, origin = new URL(url).origin;
+    return [[`${origin}/robots.txt`, { status: 200, body: "User-agent: *\nAllow: /\n" }],
+      [url, { status: 200, body: `<title>Jane Doe for Congress</title><h1>Jane Doe</h1><p>Candidate for U.S. Representative, District 3, ${subject.stateCode}, 2026 election.</p><img alt="Jane Doe" src="${origin}/jane-doe.jpg">` }]];
+  }));
+  const read = await cycle(p, T1, { subjects: holdings.subjects }, pages);
+  assert.equal(read.report.chain.approved.length, 2, JSON.stringify(read.report.chain));
+  assert.equal(read.report.chain.readsUsed, 2);
+  const inputs = await doorInputs(p);
+  const plan = planDerivedCampaignSites({ ...inputs, profiles: null });
+  const stored: string[] = [];
+  const portraits = await publishCampaignSitePortraits({ plan, ...inputs, now: PUBLISH,
+    portraitRuntime: { read: async () => sharp({ create: { width: 200, height: 240, channels: 3, background: "#335577" } }).png().toBuffer(),
+      put: async key => { stored.push(key); } } });
+  assert.equal(portraits.portraits?.length, 2);
+  assert.equal(stored.length, 2);
+  const store = new MemoryRoutineDataStore();
+  const candidate = derivedCampaignSitesCandidate(portraits, PUBLISH);
+  assert.deepEqual(candidate.semantics.violations, []);
+  const result = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", candidate, PUBLISH);
+  assert.equal(result.candidate.state, "PROMOTED", result.candidate.failureDetail ?? undefined);
+  assert.equal(result.readerReadback?.status, "PASS", JSON.stringify(result.readerReadback));
+  const reader = await readDerivedCampaignSites({ store, bypassCache: true, now: PUBLISH });
+  assert.equal(reader.kind, "PROMOTED");
+  for (const record of portraits.portraits!) assert.equal(cardForCandidacy(record.id)?.photoUrl, record.portrait.photoUrl);
 });

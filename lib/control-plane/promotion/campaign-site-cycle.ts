@@ -1,4 +1,3 @@
-/** Held campaign-site leads stop being read at the round's dispatch cutoff (`deadlineMs`); HTTP requests retain transport timeouts. */
 import { readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../evidence/read-only-vault.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import {
@@ -200,11 +199,11 @@ export function campaignSiteSubjectsFromHoldings(
   const contacts = (holdings.nj?.contacts as { contacts?: unknown } | undefined)?.contacts;
   const filings: FilingChannels[] = (Array.isArray(contacts) ? contacts : contacts !== null && typeof contacts === "object" ? Object.values(contacts) : [])
     .filter((row): row is FilingChannels => row !== null && typeof row === "object" && typeof (row as { candidacyId?: unknown }).candidacyId === "string");
-  for (const ballot of [holdings.az?.ballot, holdings.nh?.ballot, (holdings.nj?.ballot as { candidacies?: unknown } | undefined)]) {
+  for (const ballot of [...Object.values(holdings.general?.ballots ?? {}), holdings.az?.ballot, holdings.nh?.ballot, holdings.nj?.ballot]) {
     const candidacies = (ballot as { candidacies?: unknown } | undefined)?.candidacies;
     if (!Array.isArray(candidacies)) continue;
-    for (const c of candidacies as { id?: unknown; websiteUrl?: unknown }[]) {
-      if (typeof c.id === "string" && typeof c.websiteUrl === "string") filings.push({ candidacyId: c.id, websiteUrl: c.websiteUrl });
+    for (const c of candidacies as { id?: unknown; websiteUrl?: unknown; provenance?: { sourceUrl?: string | null } }[]) {
+      if (typeof c.id === "string" && typeof c.websiteUrl === "string") filings.push({ candidacyId: c.id, websiteUrl: c.websiteUrl, sourceUrl: c.provenance?.sourceUrl });
     }
   }
   const subjects = campaignSiteSubjects({ universes: Object.values(universes), lineups, filings });

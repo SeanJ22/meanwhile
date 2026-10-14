@@ -931,15 +931,18 @@
     "publisher": "State Board of Elections, Annapolis, MD",
     "url": "https://www.elections.maryland.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "MD",
       "ocdId": "ocd-division/country:us/state:md",
       "name": "Maryland"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.elections.maryland.gov/",
-    "title": "Maryland chief election office discovery root",
+    "electionPageUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+    "title": "Maryland November 3, 2026 general election candidates and statewide questions",
     "office": {
       "name": "State Board of Elections, Annapolis, MD",
       "phone": "800/222-8683 410/269-2840",
@@ -947,14 +950,16 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official statewide candidate CSV and certified general-election ballots for all 24 election jurisdictions read successfully; the three statewide questions and full constitutional amendment text are public.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.maryland.gov/\">https://www.elections.maryland.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+    "ballotMeasuresUrl": "https://www.elections.maryland.gov/elections/2026/ballot_questions.html"
   },
   {
     "id": "fec-ma-chief",

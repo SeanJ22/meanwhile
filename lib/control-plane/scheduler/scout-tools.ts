@@ -1238,18 +1238,18 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const reportedKeys = new Map<string, string>();
   const savedForReport = new Map<string, { readonly artifactId: string | null; readonly why: string }>();
 
-  /** The cited page, from this job's saved pages or fetched once by code. The model never re-fetches it. */
-  async function citedPage(sourceUrl: string): Promise<{ readonly artifactId: string | null; readonly why: string }> {
+  /** The cited page, from this job's saved pages or fetched once by code, with any capture the fetch made. The model never re-fetches it. */
+  async function citedPage(sourceUrl: string): Promise<{ readonly artifactId: string | null; readonly why: string; readonly fetched: ScoutToolCallResult | null }> {
     for (const page of savedPages.values()) {
-      if (sameUrl(page.canonicalUrl, sourceUrl) || sameUrl(page.retrievalUrl, sourceUrl)) return { artifactId: page.artifactId, why: "saved" };
+      if (sameUrl(page.canonicalUrl, sourceUrl) || sameUrl(page.retrievalUrl, sourceUrl)) return { artifactId: page.artifactId, why: "saved", fetched: null };
     }
     const prior = savedForReport.get(sourceUrl);
-    if (prior) return prior;
+    if (prior) return { ...prior, fetched: null };
     const fetched = await fetchPublic({ url: sourceUrl, lookFor: null });
     const page = fetched.ok ? fetched.artifacts.find(artifact => savedPages.has(artifact.artifactId)) : undefined;
     const saved = page ? { artifactId: page.artifactId, why: "saved" } : { artifactId: null, why: fetched.step?.observed ?? fetched.forModel.slice(0, 200) };
     savedForReport.set(sourceUrl, saved);
-    return saved;
+    return { ...saved, fetched };
   }
 
   async function reportFinding(raw: unknown): Promise<ScoutToolCallResult> {
@@ -1275,7 +1275,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       const written = await report.write(finding);
       reported.push(finding);
       reportedKeys.set(key, written.boxId);
-      return { ok: true, step: null, artifacts: [], provenance: [], requestCount: 0, bytesFetched: 0,
+      return { ok: true, step: page.fetched?.step ?? null, artifacts: page.fetched?.artifacts ?? [], provenance: page.fetched?.provenance ?? [],
+        requestCount: page.fetched?.requestCount ?? 0, bytesFetched: page.fetched?.bytesFetched ?? 0,
         forModel: `IN THE BOX: ${field} = ${JSON.stringify(value)} for ${subjectId}. ` +
           (page.artifactId ? `The page is saved as ${page.artifactId} for checking.` : `The page could not be saved (${page.why}); if another page states it, report that one too.`) };
     } catch (error) {
@@ -1287,8 +1288,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     if (!(SCOUT_RESEARCH_TOOLS as readonly string[]).includes(name)) {
       return refusal(`${JSON.stringify(name)} is not a tool; the tools are ${SCOUT_RESEARCH_TOOLS.join(", ")} and finish.`);
     }
-    if (name === "report_finding") return await reportFinding(input);
     toolCalls += 1;
+    if (name === "report_finding") return await reportFinding(input);
     if ((SOURCE_API_TOOLS as readonly string[]).includes(name) || name === "legistar_events") return sourceApi(name as SourceApiTool | ClientTool, input);
     switch (name) {
       case "read_held":

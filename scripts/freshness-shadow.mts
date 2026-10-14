@@ -120,7 +120,7 @@ import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
 import { HUNT_PACKET_NAMESPACE } from "../lib/hunt/packet.ts";
-import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
+import { divisionsOfPlace, placeDivisionIds, placeKeyOfWords } from "../lib/hunt/packet-read.ts";
 import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
@@ -1481,12 +1481,16 @@ if (dispatchTargets.length > 0) {
     }
     const durable = new Map<string, DurableRowFacts>();
     for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
-    /* Every division each sent place touches gets one hunt packet; a place whose ZIPs cannot be read gets its placed governments' packets. */
+    /* Every division each sent place touches gets one hunt packet; a send whose place cannot be read gets its placed governments' packets. */
     const packetDivisions = new Map<string, readonly string[]>();
     for (const target of dispatchTargets) {
-      if (target.kind !== "SCOPE" || target.scope.kind !== "RESOLVED") continue;
-      try { packetDivisions.set(target.key, await divisionsOfPlace([...target.scope.zctas], target.scope.states)); }
-      catch (error) { console.warn(`  ${target.label}: its ZIPs' divisions could not be read (${error instanceof Error ? error.message : String(error)})`); }
+      try {
+        if (target.kind === "SCOPE" && target.scope.kind === "RESOLVED") packetDivisions.set(target.key, await divisionsOfPlace([...target.scope.zctas], target.scope.states));
+        if (target.kind === "DISPATCH") {
+          const place = await placeKeyOfWords(target.target.text);
+          if (place !== null) packetDivisions.set(target.key, await placeDivisionIds(place));
+        }
+      } catch (error) { console.warn(`  ${target.label}: the divisions it touches could not be read (${error instanceof Error ? error.message : String(error)})`); }
     }
     const plan = planDispatchWork({
       targets: dispatchTargets,

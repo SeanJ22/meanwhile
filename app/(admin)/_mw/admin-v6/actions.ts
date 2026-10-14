@@ -55,6 +55,8 @@ export interface Preview {
   /** A number the owner types (a hunt's lifetime limit). */
   readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
   readonly note?: boolean;
+  /** The place whose hunt packets the dialog shows before sending: held facts, open blanks by family and the estimated cost. */
+  readonly packetsFor?: string;
   readonly invalid?: (input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: number }) => string | null;
 }
 
@@ -100,6 +102,7 @@ const defs: ActionDef[] = [
         ["Spending", "Up to the limit below"],
         ["Needs", "Spending permission"],
       ],
+      packetsFor: ctx.target,
       amount: { label: "Lifetime limit in dollars", initial: "25" },
       invalid: ({ amount }) => {
         const n = Number(amount);
@@ -347,6 +350,7 @@ const defs: ActionDef[] = [
         ["Cost", "Nothing by itself. A budget below limits what this send may spend."],
         ["Undo", "Send it somewhere else"],
       ],
+      ...(ctx.scopeIsCountry ? ctx.words ? { packetsFor: ctx.words } : {} : { packetsFor: ctx.target }),
       amount: { label: "Budget for this send in dollars (optional, rolling 24 hours)", initial: "" },
       invalid: ({ amount }) => {
         if (amount.trim() === "") return null;

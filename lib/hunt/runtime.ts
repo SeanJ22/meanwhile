@@ -16,7 +16,7 @@ import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { RouteTask } from "../control-plane/route-task.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
-import type { CostEntry } from "../control-plane/cost.ts";
+import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../control-plane/cost.ts";
 import { readRolePlaybook } from "../control-plane/playbooks.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { ABSENCE_MAX_HOLD_DEFAULT_DAYS, ABSENCE_MAX_HOLD_SETTING } from "../control-plane/scheduler/absence-hold.ts";
@@ -25,7 +25,7 @@ import { durableResearchTools, type ResearchRuntimeTools } from "../control-plan
 import type { ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { huntBrief, type HuntRole } from "./brief.ts";
 import { blankDigest, packetDue, triedSteps, type LastPacketJob, type PacketDue, type ShutDoorNote } from "./packet-due.ts";
-import { blankFingerprint, huntPacketObligationId, reportableSubjects, type HuntPacket } from "./packet.ts";
+import { blankFingerprint, HUNT_PACKET_ROUTE_ID, huntPacketObligationId, reportableSubjects, type HuntPacket } from "./packet.ts";
 import { readGovernmentPackets } from "./packet-read.ts";
 import { stateOfDivision } from "./packet-plan.ts";
 import type { HuntSearch, SearchCharge } from "./search.ts";
@@ -58,13 +58,13 @@ export async function deadEndWaitMs(repos: Pick<ControlPlaneRepositories, "admin
   return days * 86_400_000;
 }
 
-/** One search request's cost-ledger row, charged to the job that ran it and the Sends its packet belongs to. */
-export function huntSearchCost(input: { readonly charge: SearchCharge; readonly role: HuntRole; readonly attemptId: string; readonly workItemId: string;
+/** One search request's cost-ledger row, charged to the job that ran it and the Sends its packet belongs to; never mixed with model spend. */
+export function huntSearchCost(input: { readonly charge: SearchCharge; readonly attemptId: string; readonly workItemId: string;
   readonly routeTaskId: string; readonly governmentId: string; readonly assignmentKeys: readonly string[]; readonly recordedAt: string }): CostEntry {
   return {
-    attemptId: input.attemptId, workItemId: input.workItemId, routeTaskId: input.routeTaskId, routeId: null,
+    attemptId: input.attemptId, workItemId: input.workItemId, routeTaskId: input.routeTaskId, routeId: HUNT_PACKET_ROUTE_ID,
     source: input.charge.host, jurisdiction: input.governmentId, project: FRESHNESS_PROJECT,
-    role: input.role === "DETECTIVE" ? "DETECTIVE" : "SCOUT", model: null, obligationId: huntPacketObligationId(input.governmentId),
+    role: DISCOVERY_SEARCH_ROLE, model: null, obligationId: huntPacketObligationId(input.governmentId),
     ...(input.assignmentKeys.length ? { assignmentKeys: [...input.assignmentKeys] } : {}),
     cost: { inputTokens: null, outputTokens: null, usd: input.charge.usd, durationMs: null, bytesFetched: input.charge.bytes, requestCount: 1,
       cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null,
@@ -160,7 +160,7 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
           held: reportPacket.held,
           ...(input.search ? { search: input.search } : {}),
           chargeSearch: async charge => {
-            await recordCost(input.repos, huntSearchCost({ charge, role, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id,
+            await recordCost(input.repos, huntSearchCost({ charge, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id,
               governmentId, assignmentKeys, recordedAt: input.now() }), input.now());
           },
           reportFinding: {

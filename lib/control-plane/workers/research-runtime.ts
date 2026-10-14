@@ -1,7 +1,7 @@
 import { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
 export { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
 import { readSourceReliability } from "../scheduler/scout-reliability.ts";
-import { readFieldManual, writeFieldManual, newFieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { writeFieldManual, newFieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { performance } from "node:perf_hooks";
 import { ZERO_COST, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability } from "../capability.ts";
@@ -94,7 +94,6 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
     let measuredToolkit: ReturnType<typeof buildScoutToolkit> | undefined;
     try {
       requireCapability(grant,"VAULT_READ_SANITIZED");
-      const learned = await readFieldManual(tools.repos, acquirerQuery(item.subject, spec.contract.recordClass));
       if (!spec.acquisition || spec.acquisition.route.subjectId !== item.subject) throw new Error("ACQUIRER_TASK_BINDING_REFUSED");
       const scheduled = scheduledWorkerObligation(task);
       const toolkit = buildScoutToolkit({root,obligation:{...scheduled,obligation:{...scheduled.obligation,autonomousPlan:item.autonomousPlan}},route:null,providerId:null,attemptId,workItemId,routeTaskId,

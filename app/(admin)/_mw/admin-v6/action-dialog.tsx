@@ -15,6 +15,38 @@ export interface DialogSend {
   readonly when?: OrderWhen;
 }
 
+type PacketsReading =
+  | { readonly state: "READ"; readonly governments: readonly unknown[]; readonly held: number; readonly blanks: number; readonly estimatedUsd: number;
+      readonly families: readonly { readonly family: string; readonly name: string; readonly blanks: number; readonly held: number }[] }
+  | { readonly state: "REFUSED"; readonly says: string };
+
+/** What agents would hunt here, read before anything is sent. */
+function PacketsPreview(props: { readonly place: string }) {
+  const [reading, setReading] = useState<PacketsReading | "loading" | "failed">("loading");
+  useEffect(() => {
+    const ctl = new AbortController();
+    void fetch(`/api/admin/v6/hunt-preview?place=${encodeURIComponent(props.place)}`, { signal: ctl.signal, headers: { accept: "application/json" } })
+      .then(res => res.ok ? res.json() as Promise<PacketsReading> : Promise.reject(new Error(`HTTP ${res.status}`)))
+      .then(setReading, () => { if (!ctl.signal.aborted) setReading("failed"); });
+    return () => ctl.abort();
+  }, [props.place]);
+  if (reading === "loading") return <p className={s.meta}>Reading what we hold here…</p>;
+  if (reading === "failed") return <p className={s.meta}>What we hold here could not be read just now.</p>;
+  if (reading.state === "REFUSED") return <p className={s.meta}>{reading.says}</p>;
+  const open = reading.families.filter(f => f.blanks > 0).sort((a, b) => b.blanks - a.blanks);
+  return (
+    <div className={s.stack} style={{ gap: 4 }}>
+      <Facts rows={[
+        ["Governments", reading.governments.length.toLocaleString("en-US")],
+        ["Already held", `${reading.held.toLocaleString("en-US")} facts, never looked for again`],
+        ["Blanks to hunt", reading.blanks.toLocaleString("en-US")],
+        ["Estimated cost", reading.blanks === 0 ? "Nothing: every blank is held" : `About $${reading.estimatedUsd.toFixed(2)}`],
+      ]} />
+      {open.length > 0 && <p className={s.meta}>{open.slice(0, 8).map(f => `${f.name} ${f.blanks.toLocaleString("en-US")}`).join(" · ")}{open.length > 8 ? ` · and ${open.length - 8} more` : ""}</p>}
+    </div>
+  );
+}
+
 export function ActionDialog(props: {
   readonly def: ActionDef;
   readonly preview: Preview;
@@ -85,6 +117,7 @@ export function ActionDialog(props: {
         </div>
         <h2 id={titleId} className={s.h2}>{preview.title}</h2>
         <Facts rows={preview.rows.map(([k, v]) => [k, v] as const).concat(items.length ? [["Selected", `${selected.length} of ${items.length}`] as const] : [])} />
+        {preview.packetsFor && props.mode === "live" && <PacketsPreview place={preview.packetsFor} />}
 
         {!!preview.options?.length && (
           <div className={s.stack} role="radiogroup" aria-label="Choose one">

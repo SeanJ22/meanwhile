@@ -1,0 +1,33 @@
+{
+  "n": 38,
+  "branch": "release/38",
+  "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+  "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+  "steps": [
+    "R3-GRANICUS",
+    "BL-11",
+    "BL-12",
+    "BL-13",
+    "BL-15",
+    "BL-16",
+    "BL-10",
+    "FM-07"
+  ],
+  "lanes": [
+    "platform-granicus",
+    "ballot-bl-11",
+    "ballot-bl-12",
+    "ballot-bl-13",
+    "ballot-bl-15",
+    "ballot-bl-16",
+    "ballot-national",
+    "field-manual"
+  ],
+  "integration_from": 203,
+  "integration_count": 211,
+  "pr": {
+    "number": 747,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/747"
+  },
+  "at": "2026-10-14T20:06:41Z"
+}

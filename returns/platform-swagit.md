@@ -5,16 +5,16 @@ owner: platform-swagit
 writer: the platform-swagit lane
 check: fold-conflict
 ready: no step ids unknown
-river: ac3ccf885d6de2934f43f931a3092f735f05f0e1
-at: 2026-10-13T22:18:40Z
+river: 5bb464f06e345165d6302377d20418f29d392409
+at: 2026-10-14T00:54:56Z
 state: returned
-fix_subject: fix:77530885
-fix: River · stream/platform-swagit — fold-conflict failed for platform-swagit: platform-swagit READY e6927e93132c conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: lib/civic-data/derived-door-kinds.ts lib/control-plane/discovery/auto-crosswalk.ts lib/control-plane/discovery/de
+fix_subject: fix:215ad47c
+fix: River · stream/platform-swagit — fold-conflict failed for platform-swagit: platform-swagit READY 98c25e830 conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-swagit, resolve, and mark READY again.
 
 ## Failure
 
 ```
-platform-swagit READY e6927e93132c conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: lib/civic-data/derived-door-kinds.ts lib/control-plane/discovery/auto-crosswalk.ts lib/control-plane/discovery/derived-wiring-reading.ts lib/control-plane/discovery/derived-wiring.ts lib/hunt/meetings-recipes.ts lib/hunt/meetings-site-discovery.ts lib/registry/source-wiring.ts   Merge river into stream/platform-swagit, resolve, and mark READY again.
+platform-swagit READY 98c25e830 conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-swagit, resolve, and mark READY again.
 ```
 
 ## Repair

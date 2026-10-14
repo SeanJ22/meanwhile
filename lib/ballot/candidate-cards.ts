@@ -1,4 +1,5 @@
-import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
+import { currentCandidateProfilesProjection, candidateProfilesReadState } from "../civic-data/manual-read-models.ts";
+import { currentDerivedCandidatePortraits } from "../civic-data/derived-campaign-sites.ts";
 import type { PortraitVerification } from "../photos/binding.ts";
 import { officialPhotoForPerson } from "../photos/person.ts";
 
@@ -31,31 +32,27 @@ function load(): CandidateCardsFile {
   return currentCandidateProfilesProjection().cards;
 }
 
-function withPersonPhoto(
-  card: CandidateCardData | null,
-  subjectId: string,
-): CandidateCardData | null {
-  if (!card) return card;
-  const official = officialPhotoForPerson(card.personId ?? subjectId);
-  const merged =
-    !official
-      ? card
-      : { ...card, personId: official.verification?.personId ?? card.personId, photoUrl: official.url, photoSource: official.source, photoVerification: official.verification };
-  return merged;
+function cardForKey(key: string): CandidateCardData | null {
+  const state = candidateProfilesReadState();
+  const cards = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP" ? load().cards : {};
+  const card = Object.hasOwn(cards, key) ? cards[key] : null;
+  if (card?.photoUrl) return card;
+  const portrait = currentDerivedCandidatePortraits().find(record => record.id === key)?.portrait;
+  const official = officialPhotoForPerson(card?.personId ?? key);
+  const photo = portrait ?? (official ? { personId: official.verification?.personId ?? card?.personId,
+    photoUrl: official.url, photoSource: official.source, photoVerification: official.verification } : null);
+  if (!photo) return card;
+  const base = card ?? { bio: null, bioSourceUrl: null, bioSourceLabel: null, email: null, phone: null, phoneLabel: null,
+    filedAddress: null, filedAddressSource: null };
+  return { ...base, ...photo };
 }
 
 export function cardForCandidacy(candidacyId: string): CandidateCardData | null {
-  return withPersonPhoto(
-    load().cards[candidacyId] ?? null,
-    candidacyId,
-  );
+  return cardForKey(candidacyId);
 }
 
-export function cardForNominee(
-  contestId: string,
-  name: string,
-): CandidateCardData | null {
-  return withPersonPhoto(load().cards[`${contestId}|${name}`] ?? null, `${contestId}|${name}`);
+export function cardForNominee(contestId: string, name: string): CandidateCardData | null {
+  return cardForKey(`${contestId}|${name}`);
 }
 
 export function allCandidateCards(): CandidateCardsFile {

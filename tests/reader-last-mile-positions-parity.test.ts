@@ -11,6 +11,7 @@ import { answerFor, type CandidateCorpus, type CandidateDocument } from "../lib/
 import { createHash } from "node:crypto";
 import { installAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
 import { servableAzBallot } from "./helpers/reader-fixtures.ts";
+import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
 
 await installRegistryAuthority();
 // The governor's certified card, reconciled to the governor's candidacy.
@@ -21,18 +22,13 @@ await installAzBallot(servableAzBallot([{
   lineup: [{ name: "Katie Hobbs", partyLabel: "Democratic", outcome: "RECONCILED", candidacyId: "ballot-az-pima:governor:hobbs-katie" }],
 }]));
 await installOfficeholderStatements();
-/*
- * The synthetic publication corpus, plus one synthetic campaign page held under the governor's certified card
- * and one under each of twelve candidacies the registry's official-candidacy bridge resolves to a current
- * official, so each page is reachable from two identities.
- */
 const page = (candidateKey: string, url: string, text: string): CandidateDocument => {
   const contentHash = createHash("sha256").update(text).digest("hex");
   return { id: `${candidateKey}@${contentHash}`, candidateKey, sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED", metaDescription: null,
     documentUrl: url, contentHash, retrievedAt: "2026-09-20T00:00:00.000Z", contentType: "text/html", text, extraction: "html", extractionNote: null };
 };
 const bridged = registryTransferImport().projection.payload.officialCandidacies.rows
-  .filter((row) => row.status === "RESOLVED" && row.candidacy && !row.candidacy.candidacyId.startsWith("ballot-az-")).slice(0, 12);
+  .filter((row) => officialCandidacySeatMatches(row) && row.candidacy && !row.candidacy.candidacyId.startsWith("ballot-az-")).slice(0, 12);
 const base = syntheticCandidateCorpus();
 const extra = [
   page("ballot-az-pima:governor|Katie Hobbs", "https://example.test/governor-card/",

@@ -48,7 +48,7 @@ async function setup() {
   const [base, facts] = await Promise.all([prior(), factDb()]);
   await ensureFactEntities(facts, ROOT, ["az"]);
   const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
-  const division = base.payload.registry.divisions.find(row => row.ocdId === body.ocdId)!;
+  const division = new Map(base.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId!)!;
   const publish = (reading: RosterReading) => publishBodyRoster(facts, { body, division, state: "AZ", reading, clocks, now: new Date(NOW) });
   return { base, facts, body, publish };
 }

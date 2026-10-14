@@ -191,6 +191,7 @@ test("accepted registry slices keep the manifest's immutable version through bot
   const body = { id: `${county}#governing`, ocdId: county, alsoServesOcdIds: [neighbour], name: "Held county board" };
   let missing = false, calls = 0;
   const query: ReadOnlyQuery = async statements => statements.map(statement => {
+    if (/\bFROM fact\b/.test(statement.text)) return [];
     calls++;
     assert.match(statement.text, /JOIN civic_data_candidates c ON c\.id=accepted\.version_id AND c\.scope=accepted\.scope/);
     assert.match(statement.text, /c\.state='PROMOTED' AND c\.promoted_version_id=c\.id/);

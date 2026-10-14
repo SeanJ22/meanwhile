@@ -4,7 +4,7 @@ import test from "node:test";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublicationBoxItems, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../lib/control-plane/repository/pg-store.ts";
-import type { WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
+import { owedFactItems, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { indexBoxFinding, takeBoxFinding } from "../lib/control-plane/box.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
@@ -33,7 +33,7 @@ test("BX-12: publish-now runs each minute while a routine pass remains in flight
 });
 
 test("BX-03: all unacknowledged parser results stay owed across restart; an acknowledgement removes only its result", () => {
-  const item = { id: "work-a", autonomousPlan: { contract: { recordClass: "OFFICIAL_ROSTER" }, publication: { contractId: "registry-runtime-bindings" } } } as WorkItem;
+  const item = { id: "work-a", autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime-bindings" } } } as WorkItem;
   const parser = { id: "parser-a", workItemId: item.id, endedAt: "2026-10-01T12:00:00.000Z", result: { role: "PARSER", verdict: "EXTRACTED" } } as WorkerResultRecord;
   const sibling = { ...item, id: "work-b" };
   const siblingParser = { ...parser, id: "parser-b", workItemId: sibling.id };
@@ -70,16 +70,19 @@ test("the independent publication lane preserves held roster, board and ballot-r
     { id: "ballot", autonomousPlan: { contract: { recordClass: "VOTER_ACCESS_ROUTE" }, publication: { contractId: "ballot-navigation" } } },
   ];
   const tasks = publishNowWorkerTasks(items, [], NOW);
-  assert.equal(tasks.length, 3);
+  assert.deepEqual(tasks.map(task => task.id.split(":").at(-1)), ["board", "ballot"], "a held roster publishes as facts in the lane itself");
+  assert.deepEqual(owedFactItems(items, [], NOW).rosters, ["roster"]);
   assert.ok(tasks.every(task => task.ownerInvocation?.publicationPending && task.retryMs === 15 * 60000));
   const held = items.map(item => ({ ...item, publicationOutcome: { status: "HELD", at: NOW } as WorkItem["publicationOutcome"] }));
   assert.equal(publishNowWorkerTasks(held, [], "2026-10-05T18:59:59.999Z").length, 0);
-  assert.equal(publishNowWorkerTasks(held, [], "2026-10-05T19:00:00.000Z").length, 3);
+  assert.deepEqual(owedFactItems(held, [], "2026-10-05T18:59:59.999Z").rosters, []);
+  assert.equal(publishNowWorkerTasks(held, [], "2026-10-05T19:00:00.000Z").length, 2);
+  assert.deepEqual(owedFactItems(held, [], "2026-10-05T19:00:00.000Z").rosters, ["roster"]);
 });
 
 test("publication admission reads only the named result page and releases its evidence before the next page", async () => {
   const items: WorkerPublicationItem[] = Array.from({ length: AGGREGATE_LIST_READ_PAGE * 2 + 1 }, (_, index) => ({
-    id: `work-${index}`, autonomousPlan: { contract: { recordClass: "OFFICIAL_ROSTER" }, publication: { contractId: "registry-runtime-bindings" } },
+    id: `work-${index}`, autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime-bindings" } },
   }));
   const readIds: string[][] = [];
   let reading = false;
@@ -154,7 +157,7 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
   assert.equal(publishNowHasNothingOwed(true, 0, 0, { ...current, readerEdge: "SKIPPED_OWNER_PAUSE" }), true, "the existing full publication pause ends an empty minute quietly");
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const initial = runner.indexOf("await publishNowEdgeChecks.run()");
-  assert.ok(initial > 0 && initial < runner.indexOf("huntTasks = await readHuntSourceTasks()"), "promoted pointers publish before a large worker admission read");
+  assert.ok(initial > 0 && initial < runner.indexOf("huntTasks = await readHuntSourceTasks(store, supervisorFailures)"), "promoted pointers publish before a large worker admission read");
   const quiet = runner.indexOf("if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {");
   assert.ok(quiet > runner.indexOf("const selectedTasks = "), "decided once the minute's tasks are selected");
   const quietBranch = runner.slice(quiet, runner.indexOf("  } else {", quiet));

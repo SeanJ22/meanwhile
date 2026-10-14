@@ -92,7 +92,7 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   const facts = await factDb();
   await ensureFactEntities(facts, ROOT, ["az"]);
   const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
-  await publishBodyRoster(facts, { body, division: base.payload.registry.divisions.find(row => row.ocdId === body.ocdId)!, state: "AZ", schedule, clocks: factClocks(null), now: new Date(NOW),
+  await publishBodyRoster(facts, { body, division: new Map(base.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId!)!, state: "AZ", schedule, clocks: factClocks(null), now: new Date(NOW),
     reading: { id: `held:${roster.evidence.artifactId}`, capture: roster, linkingPage: null, complete: true, method: "fixture",
       members: readHeldRoster(ROSTER, ROSTER_URL)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
   const after = await withFactRegistry(base.payload, facts.query);

@@ -53,6 +53,9 @@ function safeFailure(value: string): string {
 
 
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
+/** The registry partition a registry-runtime edge version was composed on; the rest names the facts read beside it. */
+const registryPartitionVersion = (version: string) => version.split("+")[0]!;
+
 export type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
 export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, observedAt: string,
@@ -137,9 +140,10 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const extras: { commentAccess?: readonly unknown[]; everydayRouting?: unknown; versionIds: Partial<Record<"comment-access" | "everyday-routing", string | null>> } = {
         commentAccess: servedManifest?.commentAccess, everydayRouting: servedManifest?.everydayRouting, versionIds: { ...servedManifest?.extrasVersionIds },
       };
-      const facts = await factsVersion(factReader()).catch(() => null);
+      let facts: string | null = null;
       let comments: Awaited<ReturnType<typeof readCommentAccessFacts>> | null = null;
       try {
+        facts = await factsVersion(factReader());
         if (facts !== null && servedManifest?.extrasVersionIds?.["comment-access"] !== facts) {
           comments = await readCommentAccessFacts();
           extras.commentAccess = currentCommentAccess();
@@ -188,7 +192,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
           process.stderr.write(`READER_EDGE_AUTHORITY_REFRESH_FAILED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
         },
       });
-      if (refreshes("registry-runtime")) try {
+      if (refreshes("registry-runtime") && facts !== null) try {
         // Members are facts, so the family changes when the partition or any fact does.
         const pointer = manualPointer("registry-runtime-bindings");
         const carried = await servedIfCurrent("registry-runtime", async () => { const at = await pointer(); return at && `${at}+${facts}`; });
@@ -362,8 +366,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
             const divisions = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.ocdId ? [meeting.ocdId.split("#")[0]] : []))];
             const bodyIds = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []))];
             const read = await (options.readMeetingRegistry ?? ((ids, bodies, versionId) =>
-              readPlaceVersionSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, versionId, ids, bodies)))(divisions, bodyIds, meetingRegistryVersion);
-            if (read.kind !== "PROMOTED" || read.metadata.versionId !== meetingRegistryVersion) throw new Error(`Meeting territories read ${read.kind} at a different registry version`);
+              readPlaceVersionSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, versionId, ids, bodies)))(divisions, bodyIds, registryPartitionVersion(meetingRegistryVersion));
+            if (read.kind !== "PROMOTED" || read.metadata.versionId !== registryPartitionVersion(meetingRegistryVersion)) throw new Error(`Meeting territories read ${read.kind} at a different registry version`);
             meetingBodies = read.value?.registry.bodies;
             if (!meetingBodies) throw new Error("The accepted registry version has no readable meeting territories");
           }

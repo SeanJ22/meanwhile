@@ -4,7 +4,7 @@ import type { EvidenceRecord,EvidenceSubject } from "./evidence.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
 export const isBillQuestion=(question:string)=>/\b(?:bills?|legislation|sponsor(?:ed|s|ing)?|cosponsor(?:ed|s|ing)?|[HS](?:B|R|JR|CR)\s*\d+)\b/i.test(question);
-export function billEvidence(bill:Bill,subjectId:string|null=null):EvidenceRecord[] {
+function billEvidence(bill:Bill,subjectId:string|null=null):EvidenceRecord[] {
   const record:EvidenceRecord={kind:"STATE_BILL",id:bill.id,subjectId,text:`${bill.state} ${bill.number} (${bill.sessionName}): ${bill.title}. Status: ${bill.statusLabel}${bill.statusDate?` on ${bill.statusDate}`:""}. Sponsors: ${bill.sponsors.map(row=>row.name).join(", ")||"not published"}. ${bill.description}`,
     occurredAt:bill.statusDate,sourceUrl:bill.sourceUrl,sourceOrg:"LegiScan (CC BY 4.0)",retrievedAt:bill.facts.title.collectedAt,
     bill:{number:bill.number,state:bill.state,session:bill.sessionName,status:bill.statusLabel,publishedAt:bill.facts.title.publishedAt,texts:bill.texts}};

@@ -408,14 +408,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Boise, ID",
     "url": "https://sos.idaho.gov/elections-division/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "ID",
       "ocdId": "ocd-division/country:us/state:id",
       "name": "Idaho"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.idaho.gov/elections-division/",
+    "electionPageUrl": "https://voteidaho.gov/idaho-general-election/",
     "title": "Idaho chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Boise, ID",
@@ -424,14 +427,23 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official chief election office redirects to VoteIdaho.gov; the public final-candidate API and 2026 Voter Pamphlet were acquired as exact bytes with HTTP 200. No voter identity lookup was used.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.idaho.gov/elections-division/\">https://sos.idaho.gov/elections-division/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://run.voteidaho.gov/search",
+      "https://api-run.voteidaho.gov/api/FiledCandidates/SearchCandidates"
+    ],
+    "ballotMeasureUrls": [
+      "https://voteidaho.gov/initiatives-amendments/",
+      "https://voteidaho.gov/idaho-general-election/",
+      "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf"
+    ]
   },
   {
     "id": "fec-il-chief",

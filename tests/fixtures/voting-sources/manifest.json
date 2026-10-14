@@ -709,6 +709,46 @@
       "sha256": "ec7b4e17b41ed50ddbc818f24215ccbfb83781e9597a40d8efb17050f3d92836",
       "publisher": "Vermont Secretary of State",
       "representation": "Original HTTP response bytes; see vt-native-capture.json for source-authority and coverage limits."
+    },
+    {
+      "file": "vt-live-0-direct-original.html",
+      "url": "https://sos.vermont.gov/robots.txt",
+      "httpStatus": 403,
+      "sha256": "f8f987cad7da38c008d0811567501296085d86224b7934e4aea028ecf11d0d89",
+      "publisher": "Vermont Secretary of State",
+      "representation": "Original HTTP error response bytes from the live reproduction; vt-live-discovery.json records routes, candidates and replay counts."
+    },
+    {
+      "file": "vt-live-1-browser-ua-original.html",
+      "url": "https://sos.vermont.gov/robots.txt",
+      "httpStatus": 403,
+      "sha256": "830ad4cb2ff89781e3c351ef52af455334e6393eb0e4d644b44a86ddc5faa1b5",
+      "publisher": "Vermont Secretary of State",
+      "representation": "Original HTTP error response bytes from the live reproduction; vt-live-discovery.json records routes, candidates and replay counts."
+    },
+    {
+      "file": "vt-live-2-direct-original.html",
+      "url": "https://sos.vermont.gov/elections/",
+      "httpStatus": 403,
+      "sha256": "3d00f175d7bafbaf5689992530bdbc6aacd15c944a1687771ba8f38b33fff944",
+      "publisher": "Vermont Secretary of State",
+      "representation": "Original HTTP error response bytes from the live reproduction; vt-live-discovery.json records routes, candidates and replay counts."
+    },
+    {
+      "file": "vt-live-3-browser-ua-original.html",
+      "url": "https://sos.vermont.gov/elections/",
+      "httpStatus": 403,
+      "sha256": "a0988c3c161fbbe44cb90750a3857aa2409ca12f7baaf2e79c338963cb85c7e0",
+      "publisher": "Vermont Secretary of State",
+      "representation": "Original HTTP error response bytes from the live reproduction; vt-live-discovery.json records routes, candidates and replay counts."
+    },
+    {
+      "file": "vt-live-browser-original.html",
+      "url": "https://sos.vermont.gov/elections/",
+      "httpStatus": 403,
+      "sha256": "da68e6f7a201485cd29e484f14d4db917683ff77901a42f4085e1130a5237e0f",
+      "publisher": "Vermont Secretary of State",
+      "representation": "Original HTTP error response bytes from the live reproduction; vt-live-discovery.json records routes, candidates and replay counts."
     }
   ],
   "unavailable": [
@@ -751,6 +791,7 @@
     }
   ],
   "additionalProvenance": [
-    "vt-native-capture.json: native Vermont town captures, exact source URLs/hashes, confirmed facts and open authority/statewide/Albany blanks."
+    "vt-native-capture.json: native Vermont town captures, exact source URLs/hashes, confirmed facts and open authority/statewide/Albany blanks.",
+    "vt-live-discovery.json: full candidate list for the attempted Vermont elections-root pass; root access failed, so the reported 2,744 / 1,144 graph was not reproduced."
   ]
 }

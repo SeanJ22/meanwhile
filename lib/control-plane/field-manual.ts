@@ -105,7 +105,7 @@ function lower(values: readonly string[]): string[] {
 export const JOB_COST_KIND = "JOB_COST";
 
 /** Kinds that hold bookkeeping rather than lessons; no worker is shown them. */
-export const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT", "PLATFORM_CENSUS_CHECK", "PLATFORM_CENSUS_REFERENCE", "PLATFORM_CENSUS_RUN"]);
+const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT", "PLATFORM_CENSUS_CHECK", "PLATFORM_CENSUS_REFERENCE", "PLATFORM_CENSUS_RUN"]);
 
 /** Reusable ways in: a method from one place is offered wherever it could apply, ranked by where it has worked. */
 export const TRANSFERABLE_METHOD_KINDS: ReadonlySet<string> = new Set(["METHOD", "ROUTE", "MANIFEST_BRANCH"]);

@@ -926,7 +926,10 @@
     "publisher": "Office of the Secretary of State, Lincoln, NE",
     "url": "https://sos.nebraska.gov/index",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NE",
       "ocdId": "ocd-division/country:us/state:ne",
@@ -949,7 +952,15 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.nebraska.gov/index\">https://sos.nebraska.gov/index</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+      "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+      "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf"
+    ]
   },
   {
     "id": "fec-nv-chief",

@@ -967,7 +967,10 @@
     "publisher": "Office of the Secretary of State, Carson City, NV",
     "url": "https://www.nvsos.gov/sos/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NV",
       "ocdId": "ocd-division/country:us/state:nv",
@@ -990,7 +993,14 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.nvsos.gov/sos/elections\">https://www.nvsos.gov/sos/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
+      "https://www.washoecounty.gov/voters/files/Washoe%20County%202026%20General%20Election%20Contests.xlsx"
+    ],
+    "ballotMeasureUrls": [
+      "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf"
+    ]
   },
   {
     "id": "fec-nh-chief",

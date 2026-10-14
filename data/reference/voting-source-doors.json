@@ -591,14 +591,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Topeka, KS",
     "url": "https://www.sos.ks.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "KS",
       "ocdId": "ocd-division/country:us/state:ks",
       "name": "Kansas"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.ks.gov/",
+    "electionPageUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
     "title": "Kansas chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Topeka, KS",
@@ -607,14 +610,24 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Public candidate-list form returns the 2026 General election through POST ddlElections=36, btnSubmit=Submit with the page-provided hidden fields. No identity input required. Statewide constitutional amendment text is published as HTML and an official ballot PDF. The Sedgwick County statutory general-election notice publishes all nominees supplied by the Secretary of State for contests voted on there; the printed nominee inventories in Sedgwick and Johnson County official notices confirm 67 contests without widening other districts.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ks.gov/\">https://www.sos.ks.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+      "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+      "https://www.jocoelection.org/sites/default/files/2026-10/11-03-2026%20-%20Notice%20of%20Election%20%28candidates%29%20-%20REVISED.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.sos.ks.gov/elections/proposed-constitutional-amendments.html",
+      "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-ky-chief",

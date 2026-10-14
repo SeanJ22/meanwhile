@@ -4,17 +4,17 @@ lane: road
 owner: road
 writer: the road lane
 check: fold-conflict
-ready: no step ids unknown
-river: ac3ccf885d6de2934f43f931a3092f735f05f0e1
-at: 2026-10-13T22:18:44Z
+ready: no step ids df7b359c97cf9aa0c94b79c1860d555a508e161e
+river: 5bb464f06e345165d6302377d20418f29d392409
+at: 2026-10-14T00:55:00Z
 state: returned
-fix_subject: fix:0d30d393
-fix: River · stream/road — fold-conflict failed for road: road READY da9a3e39df32 conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: app/(admin)/_mw/admin-v6/screen-money.tsx app/(admin)/_mw/admin-v6/screen-workers.tsx lib/ask/cost.ts lib/control-plane/repo
+fix_subject: fix:98beff1f
+fix: River · stream/road — fold-conflict failed for road: road READY df7b359c9 conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/road, resolve, and mark READY again.
 
 ## Failure
 
 ```
-road READY da9a3e39df32 conflicts with river 691c01dd0ff4 (releases 25 to 29) when merged alone. Conflicting files: app/(admin)/_mw/admin-v6/screen-money.tsx app/(admin)/_mw/admin-v6/screen-workers.tsx lib/ask/cost.ts lib/control-plane/repository/coordinator.ts lib/control-plane/scheduler/scout-executor.ts lib/frontend/look-spend.ts scripts/freshness-shadow.mts   Merge river into stream/road, resolve, and mark READY again.
+road READY df7b359c9 conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/road, resolve, and mark READY again.
 ```
 
 ## Repair

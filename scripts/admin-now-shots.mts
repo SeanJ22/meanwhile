@@ -1,14 +1,4 @@
-/**
- * Admin's Now and Workers pages, rendered from section data in a browser and photographed, for before/after
- * reviews. It mounts the real command center (CommandCenter, buildLiveBundle) the way the Admin tests do, styled
- * with the built app's global stylesheet, and answers the panels that read their own routes (doors, settings,
- * updates) from the same fixture. No server, database or production read is involved.
- *
- *   pnpm build                                   # for the global stylesheet in .next/static
- *   ADMIN_SHOTS_LABEL=after pnpm exec tsx scripts/admin-now-shots.mts
- *
- * Writes docs/design/admin-now/<label>/{now,workers}-{desktop,narrow}.png and the pages' text.
- */
+/** Photographs Admin's Now and Workers pages from fixture data (after `pnpm build`), into docs/design/admin-now/<label>/. */
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 

@@ -114,7 +114,7 @@
   {
     "id": "novusagenda",
     "label": "NovusAgenda",
-    "haveAdapter": false,
+    "haveAdapter": true,
     "hostPattern": "\\bnovusagenda\\.com\\b",
     "flags": "i",
     "markup": [

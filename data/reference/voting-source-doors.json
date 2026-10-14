@@ -1471,14 +1471,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
     "url": "https://www.sos.state.tx.us/elections/index.shtml",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "TX",
       "ocdId": "ocd-division/country:us/state:tx",
       "name": "Texas"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.state.tx.us/elections/index.shtml",
+    "electionPageUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
     "title": "Texas chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Austin, TX",
@@ -1494,7 +1497,11 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.tx.us/elections/index.shtml\">https://www.sos.state.tx.us/elections/index.shtml</a>"
-    }
+    },
+    "candidateListUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "writeInCandidateListUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+    "ballotMeasuresUrl": "https://www.sos.state.tx.us/elections/forms/2026-sample-ballot.pdf",
+    "publicationMessage": "Certified statewide and district candidates are listed by all 254 counties. The linked sample ballot contains no statewide measure questions; a statewide measure certification was not found."
   },
   {
     "id": "fec-ut-chief",

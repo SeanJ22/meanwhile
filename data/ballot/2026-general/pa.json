@@ -10,7 +10,7 @@
       },
       "contests": [
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:governor-lieutenant-governor",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa",
@@ -23,14 +23,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Governor and Lieutenant Governor – Statewide – Vote for the candidates of one party for Governor and Lieutenant Governor"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:cd-2",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/cd:2",
@@ -43,14 +43,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in Congress – 2nd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:cd-3",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/cd:3",
@@ -63,14 +63,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in Congress – 3rd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:cd-5",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/cd:5",
@@ -83,14 +83,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in Congress – 5th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldu-2",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldu:2",
@@ -103,14 +103,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Senator in the General Assembly – 2nd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldu-4",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldu:4",
@@ -123,14 +123,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Senator in the General Assembly – 4th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldu-8",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldu:8",
@@ -143,14 +143,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Senator in the General Assembly – 8th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-10",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:10",
@@ -163,14 +163,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 10th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-170",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:170",
@@ -183,14 +183,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 170th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-172",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:172",
@@ -203,14 +203,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 172nd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-173",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:173",
@@ -223,14 +223,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 173rd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-174",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:174",
@@ -243,14 +243,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 174th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-175",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:175",
@@ -263,14 +263,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 175th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-177",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:177",
@@ -283,14 +283,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 177th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-179",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:179",
@@ -303,14 +303,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 179th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-180",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:180",
@@ -323,14 +323,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 180th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-181",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:181",
@@ -343,14 +343,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 181st District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-182",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:182",
@@ -363,14 +363,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 182nd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-184",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:184",
@@ -383,14 +383,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 184th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-185",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:185",
@@ -403,14 +403,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 185th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-186",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:186",
@@ -423,14 +423,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 186th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-188",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:188",
@@ -443,14 +443,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 188th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-190",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:190",
@@ -463,14 +463,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 190th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-191",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:191",
@@ -483,14 +483,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 191st District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-192",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:192",
@@ -503,14 +503,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 192nd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-194",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:194",
@@ -523,14 +523,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 194th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-195",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:195",
@@ -543,14 +543,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 195th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-197",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:197",
@@ -563,14 +563,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 197th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-198",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:198",
@@ -583,14 +583,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 198th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-200",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:200",
@@ -603,14 +603,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 200th District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-201",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:201",
@@ -623,14 +623,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 201st District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-202",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:202",
@@ -643,14 +643,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 202nd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-203",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:203",
@@ -663,14 +663,14 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative in the General Assembly – 203rd District – Vote for 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:cd-10",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/cd:10",
@@ -683,14 +683,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In Congress (District 10) 2 Year Term*                                                  JANELLE STELSON                                          Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:cd-11",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/cd:11",
@@ -703,14 +703,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In Congress (District 11) 2 Year Term*                                                  NANCY MANNION                                            Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldu-28",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldu:28",
@@ -723,14 +723,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Senator In The General Assembly (District 28) 4 Year Term*                                             THOMAS JOHNSON                                           Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-47",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:47",
@@ -743,14 +743,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 47) 2 Year Term*                                      EDWARD RITTER                                            Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-92",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:92",
@@ -763,14 +763,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 92) 2 Year Term*                                      KRISTA JEAN ANDERSON                                     Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-93",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:93",
@@ -783,14 +783,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 93) 2 Year Term*                                      MISSY BARNES                                             Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-94",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:94",
@@ -803,14 +803,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 94) 2 Year Term*                                      KONNOR JOHN-RICHARD GRIMEK                               Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-95",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:95",
@@ -823,14 +823,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 95) 2 Year Term*                                      CAROL HILL-EVANS                                         Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-169",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:169",
@@ -843,14 +843,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 169) 2 Year Term*                                     AUSTIN GRAHAM                                            Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-196",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:196",
@@ -863,14 +863,14 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 196) 2 Year Term*                                     RON RUMAN                                                Democratic"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:cd-12",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/cd:12",
@@ -883,14 +883,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Summer | Lee | Representative in Congress | 12th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:cd-17",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/cd:17",
@@ -903,14 +903,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Chris | Deluzio | Representative in Congress | 17th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldu-38",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldu:38",
@@ -923,14 +923,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Lindsey | Williams | Senator in the General Assembly | 38th DISTRICT | Democratic | 4 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldu-42",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldu:42",
@@ -943,14 +943,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Wayne D. | Fontana | Senator in the General Assembly | 42nd DISTRICT | Democratic | 4 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-19",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:19",
@@ -963,14 +963,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Aerion Andrew | Abney | Representative in the General Assembly | 19th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-20",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:20",
@@ -983,14 +983,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Emily | Kinkead | Representative in the General Assembly | 20th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-21",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:21",
@@ -1003,14 +1003,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Lindsay | Powell | Representative in the General Assembly | 21st DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-23",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:23",
@@ -1023,14 +1023,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dan | Frankel | Representative in the General Assembly | 23rd DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-24",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:24",
@@ -1043,14 +1043,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "La'Tasha D. | Mayes | Representative in the General Assembly | 24th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-25",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:25",
@@ -1063,14 +1063,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Brandon J. | Markosek | Representative in the General Assembly | 25th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-27",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:27",
@@ -1083,14 +1083,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dan | Deasy | Representative in the General Assembly | 27th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-28",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:28",
@@ -1103,14 +1103,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jeremy | Shaffer | Representative in the General Assembly | 28th DISTRICT | Republican | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-30",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:30",
@@ -1123,14 +1123,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Arvind | Venkat | Representative in the General Assembly | 30th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-32",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:32",
@@ -1143,14 +1143,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Joe | McAndrew | Representative in the General Assembly | 32nd DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-33",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:33",
@@ -1163,14 +1163,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Mandy | Steele | Representative in the General Assembly | 33rd DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-34",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:34",
@@ -1183,14 +1183,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Abigail | Salisbury | Representative in the General Assembly | 34th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-35",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:35",
@@ -1203,14 +1203,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dan | Goughnour | Representative in the General Assembly | 35th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-36",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:36",
@@ -1223,14 +1223,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jessica | Benham | Representative in the General Assembly | 36th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-38",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:38",
@@ -1243,14 +1243,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "John | Inglis | Representative in the General Assembly | 38th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-39",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:39",
@@ -1263,14 +1263,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dylan | Altemara | Representative in the General Assembly | 39th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-40",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:40",
@@ -1283,14 +1283,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jon | Lloyd | Representative in the General Assembly | 40th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-42",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:42",
@@ -1303,14 +1303,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jen | Mazzocco | Representative in the General Assembly | 42nd DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-44",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:44",
@@ -1323,14 +1323,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Hadley | Haas | Representative in the General Assembly | 44th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-45",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:45",
@@ -1343,14 +1343,14 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Brittany | Bloam | Representative in the General Assembly | 45th DISTRICT | Democratic | 2 | 1"
           }
         },
         {
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "id": "pa-dos:pa-2026-general:sldl-46",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:46",
@@ -1363,8 +1363,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Mike | Crossey | Representative in the General Assembly | 46th DISTRICT | Democratic | 2 | 1"
           }
@@ -1383,8 +1383,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JOSH SHAPIRO AND AUSTIN DAVIS (DEMOCRATIC) [101]"
           }
@@ -1401,8 +1401,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "STACY GARRITY AND JASON RICHEY (REPUBLICAN) [201]"
           }
@@ -1419,8 +1419,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "KEN KRAWCHUK AND JOHN THOMAS (LIBERTARIAN) [301]"
           }
@@ -1437,8 +1437,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "BRENDAN F BOYLE (DEMOCRATIC) [102]"
           }
@@ -1455,8 +1455,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JESSICA ARRIAGA (REPUBLICAN) [202]"
           }
@@ -1473,8 +1473,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "CHRIS RABB (DEMOCRATIC) [102]"
           }
@@ -1491,8 +1491,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "DENNIS MAHONEY (THE INDEPENDENT PARTY) [402]"
           }
@@ -1509,8 +1509,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "MARY GAY SCANLON (DEMOCRATIC) [102]"
           }
@@ -1527,8 +1527,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "NICK MANGANARO (REPUBLICAN) [202]"
           }
@@ -1545,8 +1545,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "CHRISTINE M TARTAGLIONE (DEMOCRATIC) [103]"
           }
@@ -1563,8 +1563,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ART HAYWOOD (DEMOCRATIC) [103]"
           }
@@ -1581,8 +1581,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "TODD JOHNSON (REPUBLICAN) [203]"
           }
@@ -1599,8 +1599,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ANTHONY HARDY WILLIAMS (DEMOCRATIC) [103]"
           }
@@ -1617,8 +1617,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "AMEN BROWN (DEMOCRATIC) [104]"
           }
@@ -1635,8 +1635,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ROB GURTCHEFF (DEMOCRATIC) [104]"
           }
@@ -1653,8 +1653,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "MARTINA WHITE (REPUBLICAN) [204]"
           }
@@ -1671,8 +1671,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "SEAN M DOUGHERTY (DEMOCRATIC) [104]"
           }
@@ -1689,8 +1689,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "PAT GALLAGHER (DEMOCRATIC) [104]"
           }
@@ -1707,8 +1707,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "BILL GRIFFIN (REPUBLICAN) [204]"
           }
@@ -1725,8 +1725,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ED NEILSON (DEMOCRATIC) [104]"
           }
@@ -1743,8 +1743,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "MARYLOUISE ISAACSON (DEMOCRATIC) [104]"
           }
@@ -1761,8 +1761,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JOE HOHENSTEIN (DEMOCRATIC) [104]"
           }
@@ -1779,8 +1779,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ROBYN BIRD (REPUBLICAN) [204]"
           }
@@ -1797,8 +1797,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JASON T DAWKINS (DEMOCRATIC) [104]"
           }
@@ -1815,8 +1815,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JOSE A GIRAL (DEMOCRATIC) [104]"
           }
@@ -1833,8 +1833,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "MALCOLM KENYATTA (DEMOCRATIC) [104]"
           }
@@ -1851,8 +1851,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "BEN WAXMAN (DEMOCRATIC) [104]"
           }
@@ -1869,8 +1869,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ELIZABETH FIEDLER (DEMOCRATIC) [104]"
           }
@@ -1887,8 +1887,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "REGINA YOUNG (DEMOCRATIC) [104]"
           }
@@ -1905,8 +1905,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JORDAN A HARRIS (DEMOCRATIC) [104]"
           }
@@ -1923,8 +1923,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "RICK KRAJEWSKI (DEMOCRATIC) [104]"
           }
@@ -1941,8 +1941,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "RONI GREEN (DEMOCRATIC) [104]"
           }
@@ -1959,8 +1959,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JOANNA E MCCLINTON (DEMOCRATIC) [104]"
           }
@@ -1977,8 +1977,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "MORGAN CEPHAS (DEMOCRATIC) [104]"
           }
@@ -1995,8 +1995,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "TIFFANY VANN BROWN (REPUBLICAN) [204]"
           }
@@ -2013,8 +2013,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "TARIK KHAN (DEMOCRATIC) [104]"
           }
@@ -2031,8 +2031,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "SIERRA MCNEIL (DEMOCRATIC) [104]"
           }
@@ -2049,8 +2049,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "DANILO BURGOS (DEMOCRATIC) [104]"
           }
@@ -2067,8 +2067,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "DARISHA K PARKER (DEMOCRATIC) [104]"
           }
@@ -2085,8 +2085,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "CHRIS JOHNSON (DEMOCRATIC) [104]"
           }
@@ -2103,8 +2103,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ANDRE D CARROLL (DEMOCRATIC) [104]"
           }
@@ -2121,8 +2121,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "JARED SOLOMON (DEMOCRATIC) [104]"
           }
@@ -2139,8 +2139,8 @@
           "provenance": {
             "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
             "sourceOrg": "Philadelphia City Commissioners",
-            "collectedAt": "2026-10-14T05:09:23.579455Z",
-            "verifiedAt": "2026-10-14T05:09:23.579455Z",
+            "collectedAt": "2026-10-14T16:12:34.013055Z",
+            "verifiedAt": "2026-10-14T16:12:34.013055Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "ANTHONY BELLMON (DEMOCRATIC) [104]"
           }
@@ -2157,8 +2157,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In Congress (District 10) 2 Year Term*                                                  JANELLE STELSON                                          Democratic"
           }
@@ -2175,8 +2175,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In Congress (District 10) 2 Year Term*                                                  SCOTT PERRY                                              Republican"
           }
@@ -2193,8 +2193,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In Congress (District 11) 2 Year Term*                                                  NANCY MANNION                                            Democratic"
           }
@@ -2211,8 +2211,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In Congress (District 11) 2 Year Term*                                                  LLOYD K. SMUCKER                                         Republican"
           }
@@ -2229,8 +2229,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Senator In The General Assembly (District 28) 4 Year Term*                                             THOMAS JOHNSON                                           Democratic"
           }
@@ -2247,8 +2247,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Senator In The General Assembly (District 28) 4 Year Term*                                             KRISTIN PHILLIPS-HILL                                    Republican"
           }
@@ -2265,8 +2265,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 47) 2 Year Term*                                      EDWARD RITTER                                            Democratic"
           }
@@ -2283,8 +2283,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 47) 2 Year Term*                                      JOE D'ORSIE                                              Republican"
           }
@@ -2301,8 +2301,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 92) 2 Year Term*                                      KRISTA JEAN ANDERSON                                     Democratic"
           }
@@ -2319,8 +2319,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 92) 2 Year Term*                                      MARC ANDERSON                                            Republican"
           }
@@ -2337,8 +2337,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 93) 2 Year Term*                                      MISSY BARNES                                             Democratic"
           }
@@ -2355,8 +2355,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 93) 2 Year Term*                                      MIKE JONES                                               Republican"
           }
@@ -2373,8 +2373,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 94) 2 Year Term*                                      KONNOR JOHN-RICHARD GRIMEK                               Democratic"
           }
@@ -2391,8 +2391,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 94) 2 Year Term*                                      WENDY FINK                                               Republican"
           }
@@ -2409,8 +2409,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 95) 2 Year Term*                                      CAROL HILL-EVANS                                         Democratic"
           }
@@ -2427,8 +2427,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 95) 2 Year Term*                                      JASMINE RIVERA                                           Republican"
           }
@@ -2445,8 +2445,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 169) 2 Year Term*                                     AUSTIN GRAHAM                                            Democratic"
           }
@@ -2463,8 +2463,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 169) 2 Year Term*                                     KATE A. KLUNK                                            Republican"
           }
@@ -2481,8 +2481,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 196) 2 Year Term*                                     RON RUMAN                                                Democratic"
           }
@@ -2499,8 +2499,8 @@
           "provenance": {
             "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
             "sourceOrg": "York County Elections",
-            "collectedAt": "2026-10-14T05:12:41.250473Z",
-            "verifiedAt": "2026-10-14T05:12:41.250473Z",
+            "collectedAt": "2026-10-14T16:15:18.784935Z",
+            "verifiedAt": "2026-10-14T16:15:18.784935Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Representative In The General Assembly (District 196) 2 Year Term*                                     GEORGE MARGETAS                                          Republican"
           }
@@ -2517,8 +2517,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Summer | Lee | Representative in Congress | 12th DISTRICT | Democratic | 2 | 1"
           }
@@ -2535,8 +2535,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "James | Hayes | Representative in Congress | 12th DISTRICT | Republican | 2 | 1"
           }
@@ -2553,8 +2553,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Chris | Deluzio | Representative in Congress | 17th DISTRICT | Democratic | 2 | 1"
           }
@@ -2571,8 +2571,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Tony | Guy | Representative in Congress | 17th DISTRICT | Republican | 2 | 1"
           }
@@ -2589,8 +2589,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Lindsey | Williams | Senator in the General Assembly | 38th DISTRICT | Democratic | 4 | 1"
           }
@@ -2607,8 +2607,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Thomas | West | Senator in the General Assembly | 38th DISTRICT | Republican | 4 | 1"
           }
@@ -2625,8 +2625,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Wayne D. | Fontana | Senator in the General Assembly | 42nd DISTRICT | Democratic | 4 | 1"
           }
@@ -2643,8 +2643,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Aerion Andrew | Abney | Representative in the General Assembly | 19th DISTRICT | Democratic | 2 | 1"
           }
@@ -2661,8 +2661,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Emily | Kinkead | Representative in the General Assembly | 20th DISTRICT | Democratic | 2 | 1"
           }
@@ -2679,8 +2679,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Joseph | Aguglia | Representative in the General Assembly | 20th DISTRICT | Republican | 2 | 1"
           }
@@ -2697,8 +2697,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Lindsay | Powell | Representative in the General Assembly | 21st DISTRICT | Democratic | 2 | 1"
           }
@@ -2715,8 +2715,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dan | Frankel | Representative in the General Assembly | 23rd DISTRICT | Democratic | 2 | 1"
           }
@@ -2733,8 +2733,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "La'Tasha D. | Mayes | Representative in the General Assembly | 24th DISTRICT | Democratic | 2 | 1"
           }
@@ -2751,8 +2751,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Brandon J. | Markosek | Representative in the General Assembly | 25th DISTRICT | Democratic | 2 | 1"
           }
@@ -2769,8 +2769,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Amy | Noone | Representative in the General Assembly | 25th DISTRICT | Republican | 2 | 1"
           }
@@ -2787,8 +2787,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dan | Deasy | Representative in the General Assembly | 27th DISTRICT | Democratic | 2 | 1"
           }
@@ -2805,8 +2805,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jeremy | Shaffer | Representative in the General Assembly | 28th DISTRICT | Republican | 2 | 1"
           }
@@ -2823,8 +2823,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jeremy | Ferderber | Representative in the General Assembly | 28th DISTRICT | Democratic | 2 | 1"
           }
@@ -2841,8 +2841,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Arvind | Venkat | Representative in the General Assembly | 30th DISTRICT | Democratic | 2 | 1"
           }
@@ -2859,8 +2859,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Libby | Blackburn | Representative in the General Assembly | 30th DISTRICT | Republican | 2 | 1"
           }
@@ -2877,8 +2877,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Joe | McAndrew | Representative in the General Assembly | 32nd DISTRICT | Democratic | 2 | 1"
           }
@@ -2895,8 +2895,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Gary | Motor | Representative in the General Assembly | 32nd DISTRICT | Republican | 2 | 1"
           }
@@ -2913,8 +2913,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Mandy | Steele | Representative in the General Assembly | 33rd DISTRICT | Democratic | 2 | 1"
           }
@@ -2931,8 +2931,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Mike | Hammill | Representative in the General Assembly | 33rd DISTRICT | Republican | 2 | 1"
           }
@@ -2949,8 +2949,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Abigail | Salisbury | Representative in the General Assembly | 34th DISTRICT | Democratic | 2 | 1"
           }
@@ -2967,8 +2967,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dan | Goughnour | Representative in the General Assembly | 35th DISTRICT | Democratic | 2 | 1"
           }
@@ -2985,8 +2985,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jim | Edwards | Representative in the General Assembly | 35th DISTRICT | Republican | 2 | 1"
           }
@@ -3003,8 +3003,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jessica | Benham | Representative in the General Assembly | 36th DISTRICT | Democratic | 2 | 1"
           }
@@ -3021,8 +3021,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Timothy | McCune | Representative in the General Assembly | 36th DISTRICT | Republican | 2 | 1"
           }
@@ -3039,8 +3039,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "John | Inglis | Representative in the General Assembly | 38th DISTRICT | Democratic | 2 | 1"
           }
@@ -3057,8 +3057,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Stone | Sobieralski | Representative in the General Assembly | 38th DISTRICT | Republican | 2 | 1"
           }
@@ -3075,8 +3075,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Dylan | Altemara | Representative in the General Assembly | 39th DISTRICT | Democratic | 2 | 1"
           }
@@ -3093,8 +3093,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Andrew | Kuzma | Representative in the General Assembly | 39th DISTRICT | Republican | 2 | 1"
           }
@@ -3111,8 +3111,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jon | Lloyd | Representative in the General Assembly | 40th DISTRICT | Democratic | 2 | 1"
           }
@@ -3129,8 +3129,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Natalie | Mihalek | Representative in the General Assembly | 40th DISTRICT | Republican | 2 | 1"
           }
@@ -3147,8 +3147,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jen | Mazzocco | Representative in the General Assembly | 42nd DISTRICT | Democratic | 2 | 1"
           }
@@ -3165,8 +3165,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Hadley | Haas | Representative in the General Assembly | 44th DISTRICT | Democratic | 2 | 1"
           }
@@ -3183,8 +3183,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Valerie | Gaydos | Representative in the General Assembly | 44th DISTRICT | Republican | 2 | 1"
           }
@@ -3201,8 +3201,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Brittany | Bloam | Representative in the General Assembly | 45th DISTRICT | Democratic | 2 | 1"
           }
@@ -3219,8 +3219,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "James | Julius | Representative in the General Assembly | 45th DISTRICT | Republican | 2 | 1"
           }
@@ -3237,8 +3237,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Mike | Crossey | Representative in the General Assembly | 46th DISTRICT | Democratic | 2 | 1"
           }
@@ -3255,8 +3255,8 @@
           "provenance": {
             "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
             "sourceOrg": "Allegheny County Elections Division",
-            "collectedAt": "2026-10-14T05:13:09.940688Z",
-            "verifiedAt": "2026-10-14T05:13:09.940688Z",
+            "collectedAt": "2026-10-14T16:15:18.793463Z",
+            "verifiedAt": "2026-10-14T16:15:18.793463Z",
             "doorId": "fec-pa-chief",
             "evidenceExcerpt": "Jason | Ortitay | Representative in the General Assembly | 46th DISTRICT | Republican | 2 | 1"
           }
@@ -3265,29 +3265,28 @@
       "measures": [],
       "absences": [],
       "coverageNotes": [
-        "Partial Pennsylvania candidate coverage: Philadelphia City Commissioners states “On November 03, 2026, Philadelphia voters will cast Election ballots to select candidates for the following offices:” Its list and the official York and Allegheny county general-election files provide 68 contests and 105 printed candidacies. Congressional districts 2, 3, 5, 10, 11, 12, and 17, six state Senate districts, and 54 state House districts are held. Candidates in the other Pennsylvania districts remain to be acquired.",
+        "Pennsylvania candidate coverage remains partial by district: the full official Philadelphia, York, and Allegheny county candidate lists provide 68 contests and 105 printed candidacies. Congressional districts 2, 3, 5, 10, 11, 12, and 17, six state Senate districts, and 54 state House districts are held. Candidates in the other Pennsylvania districts remain to be acquired.",
         "The statewide Candidate Database linked by the Pennsylvania Department of State returned an Incapsula page stating “Request unsuccessful.” The saved response supplied no candidate list. The Department states: “To obtain electronic copies of nomination petitions, please visit the Candidate Database or email your request to ra-elections@pa.gov.”",
-        "The Philadelphia candidate list is the current official November 3 general-election listing, but it does not explicitly label itself certified; candidateListComplete remains false.",
+        "All 68 held contests have complete official candidate-list evidence for their named races. Philadelphia publishes all November 3 ballot choices, including independent-party candidates. Allegheny identifies the linked current general-election file as a full candidate list; it includes candidates from outside the county. York’s full candidate listing was script-corroborated against every printed choice across its official 162-precinct ballot corpus. The unofficial labels on the York and Allegheny files describe their publication status; they do not limit the lists to county-resident candidates or filing applicants.",
         "Statewide measures remain unverified. The official ballot-question file linked by Philadelphia is titled “PROPOSED CHARTER CHANGE QUESTION” and contains two Philadelphia Home Rule Charter questions. It is a county document and cannot establish that Pennsylvania has no statewide measures. A statewide measure list or official no-measure statement remains to be acquired.",
-        "The statewide ticket names are preserved as the joint candidacies printed on the ballot. Incumbency and candidate websites are not stated in the saved list.",
-        "York County states “Note: This list is unofficial and subject to change.” Allegheny County states “This list will be updated as candidates continue to file petitions, nomination papers and filing fees.” Both county files remain incomplete-certification coverage, with candidateListComplete false."
+        "The statewide ticket names are preserved as the joint candidacies printed on the ballot. Incumbency and candidate websites are not stated in the saved list."
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:13:09.940688Z",
-    "reviewedBy": "BL-15 official source conversion",
+    "reviewedAt": "2026-10-14T16:15:18.875293Z",
+    "reviewedBy": "BL-15 official full candidate-list review",
     "sources": [
       {
         "requestedUrl": "https://vote.phila.gov/voting/candidates-for-office/",
         "finalUrl": "https://vote.phila.gov/voting/candidates-for-office/",
         "httpStatus": 200,
         "rawHash": "1e30a37ac7afd1d3ba647a8693a7e19974ae782aca792a45eb13553533b54248",
-        "retrievedAt": "2026-10-14T05:09:23.579455Z",
+        "retrievedAt": "2026-10-14T16:12:34.013055Z",
         "publisher": "Philadelphia City Commissioners",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "On November 03, 2026, Philadelphia voters will cast Election ballots to select candidates for the following offices: Office headings and every candidate/party entry were converted from the official Philadelphia general-election HTML."
+        "reviewedEvidence": "On November 03, 2026, Philadelphia voters will cast Election ballots to select candidates for the following offices: The official full candidate listing identifies all ballot choices, including independent-party candidates, for 33 named contests. Every candidate name and printed party was script-compared with the held data."
       },
       {
         "requestedUrl": "https://www.pa.gov/agencies/dos/programs/voting-and-elections/running-for-office",
@@ -3344,20 +3343,20 @@
         "finalUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
         "httpStatus": 200,
         "rawHash": "1534e3627a0a7c54783512fccb4592e04b16c079cbf67d99fecd2425dc91d585",
-        "retrievedAt": "2026-10-14T05:12:41.250473Z",
+        "retrievedAt": "2026-10-14T16:15:18.784935Z",
         "publisher": "York County Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "2026 General Election - Unofficial Candidate Listing. Note: This list is unofficial and subject to change. Exact candidate names, parties, offices, district numbers, and term lengths converted from PDF text."
+        "reviewedEvidence": "2026 General Election - Unofficial Candidate Listing. Every printed candidate/party set for its 10 held district contests exactly matches the complete official 162-precinct mail-in-ballot corpus. \"Unofficial and subject to change\" is retained as the publication status; the file provides the full listed ballot choices, rather than only county-resident applicants."
       },
       {
         "requestedUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
         "finalUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
         "httpStatus": 200,
         "rawHash": "e158e7bfe437ff095d72dbc7f9a9d99e59bf7fc82092f4ca49b6786e575e51fa",
-        "retrievedAt": "2026-10-14T05:13:09.940688Z",
+        "retrievedAt": "2026-10-14T16:15:18.793463Z",
         "publisher": "Allegheny County Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "This list will be updated as candidates continue to file petitions, nomination papers and filing fees. Exact given/family names, parties, offices, district numbers, terms and vote counts converted from XLSX XML; address columns excluded."
+        "reviewedEvidence": "The official county sample-ballot page identifies the linked candidate files as \"full candidate lists for both parties\". Every name and printed party for the 25 held district contests was script-compared with this current 2026 general-election XLSX. The file includes non-Allegheny candidates and the statewide Libertarian ticket; its unofficial label and update notice remain publication facts."
       },
       {
         "requestedUrl": "https://www.pavoterservices.pa.gov/ElectionInfo/ElectionInfo.aspx",
@@ -3368,6 +3367,46 @@
         "publisher": "Pennsylvania Department of State Candidate Database",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Public candidate database retrieval returned an Incapsula wrapper stating Request unsuccessful. It supplied no candidate list; this source supports only the access gap."
+      },
+      {
+        "requestedUrl": "https://www.alleghenycounty.us/Government/Elections/Sample-Ballots",
+        "finalUrl": "https://www.alleghenycounty.us/Government/Elections/Sample-Ballots",
+        "httpStatus": 200,
+        "rawHash": "fb210b5e0428f5cea1a74828a7409cebb13b6ca52c7a4d8a985d0a56c123ba29",
+        "retrievedAt": "2026-10-14T16:13:55.905744Z",
+        "publisher": "Allegheny County Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The official page states: \"full candidate lists for both parties are available on the Candidate and Municipality Resources webpage\". The linked current 2026 general-election XLSX lists the complete choices for each named contest, including candidates whose filed county is outside Allegheny. General-election sample ballots are not yet available."
+      },
+      {
+        "requestedUrl": "https://www.alleghenycounty.us/Government/Elections/Candidate-and-Municipality-Resources",
+        "finalUrl": "https://www.alleghenycounty.us/Government/Elections/Candidate-and-Municipality-Resources",
+        "httpStatus": 200,
+        "rawHash": "c8b2e5b37c168bbe3723102b3bae18f370afa96b45d1572e861559b3dbc27c64",
+        "retrievedAt": "2026-10-14T16:13:55.848571Z",
+        "publisher": "Allegheny County Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The 2026 General Election section links the Unofficial Candidates List XLSX. The official sample-ballot page identifies these files as full candidate lists; every printed candidate/party choice in its 25 held district contests was script-compared with the state data."
+      },
+      {
+        "requestedUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195",
+        "finalUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195/MIB-Merge-File?bidId=",
+        "httpStatus": 200,
+        "rawHash": "c181147c903099a66a6b665be868a683acb57788c357e0975a453d8705002c9b",
+        "retrievedAt": "2026-10-14T16:15:18.875293Z",
+        "publisher": "York County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 mail-in ballots for all 162 York precincts. A script parsed every ballot and compared each complete printed candidate/party set with the county candidate list and all 10 held York district contests; every set matched exactly."
+      },
+      {
+        "requestedUrl": "https://yorkcountypa.gov/971/Sample-Ballots",
+        "finalUrl": "https://yorkcountypa.gov/971/Sample-Ballots",
+        "httpStatus": 200,
+        "rawHash": "00b2eb6a0eb25c447634ba1aac1ea3f0c967e0f5572aa6ce90439e636370a3d5",
+        "retrievedAt": "2026-10-14T16:14:26.757043Z",
+        "publisher": "York County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The page links \"2026 General Election Sample Ballots\" to one official PDF containing all precinct ballots; this provides countywide corroboration for the full candidate listing, rather than a single town specimen."
       }
     ]
   }

@@ -3,18 +3,28 @@
 lane: fact-store
 owner: fact-store
 writer: the fact-store lane
-check: fold-conflict
-ready: no step ids unknown
-river: 0e9d37e0829974dbf3c91800fe7e3cb12360f00e
-at: 2026-10-14T20:56:14Z
+check: cleanliness
+ready: R1 bff3d84a630fba7efe2620258c5d1c9ab5b5c9d4
+river: b9911b63edc727359da760ecc4c32fb25cb83ff8
+at: 2026-10-14T21:56:55Z
 state: returned
-fix_subject: fix:616e13e3
-fix: River · stream/fact-store — fold-conflict failed for fact-store: fact-store READY 39a046cb8 (R1) conflicts with river 0e9d37e08299 by itself (the lane's last river merge is 9b36ff25c; release 38 landed after it). Conflicts: docs/pilot-runner.md, docs/sources.md and docs/system-map.md (FM-07 deleted these
+fix_subject: fix:34082ba6
+fix: River · stream/fact-store — cleanliness failed for fact-store: ## fact-store — cleanup list (River's review at fold; delete in stream/fact-store, then mark READY again)
 
 ## Failure
 
 ```
-fact-store READY 39a046cb8 (R1) conflicts with river 0e9d37e08299 by itself (the lane's last river merge is 9b36ff25c; release 38 landed after it). Conflicts: docs/pilot-runner.md, docs/sources.md and docs/system-map.md (FM-07 deleted these docs; this lane modifies them — drop or re-home those edits), plus lib/civic-data/worker-publication-tasks.ts and lib/control-plane/gateway/registry.ts (BL-10 changed the same code in release 38 — resolve against river's version). Merge river into stream/fact-store, resolve, and mark READY again.
+## fact-store — cleanup list (River's review at fold; delete in stream/fact-store, then mark READY again)
+
+Lane fact-store (R1), READY bff3d84a6, folded into river-next faa0b2b94711. Measured effect against river b9911b63edc7: +7,162 / −8,281 lines across 214 files (38 added, 14 deleted, 162 modified); code and tests +4,900 / −10,188 in 212 files. The READY counts match.
+
+Delete or rewrite:
+1. lib/civic-data/types.ts:319: the comment "A roster row the registry partition no longer carries because each member is now its own fact" tells history. State what the row is, in at most two lines, or delete the comment.
+2. lib/facts/check.ts:105 and lib/facts/publish.ts:36: the comments cite "rulings §3". Drop the citation and keep only the why, at most two lines each.
+
+Test-only exports left alone: lib/civic-data/candidate-profile-findings.ts:34 (CandidateFindingSubject), lib/civic-data/worker-roster-publication.ts:150 (publishBodyRoster), lib/facts/clocks.ts:9 (FRESHNESS_HOURS_DEFAULT), lib/facts/db.ts:43 (installFactReader), lib/facts/publish.ts:18 (PublishInput).
+
+Checked and clean otherwise: no commented-out code; the migration R1_fact_store.sql only creates tables (expand phase), with no control-plane references.
 ```
 
 ## Repair

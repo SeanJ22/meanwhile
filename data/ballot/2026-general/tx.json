@@ -13328,7 +13328,7 @@
         "retrievedAt": "2026-10-14T05:04:37.506177Z",
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Texas Secretary of State",
-        "reviewedEvidence": "Official election-office source downloaded and converted by scripts/ballot-bl-16-tx.py."
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
       },
       {
         "requestedUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
@@ -13338,7 +13338,7 @@
         "retrievedAt": "2026-10-14T05:05:05.416381Z",
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Texas Secretary of State",
-        "reviewedEvidence": "Official election-office source downloaded and converted by scripts/ballot-bl-16-tx.py."
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
       },
       {
         "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
@@ -13348,7 +13348,7 @@
         "retrievedAt": "2026-10-14T05:06:23.519615+00:00",
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Texas Secretary of State",
-        "reviewedEvidence": "Official election-office source downloaded and converted by scripts/ballot-bl-16-tx.py."
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
       },
       {
         "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
@@ -13358,7 +13358,7 @@
         "retrievedAt": "2026-10-14T05:06:21.480230+00:00",
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Texas Secretary of State",
-        "reviewedEvidence": "Official election-office source downloaded and converted by scripts/ballot-bl-16-tx.py."
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
       },
       {
         "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-sample-ballot.pdf",
@@ -13368,7 +13368,7 @@
         "retrievedAt": "2026-10-14T05:06:20.805752+00:00",
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Texas Secretary of State",
-        "reviewedEvidence": "Official election-office source downloaded and converted by scripts/ballot-bl-16-tx.py."
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
       }
     ]
   }

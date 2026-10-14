@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { granicusBodyLabel, parseGranicusPublisher } from "../../sources/granicus/index.ts";
 import { parseDiligentMeetings } from "../../sources/diligent/index.ts";
 
 import type { DerivedInputRef } from "../../civic-data/derived-authority.ts";
@@ -70,8 +71,8 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", novusagenda: "NOVUSAGENDA",
-  escribe: "ESCRIBE",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", granicus: "GRANICUS", escribe: "ESCRIBE",
+  novusagenda: "NOVUSAGENDA",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -446,15 +447,16 @@ type Selected = Selection | { readonly held: AutoCrosswalkHoldReason; readonly d
 const titleHas = (title: string, terms: readonly string[]): boolean => terms.some((t) => low(title).includes(low(t)));
 
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
-  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE", "NOVUSAGENDA"].includes(kind)) {
+  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
     const matches = (event: CalendarEvent) => namesIn(event).some(name => canonical(name.text, jurisdictionId) === proposal.key) ||
       event.categories.some(name => canonical(name, jurisdictionId) === proposal.key);
-    const selected = events.filter(matches);
+    const selected = events.filter(event => matches(event) && (kind !== "GRANICUS" || namesIn(event).every(name => canonical(name.text, jurisdictionId) === proposal.key)));
     if (selected.length === 0) return { held: "SELECTS_NOTHING", detail: `no ${kind} event names the reviewed body` };
     const other = selected.find(event => namesIn(event).some(name => canonical(name.text, jurisdictionId) !== proposal.key));
     if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
+    if (kind === "GRANICUS") return { filter: { bodyMatch: [...new Set(selected.map(event => granicusBodyLabel(event.title)))].join("|") }, selected };
     if (kind === "BOARDBOOK") {
       if (selected.length !== events.length) return { held: "AMBIGUOUS_TITLE", detail: "the BoardBook organization feed also carries another body's events; a whole-organization reader cannot select this body alone" };
       return { filter: {}, selected };
@@ -673,7 +675,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE", "NOVUSAGENDA"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -719,6 +721,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const rows = parseDiligentMeetings(calendar.text);
       if (!rows?.length) { hold(route, "CALENDAR_UNREADABLE", "the held public Diligent response has no dated meetings"); continue; }
       events = rows.map(m => ({ title: flat(m.Name ?? ""), context: "", categories: [flat(m.MeetingTypeName ?? "")], identity: `${m.Id}|${m.MeetingDateTime}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Portal/MeetingInformation.aspx?Id=${m.Id}` }));
+    } else if (kind === "GRANICUS") {
+      let rows: ReturnType<typeof parseGranicusPublisher> = [];
+      try { rows = parseGranicusPublisher(calendar.text, route); } catch { /* An invalid public list names no meeting. */ }
+      events = rows.map(row => ({ title: flat(granicusBodyLabel(row.title)), context: "", categories: [flat(granicusBodyLabel(row.title))],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.agendaUrl ?? row.videoUrl ?? route }));
     } else if (kind === "BOARDBOOK") {
       events = parseOrganizationPage(calendar.text).rows.map(row => ({ title: flat(row.title), context: "", categories: [],
         identity: `${row.meetingId ?? ""}|${row.y}-${row.mo}-${row.d}|${row.h}:${row.mi}`, tzid: stateZone, utc: false, floating: true, url: route }));

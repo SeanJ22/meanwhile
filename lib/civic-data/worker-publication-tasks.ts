@@ -124,10 +124,12 @@ export function workerPublicationTasksFor(owed: readonly OwedWorkerPublication[]
     .map(({ ids, key, requestedAt, contractId: id }) => {
       const contract = requiredManualProductionContract(id as Exclude<typeof id, typeof COMMENT_RULE_PUBLICATION>);
       const taskId = `worker-publication:${contract.id}:${key}`;
+      const command = id === "registry-runtime-bindings" || id === "voting-sites" ? contract.command
+        : ["scripts/promote-manual-civic-projection.mts", `--contract=${id}`];
       return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
         acquisitionFailureDomain: taskId, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
         parserVersion: contract.parserNormalizerVersion,
-        command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-directories" : "worker-results"}=${ids.join(",")}`],
+        command: [...command, `--${id === "registry-runtime-bindings" ? "worker-directories" : "worker-results"}=${ids.join(",")}`],
         cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
         contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
         ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"] } };

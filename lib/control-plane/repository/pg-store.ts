@@ -25,6 +25,7 @@ import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, ty
 import { createFixMapRepository } from "../../method/fix-map.ts";
 import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
+import { seedFieldManualNotes } from "../field-manual-notes.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import { appendActionReceiptWithHistoryAtomic, readActionHistoryPage } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -1023,6 +1024,17 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
     async retireInstructions() {
       await run("retireInstructions", "DOCUMENT", retireInstructionsSql(), []);
     },
+    async insertNew(entries, now) {
+      const inserted = new Set<string>();
+      for (let at = 0; at < entries.length; at += AGGREGATE_LIST_READ_PAGE) {
+        const page = entries.slice(at, at + AGGREGATE_LIST_READ_PAGE);
+        const rows = (await run("insertNew", "PAGE", `INSERT INTO cp_field_manual_entries (id, revision, updated_at, value)
+          SELECT e->>'id', 1, $2::timestamptz, e FROM jsonb_array_elements($1::jsonb) AS e
+          ON CONFLICT (id) DO NOTHING RETURNING id`, [JSON.stringify(page), now])) as Record<string, unknown>[];
+        for (const row of rows) inserted.add(String(row.id));
+      }
+      return inserted;
+    },
     async slice(query) {
       if (copies !== null) {
         const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
@@ -1355,6 +1367,11 @@ export async function createPgRepositories(
     if (setup !== null && (setup.created > 0 || setup.retired)) {
       console.log(`  role instructions: ${setup.created} created, ${setup.present} already held${setup.retired ? ", old instruction rows retired" : ""}`);
     }
+    const notes = await seedFieldManualNotes(repositories, nowIso).catch((error: unknown) => {
+      console.error(`  field manual notes: not loaded this start; the next start tries again (${error instanceof Error ? error.message : String(error)})`);
+      return null;
+    });
+    if (notes !== null && notes.created > 0) console.log(`  field manual notes: ${notes.created} loaded, ${notes.present} already held`);
   }
   return repositories;
 }
@@ -1369,17 +1386,6 @@ export function pgSingleDocumentManual(sql: Sql, options: PgRepositoryBounds = {
       const moved = (await run("retire", "DOCUMENT", "UPDATE cp_field_manual SET id = $3 WHERE id = $1 AND revision = $2 RETURNING id",
         [id, revision, as])) as unknown[];
       return moved.length === 1;
-    },
-    async insertNew(entries, now) {
-      const inserted = new Set<string>();
-      for (let at = 0; at < entries.length; at += AGGREGATE_LIST_READ_PAGE) {
-        const page = entries.slice(at, at + AGGREGATE_LIST_READ_PAGE);
-        const rows = (await run("insertNew", "PAGE", `INSERT INTO cp_field_manual_entries (id, revision, updated_at, value)
-          SELECT e->>'id', 1, $2::timestamptz, e FROM jsonb_array_elements($1::jsonb) AS e
-          ON CONFLICT (id) DO NOTHING RETURNING id`, [JSON.stringify(page), now])) as Record<string, unknown>[];
-        for (const row of rows) inserted.add(String(row.id));
-      }
-      return inserted;
     },
   };
 }

@@ -4,7 +4,7 @@ The state's own memory: filing systems, vendor patterns, walls, statutory
 posting rules. Appended by every session that learns something about AZ.
 Born 2026-08-15 (the NH/NJ depth session) — created for parity with the two
 states that session went deep on, and seeded from what the repo already knew.
-The method across all states is `docs/zip-playbook.md`; this file is what is
+The method across all states is the field manual; this file is what is
 true of this one.
 
 ## Elections and filings

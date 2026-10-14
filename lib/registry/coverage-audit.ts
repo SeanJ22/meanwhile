@@ -22,8 +22,7 @@ import type { BodyCoverageAudit, CoverageAuditFile } from "./audit.ts";
  *   fourth sighting. The real source is the district website's own events
  *   API (Apptegy), which carries the board meetings with district-published
  *   coordinates.
- * - **Tucson's Hyland conclusion reversed** — see the row and
- *   `docs/vendor-review.md` (D16).
+ * - **Tucson's Hyland conclusion reversed** — see the row (D16).
  */
 
 const BY_13 = "session 2026-08-13, the composite build";
@@ -78,7 +77,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
         rung: "VENDOR_API",
         outcome: "HIT",
         url: "https://tucsonaz.hylandcloud.com/221agendaonline",
-        note: "Hyland OnBase Agenda Online. Server-rendered meeting list, 10 rows on 2026-08-13, direct agenda-PDF downloads. ORIGINALLY RECORDED AS BLOCKED_TERMS on hyland.com's ToU; reversed 2026-08-13 — the terms enumerate five hyland.com hosts and do not reach hylandcloud.com, and the records are the City's (A.R.S. § 38-431.02). See docs/vendor-review.md.",
+        note: "Hyland OnBase Agenda Online. Server-rendered meeting list, 10 rows on 2026-08-13, direct agenda-PDF downloads. ORIGINALLY RECORDED AS BLOCKED_TERMS on hyland.com's ToU; reversed 2026-08-13 — the terms enumerate five hyland.com hosts and do not reach hylandcloud.com, and the records are the City's (A.R.S. § 38-431.02).",
       },
       {
         rung: "BODY_SUBSCRIBE",
@@ -133,7 +132,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
       "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/",
     coverageStatus: "LIVE",
     notes:
-      "D13. Wired via the MeetingsService JSON endpoint — the same public data the portal shows, in the form the page already receives it. The website ToU carve-out question (B09) stands recorded but does not gate the route per the public-records constraint; docs/vendor-review.md has the paragraph. Zoom-only sittings drop as placeless and are counted.",
+      "D13. Wired via the MeetingsService JSON endpoint — the same public data the portal shows, in the form the page already receives it. The website ToU carve-out question (B09) stands recorded but does not gate the route per the public-records constraint. Zoom-only sittings drop as placeless and are counted.",
   },
 
   {
@@ -609,12 +608,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
         note: "Document URLs are stable and directly fetchable without the ?t= cache token — canonical URLs for provenance.",
       },
       {
-        // The statutory posting location in practice — DISCOVERY LADDER
-        // LETTER I (`docs/zip-playbook.md` §2), reached through the body's own
-        // agenda page. Renumbered from "source-ladder rung 9" on 2026-08-20
-        // (RULING 16): the discovery list was numbered, `CLAUDE.md`'s
-        // retrieval-mechanics ladder is numbered, and "rung 9" meant a
-        // different thing in each. Letters cannot collide with numbers.
+        // The statutory posting location in practice, reached through the body's own agenda page.
         rung: "BODY_AGENDA_PAGE",
         outcome: "HIT",
         url: "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.27.26.pdf",
@@ -703,7 +697,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
     agendaSourceRef: "https://meetings.boardbook.org/Public/Organization/2065",
     coverageStatus: "LIVE",
     notes:
-      "Wired 2026-08-18 (session-date label; wall clock 2026-08-14) — first BoardBook Premier tenant, new vendor entry in docs/vendor-review.md. Two venues observed in 2026 rows, both in the venue cache with the feed's own published addresses.",
+      "Wired 2026-08-18 (session-date label; wall clock 2026-08-14) — first BoardBook Premier tenant, registered in the source registry. Two venues observed in 2026 rows, both in the venue cache with the feed's own published addresses.",
   },
 
   /**

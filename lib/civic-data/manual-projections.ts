@@ -184,9 +184,17 @@ function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetRecei
   const held = object(payload);
   const citations = held?.kind === "ballot-navigation"
     ? new Set(rows(held, "records").flatMap(row => manualRecordSourceUrls(row)))
-    : directPositiveSourceUrls(payload);
+    : held?.kind === "ballot-contests" ? ballotProvenanceUrls(payload) : directPositiveSourceUrls(payload);
   const missing = [...citations].filter((url) => !receipted.has(url)).sort();
   return missing.map((url) => `The projection cites ${url} without exact-byte evidence in the reviewed source set.`);
+}
+
+function ballotProvenanceUrls(value: unknown): Set<string> {
+  if (Array.isArray(value)) return new Set(value.flatMap(row => [...ballotProvenanceUrls(row)]));
+  const row = object(value);
+  if (!row) return new Set();
+  const url = string(object(row.provenance)?.sourceUrl);
+  return new Set([...(url ? [url] : []), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
 }
 
 /** An official page's linked lookup is a fact on that page, not another acquired source. */

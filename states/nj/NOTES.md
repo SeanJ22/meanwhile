@@ -3,7 +3,7 @@
 The state's own memory: filing systems, vendor patterns, walls, statutory
 posting rules. Appended by every session that learns something about NJ.
 Born 2026-08-15 (the NH/NJ depth session). The method across all states is
-`docs/zip-playbook.md`; this file is what is true of this one.
+the field manual; this file is what is true of this one.
 
 ## Elections and filings
 
@@ -130,7 +130,7 @@ of the fact.
 
 `nj.gov/nj/gov/county/localgov.shtml` — re-walked 2026-08-26, HTTP 200,
 114,118 B, **618 outbound links, all 21 counties named, Rockaway Township
-present**. `docs/sources.md` records 624 entities on 2026-08-22 from the
+present**. the source registry records 624 entities on 2026-08-22 from the
 committed walk; **both numbers are stated** rather than one being chosen — a page
 that changes is not two instruments disagreeing.
 

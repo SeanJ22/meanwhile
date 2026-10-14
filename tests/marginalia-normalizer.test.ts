@@ -18,7 +18,7 @@ test("a held Marginalia answer normalizes to POINTER rows — URL, title, format
 });
 
 test("an empty answer is a NAMED NO-HIT, not a failed normalization and never a statement about the candidate", () => {
-  /* The documented control: an impossible term answers a licence and an empty results array (docs/sources.md). */
+  /* The documented control: an impossible term answers a licence and an empty results array. */
   const empty = JSON.stringify({ license: "CC-BY-NC-SA 4.0", page: 1, pages: 0, query: "zzqxv impossible term", results: [] });
   const n = normalizeMarginaliaSearch(empty);
   assert.equal(n.rows.length, 0);

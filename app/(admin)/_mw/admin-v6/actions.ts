@@ -1,4 +1,3 @@
-/** `gateway` maps the kinds the deployed `/api/admin/action` registry performs; any other control carries a named `dependency`. */
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
 import { addableFamilies } from "../../../../lib/coverage/owed-overlay.ts";
@@ -86,6 +85,15 @@ function localOrGlobal(ctx: PreviewContext): "local" | "global" {
 
 
 const defs: ActionDef[] = [
+  {
+    kind: "ballot-publish", label: "Publish ballots", needs: "owner", doneWords: "Ballot publication queued.",
+    preview: () => ({ title: "Publish ballots", level: "global", rows: [
+      ["Publishes", "Every reviewed state ballot that passes, retaining published states"],
+      ["When", "The runner’s next pass"],
+      ["Results", "Merged states and skipped states with reasons appear in Workers"],
+    ] }),
+    gateway: { type: "ballot.publish" }, dependency: null,
+  },
   {
     kind: "hunt-start",
     label: "Start a hunt here",

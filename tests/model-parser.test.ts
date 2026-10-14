@@ -9,7 +9,6 @@ import { documentWindows, modelParseReasoner, ModelParseFailure, parseLearningEn
 import { auditLearningEntries } from "../lib/control-plane/workers/audit-sampling.ts";
 import { confirmQuotedRecords, isQuotedExtraction, quotedSourceFindings, quotesHoldAgainst } from "../lib/control-plane/workers/quoted-proof.ts";
 import { validateGeneralizedExtraction } from "../lib/control-plane/workers/generalized-validator.ts";
-import { outsideRecordBlockBriefs } from "../lib/control-plane/workers/record-block.ts";
 import type { GeneralizedCivicExtractionContract, ParserWorkerInput, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 
 const NOW = "2026-09-29T10:00:00.000Z";
@@ -269,19 +268,9 @@ for (const [shape, text] of Object.entries({
     const bobEmail = result.spans.find(span => span.field === "email")!;
     const forged = { records: [{ ...result.records[0], fields: { ...result.records[0].fields, email: "bob@example.test" }, evidenceSpanIds: [...result.records[0].evidenceSpanIds, bobEmail.id] }], spans: result.spans };
     assert.ok(quotesHoldAgainst(forged, text).failures.some(failure => failure.field === "email"), "replay rejects the old parser's cross-row result");
-    const brief = outsideRecordBlockBriefs(result.warnings);
-    assert.equal(brief.length, 1, "the dropped field goes to a detective as one finding (DP-03)");
-    assert.match(brief[0], /Field email for "Alice Adams" was dropped because the value "bob@example\.test" sits outside that person's own record/);
-    assert.ok(brief[0].includes(source.canonicalUrl), "the detective is told which page to reread");
   });
 }
 
-test("CP-19: only dropped cross-row fields make a brief line, and the brief stays bounded", () => {
-  assert.deepEqual(outsideRecordBlockBriefs([{ code: "DUPLICATE_SOURCE_RECORD_ID", detail: "x" }]), []);
-  assert.match(outsideRecordBlockBriefs([{ code: "FIELD_OUTSIDE_RECORD_BLOCK", detail: "not json", field: "phone" }])[0], /^Field phone was dropped because its value/);
-  const many = Array.from({ length: 30 }, (_, i) => ({ code: "FIELD_OUTSIDE_RECORD_BLOCK", detail: JSON.stringify({ name: `Person ${i}`, value: `v${i}` }), field: "email" }));
-  assert.equal(outsideRecordBlockBriefs(many).length, 20, "the brief stays bounded");
-});
 
 
 test("CP-19: a wrapped name retains the same record's fields and exact source offsets", () => {

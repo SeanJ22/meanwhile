@@ -1204,7 +1204,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       : res.hits.length === 0 ? `SEARCH "${query}" — nothing found by ${res.provider}.${errors}`
       : [`SEARCH "${query}" — ${res.hits.length} result(s) from ${res.provider}.${errors}`, UNTRUSTED_CONTENT_HEADER, DATA_BEGIN,
         ...res.hits.map((hit, i) => `${i + 1}. ${hit.url} — ${hit.title}\n${hit.text ?? ""}`), DATA_END].join("\n");
-    const step: HuntStep = { tool: "search", target: query, observed: `${res.hits.length} result(s) from ${res.provider ?? "no provider"}`,
+    const step: HuntStep = { tool: "search", target: query, observed: `${res.hits.length} result(s) from ${res.provider ?? "no provider"}${errors}`.slice(0, 400),
       artifactIds: [], transport: res.provider ? "REACHABLE" : "OTHER_NAMED_FAILURE", httpStatus: null, returnedCount: res.hits.length };
     return result(res.provider !== null, forModel, step, acc);
   }

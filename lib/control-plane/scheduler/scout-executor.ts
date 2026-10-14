@@ -381,6 +381,11 @@ export function scoutCarriedForward(input: {
     for (const b of [...(m.content as Record<string, unknown>[])].reverse()) {
       if (b?.type !== "tool_result" || typeof b.content !== "string") continue;
       const size = Buffer.byteLength(b.content, "utf8");
+      if (results.length === 0 && size > input.budgetBytes / 2) {
+        results.unshift(`${b.content.slice(0, Math.floor(input.budgetBytes / 2))}\n[cut here; the full page is saved]`);
+        bytes = input.budgetBytes / 2;
+        continue;
+      }
       if (bytes + size > input.budgetBytes / 2) continue;
       results.unshift(b.content);
       bytes += size;
@@ -721,7 +726,9 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
           detail: `HUNT ended with nothing reported after ${turns} turn(s): ${persisted.refusal.map(i => `${i.code} — ${i.detail}`).join("; ")}` };
       }
       return { ...common, kind: "DISPOSED", disposition: dispositionForHunt(persisted),
-        detail: `HUNT ${role} (${stoppedBy}) in ${turns} turn(s), ${toolkit.toolCalls} tool call(s), ${findings.length} fact(s) into the Box, usd ${usd === null ? "UNMEASURED" : usd.toFixed(4)}` };
+        detail: `HUNT ${role} (${stoppedBy}) in ${turns} turn(s), ${toolkit.toolCalls} tool call(s), ${findings.length} fact(s) into the Box, usd ${usd === null ? "UNMEASURED" : usd.toFixed(4)}` +
+          (result.cacheDefect ? `; CACHE DEFECT on turn(s) ${result.cacheDefect.turns.join(", ")}` : "") +
+          (inputTransformations.length ? `; THINKING DROPPED (${[...new Set(inputTransformations.map(t => t.reason ?? t.type))].join(", ")}) on turn(s) ${[...new Set(inputTransformations.map(t => t.turn))].join(", ")}` : "") };
     },
   };
 }

@@ -3,18 +3,27 @@
 lane: platform-novusagenda
 owner: platform-novusagenda
 writer: the platform-novusagenda lane
-check: fold-conflict
-ready: no step ids unknown
-river: 5bb464f06e345165d6302377d20418f29d392409
-at: 2026-10-14T00:54:53Z
+check: cleanliness
+ready: R3-NOVUS 6d8ba4a1a5824a9b37dba97bd590c2e297abafc6
+river: e06723d0f904ae6123d9c3d8f63b124c67b27ba2
+at: 2026-10-14T15:56:21Z
 state: returned
-fix_subject: fix:64151bf7
-fix: River · stream/platform-novusagenda — fold-conflict failed for platform-novusagenda: platform-novusagenda READY 06dd8586c conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-novusagenda, resolve, and mark READY again.
+fix_subject: fix:a9b7ebb2
+fix: River · stream/platform-novusagenda — cleanliness failed for platform-novusagenda: ## platform-novusagenda — cleanup list (River's review at fold; delete in stream/platform-novusagenda, then mark READY again)
 
 ## Failure
 
 ```
-platform-novusagenda READY 06dd8586c conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-novusagenda, resolve, and mark READY again.
+## platform-novusagenda — cleanup list (River's review at fold; delete in stream/platform-novusagenda, then mark READY again)
+
+Lane platform-novusagenda (R3-NOVUS), READY 6d8ba4a1a, folded into river-next. Measured effect against river e06723d0f904: +5,697 / −23 lines across 26 files (9 added, 0 deleted, 17 modified); code and tests +484 / −23 in 19 files. The READY commit gives no line or file counts; state them when marking READY again.
+
+Delete:
+1. Remove the unused `export` keyword (nothing outside the file imports them, tests included): lib/sources/novusagenda/index.ts:11 (NovusMeeting), :20 (NovusRaw) and :78 (novusForm). If a symbol is also unused inside its file, delete it.
+
+Test-only export left alone: lib/sources/novusagenda/index.ts:92 (nextNovusPage).
+
+Checked and clean otherwise: no commented-out code; every new code file and fixture is referenced.
 ```
 
 ## Repair

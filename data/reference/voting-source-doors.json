@@ -729,14 +729,17 @@
     "publisher": "Office of the Secretary of State, Des Moines, IA",
     "url": "https://sos.iowa.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "IA",
       "ocdId": "ocd-division/country:us/state:ia",
       "name": "Iowa"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.iowa.gov/",
+    "electionPageUrl": "https://sos.iowa.gov/general-election",
     "title": "Iowa chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Des Moines, IA",
@@ -745,28 +748,40 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official general-election page and candidate PDF reached with a browser user agent. Statewide measure full text and official ballot acquired from .gov county election publications. The statewide candidate PDF is reviewed and accepted, but not labeled certified.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.iowa.gov/\">https://sos.iowa.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+      "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+      "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+      "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf"
+    ]
   },
   {
     "id": "fec-ks-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Topeka, KS",
     "url": "https://www.sos.ks.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "KS",
       "ocdId": "ocd-division/country:us/state:ks",
       "name": "Kansas"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.ks.gov/",
+    "electionPageUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
     "title": "Kansas chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Topeka, KS",
@@ -775,28 +790,41 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Public candidate-list form returns the 2026 General election through POST ddlElections=36, btnSubmit=Submit with the page-provided hidden fields. No identity input required. Statewide constitutional amendment text is published as HTML and an official ballot PDF. The Sedgwick County statutory general-election notice publishes all nominees supplied by the Secretary of State for contests voted on there; the printed nominee inventories in Sedgwick and Johnson County official notices confirm 67 contests without widening other districts.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ks.gov/\">https://www.sos.ks.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+      "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+      "https://www.jocoelection.org/sites/default/files/2026-10/11-03-2026%20-%20Notice%20of%20Election%20%28candidates%29%20-%20REVISED.pdf"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.sos.ks.gov/elections/proposed-constitutional-amendments.html",
+      "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-ky-chief",
     "publisher": "Office of the Secretary of State, Frankfort, KY",
     "url": "https://www.sos.ky.gov/Pages/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "KY",
       "ocdId": "ocd-division/country:us/state:ky",
       "name": "Kentucky"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.ky.gov/Pages/default.aspx",
+    "electionPageUrl": "https://web.sos.ky.gov/CandidateFilings/",
     "title": "Kentucky chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Frankfort, KY",
@@ -804,15 +832,22 @@
       "url": "https://www.sos.ky.gov/Pages/default.aspx"
     },
     "access": {
-      "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "status": "open",
+      "detail": "The official root and public 2026 General Election List All Candidates form were acquired with HTTP 200; no voter identity lookup is needed. The amendment question and full enacted text were acquired from public official pages.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ky.gov/Pages/default.aspx\">https://www.sos.ky.gov/Pages/default.aspx</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://web.sos.ky.gov/CandidateFilings/"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+      "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf"
+    ]
   },
   {
     "id": "fec-ky-board",

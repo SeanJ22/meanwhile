@@ -1298,14 +1298,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Salem, OR",
     "url": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "OR",
       "ocdId": "ocd-division/country:us/state:or",
       "name": "Oregon"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
+    "electionPageUrl": "https://sos.oregon.gov/elections/Pages/current-election.aspx",
     "title": "Oregon chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Salem, OR",
@@ -1314,14 +1317,17 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official general-election Candidate Ballot Statement recovered from Directive 2026-09. Complete certified federal, gubernatorial and legislative candidate list; the directive explicitly states no statewide measures are on the November 3, 2026 ballot.",
+      "checkedAt": "2026-10-14T05:05:51.507Z"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.oregon.gov/voting-elections/Pages/default.aspx\">https://sos.oregon.gov/voting-elections/Pages/default.aspx</a>"
-    }
+    },
+    "candidateListUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+    "ballotMeasuresUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-pa-chief",

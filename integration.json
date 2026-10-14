@@ -2235,5 +2235,41 @@
     "tested_sha": "5bb464f06e345165d6302377d20418f29d392409",
     "gates": "pass",
     "at": "2026-10-14T00:53:41Z"
+  },
+  {
+    "lane": "acquisition-leftovers",
+    "steps": [
+      "R2B"
+    ],
+    "ready_sha": "0f8d836a04ab8422f223b3efe13dfd9bc0506cbb",
+    "merge_sha": "abc6951072dead319ac15b88c77d5093489b8890",
+    "river_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+    "tested_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+    "gates": "pass",
+    "at": "2026-10-14T02:28:13Z"
+  },
+  {
+    "lane": "census-lane",
+    "steps": [
+      "R2"
+    ],
+    "ready_sha": "93ea274c6fc8c00c9c47d398fcbafa1aebbb7d86",
+    "merge_sha": "f8d62ea7a43000888a3af55b400cc8816ea622db",
+    "river_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+    "tested_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+    "gates": "pass",
+    "at": "2026-10-14T02:28:13Z"
+  },
+  {
+    "lane": "road",
+    "steps": [
+      "R0"
+    ],
+    "ready_sha": "2115f4f5d5f5dabfef55ea83721970fde9d96837",
+    "merge_sha": "fb8189e76b29e701924086a7bebf782f64f44967",
+    "river_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+    "tested_sha": "1caea1bd9c88fd51a5449140ea7dbf11db2b17cf",
+    "gates": "pass",
+    "at": "2026-10-14T02:28:13Z"
   }
 ]

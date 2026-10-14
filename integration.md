@@ -255,3 +255,9 @@ One line per batch folded into river.
 - 2026-10-14T16:35:47Z · platform-novusagenda · R3-NOVUS · ready 6d8ba4a1a582 · river dc5cddd3834a · pnpm gates pass on dc5cddd3834a
 - 2026-10-14T16:35:47Z · state-votes · SV-01 · ready 5b126678f6a9 · river dc5cddd3834a · pnpm gates pass on dc5cddd3834a
 - 2026-10-14T16:35:47Z · token-cost · R7 · ready 88328d939d41 · river dc5cddd3834a · pnpm gates pass on dc5cddd3834a
+- 2026-10-14T17:40:41Z · ballot-bl-11 · BL-11 · ready 9675256f94a3 · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
+- 2026-10-14T17:40:41Z · ballot-bl-12 · BL-12 · ready 9f21300c0684 · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
+- 2026-10-14T17:40:41Z · ballot-bl-13 · BL-13 · ready 1604fd509556 · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
+- 2026-10-14T17:40:41Z · ballot-bl-14 · BL-14 · ready e72a212907de · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
+- 2026-10-14T17:40:41Z · ballot-bl-16 · BL-16 · ready f32b510a72cf · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
+- 2026-10-14T17:40:41Z · ballot-parity · BL-20 · ready 20cc658b06f2 · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739

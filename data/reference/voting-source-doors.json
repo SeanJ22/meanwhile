@@ -177,14 +177,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Sacramento, CA",
     "url": "https://www.sos.ca.gov/elections",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "CA",
       "ocdId": "ocd-division/country:us/state:ca",
       "name": "California"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.ca.gov/elections",
+    "electionPageUrl": "https://www.sos.ca.gov/elections/upcoming-elections/general-election-november-3-2026",
     "title": "California chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Sacramento, CA",
@@ -200,7 +203,43 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.ca.gov/elections\">https://www.sos.ca.gov/elections</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+      "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/contact-list.pdf"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.ca.gov/elections/ballot-measures/qualified-ballot-measures",
+      "https://elections.cdn.sos.ca.gov/ccrov/2026/august/26211jj.pdf",
+      "https://voterguide.sos.ca.gov/propositions/1/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/2/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/3/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/4/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/5/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/37/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/38/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/39/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/40/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/41/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/42/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/43/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/44/index.htm",
+      "https://voterguide.sos.ca.gov/propositions/45/index.htm",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop1-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop2-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop3-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop4-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop5-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop37-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop38-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop39-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop40-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop41-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop42-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop43-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop44-text-proposed-laws.pdf",
+      "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop45-text-proposed-laws.pdf"
+    ]
   },
   {
     "id": "fec-co-chief",

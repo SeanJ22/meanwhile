@@ -2099,14 +2099,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Olympia, WA",
     "url": "https://www.sos.wa.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WA",
       "ocdId": "ocd-division/country:us/state:wa",
       "name": "Washington"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.wa.gov/elections/",
+    "electionPageUrl": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
     "title": "Washington chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Olympia, WA",
@@ -2115,14 +2118,25 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "2026 general candidate list exported as official CSV; all 10 U.S. House districts, 98 state House seats, 24 state Senate seats, five statewide Supreme Court seats and three statewide initiatives converted from official sources."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.wa.gov/elections/\">https://www.sos.wa.gov/elections/</a>"
-    }
+    },
+    "candidateListUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899",
+    "measureListUrl": "https://www.sos.wa.gov/elections/voters/proposed-ballot-measure-information",
+    "sourceUrls": [
+      "https://voter.votewa.gov/CandidateList.aspx?e=899",
+      "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+      "https://www.sos.wa.gov/sites/default/files/2026-08/2026%20Certification%20of%20Measures%20to%20General%20Election.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-07/Finaltext_IP26-645_fulltext.pdf"
+    ]
   },
   {
     "id": "fec-wv-chief",

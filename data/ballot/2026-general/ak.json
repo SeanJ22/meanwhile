@@ -1,0 +1,3667 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "AK:ak-2026-general": {
+      "election": {
+        "id": "ak-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "AK"
+      },
+      "contests": [
+        {
+          "id": "ak-doe-2026-general-governor-lieutenant-governor",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak",
+          "divisionVintage": "2020",
+          "title": "GOVERNOR / LIEUTENANT GOVERNOR",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The certified list includes certified write-in candidates. Governor and lieutenant governor candidates are listed as joint tickets; each filed ticket name is preserved in full.",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bronson, Dave / Church, Josh (Registered Republican) (Certified); Kreiss-Tomkins, Jonathan S. “JKT” / Johnson, Zac (Registered Democrat / Nonpartisan) (Certified); Certified Write-In Parkin, James W. “JP4” / Greer, Ramadhani “Ram” (Registered Republican / Registered Democrat) (Certified); Taylor, Treg/ English, Candi (Registered Republican) (Certified); Wilson, Bernadette M. / Shower, Michael K. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-senator",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak",
+          "divisionVintage": "2020",
+          "title": "UNITED STATES SENATOR",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The certified list includes certified write-in candidates.",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Heikes, Gerald L. (Registered Republican) (Certified); Certified Write-In Hill, Sidney “Sid” (Undeclared) (Certified); Certified Write-In McElwain, Heather (Registered Libertarian) (Certified); Peltola, Mary (Registered Democrat) (Certified); Sullivan, Dan S. (Registered Republican) (Certified) Incumbent; Sullivan, Daniel J. Jr. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-representative",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/cd:at-large",
+          "divisionVintage": "2020",
+          "title": "UNITED STATES REPRESENTATIVE",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Begich, Nick (Registered Republican) (Certified) Incumbent; Hafner, Eric (Registered Democrat) (Certified); Hill, Bill (Nonpartisan) (Certified); McDermott, James C. “Jim” (Registered Libertarian) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-a",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:a",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT A",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Stedman, Bert K. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-c",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:c",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT C",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Harris, Carrie L. (Registered Republican) (Certified); Smith, Heath (Registered Republican) (Certified); Stutes, Louise B. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-e",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:e",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT E",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Giessel, Cathy (Registered Republican) (Certified) Incumbent; Stoddard, Gretchen W. (Registered Republican) (Certified); White, Jason “Jace” (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-g",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:g",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT G",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Danger, Nicholas (Nonpartisan) (Certified); Gray-Jackson, Elvi (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-i",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:i",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT I",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Tobin, Löki Gale (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-k",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:k",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT K",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wielechowski, Bill (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-m",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:m",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT M",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Berry, Ryan (Registered Republican) (Certified); Chesbro, Patricia R. (Registered Democrat) (Certified); Tilton, Cathy L. (Registered Republican) (Certified) Incumbent; Vrvilo, Zane (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-o",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:o",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT O",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bauer, Peter (Registered Democrat) (Certified); Rauscher, George (Registered Republican) (Certified) Incumbent; Sheldon, Ryan W. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-q",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:q",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT Q",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hunt, William (Registered Democrat) (Certified); Tomaszewski, Frank (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-s",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldu:s",
+          "divisionVintage": "2020",
+          "title": "SENATE DISTRICT S",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Deacon, Darren Morgan (Registered Republican) (Certified); Edgmon, Bryce (Undeclared) (Certified); Guy, Wassilie P. “WG” (Registered Democrat) (Certified); Robb, Richard “Rick” (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-01",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:1",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 01",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bynum, Jeremy T. (Registered Republican) (Certified) Incumbent; EchoHawk, Grant (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-02",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:2",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 02",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Evans, Alston C. (Undeclared) (Certified); Himschoot, Rebecca (Nonpartisan) (Certified) Incumbent; Skaflestad, Kenny “Kenny Karl” (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-03",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:3",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 03",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kreitzer, Annette (Registered Republican) (Certified); Story, Andrea “Andi” (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-04",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:4",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 04",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hannan, Sara (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-05",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:5",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 05",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Prout, Sheldon R.J. (Registered Republican) (Certified); Simpler, Kathy C. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-06",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:6",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 06",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Johnson, Brent (Nonpartisan) (Certified); Vance, Sarah L. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-07",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:7",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 07",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Ruffridge, Justin M. (Registered Republican) (Certified) Incumbent; Veh, Kate (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-supreme-court",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak",
+          "divisionVintage": "2020",
+          "title": "SUPREME COURT",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Jude Pate (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-08",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:8",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 08",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Elam, William H. “Bill” (Registered Republican) (Certified) Incumbent; Quinn, Frank (Nonpartisan) (Certified); Savage, Nissa (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-09",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:9",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 09",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Boyle, John C. (Registered Republican) (Certified); Holland, Ky (Nonpartisan) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-10",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:10",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 10",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kopp, Charles M. “Chuck” (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-11",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:11",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 11",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Coulombe, Julie (Registered Republican) (Certified) Incumbent; Hall, Danni M. (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-12",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:12",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 12",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McDonald, Jieun C. “Jini” (Registered Republican) (Certified); Schrage, Calvin R. (Nonpartisan) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-13",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:13",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 13",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The certified list includes certified write-in candidates.",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Keller, Lisa M. (Registered Democrat) (Certified); Certified Write-In Short, Sarah D. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-14",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:14",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 14",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Galvin, Alyse S. (Nonpartisan) (Certified) Incumbent; Wyatt, Russell O. (Undeclared) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-15",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:15",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 15",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Costello, Mia (Registered Republican) (Certified) Incumbent; Wells, Denny (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-16",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:16",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 16",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hall, Carolyn (Registered Democrat) (Certified) Incumbent; Isley, Phil (Undeclared) (Certified); Vazquez, Liz (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-17",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:17",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 17",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bradley, Daniel L. (Registered Republican) (Certified); Fields, William Z. “Zack” (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-18",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:18",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 18",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Groh, Cliff (Registered Democrat) (Certified); Sager, Dan (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-19",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:19",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 19",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Mina, Genevieve G. (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-20",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:20",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 20",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bauer, Paul A. Jr. (Nonpartisan) (Certified); Gray, Andrew T. (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-21",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:21",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 21",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Mears, Donna (Registered Democrat) (Certified) Incumbent; Sims, Aimeé (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-22",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:22",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 22",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Eischeid, Ted J. (Registered Democrat) (Certified) Incumbent; Tagle, Jose Roel A. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-23",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:23",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 23",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Allard, Jamie (Registered Republican) (Certified) Incumbent; Arlington, Jim (Registered Democrat) (Certified); Hammermeister, Lee E. (Registered Democrat) (Certified); Jones, Ruby (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-24",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:24",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 24",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McCarty, Ken (Registered Republican) (Certified); Wall, Gina T. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-25",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:25",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 25",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bowles, Michael (Registered Republican) (Certified); Johnson, DeLena M. (Registered Republican) (Certified) Incumbent; Merritt, Steven L. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-26",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:26",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 26",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "St. Clair, Steve J. (Registered Republican) (Certified) Incumbent; Troshynski, Jeanne (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-27",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:27",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 27",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Eastman, David (Registered Republican) (Certified); Underwood, Jubilee L. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-28",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:28",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 28",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kennedy, Kathleen M. “Kit” (Registered Democrat) (Certified); Moore, Elexie B. (Registered Republican) (Certified) Incumbent; Wright, Stephen (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-29",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:29",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 29",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kusner-Kalarchik, Jessica I. (Nonpartisan) (Certified); Menard, Steve (Registered Republican) (Certified); Nelson, Gerald “Garret” (Registered Republican) (Certified) Incumbent; Slone, Kimberly (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-30",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:30",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 30",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Loomis, Sandra D. (Registered Democrat) (Certified); Massie, Doug (Registered Republican) (Certified); McCabe, Kevin J. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-31",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:31",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 31",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Dibert, Maxine L. (Registered Democrat) (Certified) Incumbent; Moore, Aimée (Registered Republican) (Certified); Powell-Mark, Jonathan (Registered Libertarian) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-32",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:32",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 32",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Stapp, Will (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-33",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:33",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 33",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Haney, Barbara (Registered Republican) (Certified); McFarland, Pepper (Undeclared) (Certified); Prax, Glenn M. “Mike” (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-34",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:34",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 34",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Cottle, Joy E. “Joy Beth” (Nonpartisan) (Certified); Tomaszewski, Harmony (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-35",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:35",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 35",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Carrick, Ashley E. (Registered Democrat) (Certified) Incumbent; Rentzel, Jeffrey L. “Jeff” (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-36",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:36",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 36",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Jones, Crystal (Nonpartisan) (Certified); Schwanke, Rebecca A. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-37",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:37",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 37",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Smith, Mark (Nonpartisan) (Certified); Trefon, Evelynn M. (Registered Democrat) (Certified); Wilson, Brenda L. (Registered Republican) (Certified); Woods, Cade J. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-38",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:38",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 38",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Amik, Joseph R. (Nonpartisan) (Certified); Jimmie, Nellie “Unangiq” (Registered Democrat) (Certified) Incumbent; Keppel, WIlly (Registered Republican) (Certified); McCormick, CJ (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-39",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:39",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 39",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Foster, Neal W. “Quannaq” (Registered Democrat) (Certified) Incumbent; Ivanoff, Tyler (Nonpartisan) (Certified); Okitkun, Reynold D. “Papa Joe” (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-40",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/sldl:40",
+          "divisionVintage": "2020",
+          "title": "HOUSE DISTRICT 40",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Chase, Saima (Registered Democrat) (Certified); Frier, Robyn Niayuq Burke (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-measure-2",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak",
+          "divisionVintage": "2020",
+          "title": "Ballot Measure No.2 — 24ESEG - An Act Restoring Political Party Primaries, Ending Ranked-Choice General Elections, and Repealing Recent Campaign Finance Laws",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.elections.alaska.gov/petitions/24ESEG/24ESEG-Bill.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:03:07.845669Z",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Ballot Measure No.2\n24ESEG - An Act Restoring\nPolitical Party Primaries,\nEnding Ranked-Choice\nGeneral Elections, and\nRepealing Recent Campaign\nFinance Laws\nThis act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-measure-3",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak",
+          "divisionVintage": "2020",
+          "title": "Ballot Measure No.3 — 25USCV - An Act Addressing Voter Qualification",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:03:07.845669Z",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Ballot Measure No.3\n25USCV - An Act Addressing\nVoter Qualification\nAlaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ak-doe-2026-general-governor-lieutenant-governor-bronson-dave-church-josh",
+          "contestId": "ak-doe-2026-general-governor-lieutenant-governor",
+          "familyName": "Bronson, Dave / Church, Josh",
+          "givenName": "",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.davebronson.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bronson, Dave / Church, Josh (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-governor-lieutenant-governor-kreiss-tomkins-jonathan-s-jkt-johnson-zac",
+          "contestId": "ak-doe-2026-general-governor-lieutenant-governor",
+          "familyName": "Kreiss-Tomkins, Jonathan S. “JKT” / Johnson, Zac",
+          "givenName": "",
+          "partyLabel": "Registered Democrat / Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.jktforak.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kreiss-Tomkins, Jonathan S. “JKT” / Johnson, Zac (Registered Democrat / Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-governor-lieutenant-governor-parkin-james-w-jp4-greer-ramadhani-ram",
+          "contestId": "ak-doe-2026-general-governor-lieutenant-governor",
+          "familyName": "Parkin, James W. “JP4” / Greer, Ramadhani “Ram”",
+          "givenName": "",
+          "partyLabel": "Registered Republican / Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.jp4gov.org",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Certified Write-In Parkin, James W. “JP4” / Greer, Ramadhani “Ram” (Registered Republican / Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-governor-lieutenant-governor-taylor-treg-english-candi",
+          "contestId": "ak-doe-2026-general-governor-lieutenant-governor",
+          "familyName": "Taylor, Treg/ English, Candi",
+          "givenName": "",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Taylor, Treg/ English, Candi (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-governor-lieutenant-governor-wilson-bernadette-m-shower-michael-k",
+          "contestId": "ak-doe-2026-general-governor-lieutenant-governor",
+          "familyName": "Wilson, Bernadette M. / Shower, Michael K.",
+          "givenName": "",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.bernadetteforgovernor.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wilson, Bernadette M. / Shower, Michael K. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-senator-heikes-gerald-l",
+          "contestId": "ak-doe-2026-general-united-states-senator",
+          "familyName": "Heikes",
+          "givenName": "Gerald L.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Heikes, Gerald L. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-senator-hill-sidney-sid",
+          "contestId": "ak-doe-2026-general-united-states-senator",
+          "familyName": "Hill",
+          "givenName": "Sidney “Sid”",
+          "partyLabel": "Undeclared",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Certified Write-In Hill, Sidney “Sid” (Undeclared) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-senator-mcelwain-heather",
+          "contestId": "ak-doe-2026-general-united-states-senator",
+          "familyName": "McElwain",
+          "givenName": "Heather",
+          "partyLabel": "Registered Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Certified Write-In McElwain, Heather (Registered Libertarian) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-senator-peltola-mary",
+          "contestId": "ak-doe-2026-general-united-states-senator",
+          "familyName": "Peltola",
+          "givenName": "Mary",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.marypeltola.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Peltola, Mary (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-senator-sullivan-dan-s",
+          "contestId": "ak-doe-2026-general-united-states-senator",
+          "familyName": "Sullivan",
+          "givenName": "Dan S.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.dansullivanforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Sullivan, Dan S. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-senator-sullivan-daniel-j-jr",
+          "contestId": "ak-doe-2026-general-united-states-senator",
+          "familyName": "Sullivan",
+          "givenName": "Daniel J. Jr.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.sullivanforsenate.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Sullivan, Daniel J. Jr. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-representative-begich-nick",
+          "contestId": "ak-doe-2026-general-united-states-representative",
+          "familyName": "Begich",
+          "givenName": "Nick",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.alaskansfornickbegich.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Begich, Nick (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-representative-hafner-eric",
+          "contestId": "ak-doe-2026-general-united-states-representative",
+          "familyName": "Hafner",
+          "givenName": "Eric",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.erichafner.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hafner, Eric (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-representative-hill-bill",
+          "contestId": "ak-doe-2026-general-united-states-representative",
+          "familyName": "Hill",
+          "givenName": "Bill",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.billhillforalaskans.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hill, Bill (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-united-states-representative-mcdermott-james-c-jim",
+          "contestId": "ak-doe-2026-general-united-states-representative",
+          "familyName": "McDermott",
+          "givenName": "James C. “Jim”",
+          "partyLabel": "Registered Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.linkedin.com/in/irishjim/",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McDermott, James C. “Jim” (Registered Libertarian) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-a-stedman-bert-k",
+          "contestId": "ak-doe-2026-general-senate-district-a",
+          "familyName": "Stedman",
+          "givenName": "Bert K.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Stedman, Bert K. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-c-harris-carrie-l",
+          "contestId": "ak-doe-2026-general-senate-district-c",
+          "familyName": "Harris",
+          "givenName": "Carrie L.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Harris, Carrie L. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-c-smith-heath",
+          "contestId": "ak-doe-2026-general-senate-district-c",
+          "familyName": "Smith",
+          "givenName": "Heath",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Smith, Heath (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-c-stutes-louise-b",
+          "contestId": "ak-doe-2026-general-senate-district-c",
+          "familyName": "Stutes",
+          "givenName": "Louise B.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Stutes, Louise B. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-e-giessel-cathy",
+          "contestId": "ak-doe-2026-general-senate-district-e",
+          "familyName": "Giessel",
+          "givenName": "Cathy",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Giessel, Cathy (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-e-stoddard-gretchen-w",
+          "contestId": "ak-doe-2026-general-senate-district-e",
+          "familyName": "Stoddard",
+          "givenName": "Gretchen W.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Stoddard, Gretchen W. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-e-white-jason-jace",
+          "contestId": "ak-doe-2026-general-senate-district-e",
+          "familyName": "White",
+          "givenName": "Jason “Jace”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "White, Jason “Jace” (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-g-danger-nicholas",
+          "contestId": "ak-doe-2026-general-senate-district-g",
+          "familyName": "Danger",
+          "givenName": "Nicholas",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.nick-danger.freeservers.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Danger, Nicholas (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-g-gray-jackson-elvi",
+          "contestId": "ak-doe-2026-general-senate-district-g",
+          "familyName": "Gray-Jackson",
+          "givenName": "Elvi",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.friendsofelvi.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Gray-Jackson, Elvi (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-i-tobin-l-ki-gale",
+          "contestId": "ak-doe-2026-general-senate-district-i",
+          "familyName": "Tobin",
+          "givenName": "Löki Gale",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.lokitobinforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Tobin, Löki Gale (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-k-wielechowski-bill",
+          "contestId": "ak-doe-2026-general-senate-district-k",
+          "familyName": "Wielechowski",
+          "givenName": "Bill",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.wielechowski.org",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wielechowski, Bill (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-m-berry-ryan",
+          "contestId": "ak-doe-2026-general-senate-district-m",
+          "familyName": "Berry",
+          "givenName": "Ryan",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.berryforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Berry, Ryan (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-m-chesbro-patricia-r",
+          "contestId": "ak-doe-2026-general-senate-district-m",
+          "familyName": "Chesbro",
+          "givenName": "Patricia R.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.choosechesbro.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Chesbro, Patricia R. (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-m-tilton-cathy-l",
+          "contestId": "ak-doe-2026-general-senate-district-m",
+          "familyName": "Tilton",
+          "givenName": "Cathy L.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.cathytilton.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Tilton, Cathy L. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-m-vrvilo-zane",
+          "contestId": "ak-doe-2026-general-senate-district-m",
+          "familyName": "Vrvilo",
+          "givenName": "Zane",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.zaneforsenate.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Vrvilo, Zane (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-o-bauer-peter",
+          "contestId": "ak-doe-2026-general-senate-district-o",
+          "familyName": "Bauer",
+          "givenName": "Peter",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.drpeteforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bauer, Peter (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-o-rauscher-george",
+          "contestId": "ak-doe-2026-general-senate-district-o",
+          "familyName": "Rauscher",
+          "givenName": "George",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.georgerauscher.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Rauscher, George (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-o-sheldon-ryan-w",
+          "contestId": "ak-doe-2026-general-senate-district-o",
+          "familyName": "Sheldon",
+          "givenName": "Ryan W.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.ryanforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Sheldon, Ryan W. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-q-hunt-william",
+          "contestId": "ak-doe-2026-general-senate-district-q",
+          "familyName": "Hunt",
+          "givenName": "William",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.huntforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hunt, William (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-q-tomaszewski-frank",
+          "contestId": "ak-doe-2026-general-senate-district-q",
+          "familyName": "Tomaszewski",
+          "givenName": "Frank",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.frank4fairbanks.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Tomaszewski, Frank (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-s-deacon-darren-morgan",
+          "contestId": "ak-doe-2026-general-senate-district-s",
+          "familyName": "Deacon",
+          "givenName": "Darren Morgan",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Deacon, Darren Morgan (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-s-edgmon-bryce",
+          "contestId": "ak-doe-2026-general-senate-district-s",
+          "familyName": "Edgmon",
+          "givenName": "Bryce",
+          "partyLabel": "Undeclared",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Edgmon, Bryce (Undeclared) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-s-guy-wassilie-p-wg",
+          "contestId": "ak-doe-2026-general-senate-district-s",
+          "familyName": "Guy",
+          "givenName": "Wassilie P. “WG”",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Guy, Wassilie P. “WG” (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-senate-district-s-robb-richard-rick",
+          "contestId": "ak-doe-2026-general-senate-district-s",
+          "familyName": "Robb",
+          "givenName": "Richard “Rick”",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://RickRobbalaskasenate.org",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Robb, Richard “Rick” (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-01-bynum-jeremy-t",
+          "contestId": "ak-doe-2026-general-house-district-01",
+          "familyName": "Bynum",
+          "givenName": "Jeremy T.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.votebynum.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bynum, Jeremy T. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-01-echohawk-grant",
+          "contestId": "ak-doe-2026-general-house-district-01",
+          "familyName": "EchoHawk",
+          "givenName": "Grant",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "EchoHawk, Grant (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-02-evans-alston-c",
+          "contestId": "ak-doe-2026-general-house-district-02",
+          "familyName": "Evans",
+          "givenName": "Alston C.",
+          "partyLabel": "Undeclared",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Evans, Alston C. (Undeclared) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-02-himschoot-rebecca",
+          "contestId": "ak-doe-2026-general-house-district-02",
+          "familyName": "Himschoot",
+          "givenName": "Rebecca",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.rebeccahimschoot.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Himschoot, Rebecca (Nonpartisan) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-02-skaflestad-kenny-kenny-karl",
+          "contestId": "ak-doe-2026-general-house-district-02",
+          "familyName": "Skaflestad",
+          "givenName": "Kenny “Kenny Karl”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Skaflestad, Kenny “Kenny Karl” (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-03-kreitzer-annette",
+          "contestId": "ak-doe-2026-general-house-district-03",
+          "familyName": "Kreitzer",
+          "givenName": "Annette",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.annetteforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kreitzer, Annette (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-03-story-andrea-andi",
+          "contestId": "ak-doe-2026-general-house-district-03",
+          "familyName": "Story",
+          "givenName": "Andrea “Andi”",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Story, Andrea “Andi” (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-04-hannan-sara",
+          "contestId": "ak-doe-2026-general-house-district-04",
+          "familyName": "Hannan",
+          "givenName": "Sara",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.electsarahannan.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hannan, Sara (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-05-prout-sheldon-r-j",
+          "contestId": "ak-doe-2026-general-house-district-05",
+          "familyName": "Prout",
+          "givenName": "Sheldon R.J.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.proutforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Prout, Sheldon R.J. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-05-simpler-kathy-c",
+          "contestId": "ak-doe-2026-general-house-district-05",
+          "familyName": "Simpler",
+          "givenName": "Kathy C.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.simplerforstatehouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Simpler, Kathy C. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-06-johnson-brent",
+          "contestId": "ak-doe-2026-general-house-district-06",
+          "familyName": "Johnson",
+          "givenName": "Brent",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.BrentforHouse.org",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Johnson, Brent (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-06-vance-sarah-l",
+          "contestId": "ak-doe-2026-general-house-district-06",
+          "familyName": "Vance",
+          "givenName": "Sarah L.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.sarahvance.org",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Vance, Sarah L. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-07-ruffridge-justin-m",
+          "contestId": "ak-doe-2026-general-house-district-07",
+          "familyName": "Ruffridge",
+          "givenName": "Justin M.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.voteruffridge.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Ruffridge, Justin M. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-07-veh-kate",
+          "contestId": "ak-doe-2026-general-house-district-07",
+          "familyName": "Veh",
+          "givenName": "Kate",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.facebook.com/people/Kate-Veh-for-AK/61590834404014",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Veh, Kate (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-supreme-court-jude-pate",
+          "contestId": "ak-doe-2026-general-supreme-court",
+          "familyName": "Pate",
+          "givenName": "Jude",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:13.727242Z",
+            "verifiedAt": "2026-10-14T05:02:13.727242Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Jude Pate (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-08-elam-william-h-bill",
+          "contestId": "ak-doe-2026-general-house-district-08",
+          "familyName": "Elam",
+          "givenName": "William H. “Bill”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.billelam.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Elam, William H. “Bill” (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-08-quinn-frank",
+          "contestId": "ak-doe-2026-general-house-district-08",
+          "familyName": "Quinn",
+          "givenName": "Frank",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.alaskaquinn.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Quinn, Frank (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-08-savage-nissa",
+          "contestId": "ak-doe-2026-general-house-district-08",
+          "familyName": "Savage",
+          "givenName": "Nissa",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Savage, Nissa (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-09-boyle-john-c",
+          "contestId": "ak-doe-2026-general-house-district-09",
+          "familyName": "Boyle",
+          "givenName": "John C.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.boyle4alaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Boyle, John C. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-09-holland-ky",
+          "contestId": "ak-doe-2026-general-house-district-09",
+          "familyName": "Holland",
+          "givenName": "Ky",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.alaskansforkyholland.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Holland, Ky (Nonpartisan) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-10-kopp-charles-m-chuck",
+          "contestId": "ak-doe-2026-general-house-district-10",
+          "familyName": "Kopp",
+          "givenName": "Charles M. “Chuck”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.chuckkopp.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kopp, Charles M. “Chuck” (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-11-coulombe-julie",
+          "contestId": "ak-doe-2026-general-house-district-11",
+          "familyName": "Coulombe",
+          "givenName": "Julie",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.julieforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Coulombe, Julie (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-11-hall-danni-m",
+          "contestId": "ak-doe-2026-general-house-district-11",
+          "familyName": "Hall",
+          "givenName": "Danni M.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.alaskansfordanni.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hall, Danni M. (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-12-mcdonald-jieun-c-jini",
+          "contestId": "ak-doe-2026-general-house-district-12",
+          "familyName": "McDonald",
+          "givenName": "Jieun C. “Jini”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McDonald, Jieun C. “Jini” (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-12-schrage-calvin-r",
+          "contestId": "ak-doe-2026-general-house-district-12",
+          "familyName": "Schrage",
+          "givenName": "Calvin R.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.calvinforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Schrage, Calvin R. (Nonpartisan) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-13-keller-lisa-m",
+          "contestId": "ak-doe-2026-general-house-district-13",
+          "familyName": "Keller",
+          "givenName": "Lisa M.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.lisakellerforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Keller, Lisa M. (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-13-short-sarah-d",
+          "contestId": "ak-doe-2026-general-house-district-13",
+          "familyName": "Short",
+          "givenName": "Sarah D.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.sarahdshort.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Certified Write-In Short, Sarah D. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-14-galvin-alyse-s",
+          "contestId": "ak-doe-2026-general-house-district-14",
+          "familyName": "Galvin",
+          "givenName": "Alyse S.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.alaskans4alyse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Galvin, Alyse S. (Nonpartisan) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-14-wyatt-russell-o",
+          "contestId": "ak-doe-2026-general-house-district-14",
+          "familyName": "Wyatt",
+          "givenName": "Russell O.",
+          "partyLabel": "Undeclared",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wyatt, Russell O. (Undeclared) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-15-costello-mia",
+          "contestId": "ak-doe-2026-general-house-district-15",
+          "familyName": "Costello",
+          "givenName": "Mia",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.votemia.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Costello, Mia (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-15-wells-denny",
+          "contestId": "ak-doe-2026-general-house-district-15",
+          "familyName": "Wells",
+          "givenName": "Denny",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.dennywellsforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wells, Denny (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-16-hall-carolyn",
+          "contestId": "ak-doe-2026-general-house-district-16",
+          "familyName": "Hall",
+          "givenName": "Carolyn",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.carolynforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hall, Carolyn (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-16-isley-phil",
+          "contestId": "ak-doe-2026-general-house-district-16",
+          "familyName": "Isley",
+          "givenName": "Phil",
+          "partyLabel": "Undeclared",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Isley, Phil (Undeclared) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-16-vazquez-liz",
+          "contestId": "ak-doe-2026-general-house-district-16",
+          "familyName": "Vazquez",
+          "givenName": "Liz",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Vazquez, Liz (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-17-bradley-daniel-l",
+          "contestId": "ak-doe-2026-general-house-district-17",
+          "familyName": "Bradley",
+          "givenName": "Daniel L.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bradley, Daniel L. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-17-fields-william-z-zack",
+          "contestId": "ak-doe-2026-general-house-district-17",
+          "familyName": "Fields",
+          "givenName": "William Z. “Zack”",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.zackforalaska.blogspot.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Fields, William Z. “Zack” (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-18-groh-cliff",
+          "contestId": "ak-doe-2026-general-house-district-18",
+          "familyName": "Groh",
+          "givenName": "Cliff",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://cliffgroh4alaska.com/",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Groh, Cliff (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-18-sager-dan",
+          "contestId": "ak-doe-2026-general-house-district-18",
+          "familyName": "Sager",
+          "givenName": "Dan",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.sagerforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Sager, Dan (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-19-mina-genevieve-g",
+          "contestId": "ak-doe-2026-general-house-district-19",
+          "familyName": "Mina",
+          "givenName": "Genevieve G.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.alaskansforgenevieve.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Mina, Genevieve G. (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-20-bauer-paul-a-jr",
+          "contestId": "ak-doe-2026-general-house-district-20",
+          "familyName": "Bauer",
+          "givenName": "Paul A. Jr.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bauer, Paul A. Jr. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-20-gray-andrew-t",
+          "contestId": "ak-doe-2026-general-house-district-20",
+          "familyName": "Gray",
+          "givenName": "Andrew T.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.andrewgrayak.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Gray, Andrew T. (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-21-mears-donna",
+          "contestId": "ak-doe-2026-general-house-district-21",
+          "familyName": "Mears",
+          "givenName": "Donna",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.mearsforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Mears, Donna (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-21-sims-aime",
+          "contestId": "ak-doe-2026-general-house-district-21",
+          "familyName": "Sims",
+          "givenName": "Aimeé",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.simsforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Sims, Aimeé (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-22-eischeid-ted-j",
+          "contestId": "ak-doe-2026-general-house-district-22",
+          "familyName": "Eischeid",
+          "givenName": "Ted J.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.tedforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Eischeid, Ted J. (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-22-tagle-jose-roel-a",
+          "contestId": "ak-doe-2026-general-house-district-22",
+          "familyName": "Tagle",
+          "givenName": "Jose Roel A.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Tagle, Jose Roel A. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-23-allard-jamie",
+          "contestId": "ak-doe-2026-general-house-district-23",
+          "familyName": "Allard",
+          "givenName": "Jamie",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.allardforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Allard, Jamie (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-23-arlington-jim",
+          "contestId": "ak-doe-2026-general-house-district-23",
+          "familyName": "Arlington",
+          "givenName": "Jim",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Arlington, Jim (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-23-hammermeister-lee-e",
+          "contestId": "ak-doe-2026-general-house-district-23",
+          "familyName": "Hammermeister",
+          "givenName": "Lee E.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Hammermeister, Lee E. (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-23-jones-ruby",
+          "contestId": "ak-doe-2026-general-house-district-23",
+          "familyName": "Jones",
+          "givenName": "Ruby",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.rubyforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Jones, Ruby (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-24-mccarty-ken",
+          "contestId": "ak-doe-2026-general-house-district-24",
+          "familyName": "McCarty",
+          "givenName": "Ken",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.mccartyforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McCarty, Ken (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-24-wall-gina-t",
+          "contestId": "ak-doe-2026-general-house-district-24",
+          "familyName": "Wall",
+          "givenName": "Gina T.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.ginawallforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wall, Gina T. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-25-bowles-michael",
+          "contestId": "ak-doe-2026-general-house-district-25",
+          "familyName": "Bowles",
+          "givenName": "Michael",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.electmichaelbowles.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Bowles, Michael (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-25-johnson-delena-m",
+          "contestId": "ak-doe-2026-general-house-district-25",
+          "familyName": "Johnson",
+          "givenName": "DeLena M.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.electdelena.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Johnson, DeLena M. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-25-merritt-steven-l",
+          "contestId": "ak-doe-2026-general-house-district-25",
+          "familyName": "Merritt",
+          "givenName": "Steven L.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.merrittforstatehouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Merritt, Steven L. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-26-st-clair-steve-j",
+          "contestId": "ak-doe-2026-general-house-district-26",
+          "familyName": "St. Clair",
+          "givenName": "Steve J.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.steve4housedistrict26.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "St. Clair, Steve J. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-26-troshynski-jeanne",
+          "contestId": "ak-doe-2026-general-house-district-26",
+          "familyName": "Troshynski",
+          "givenName": "Jeanne",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Troshynski, Jeanne (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-27-eastman-david",
+          "contestId": "ak-doe-2026-general-house-district-27",
+          "familyName": "Eastman",
+          "givenName": "David",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.davideastman.org",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Eastman, David (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-27-underwood-jubilee-l",
+          "contestId": "ak-doe-2026-general-house-district-27",
+          "familyName": "Underwood",
+          "givenName": "Jubilee L.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.jubileeforstatehouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.989959Z",
+            "verifiedAt": "2026-10-14T05:02:51.989959Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Underwood, Jubilee L. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-28-kennedy-kathleen-m-kit",
+          "contestId": "ak-doe-2026-general-house-district-28",
+          "familyName": "Kennedy",
+          "givenName": "Kathleen M. “Kit”",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.kit4aksfuture.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kennedy, Kathleen M. “Kit” (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-28-moore-elexie-b",
+          "contestId": "ak-doe-2026-general-house-district-28",
+          "familyName": "Moore",
+          "givenName": "Elexie B.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.mooreforak.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Moore, Elexie B. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-28-wright-stephen",
+          "contestId": "ak-doe-2026-general-house-district-28",
+          "familyName": "Wright",
+          "givenName": "Stephen",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.stephenwrightalaska.weebly.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wright, Stephen (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-29-kusner-kalarchik-jessica-i",
+          "contestId": "ak-doe-2026-general-house-district-29",
+          "familyName": "Kusner-Kalarchik",
+          "givenName": "Jessica I.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Kusner-Kalarchik, Jessica I. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-29-menard-steve",
+          "contestId": "ak-doe-2026-general-house-district-29",
+          "familyName": "Menard",
+          "givenName": "Steve",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.alaskansforstevemenard.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Menard, Steve (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-29-nelson-gerald-garret",
+          "contestId": "ak-doe-2026-general-house-district-29",
+          "familyName": "Nelson",
+          "givenName": "Gerald “Garret”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Nelson, Gerald “Garret” (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-29-slone-kimberly",
+          "contestId": "ak-doe-2026-general-house-district-29",
+          "familyName": "Slone",
+          "givenName": "Kimberly",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Slone, Kimberly (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-30-loomis-sandra-d",
+          "contestId": "ak-doe-2026-general-house-district-30",
+          "familyName": "Loomis",
+          "givenName": "Sandra D.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.sandraforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Loomis, Sandra D. (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-30-massie-doug",
+          "contestId": "ak-doe-2026-general-house-district-30",
+          "familyName": "Massie",
+          "givenName": "Doug",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.dougmassieforhouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Massie, Doug (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-30-mccabe-kevin-j",
+          "contestId": "ak-doe-2026-general-house-district-30",
+          "familyName": "McCabe",
+          "givenName": "Kevin J.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.votekevinmccabe.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McCabe, Kevin J. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-31-dibert-maxine-l",
+          "contestId": "ak-doe-2026-general-house-district-31",
+          "familyName": "Dibert",
+          "givenName": "Maxine L.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.maxinedibertforhouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Dibert, Maxine L. (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-31-moore-aim-e",
+          "contestId": "ak-doe-2026-general-house-district-31",
+          "familyName": "Moore",
+          "givenName": "Aimée",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Moore, Aimée (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-31-powell-mark-jonathan",
+          "contestId": "ak-doe-2026-general-house-district-31",
+          "familyName": "Powell-Mark",
+          "givenName": "Jonathan",
+          "partyLabel": "Registered Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Powell-Mark, Jonathan (Registered Libertarian) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-32-stapp-will",
+          "contestId": "ak-doe-2026-general-house-district-32",
+          "familyName": "Stapp",
+          "givenName": "Will",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.willstappforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Stapp, Will (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-33-haney-barbara",
+          "contestId": "ak-doe-2026-general-house-district-33",
+          "familyName": "Haney",
+          "givenName": "Barbara",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.haneyforakhouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Haney, Barbara (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-33-mcfarland-pepper",
+          "contestId": "ak-doe-2026-general-house-district-33",
+          "familyName": "McFarland",
+          "givenName": "Pepper",
+          "partyLabel": "Undeclared",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.peppermcfarland.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McFarland, Pepper (Undeclared) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-33-prax-glenn-m-mike",
+          "contestId": "ak-doe-2026-general-house-district-33",
+          "familyName": "Prax",
+          "givenName": "Glenn M. “Mike”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Prax, Glenn M. “Mike” (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-34-cottle-joy-e-joy-beth",
+          "contestId": "ak-doe-2026-general-house-district-34",
+          "familyName": "Cottle",
+          "givenName": "Joy E. “Joy Beth”",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.joybethforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Cottle, Joy E. “Joy Beth” (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-34-tomaszewski-harmony",
+          "contestId": "ak-doe-2026-general-house-district-34",
+          "familyName": "Tomaszewski",
+          "givenName": "Harmony",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.harmonyforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Tomaszewski, Harmony (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-35-carrick-ashley-e",
+          "contestId": "ak-doe-2026-general-house-district-35",
+          "familyName": "Carrick",
+          "givenName": "Ashley E.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.ashleyforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Carrick, Ashley E. (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-35-rentzel-jeffrey-l-jeff",
+          "contestId": "ak-doe-2026-general-house-district-35",
+          "familyName": "Rentzel",
+          "givenName": "Jeffrey L. “Jeff”",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Rentzel, Jeffrey L. “Jeff” (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-36-jones-crystal",
+          "contestId": "ak-doe-2026-general-house-district-36",
+          "familyName": "Jones",
+          "givenName": "Crystal",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Jones, Crystal (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-36-schwanke-rebecca-a",
+          "contestId": "ak-doe-2026-general-house-district-36",
+          "familyName": "Schwanke",
+          "givenName": "Rebecca A.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.schwankeforstatehouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Schwanke, Rebecca A. (Registered Republican) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-37-smith-mark",
+          "contestId": "ak-doe-2026-general-house-district-37",
+          "familyName": "Smith",
+          "givenName": "Mark",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "http://www.markforalaska.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Smith, Mark (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-37-trefon-evelynn-m",
+          "contestId": "ak-doe-2026-general-house-district-37",
+          "familyName": "Trefon",
+          "givenName": "Evelynn M.",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Trefon, Evelynn M. (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-37-wilson-brenda-l",
+          "contestId": "ak-doe-2026-general-house-district-37",
+          "familyName": "Wilson",
+          "givenName": "Brenda L.",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Wilson, Brenda L. (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-37-woods-cade-j",
+          "contestId": "ak-doe-2026-general-house-district-37",
+          "familyName": "Woods",
+          "givenName": "Cade J.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Woods, Cade J. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-38-amik-joseph-r",
+          "contestId": "ak-doe-2026-general-house-district-38",
+          "familyName": "Amik",
+          "givenName": "Joseph R.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Amik, Joseph R. (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-38-jimmie-nellie-unangiq",
+          "contestId": "ak-doe-2026-general-house-district-38",
+          "familyName": "Jimmie",
+          "givenName": "Nellie “Unangiq”",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Jimmie, Nellie “Unangiq” (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-38-keppel-willy",
+          "contestId": "ak-doe-2026-general-house-district-38",
+          "familyName": "Keppel",
+          "givenName": "WIlly",
+          "partyLabel": "Registered Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Keppel, WIlly (Registered Republican) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-38-mccormick-cj",
+          "contestId": "ak-doe-2026-general-house-district-38",
+          "familyName": "McCormick",
+          "givenName": "CJ",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "McCormick, CJ (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-39-foster-neal-w-quannaq",
+          "contestId": "ak-doe-2026-general-house-district-39",
+          "familyName": "Foster",
+          "givenName": "Neal W. “Quannaq”",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.fosterforhouse.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Foster, Neal W. “Quannaq” (Registered Democrat) (Certified) Incumbent"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-39-ivanoff-tyler",
+          "contestId": "ak-doe-2026-general-house-district-39",
+          "familyName": "Ivanoff",
+          "givenName": "Tyler",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Ivanoff, Tyler (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-39-okitkun-reynold-d-papa-joe",
+          "contestId": "ak-doe-2026-general-house-district-39",
+          "familyName": "Okitkun",
+          "givenName": "Reynold D. “Papa Joe”",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Okitkun, Reynold D. “Papa Joe” (Nonpartisan) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-40-chase-saima",
+          "contestId": "ak-doe-2026-general-house-district-40",
+          "familyName": "Chase",
+          "givenName": "Saima",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Chase, Saima (Registered Democrat) (Certified)"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-house-district-40-frier-robyn-niayuq-burke",
+          "contestId": "ak-doe-2026-general-house-district-40",
+          "familyName": "Frier",
+          "givenName": "Robyn Niayuq Burke",
+          "partyLabel": "Registered Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "http://www.robynburkeak.com",
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:02:51.164302Z",
+            "verifiedAt": "2026-10-14T05:02:51.164302Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Frier, Robyn Niayuq Burke (Registered Democrat) (Certified) Incumbent"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ak-doe-2026-general-24eseg",
+          "contestId": "ak-doe-2026-general-measure-2",
+          "officialNumber": "Ballot Measure No.2",
+          "questionText": "This act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:03:07.845669Z",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Ballot Measure No.2\n24ESEG - An Act Restoring\nPolitical Party Primaries,\nEnding Ranked-Choice\nGeneral Elections, and\nRepealing Recent Campaign\nFinance Laws\nThis act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?"
+          }
+        },
+        {
+          "id": "ak-doe-2026-general-25uscv",
+          "contestId": "ak-doe-2026-general-measure-3",
+          "officialNumber": "Ballot Measure No.3",
+          "questionText": "Alaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "sourceOrg": "Alaska Division of Elections",
+            "collectedAt": "2026-10-14T05:03:07.845669Z",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "doorId": "fec-ak-chief",
+            "quote": "Ballot Measure No.3\n25USCV - An Act Addressing\nVoter Qualification\nAlaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?"
+          }
+        }
+      ],
+      "absences": [],
+      "coverageNotes": [
+        "All 40 state House contests and the 10 state Senate contests appearing on the certified general-election roster are held, together with the U.S. Senate, at-large U.S. House, joint governor/lieutenant governor tickets, and statewide Supreme Court retention.",
+        "The general-election sample ballot prints Ballot Measures No.2 (24ESEG) and No.3 (25USCV). Initiative 23RCF2 is excluded: its official status page says it was approved by voters, YES – 117,962, NO – 45,418, and its audio link identifies the 2026 Primary Election.",
+        "The official website includes this general-election statement: “Updates will occur as they are received and processed.” Certified write-ins in the roster are included; future certifications can change the list.",
+        "The election office’s .gov hostname returned an upstream certificate verification error. The same public election-office publications were recovered from the hostname’s observed CloudFront DNS target with certificate verification enabled."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedBy": "Codex",
+    "reviewedAt": "2026-10-14T05:05:10.560204Z",
+    "sources": [
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+        "httpStatus": 200,
+        "rawHash": "dae2147db813d528dbcc8778c8a27b7d05c7a77f3c7e0ed7e71c25b28b5173b2",
+        "retrievedAt": "2026-10-14T05:02:13.727242Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+        "httpStatus": 200,
+        "rawHash": "214983e1689b81fd3fe17e1e448b347ca45e6f056b718a95b58c56093b7552ef",
+        "retrievedAt": "2026-10-14T05:02:51.989959Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+        "httpStatus": 200,
+        "rawHash": "17aec50d62da3d76b6deae74be8e02ecd67c63e0de284644dedcb31d6e0e0ded",
+        "retrievedAt": "2026-10-14T05:02:51.164302Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+        "httpStatus": 200,
+        "rawHash": "188710841f5b8d7c15cebbd6d2371ce9325465965891f5493b5bbf7726d4fa84",
+        "retrievedAt": "2026-10-14T05:03:07.845669Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/24ESEG/24ESEG-Bill.pdf",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/24ESEG/24ESEG-Bill.pdf",
+        "httpStatus": 200,
+        "rawHash": "e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf",
+        "retrievedAt": "2026-10-14T05:03:07.906921Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+        "httpStatus": 200,
+        "rawHash": "f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570",
+        "retrievedAt": "2026-10-14T05:03:07.867432Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=25USCV#is81213",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=25USCV#is81213",
+        "httpStatus": 200,
+        "rawHash": "3244cda468e3b2dcab5b6f71dc5cb618efa9826ac8241eed9ed7506509d6b1f7",
+        "retrievedAt": "2026-10-14T05:02:10.627229Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=24ESEG#is81213",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=24ESEG#is81213",
+        "httpStatus": 200,
+        "rawHash": "3dcf7471ec7f740d6828c0446995a3575e5944dcf8c8945b08ae5e9efa6e4d52",
+        "retrievedAt": "2026-10-14T05:02:12.004128Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=23RCF2#is81213",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=23RCF2#is81213",
+        "httpStatus": 200,
+        "rawHash": "7bc1e62f441a1fe151e5078a1e8b774f2358775d53420469f22c5461ec7cb051",
+        "retrievedAt": "2026-10-14T05:02:09.214016Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      }
+    ]
+  }
+}

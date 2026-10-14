@@ -1181,7 +1181,10 @@
     "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
     "url": "https://www.ncsbe.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NC",
       "ocdId": "ocd-division/country:us/state:nc",
@@ -1204,7 +1207,17 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.ncsbe.gov/\">https://www.ncsbe.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/2026_general_candidate_list_by_contest_federal_and_state.pdf",
+      "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv"
+    ],
+    "ballotMeasureUrls": [
+      "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/statewide_referendums_20261103.pdf",
+      "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+      "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+      "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html"
+    ]
   },
   {
     "id": "fec-nd-chief",

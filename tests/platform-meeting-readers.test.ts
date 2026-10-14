@@ -10,9 +10,12 @@ import { walkMeetingsDiscoveryNeed } from "../lib/control-plane/discovery/meetin
 import { attestationFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { politeGetText } from "../lib/sources/http.ts";
 import { verifyEndpointBody } from "../lib/hunt/meetings-site-discovery.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
 const ALAMEDA = fixture("civicplus-alameda-water-agendacenter.html");
+const cache = () => ({ store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks });
 const LIST = fixture("boarddocs-grand-rapids-meetings.json");
 const DETAIL = fixture("boarddocs-grand-rapids-meeting.html");
 const BOARD_URL = "https://go.boarddocs.com/mi/grand/Board.nsf/Public";
@@ -29,8 +32,8 @@ test("CivicPlus grouped category panels preserve Alameda's category names and ag
     { id: "3", name: "Engineering and Information Technology Committee" },
     { id: "5", name: "Operations and Water Quality Committee" },
   ]);
-  assert.deepEqual(parseAgendaCenter(ALAMEDA, "3"), [{ date: "2024-09-04", agendaHref: "/AgendaCenter/ViewFile/Agenda/_09042024-1447" }]);
-  assert.deepEqual(parseAgendaCenter(ALAMEDA, "5"), [{ date: "2024-09-03", agendaHref: "/AgendaCenter/ViewFile/Agenda/_09032024-1448" }]);
+  assert.deepEqual(parseAgendaCenter(ALAMEDA, "3").map(({ id, date, agendaHref }) => ({ id, date, agendaHref })), [{ id: "1447", date: "2024-09-04", agendaHref: "/AgendaCenter/ViewFile/Agenda/_09042024-1447" }]);
+  assert.deepEqual(parseAgendaCenter(ALAMEDA, "5").map(({ id, date, agendaHref }) => ({ id, date, agendaHref })), [{ id: "1448", date: "2024-09-03", agendaHref: "/AgendaCenter/ViewFile/Agenda/_09032024-1448" }]);
   assert.deepEqual(parseAgendaCenter(ALAMEDA, "999"), []);
 });
 
@@ -45,9 +48,9 @@ test("CivicPlus AgendaCenter-only rows fetch and publish without an unrelated iC
   const wiring: BodySourceWiring = { ...BOARD, agendaSourceType: "CIVICPLUS", publishingOrg: "Alameda County Water District", timeZone: "America/Los_Angeles",
     config: { slug: "alameda-water-committee", bodyName: "Engineering and Information Technology Committee", agendaCenterUrl: "https://www.acwd.org/AgendaCenter", agendaCenterCategoryId: "3" } };
   const seen: string[] = [];
-  const source = makeCivicPlusSource([wiring], (async (url) => { seen.push(String(url)); return new Response(ALAMEDA); }) as typeof fetch);
+  const source = makeCivicPlusSource([wiring], (async (url) => { seen.push(String(url)); return new Response(String(url).includes("RSSFeed") ? fixture("civicplus/alameda-rss.xml") : ALAMEDA); }) as typeof fetch, cache());
   const raw = await source.fetch({ lat: 37.5, lng: -122, radiusKm: 25 });
-  assert.deepEqual(seen, [wiring.config.agendaCenterUrl]);
+  assert.deepEqual(seen, ["https://www.acwd.org/RSSFeed.aspx?CID=All-0&ModID=65", wiring.config.agendaCenterUrl]);
   const { meetings, accounting } = source.normalizeWithDrops(raw, new Date("2024-09-01T00:00:00Z"));
   assert.equal(meetings.length, 1);
   assert.equal(new Date(meetings[0].startsAt).toISOString(), "2024-09-04T07:00:00.000Z");
@@ -61,7 +64,7 @@ test("CivicPlus preserves verified calendar dates when the archive fails and rec
   const wiring: BodySourceWiring = { ...BOARD, agendaSourceType: "CIVICPLUS", timeZone: "America/New_York",
     config: { slug: "rockaway", summaryMatch: "Township Council", icalUrl: "https://www.rockawaytownship.org/council.ics", agendaCenterUrl: "https://www.rockawaytownship.org/AgendaCenter", agendaCenterCategoryId: "2" } };
   const source = makeCivicPlusSource([wiring], (async url => String(url).endsWith(".ics")
-    ? new Response(fixture("civicplus-rockaway.ics")) : new Response("not found", { status: 404 })) as typeof fetch);
+    ? new Response(fixture("civicplus-rockaway.ics")) : new Response("not found", { status: 404 })) as typeof fetch, cache());
   const raw = await source.fetch({ lat: 40.9, lng: -74.5, radiusKm: 25 });
   const output = source.normalizeWithDrops(raw, new Date("2026-08-13T12:00:00-07:00"));
   assert.ok(output.meetings.length > 0);

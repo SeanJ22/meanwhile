@@ -1,0 +1,594 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-green-county-2026-general-governor",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "Governor",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Governor and Lieutenant Governor are elected jointly on one ticket. The official ballot says: \"Vote for candidates on one ticket, or Write in names of persons on both write-in lines\".",
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-lieutenant-governor",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "Lieutenant Governor",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Governor and Lieutenant Governor are elected jointly on one ticket. The official ballot says: \"Vote for candidates on one ticket, or Write in names of persons on both write-in lines\".",
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-attorney-general",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "Attorney General",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-secretary-of-state",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "Secretary of State",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-state-treasurer",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "State Treasurer",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-representative-in-congress-district-2",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:2",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 2",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-state-senator-district-17",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:17",
+          "divisionVintage": "2026",
+          "title": "State Senator District 17",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-representative-to-the-assembly-district-50",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:50",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 50",
+          "type": "CANDIDACY",
+          "candidateListComplete": false,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-question-1",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "Partial veto",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:19.431021+00:00",
+            "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-question-2",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "Freedom to gather in places of worship during an emergency",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:19.431021+00:00",
+            "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-question-3",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "divisionVintage": "2026",
+          "title": "Governmental entity discrimination prohibited",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:19.431021+00:00",
+            "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "wi-green-county-2026-general-governor-candidate-tom-tiffany",
+          "contestId": "wi-green-county-2026-general-governor",
+          "familyName": "Tiffany",
+          "givenName": "Tom",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-governor-candidate-david-crowley",
+          "contestId": "wi-green-county-2026-general-governor",
+          "familyName": "Crowley",
+          "givenName": "David",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-lieutenant-governor-candidate-david-varnam",
+          "contestId": "wi-green-county-2026-general-lieutenant-governor",
+          "familyName": "Varnam",
+          "givenName": "David",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-lieutenant-governor-candidate-sarah-godlewski",
+          "contestId": "wi-green-county-2026-general-lieutenant-governor",
+          "familyName": "Godlewski",
+          "givenName": "Sarah",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-attorney-general-candidate-eric-toney",
+          "contestId": "wi-green-county-2026-general-attorney-general",
+          "familyName": "Toney",
+          "givenName": "Eric",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-attorney-general-candidate-josh-kaul",
+          "contestId": "wi-green-county-2026-general-attorney-general",
+          "familyName": "Kaul",
+          "givenName": "Josh",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-secretary-of-state-candidate-jay-schroeder",
+          "contestId": "wi-green-county-2026-general-secretary-of-state",
+          "familyName": "Schroeder",
+          "givenName": "Jay",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-secretary-of-state-candidate-jocasta-zamarripa",
+          "contestId": "wi-green-county-2026-general-secretary-of-state",
+          "familyName": "Zamarripa",
+          "givenName": "JoCasta",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-secretary-of-state-candidate-pete-karas",
+          "contestId": "wi-green-county-2026-general-secretary-of-state",
+          "familyName": "Karas",
+          "givenName": "Pete",
+          "partyLabel": "Wisconsin Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-state-treasurer-candidate-john-s-leiber",
+          "contestId": "wi-green-county-2026-general-state-treasurer",
+          "familyName": "Leiber",
+          "givenName": "John S.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-state-treasurer-candidate-yee-leng-xiong",
+          "contestId": "wi-green-county-2026-general-state-treasurer",
+          "familyName": "Xiong",
+          "givenName": "Yee Leng",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-representative-in-congress-district-2-candidate-mark-pocan",
+          "contestId": "wi-green-county-2026-general-representative-in-congress-district-2",
+          "familyName": "Pocan",
+          "givenName": "Mark",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-state-senator-district-17-candidate-howard-marklein",
+          "contestId": "wi-green-county-2026-general-state-senator-district-17",
+          "familyName": "Marklein",
+          "givenName": "Howard",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-state-senator-district-17-candidate-jenna-jacobson",
+          "contestId": "wi-green-county-2026-general-state-senator-district-17",
+          "familyName": "Jacobson",
+          "givenName": "Jenna",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-representative-to-the-assembly-district-50-candidate-jon-aleckson",
+          "contestId": "wi-green-county-2026-general-representative-to-the-assembly-district-50",
+          "familyName": "Aleckson",
+          "givenName": "Jon",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-representative-to-the-assembly-district-50-candidate-bill-oemichen",
+          "contestId": "wi-green-county-2026-general-representative-to-the-assembly-district-50",
+          "familyName": "Oemichen",
+          "givenName": "Bill",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+            "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-green-county-2026-general-question-1-text",
+          "contestId": "wi-green-county-2026-general-question-1",
+          "officialNumber": "QUESTION 1",
+          "questionText": "Partial veto. Shall section 10 (1) (c) of article V of the constitution be amended to prohibit the governor, in exercising his or her partial veto authority, from creating or increasing or authorizing the creation or increase of any tax or fee?",
+          "officialStatement": "Under current law, the Governor may partially veto language in a spending bill passed by the\nLegislature. The veto may result in either more or fewer taxes or fees being imposed and may\nalso result in local government entities being authorized to increase or decrease local taxes or\nfees.\n\nThe proposed amendment would add a new clause to Article V, section 10(1)(c) of the\nWisconsin Constitution, providing that the Governor’s veto “may not create or increase or\nauthorize the creation or increase of any tax or fee.” This language would not only prevent a veto\nfrom increasing any state taxes or fees, but also prevent a veto from allowing local governments,\nsuch as school districts, to increase their own taxes or fees.\n\nA “yes” vote on Question 1 would vote to amend Wis. Const. art. V, § 10(1)(c) to prohibit the\nGovernor from partially vetoing a spending bill in a way that would create or increase or\nauthorize the creation or increase of any tax or fee.\n\nA “no” vote on Question 1 would vote not to amend Wis. Const. art. V § 10(1)(c) of the\nWisconsin Constitution.",
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:19.431021+00:00",
+            "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-question-2-text",
+          "contestId": "wi-green-county-2026-general-question-2",
+          "officialNumber": "QUESTION 2",
+          "questionText": "Freedom to gather in places of worship during an emergency. Shall section 18 of article I of the constitution, which deals with religious liberty, be amended to prohibit the state or a political subdivision of the state from ordering the closure of, or forbidding gatherings in, places of worship in response to a state of emergency, including a public health emergency?",
+          "officialStatement": "Under current law, Article I, section 18 of the Wisconsin Constitution, like the First Amendment\nof the U.S. Constitution, protects religious rights. In a declared state of emergency, officials may\nlimit public gatherings, including religious gatherings, so long as religious and secular gatherings\nare treated equivalently.\n\nThe proposed amendment would add a new clause to the end of Article I, section 18, prohibiting\nthe state and local governments from ordering the closure or forbidding gatherings “in places of\nworship” when there is a state of emergency. That language would prevent officials from\nforbidding gatherings in places of worship even when other types of public gatherings have been\nclosed.\n\nA “yes” vote on Question 2 would vote to amend Wis. Const. art. I, § 18. The amendment would\nprohibit the state and local governments from closing or prohibiting gatherings in places of\nworship during a state of emergency.\n\nA “no” vote on Question 2 would vote not to amend Wis. Const. art. I, § 18 of the Wisconsin\nConstitution.",
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:19.431021+00:00",
+            "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        },
+        {
+          "id": "wi-green-county-2026-general-question-3-text",
+          "contestId": "wi-green-county-2026-general-question-3",
+          "officialNumber": "QUESTION 3",
+          "questionText": "Governmental entity discrimination prohibited. Shall section 27 of article I of the constitution be created to prohibit governmental entities in the state from discriminating against, or granting preferential treatment to, any individual or group on the basis of race, sex, color, ethnicity, or national origin in public employment, public education, public contracting, or public administration?",
+          "officialStatement": "Under current law, both under Article I, section 1 of the Wisconsin Constitution and the Equal\nProtection Clause of the Fourteenth Amendment to the U.S. Constitution, states and local\ngovernments may not discriminate based on race, ethnicity, color, national origin, or sex except\nunder specific circumstances. For race, color, ethnicity, or national origin, discrimination in\nfavor of or against a group is permissible only if the government has a compelling interest and a\nnarrowly tailored remedy. For sex, discrimination is permissible if it serves an important\ngovernment interest and is substantially related to that interest. Current law also makes\ndistinctions depending on whether discrimination is overt and intentional, or merely a disparate\nimpact of a neutral policy.\n\nThe proposed amendment would create a new provision, Article I, section 27, which would\nprohibit state and local governmental entities from discriminating or granting preferential\ntreatment based on race, sex, color, ethnicity, or national origin in public employment, public\neducation, public contracting, or public administration.\n\nThis language appears to impose stricter standards against discrimination than the standards\nunder current state and federal law.\n\nThe amendment contains three exceptions. It does not apply if it would cause the governmental\nentity (1) to lose eligibility for a federal program or (2) to violate federal law. And the\namendment’s prohibition on treating people differently based on sex does not apply to measures\nthat are “reasonably necessary” to the “normal operation” of public employment, education,\ncontracting, or administration.\n\nA “yes” vote on Question 3 would vote to create a new provision of the Wisconsin\nConstitution—Wis. Const. art. I, § 18, which would prohibit any governmental entity from\n\ndiscriminating or granting preferential treatment based on race, sex, color, ethnicity, or national\norigin in public employment, public education, public contracting, or public administration.\n\nA “no” vote on Question 3 would vote not to add Wis. Const. art. I § 18 to the\nWisconsin Constitution.",
+          "provenance": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceOrg": "Green County Clerk",
+            "collectedAt": "2026-10-14T05:09:19.431021+00:00",
+            "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
+            "doorId": "fec-wi-chief"
+          }
+        }
+      ],
+      "absences": [],
+      "coverageNotes": [
+        "The official referendum notice cites article I, section 18 in the explanation for Question 3; its ballot question and proposed text cite section 27."
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "The official Green County sample ballot supplies the five statewide offices, Congressional District 2, Senate District 17 and Assembly District 50. The statewide certified candidate PDF at https://elections.wi.gov/media/40951/download returned HTTP 403. Candidates for other congressional and legislative districts remain unacquired. The official county notice limits its ballot to \"the several wards in Green County\".",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wi"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T05:09:53.173299+00:00",
+    "reviewedBy": "Codex BL-16",
+    "sources": [
+      {
+        "requestedUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+        "finalUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+        "httpStatus": 200,
+        "rawHash": "10d7fd0ed0279c84225899aabaa5b17423d4f974e1a472b2d7cc4dfb6b015082",
+        "retrievedAt": "2026-10-14T05:09:53.173299+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Green County Clerk",
+        "reviewedEvidence": "Official November 3, 2026 City of Monroe sample ballot: full statewide tickets, Attorney General, Secretary of State, State Treasurer, Congressional District 2, Senate District 17 and Assembly District 50 names and parties. Ballot extracted by pdftotext bounding boxes."
+      },
+      {
+        "requestedUrl": "https://www.greencountywi.org/DocumentCenter/View/4592/Type-B-Notice-for-Fall-General",
+        "finalUrl": "https://www.greencountywi.org/DocumentCenter/View/4592/Type-B-Notice-for-Fall-General",
+        "httpStatus": 200,
+        "rawHash": "a2bce96b49304d977938cee33d1a06213ac81fe72ea875e5bca661c5e394a74e",
+        "retrievedAt": "2026-10-14T05:09:18.942179+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Green County Clerk",
+        "reviewedEvidence": "Official November 3, 2026 general election notice states the county scope and that the ballot names are candidates whose nominations have been certified to or filed in this office."
+      },
+      {
+        "requestedUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+        "finalUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+        "httpStatus": 200,
+        "rawHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+        "retrievedAt": "2026-10-14T05:09:19.431021+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Green County Clerk",
+        "reviewedEvidence": "Official statewide referendum notice for November 3, 2026: Questions 1, 2 and 3, full proposed constitutional texts and explanatory statements, printed September 30, 2026."
+      }
+    ]
+  }
+}

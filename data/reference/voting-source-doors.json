@@ -2067,14 +2067,17 @@
     "publisher": "State Board of Elections, Richmond, VA",
     "url": "https://www.elections.virginia.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "VA",
       "ocdId": "ocd-division/country:us/state:va",
       "name": "Virginia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.elections.virginia.gov/",
+    "electionPageUrl": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/",
     "title": "Virginia chief election office discovery root",
     "office": {
       "name": "State Board of Elections, Richmond, VA",
@@ -2083,28 +2086,63 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official federal, special legislative and statewide measure workbooks acquired as HTTP 200 and converted with a script."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.virginia.gov/\">https://www.elections.virginia.gov/</a>"
-    }
+    },
+    "discoveredSources": [
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx",
+        "covers": [
+          "CANDIDATE_LIST"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      },
+      {
+        "url": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "covers": [
+          "BALLOT_MEASURES"
+        ]
+      }
+    ]
   },
   {
     "id": "fec-wa-chief",
     "publisher": "Elections Division, Office of the Secretary of State, Olympia, WA",
     "url": "https://www.sos.wa.gov/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WA",
       "ocdId": "ocd-division/country:us/state:wa",
       "name": "Washington"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.sos.wa.gov/elections/",
+    "electionPageUrl": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
     "title": "Washington chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Olympia, WA",
@@ -2113,28 +2151,42 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "2026 general candidate list exported as official CSV; all 10 U.S. House districts, 98 state House seats, 24 state Senate seats, five statewide Supreme Court seats and three statewide initiatives converted from official sources."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.wa.gov/elections/\">https://www.sos.wa.gov/elections/</a>"
-    }
+    },
+    "candidateListUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899",
+    "measureListUrl": "https://www.sos.wa.gov/elections/voters/proposed-ballot-measure-information",
+    "sourceUrls": [
+      "https://voter.votewa.gov/CandidateList.aspx?e=899",
+      "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+      "https://www.sos.wa.gov/sites/default/files/2026-08/2026%20Certification%20of%20Measures%20to%20General%20Election.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
+      "https://www.sos.wa.gov/sites/default/files/2026-07/Finaltext_IP26-645_fulltext.pdf"
+    ]
   },
   {
     "id": "fec-wv-chief",
     "publisher": "Office of the Secretary of State, Charleston, WV",
     "url": "https://sos.wv.gov/elections/Pages/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WV",
       "ocdId": "ocd-division/country:us/state:wv",
       "name": "West Virginia"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.wv.gov/elections/Pages/default.aspx",
+    "electionPageUrl": "https://sos.wv.gov/govotewv",
     "title": "West Virginia chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Charleston, WV",
@@ -2143,21 +2195,88 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Current official candidate listing returned HTTP 503. Official sample ballots acquired for all 55 counties supply every federal and state legislative contest; candidateListComplete remains false. Amendment 1 question and full text acquired."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.wv.gov/elections/Pages/default.aspx\">https://sos.wv.gov/elections/Pages/default.aspx</a>"
-    }
+    },
+    "candidateListUrl": "https://candidates.wvsos.gov/",
+    "candidateSampleBallotsUrl": "https://apps.sos.wv.gov/elections/SampleBallots",
+    "measureListUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+    "sourceUrls": [
+      "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Barbour%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Berkeley%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Boone%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Braxton%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Brooke%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Cabell%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Calhoun%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Clay%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Doddridge%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Gilmer%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Grant%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Greenbrier%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hampshire%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hancock%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hardy%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Harrison%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Jackson%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Jefferson%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lewis%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lincoln%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Logan%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marion%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marshall%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mason%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20McDowell%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mercer%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mineral%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mingo%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monongalia%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monroe%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Morgan%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Nicholas%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Ohio%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pendleton%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pleasants%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pocahontas%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Preston%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Putnam%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Raleigh%20261103%20General%20-14inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Randolph%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Ritchie%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Roane%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Summers%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tucker%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tyler%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Upshur%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wayne%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Webster%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wetzel%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wirt%20261103%20General%20-%2017inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wood%20261103%20General%20-%2014inch.pdf",
+      "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wyoming%20261103%20General%20-%2014inch.pdf",
+      "https://sos.wv.gov/govotewv",
+      "https://www.wvlegislature.gov/Bill_Status/bills_text.cfm?billdoc=sjr9%20sub1%20enr.htm&yr=2026&sesstype=RS&i=9&houseorig=s&billtype=jr",
+      "https://apps.sos.wv.gov/elections/SampleBallots"
+    ]
   },
   {
     "id": "fec-wi-chief",
     "publisher": "Wisconsin Elections Commission, Madison, WI",
     "url": "https://elections.wi.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WI",
       "ocdId": "ocd-division/country:us/state:wi",
@@ -2173,28 +2292,38 @@
     },
     "access": {
       "status": "unreachable",
-      "detail": "Browser extraction returned Internal Error without a response body.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Wisconsin Elections Commission root and certified general candidate download return HTTP 403. Official Green County candidate ballot and statewide referendum notice were acquired with HTTP 200; other districts remain unacquired."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.wi.gov/\">https://elections.wi.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+    "ballotMeasuresUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+    "candidateListUrls": [
+      "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+      "https://www.greencountywi.org/DocumentCenter/View/4592/Type-B-Notice-for-Fall-General"
+    ],
+    "officialCertifiedCandidateListUrl": "https://elections.wi.gov/media/40951/download"
   },
   {
     "id": "fec-wy-chief",
     "publisher": "Office of the Secretary of State, Cheyenne, WY",
     "url": "https://sos.wyo.gov/Elections/Default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "WY",
       "ocdId": "ocd-division/country:us/state:wy",
       "name": "Wyoming"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.wyo.gov/Elections/Default.aspx",
+    "electionPageUrl": "https://sos.wyo.gov/Elections/2026ElectionInformation.aspx",
     "title": "Wyoming chief election office discovery root",
     "office": {
       "name": "Office of the Secretary of State, Cheyenne, WY",
@@ -2203,14 +2332,16 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "checkedAt": "2026-10-14",
+      "detail": "Official election root links the 2026 general election candidate roster in CSV/PDF and statewide propositions with full initiative text."
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.wyo.gov/Elections/Default.aspx\">https://sos.wyo.gov/Elections/Default.aspx</a>"
-    }
+    },
+    "candidateListUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+    "ballotMeasuresUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf"
   },
   {
     "id": "mt-statewide-polling-2026",

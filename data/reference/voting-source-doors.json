@@ -1334,7 +1334,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Providence, RI",
     "url": "https://vote.sos.ri.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "RI",
       "ocdId": "ocd-division/country:us/state:ri",
@@ -1350,14 +1353,31 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official general-election candidate summary tables and 2026 voter handbook fetched as raw bytes. Public summaries expose all federal, statewide and legislative offices without voter identity input.",
+      "checkedAt": "2026-10-14T05:09:38.724006+00:00"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://vote.sos.ri.gov/\">https://vote.sos.ri.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=518&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=548&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=549&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=551&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=591&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=592&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=593&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=617&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=620&Election=18144",
+      "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=621&Election=18144"
+    ],
+    "ballotMeasuresUrls": [
+      "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+      "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-ri-board",

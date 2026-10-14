@@ -1,0 +1,31 @@
+{
+  "n": 36,
+  "branch": "release/36",
+  "river_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+  "tested_sha": "dc5cddd3834ac04588782f84b6becc81fe6a5e25",
+  "steps": [
+    "DS-03",
+    "R3-CIVICCLERK",
+    "R3-CIVICPLUS",
+    "R3-ESCRIBE",
+    "R3-NOVUS",
+    "SV-01",
+    "R7"
+  ],
+  "lanes": [
+    "office-pins",
+    "platform-civicclerk",
+    "platform-civicplus",
+    "platform-escribe",
+    "platform-novusagenda",
+    "state-votes",
+    "token-cost"
+  ],
+  "integration_from": 190,
+  "integration_count": 197,
+  "pr": {
+    "number": 745,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/745"
+  },
+  "at": "2026-10-14T16:35:58Z"
+}

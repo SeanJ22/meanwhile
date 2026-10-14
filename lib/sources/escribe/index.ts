@@ -6,7 +6,7 @@ import { decodeEntities, politeGetText } from "../http.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, ReportingMeetingSource } from "../types.ts";
 
-export interface EscribeMeeting {
+interface EscribeMeeting {
   ID: string;
   MeetingName: string;
   MeetingType: string;
@@ -24,7 +24,7 @@ export interface EscribeMeeting {
   MeetingDocumentLink: { Title: string; Type: string; Url: string }[];
 }
 
-export interface EscribeRaw { wiring: BodySourceWiring; text: string; collectedAt: string }
+interface EscribeRaw { wiring: BodySourceWiring; text: string; collectedAt: string }
 
 const plain = (html: string) => decodeEntities(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 

@@ -87,6 +87,8 @@ export function meetingAcquisitionFailureDomain(
       case "boardbook": return "https://meetings.boardbook.org";
       case "escribe": return wiring.config.portalUrl;
       case "boarddocs": return wiring.config.portalUrl;
+      case "granicus": return wiring.config.publisherUrl;
+      case "novusagenda": return wiring.config.portalUrl;
       case "civicplus": return wiring.config.agendaCenterUrl ?? wiring.config.icalUrl;
       case "iqm2": return wiring.config.base;
       case "revize": return wiring.config.base;

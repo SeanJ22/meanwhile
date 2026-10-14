@@ -100,6 +100,14 @@ const SITE = (feed = FEED, home = HOME): Record<string, RecordedReply> => ({
   [ROUTE]: { status: 200, body: feed, contentType: "text/calendar" },
 });
 
+test("one calendar automatically binds every verified body beyond the first ten", async () => {
+  const names = ["City Council", "Planning Commission", "Housing Commission", "Arts Commission", "Tourism Commission", "Library Board", "Parks Commission", "Water Board", "Transit Board", "Health Board", "Airport Commission", "Historic Preservation Commission"];
+  const feed = ics(names.map((name, index) => ({ uid: `body-${index}`, summary: `${name} Meeting`, start: `202610${String(index + 1).padStart(2, "0")}T180000` })));
+  const recorded = await walk(SITE(feed, `<a href="${ROUTE}">Meetings</a><p>${names.join(". ")}</p>`));
+  const result = review(recorded.attempt, recorded.bodies);
+  assert.equal(result.accepted.length, names.length, JSON.stringify(result.held));
+});
+
 test("route selection leaves the original saved walk intact and does not re-review superseded calendars", async () => {
   const recorded = await walk(SITE());
   const before = JSON.stringify(recorded.attempt);

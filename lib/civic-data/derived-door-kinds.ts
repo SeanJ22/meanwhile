@@ -4,6 +4,8 @@ export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
   "BOARDDOCS",
+  "GRANICUS",
+  "NOVUSAGENDA",
   "ESCRIBE",
   "CIVICCLERK",
   "IQM2",
@@ -42,6 +44,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     route: { key: "orgId", as: "lastPathSegment" },
     allowed: [], required: [],
   },
+  GRANICUS: {
+    sourceName: "granicus", agendaSourceType: "GRANICUS", entry: "lib/sources/granicus/index.ts",
+    route: { key: "publisherUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
+  },
   ESCRIBE: {
     sourceName: "escribe", agendaSourceType: "ESCRIBE", entry: "lib/sources/escribe/index.ts",
     route: { key: "portalUrl", as: "origin" },
@@ -51,6 +58,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     sourceName: "boarddocs", agendaSourceType: "BOARDDOCS", entry: "lib/sources/boarddocs/index.ts",
     route: { key: "portalUrl", as: "url" },
     allowed: ["committeeId"], required: ["committeeId"],
+  },
+  NOVUSAGENDA: {
+    sourceName: "novusagenda", agendaSourceType: "NOVUSAGENDA", entry: "lib/sources/novusagenda/index.ts",
+    route: { key: "portalUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
   },
   CIVICCLERK: {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",

@@ -614,6 +614,7 @@ export async function readManualProjectionPrior(
   }
   const candidate = await store.readCandidate(read.projection.versionId);
   const sourceReceipt = candidate?.candidate.retrieval.manualSourceReceipt;
+  if (candidate && !sourceReceipt) return null;
   const issue = manualSourceReceiptStructureIssue(sourceReceipt);
   if (!candidate || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${contractId}:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
@@ -1015,10 +1016,7 @@ export function manualProjectionCandidate(
     : null;
   const payload = isolated?.payload ?? input.payload;
   const promotionReceipt = isolated?.sourceReceipt ?? input.sourceReceipt;
-  // Ballot packages deliberately remain atomic: candidacies reference exact
-  // contests, and Arizona additionally cross-checks filings, certified lineup,
-  // identity registry, and reconciliation rows. Splitting those members would
-  // permit a cross-record proof assembled from incompatible source versions.
+  // Ballot candidacies and their contest evidence must remain in one source version.
   const built = input.contractId === "plain-english-translations"
     ? plainEnglishProjection(payload)
     : input.contractId === "ballot-contests"
@@ -1055,9 +1053,7 @@ export function manualProjectionCandidate(
   const civicRecords = civicRecordsFor(contract.recordClass, built.payload);
   const droppedRecords = isolated?.rejectedCurrentMembers ?? 0;
   return {
-    // Contract/record-class identity is part of the version id. Candidate
-    // profiles and publications deliberately share a source and scope, and
-    // must never collide merely because one review covered the same bytes.
+    // Profiles and publications share a source and scope; their contract keeps version ids distinct.
     id: `${contract.sourceId}:${sha256(`${contract.id}\n${contract.recordClass}\n${scope}\n${attemptHash}\n${normalizedHash}\n${reviewedAt}`).slice(0, 32)}`,
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,

@@ -54,8 +54,8 @@ export type AgendaSourceType =
   | "BOARDBOOK"
   /** BoardDocs public committee meeting list and per-meeting agenda page. */
   | "BOARDDOCS"
+  | "NOVUSAGENDA"
   | "ESCRIBE"
-
   | "SCHEDULEPAGE"
 
   | "PIMA_EDU"
@@ -69,8 +69,8 @@ export type AgendaSourceType =
   | "DOCUMENT_LISTING"
 
   | "SUITEONE"
+  | "GRANICUS"
   | "PRIMEGOV"
-  | "NOVUSAGENDA"
   | "SIMBLI"
   | "ICAL"
   | "RSS"

@@ -1,5 +1,15 @@
 # Returned: ballot-national
 
+## ballot-national — cleanup list (River's review at fold; delete in stream/ballot-national, then mark READY again)
+
+Lane ballot-national (BL-10), READY 78cbc5a56, folded into river-next. Measured effect against river 0a0daac9af64: +343 / −5 lines across 7 files (3 added, 0 deleted, 4 modified). The READY commit's counts match.
+
+Delete:
+1. Remove the unused `export` keyword (nothing imports it, tests included): lib/ballot/voting-source-types.ts:5 (VotingDoorCoverage).
+
+Test-only exports left alone: scripts/assemble-ballot-package.mts:16 (BallotStateFile) and :65 (assembleBallotPackage).
+
+
 lane: ballot-national
 owner: ballot-national
 writer: the ballot-national lane

@@ -68,7 +68,7 @@ const NEXT = "river-next";
 const MIGRATIONS_DIR = "lib/db/migrations";
 const JOURNAL = `${MIGRATIONS_DIR}/meta/_journal.json`;
 const OBSERVE_WORKFLOW = "post-deploy-integrity.yml";
-const STEP_ID = /\b[A-Z]{2,4}-\d{1,3}\b/g;
+const STEP_ID = /\b(?:R\d-[A-Z]+(?:-[A-Z]+)*|[A-Z]{2,4}-\d{1,3}|[A-Z]{2,}-[A-Z]{2,}|R\d[A-Z]?)\b/g;
 
 /**
  * The adapter implementation path. An adapter stream that reaches outside it is

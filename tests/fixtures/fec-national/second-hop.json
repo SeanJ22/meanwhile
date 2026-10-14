@@ -1,0 +1,32 @@
+{
+  "dataClass": "FEC_CONTRIBUTOR",
+  "committeeId": "C00107235",
+  "name": "PRICEWATERHOUSECOOPERS POLITICAL ACTION COMMITTEE I",
+  "committeeType": "Q",
+  "organizationType": "C",
+  "designation": "B",
+  "topContributions": [
+    {
+      "dataClass": "FEC_CONTRIBUTOR",
+      "kind": "COMMITTEE_OR_ORGANIZATION",
+      "contributorName": "PRICEWATERHOUSECOOPERS",
+      "amount": 5000,
+      "receiptDate": "2025-01-21",
+      "city": "WASHINGTON",
+      "state": "DC",
+      "entityType": "ORG",
+      "lineNumber": "11AI",
+      "committeeType": null,
+      "organizationType": null,
+      "designation": null,
+      "contributorCommitteeId": null
+    }
+  ],
+  "receipts": 3267653.69,
+  "provenance": {
+    "sourceUrl": "https://www.fec.gov/data/committee/C00107235/",
+    "sourceOrg": "Federal Election Commission",
+    "collectedAt": "2026-09-05",
+    "verifiedAt": "2026-09-05"
+  }
+}

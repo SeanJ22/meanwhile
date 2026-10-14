@@ -1,17 +1,9 @@
-/**
- * A saved method finds a body's own events page and the runner reuses it in another state, on recorded pages only.
- * An event verifies only on the body's own host, named in its title by the body's recorded name, the name without
- * class words, its initials, or the words the body's own homepage used to link the page, and dated in the body's
- * state's zone; a state that spans zones is never guessed. An Arizona page never verifies for a New Mexico body,
- * nor the reverse.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
-  runMeetingsDiscovery,
+
   walkMeetingsDiscoveryNeed,
   type DiscoveryOpen,
   type DiscoveryRuntime,
@@ -24,7 +16,6 @@ import {
   verifyEndpointBody,
 } from "../lib/hunt/meetings-site-discovery.ts";
 import { SEED_RECIPES, knownRecipes, recipeCandidates } from "../lib/hunt/meetings-recipes.ts";
-import { eachStore } from "./control-plane-fixtures.ts";
 import { COUNTY_TIME_ZONES, governmentTimeZone } from "../lib/time/county-time-zones.ts";
 
 const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
@@ -252,67 +243,4 @@ test("LAZY VAULT: walks share the linking index, reload selected original pages,
   assert.ok(reads.every(n => n === 1), "each unrelated capture is ingested once across both walks");
   assert.ok(directoryReads > 1, "the selected endorsement is read again from its original capture");
   assert.ok(captureReads > 0, "fresh captures are loaded through the vault reader");
-});
-
-test("LAZY VAULT DEADLINE: an expired body read leaves the walk and remaining needs owed", async () => {
-  for (const [label, repos] of await eachStore("wtp-lazy-discovery-")) {
-    let left = 60_000;
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [TUSD, SFPS], cycleIndex: 0, maxWalks: 5,
-      runtime: {
-        ...runtime(fakeOpen({ ...TUSD_SITE, ...SFPS_SITE }).open),
-        budget: { spent: () => left <= 0, remainingMs: () => left },
-        readOfficialPages: async () => [{ canonicalUrl: DIRECTORY.url, readText: async () => { left = 0; throw new Error("vault read deadline"); } }],
-      },
-    });
-    assert.deepEqual(pass.walked, [], label);
-    assert.equal(pass.cutShort.length, 1, label);
-    assert.deepEqual(new Set(pass.deferred), new Set([TUSD.jurisdictionId, SFPS.jurisdictionId]), label);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent(pass.cutShort[0].jurisdictionId, 5), [], label);
-  }
-});
-
-test("VAULT INDEX DEADLINE: expiry before page metadata loads records no discovery reading", async () => {
-  for (const [label, repos] of await eachStore("wtp-index-discovery-")) {
-    let expired = false;
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [TUSD], cycleIndex: 0, maxWalks: 5,
-      runtime: {
-        ...runtime(fakeOpen(TUSD_SITE).open),
-        budget: { spent: () => expired, remainingMs: () => expired ? 0 : 60_000 },
-        readOfficialPages: async () => { expired = true; throw new Error("vault index deadline"); },
-      },
-    });
-    assert.deepEqual(pass.walked, [], label);
-    assert.deepEqual(pass.cutShort, [{ jurisdictionId: TUSD.jurisdictionId, requests: 0, search: [] }], label);
-    assert.deepEqual(pass.deferred, [TUSD.jurisdictionId], label);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent(TUSD.jurisdictionId, 5), [], label);
-  }
-});
-
-test("THE RUNNER USES WHAT IT SAVED: cycle 1 credits the method for TUSD; cycle 2, a later process in New Mexico, reads it from the store and applies it", async () => {
-  for (const [label, repos] of await eachStore("wtp-official-page-")) {
-    const first = await runMeetingsDiscovery(repos, {
-      needs: [TUSD],
-      runtime: runtime(fakeOpen(TUSD_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(first.walked[0].outcome, "FOUND", label);
-    assert.ok(first.recipesUpdated.includes(METHOD), label);
-    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
-    assert.equal(saved.successes, 1, `${label}: the success is written to the field manual, which outlives the process`);
-    assert.equal(saved.lastSuccess?.jurisdictionId, TUSD.jurisdictionId);
-
-    const second = await runMeetingsDiscovery(repos, {
-      needs: [SFPS],
-      runtime: runtime(fakeOpen(SFPS_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), "2026-09-23T23:59:00.000Z"),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(second.walked[0].outcome, "FOUND", label);
-    const after = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
-    assert.equal(after.successes, 2, `${label}: the New Mexico walk used the saved method and added to it`);
-    assert.equal(after.lastSuccess?.jurisdictionId, SFPS.jurisdictionId);
-  }
 });

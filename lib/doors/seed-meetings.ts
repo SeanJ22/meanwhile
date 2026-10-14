@@ -1,11 +1,3 @@
-/**
- * Today's meeting doors as registry records. A hand-wired door is (meeting
- * source, body), its partition id `meetings:<source>:<bodyId>`; one wiring row
- * can produce several. A derived member's door id is its derived wiring row id,
- * and it stays in its state's family partition (`meetings:derived:<state>`).
- * Pure mapping; the registry records doors and does not move what readers see.
- */
-
 import { derivedMeetingFamilyId, meetingAcquisitionFailureDomain, meetingPartitionId } from "../civic-data/meeting-partitions.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
 import type { DerivedMeetingFamilyState } from "../civic-data/contracts.ts";
@@ -70,7 +62,7 @@ export function doorFromDerivedRecord(record: DerivedWiringRecord): DoorDraft {
     ocdId: row.ocdId,
     bodyIds: [row.bodyId],
     hosts: hostsOfConfig(row.config, [row.route, `https://${row.officialHost}/`]),
-    config: { ...row.config, route: row.route, familyPartition: derivedMeetingFamilyId(row.state as DerivedMeetingFamilyState) },
+    config: { ...row.config, governmentId: row.jurisdictionId, route: row.route, familyPartition: derivedMeetingFamilyId(row.state as DerivedMeetingFamilyState) },
     holds: ["meetings"],
     checkEveryMinutes: null,
     notes: `Derived meeting door for ${row.publishingOrg}, from the reviewed crosswalk row ${row.crosswalkRowId} (reviewed ${row.reviewedAt}).`,
@@ -95,10 +87,6 @@ export interface MeetingSeedCounts {
   refused: readonly string[];
 }
 
-/**
- * Import every wiring row and derived row once. Safe to repeat: rows upsert by
- * door id and a hand edit newer than `deriveInputAt` is never overwritten.
- */
 export async function seedMeetingDoors(input: {
   readonly repo: DoorRepository;
   readonly wiring: readonly BodySourceWiring[];

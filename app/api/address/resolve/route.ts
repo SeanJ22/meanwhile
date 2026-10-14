@@ -2,27 +2,20 @@ import {
   zipThisAddressResolvesTo,
   locateAddressInZip,
   sampleStreetPoints,
+  type CensusPoint,
 } from "@/lib/geo/census-geocoder";
 import {
   resolveAddress,
   type AddressResolution,
   type Sample,
 } from "@/lib/geo/address-resolution";
-import { divisionsAt } from "@/lib/registry/server";
+import { divisionsForCensusGeographies } from "@/lib/registry/server";
+import { censusVintageFor } from "@/lib/geo/census-geographies";
+import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
 import { lookupZcta } from "@/lib/geo/zcta";
-
-/**
- * Takes a street and a ZIP; returns the jurisdictions the reader is confirmed to be in, level by level, and
- * the levels the street crosses. Nothing is stored or logged, and the house number is used for one geocode
- * and dropped. `no-store`: the answer is per reader and must never sit in a shared cache.
- *
- *   RESOLVED   every level the street touches has one answer
- *   AMBIGUOUS  one or more levels are split; the confirmed levels stay confirmed
- *   FAILED     we could not place the street
- */
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -36,10 +29,11 @@ function bad(): Response {
 }
 
 /** Contest ids for a confirmed division set — the ballot page's narrowing. */
-async function contestIdsFor(ocdIds: readonly string[]): Promise<string[]> {
-  if (ocdIds.length === 0) return [];
+async function contestIdsFor(ocdIds: readonly string[], selection: GeographySelection): Promise<string[]> {
+  if (ocdIds.length === 0 || selection.purpose !== "election") return [];
   for (const { source } of await readerBallotSourcesForDivisions(ocdIds)) {
     const candidate = source.normalize(await source.fetch());
+    if (candidate.election.date !== selection.electionDate) continue;
     const hit = contestsForDivisions(candidate, [...ocdIds]);
     if (hit.contests.length > 0 || hit.absences.length > 0) {
       return hit.contests.map((c) => c.id);
@@ -53,17 +47,24 @@ export async function POST(request: Request) {
   let street = "";
   let houseNumber = "";
   let postalEntry = false;
+  let selection: GeographySelection = currentRepresentationSelection();
   try {
     const body = (await request.json()) as {
       zip?: unknown;
       street?: unknown;
       houseNumber?: unknown;
       postalEntry?: unknown;
+      selection?: GeographySelection;
     };
     zip = typeof body.zip === "string" ? body.zip.trim() : "";
     street = typeof body.street === "string" ? body.street.trim() : "";
     houseNumber = typeof body.houseNumber === "string" ? body.houseNumber.trim() : "";
     postalEntry = body.postalEntry === true;
+    if (body.selection) {
+      if (!["representation", "election"].includes(body.selection.purpose) || !/^\d{4}-\d{2}-\d{2}$/.test(body.selection.asOf) ||
+          body.selection.purpose === "election" && !/^\d{4}-\d{2}-\d{2}$/.test(body.selection.electionDate ?? "")) return bad();
+      selection = body.selection;
+    }
   } catch {
     return bad();
   }
@@ -78,24 +79,18 @@ export async function POST(request: Request) {
   const queryStreet = omitZip && !street.includes(",") && area?.place && area.state
     ? `${street}, ${area.place}, ${area.state}` : street;
 
-  /*
-   * With a house number there is ONE point and nothing to average, so every
-   * level is certain by construction. Without one, the street is sampled at
-   * several low numbers and the divisions are compared.
-   */
-  const points: { lat: number; lng: number }[] = [];
+
+  const points: CensusPoint[] = [];
+  const vintage = censusVintageFor(selection);
   if (houseNumber.length > 0) {
-    const point = await locateAddressInZip(houseNumber, queryStreet, zip, { omitZip });
-    if (point) points.push({ lat: point.lat, lng: point.lng });
+    const point = await locateAddressInZip(houseNumber, queryStreet, zip, { omitZip, vintage });
+    if (point) points.push(point);
   } else {
-    points.push(...(await sampleStreetPoints(queryStreet, zip, { omitZip })));
+    points.push(...(await sampleStreetPoints(queryStreet, zip, { omitZip, vintage })));
   }
 
   if (points.length === 0) {
-    /*
-     * `locateAddressInZip` puts the ZIP into the query, so an address in the next ZIP over fails like a bad
-     * address. Only on that failure, and only with a house number, ask where it does resolve.
-     */
+
     const elsewhere =
       houseNumber.length > 0
         ? await zipThisAddressResolvesTo(houseNumber, street, zip)
@@ -110,7 +105,7 @@ export async function POST(request: Request) {
 
   const samples: Sample[] = [];
   for (const p of points) {
-    const divisions = await divisionsAt(p.lat, p.lng);
+    const divisions = await divisionsForCensusGeographies(p.geographies ?? {}, selection, vintage, p.geographyVintages ?? {});
     samples.push(
       divisions.map((d) => ({ ocdId: d.ocdId, divisionType: d.divisionType, label: d.label })),
     );
@@ -118,13 +113,7 @@ export async function POST(request: Request) {
 
   const resolution = resolveAddress(samples);
 
-  /*
-   * Contests come from the CONFIRMED divisions only. A level the street
-   * genuinely crosses contributes nothing until the reader settles it, because
-   * narrowing a ballot on a jurisdiction we are not sure of would hide
-   * contests the reader may actually vote in — and hiding a contest silently
-   * is how a reader ends up believing it does not exist.
-   */
+
   const confirmed =
     resolution.status === "FAILED"
       ? []
@@ -140,7 +129,7 @@ export async function POST(request: Request) {
       : null;
 
   return Response.json(
-    { ok: true, resolution, contestIds: await contestIdsFor(confirmed), point },
+    { ok: true, resolution, contestIds: await contestIdsFor(confirmed, selection).catch(() => []), point },
     { headers: NO_STORE },
   );
 }

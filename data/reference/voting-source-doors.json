@@ -1524,7 +1524,10 @@
     "publisher": "Office of the Secretary of State, Pierre, SD",
     "url": "https://sdsos.gov/elections-voting/default.aspx",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "SD",
       "ocdId": "ocd-division/country:us/state:sd",
@@ -1540,14 +1543,27 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official public general-election candidate export and statewide ballot-question pamphlet fetched as raw bytes. Candidate export contains all federal, statewide and legislative contest divisions. Voter identity lookup was not used.",
+      "checkedAt": "2026-10-14T05:39:43.802756+00:00"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sdsos.gov/elections-voting/default.aspx\">https://sdsos.gov/elections-voting/default.aspx</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://vip.sdsos.gov/candidatelist.aspx?eid=774"
+    ],
+    "ballotMeasuresUrls": [
+      "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026-ballot-questions.aspx",
+      "https://charlesmixcounty.gov/files/2026/10/GE-General.pdf",
+      "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
+      "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf"
+    ],
+    "electionAssociationVerified": true
   },
   {
     "id": "fec-tn-chief",

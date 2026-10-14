@@ -28,8 +28,32 @@ export interface ScoutManualOptions {
   readonly obligationId?: string | null;
   /** The divisions the walk's obligation covers. */
   readonly divisions?: readonly string[];
-  readonly recordClass?: string | null;
+  /** The record classes of the blanks the walk is for; notes on them rank first. */
+  readonly recordClasses?: readonly string[];
   readonly limit?: number;
+}
+
+/** The field manual's record class for each checklist family's blanks. */
+const FAMILY_RECORD_CLASS: Readonly<Record<string, string>> = {
+  GOV: "local-jurisdiction", OFF: "official_roster", MTG: "meetings", DOC: "meetings", PAR: "public_comment_rule",
+  ELE: "ballot_contest", CAN: "candidate-enrichment", CAM: "campaign_finance_filing",
+};
+
+/** The note classes that also bear on each record class. */
+const RELATED: Readonly<Record<string, readonly string[]>> = {
+  "local-jurisdiction": ["official_board_directory", "body", "jurisdiction", "roster", "verifiedpage"],
+  official_roster: ["officeholder", "official", "roster", "contact", "email", "photo", "verifiedpage"],
+  meetings: ["meetings-discovery", "meeting", "agenda", "minutes", "packet", "document", "outcome", "vote", "official_document_sitemap"],
+  public_comment_rule: ["service_contact", "meeting", "agenda", "contact"],
+  ballot_contest: ["voter_access_route", "election", "contest", "ballot", "measure", "voting_site"],
+  "candidate-enrichment": ["candidate_filing_document", "candidate", "candidacy", "campaignsite", "contact", "photo", "blurb", "filing"],
+  campaign_finance_filing: ["campaign_finance_document", "filing", "document", "contribution", "expenditure"],
+};
+
+/** The record class of a blank, by its checklist id; null for a field that is not a checklist item. */
+export function blankRecordClass(checklistId: string): string | null {
+  const family = /^([A-Z]+)-\d+$/.exec(checklistId)?.[1];
+  return family === undefined ? null : FAMILY_RECORD_CLASS[family] ?? family.toLowerCase();
 }
 
 /** The walk's own places: its subject when that is a division, and the divisions its obligation covers. */
@@ -59,22 +83,15 @@ export function scoutFieldManualProjection(
   opts: ScoutManualOptions,
 ): FieldManualProjection {
   const store = read.store;
-  // Rank applicable field hints first; cross-family methods keep the remaining slots.
-  const related: Readonly<Record<string, readonly string[]>> = {
-    OFFICIAL_ROSTER: ["officeholder", "roster", "contact", "verifiedpage", "photo", "body", "officials"],
-    OFFICIAL_BOARD_DIRECTORY: ["body", "jurisdiction", "roster", "verifiedpage"],
-    PUBLIC_COMMENT_RULE: ["meeting", "agenda", "minutes", "body", "verifiedpage"],
-    CANDIDATE_FILING_DOCUMENT: ["candidate", "contest", "filing", "document"],
-    CAMPAIGN_FINANCE_FILING: ["filing", "document", "contribution", "expenditure"],
-  };
-  const hints = new Set([opts.recordClass?.toLowerCase() ?? "", ...(related[opts.recordClass ?? ""] ?? [])]);
+  const classes = new Set((opts.recordClasses ?? []).map(value => value.toLowerCase()));
+  const hints = new Set([...classes].flatMap(value => [value, ...(RELATED[value] ?? [])]));
   const full = projectFieldManual(store, { ...scoutFieldManualQuery(opts), limit: store.entries.length }, read.evidence);
   const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
   const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, tier: full.tiers[index]!, entry: byId.get(id)! }))
-    .filter(row => row.entry.kind !== "PLAYBOOK" && (row.entry.kind !== "EXHAUSTED_RUNGS" || !opts.recordClass || row.entry.recordClasses.includes(opts.recordClass.toLowerCase())));
-  // Within each rank, the record class's own fields first.
+    .filter(row => row.entry.kind !== "PLAYBOOK" && (row.entry.kind !== "EXHAUSTED_RUNGS" || classes.size === 0 || row.entry.recordClasses.some(value => classes.has(value))));
+  // Notes on the blanks' own record classes first, then notes for any class, then the rest; each by rank.
   const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
-  indexed.sort((a, b) => a.tier - b.tier || affinity(a.entry) - affinity(b.entry));
+  indexed.sort((a, b) => affinity(a.entry) - affinity(b.entry) || a.tier - b.tier);
   const chosen = indexed.slice(0, opts.limit ?? 30);
   return { lines: chosen.map(row => row.line), entryIds: chosen.map(row => row.id), tiers: chosen.map(row => row.tier),
     leftOutFailingHere: full.leftOutFailingHere, matched: full.matched, total: full.total };

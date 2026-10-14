@@ -8,7 +8,7 @@ import { readSetting } from "../control-plane/settings.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import { FRESHNESS_PROJECT } from "../control-plane/scheduler/durable.ts";
 import { readFieldManual, writeFieldManual, newFieldManualEntry, type FieldManualEntry } from "../control-plane/field-manual.ts";
-import { scoutFieldManualProjection, scoutFieldManualQuery } from "../control-plane/scheduler/field-manual-scout.ts";
+import { blankRecordClass, scoutFieldManualProjection, scoutFieldManualQuery } from "../control-plane/scheduler/field-manual-scout.ts";
 import { hunterExecutor, type ModelTransport } from "../control-plane/scheduler/scout-executor.ts";
 import { buildScoutToolkit } from "../control-plane/scheduler/scout-tools.ts";
 import type { DeclaredExecutor } from "../control-plane/scheduler/dispatch.ts";
@@ -74,6 +74,9 @@ export function huntSearchCost(input: { readonly charge: SearchCharge; readonly 
   };
 }
 
+const recordClassesOf = (fields: readonly string[]): string[] =>
+  [...new Set(fields.map(blankRecordClass).filter((value): value is string => value !== null))];
+
 /** Field-manual rows from one job: the pages that gave facts, and the blanks it could not fill with what would unlock them. */
 export function huntLearnings(result: ScoutResult, packet: Pick<HuntPacket, "governmentId" | "label">): FieldManualEntry[] {
   const state = stateOfDivision(packet.governmentId).toLowerCase();
@@ -81,10 +84,11 @@ export function huntLearnings(result: ScoutResult, packet: Pick<HuntPacket, "gov
   for (const finding of result.findings) if (finding.sourceUrl && finding.field) byPage.set(finding.sourceUrl, [...byPage.get(finding.sourceUrl) ?? [], finding.field]);
   return [
     ...[...byPage].map(([url, fields]) => newFieldManualEntry("hunt", `${packet.governmentId}|${url}`, {
-      role: "SCOUT", kind: "SOURCE_PAGE", title: new URL(url).host, url, outcome: "YIELDED", states: [state], ocdIds: [packet.governmentId],
+      role: "SCOUT", kind: "SOURCE_PAGE", title: new URL(url).host, url, outcome: "YIELDED", states: [state], ocdIds: [packet.governmentId], recordClasses: recordClassesOf(fields),
       summary: `${[...new Set(fields)].join(", ")} for ${packet.label} found on this page`, observedAt: result.recordedAt })),
     ...(result.unfilled ?? []).map(blank => newFieldManualEntry("hunt", `${packet.governmentId}|${blank.subjectId}|${blank.field}`, {
       role: "SCOUT", kind: "DEAD_END", title: `${blank.field} for ${packet.label}`, outcome: "ZERO", states: [state], ocdIds: [packet.governmentId],
+      recordClasses: recordClassesOf([blank.field]),
       summary: `Tried: ${blank.tried}. Would unlock: ${blank.unlock}`.replace(/\s+/g, " ").slice(0, 300), observedAt: result.recordedAt })),
   ];
 }
@@ -153,7 +157,8 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
       packet = await packetNow();
       if (packet === null || packet.blanks.length === 0) return null;
       const manual = await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: governmentId, divisions: [governmentId] })).catch(() => null);
-      const notes = manual === null ? [] : scoutFieldManualProjection(manual, { subjectId: governmentId, divisions: [governmentId], limit: NOTE_LIMIT }).lines;
+      const notes = manual === null ? [] : scoutFieldManualProjection(manual, { subjectId: governmentId, divisions: [governmentId],
+        recordClasses: recordClassesOf(packet.blanks.map(blank => blank.checklistId)), limit: NOTE_LIMIT }).lines;
       const tried = role === "DETECTIVE" ? triedSteps({ steps: last?.rungs ?? [], unfilled: last?.unfilled ?? [], shutDoors: doors }) : [];
       const bound = durableResearchTools(input.tools, { project: item.project, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id, subjectId: governmentId });
       const reportPacket = packet;

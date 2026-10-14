@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { projectFieldManual } from "../lib/control-plane/field-manual.ts";
-import { scoutFieldManualProjection, scoutStateHint } from "../lib/control-plane/scheduler/field-manual-scout.ts";
+import { blankRecordClass, scoutFieldManualProjection, scoutStateHint } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 
 test("scoutStateHint reads the state from an OCD subject and from an obligation id", () => {
   assert.deepEqual(scoutStateHint("ocd-division/country:us/state:nj/county:morris#governing", null), ["nj"]);
@@ -22,12 +22,17 @@ test("a projection never exceeds its limit — a worker inherits a page, not the
   assert.equal(projection.total, 200);
 });
 
-test("OFFICIAL_ROSTER inherits historic contact and roster methods before unrelated doors", () => {
-  const make = (id: string, field: string) => ({
-    id, role: "SCOUT" as const, kind: "ROUTE", title: id, summary: id, states: ["az"], recordClasses: [field], platforms: [],
-    outcome: "YIELDED" as const, url: `https://example.gov/${id}`, source: "method", observedAt: null, tier: null, payload: {},
+test("notes on the blanks' record classes rank ahead of generic state notes, even ones about the place itself", () => {
+  const make = (id: string, classes: string[], ocdIds?: string[]) => ({
+    id, role: "SCOUT" as const, kind: "ROUTE", title: id, summary: id, states: ["az"], recordClasses: classes, platforms: [],
+    outcome: "YIELDED" as const, url: `https://example.gov/${id}`, source: "method", observedAt: null, tier: null, payload: {}, ...(ocdIds ? { ocdIds } : {}),
   });
-  const store = { entries: [make("meeting", "meeting"), make("contact", "contact"), make("roster", "roster")] };
-  const projection = scoutFieldManualProjection({ store }, { subjectId: "az:city:sierra-vista", recordClass: "OFFICIAL_ROSTER", limit: 2 });
-  assert.deepEqual(projection.entryIds, ["contact", "roster"]);
+  const county = "ocd-division/country:us/state:az/county:cochise";
+  const store = { entries: [make("robots", ["permission"], [county]), make("meeting", ["meeting"]), make("generic", []), make("campaign", ["campaignsite"]), make("contact", ["contact"])] };
+  const blanks = ["CAN-05", "CAN-06", "CAN-17"].map(blankRecordClass).filter((value): value is string => value !== null);
+  assert.deepEqual([...new Set(blanks)], ["candidate-enrichment"]);
+  const projection = scoutFieldManualProjection({ store }, { subjectId: county, divisions: [county], recordClasses: blanks, limit: 4 });
+  assert.deepEqual(projection.entryIds.slice(0, 3), ["campaign", "contact", "generic"]);
+  assert.ok(!projection.entryIds.slice(0, 3).includes("robots"));
+  assert.equal(blankRecordClass("meetingSchedule"), null);
 });

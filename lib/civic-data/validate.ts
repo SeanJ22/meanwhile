@@ -210,7 +210,8 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
 
 /** Per-contest evidence authorizes candidacy removals without claiming the whole ballot universe is complete. */
 function ballotListRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null): ValidationCheck | null {
-  if (candidate.recordClass !== "BALLOT_CANDIDACY" || object(candidate.readModel)?.kind !== "ballot-contests") return null;
+  if (candidate.recordClass !== "BALLOT_CANDIDACY" || object(candidate.readModel)?.kind !== "ballot-contests" ||
+    candidate.ballotCandidateLists === undefined) return null;
   const removed = candidate.changeSet?.removed ?? [];
   const receipt = candidate.retrieval.manualSourceReceipt;
   if (!prior || prior.candidate.sourceId !== candidate.sourceId || prior.candidate.scope !== candidate.scope ||
@@ -284,11 +285,12 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
         );
   }
 
-  const ballotReplacement = ballotListRemovalCheck(candidate, prior);
-  if (ballotReplacement !== null) return ballotReplacement;
-
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;
+
+  // A package that carries per-contest list evidence is judged on that evidence; one without it on the newer complete official list.
+  const ballotReplacement = ballotListRemovalCheck(candidate, prior);
+  if (ballotReplacement !== null) return ballotReplacement;
 
   const ballotRemoval = completeBallotRemovalCheck(candidate, prior);
   if (ballotRemoval !== null) return ballotRemoval;

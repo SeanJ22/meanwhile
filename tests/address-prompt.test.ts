@@ -12,7 +12,7 @@ const visit = (node: ts.Node) => {
 visit(source);
 assert.ok(send?.initializer);
 const makeSend = new Function("dependencies", ts.transpileModule(`
-  const { fetch, zip, postalEntry, street, page, readerPageForPath, logAddressEntered, setPhase, setError, setElsewhere, setResolution, setHouseNumber, setStreet, onPoint, onResolved, writeSessionAddress } = dependencies;
+  const { fetch, zip, postalEntry, selection, street, page, readerPageForPath, logAddressEntered, setPhase, setError, setElsewhere, setResolution, setHouseNumber, setStreet, onPoint, onResolved, writeSessionAddress } = dependencies;
   return ${send.initializer.getText()};
 `, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText);
 
@@ -26,7 +26,7 @@ async function submit(street: string, withNumber: string, body: unknown) {
     state[key] = typeof value === "function" ? value(state[key]) : value;
   };
   const run = makeSend({
-    zip: "43215", postalEntry: false, street,
+    zip: "43215", postalEntry: false, selection: undefined, street,
     page: "MAP", readerPageForPath: () => "MAP",
     logAddressEntered: (scope: unknown) => entries.push(scope),
     fetch: async (url: string, init: RequestInit) => {

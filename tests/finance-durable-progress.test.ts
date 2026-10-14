@@ -29,10 +29,11 @@ test("FEC publishes attempts and second-hop-only changes, and the next pass read
   const secondHop = { dataClass: "FEC_CONTRIBUTOR" as const, committeeId: "C00000001", cycle: 2026,
     name: "Example Organization Committee", committeeType: null, organizationType: null, designation: null,
     topContributions: [], receipts: 100, provenance: { sourceUrl: url, sourceOrg: "Federal Election Commission", collectedAt: T0, verifiedAt: null } };
-  const third = { ...await read(), secondHop: [secondHop] };
+  const held = (await read()).secondHop ?? [];
+  const third = { ...await read(), secondHop: [...held, secondHop] };
   const published = await processRegisteredRoutineCandidate(store, "fec-funding", build(third, T2), T2);
   assert.ok(published.promoted); assert.equal(published.confirmed, undefined);
-  assert.deepEqual((await read()).secondHop, [secondHop]);
+  assert.deepEqual((await read()).secondHop, [...held, secondHop]);
   assert.deepEqual((await read()).candidates, snapshot.candidates);
   assert.equal((await read()).fetchedAt, snapshot.fetchedAt);
   const unchanged = await processRegisteredRoutineCandidate(store, "fec-funding", build(await read(), T2), T2);

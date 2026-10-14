@@ -30,8 +30,10 @@ export async function lookupAddressGeographies(address: string, zip: string, opt
   fetchImpl?: typeof fetch; signal?: AbortSignal;
   /** Postal entry: the typed ZIP is mail-only or unknown, so the ZIP the Census matched is the answer, not a redirect. */
   anyZip?: boolean;
+  /** The Census vintage that answers for the selected purpose and date. */
+  vintage?: string;
 } = {}): Promise<AddressGeographyLookup | null> {
-  const query = new URLSearchParams({ address, benchmark: CENSUS_BENCHMARK, vintage: "Current_Current", layers: "all", format: "json" });
+  const query = new URLSearchParams({ address, benchmark: CENSUS_BENCHMARK, vintage: options.vintage ?? "Current_Current", layers: "all", format: "json" });
   try {
     const response = await (options.fetchImpl ?? publicFetch)(`${ENDPOINT}?${query}`, {
       cache: "no-store", headers: { accept: "application/json" },

@@ -9,6 +9,8 @@ import { censusWorkDivision } from "@/lib/census-geography/division-id";
 import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
 import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
 import { lookupZcta } from "@/lib/geo/zcta";
+import { censusVintageFor } from "@/lib/geo/census-geographies";
+import { divisionsForCensusGeographies } from "@/lib/registry/server";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { ensureReaderAuthorityEdge, readReaderManifest, READER_BALLOT_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
@@ -48,10 +50,12 @@ export async function resolveAddressRequest(request: Request, fetchImpl: typeof 
   if (house && !/^\d+[a-z]?(?:[-/]\d+[a-z]?)?$/i.test(house)) return answer({ ok: false }, 400);
   const address = house ? `${house} ${embeddedHouse ? street.slice(embeddedHouse[0].length) : street}` : street;
   const signal = AbortSignal.any([request.signal, AbortSignal.timeout(2500)]);
-  const geographiesRead = omitZip ? lookupAddressGeographies(address, zip, { fetchImpl, signal, anyZip: true })
-    : lookupAddressGeographies(`${address}, ${zip}`, zip, { fetchImpl, signal }).then(async found => {
+  const wanted = requested ?? currentRepresentationSelection();
+  const vintage = censusVintageFor(wanted);
+  const geographiesRead = omitZip ? lookupAddressGeographies(address, zip, { fetchImpl, signal, anyZip: true, vintage })
+    : lookupAddressGeographies(`${address}, ${zip}`, zip, { fetchImpl, signal, vintage }).then(async found => {
       if (found || signal.aborted) return found;
-      const elsewhere = await lookupAddressGeographies(address, zip, { fetchImpl, signal });
+      const elsewhere = await lookupAddressGeographies(address, zip, { fetchImpl, signal, vintage });
       return elsewhere?.kind === "OTHER_ZIP" ? elsewhere : null;
     });
   const manifest = await readReaderManifest().catch(() => null);
@@ -68,8 +72,14 @@ export async function resolveAddressRequest(request: Request, fetchImpl: typeof 
     contestIds: [], excludedContestIds: [] });
   const geographies = found.geographies;
   const stateFips = addressStateFips(geographies);
-  const selection = { ...(requested ?? currentRepresentationSelection()), ...(stateFips ? { stateFips } : {}) };
-  const resolution = resolveAddress([addressDivisions(geographies, held, selection)]);
+  const selection = { ...wanted, ...(stateFips ? { stateFips } : {}) };
+  // The Census answers for the vintage matching the selection; the held plan answers for the date. Either may place a level.
+  const byVintage = await divisionsForCensusGeographies(geographies, selection, vintage, {}).catch(() => []);
+  const sample = [...addressDivisions(geographies, held, selection)];
+  for (const division of byVintage) if (!sample.some(row => row.ocdId === division.ocdId)) {
+    sample.push({ ocdId: division.ocdId, divisionType: division.divisionType, label: division.label });
+  }
+  const resolution = resolveAddress([sample]);
   // The source lookup starts from every held plan touching the ZIP, not just today's representation map.
   const ids = new Set(entry?.ids ?? []);
   if (held.kind === "HELD") for (const row of held.value.containers) { const id = censusWorkDivision(row.ref); if (id) ids.add(id); }

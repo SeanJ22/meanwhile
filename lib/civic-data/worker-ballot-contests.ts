@@ -113,11 +113,11 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     const keepsMeasure = (contestId: string, sourceUrl: string | null) => !ids.has(contestId) ||
       !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
-    // A candidacy leaves when a verified list replaces it or a newer complete official list for the same contest omits it.
+    // A candidacy leaves when a verified list replaces it. Packages without per-contest list evidence rely on a newer complete official list for the contest.
     const carriedCandidates = (before?.candidacies ?? []).filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
       !replacedLists.has(row.contestId) &&
-      !ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
-        Date.parse(contest.provenance.collectedAt) >= Date.parse(before?.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? "")));
+      !(input.ballotCandidateLists === undefined && ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
+        Date.parse(contest.provenance.collectedAt) >= Date.parse(before?.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? ""))));
     const contests = ballot.contests.map(contest => carriedCandidates.some(row => row.contestId === contest.id)
       ? { ...contest, candidateListComplete: false, scopeNote: "We're working on getting the rest of this candidate list" }
       : contest);

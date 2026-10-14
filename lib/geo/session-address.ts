@@ -114,7 +114,8 @@ export function writeSessionAddress(scope: Omit<SessionAddressScope, "resolvedAt
         SESSION_ADDRESS_KEY,
         JSON.stringify({ scopeVersion: 3, zip: scope.zip, contestIds: scope.contestIds,
           excludedContestIds: scope.excludedContestIds ?? [], divisionIds: scope.divisionIds, splitLevels: scope.splitLevels,
-          divisionLabels: scope.divisionLabels ?? [], streetLabel: scope.streetLabel, resolvedAt: new Date().toISOString() }),
+          divisionLabels: scope.divisionLabels ?? [], streetLabel: scope.streetLabel, resolvedAt: new Date().toISOString(),
+          ...(scope.selection ? { selection: scope.selection } : {}) }),
       ),
     publish,
   );

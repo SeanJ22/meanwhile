@@ -193,9 +193,9 @@ test("the address store makes no server request", () => {
 test("an address scope stays inside its ZIP and selected election date", async () => {
   let saved: string | null = null;
   const previous = Reflect.get(globalThis, "window");
-  Reflect.set(globalThis, "window", { sessionStorage: {
-    getItem: () => saved, setItem: (_key: string, value: string) => { saved = value; },
-  } });
+  const storage = { getItem: () => saved, setItem: (_key: string, value: string) => { saved = value; }, removeItem: () => { saved = null; } };
+  // The remembered address lives on the device until the reader forgets it.
+  Reflect.set(globalThis, "window", { sessionStorage: storage, localStorage: storage });
   try {
     const { writeSessionAddress, sessionAddressFor } = await import("../lib/geo/session-address.ts");
     const scope = { zip: "85641", contestIds: [], divisionIds: ["ocd-division/country:us/state:az/sldl:17"],

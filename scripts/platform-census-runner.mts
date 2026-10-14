@@ -29,7 +29,7 @@ let stopped = false;
 process.on("message", message => { if ((message as { kind?: string })?.kind === "RUNTIME_RELEASE_DRAIN") stopped = true; });
 const vault = cycleVault(join(root, ...VAULT_DIR));
 let sizeFor = websiteSizeFromHoldings([], root);
-const fleet = new FleetSafetyController({ now: now(), costs: [], modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
+const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
   websiteSize: target => sizeFor(target) });
 const spaceOut = hostSpacer();
 let dotgov: Promise<Awaited<ReturnType<DiscoveryRuntime["open"]>>> | undefined;

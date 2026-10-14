@@ -34,6 +34,7 @@ import type { CandidateStore } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -99,6 +100,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   projectAggregate,
+  projectRecord,
   reconcileIdempotentPut,
   type AggregateRepository,
   type AppendOnlyRepository,
@@ -557,9 +559,9 @@ export function pgAppendOnlyRepository<T>(
   }
 
   const copies = options.copies ?? null;
-  const heldAll = (): Promise<T[]> => copies === null
-    ? readChangedSince(null).then(changed => changed.records.map(entry => entry.record))
-    : copies.logReadAll(table, readChangedSince);
+  const heldAll = <O>(out: (record: T) => O): Promise<O[]> => copies === null
+    ? readChangedSince(null).then(changed => changed.records.map(entry => out(entry.record)))
+    : copies.logReadAll(table, readChangedSince, out);
 
   return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
@@ -747,7 +749,8 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    readAll: () => heldAll(),
+    readAll: () => heldAll(record => record),
+    readAllNarrowed: projection => heldAll(record => projectRecord(record, projection)),
     readChangedSince,
 
     async readRecent(key, limit) {
@@ -1302,6 +1305,7 @@ export async function createPgRepositories(
     ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests", bounded),
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions", bounded),
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
+    spendWindow: pgAggregateRepository<SpendWindow>(sql, "SpendWindow", "cp_spend_window", bounded),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
     boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),

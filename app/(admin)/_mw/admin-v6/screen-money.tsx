@@ -2,13 +2,14 @@
 
 import { useMemo, useState } from "react";
 
+import { periodDays } from "@/lib/control-plane/admin-view/periods.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 import type { ModelSpendView } from "@/lib/control-plane/admin-view/model-spend.ts";
 
 import { useV6 } from "./context.tsx";
 import { mst, usd, type Hunt } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
-import { Card, cx } from "./ui.tsx";
+import { Card, cx, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const DASH = "—";
@@ -99,6 +100,9 @@ export function MoneyScreen() {
   const shownDays = all ? days : days.slice(0, TOP);
   /** Hosting is billed by the month: the provider's own reading for the month in the picker, or a dash. */
   const hosting = /^20\d\d-\d\d$/.test(v.period) ? v.data.money.data?.account.find((a) => a.provider === "Netlify")?.amountUsd ?? null : null;
+  const bills = v.data.money.data?.byDay ?? null;
+  const billSpan = periodDays(v.period, new Date());
+  const billDays = bills === null ? [] : bills.days.filter((d) => billSpan === null || (d.day >= billSpan.from && d.day <= billSpan.to));
   const switcher = (
     <span className={s.inline}>
       {(["hunt", "day"] as const).map((k) => (
@@ -123,7 +127,7 @@ export function MoneyScreen() {
           <div className={s.row}><span className={s.eyebrow}>Hosting</span><span className={s.big}>{money(hosting)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Set aside</span><span className={s.big}>{money(sum.setAsideUsd)}</span></div>
           <div className={s.row}>
-            <span className={s.eyebrow}>Today against the daily limit</span>
+            <span className={s.eyebrow}>Today against the daily limit · Anthropic tokens only</span>
             <span className={s.big}>{money(sum.todayUsd)} <span className={s.dim}>of {money(sum.dailyLimitUsd)}</span></span>
           </div>
           <div className={s.row}><span className={s.eyebrow}>Left today</span><span className={s.big}>{money(sum.leftUsd)}</span></div>
@@ -137,6 +141,32 @@ export function MoneyScreen() {
           <p className={cx(s.p, s.small, s.textWarn)} role="status">
             {worstCase} charge{worstCase === 1 ? " was" : "s were"} counted at the most it could have cost because no price was recorded. Spend is still counted and the daily limit still holds.
           </p>
+        )}
+      </Card>
+
+      <Card title="Provider bills by day">
+        {bills === null ? <p className={cx(s.p, s.small)}>{DASH}</p> : (
+          <>
+            {billDays.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead><tr><th scope="col">Day</th>{bills.providers.map((p) => <th key={p.provider} scope="col" className={s.num}>{p.provider}</th>)}</tr></thead>
+                  <tbody>
+                    {billDays.map((d) => (
+                      <tr key={d.day}>
+                        <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{dayWords(d.day)}</th>
+                        {d.cells.map((c, i) => <td key={bills.providers[i].provider} className={s.num}>{c === null ? DASH : c.usd !== null ? usd(c.usd) : c.usage ?? DASH}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {bills.providers.some((p) => p.note !== null) && (
+              <ul className={cx(s.p, s.small)}>{bills.providers.flatMap((p) => (p.note === null ? [] : [<li key={p.provider}>{p.note}</li>]))}</ul>
+            )}
+            <Technical lines={bills.technical} />
+          </>
         )}
       </Card>
 

@@ -4,10 +4,10 @@ import { publicFetch, MAX_PUBLIC_REDIRECTS, publicRedirectHeaders, EgressRefusal
  *
  * This is an admission controller over the existing cost ledger and scheduler;
  * it is not a second budget ledger. Historical spend comes only from the
- * canonical `costs` repository. In-cycle reservations close the race between
+ * spend window the ledger's writes keep (`spend-window.ts`). In-cycle reservations close the race between
  * concurrent model requests until their provider-reported cost is persisted.
  */
-import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry } from "./cost.ts";
+import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry, type MeteredCharge } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, ratesForPrompt, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
@@ -19,6 +19,7 @@ import { httpProviderFailure, type FetchOutcome } from "./scheduler/http-executo
 import { sourceReliabilityKey } from "./scheduler/scout-reliability.ts";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "./scheduler/host-supervision.ts";
 import { memoryWebsitePacing, websiteOf, type WebsitePacing } from "./website-pacing.ts";
+import { enterHostGate, HOST_CONCURRENCY_DEFAULT, providerConcurrency } from "./scheduler/provider-limits.ts";
 import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
 import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
 
@@ -158,16 +159,58 @@ function recordedModelPrice(model: string | null | undefined, cost: CostEntry["c
     (cost.cacheCreationInputTokens === 0 || split.every(amount)) };
 }
 
-/** A charge no price or request bound covers is counted at its worst case, so
- * spend stays a number and the budget dial keeps control. */
-function entryModelPrice(entry: CostEntry): { usd: number; knownUsd: number; measured: boolean; worstCase: boolean } {
-  const price = entryModelPriceOrNull(entry);
-  return price.usd === null ? { ...price, usd: Math.max(price.knownUsd, costEntryWorstCaseUsd(entry)), worstCase: true }
-    : { ...price, usd: price.usd, worstCase: false };
+/** One model charge as the spend window counts it, priced when it was recorded. */
+export interface PricedCharge {
+  /** The ledger row's record id. */
+  readonly id: string;
+  readonly at: string;
+  /** The exact budget job that covered it, else its Attempt. */
+  readonly jobId: string;
+  readonly routeTaskId: string | null;
+  /* What a Send's or area's budget attributes it by (`assignment-budget.ts`, `membership.ts`). */
+  readonly obligationId: string | null;
+  readonly jurisdiction: string | null;
+  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
+  readonly usd: number;
+  readonly knownUsd: number;
+  readonly measured: boolean;
+  /** Counted at a bound (an unanswered request's send limit or the worst case) rather than a measured bill. */
+  readonly bounded: boolean;
+  /** What the cache and capacity readings read, so they never re-read the ledger. */
+  readonly metered: MeteredCharge;
 }
 
-function entryModelPriceOrNull(entry: CostEntry): { usd: number | null; knownUsd: number; measured: boolean } {
-  if (amount(entry.cost.usd)) return { usd: entry.cost.usd, knownUsd: entry.cost.usd, measured: true };
+/** The model charge a ledger row carries, or null for plain code and search invoices. */
+export function pricedModelCharge(entry: CostEntry, id: string): PricedCharge | null {
+  // Search invoices are tracked separately; the Anthropic token budget must
+  // never consume Brave/Exa charges merely because they carry a dollar value.
+  if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || entry.source === "api.exa.ai") return null;
+  const isModelBacked =
+    entry.role === "SCOUT" ||
+    !!entry.requestedModel || !!entry.servedModel || !!entry.modelRequestBound ||
+    !!entry.model || (entry.tier !== undefined && entry.tier !== null && entry.tier !== "none") ||
+    entry.cost.inputTokens != null ||
+    entry.cost.outputTokens != null ||
+    entry.source === "api.anthropic.com" ||
+    entry.byModel?.some((part) => part.model.startsWith("claude-"));
+  if (!isModelBacked) return null;
+  const answered = answeredModelPrice(entry);
+  const unanswered = entry.modelRequestBound ? costEntryModelRequestBound(entry) : 0;
+  const priced = answered.usd !== null && unanswered !== null;
+  return { id, at: entry.recordedAt, jobId: entry.spendHoldJobId ?? entry.attemptId, routeTaskId: entry.routeTaskId,
+    obligationId: entry.obligationId ?? null, jurisdiction: entry.jurisdiction,
+    ...(entry.assignmentRefs ? { assignmentRefs: entry.assignmentRefs } : {}),
+    usd: priced ? answered.usd! + unanswered! : Math.max(answered.knownUsd, costEntryWorstCaseUsd(entry)),
+    knownUsd: answered.knownUsd, measured: priced && answered.measured && unanswered === 0,
+    bounded: !priced || answered.bounded || unanswered !== 0,
+    metered: { attemptId: entry.attemptId, role: entry.role, routeId: entry.routeId, model: entry.model, tier: entry.tier,
+      ...(entry.byModel ? { byModel: entry.byModel } : {}), cost: entry.cost, recordedAt: entry.recordedAt } };
+}
+
+/** The answered requests' bill. A row whose one request is the unpriced one answered nothing else. */
+function answeredModelPrice(entry: CostEntry): { usd: number | null; knownUsd: number; measured: boolean; bounded: boolean } {
+  if (amount(entry.cost.usd)) return { usd: entry.cost.usd, knownUsd: entry.cost.usd, measured: true, bounded: false };
+  if (entry.modelRequestBound && entry.cost.requestCount === 1) return { usd: 0, knownUsd: 0, measured: true, bounded: false };
   if (entry.byModel?.length) {
     // A split must cover the recorded aggregate quantities. A partial split
     // cannot make the missing part of an attempt free.
@@ -176,20 +219,15 @@ function entryModelPriceOrNull(entry: CostEntry): { usd: number | null; knownUsd
     const knownUsd = prices.reduce((n, price) => n + (price?.measured ? price.usd : 0), 0);
     for (const key of ["inputTokens", "outputTokens"] as const) {
       if (amount(entry.cost[key]) && (!shares.every(share => amount(share[key])) ||
-        shares.reduce((n, share) => n + share[key]!, 0) !== entry.cost[key])) {
-        const bound = costEntryModelRequestBound(entry);
-        return { usd: bound === null ? null : Math.max(knownUsd, bound), knownUsd, measured: false };
-      }
+        shares.reduce((n, share) => n + share[key]!, 0) !== entry.cost[key])) return { usd: null, knownUsd, measured: false, bounded: true };
     }
     const sum = prices.some(price => price === null) ? null : prices.reduce((n, price) => n + price!.usd, 0);
-    const bound = sum === null ? costEntryModelRequestBound(entry) : null;
-    return { usd: sum ?? (bound === null ? null : Math.max(knownUsd, bound)),
-      knownUsd,
-      measured: prices.every(price => price?.measured === true) };
+    return { usd: sum, knownUsd, measured: prices.every(price => price?.measured === true), bounded: false };
   }
   const price = recordedModelPrice(entry.model ?? (entry.tier === "none" ? null : entry.tier), entry.cost);
-  const bound = price === null ? costEntryModelRequestBound(entry) : null;
-  return { usd: price?.usd ?? bound, knownUsd: price?.measured ? price.usd : 0, measured: price?.measured === true };
+  if (price !== null) return { usd: price.usd, knownUsd: price.measured ? price.usd : 0, measured: price.measured, bounded: false };
+  const legacyAsk = entry.modelRequestBound ? null : costEntryModelRequestBound(entry);
+  return { usd: legacyAsk, knownUsd: 0, measured: false, bounded: legacyAsk !== null };
 }
 
 /** Every recorded model role/identity/usage is accounted for, including a
@@ -201,6 +239,16 @@ export function aggregateModelSpend(
   until: string,
   spendHolds: readonly SpendHold[] = [],
 ): { readonly usd: number; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number; readonly worstCaseCharges: number } {
+  return aggregatePricedSpend(costs.flatMap(entry => pricedModelCharge(entry, entry.attemptId) ?? []), since, until, spendHolds);
+}
+
+/** The spend of the charges recorded in [since, until], holds standing in where they are tighter. */
+export function aggregatePricedSpend(
+  charges: readonly PricedCharge[],
+  since: string,
+  until: string,
+  spendHolds: readonly SpendHold[] = [],
+): { readonly usd: number; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number; readonly worstCaseCharges: number } {
   let usd = 0;
   let knownUsd = 0;
   let measured = 0;
@@ -208,31 +256,17 @@ export function aggregateModelSpend(
   let worstCaseCharges = 0;
   const jobs = new Map<string, { usd: number; worstCaseUsd: number }>();
   const start = Date.parse(since), end = Date.parse(until);
-  for (const entry of costs) {
-    // Search invoices are tracked separately; the Anthropic token budget must
-    // never consume Brave/Exa charges merely because they carry a dollar value.
-    if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || entry.source === "api.exa.ai") continue;
-    const isModelBacked =
-      entry.role === "SCOUT" ||
-      !!entry.requestedModel || !!entry.servedModel || !!entry.modelRequestBound ||
-      !!entry.model || (entry.tier !== undefined && entry.tier !== null && entry.tier !== "none") ||
-      entry.cost.inputTokens != null ||
-      entry.cost.outputTokens != null ||
-        entry.source === "api.anthropic.com" ||
-        entry.byModel?.some((part) => part.model.startsWith("claude-"));
-    if (!isModelBacked) continue;
-    const at = Date.parse(entry.recordedAt);
+  for (const charge of charges) {
+    const at = Date.parse(charge.at);
     if (!(at >= start && at <= end)) continue;
-    const price = entryModelPrice(entry);
-    const jobId = entry.spendHoldJobId ?? entry.attemptId;
-    const job = jobs.get(jobId) ?? { usd: 0, worstCaseUsd: 0 };
-    knownUsd += price.knownUsd;
-    if (price.measured) measured += 1;
+    const job = jobs.get(charge.jobId) ?? { usd: 0, worstCaseUsd: 0 };
+    knownUsd += charge.knownUsd;
+    if (charge.measured) measured += 1;
     else unmeasured += 1;
-    if (price.worstCase) worstCaseCharges += 1;
-    job.usd += price.usd;
-    if (price.worstCase) job.worstCaseUsd += price.usd;
-    jobs.set(jobId, job);
+    if (charge.bounded) worstCaseCharges += 1;
+    job.usd += charge.usd;
+    if (charge.bounded) job.worstCaseUsd += charge.usd;
+    jobs.set(charge.jobId, job);
   }
   const held = new Map<string, number>();
   const worstCase = new Map<string, number>();
@@ -245,13 +279,11 @@ export function aggregateModelSpend(
     if (hold.settled === null) held.set(hold.jobId, (held.get(hold.jobId) ?? 0) + hold.usd);
   }
   for (const [id, job] of jobs) {
-    // Only an exact job identity can stand in for the worst case of an
-    // unpriced charge: its hold is the job's actual maximum, which is tighter.
-    // Obligation-only attribution can reuse one hold for several failed
-    // attempts, so it never does; the worst case then stays counted.
+    // Only an exact job identity can stand in for a bounded charge: its hold is the job's actual maximum.
+    // Obligation-only attribution can reuse one hold for several failed attempts, so it never does.
     const known = job.usd - job.worstCaseUsd;
     const exact = job.worstCaseUsd > 0 ? worstCase.get(id) : undefined;
-    usd += exact !== undefined && exact >= known ? exact : Math.max(job.usd, held.get(id) ?? 0);
+    usd += exact !== undefined && exact >= known ? Math.min(exact, job.usd) : Math.max(job.usd, held.get(id) ?? 0);
     held.delete(id);
   }
   // A hold carries no provider or model. Unmatched holds may reserve a paid
@@ -375,7 +407,11 @@ export class FleetSafetyController {
   private readonly deferrals: FleetNamedDeferral[] = [];
   private readonly stopReasons = new Set<string>();
   private readonly circuits = new Map<string, ProviderCircuit>();
+  /** Providers whose breaker wait ran out with no answer since: half-open until a response closes it or a failure reopens it. */
+  private readonly probing = new Set<string>();
   private readonly httpPending = new Map<string, Promise<void>>();
+  private readonly hostConcurrency: () => number;
+  private readonly sleep: (ms: number) => Promise<unknown>;
   /** Every reader's shared count and holds per website; this process's own when the store cannot answer. */
   private readonly pacing: WebsitePacing;
   private readonly localPacing = memoryWebsitePacing();
@@ -392,7 +428,7 @@ export class FleetSafetyController {
 
   constructor(input: {
     readonly now: string;
-    readonly costs: readonly CostEntry[];
+    readonly charges: readonly PricedCharge[];
     readonly spendHolds?: readonly SpendHold[];
     /** The owner's runner-level PAUSE_RUNNER stands. The snapshot says PAUSED, and no model request is reserved. */
     readonly paused?: boolean;
@@ -414,6 +450,9 @@ export class FleetSafetyController {
     readonly websiteSize?: WebsiteSizeForUrl;
     /** The store every reader shares (`repos.websitePacing`); absent, this process paces alone. */
     readonly websitePacing?: WebsitePacing;
+    /** Requests in flight at once to one provider (the Admin setting), read per request. */
+    readonly hostConcurrency?: () => number;
+    readonly sleep?: (ms: number) => Promise<unknown>;
   }) {
     const ceiling = resolveRollingCeiling(input.rollingCeilingUsd);
     this.bounds =
@@ -428,10 +467,12 @@ export class FleetSafetyController {
     this.clock = input.clock ?? Date.now;
     this.websiteSize = input.websiteSize;
     this.pacing = input.websitePacing ?? this.localPacing;
+    this.hostConcurrency = input.hostConcurrency ?? (() => HOST_CONCURRENCY_DEFAULT);
+    this.sleep = input.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
-    const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now, input.spendHolds);
-    const rollingSpend = aggregateModelSpend(
-      input.costs,
+    const nightSpend = aggregatePricedSpend(input.charges, this.night.start, input.now, input.spendHolds);
+    const rollingSpend = aggregatePricedSpend(
+      input.charges,
       new Date(this.startedMs - 24 * 3_600_000).toISOString(),
       input.now,
       input.spendHolds,
@@ -465,15 +506,36 @@ export class FleetSafetyController {
     throw new FleetSafetyRefusal(code, why);
   }
 
-  admitDispatch(_work: string, _nowMs: number = this.clock()): { readonly admit: true } | { readonly admit: false; readonly code: FleetStopCode; readonly why: string } {
-    // Budget reservations govern paid calls; dispatches are counted for Admin.
+  /** Budget reservations govern paid calls; dispatches are counted for Admin. Work for a provider whose breaker is open waits until it closes. */
+  admitDispatch(work: string, url: string | null = null): { readonly admit: true } | { readonly admit: false; readonly code: FleetStopCode; readonly why: string } {
+    const held = url === null ? null : this.providerHold(url);
+    if (held !== null) {
+      const why = `${held.provider} is resting until ${held.eligibleAt} after ${held.condition}`;
+      this.circuits.set(held.provider, { ...held, workDeferred: [...new Set([...held.workDeferred, work])] });
+      this.defer(work, "PROVIDER_CIRCUIT_BROKEN", why);
+      return { admit: false, code: "PROVIDER_CIRCUIT_BROKEN", why };
+    }
     this.dispatches += 1;
     return { admit: true };
   }
 
+  /** The open breaker a request to `url` would meet now, or null. */
+  providerHold(url: string): ProviderCircuit | null {
+    this.expireProviderCircuits();
+    const circuit = this.circuits.get(sourceReliabilityKey(url));
+    return circuit && Date.parse(circuit.eligibleAt) > this.clock() ? circuit : null;
+  }
+
+  /** Open: nothing is sent. Half-open: its wait is over and no answer has closed it yet, so one probe goes at a time. */
+  providerState(url: string): "CLOSED" | "HALF_OPEN" | "OPEN" {
+    if (this.providerHold(url) !== null) return "OPEN";
+    const provider = sourceReliabilityKey(url);
+    return this.circuits.has(provider) || this.probing.has(provider) ? "HALF_OPEN" : "CLOSED";
+  }
+
   private expireProviderCircuits(nowMs: number = this.clock()): void {
     for (const [provider, circuit] of this.circuits) {
-      if (!this.hardCircuit(circuit) && Date.parse(circuit.eligibleAt) <= nowMs) this.circuits.delete(provider);
+      if (!this.hardCircuit(circuit) && Date.parse(circuit.eligibleAt) <= nowMs) { this.circuits.delete(provider); this.probing.add(provider); }
     }
   }
 
@@ -500,6 +562,7 @@ export class FleetSafetyController {
   }
 
   private providerSucceeded(provider: string, observed: ProviderCircuit | undefined): void {
+    this.probing.delete(provider);
     const current = this.circuits.get(provider);
     // A response sent before a newer failure cannot erase that failure. A
     // deferred sibling may extend workDeferred without changing this generation.
@@ -754,27 +817,27 @@ export class FleetSafetyController {
     await this.pacing.hold(site, until, now).catch(() => this.localPacing.hold(site, until, now));
   }
 
+  /** One request's place at its provider: under the in-flight cap (one while half-open), at its published pace, never while open. */
+  private async enterProvider(provider: string, url: string, work: string): Promise<() => void> {
+    const release = await enterHostGate({ provider, pacing: this.pacing, clock: this.clock, sleep: this.sleep,
+      limit: () => providerConcurrency(this.providerState(url), this.hostConcurrency()) });
+    const held = this.providerHold(url);
+    if (held === null) return release;
+    release();
+    this.refuse(work, "PROVIDER_CIRCUIT_BROKEN", `${held.provider} is latched until ${held.eligibleAt}: ${held.condition}`);
+  }
+
   /** A fetch seam that hard-caps application payload consumption by streaming. */
   guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = publicFetch): OpenOne {
     return async ({ url, method, headers, body, timeoutMs }) => {
-      // Worker processes broker requests through this shared parent. Serialize
-      // one source so queued subjects see the first failure before sending.
-      const source = sourceReliabilityKey(url);
-      const preceding = this.httpPending.get(source);
-      let release!: () => void;
-      const pending = new Promise<void>(resolve => { release = resolve; });
-      this.httpPending.set(source, pending);
-      await preceding;
-      let sourceReleased = false;
-      const releaseSource = () => {
-        release(); sourceReleased = true;
-        if (this.httpPending.get(source) === pending) this.httpPending.delete(source);
-      };
+      // Worker processes broker requests through this shared parent, so every
+      // caller waits at one gate per provider.
       const started = Date.now();
       let requests = 0;
       let currentUrl = url;
-      let provider = source;
+      let provider = sourceReliabilityKey(url);
       let observed: ProviderCircuit | undefined;
+      let leave: (() => void) | null = null;
       const recoveries: [string, () => void][] = [];
       try {
         let currentMethod = method;
@@ -786,13 +849,15 @@ export class FleetSafetyController {
         let merged: Uint8Array;
         while (true) {
           provider = sourceReliabilityKey(currentUrl);
-          if ((provider !== source || sourceReleased) && !recoveries.some(([key]) => key === provider)) {
+          if (!recoveries.some(([key]) => key === provider)) {
             const recovery = await this.beginProviderRecovery(provider);
             if (recovery) recoveries.push([provider, recovery]);
           }
           this.expireProviderCircuits();
+          leave?.();
+          leave = await this.enterProvider(provider, currentUrl, work);
           observed = this.circuits.get(provider);
-          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) await this.admitWebsiteRequest(currentUrl, work);
+          await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
             requests++;
@@ -825,7 +890,6 @@ export class FleetSafetyController {
           const nextUrl = new URL(location, currentUrl).toString();
           currentHeaders = publicRedirectHeaders(currentHeaders, currentUrl, nextUrl);
           if (sourceReliabilityKey(nextUrl) !== provider) {
-            if (provider === source && !sourceReleased) releaseSource();
             const index = recoveries.findIndex(([key]) => key === provider);
             if (index !== -1) recoveries.splice(index, 1)[0][1]();
           }
@@ -859,7 +923,8 @@ export class FleetSafetyController {
           transportError: error instanceof Error ? error.message : String(error), requestCount: requests };
       } finally {
         recoveries.forEach(([, release]) => release());
-        releaseSource();
+        // Held until the answer is classified, so requests queued behind it see a failure before they send.
+        leave?.();
       }
     };
   }
@@ -880,6 +945,7 @@ export class FleetSafetyController {
       const recoveries: [string, () => void][] = [];
       let provider = sourceReliabilityKey(url);
       let observed: ProviderCircuit | undefined;
+      let leave: (() => void) | null = null;
       let sent = false;
       let partialFailureObserved = false;
       try {
@@ -896,8 +962,10 @@ export class FleetSafetyController {
             const recovery = await this.beginProviderRecovery(provider);
             if (recovery) recoveries.push([provider, recovery]);
           }
+          leave?.();
+          leave = await this.enterProvider(provider, currentUrl, work);
           observed = this.circuits.get(provider);
-          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) await this.admitWebsiteRequest(currentUrl, work);
+          await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work);
           try {
             sent = true;
@@ -969,7 +1037,7 @@ export class FleetSafetyController {
           durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error),
         };
-      } finally { recoveries.forEach(([, release]) => release()); }
+      } finally { recoveries.forEach(([, release]) => release()); leave?.(); }
     };
   }
 

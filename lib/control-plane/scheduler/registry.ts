@@ -44,6 +44,8 @@ export interface YieldContract {
   readonly rowsAt?: string;
   /** Dot path to an INTEGER row count in the parsed JSON. */
   readonly countAt?: string;
+  /** A search query, where zero rows is a miss for that query (WALKED_NO_YIELD); a government's own list never sets it. */
+  readonly zeroRowsIsMiss?: true;
 }
 
 /** One representation of a record. `routeId` is the join to the method store; an unknown id dispatches to the bounded lane. */

@@ -27,6 +27,7 @@ import {
   withCacheBreakpoints,
   scoutExecutor,
   OUTAGE_TIER_AFTER,
+  ModelRequestNotSent,
   ModelTransportError,
   dispositionForScout,
   type ModelRequest,
@@ -471,7 +472,8 @@ test("the runner's exact Scout hold reaches disposed and aborted cost rows witho
     if (mode === "unmetered") {
       assert.equal(result.cost?.usd, null);
       assert.equal(costs[0].cost.usd, null, "the hold never becomes an invented measured charge");
-      assert.equal(aggregateModelSpend(costs, NOW, NOW, Object.values(heldRows(repos))).usd, 2);
+      assert.equal(aggregateModelSpend(costs, NOW, NOW, Object.values(heldRows(repos))).usd, costs[0].modelRequestBound?.usd,
+        "the lost request counts at its send limit, tighter than the job's hold");
     }
   }
 });
@@ -1098,11 +1100,12 @@ test("10. a lost or server-error response keeps unknown spending reserved, inclu
   const attempt = (await attemptsForRouteTask(repos, task.id)).at(-1)!.value;
   assert.equal(attempt.outcome, "ABORTED");
   assert.equal(attempt.cost.usd, null, "a server failure does not prove zero provider spending");
-  assert.equal(attempt.cost.inputTokens, null);
-  assert.equal(attempt.cost.requestCount, null, "no completed response cannot establish zero sent requests");
+  assert.equal(attempt.cost.inputTokens, 0, "no request was answered");
+  assert.equal(attempt.cost.requestCount, 1, "the lost request was sent");
   const ledger = (await repos.costs.readAll()).filter((c) => c.attemptId === attempt.id);
   assert.equal(ledger.length, 1);
   assert.equal(ledger[0].cost.usd, null);
+  assert.equal(ledger[0].modelRequestBound?.model, ledger[0].requestedModel, "the lost request counts at its own send limit");
   let n = 0;
   const failsSecond: ModelTransport = async () => {
     n += 1;
@@ -1127,8 +1130,19 @@ test("only recognized request rejections establish zero, not timeout or arbitrar
       maturity: () => "UNGRADUATED", executor: exec });
     const rejected = [400, 401, 429].includes(status);
     assert.equal(result.cost?.usd, rejected ? 0 : null, `status ${status}`);
-    assert.equal(result.cost?.requestCount, rejected ? 1 : null, `request count for status ${status}`);
+    assert.equal(result.cost?.requestCount, 1, `request count for status ${status}`);
   }
+});
+
+test("a request the worker never handed to the provider costs nothing and carries no send limit", async () => {
+  const { repos, task } = await registered();
+  const { exec } = executorWith(async () => { throw new ModelRequestNotSent("LEASE_WORKER_BROKER_DISCONNECTED"); }, fakeToolkit());
+  const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id, holder: "not-sent",
+    now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
+  assert.equal(result.cost?.usd, 0);
+  assert.equal(result.cost?.requestCount, 0);
+  const [row] = (await repos.costs.readAll()).filter(c => c.attemptId === result.attemptId);
+  assert.equal(row?.modelRequestBound, undefined);
 });
 
 test("proven pre-send Scout refusals settle unused holds without erasing earlier measured turns", async () => {
@@ -1138,8 +1152,8 @@ test("proven pre-send Scout refusals settle unused holds without erasing earlier
     const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original", budgetUsd: 50, historicalUsd: 0, historyReadAt: new Date(NOW_MS - 1_000).toISOString() };
     const job = new JobSpend(holds, mode, OBLIGATION.id, { sends: [], areas: [line] });
     assert.equal((await job.admit(2, "Scout")).admit, true);
-    const heldFleet = new FleetSafetyController({ now: NOW, costs: [], modelHold: "lane closed", clock: () => NOW_MS });
-    const openFleet = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 50, clock: () => NOW_MS });
+    const heldFleet = new FleetSafetyController({ now: NOW, charges: [], modelHold: "lane closed", clock: () => NOW_MS });
+    const openFleet = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 50, clock: () => NOW_MS });
     let sent = 0;
     const provider: ModelTransport = async request => {
       sent++;
@@ -1162,7 +1176,7 @@ test("proven pre-send Scout refusals settle unused holds without erasing earlier
       assert.doesNotMatch(result.detail, /SCOUT_TRANSPORT_FAILED/);
     }
     assert.equal(sent, expectedSent, mode);
-    assert.equal(result.cost?.requestCount, mode === "unpriced-after-response" ? null : expectedSent, mode);
+    assert.equal(result.cost?.requestCount, expectedSent, mode);
     if (mode === "unpriced-after-response") assert.equal(result.cost?.usd, null);
     else if (mode === "fleet-after-metered") assert.ok((result.cost?.usd ?? 0) > 0);
     else assert.equal(result.cost?.usd, 0);

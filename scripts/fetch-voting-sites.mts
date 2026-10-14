@@ -271,11 +271,7 @@ async function main() {
         }
         if (capture && disposition.kind !== "DOOR") {
           for (const old of stateDoors.filter(old => pageAddress(old.url)?.url === url)) doors.delete(old.id);
-          const rows = await context.repos.doors.listWhere(["config", "url"], url);
-          for (const row of rows) if (row.value.origin === "DERIVED" && row.value.status !== "SUSPENDED") {
-            await context.repos.doors.compareAndSet(row.id, row.revision, { ...row.value, status: "SUSPENDED",
-              readNow: false, notes: disposition.reason, updatedAt: now() }, now());
-          }
+
         }
       };
       const walk = async (root: VotingSourceDoor) => {

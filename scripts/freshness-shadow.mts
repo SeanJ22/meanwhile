@@ -11,7 +11,9 @@ import { routeProcessExecutor } from "../lib/control-plane/workers/route-process
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
-import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
+import { LINEAGE_ARTIFACT_FIELDS, LINEAGE_ATTEMPT_FIELDS, persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor, type LineageArtifact, type LineageAttempt } from "../lib/control-plane/workers/standing-lineage.ts";
+import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
+import { HOST_CONCURRENCY_DEFAULT, HOST_CONCURRENCY_SETTING, providerConcurrency } from "../lib/control-plane/scheduler/provider-limits.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { MODELS } from "../lib/models.ts";
@@ -179,7 +181,7 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { DETECTIVE_SHUT_THRESHOLD, failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
@@ -237,9 +239,9 @@ import {
   type ResearchMetrics,
 } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
-import { modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
-import type { SpendHold } from "../lib/control-plane/budget.ts";
-import type { AttemptCost } from "../lib/control-plane/attempt.ts";
+import { modelRequestBoundFor } from "../lib/control-plane/cost.ts";
+import { readSpendWindow } from "../lib/control-plane/spend-window.ts";
+import { ZERO_COST, type AttemptCost } from "../lib/control-plane/attempt.ts";
 import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
@@ -260,6 +262,7 @@ import {
   scoutEscalationReservation,
   modelRequestWorstCaseUsd,
   modelResponseUsd,
+  type PricedCharge,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import {
@@ -298,7 +301,6 @@ import {
   SendBudgetRefusal,
   budgetGuardedTransport,
   hasBudgetLines,
-  readLiveSpendHolds,
   releaseOpenJobs,
   SPEND_HOLD_STALE_MS,
 } from "../lib/control-plane/expansion/spend-holds.ts";
@@ -874,10 +876,11 @@ console.log(
 // clock before deciding which standing source periods are due this cycle.
 const standingLineages = sync.all.some(o => o.autonomousPlan) ? await (async () => {
   const [occurrences, workItems, artifacts, attempts, workerResults] = await Promise.all([
-    repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAll(), repos.attempts.list(), repos.workerResults.readAll(),
+    repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS),
+    repos.attempts.listNarrowed(LINEAGE_ATTEMPT_FIELDS), repos.workerResults.readAll(),
   ]);
   return selectStandingLineages({ occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
-    artifacts, attempts: attempts.map(row => row.value), workerResults });
+    artifacts: artifacts as LineageArtifact[], attempts: attempts.map(row => row.value as LineageAttempt), workerResults });
 })() : [];
 const publicationAnchors = await persistVerifiedPublicationAnchors(repos, { obligations: sync.all, lineages: standingLineages, now: NOW });
 if (publicationAnchors.anchored.length) {
@@ -1315,31 +1318,21 @@ let effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-let costLedger: CostEntry[] = [];
-let historicalSpendHolds: readonly SpendHold[] = [];
+let spendCharges: readonly PricedCharge[] = [];
 let ledgerUnreadable: string | null = null;
 try {
-  // readSince already pages under the repository's PAGE request bound.
   // Only transient failures are retried, under the existing backoff and circuit.
-  costLedger = [...await retryStartupRead(
-    () => repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-    () => null, startupReadRetry)];
-  if (researchSpendInWindow(costLedger, NOW).windowUsd === null) {
-    /* The holds that count now, one row each (schema v24; the ledger row behind WTP_SPEND_HOLDS_TABLE=0). */
-    historicalSpendHolds = Object.values(await retryStartupRead(() => readLiveSpendHolds(repos, NOW), () => null, startupReadRetry));
-  }
+  spendCharges = await retryStartupRead(() => readSpendWindow(repos, NOW), () => null, startupReadRetry);
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); paid model work waits while held and plain-code work continue`);
 }
-const spendWindow = researchSpendInWindow(costLedger, NOW, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
+const spendWindow = researchSpendInWindow(spendCharges, NOW, RESEARCH_BOUNDS.windowHours);
 const paidSpendHold = ledgerUnreadable !== null
   ? `the cost ledger could not be read (${ledgerUnreadable})`
-  : spendWindow.windowUsd === null
-    ? `model spend includes ${spendWindow.unmeasured} unmeasured row(s) without complete usage or an existing worst-case reservation; known model spend is $${spendWindow.knownUsd.toFixed(6)}`
-    : !ceilingPermits(spendWindow.windowUsd, effectiveCeilingUsd).permits
-      ? `the owner's $${effectiveCeilingUsd.toFixed(2)} model ceiling is reached`
-      : null;
+  : !ceilingPermits(spendWindow.windowUsd, effectiveCeilingUsd).permits
+    ? `the owner's $${effectiveCeilingUsd.toFixed(2)} model ceiling is reached`
+    : null;
 if (paidSpendHold !== null && ledgerUnreadable === null) {
   runtimeConditions.push(`${paidSpendHold}; paid model work waits while held and plain-code work continue`);
 }
@@ -1421,11 +1414,12 @@ try {
 
 const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
 const sizeForDiscovery = websiteSize;
+let hostConcurrency = readSetting(config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
 const fleetSafety = new FleetSafetyController({
   websiteSize: sizeForDiscovery,
+  hostConcurrency: () => hostConcurrency,
   now: NOW,
-  costs: costLedger,
-  spendHolds: historicalSpendHolds,
+  charges: spendCharges,
   costLedgerReadable: ledgerUnreadable === null,
   paused: intents.runnerPause.paused,
   /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
@@ -1446,6 +1440,7 @@ function refreshOwnerSettings(): Promise<void> {
   settingsReadAt = Date.now();
   settingsRead = (async () => {
     const reread = adminConfigForPaidWork({ row: await repos.adminConfig.read(ADMIN_CONFIG_ID) });
+    hostConcurrency = readSetting(reread.config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
     if (reread.holdPaidWork !== null) return;
     const next = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(reread.config));
     if (next.rollingCeilingUsd === effectiveCeilingUsd) return;
@@ -1511,7 +1506,7 @@ console.log(
 
 const expansionBudget = expansionPlan === null
   ? null
-  : armExpansionBudget(expansionPlan, { now: NOW, costs: ledgerUnreadable === null ? costLedger : null, worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY });
+  : armExpansionBudget(expansionPlan, { now: NOW, charges: ledgerUnreadable === null ? spendCharges : null, worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY });
 let expansionReading: ExpansionCycleReading | null = expansionBudget === null || expansionPlan === null
   ? null
   : withCycleCounts(expansionBudget.reading, {
@@ -1715,7 +1710,7 @@ const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
   now: NOW,
   specs: assignmentSpecs,
   membership: assignmentMembers,
-  costs: ledgerUnreadable === null ? costLedger : null,
+  charges: ledgerUnreadable === null ? spendCharges : null,
   worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY,
   /* An unread log cannot say which DISPATCH carries a budget, so its work is held (assignment-budget.ts). */
   intentsReadable: intentLogUnreadable === null,
@@ -1832,7 +1827,7 @@ const assignmentsReading = (): AssignmentCycleReading | null =>
         gate: assignmentBudget,
         specs: assignmentSpecs,
         membership: assignmentMembers,
-        costs: ledgerUnreadable === null ? costLedger : null,
+        charges: ledgerUnreadable === null ? spendCharges : null,
         intentsReadable: intentLogUnreadable === null,
         labels: assignmentLabels,
         completionFor: assignmentCompletion,
@@ -2050,8 +2045,7 @@ type CycleResearchState = ResearchState & { readonly ownerDispatch: OwnerDispatc
 
 function researchState(cycleFinishedAt: string | null): CycleResearchState {
   const measuredSpend = finalSpendWindow ?? spendWindow;
-  const window = finalSpendWindow !== null ? finalSpendWindow.windowUsd
-    : spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
+  const window = finalSpendWindow !== null ? finalSpendWindow.windowUsd : spendWindow.windowUsd + spentThisCycle;
   return {
     formatVersion: RESEARCH_FORMAT_VERSION,
     beatAt: nowIso(),
@@ -2202,8 +2196,28 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
       if (!held.admit) return { status: "SKIPPED", at, model, code: held.code, detail: `no paid call: ${held.why}`, durationMs: Date.now() - started };
     }
     const transport = guardedMessagesFor(prewarmHold?.obligationId ?? "scout-prewarm");
-    /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
-    const response = await transport(request);
+    const ledger = (cost: AttemptCost, servedModel: string | null, unanswered: boolean) => recordCost(
+      repos,
+      {
+        attemptId: `scout-prewarm:${NOW}`, workItemId: "scout-prewarm", routeTaskId: null, routeId: SCOUT_PREWARM_ROUTE_ID, source: "api.anthropic.com",
+        /* Charged to the budgeted work it was held for, so the Send's and area's history carries it; otherwise as before. */
+        jurisdiction: prewarmHold === null ? null : (jobSubject.get(prewarmHold.obligationId) ?? null),
+        ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId, spendHoldJobId: prewarmHold.jobId }),
+        project: "freshness", role: "SCOUT", model: servedModel ?? model, requestedModel: model, servedModel,
+        ...(unanswered ? { modelRequestBound: modelRequestBoundFor(model, Buffer.byteLength(JSON.stringify(request)), request.max_tokens) ?? undefined } : {}),
+        cost, recordedAt: at,
+      },
+      at,
+    );
+    let response: ModelResponse;
+    try { response = await transport(request); }
+    catch (error) {
+      /* Sent and lost: the one request counts at its send limit, and its hold stands. */
+      if (!(error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal)) {
+        await ledger({ ...ZERO_COST, inputTokens: 0, outputTokens: 0, usd: 0, durationMs: Date.now() - started, requestCount: 1 }, null, true);
+      }
+      throw error;
+    }
     const metered = readMeteredUsage(response.usage ?? {});
     const priced = priceMeteredUsage(model, metered, "1h");
     const durationMs = Date.now() - started;
@@ -2218,19 +2232,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
       modelRequestCount: 1, batchRequestCount: 0, batchEligibleRequestCount: 0,
       listPriceUsd: listPriceUsdForUsage(response.model, metered),
     };
-    await recordCost(
-      repos,
-      {
-        attemptId: `scout-prewarm:${NOW}`, workItemId: "scout-prewarm", routeTaskId: null, routeId: SCOUT_PREWARM_ROUTE_ID, source: "api.anthropic.com",
-        /* Charged to the budgeted work it was held for, so the Send's and area's history carries it; otherwise as before. */
-        jurisdiction: prewarmHold === null ? null : (jobSubject.get(prewarmHold.obligationId) ?? null),
-        ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId, spendHoldJobId: prewarmHold.jobId }),
-        project: "freshness", role: "SCOUT", model: response.model, requestedModel: model, servedModel: response.model,
-        modelRequestBound: modelRequestBoundFor(model, Buffer.byteLength(JSON.stringify(request)), request.max_tokens) ?? undefined,
-        cost, recordedAt: at,
-      },
-      at,
-    );
+    await ledger(cost, response.model ?? null, false);
     if (prewarmHold !== null) {
       const failed = await spendHolds.settle(prewarmHold.jobId, priced.usd, nowIso());
       if (failed !== null) runtimeConditions.push(`the pre-warm's budget hold could not be settled (${failed}); it counts in full for its window`);
@@ -2448,6 +2450,11 @@ async function projectRetainedFacts(phase: string): Promise<void> {
 const retainedProjection = !dry && !canary
   ? projectRetainedFacts("retained-results:fact-projection") : Promise.resolve();
 
+/** Where a row's deterministic request goes, so an open breaker on that provider holds it. */
+const routeUrl = (obligationId: string): string | null => {
+  const open = registry.routeFor(obligationId)?.open;
+  return open && (open.kind === "HTTP_GET" || open.kind === "HTTP_POST") ? open.url : null;
+};
 const cycle = await runCycle({
   repos,
   recoveryRepos,
@@ -2474,7 +2481,13 @@ const cycle = await runCycle({
   settledOccurrences,
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
-  admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
+  admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id, routeUrl(row.obligation.id)),
+  providerLimitOf: (row) => {
+    const url = routeUrl(row.obligation.id);
+    if (url === null) return null;
+    const key = sourceReliabilityKey(url);
+    return { key, limit: providerConcurrency(fleetSafety.providerState(url), hostConcurrency) };
+  },
   /* The owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
@@ -2782,7 +2795,7 @@ async function runAutonomousWave() {
     childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
-      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, fundedSubjects: [...lifetimeHuntSubjects] },
+      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: guards.workerTransportFor,
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
@@ -3180,7 +3193,7 @@ leavePromotionTail();
 // Join failures too: neither finalization view retries an unchanged failed read.
 const finalizationReads = canary ? null : Promise.allSettled([
   repos.scoutResults.readAll(),
-  repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
+  readSpendWindow(repos, nowIso()),
   repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
     Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
     new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
@@ -3195,9 +3208,9 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     return null;
   }
   const results = resultsRead.value;
-  const costsNow = costsRead.value;
+  const costsNow = costsRead.value.map(charge => charge.metered);
   const at = nowIso();
-  finalSpendWindow = researchSpendInWindow(costsNow, at, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
+  finalSpendWindow = researchSpendInWindow(costsRead.value, at, RESEARCH_BOUNDS.windowHours);
   finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
@@ -3226,7 +3239,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
-
+  /* The cache rows, from the spend window the ceiling reads, over its trailing window and over this cycle for the COST section. */
   const windowSince = new Date(Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString();
   cacheThisCycle = cacheHitRateByRole({ costs: costsNow, results, sinceIso: NOW, untilIso: at });
   return {

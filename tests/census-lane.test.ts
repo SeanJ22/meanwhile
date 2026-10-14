@@ -99,6 +99,23 @@ test("a page carries its government and its own plain reread clock", async () =>
   assert.equal((await repos.doors.mustRead(row.id)).value.validators?.checkedAt, NOW);
 });
 
+test("an unchanged single notice leaves the page clock while its saved evidence remains available", async () => {
+  const repos = createMemoryRepositories();
+  const url = "https://www.benningtonvt.org/_T8_R868.php";
+  const body = readFileSync("tests/fixtures/voting-sources/vt-bennington-nov3-original.html", "utf8");
+  const draft = pageDoorDraft({ url, retrievedAt: NOW, recordClass: "VOTING_SITE", ocdId: "ocd-division/country:us/state:vt/place:bennington", foundBy: "SCOUT" })!;
+  const { upsertDerivedDoor } = await import("../lib/doors/registry.ts");
+  await upsertDerivedDoor(repos.doors, draft, NOW, NOW);
+  const row = await repos.doors.mustRead(draft.doorId);
+  const hash = (await import("node:crypto")).createHash("sha256").update(body).digest("hex");
+  await repos.doors.compareAndSet(row.id, row.revision, { ...row.value, lastSuccessAt: NOW,
+    validators: { contentHash: hash, checkedAt: "2026-09-01T00:00:00Z", changedAt: null, etag: null, lastModified: null } }, NOW);
+  const report = await runPageDoorChecks(repos, runtime({ open: recordedDiscoveryOpen({ [url]: { status: 200, body } }) }), [(await repos.doors.mustRead(row.id)).value]);
+  assert.equal(report.read, 1, JSON.stringify(report));
+  assert.equal(report.changed, 0);
+  assert.equal((await repos.doors.mustRead(row.id)).value.status, "SUSPENDED");
+});
+
 test("a slow research run cannot delay the census admission clock", async () => {
   let finish!: () => void;
   const research = new Promise<void>(resolve => { finish = resolve; });

@@ -72,6 +72,18 @@ test("writing fields replaces them in place, adds new ones to the block and keep
   assert.equal(setStatusFields("# Title\n\nprose\n", { lock: "t" }), "# Title\n\nlock: t\n\nprose\n");
 });
 
+test("plan step ids from R, platform and source lanes count as steps", () => {
+  assert.deepEqual(stepIds("READY: R2"), ["R2"]);
+  assert.deepEqual(stepIds("READY: R2B"), ["R2B"]);
+  assert.deepEqual(stepIds("READY: R0"), ["R0"]);
+  assert.deepEqual(stepIds("READY: R3-LEGISTAR-MEMBERS"), ["R3-LEGISTAR-MEMBERS"]);
+  assert.deepEqual(stepIds("READY: R3-CIVICCLERK"), ["R3-CIVICCLERK"]);
+  assert.deepEqual(stepIds("READY: SRC-LS"), ["SRC-LS"]);
+  assert.deepEqual(stepIds("READY: SRC-AC"), ["SRC-AC"]);
+  assert.deepEqual(stepIds("READY: R2B, SRC-LS and DB-09"), ["R2B", "SRC-LS", "DB-09"]);
+  assert.deepEqual(stepIds("WIP: still working"), []);
+});
+
 test("READY subjects name their step ids; the newest READY is folded and later WIP stays behind", () => {
   assert.deepEqual(stepIds("READY: DB-09, DB-10 and RL-03 (again DB-09)"), ["DB-09", "DB-10", "RL-03"]);
   const commits = [

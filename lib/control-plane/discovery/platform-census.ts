@@ -16,7 +16,7 @@ import { loadRegistrationReference } from "../../registration/reference.ts";
 import { readCensusGovernmentFacts } from "../../registration/jurisdictions.ts";
 import { DEFAULT_USER_AGENT } from "../scheduler/route-executor.ts";
 
-export const PLATFORM_CENSUS_RECHECK_HOURS = 12;
+const PLATFORM_CENSUS_RECHECK_HOURS = 12;
 export const DOTGOV_CENSUS_URL = "https://raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv";
 type CensusRepos = Pick<ControlPlaneRepositories, "fieldManual">;
 export interface PlatformCensusObservation {

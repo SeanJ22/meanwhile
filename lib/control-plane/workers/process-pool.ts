@@ -67,6 +67,8 @@ export interface LeaseWorkerConfig {
   readonly modelEnabled: boolean;
   readonly searchEnabled: boolean;
   readonly ceilingUsd: number;
+  /** Admin's requests in flight at once to one website; absent, the default. */
+  readonly hostConcurrency?: number;
   readonly fundedSubjects: readonly string[];
   /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
   readonly nationalZips?: readonly string[];

@@ -63,7 +63,11 @@ function linksOfficialPortal(evidence: WorkerEvidence): boolean {
 }
 
 /** The implemented learned procedure is deliberately scoped to this existing owed/held artifact class. */
-export function heldEventContract(root: string, artifact: ArtifactRecord): LegacyCivicExtractionContract | null {
+/** The capture fields `legacyHeldWorkOwed` reads from every capture. */
+const HELD_EVENT_FIELDS = { artifactId: true, workItemId: true, partial: true, canonicalUrl: true } as const;
+type HeldEventCapture = Pick<ArtifactRecord, keyof typeof HELD_EVENT_FIELDS>;
+
+export function heldEventContract(root: string, artifact: Pick<ArtifactRecord, "partial" | "canonicalUrl">): LegacyCivicExtractionContract | null {
   if (!artifact.partial) {
     const registered = registeredHeldMeetingContract(artifact.canonicalUrl);
     if (registered) return registered;
@@ -478,7 +482,8 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
  * Parser that did not extract, a Validator that did not pass, or an Auditor result.
  */
 export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): Promise<boolean> {
-  const candidates = (await runtime.repos.artifacts.readAll()).filter(artifact => !artifact.partial && heldEventContract(root, artifact) !== null);
+  const candidates = (await runtime.repos.artifacts.readAllNarrowed(HELD_EVENT_FIELDS) as HeldEventCapture[])
+    .filter(artifact => !artifact.partial && heldEventContract(root, artifact) !== null);
   if (candidates.length === 0) return false;
   const [itemRows, records] = await Promise.all([runtime.repos.workItems.list(), runtime.repos.workerResults.readAll()]);
   const items = new Map(itemRows.map(row => [row.id, row.value]));

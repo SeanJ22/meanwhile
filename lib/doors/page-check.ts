@@ -11,11 +11,11 @@ import { enqueueWorkerTask } from "../control-plane/workers/runtime.ts";
 import { loadRegistrationReference } from "../registration/reference.ts";
 import { createHash } from "node:crypto";
 import { classifySourceContent, SOURCE_FAMILIES } from "./source-content.ts";
-import { recordSourceObservation } from "./source-capture.ts";
+import { recordSourceObservation, retireSourceDoors } from "./source-capture.ts";
 import { cycleVault, VAULT_DIR } from "../control-plane/scheduler/vault.ts";
 import { join } from "node:path";
 
-export async function bindPageGovernment(repos: ControlPlaneRepositories, door: DoorRecord, now: string, root = process.cwd()): Promise<DoorRecord> {
+async function bindPageGovernment(repos: ControlPlaneRepositories, door: DoorRecord, now: string, root = process.cwd()): Promise<DoorRecord> {
   if (door.kind !== "page") return door;
   const items = typeof door.config.workItemId === "string" ? [await repos.workItems.read(door.config.workItemId)]
     : await repos.workItems.listWhere(["publicationOutcome", "doorId"], door.doorId);
@@ -75,7 +75,12 @@ export async function runPageDoorChecks(repos: ControlPlaneRepositories, runtime
       const changed = contentHash !== door.validators?.contentHash;
       const pending = changed || Boolean(door.validators?.changedAt && Date.parse(door.validators.changedAt) > Date.parse(door.lastSuccessAt ?? "1970-01-01"));
       const changedAt = changed ? at : door.validators!.changedAt!;
-      if (pending) {
+      const disposition = classifySourceContent({ url, text: page.body, contentType: page.contentType ?? "", names: [],
+        belongsToPlace: true, owed: SOURCE_FAMILIES });
+      if (disposition.kind === "EVIDENCE") {
+        await retireSourceDoors(repos.doors, { url, ocdId: door.ocdId ?? "", disposition,
+          capture: { bytes: new TextEncoder().encode(page.body), contentType: page.contentType ?? "" } }, at);
+      } else if (pending) {
         if (typeof door.config.sourceScopes === "string") {
           const scopes = JSON.parse(door.config.sourceScopes) as { ocdId: string; state: string; names: string[] }[];
           for (const scope of scopes) await recordSourceObservation(repos, { url, ...scope,

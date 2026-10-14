@@ -973,8 +973,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   const memoryDeferral = routinePreSpawnMemoryDeferral(run, startedSourceChildren.has(run.id));
   if (memoryDeferral !== null) {
     attempted -= 1;
+    // Admission already wrote this pass's QUEUED progress row, and append-only history refuses a second one.
     const detail = safeFailure(memoryDeferral);
-    await recordHuntSourceProgress(pending.task, "QUEUED", detail);
     console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
     return;
   }

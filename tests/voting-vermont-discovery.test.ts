@@ -14,12 +14,14 @@ import { pageAddress } from "../lib/doors/page-doors.ts";
 import { classifySourceContent, SOURCE_FAMILIES, sourceLinks } from "../lib/doors/source-content.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { upsertDerivedDoor } from "../lib/doors/registry.ts";
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 
 const NOW = "2026-10-13T18:00:00.000Z";
 const path = (file: string) => `tests/fixtures/voting-sources/${file}`;
 const manifest = JSON.parse(readFileSync(path("vt-native-capture.json"), "utf8")) as { files: { file: string; url: string; httpStatus: number; sha256: string }[] };
 const replay = JSON.parse(readFileSync(path("vt-discovery-replay.json"), "utf8"));
+const candidates = JSON.parse(readFileSync(path("vt-native-discovery-candidates.json"), "utf8")) as { url: string; after: string; captureFile: string | null }[];
 const roots = (JSON.parse(readFileSync(replay.rootReference, "utf8")) as VotingSourceDoor[]).filter(source => source.scope.state === "VT");
 const byUrl = new Map(manifest.files.map(file => [pageAddress(file.url)!.url, file]));
 const text = (file: string) => readFileSync(path(file), "utf8");
@@ -30,8 +32,9 @@ function transport() {
     const url = pageAddress(String(input))?.url ?? String(input);
     requests.set(url, (requests.get(url) ?? 0) + 1);
     const file = byUrl.get(url);
-    return file ? new Response(readFileSync(path(file.file)), { status: file.httpStatus,
-      headers: { "content-type": file.file.endsWith(".pdf") ? "application/pdf" : "text/html" } }) : new Response(null, { status: 404 });
+    if (!file) throw new Error(`No target capture saved for ${url}`);
+    return new Response(readFileSync(path(file.file)), { status: file.httpStatus,
+      headers: { "content-type": file.file.endsWith(".pdf") ? "application/pdf" : "text/html" } });
   }) as typeof fetch;
   return { fetcher, requests };
 }
@@ -43,6 +46,9 @@ test("Vermont native replay creates clocks for collections, captures single fact
   const { fetcher, requests } = transport();
   const runtime: VotingSourceRuntime = { fetch: fetcher, now: () => NOW, captureCache: new Map(), discoverySeen: new Set() };
   const vault = cycleVault(location);
+  for (const source of roots) await upsertDerivedDoor(repos.doors, { doorId: source.id, kind: "official-voting-source", ocdId: source.scope.ocdId,
+    hosts: [new URL(source.url).hostname], config: { votingSource: JSON.stringify(source) }, holds: ["voting-sites"] }, NOW, NOW);
+  assert.equal((await repos.doors.list()).filter(row => row.value.status !== "SUSPENDED").length, replay.before.doors);
   runtime.onDiscoveredDoor = async source => { await saveVotingSourceDoor(repos.doors, source, NOW); };
   runtime.onDiscoveredSource = async observation => {
     observations.push(observation);
@@ -59,9 +65,15 @@ test("Vermont native replay creates clocks for collections, captures single fact
     assert.equal(observations.filter(row => row.disposition.kind === "SKIP").length, replay.after.skips);
     assert.equal(observations.filter(row => row.capture).length, replay.heldTargetCaptures);
     assert.equal(new Set(observations.map(row => pageAddress(row.source.url)!.url)).size, observations.length);
+    assert.deepEqual(observations.map(row => ({ url: row.source.url, after: row.disposition.kind,
+      captureFile: row.capture ? byUrl.get(row.source.url)!.file : null })),
+    candidates.map(({ url, after, captureFile }) => ({ url, after, captureFile })));
     const registered = await registeredVotingSourceDoors(repos.doors);
     assert.equal(registered.length, replay.after.doors);
-    assert.ok((await repos.doors.list()).every(row => row.value.checkEveryMinutes !== null && row.value.ocdId));
+    const active = (await repos.doors.list()).filter(row => row.value.status !== "SUSPENDED");
+    assert.equal(active.length, replay.after.doors);
+    assert.ok(active.every(row => row.value.checkEveryMinutes !== null && row.value.ocdId));
+    assert.equal((await repos.doors.list()).filter(row => row.value.status === "SUSPENDED").length, 5);
     const notice = roots.find(root => root.id === "vt-bennington-drop-box-2026")!;
     assert.ok(!registered.some(door => pageAddress(door.url)?.url === pageAddress(notice.url)?.url));
     const read = reads.get(notice.id)!;
@@ -85,6 +97,27 @@ test("Vermont native replay creates clocks for collections, captures single fact
   } finally { await rm(location, { recursive: true, force: true }); }
 });
 
+test("the saved live Vermont pass records access failure without a guessed door or a link-created blank", async () => {
+  const fixture = JSON.parse(text("vt-live-discovery.json"));
+  for (const response of fixture.responses) assert.equal(createHash("sha256").update(readFileSync(path(response.file))).digest("hex"), response.sha256);
+  const browser = fixture.alternatives.find((route: { route: string }) => route.route === "browser");
+  assert.equal(createHash("sha256").update(readFileSync(path(browser.file))).digest("hex"), browser.sha256);
+  const fetcher = (async (input: unknown) => {
+    const response = fixture.responses.find((row: { url: string }) => row.url === String(input));
+    assert.ok(response, "every request comes from the same saved live pass");
+    return new Response(readFileSync(path(response.file)), { status: response.httpStatus, headers: { "content-type": response.contentType } });
+  }) as typeof fetch;
+  const result = await discoverVotingDoors(fixture.root, { fetch: fetcher, browserFetch: fetcher });
+  assert.deepEqual(result.sources.map(row => ({ url: pageAddress(row.source.url)!.url, after: row.disposition.kind })),
+    fixture.candidates.map((row: { normalizedUrl: string; after: string }) => ({ url: row.normalizedUrl, after: row.after })));
+  const blanks = planVotingSourceBlanks({ electionDate: fixture.root.electionDate, places: [fixture.root.scope], doors: [fixture.root], reads: [] });
+  assert.deepEqual({ doors: result.doors.length, evidence: result.evidence.length, skips: result.skips.length,
+    linkBlanks: 0, placeBlanks: blanks.length, blanks: blanks.length }, fixture.after);
+  assert.equal(fixture.reportedPass.reproduced, false);
+  assert.equal(result.sources[0]!.capture, null);
+  assert.ok(result.attempts.some(attempt => attempt.url.endsWith("robots.txt")));
+});
+
 test("content and place decide the disposition on any domain, including a homepage that actually publishes notices", () => {
   const html = text("vt-bennington-nov3-original.html");
   for (const url of ["https://www.benningtonvt.org/_T8_R868.php", "https://media.example.com/video"]) {
@@ -104,4 +137,18 @@ test("one normalized voting URL keeps every place mapping on one clock", async (
     { ...source, url: `${source.url}${index === 0 ? "" : `?utm_source=${index}#top`}` }, NOW);
   assert.equal((await repos.doors.list()).length, 1);
   assert.deepEqual((await registeredVotingSourceDoors(repos.doors)).map(source => source.id).sort(), noticeMappings.map(source => source.id).sort());
+});
+
+test("a skipped link for another place cannot suspend that place's registered source", async () => {
+  const repos = createMemoryRepositories(), location = await mkdtemp(join(tmpdir(), "vt-source-place-"));
+  const source = roots.find(root => root.id === "vt-bennington-drop-box-2026")!;
+  await saveVotingSourceDoor(repos.doors, source, NOW);
+  const bytes = readFileSync(path("vt-bennington-nov3-original.html"));
+  const disposition = classifySourceContent({ url: source.url, text: bytes.toString("utf8"), contentType: "text/html", names: ["Arlington"], owed: SOURCE_FAMILIES });
+  assert.equal(disposition.kind, "SKIP");
+  try {
+    await recordSourceObservation(repos, { url: source.url, ocdId: "ocd-division/country:us/state:vt/place:arlington", state: "VT", names: ["Arlington"],
+      disposition, capture: { contentType: "text/html", bytes } }, NOW, cycleVault(location));
+    assert.equal((await repos.doors.list())[0]!.value.status, "OPEN");
+  } finally { await rm(location, { recursive: true, force: true }); }
 });

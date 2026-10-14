@@ -1,21 +1,9 @@
-/**
- * Every door the system already holds, kept in the registry on every runner
- * pass: the hand-wired meeting doors moved out of code (the one-time door
- * import, `data/doors/hand-wired-meeting-doors.json`), the promoted derived
- * wiring, the feeds, the route hints, and the sources Scouts and detectives
- * found. Each goes through the same upserts every derive step uses, so a pass
- * with nothing new writes nothing and a hand edit made since is kept. Sources
- * found after this are added as they are recorded (`recordFoundSources`).
- */
-
 import { readDerivedMeetingWiring, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
-import type { AppendOnlyRepository, Persisted } from "../control-plane/repository/types.ts";
-import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
+import type { Persisted } from "../control-plane/repository/types.ts";
 import { ROUTE_HINTS } from "../hunt/meetings-route-hints.ts";
 import { readFileSync } from "node:fs";
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
-import { PAGE_DOOR_KIND, recordFoundSources, type PageDoorsResult } from "./page-doors.ts";
-import { isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { type DoorRecord, type DoorRepository } from "./registry.ts";
 import { seedRouteHintDoors } from "./route-hints.ts";
 import { seedFeedDoors } from "./seed-feeds.ts";
 import { seedMeetingDoors } from "./seed-meetings.ts";
@@ -35,17 +23,10 @@ export interface SeedAllResult {
   readonly meetings: SeedCounts;
   readonly feeds: SeedCounts;
   readonly routeHints: SeedCounts;
-  /** Null when found sources were already held, so the scout log was not read. */
-  readonly found: PageDoorsResult | null;
   readonly derivedNote: string;
   readonly total: number;
 }
 
-/**
- * The one-time door import: the hand-wired meeting doors that lived only in code, moved into the registry. Read by
- * the import alone; deleted once production confirms the import. Its time is when the rows were taken from code, so
- * a door edited in the registry since keeps its edit.
- */
 export const DOOR_IMPORT_PATH = "data/doors/hand-wired-meeting-doors.json";
 export function readDoorImport(root = process.cwd()): { readonly generatedAt: string; readonly rows: readonly BodySourceWiring[] } {
   const file = JSON.parse(readFileSync(`${root}/${DOOR_IMPORT_PATH}`, "utf8")) as { generatedAt?: unknown; rows?: unknown };
@@ -81,9 +62,6 @@ function readFromListing(repo: DoorRepository, rows: readonly Persisted<DoorReco
   });
 }
 
-const isFoundSource = (row: Persisted<DoorRecord>): boolean =>
-  isDoorRecord(row.value) && row.value.kind === PAGE_DOOR_KIND && typeof row.value.config.foundBy === "string";
-
 export async function seedAllDoors(input: {
   readonly repo: DoorRepository;
   readonly imported: { readonly generatedAt: string; readonly rows: readonly BodySourceWiring[] };
@@ -91,8 +69,6 @@ export async function seedAllDoors(input: {
   /** When the derived rows were promoted. */
   readonly derivedAt?: string;
   readonly derivedNote?: string;
-  /** The scout log, read in full only while the registry holds no found source yet. */
-  readonly scoutResults?: Pick<AppendOnlyRepository<ScoutResult>, "readAll">;
   readonly now: string;
 }): Promise<SeedAllResult> {
   const { now } = input;
@@ -104,11 +80,8 @@ export async function seedAllDoors(input: {
   const meetings = await seedMeetingDoors({ repo, wiring: [], derived: input.derived, deriveInputAt: input.derivedAt ?? now, at: now });
   const feeds = await seedFeedDoors({ repo, deriveInputAt: codeAt, at: now });
   const routeHints = await seedRouteHintDoors({ repo, hints: ROUTE_HINTS, deriveInputAt: codeAt, at: now });
-  const found = input.scoutResults !== undefined && !rows.some(isFoundSource)
-    ? await recordFoundSources(repo, await input.scoutResults.readAll(), now)
-    : null;
-  const total = rows.length + imported.created + meetings.created + feeds.created + routeHints.created + (found?.created ?? 0);
-  return { imported, meetings, feeds, routeHints, found, derivedNote: input.derivedNote ?? "", total };
+  const total = rows.length + imported.created + meetings.created + feeds.created + routeHints.created;
+  return { imported, meetings, feeds, routeHints, derivedNote: input.derivedNote ?? "", total };
 }
 
 export type DoorSync =
@@ -119,7 +92,6 @@ export type DoorSync =
 export async function syncHeldDoors(
   repo: DoorRepository,
   options: {
-    readonly scoutResults?: Pick<AppendOnlyRepository<ScoutResult>, "readAll">;
     readonly now?: string;
     readonly imported?: { readonly generatedAt: string; readonly rows: readonly BodySourceWiring[] };
   } = {},
@@ -128,7 +100,7 @@ export async function syncHeldDoors(
     const now = options.now ?? new Date().toISOString();
     const derived = await readDerivedForSeed(now);
     return { synced: true, result: await seedAllDoors({ repo, imported: options.imported ?? readDoorImport(), derived: derived.records, derivedAt: derived.at,
-      derivedNote: derived.note, scoutResults: options.scoutResults, now }) };
+      derivedNote: derived.note, now }) };
   } catch (error) {
     return { synced: false, reason: `the doors could not be brought up to date: ${error instanceof Error ? error.message : String(error)}` };
   }
@@ -137,8 +109,8 @@ export async function syncHeldDoors(
 /** One line for the runner log. */
 export function doorSyncLine(sync: DoorSync): string {
   if (!sync.synced) return sync.reason;
-  const { imported, meetings, feeds, routeHints, found, total } = sync.result;
-  const parts = [imported, meetings, feeds, routeHints, ...(found === null ? [] : [found])];
+  const { imported, meetings, feeds, routeHints, total } = sync.result;
+  const parts = [imported, meetings, feeds, routeHints];
   const created = parts.reduce((sum, part) => sum + part.created, 0);
   const updated = parts.reduce((sum, part) => sum + part.updated, 0);
   const refused = [imported, meetings, feeds, routeHints].reduce((sum, part) => sum + part.refused.length, 0);

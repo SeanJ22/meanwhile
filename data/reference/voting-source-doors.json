@@ -733,7 +733,7 @@
     },
     "access": {
       "status": "open",
-      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses\u2019 public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
+      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses’ public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
       "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
@@ -1951,14 +1951,17 @@
     "publisher": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
     "url": "https://vote.utah.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "UT",
       "ocdId": "ocd-division/country:us/state:ut",
       "name": "Utah"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://vote.utah.gov/",
+    "electionPageUrl": "https://vote.utah.gov/current-election-information/",
     "title": "Utah chief election office discovery root",
     "office": {
       "name": "Elections Office, Office of the Lieutenant Governor, Salt Lake City, UT",
@@ -1974,7 +1977,10 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://vote.utah.gov/\">https://vote.utah.gov/</a>"
-    }
+    },
+    "candidateListUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+    "writeInCandidateListUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Write-In-Certification.pdf",
+    "ballotMeasuresUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf"
   },
   {
     "id": "fec-vt-chief",

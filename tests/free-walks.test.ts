@@ -11,15 +11,12 @@ import {
   type FreeWalkSubject,
 } from "../lib/control-plane/discovery/free-walks.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { MEETINGS_DISCOVERY_NAMESPACE } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { DiscoveryOutcome, MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
 const ROOT = process.cwd();
 const AJ = "az:city:city-of-apache-junction";
 const COOLIDGE = "az:city:city-of-coolidge";
-const AJ_ROW = `${MEETINGS_DISCOVERY_NAMESPACE}${AJ}#own-site-meetings`;
-const COOLIDGE_ROW = `${MEETINGS_DISCOVERY_NAMESPACE}${COOLIDGE}#find-own-site`;
 const SUBJECTS: readonly FreeWalkSubject[] = [
   { jurisdictionId: AJ, walkable: true },
   { jurisdictionId: COOLIDGE, walkable: false },

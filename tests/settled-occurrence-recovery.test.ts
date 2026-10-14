@@ -849,10 +849,6 @@ function closedScoutLane(modelIds: ReadonlySet<string>): ResearchLanes {
       modelIds.has(row.obligation.id)
         ? { kind: "BOUNDED_MODEL_WORKER", why: "fixture model row", disagreement: null }
         : { kind: "DETERMINISTIC", why: "fixture deterministic row", disagreement: null },
-    admitScout: () => ({ admit: false, code: "LANE_DISABLED", why: "the fixture Scout lane is closed" }),
-    modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: neverRuns },
-    workerCapacity: 2,
-    scoutLeaseTtlMs: TTL,
   };
 }
 

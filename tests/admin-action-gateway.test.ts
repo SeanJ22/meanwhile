@@ -294,7 +294,6 @@ test("research.pause records one versioned paid-lane intent and idempotent recei
   assert.match(cycle, /const intents = readIntents\(intentLog\);/);
   assert.match(cycle, /const laneClosure = modelLaneClosure\(\{[\s\S]*?paused: intents\.paused,/);
   assert.match(cycle, /const modelLaneEnabled = laneClosure === null;/);
-  assert.match(cycle, /if \(!modelLaneEnabled\) return \{ admit: false, code: laneDisabledCode/);
   assert.match(cycle, /pendingResearchLaneAcknowledgment\(intentLog, laneClosure\)/);
   assert.match(cycle, /honorIntent\(pendingAcknowledgment\.intent, pendingAcknowledgment\.detail\)/);
 

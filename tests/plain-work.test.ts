@@ -16,7 +16,9 @@ import {
 } from "@/lib/control-plane/plain-work.ts";
 import { metricGroupLead, researchDigestRows } from "@/lib/control-plane/research-digest.ts";
 import type { ResearchMetrics } from "@/lib/control-plane/research-metrics.ts";
-import { SCOUT_OUTCOMES } from "@/lib/control-plane/scheduler/scout-result.ts";
+import type { ScoutOutcome } from "@/lib/control-plane/scheduler/scout-result.ts";
+
+const SCOUT_OUTCOMES: readonly ScoutOutcome[] = ["EVIDENCE_FOUND", "NO_PROGRESS", "ROUTE_CANDIDATE", "NEEDS_ADAPTER", "BLOCKED", "HUMAN_REQUIRED"];
 
 const SUBJECT = { name: "Atlantic County, New Jersey", retryPhrase: null };
 

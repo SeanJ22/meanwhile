@@ -415,10 +415,16 @@
     },
     "candidateListUrls": [
       "https://elections.hawaii.gov/candidates/candidate-reports/",
-      "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94"
+      "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+      "https://voterguide.hawaii.gov/view-sample-ballots/",
+      "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf"
     ],
     "ballotMeasureUrls": [
-      "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/"
+      "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+      "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
+      "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=secondCross_unammend&title=Senate+bills+that+have+passed+Third+Reading+and+were+unamended+by+the+nonoriginating+chamber&year=2025",
+      "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
+      "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=passLeg_finalDecking&title=Senate+bills+that+have+passed+the+Legislature+or+been+decked+for+Final+Reading&year=2026"
     ]
   },
   {
@@ -426,14 +432,17 @@
     "publisher": "Elections Division, Office of the Secretary of State, Boise, ID",
     "url": "https://sos.idaho.gov/elections-division/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "ID",
       "ocdId": "ocd-division/country:us/state:id",
       "name": "Idaho"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://sos.idaho.gov/elections-division/",
+    "electionPageUrl": "https://voteidaho.gov/idaho-general-election/",
     "title": "Idaho chief election office discovery root",
     "office": {
       "name": "Elections Division, Office of the Secretary of State, Boise, ID",
@@ -442,14 +451,23 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Official chief election office redirects to VoteIdaho.gov; the public final-candidate API and 2026 Voter Pamphlet were acquired as exact bytes with HTTP 200. No voter identity lookup was used.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://sos.idaho.gov/elections-division/\">https://sos.idaho.gov/elections-division/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://run.voteidaho.gov/search",
+      "https://api-run.voteidaho.gov/api/FiledCandidates/SearchCandidates"
+    ],
+    "ballotMeasureUrls": [
+      "https://voteidaho.gov/initiatives-amendments/",
+      "https://voteidaho.gov/idaho-general-election/",
+      "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf"
+    ]
   },
   {
     "id": "fec-il-chief",
@@ -486,14 +504,17 @@
     "publisher": "Indiana Election Division, Office of the Secretary of State, Indianapolis, IN",
     "url": "https://www.in.gov/sos/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "IN",
       "ocdId": "ocd-division/country:us/state:in",
       "name": "Indiana"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://www.in.gov/sos/elections/",
+    "electionPageUrl": "https://www.in.gov/sos/elections/candidate-information/",
     "title": "Indiana chief election office discovery root",
     "office": {
       "name": "Indiana Election Division, Office of the Secretary of State, Indianapolis, IN",
@@ -502,14 +523,26 @@
     },
     "access": {
       "status": "open",
-      "detail": "Official root reached through browser extraction; site routes and election applicability require discovery. This root observation was browser-based; native capture availability is recorded separately in the fixture manifest.",
-      "checkedAt": "2026-10-13"
+      "detail": "Public all-counties 2026 candidate workbook and exact statewide question PDF acquired. Both questions include exact official General Assembly resolution links observed in the Senate and House Caucuses’ public legislative articles; the resolution pages returned their application shells. Separate certified candidate-name documents remain open. 3 statewide judicial retentions are saved from the official county ballot.",
+      "checkedAt": "2026-10-14"
     },
     "discoveredFrom": "data/reference/fec_state_election_offices.csv",
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.in.gov/sos/elections/\">https://www.in.gov/sos/elections/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.in.gov/sos/elections/candidate-information/",
+      "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
+      "https://www.in.gov/courts/retention/",
+      "https://www.in.gov/courts/appeals/districts/"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+      "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL",
+      "https://iga.in.gov/legislative/2026/resolutions/senate/joint/1/details",
+      "https://iga.in.gov/legislative/2025/resolutions/house/joint/1/details"
+    ]
   },
   {
     "id": "fec-ia-chief",

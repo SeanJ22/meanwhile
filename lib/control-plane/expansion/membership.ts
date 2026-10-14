@@ -30,8 +30,7 @@
  * Pure. Every input is handed in.
  */
 
-import type { CostEntry } from "../cost.ts";
-import { aggregateModelSpend } from "../fleet-safety.ts";
+import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   MEMBERSHIP_METHOD,
@@ -315,13 +314,13 @@ export function orderByPlacement<T>(
 
 /** Attributed model spend for a scope's subjects in a window (the Fleet's own model-backed rule). */
 export function scopeModelSpend(
-  costs: readonly CostEntry[],
+  charges: readonly PricedCharge[],
   members: ReadonlySet<string>,
   since: string,
   until: string,
 ): { readonly usd: number | null; readonly measured: number; readonly unmeasured: number } {
-  return aggregateModelSpend(
-    costs.filter((entry) => entry.jurisdiction !== null && members.has(entry.jurisdiction)),
+  return aggregatePricedSpend(
+    charges.filter((entry) => entry.jurisdiction !== null && members.has(entry.jurisdiction)),
     since,
     until,
   );
@@ -691,12 +690,12 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
 
 /**
  * Step two, once the cost ledger is read: each scope's attributed spend, the
- * budget verdict, and the gate the Scout admission consults. `costs` null means
+ * budget verdict, and the gate the Scout admission consults. `charges` null means
  * the ledger could not be read — every budgeted scope then holds its paid work.
  */
 export function armExpansionBudget(
   plan: ExpansionPlan,
-  input: { readonly now: string; readonly costs: readonly CostEntry[] | null; readonly worstCaseUsd: number },
+  input: { readonly now: string; readonly charges: readonly PricedCharge[] | null; readonly worstCaseUsd: number },
 ): { readonly gate: ScopeBudgetGate; readonly reading: ExpansionCycleReading } {
   const since24 = new Date(Date.parse(input.now) - DAY_MS).toISOString();
   const since7 = new Date(Date.parse(input.now) - 7 * DAY_MS).toISOString();
@@ -709,10 +708,10 @@ export function armExpansionBudget(
         lifetime: Boolean(d.budgetStartedAt), budgetStartedAt: d.budgetStartedAt, receiptId: d.receiptId });
       return reading;
     }
-    const spend24 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since24, input.now);
-    const budgetSpend = d.budgetStartedAt && input.costs !== null ? scopeModelSpend(input.costs, scope.members, d.budgetStartedAt, input.now) : spend24;
+    const spend24 = input.charges === null ? null : scopeModelSpend(input.charges, scope.members, since24, input.now);
+    const budgetSpend = d.budgetStartedAt && input.charges !== null ? scopeModelSpend(input.charges, scope.members, d.budgetStartedAt, input.now) : spend24;
     const period = d.budgetStartedAt ? "for this hunt (Anthropic tokens)" : "in the rolling 24 hours";
-    const spend7 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since7, input.now);
+    const spend7 = input.charges === null ? null : scopeModelSpend(input.charges, scope.members, since7, input.now);
     budgetScopes.push({
       key: d.key,
       label: d.geography.label,

@@ -1,11 +1,10 @@
-/** Standing homepage observations and starting leads; a tenant lead never binds a body. */
 import { createHash } from "node:crypto";
 import { closeSync, openSync, readSync } from "node:fs";
 import { join } from "node:path";
 import { StringDecoder } from "node:string_decoder";
 import { parseCsv } from "../../reference/csv.ts";
 import { detectTenancy } from "../../hunt/platform-tenancy.ts";
-import { defaultPlatformFingerprints } from "../platform-fingerprints.ts";
+import { platformFingerprints } from "../platform-fingerprints.ts";
 import { meetingEndpointCandidates, siteOrigins, type MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import { OWN_SITE_MEETINGS_SOURCE, type MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
 import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
@@ -17,7 +16,7 @@ import { loadRegistrationReference } from "../../registration/reference.ts";
 import { readCensusGovernmentFacts } from "../../registration/jurisdictions.ts";
 import { DEFAULT_USER_AGENT } from "../scheduler/route-executor.ts";
 
-export const PLATFORM_CENSUS_RECHECK_DAYS = 30;
+const PLATFORM_CENSUS_RECHECK_HOURS = 12;
 export const DOTGOV_CENSUS_URL = "https://raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv";
 type CensusRepos = Pick<ControlPlaneRepositories, "fieldManual">;
 export interface PlatformCensusObservation {
@@ -27,7 +26,7 @@ export interface PlatformCensusObservation {
   readonly artifactId: string | null;
   readonly matches: readonly { readonly platform: string; readonly tenant: string; readonly url: string; readonly basis: string }[];
 }
-const nextCheck = (now: string) => new Date(Date.parse(now) + PLATFORM_CENSUS_RECHECK_DAYS * 86_400_000).toISOString();
+const nextCheck = (now: string) => new Date(Date.parse(now) + PLATFORM_CENSUS_RECHECK_HOURS * 3_600_000).toISOString();
 const PLATFORM_OF: Readonly<Record<string, string>> = { "legistar-api": "legistar", "legistar-insite": "legistar", "civicplus-agendacenter": "civicplus", "civicclerk-api": "civicclerk" };
 const platformOf = (vendor: string) => PLATFORM_OF[vendor] ?? vendor;
 function tenantOf(platform: string, url: string): string {
@@ -39,7 +38,7 @@ function tenantOf(platform: string, url: string): string {
 }
 export function observePlatformCensus(html: string, homepage: string, artifactId: string | null, checkedAt: string, entries?: readonly FieldManualEntry[]): PlatformCensusObservation {
   const matches = new Map<string, PlatformCensusObservation["matches"][number]>();
-  for (const fingerprint of defaultPlatformFingerprints()) {
+  for (const fingerprint of platformFingerprints(entries ?? [])) {
     if (!fingerprint.hostPattern.test(new URL(homepage).hostname)) continue;
     const platform = /(^|\.)boarddocs\.com$/i.test(new URL(homepage).hostname) ? "boarddocs" : fingerprint.id;
     const match = { platform, tenant: tenantOf(platform, homepage), url: homepage, basis: "SERVED_BY" };
@@ -55,7 +54,7 @@ export function observePlatformCensus(html: string, homepage: string, artifactId
     const match = { platform: hit.platform, tenant: tenantOf(hit.platform, url), url, basis: hit.strength };
     matches.set(`${match.platform}|${match.tenant}`, match);
   }
-  for (const endpoint of meetingEndpointCandidates(html, homepage, checkedAt)) {
+  for (const endpoint of meetingEndpointCandidates(html, homepage, checkedAt, entries)) {
     if (["own-site-meetings-page", "official-page-events", "ical"].includes(endpoint.vendor)) continue;
     const platform = platformOf(endpoint.vendor);
     const match = { platform, tenant: tenantOf(platform, endpoint.url), url: endpoint.url, basis: endpoint.basis };
@@ -129,7 +128,7 @@ export function dotgovDomainLeads(csv: string, state: string): FieldManualEntry[
     entries.push(newFieldManualEntry("cisa-dotgov-census", domain, {
       role: "SHARED", kind: "PLATFORM_CENSUS_DOMAIN", title: row["Organization name"] || domain,
       summary: `${domain}: official domain listed by CISA.`, states: [postal.toLowerCase()], recordClasses: ["meetings"],
-      outcome: "REFERENCE", url: `https://${domain}/`, payload: { domain, state: postal, organization: row["Organization name"], source: DOTGOV_CENSUS_URL },
+      outcome: "REFERENCE", url: `https://${domain}/`, payload: { domain, state: postal, organization: row["Organization name"], city: row.City, source: DOTGOV_CENSUS_URL },
     }));
   }
   if (!header) throw new Error("CISA domain census returned no header");
@@ -164,9 +163,8 @@ export function heldCensusWebsiteNeeds(state: string, root = process.cwd()): Mee
   return loaded.reference.governments.flatMap(([pid, jurisdictionId, name, govClass]) => {
     const fact = facts.byPid.get(pid);
     const website = fact?.web || null;
-    if (!siteOrigins(website).length) return [];
     return [{ jurisdictionId, stateCode: state.toUpperCase(), name, govClass, countyFips: fact?.countyFips,
-      ownWebAddress: website, basis: "SOURCE_DISCOVERY_OWED" as const, sources: [OWN_SITE_MEETINGS_SOURCE] }];
+      city: fact?.city, countyName: fact?.county, ownWebAddress: website, basis: "SOURCE_DISCOVERY_OWED" as const, sources: [OWN_SITE_MEETINGS_SOURCE] }];
   });
 }
 export async function readPlatformCensusNeeds(state: string, registry: JurisdictionRegistry | null, input: { repos: CensusRepos; root?: string; census?: typeof heldCensusWebsiteNeeds; reviewedVersionId?: string | null }): Promise<{ needs: MeetingsDiscoveryNeed[]; failures: string[] }> {
@@ -175,9 +173,8 @@ export async function readPlatformCensusNeeds(state: string, registry: Jurisdict
   const hosts = new Set<string>();
   for (const row of registry?.jurisdictions ?? []) {
     const origin = siteOrigins(row.ownWebAddress)[0];
-    if (!origin) continue;
-    hosts.add(new URL(origin).hostname.replace(/^www\./, ""));
-    needs.push({ jurisdictionId: row.id, stateCode: row.stateCode, name: row.name, govClass: row.govClass, countyFips: row.countyFips,
+    if (origin) hosts.add(new URL(origin).hostname.replace(/^www\./, ""));
+    needs.push({ jurisdictionId: row.id, stateCode: row.stateCode, name: row.name, govClass: row.govClass, countyFips: row.countyFips, countyName: row.countyName,
       ownWebAddress: row.ownWebAddress, basis: "SOURCE_DISCOVERY_OWED", sources: [OWN_SITE_MEETINGS_SOURCE],
       addressSource: registry?.registration ? { source: "REGISTRATION", versionId: registry.registration.versionId } : { source: "OPERATIONAL_REFERENCE", versionId: input.reviewedVersionId ?? null } });
   }
@@ -185,7 +182,8 @@ export async function readPlatformCensusNeeds(state: string, registry: Jurisdict
     try {
       for (const need of (input.census ?? heldCensusWebsiteNeeds)(state, input.root)) {
         needs.push(need);
-        hosts.add(new URL(siteOrigins(need.ownWebAddress)[0]!).hostname.replace(/^www\./, ""));
+        const origin = siteOrigins(need.ownWebAddress)[0];
+        if (origin) hosts.add(new URL(origin).hostname.replace(/^www\./, ""));
       }
     } catch (error) { failures.push(`Held ${state.toUpperCase()} Census websites could not be read: ${error instanceof Error ? error.message : String(error)}`); }
   }

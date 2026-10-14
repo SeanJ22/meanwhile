@@ -14,6 +14,7 @@ import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile }
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -489,6 +490,9 @@ export function fileAppendOnlyRepository<T>(
     readAll: async (): Promise<readonly T[]> =>
       (await readEveryPartition()).map((line) => line.record),
 
+    readAllNarrowed: async (projection) =>
+      (await readEveryPartition()).map((line) => projectRecord(line.record, projection)),
+
     readSince: async (since: string): Promise<readonly T[]> =>
       (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
 
@@ -624,6 +628,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
+    spendWindow: fileAggregateRepository<SpendWindow>(resolved, "SpendWindow", "spend-window"),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),

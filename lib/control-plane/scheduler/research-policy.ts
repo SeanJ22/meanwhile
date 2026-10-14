@@ -10,7 +10,7 @@ import type { CostEntry } from "../cost.ts";
 import { MODEL_FOR_CLASS, SCOUT_STEPS } from "./model-routing.ts";
 import { MODELS } from "../../models.ts";
 import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
-import { aggregateModelSpend, type FleetSafetySnapshot } from "../fleet-safety.ts";
+import { aggregateModelSpend, aggregatePricedSpend, type FleetSafetySnapshot, type PricedCharge } from "../fleet-safety.ts";
 import type { SpendHold } from "../budget.ts";
 import type { WorkerProcessSlots } from "../workers/worker-slots.ts";
 
@@ -305,9 +305,9 @@ export function scoutSpendInWindow(
   return { windowUsd: spend.usd, knownUsd: spend.knownUsd, measured: spend.measured, unmeasured: spend.unmeasured };
 }
 
-/** Both model lanes consume the existing rolling research ceiling; deterministic USD null is not model spend. */
-export function researchSpendInWindow(costs: readonly CostEntry[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours, spendHolds: readonly SpendHold[] = []) {
-  const spend = aggregateModelSpend(costs,
+/** Both model lanes consume the existing rolling research ceiling, read from the spend window's priced charges. */
+export function researchSpendInWindow(charges: readonly PricedCharge[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours, spendHolds: readonly SpendHold[] = []) {
+  const spend = aggregatePricedSpend(charges,
     new Date(Date.parse(nowIso) - windowHours * 3_600_000).toISOString(), nowIso, spendHolds);
   return { windowUsd: spend.usd, knownUsd: spend.knownUsd, measured: spend.measured, unmeasured: spend.unmeasured };
 }

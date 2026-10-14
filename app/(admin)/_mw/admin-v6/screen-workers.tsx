@@ -17,6 +17,7 @@ const STAGES: readonly WorkerStage[] = ["finding", "collecting", "extracting", "
 
 const when = (iso: string | null | undefined, withDay = true): string => (iso && Number.isFinite(Date.parse(iso)) ? mst(iso, withDay) : "—");
 
+const megabytes = (bytes: number): string => `${(bytes / 1e6).toLocaleString("en-US", { maximumFractionDigits: 1 })} MB`;
 const MINUTE = 60_000;
 const noSubscription = () => () => {};
 const minuteNow = () => Math.floor(Date.now() / MINUTE) * MINUTE;
@@ -360,6 +361,12 @@ export function WorkersScreen() {
           {st?.lastUsefulProgress && <span className={s.meta}>{progressAge ? `${progressAge}. ` : ""}{st.lastUsefulProgress.what}</span>}
         </div>
         <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <><span className={cx(s.meta, s.textWarn)}>The last round ended with an error.</span><Technical lines={[st.cycle.lastError]} /></>}</>}</div>
+        <div className={s.row}>
+          <span className={s.eyebrow}>Database reads, last full hour</span>
+          <strong>{st?.databaseReads ? megabytes(st.databaseReads.controlPlaneBytes + st.databaseReads.readerBytes) : "—"}</strong>
+          {st?.databaseReads && <><span className={s.meta}>Work records {megabytes(st.databaseReads.controlPlaneBytes)} · reader data {megabytes(st.databaseReads.readerBytes)} · hour starting {mst(st.databaseReads.hour, false)}</span>
+            <Technical lines={st.databaseReads.byCaller.map(row => `${megabytes(row.bytes)} ← ${row.caller}`)} /></>}
+        </div>
         {st?.refused && <div className={cx(s.row, s.cardWarn)}><span className={s.eyebrow}>Refused before the AI</span><strong className={s.textWarn}>{count(st.refused.count)} paid jobs</strong><span className={s.meta}>Not sent to the AI because {st.refused.why}.</span></div>}
         <div className={s.row}>
           <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>

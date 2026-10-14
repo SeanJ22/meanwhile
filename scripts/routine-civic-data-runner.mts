@@ -2,16 +2,7 @@ import { boxIndexEnabled } from "../lib/control-plane/box.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
-/**
- * @freshness-reads-here
- *
- * One source-isolated pass of the permanent routine civic-data data plane.
- * The standing local pilot calls this after its own cycle; this process owns
- * only data cadence and can neither commit nor invoke a software release.
- * `lastAttemptedAt` and `lastSucceededAt` come only from durable source-aware
- * candidate/promotion history; a child-process failure is operational evidence
- * and never replaces a candidate's own source-through or retrieved-at facts.
- */
+/* @freshness-reads-here */
 import { hostname } from "node:os";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { neon } from "@neondatabase/serverless";
@@ -259,7 +250,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     if (!PUBLISH_NOW) {
-      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, { scoutResults: doorRepos.scoutResults }))}`);
+      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
       const [published] = await runBoundedChildPass([{
         id: MEETING_DOORS_CONTRACT_ID,
         failureDomain: "derived:meeting-doors",
@@ -296,10 +287,6 @@ function releaseChildMemory(id: string): void {
   startedSourceChildren.delete(id);
 }
 
-/**
- * How often each open door has been seen to change, by door id, so a door that changes faster than its
- * policy is checked as often as it changes. An unreadable registry leaves every task on its policy.
- */
 async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return new Map();
@@ -313,11 +300,6 @@ async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
   }
 }
 
-/**
- * The task's door's last success or failure (a hand-wired meeting door, or a
- * feed's door), from its promotion outcome. A registry that cannot be written
- * never changes the pass.
- */
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
 async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null,
   sourceClock?: () => Promise<RoutineTaskClock>): Promise<void> {
@@ -389,13 +371,6 @@ function safeFailure(value: string): string {
     .slice(0, 4_000) || "The source process exited without a diagnostic.";
 }
 
-/**
- * A child that died before producing a source receipt has no source clock to
- * apply retry backoff or rotate behind same-provider siblings. Its existing supervisor
- * fault is the operational attempt clock. Reading that clock from the same
- * owner log Admin consumes prevents one broken partition from monopolizing a
- * shared publisher frontier without fabricating a source attempt.
- */
 async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[], codeChangeRetryIds: ReadonlySet<string>): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
@@ -431,11 +406,6 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
     { taskIds: codeChangeRetryIds, codeSha: RUNNING_CODE_SHA }), protocolFailures };
 }
 
-/**
- * The owner's open due requests (lib/civic-data/routine-due-request.ts): one
- * small aggregate read. A request only brings a partition's read forward, so a
- * failed read leaves every task on its normal schedule, and says so.
- */
 async function readRoutineDueRequests(): Promise<{ readonly requests: readonly RoutineDueRequest[]; readonly issues: readonly string[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured`);
@@ -1003,8 +973,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   const memoryDeferral = routinePreSpawnMemoryDeferral(run, startedSourceChildren.has(run.id));
   if (memoryDeferral !== null) {
     attempted -= 1;
+    // Admission already wrote this pass's QUEUED progress row, and append-only history refuses a second one.
     const detail = safeFailure(memoryDeferral);
-    await recordHuntSourceProgress(pending.task, "QUEUED", detail);
     console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
     return;
   }

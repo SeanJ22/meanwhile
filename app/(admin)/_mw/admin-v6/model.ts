@@ -315,6 +315,9 @@ export interface WorkerStatus {
   readonly nextRoundDueAt: string | null;
   readonly runnerState: string | null;
   readonly lanes: readonly { readonly name: string; readonly active: number | null; readonly waiting: number; readonly blockedBy: string | null }[] | null;
+  /** Database bytes the runner read in its last full hour, largest callers first. */
+  readonly databaseReads?: { readonly hour: string; readonly controlPlaneBytes: number; readonly readerBytes: number;
+    readonly byCaller: readonly { readonly caller: string; readonly bytes: number }[] } | null;
   readonly unread: readonly string[];
 }
 
@@ -494,6 +497,12 @@ export interface MoneyView {
     readonly error: string | null; readonly detail: string; readonly credits: string | null; readonly accounts: readonly string[]; readonly limits: readonly string[];
     readonly units: readonly { readonly label: string; readonly value: number; readonly unit: string }[] }[];
   readonly otherServices: string;
+  /** Each billed provider's own days; a cell is null when that number is not held. */
+  readonly byDay: {
+    readonly providers: readonly { readonly provider: string; readonly note: string | null }[];
+    readonly days: readonly { readonly day: string; readonly cells: readonly ({ readonly usd: number | null; readonly usage: string | null } | null)[] }[];
+    readonly technical: readonly string[];
+  };
 }
 
 export interface SourceReliabilityRow {

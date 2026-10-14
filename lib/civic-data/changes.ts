@@ -33,10 +33,7 @@ function textKey(value: unknown, keys: readonly string[]): string | null {
 function keyed(prefix: string, values: readonly unknown[], keys: readonly string[]): CivicRecordMember[] {
   return values.map((record) => {
     const key = textKey(record, keys);
-    // A row position is not a durable civic identity: inserting an unrelated
-    // sibling would silently rename every later member. Leave the key invalid
-    // so the promotion validator refuses the candidate before computing a
-    // delta or moving the pointer.
+    // Row positions change when siblings are inserted; an empty identity makes validation refuse the candidate.
     return { key: key === null ? "" : `${prefix}:${key}`, record };
   });
 }
@@ -93,6 +90,13 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass === "MEETING_OUTCOME" && member.key.startsWith("sitting:")) {
+    const row = object(member.record), document = object(row?.minutesDocument);
+    if (row && document) {
+      const { readAt: _readAt, ...facts } = document;
+      return { ...row, minutesDocument: facts };
+    }
+  }
   if (recordClass === "GOOGLE_CIVIC_VOTERINFO") {
     const row = object(member.record);
     if (row === null) return member.record;
@@ -158,8 +162,13 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
   const root = object(payload) ?? {};
   switch (recordClass) {
+    case "STATE_BILL":
+      return [...keyed("bill", array(root.bills), ["id"]), ...keyed("dataset", array(root.datasets), ["session_id"])];
     case "FEC_FUNDING":
-      return keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]);
+      return [
+        ...keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]),
+        ...keyed("second-hop", array(root.secondHop), ["committeeId"]),
+      ];
     case "STATE_LEGISLATOR":
       return (array(root.members).length > 0
         ? array(root.members)
@@ -182,11 +191,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         }),
       ];
     case "STATE_LEGISLATOR_VOTES":
-      // One record class, one per-state fan-out contract, two payload shapes:
-      // a per-legislator record keys each of that member's positions (bounded
-      // by the member's tenure, never the chamber), and the per-state session
-      // marker the runner's clock reads keys its own watermark. Only the
-      // per-legislator record carries positions.
+      // A session marker holds the runner watermark; per-legislator payloads hold tenure-bounded positions.
       return typeof root.officeholderId === "string" && root.officeholderId
         ? array(root.positions).map((record, index) => {
             const row = object(record) ?? {};
@@ -289,9 +294,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ].sort((left, right) => left.key.localeCompare(right.key));
     }
     case "GOOGLE_CIVIC_VOTERINFO": {
-      // The source has no native contest/site ids. One scoped query snapshot preserves every
-      // observation and can advance without treating omitted rows as an absence or a deletion.
-      // Previous snapshots remain in the existing candidate history.
+      // Scoped snapshots preserve sources without claiming omitted contests or sites were deleted.
       return [{ key: "google-civic:query-snapshot", record: root }];
     }
     case "VOTING_SITE":
@@ -336,11 +339,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return members.sort((left, right) => left.key.localeCompare(right.key));
     }
     case "REGISTRATION": {
-      // One civic record per Census division and per registered body. A
-      // division is keyed by its OCD id and Census GEOID together, because the
-      // committed geometry already gives one id to two school districts; a body
-      // by its id. The records carry the reference's build date, never the
-      // run's clock, so an unchanged month compares equal.
+      // OCD ids can collide for school districts, so a division's identity also includes its Census GEOID.
       const divisions = array(root.divisions).map((record) => {
         const row = object(record);
         const ocdId = row && typeof row.ocdId === "string" ? row.ocdId : "";
@@ -519,11 +518,6 @@ export function canonicalCivicDataJson(value: unknown): string {
     .join(",")}}`;
 }
 
-/**
- * The member projection and fact comparison a durable delta was derived under.
- * A delta is re-derived only to verify evidence, and evidence is verified
- * against the contract that wrote it.
- */
 export interface CivicChangeContract {
   readonly members: (recordClass: RoutineRecordClass, payload: unknown) => readonly CivicRecordMember[];
   readonly facts: (recordClass: RoutineRecordClass, member: CivicRecordMember) => unknown;
@@ -543,7 +537,6 @@ export function rowKeyedCivicRecordsFor(recordClass: RoutineRecordClass, payload
   ];
 }
 
-/** The earlier projection: one member per stored row, compared whole. Pointers written under it are re-proved against it, never against a later contract. */
 export const ROW_KEYED_CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
   members: rowKeyedCivicRecordsFor,
   facts: (_recordClass, member) => member.record,
@@ -554,9 +547,7 @@ export function candidateChangeSet(
   previousPayload: unknown | null,
   contract: CivicChangeContract = CIVIC_CHANGE_CONTRACT,
 ): RoutineChangeSet {
-  // A caller-supplied member list is evidence to validate, never authority for
-  // the durable delta. Derive Admin's exact changed/removed records from the
-  // same Reader projection that the canonical pointer will serve.
+  // Derive deltas from the Reader projection; caller-supplied members remain evidence to validate.
   const next = contract.members(candidate.recordClass, candidate.readModel);
   const prior = previousPayload === null ? [] : contract.members(candidate.recordClass, previousPayload);
   const priorByKey = new Map(prior.map((member) => [member.key, member]));

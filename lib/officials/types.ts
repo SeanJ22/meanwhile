@@ -29,7 +29,7 @@ export interface PortraitCandidate {
   readonly attribution?: string | null;
 }
 
-export type OfficeSelectionMethod = "ELECTED_STATEWIDE" | "APPOINTED" | "UNKNOWN";
+type OfficeSelectionMethod = "ELECTED_STATEWIDE" | "APPOINTED" | "UNKNOWN";
 
 /** A source disagreement remains acquisition work while the preferred fact serves readers. */
 export interface PersonFieldDisagreement {

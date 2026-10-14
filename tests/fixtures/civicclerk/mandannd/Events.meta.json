@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://mandannd.api.civicclerk.com/v1/Events?$top=200&$orderby=id%20desc",
+  "state": "ND",
+  "retrievedAt": "2026-10-13T19:21:38.854343+00:00",
+  "sha256": "2d7bf1cd3efc8530f076fd6985c07a8a8a9f7e82db6c4632453df493d7812fda",
+  "records": 15
+}

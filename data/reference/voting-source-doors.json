@@ -1119,7 +1119,10 @@
     "publisher": "State Election Board, Oklahoma City, OK",
     "url": "https://oklahoma.gov/elections.html",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "OK",
       "ocdId": "ocd-division/country:us/state:ok",
@@ -1142,7 +1145,17 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://oklahoma.gov/elections.html\">https://oklahoma.gov/elections.html</a>"
-    }
+    },
+    "candidateListUrl": "https://hosting.okelections.gov/electionlist.html",
+    "ballotMeasuresUrl": "https://oklahoma.gov/elections/elections-results/state-question-info.html",
+    "candidateListUrls": [
+      "https://hosting.okelections.gov/electionlist.html"
+    ],
+    "ballotMeasureUrls": [
+      "https://oklahoma.gov/elections/elections-results/state-question-info.html",
+      "https://www.sos.ok.gov/documents/questions/845.pdf",
+      "https://www.sos.ok.gov/documents/questions/847.pdf"
+    ]
   },
   {
     "id": "fec-or-chief",

@@ -1,17 +1,6 @@
 import { officialStateVoteScopeForOfficeholderId } from "./authority.ts";
 import { PLURAL_STATES } from "../sources/plural/targets.ts";
 
-/**
- * Which state scopes can render a legislator's roll-call votes to a reader
- * through `/api/votes` → the promoted `STATE_ROLL_CALL` projection. The
- * client-safe gate the official popup uses to decide whether to ask for a
- * member's votes; dependency-free so the reader bundle never pulls the
- * contract registry.
- *
- * Each state reads its national source holdings and any linked official source.
- */
-export const READER_VOTE_RENDERABLE_STATE_SCOPES: readonly string[] = PLURAL_STATES.map(state => `US-${state.toUpperCase()}`);
-
 const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 
 /** Establish the state boundary before reading a vote holding. */

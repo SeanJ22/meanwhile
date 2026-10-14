@@ -8,6 +8,7 @@ import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
+import { makeNovusAgendaSource } from "../../sources/novusagenda/index.ts";
 import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
 import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
 import { makeEscribeSource } from "../../sources/escribe/index.ts";
@@ -92,7 +93,7 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "ESCRIBE"].includes(row.kind)) {
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "ESCRIBE", "IQM2", "NOVUSAGENDA"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
@@ -106,6 +107,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
         meetings = makeCivicClerkSource([wiring]).normalizeWithDrops([{ wiring, events, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "BOARDBOOK") {
         meetings = makeBoardBookSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "NOVUSAGENDA") {
+        meetings = makeNovusAgendaSource([wiring]).normalizeWithDrops([{ wiring, pages: [{ url: row.route, html: text }], collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "IQM2") {
         meetings = makeIqm2Source([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
       } else {

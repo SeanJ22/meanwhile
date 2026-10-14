@@ -25,7 +25,7 @@ const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "
   ?? role.toLowerCase().replaceAll("_", " ").replace(/^./, char => char.toUpperCase()));
 
 /** What hunting cost for each fact it got published. */
-export function HuntCostPanel({ view }: { view: HuntCostView | null }) {
+function HuntCostPanel({ view }: { view: HuntCostView | null }) {
   if (view === null) return <Card title="Hunting"><p className={cx(s.p, s.small)}>The hunting costs could not be read just now.</p></Card>;
   return <Card title="Hunting">
     <Facts rows={[
@@ -38,7 +38,7 @@ export function HuntCostPanel({ view }: { view: HuntCostView | null }) {
   </Card>;
 }
 
-export function ModelSpendPanel({ view, days }: { view: ModelSpendView | null; days: readonly string[] }) {
+function ModelSpendPanel({ view, days }: { view: ModelSpendView | null; days: readonly string[] }) {
   const [comparison, setComparison] = useState(false);
   const [all, setAll] = useState(false);
   const rows = view === null ? [] : comparison

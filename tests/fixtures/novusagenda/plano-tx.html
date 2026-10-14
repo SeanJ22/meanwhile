@@ -1,0 +1,1179 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="viewport" content="width=device-width, initial-scale=1" /><title>
+	NovusAGENDA
+</title>
+
+
+
+
+    <link rel="stylesheet" href="Content/bootstrap.min.css" /><link rel="stylesheet" href="Content/custombootstrap.css" /><link href="Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+
+
+
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <div class="responsive-header hidden-xs" align ="center">
+                <img src="ImageLibrary.ashx?path=ROOT%2fPublicLogo%2fPublicLogo" alt="NovusAGENDA Logo" style="max-height: 200px; max-width: 830px;" />
+            </div>
+        </h1>
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-12" style="text-align: left;">
+        <span id="ctl00_ContentPlaceHolder1_lblAgendaSearchInfoMessage" class="agendasearch-infomessage"></span>
+    </div>
+</div>
+
+<form method="post" action="./meetingsresponsive.aspx?Date=cus&amp;From=06%2f15%2f2026&amp;To=02%2f10%2f2027" id="aspnetForm">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTQwNDg4MTM2Nw8WGB4GQ29sdW1uBQtNZWV0aW5nRGF0ZR4OX0xhc3RJdGVtSW5kZXgCAx4NSXRlbVNvcnRvcmRlcgUEREVTQx4LX0ZpcnN0SW5kZXhmHg9fRmlyc3RJdGVtSW5kZXhmHhBfQ3VycmVudEl0ZW1QYWdlZh4OaXRlbXNQYWdlQ291bnQCAx4KX0xhc3RJbmRleAIBHgxfQ3VycmVudFBhZ2VmHgpJdGVtQ29sdW1uBQtNZWV0aW5nRGF0ZR4JU29ydG9yZGVyBQRERVNDHhFtZWV0aW5nc1BhZ2VDb3VudAIBFgJmD2QWAgIDD2QWBGYPDxYCHgRUZXh0ZWRkAgEPZBYUAgEPDxYCHwwFCTYvMTUvMjAyNmRkAgMPDxYCHwwFCTIvMTAvMjAyN2RkAgUPEA8WAh4LXyFEYXRhQm91bmRnZBAVGgAeQm9hcmQgYW5kIENvbW1pc3Npb24gUmVjZXB0aW9uKkJvYXJkcyBhbmQgQ29tbWlzc2lvbnMgSW5mb3JtYXRpb24gU2Vzc2lvbh9DaXR5IENvdW5jaWwgR3JhbnQgV29yayBTZXNzaW9uGENpdHkgQ291bmNpbCBQT00gTWVldGluZxxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nFENpdHkgQ291bmNpbCBSZXRyZWF0I0NpdHkgQ291bmNpbCBTcGVjaWFsIENhbGxlZCBTZXNzaW9uGUNpdHkgQ291bmNpbCBXb3JrIFNlc3Npb24UQ29mZmVlIHdpdGggdGhlIENpdHkVQ29mZmVlIHdpdGggdGhlIE1heW9yHENvbW11bml0eSBMZWFkZXJzaGlwIE1lZXRpbmcaQ291bmNpbCBDYW5kaWRhdGUgQnJpZWZpbmcRQ291bmNpbCBSZWNlcHRpb24RRW1lcmdlbmN5IE1lZXRpbmcZSm9pbnQgQ291bmNpbCAvIElTRCBCb2FyZC5Kb2ludCBDb3VuY2lsIC8gUGxhbm5pbmcgYW5kIFpvbmluZyBDb21taXNzaW9uDUpvaW50IE1lZXRpbmcfTmVpZ2hib3Job29kIExlYWRlcnNoaXAgQ291bmNpbB9OZWlnaGJvcmhvb2QgTGVhZGVyc2hpcCBNZWV0aW5nBk5vdGljZRlOb3RpY2Ugb2YgUG9zc2libGUgUXVvcnVtFlNwZWNpYWwgQ2FsbGVkIE1lZXRpbmcRU3RhdGUgb2YgdGhlIENpdHkcU3VwcGxlbWVudCB0byBDb3VuY2lsIEFnZW5kYRFUb3duIEhhbGwgTWVldGluZxUaAi0xAjI1AjMwAjI0ATIBMQIxNwIxOQIxOAIyNgEzAjMyATgCMjMCMjgCMTYCMTABNgE0AjI5AjI3ATkCMjIBNQIyMQE3FCsDGmdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnFgFmZAIGDxBkEBUBABUBAi0xFCsDAWcWAWZkAhEPFgIeC18hSXRlbUNvdW50AgQWCmYPZBYGAgsPFgIeB1Zpc2libGVoZAINDxYCHw9oZAIRDxYCHw9oZAIBD2QWGmYPFQECNSVkAgQPFQgCOCUIMDcvMTQvMjYDMTglBDM3MDMZTm90aWNlIG9mIFBvc3NpYmxlIFF1b3J1bRlOb3RpY2Ugb2YgUG9zc2libGUgUXVvcnVtAzMyJSxTaG9wcyBhdCBXaWxsb3cgQmVuZCwgNjEyMSBXLiBQYXJrLCBQbGFubyBUWGQCBQ8WAh4Fd2lkdGgFAzEyJWQCBw8WAh8QBQMxMiUWAgIBDw8WCB4ISW1hZ2VVcmwFFH4vaW1hZ2VzL2ljb19wZGYuZ2lmHwwFCkFnZW5kYSBQREYeBlRhcmdldAUGX2JsYW5rHgtOYXZpZ2F0ZVVybAUkRGlzcGxheUFnZW5kYVBERi5hc2h4P01lZXRpbmdJRD0zNzAzZGQCCQ8WAh8PaBYCAgEPDxYKHxEFFH4vaW1hZ2VzL2ljb19wZGYuZ2lmHwwFCkFnZW5kYSBQREYfEgUGX2JsYW5rHxMFM0Rpc3BsYXlBZ2VuZGFQREYuYXNoeD9NZWV0aW5nSUQ9MzcwMyZEb2N1bWVudFR5cGU9Mh8PaGRkAgsPFgQfEAUCMCUfD2gWAgIBDw8WBB8RBRd+L2ltYWdlcy9pY29uX2ZpbGVzLmdpZh8PaBYCHgVzdHlsZQUOY3Vyc29yOnBvaW50ZXJkAg0PFgIfEAUDMTIlFgICAQ8PFgIfD2hkZAIPDxYEHxAFAjAlHw9oZAIQDxUDBDM3MDMBNyxTaG9wcyBhdCBXaWxsb3cgQmVuZCwgNjEyMSBXLiBQYXJrLCBQbGFubyBUWGQCEw8PFgQfEgUGX2JsYW5rHxMFJERpc3BsYXlBZ2VuZGFQREYuYXNoeD9NZWV0aW5nSUQ9MzcwM2RkAhUPDxYGHxIFBl9ibGFuax8TBTNEaXNwbGF5QWdlbmRhUERGLmFzaHg/TWVldGluZ0lEPTM3MDMmRG9jdW1lbnRUeXBlPTIfD2hkZAIXDw8WAh8PaBYCHgVTdHlsZQUOY3Vyc29yOnBvaW50ZXJkAhkPDxYCHw9oZGQCAg9kFhpmDxUBAjUlZAIEDxUIAjglCDA3LzA4LzI2AzE4JQQzNzAyGU5vdGljZSBvZiBQb3NzaWJsZSBRdW9ydW0ZTm90aWNlIG9mIFBvc3NpYmxlIFF1b3J1bQMzMiUsU2hvcHMgYXQgV2lsbG93IEJlbmQsIDYxMjEgVy4gUGFyaywgUGxhbm8gVFhkAgUPFgIfEAUDMTIlZAIHDxYCHxAFAzEyJRYCAgEPDxYIHxEFFH4vaW1hZ2VzL2ljb19wZGYuZ2lmHwwFCkFnZW5kYSBQREYfEgUGX2JsYW5rHxMFJERpc3BsYXlBZ2VuZGFQREYuYXNoeD9NZWV0aW5nSUQ9MzcwMmRkAgkPFgIfD2gWAgIBDw8WCh8RBRR+L2ltYWdlcy9pY29fcGRmLmdpZh8MBQpBZ2VuZGEgUERGHxIFBl9ibGFuax8TBTNEaXNwbGF5QWdlbmRhUERGLmFzaHg/TWVldGluZ0lEPTM3MDImRG9jdW1lbnRUeXBlPTIfD2hkZAILDxYEHxAFAjAlHw9oFgICAQ8PFgQfEQUXfi9pbWFnZXMvaWNvbl9maWxlcy5naWYfD2gWAh8UBQ5jdXJzb3I6cG9pbnRlcmQCDQ8WAh8QBQMxMiUWAgIBDw8WAh8PaGRkAg8PFgQfEAUCMCUfD2hkAhAPFQMEMzcwMgE3LFNob3BzIGF0IFdpbGxvdyBCZW5kLCA2MTIxIFcuIFBhcmssIFBsYW5vIFRYZAITDw8WBB8SBQZfYmxhbmsfEwUkRGlzcGxheUFnZW5kYVBERi5hc2h4P01lZXRpbmdJRD0zNzAyZGQCFQ8PFgYfEgUGX2JsYW5rHxMFM0Rpc3BsYXlBZ2VuZGFQREYuYXNoeD9NZWV0aW5nSUQ9MzcwMiZEb2N1bWVudFR5cGU9Mh8PaGRkAhcPDxYCHw9oFgIfFQUOY3Vyc29yOnBvaW50ZXJkAhkPDxYCHw9oZGQCAw9kFhxmDxUBAjUlZAIEDxUIAjglCDA2LzIyLzI2AzE4JQQzNjk1HENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmccQ2l0eSBDb3VuY2lsIFJlZ3VsYXIgTWVldGluZwMzMiUdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgUPFgIfEAUDMTIlFgICAQ8PFgQfEQUXfi9pbWFnZXMvaWNvbl9maWxlcy5naWYfDAUQVmlldyBBZ2VuZGEgSFRNTBYEHxQFDmN1cnNvcjpwb2ludGVyHgdvbkNsaWNrBfEBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignTWVldGluZ1ZpZXcuYXNweD9NZWV0aW5nSUQ9MzY5NSZNaW51dGVzTWVldGluZ0lEPTkxNCZkb2N0eXBlPUFnZW5kYScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9ODAwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCBw8WAh8QBQMxMiUWAgIBDw8WCB8RBRR+L2ltYWdlcy9pY29fcGRmLmdpZh8MBQpBZ2VuZGEgUERGHxIFBl9ibGFuax8TBSREaXNwbGF5QWdlbmRhUERGLmFzaHg/TWVldGluZ0lEPTM2OTVkZAIJDxYCHw9oFgICAQ8PFgofEQUUfi9pbWFnZXMvaWNvX3BkZi5naWYfDAUKQWdlbmRhIFBERh8SBQZfYmxhbmsfEwUzRGlzcGxheUFnZW5kYVBERi5hc2h4P01lZXRpbmdJRD0zNjk1JkRvY3VtZW50VHlwZT0yHw9oZGQCCw8WBB8QBQIwJR8PaBYCAgEPDxYEHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHw9oFgIfFAUOY3Vyc29yOnBvaW50ZXJkAg0PFgIfEAUDMTIlFgICAQ8PFgofEQUUfi9pbWFnZXMvaWNvX3BkZi5naWYfDAUNTGVnYWwgTWludXRlcx8SBQZfYmxhbmsfEwUqRGlzcGxheUFnZW5kYVBERi5hc2h4P01pbnV0ZXNNZWV0aW5nSUQ9OTE0Hw9nZGQCDw8WBB8QBQIwJR8PaGQCEA8VAwQzNjk1ATcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAhEPD2QWBB8VBQ5jdXJzb3I6cG9pbnRlch8WBfEBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignTWVldGluZ1ZpZXcuYXNweD9NZWV0aW5nSUQ9MzY5NSZNaW51dGVzTWVldGluZ0lEPTkxNCZkb2N0eXBlPUFnZW5kYScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9ODAwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCEw8PFgQfEgUGX2JsYW5rHxMFJERpc3BsYXlBZ2VuZGFQREYuYXNoeD9NZWV0aW5nSUQ9MzY5NWRkAhUPDxYGHxIFBl9ibGFuax8TBTNEaXNwbGF5QWdlbmRhUERGLmFzaHg/TWVldGluZ0lEPTM2OTUmRG9jdW1lbnRUeXBlPTIfD2hkZAIXDw8WAh8PaBYCHxUFDmN1cnNvcjpwb2ludGVyZAIZDw8WCB8MBQ1MZWdhbCBNaW51dGVzHxIFBl9ibGFuax8TBSpEaXNwbGF5QWdlbmRhUERGLmFzaHg/TWludXRlc01lZXRpbmdJRD05MTQfD2dkZAIED2QWHGYPFQECNSVkAgQPFQgCOCUIMDYvMjIvMjYDMTglBDM2OTIYQ2l0eSBDb3VuY2lsIFBPTSBNZWV0aW5nGENpdHkgQ291bmNpbCBQT00gTWVldGluZwMzMiUdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgUPFgIfEAUDMTIlFgICAQ8PFgQfEQUXfi9pbWFnZXMvaWNvbl9maWxlcy5naWYfDAUQVmlldyBBZ2VuZGEgSFRNTBYEHxQFDmN1cnNvcjpwb2ludGVyHxYF8QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdNZWV0aW5nVmlldy5hc3B4P01lZXRpbmdJRD0zNjkyJk1pbnV0ZXNNZWV0aW5nSUQ9OTEzJmRvY3R5cGU9QWdlbmRhJywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD04MDAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIHDxYCHxAFAzEyJRYCAgEPDxYIHxEFFH4vaW1hZ2VzL2ljb19wZGYuZ2lmHwwFCkFnZW5kYSBQREYfEgUGX2JsYW5rHxMFJERpc3BsYXlBZ2VuZGFQREYuYXNoeD9NZWV0aW5nSUQ9MzY5MmRkAgkPFgIfD2gWAgIBDw8WCh8RBRR+L2ltYWdlcy9pY29fcGRmLmdpZh8MBQpBZ2VuZGEgUERGHxIFBl9ibGFuax8TBTNEaXNwbGF5QWdlbmRhUERGLmFzaHg/TWVldGluZ0lEPTM2OTImRG9jdW1lbnRUeXBlPTIfD2hkZAILDxYEHxAFAjAlHw9oFgICAQ8PFgQfEQUXfi9pbWFnZXMvaWNvbl9maWxlcy5naWYfD2gWAh8UBQ5jdXJzb3I6cG9pbnRlcmQCDQ8WAh8QBQMxMiUWAgIBDw8WCh8RBRR+L2ltYWdlcy9pY29fcGRmLmdpZh8MBQ1MZWdhbCBNaW51dGVzHxIFBl9ibGFuax8TBSpEaXNwbGF5QWdlbmRhUERGLmFzaHg/TWludXRlc01lZXRpbmdJRD05MTMfD2dkZAIPDxYEHxAFAjAlHw9oZAIQDxUDBDM2OTIBNx0xNTIwIEsgQXZlbnVlLCBQbGFubyBUWCA3NTA3NGQCEQ8PZBYEHxUFDmN1cnNvcjpwb2ludGVyHxYF8QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdNZWV0aW5nVmlldy5hc3B4P01lZXRpbmdJRD0zNjkyJk1pbnV0ZXNNZWV0aW5nSUQ9OTEzJmRvY3R5cGU9QWdlbmRhJywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD04MDAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAITDw8WBB8SBQZfYmxhbmsfEwUkRGlzcGxheUFnZW5kYVBERi5hc2h4P01lZXRpbmdJRD0zNjkyZGQCFQ8PFgYfEgUGX2JsYW5rHxMFM0Rpc3BsYXlBZ2VuZGFQREYuYXNoeD9NZWV0aW5nSUQ9MzY5MiZEb2N1bWVudFR5cGU9Mh8PaGRkAhcPDxYCHw9oFgIfFQUOY3Vyc29yOnBvaW50ZXJkAhkPDxYIHwwFDUxlZ2FsIE1pbnV0ZXMfEgUGX2JsYW5rHxMFKkRpc3BsYXlBZ2VuZGFQREYuYXNoeD9NaW51dGVzTWVldGluZ0lEPTkxMx8PZ2RkAhMPFgIfD2gWCgIBDxYCHxQFI2N1cnNvcjpkZWZhdWx0O3BvaW50ZXItZXZlbnRzOm5vbmU7ZAIDDxYCHxQFI2N1cnNvcjpkZWZhdWx0O3BvaW50ZXItZXZlbnRzOm5vbmU7ZAIFDzwrAAkBAA8WBB4IRGF0YUtleXMWAB8OAgFkFgJmD2QWAgIBDw8WCh4PQ29tbWFuZEFyZ3VtZW50BQEwHwwFATEeCUZvbnRfQm9sZGceB0VuYWJsZWRoHgRfIVNCAoAQFgIfFAUOY29sb3I6IzMzN2FiNztkAgcPFgIfFAUjY3Vyc29yOmRlZmF1bHQ7cG9pbnRlci1ldmVudHM6bm9uZTtkAgkPFgIfFAUjY3Vyc29yOmRlZmF1bHQ7cG9pbnRlci1ldmVudHM6bm9uZTtkAhQPFgIfD2gWAgIBDw8WAh8MBQtQYWdlIDEgb2YgMWRkAhcPFgIfDgIPFh4CAQ9kFgxmDxUECDA2LzIyLzI2AzkxND5QQVJLMDYyMjI2LTAxIExvcyBSaW9zIFBhcmsgVHJhaWwgLSBBZHZhbmNlZCBGdW5kaW5nIEFncmVlbWVudD5QQVJLMDYyMjI2LTAxIExvcyBSaW9zIFBhcmsgVHJhaWwgLSBBZHZhbmNlZCBGdW5kaW5nIEFncmVlbWVudGQCAQ8PFgIfD2hkZAICDxUDF0Fkb3B0aW9uIG9mIFJlc29sdXRpb25zHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwNzMyJk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNBdBZG9wdGlvbiBvZiBSZXNvbHV0aW9ucxxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIFDw8WAh8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA3MzImTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAgIPZBYMZg8VBAgwNi8yMi8yNgM5MTRJUFVSQzA2MjIyNi0yMSBQdXJjaGFzZSBvZiBGaXJlIEh5ZHJhbnRzLCBBY2Nlc3NvcmllcywgYW5kIFdhdGVybGluZSBQYXJ0c0lQVVJDMDYyMjI2LTIxIFB1cmNoYXNlIG9mIEZpcmUgSHlkcmFudHMsIEFjY2Vzc29yaWVzLCBhbmQgV2F0ZXJsaW5lIFBhcnRzZAIBDw8WAh8PaGRkAgIPFQMfUHVyY2hhc2UgZnJvbSBFeGlzdGluZyBDb250cmFjdBxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIDDw8WBh8RBRd+L2ltYWdlcy9pY29uX2ZpbGVzLmdpZh8MBRBWaWV3IEFnZW5kYSBIVE1MHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDczNCZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCBA8VBAM5MTQfUHVyY2hhc2UgZnJvbSBFeGlzdGluZyBDb250cmFjdBxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIFDw8WAh8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA3MzQmTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAgMPZBYMZg8VBAgwNi8yMi8yNgM5MTRpUFVSQzA2MjIyNi0xNjMgV2F0ZXIgUmVoYWJpbGl0YXRpb24gLSBQYXJrd2F5IEVzdGF0ZXMgYW5kIFdoaWZmbGV0cmVlIEFkZGl0aW9uLCBQcm9qZWN0IE5vLiBFTkctQ01CLTAwMDA2aVBVUkMwNjIyMjYtMTYzIFdhdGVyIFJlaGFiaWxpdGF0aW9uIC0gUGFya3dheSBFc3RhdGVzIGFuZCBXaGlmZmxldHJlZSBBZGRpdGlvbiwgUHJvamVjdCBOby4gRU5HLUNNQi0wMDAwNmQCAQ8PFgIfD2hkZAICDxUDF0FwcHJvdmFsIG9mIEV4cGVuZGl0dXJlHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwNzQ4Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNBdBcHByb3ZhbCBvZiBFeHBlbmRpdHVyZRxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIFDw8WAh8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA3NDgmTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAgQPZBYMZg8VBAgwNi8yMi8yNgM5MTRmUFVSQzA2MjIyNi0xNjEgV2F0ZXIgUmVoYWJpbGl0YXRpb24gLSBQYXJrIEJvdWxldmFyZCBQaGFzZSAxIChQcmVzdG9uIFJvYWQgdG8gVVMgNzUpLCBQcm9qZWN0IE5vLiA3NTczZlBVUkMwNjIyMjYtMTYxIFdhdGVyIFJlaGFiaWxpdGF0aW9uIC0gUGFyayBCb3VsZXZhcmQgUGhhc2UgMSAoUHJlc3RvbiBSb2FkIHRvIFVTIDc1KSwgUHJvamVjdCBOby4gNzU3M2QCAQ8PFgIfD2hkZAICDxUDGEFwcHJvdmFsIG9mIENoYW5nZSBPcmRlchxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIDDw8WBh8RBRd+L2ltYWdlcy9pY29uX2ZpbGVzLmdpZh8MBRBWaWV3IEFnZW5kYSBIVE1MHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDgxNyZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCBA8VBAM5MTQYQXBwcm92YWwgb2YgQ2hhbmdlIE9yZGVyHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgUPDxYCHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDgxNyZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCBQ9kFgxmDxUECDA2LzIyLzI2AzkxNClQVVJDMDYyMjI2LTExMSBHcm91cCBDcml0aWNhbCBJbGxuZXNzIElMQSlQVVJDMDYyMjI2LTExMSBHcm91cCBDcml0aWNhbCBJbGxuZXNzIElMQWQCAQ8PFgIfD2hkZAICDxUDIEFwcHJvdmFsIG9mIENvbnRyYWN0IC8gQWdyZWVtZW50HENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwODQ3Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNCBBcHByb3ZhbCBvZiBDb250cmFjdCAvIEFncmVlbWVudBxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIFDw8WAh8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA4NDcmTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAgYPZBYMZg8VBAgwNi8yMi8yNgM5MTQxQ01HUjA2MjIyNi0wMSBOYXRpb25hbCBQYXJrcyBhbmQgUmVjcmVhdGlvbiBNb250aDFDTUdSMDYyMjI2LTAxIE5hdGlvbmFsIFBhcmtzIGFuZCBSZWNyZWF0aW9uIE1vbnRoZAIBDw8WAh8PaGRkAgIPFQMlUHJvY2xhbWF0aW9ucyBhbmQgU3BlY2lhbCBSZWNvZ25pdGlvbhxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIDDw8WBh8RBRd+L2ltYWdlcy9pY29uX2ZpbGVzLmdpZh8MBRBWaWV3IEFnZW5kYSBIVE1MHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDg1MyZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCBA8VBAM5MTQlUHJvY2xhbWF0aW9ucyBhbmQgU3BlY2lhbCBSZWNvZ25pdGlvbhxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIFDw8WAh8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA4NTMmTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAgcPZBYMZg8VBAgwNi8yMi8yNgM5MTRYUFVSQzA2MjIyNi0xMDEgU2hhZHkgQnJvb2sgVHJhaWwgYXQgUml2ZXJzaWRlIERyaXZlIEVyb3Npb24gQ29udHJvbCwgUHJvamVjdCBQS1ItRC0wMDAwOVhQVVJDMDYyMjI2LTEwMSBTaGFkeSBCcm9vayBUcmFpbCBhdCBSaXZlcnNpZGUgRHJpdmUgRXJvc2lvbiBDb250cm9sLCBQcm9qZWN0IFBLUi1ELTAwMDA5ZAIBDw8WAh8PaGRkAgIPFQMhQXBwcm92YWwgb2YgQ29udHJhY3QgTW9kaWZpY2F0aW9uHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwODYzJk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNCFBcHByb3ZhbCBvZiBDb250cmFjdCBNb2RpZmljYXRpb24cQ2l0eSBDb3VuY2lsIFJlZ3VsYXIgTWVldGluZx0xNTIwIEsgQXZlbnVlLCBQbGFubyBUWCA3NTA3NGQCBQ8PFgIfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwODYzJk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIID2QWDGYPFQQIMDYvMjIvMjYDOTE0LlBVUkMwNjIyMjYtNTEgTGVhc2UgVmVoaWNsZSBQcm9ncmFtIGZvciBQb2xpY2UuUFVSQzA2MjIyNi01MSBMZWFzZSBWZWhpY2xlIFByb2dyYW0gZm9yIFBvbGljZWQCAQ8PFgIfD2hkZAICDxUDH1B1cmNoYXNlIGZyb20gRXhpc3RpbmcgQ29udHJhY3QcQ2l0eSBDb3VuY2lsIFJlZ3VsYXIgTWVldGluZx0xNTIwIEsgQXZlbnVlLCBQbGFubyBUWCA3NTA3NGQCAw8PFgYfEQUXfi9pbWFnZXMvaWNvbl9maWxlcy5naWYfDAUQVmlldyBBZ2VuZGEgSFRNTB8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA4ODkmTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAgQPFQQDOTE0H1B1cmNoYXNlIGZyb20gRXhpc3RpbmcgQ29udHJhY3QcQ2l0eSBDb3VuY2lsIFJlZ3VsYXIgTWVldGluZx0xNTIwIEsgQXZlbnVlLCBQbGFubyBUWCA3NTA3NGQCBQ8PFgIfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwODg5Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIJD2QWDGYPFQQIMDYvMjIvMjYDOTE0J0JVREcwNjIyMjYtMDEgRGVsaW5xdWVudCBUYXggQ29sbGVjdGlvbidCVURHMDYyMjI2LTAxIERlbGlucXVlbnQgVGF4IENvbGxlY3Rpb25kAgEPDxYCHw9oZGQCAg8VAyBBcHByb3ZhbCBvZiBDb250cmFjdCAvIEFncmVlbWVudBxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIDDw8WBh8RBRd+L2ltYWdlcy9pY29uX2ZpbGVzLmdpZh8MBRBWaWV3IEFnZW5kYSBIVE1MHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDkwMCZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCBA8VBAM5MTQgQXBwcm92YWwgb2YgQ29udHJhY3QgLyBBZ3JlZW1lbnQcQ2l0eSBDb3VuY2lsIFJlZ3VsYXIgTWVldGluZx0xNTIwIEsgQXZlbnVlLCBQbGFubyBUWCA3NTA3NGQCBQ8PFgIfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTAwJk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIKD2QWDGYPFQQIMDYvMjIvMjYDOTE0HlBPTEMwNjIyMjYtMDEgMjAyNSBKQUcgUHJvZ3JhbR5QT0xDMDYyMjI2LTAxIDIwMjUgSkFHIFByb2dyYW1kAgEPDxYCHw9oZGQCAg8VAyJJdGVtcyBmb3IgSW5kaXZpZHVhbCBDb25zaWRlcmF0aW9uHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTAyJk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNCJJdGVtcyBmb3IgSW5kaXZpZHVhbCBDb25zaWRlcmF0aW9uHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgUPDxYCHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDkwMiZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCCw9kFgxmDxUECDA2LzIyLzI2AzkxNJABUFVSQzA2MjIyNi0xMSBQYXZpbmcgSW1wcm92ZW1lbnRzIC0gUGluZWh1cnN0IERyaXZlLCBSb3lhbCBDaXJjbGUsIEdyYW5hZGEgUGxhY2UsIEdyYW5kIENhbnlvbiBEcml2ZSwgR2xlbiBDYW55b24gRHJpdmUsIFByb2plY3QgTm8uIEVORy1TLTAwMDEykAFQVVJDMDYyMjI2LTExIFBhdmluZyBJbXByb3ZlbWVudHMgLSBQaW5laHVyc3QgRHJpdmUsIFJveWFsIENpcmNsZSwgR3JhbmFkYSBQbGFjZSwgR3JhbmQgQ2FueW9uIERyaXZlLCBHbGVuIENhbnlvbiBEcml2ZSwgUHJvamVjdCBOby4gRU5HLVMtMDAwMTJkAgEPDxYCHw9oZGQCAg8VAx9Bd2FyZC9SZWplY3Rpb24gb2YgQmlkL1Byb3Bvc2FsHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTA2Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNB9Bd2FyZC9SZWplY3Rpb24gb2YgQmlkL1Byb3Bvc2FsHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgUPDxYCHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDkwNiZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCDA9kFgxmDxUECDA2LzIyLzI2AzkxNB9QVVJDMDYyMjI2LTUyIERydWcgQW5hbHlzaXMgSUxBH1BVUkMwNjIyMjYtNTIgRHJ1ZyBBbmFseXNpcyBJTEFkAgEPDxYCHw9oZGQCAg8VAyBBcHByb3ZhbCBvZiBDb250cmFjdCAvIEFncmVlbWVudBxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIDDw8WBh8RBRd+L2ltYWdlcy9pY29uX2ZpbGVzLmdpZh8MBRBWaWV3IEFnZW5kYSBIVE1MHxMFASMWAh8WBdkBamF2YXNjcmlwdDpWaWV3SFRNTD13aW5kb3cub3BlbignQ292ZXJzaGVldC5hc3B4P0l0ZW1JRD0xMDkwNyZNZWV0aW5nSUQ9MzY5NScsJ1ZpZXdIVE1MJywndG9vbGJhcj15ZXMsbG9jYXRpb249MCxkaXJlY3Rvcmllcz0wLHN0YXR1cz0wLG1lbnViYXI9eWVzLHNjcm9sbGJhcnM9eWVzLHJlc2l6YWJsZT15ZXMsd2lkdGg9OTYwLGhlaWdodD02MDAnKTtWaWV3SFRNTC5mb2N1cygpO2QCBA8VBAM5MTQgQXBwcm92YWwgb2YgQ29udHJhY3QgLyBBZ3JlZW1lbnQcQ2l0eSBDb3VuY2lsIFJlZ3VsYXIgTWVldGluZx0xNTIwIEsgQXZlbnVlLCBQbGFubyBUWCA3NTA3NGQCBQ8PFgIfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTA3Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIND2QWDGYPFQQIMDYvMjIvMjYDOTE0Q0VOR1IwNjIyMjYtMzAgUGVjYW4gSG9sbG93IE1haW50ZW5hbmNlIEJ1aWxkaW5nIFJlbm92YXRpb25zIFByb2plY3RDRU5HUjA2MjIyNi0zMCBQZWNhbiBIb2xsb3cgTWFpbnRlbmFuY2UgQnVpbGRpbmcgUmVub3ZhdGlvbnMgUHJvamVjdGQCAQ8PFgIfD2hkZAICDxUDF0FwcHJvdmFsIG9mIEV4cGVuZGl0dXJlHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTA4Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNBdBcHByb3ZhbCBvZiBFeHBlbmRpdHVyZRxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIFDw8WAh8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA5MDgmTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAg4PZBYMZg8VBAgwNi8yMi8yNgM5MTRPUFVSQzA2MjIyNi00MSBTcHJpbmcgQ3JlZWsgSW50ZXJjZXB0b3IgUGhhc2UgMSAoNzU5MyksIFByb2plY3QgTm8uIEVORy1TUy0wMDAwMk9QVVJDMDYyMjI2LTQxIFNwcmluZyBDcmVlayBJbnRlcmNlcHRvciBQaGFzZSAxICg3NTkzKSwgUHJvamVjdCBOby4gRU5HLVNTLTAwMDAyZAIBDw8WAh8PaGRkAgIPFQMYQXBwcm92YWwgb2YgQ2hhbmdlIE9yZGVyHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTA5Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNBhBcHByb3ZhbCBvZiBDaGFuZ2UgT3JkZXIcQ2l0eSBDb3VuY2lsIFJlZ3VsYXIgTWVldGluZx0xNTIwIEsgQXZlbnVlLCBQbGFubyBUWCA3NTA3NGQCBQ8PFgIfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTA5Jk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIPD2QWDGYPFQQIMDYvMjIvMjYDOTE0SVBVUkMwNjIyMjYtNTMgUHJvZmVzc2lvbmFsIENvbnN1bHRpbmcgU2VydmljZXMgZm9yIFBvbGljZSBUcmFpbmluZyBDZW50ZXJJUFVSQzA2MjIyNi01MyBQcm9mZXNzaW9uYWwgQ29uc3VsdGluZyBTZXJ2aWNlcyBmb3IgUG9saWNlIFRyYWluaW5nIENlbnRlcmQCAQ8PFgIfD2hkZAICDxUDF0FwcHJvdmFsIG9mIEV4cGVuZGl0dXJlHENpdHkgQ291bmNpbCBSZWd1bGFyIE1lZXRpbmcdMTUyMCBLIEF2ZW51ZSwgUGxhbm8gVFggNzUwNzRkAgMPDxYGHxEFF34vaW1hZ2VzL2ljb25fZmlsZXMuZ2lmHwwFEFZpZXcgQWdlbmRhIEhUTUwfEwUBIxYCHxYF2QFqYXZhc2NyaXB0OlZpZXdIVE1MPXdpbmRvdy5vcGVuKCdDb3ZlcnNoZWV0LmFzcHg/SXRlbUlEPTEwOTEwJk1lZXRpbmdJRD0zNjk1JywnVmlld0hUTUwnLCd0b29sYmFyPXllcyxsb2NhdGlvbj0wLGRpcmVjdG9yaWVzPTAsc3RhdHVzPTAsbWVudWJhcj15ZXMsc2Nyb2xsYmFycz15ZXMscmVzaXphYmxlPXllcyx3aWR0aD05NjAsaGVpZ2h0PTYwMCcpO1ZpZXdIVE1MLmZvY3VzKCk7ZAIEDxUEAzkxNBdBcHByb3ZhbCBvZiBFeHBlbmRpdHVyZRxDaXR5IENvdW5jaWwgUmVndWxhciBNZWV0aW5nHTE1MjAgSyBBdmVudWUsIFBsYW5vIFRYIDc1MDc0ZAIFDw8WAh8TBQEjFgIfFgXZAWphdmFzY3JpcHQ6Vmlld0hUTUw9d2luZG93Lm9wZW4oJ0NvdmVyc2hlZXQuYXNweD9JdGVtSUQ9MTA5MTAmTWVldGluZ0lEPTM2OTUnLCdWaWV3SFRNTCcsJ3Rvb2xiYXI9eWVzLGxvY2F0aW9uPTAsZGlyZWN0b3JpZXM9MCxzdGF0dXM9MCxtZW51YmFyPXllcyxzY3JvbGxiYXJzPXllcyxyZXNpemFibGU9eWVzLHdpZHRoPTk2MCxoZWlnaHQ9NjAwJyk7Vmlld0hUTUwuZm9jdXMoKTtkAhkPZBYKAgEPFgIfFAUjY3Vyc29yOmRlZmF1bHQ7cG9pbnRlci1ldmVudHM6bm9uZTtkAgMPFgIfFAUjY3Vyc29yOmRlZmF1bHQ7cG9pbnRlci1ldmVudHM6bm9uZTtkAgUPPCsACQEADxYEHxcWAB8OAgNkFgZmD2QWAgIBDw8WCh8YBQEwHwwFATEfGWcfGmgfGwKAEBYCHxQFDmNvbG9yOiMzMzdhYjc7ZAIBD2QWAgIBDw8WBB8YBQExHwwFATJkZAICD2QWAgIBDw8WBB8YBQEyHwwFATNkZAIHDxYCHxQFI2N1cnNvcjpwb2ludGVyO3BvaW50ZXItZXZlbnRzOmF1dG87ZAIJDxYCHxQFI2N1cnNvcjpwb2ludGVyO3BvaW50ZXItZXZlbnRzOmF1dG87ZAIaD2QWAgIBDw8WAh8MBQtQYWdlIDEgb2YgM2RkZP6mQGKv4B2lYORb78LYbtBFd9R4pzSuP6QgweK4j0WF" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="7438CB0E" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAECKFihWKs8LUtymMYd6hURo/w/6IyF20YDGZYO3qbJLsoItJFY1S/AYz3TMW0Z+Sak5A2cDaJ8nNBE09CXsP7xSJkDdv0Qmf6Tisdo0ut573WAAAlcUk36qcCVSCNNl2MlgEbCj+7LnWdw4uERgtKpW8r7eE9QMV+hKEQmGSUC2FzpADrCx+gflc501ZlBSHtcS4QPnv7X/w5SfS6v1BDeoHrUQjgVpr4rn8cs25+z14xmrifHq8ALPfJ4Udl5iu1OAXVZiDDkrg2nynI3xhAkhxHTkIoAXbU/hUBR3DxZ7lc6bphNMQm/s9kYu2mzun9KP+QNpjMPk7VIY/Mj0qWW2DYFs2rUrc4DzE4D06wJe7F/zZVUDjw2ie64v1fBHF8P/Lzbkdd+WqQmjElq5zFIA+xHq2G0fkeKu427kE6RbPmwJ8F83BvkUYzdZm/5klPiuOv/rV7gZRhcyNj+lMRqOVWyaf8vQlFqqmVrnMMEAlODb236PkD9BvWlfvcCzwdMXWHnIpFBvZUsIH64fVOtrT3yLWBHoV1zEdlMs6DE4+PCPtKU8WFNncAyTsAsmIu1zYuuJAJy6FTrgLXIBSxxfB61ejeaxkSkAiT7lC4h7A7xEbQEasKMtjPAmcUYN6H71s/Y88fE3T6tmj3t/BUTH2AIuJZhJ5Fx0eE7RADYvy5ExJRs8wa577TYEfgYTm8sOJ3Up8cmFueQTdg1oPhM+6SRNheanbywhMXf+8PgzuR5O83gv+DNpaE+nBT+o7mI64OreLFShAi6Fmjx08OuRzgNqVInK4e5TGoqMBJnBxyP4LMllxmtI6UzuRA1kK1ZLaVHkXNH9aUnoZ00JxWXq1fM+7B6cgITZbxViDx81SsDwCz25J6Brg0G1wsBCk0yOTFulzGhY80/Z1HbCJJ6Lol9ZIOAalaEgZQCVHKdISKv2xdJztU6FZaTx6Bw6p2gkYhgSD5xAhjzTd+5eXa4ql5tGgAlTn52O+OkWo0lfXuztvMcyLHff+IG4kJsod2SXoIFyAacvE6TWCsCilPCMyzwOpG9w3kUQKL7uhG2ibP92N7dI8YjJVDPUAni09XtRPt+cwo6KU313aUtxHHhMumOylkPdAIVl9tluE5JrTs9zpjw91U3cQiYn+igryY0HG5W0zL5K9i2IC2PPn9QPHuZy/xc3MyTMyJsg5efCPKIGMSOKsfLbfOeVzCR49zbS5Zg01Bm35pFZmVO9QaWiNpLb79aImRJeKxEOTKybTto0Fb9GGnWA/uJ1EqyTR0nJeXLz9fLALpG86kZtKwo6Sirt0vOLtc8TAwCQ++FsrI91a6OVv1ko49R0xkoAtef7qhRocjW37biwP9B6I7gi7ScM0p0lzEXMd1JH6mPozwEYzKGzRek8e2wbFE90Tec=" />
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="ctl00_ContentPlaceHolder1_ddlDateRange">Meetings Within:</label>
+                    <select name="ctl00$ContentPlaceHolder1$ddlDateRange" id="ctl00_ContentPlaceHolder1_ddlDateRange" class="form-control" onchange="dateRangeChanged();">
+	<option value="lmn">Last Month</option>
+	<option value="l6n">Last 6 Months</option>
+	<option value="lyr">Last Year</option>
+	<option value="nmn">Next Month</option>
+	<option value="n6m">Next 6 Months</option>
+	<option value="nyr">Next Year</option>
+	<option value="6ms">6 Month Span</option>
+	<option value="12ms">12 Month Span</option>
+	<option selected="selected" value="cus">Custom Date Range</option>
+
+</select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="ctl00_ContentPlaceHolder1_txtCalendarFrom">From:</label>
+                    <input name="ctl00$ContentPlaceHolder1$txtCalendarFrom" type="text" value="6/15/2026" id="ctl00_ContentPlaceHolder1_txtCalendarFrom" disabled="disabled" class="aspNetDisabled form-control datepicker" />
+                    <input type="hidden" name="ctl00$ContentPlaceHolder1$hfFromDate" id="ctl00_ContentPlaceHolder1_hfFromDate" value="6/15/2026" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="ctl00_ContentPlaceHolder1_txtCalendarTo">To:</label>
+                    <input name="ctl00$ContentPlaceHolder1$txtCalendarTo" type="text" value="2/10/2027" id="ctl00_ContentPlaceHolder1_txtCalendarTo" disabled="disabled" class="aspNetDisabled form-control datepicker" />
+                    <input type="hidden" name="ctl00$ContentPlaceHolder1$hfToDate" id="ctl00_ContentPlaceHolder1_hfToDate" value="2/10/2027" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="ctl00_ContentPlaceHolder1_ddlMeetingType">Meeting Type:</label>
+                    <select name="ctl00$ContentPlaceHolder1$ddlMeetingType" id="ctl00_ContentPlaceHolder1_ddlMeetingType" class="form-control">
+	<option selected="selected" value="-1"></option>
+	<option value="25">Board and Commission Reception</option>
+	<option value="30">Boards and Commissions Information Session</option>
+	<option value="24">City Council Grant Work Session</option>
+	<option value="2">City Council POM Meeting</option>
+	<option value="1">City Council Regular Meeting</option>
+	<option value="17">City Council Retreat</option>
+	<option value="19">City Council Special Called Session</option>
+	<option value="18">City Council Work Session</option>
+	<option value="26">Coffee with the City</option>
+	<option value="3">Coffee with the Mayor</option>
+	<option value="32">Community Leadership Meeting</option>
+	<option value="8">Council Candidate Briefing</option>
+	<option value="23">Council Reception</option>
+	<option value="28">Emergency Meeting</option>
+	<option value="16">Joint Council / ISD Board</option>
+	<option value="10">Joint Council / Planning and Zoning Commission</option>
+	<option value="6">Joint Meeting</option>
+	<option value="4">Neighborhood Leadership Council</option>
+	<option value="29">Neighborhood Leadership Meeting</option>
+	<option value="27">Notice</option>
+	<option value="9">Notice of Possible Quorum</option>
+	<option value="22">Special Called Meeting</option>
+	<option value="5">State of the City</option>
+	<option value="21">Supplement to Council Agenda</option>
+	<option value="7">Town Hall Meeting</option>
+
+</select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="ctl00_ContentPlaceHolder1_ddlCategory" style="vertical-align: middle;">Category:</label>
+                    <select name="ctl00$ContentPlaceHolder1$ddlCategory" id="ctl00_ContentPlaceHolder1_ddlCategory" class="form-control">
+	<option selected="selected" value="-1"></option>
+
+</select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="ctl00_ContentPlaceHolder1_txtSearchText">Containing Text:</label>
+                    <a onClick="javascript:ViewRules=window.open(&#39;FulltextReview.aspx&#39;, &#39;Rules&#39;, &#39;width=1000, height=350, status=0,toolbar=0,menubar=0,resizable=1,fullscreen=0,channelmode=1,scrollbars=1&#39;, false);ViewRules.focus();" href="#"><img src="images/btn-information.gif" alt="Containing Text Search Rules" /></a>
+                    <input name="ctl00$ContentPlaceHolder1$txtSearchText" type="text" id="ctl00_ContentPlaceHolder1_txtSearchText" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group">
+                    <input type="submit" name="ctl00$ContentPlaceHolder1$btnSearch" value="Search" id="ctl00_ContentPlaceHolder1_btnSearch" class="btn btn-primary" />
+                    <input type="submit" name="ctl00$ContentPlaceHolder1$btnClear" value="Clear" id="ctl00_ContentPlaceHolder1_btnClear" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+<ul class="nav nav-tabs" role="tablist" id="myTabs">
+    <li id="ctl00_ContentPlaceHolder1_tabMeeting" role="presentation" class="active">
+        <a href="#meetings" id="ctl00_ContentPlaceHolder1_meetingstab" role="tab" data-toggle="tab">Meetings</a>
+    </li>
+    <li id="ctl00_ContentPlaceHolder1_tabItem" role="presentation">
+        <a href="#items" id="ctl00_ContentPlaceHolder1_itemstab" role="tab" data-toggle="tab">Items</a>
+    </li>
+</ul>
+<input type="hidden" name="ctl00$ContentPlaceHolder1$TabName" id="ctl00_ContentPlaceHolder1_TabName" />
+<div class="tab-content" id="myTabContent">
+<div role="tabpanel" class="tab-pane active" id="meetings">
+    <div class="table-responsive">
+        <input type="hidden" name="ctl00$ContentPlaceHolder1$meetingColumnCount" id="ctl00_ContentPlaceHolder1_meetingColumnCount" value="7" />
+        <input type="hidden" name="ctl00$ContentPlaceHolder1$hSortIcon" id="ctl00_ContentPlaceHolder1_hSortIcon" />
+        <input type="hidden" name="ctl00$ContentPlaceHolder1$hSortField" id="ctl00_ContentPlaceHolder1_hSortField" />
+
+                <table class="table table-condensed table-hover table-striped">
+                <tr>
+
+                    <td style="text-align: center"></td>
+                    <th>
+                        <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl00_lnkMeetingDate" title="Click to Sort" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptMeetings$ctl00$lnkMeetingDate&#39;,&#39;&#39;)">Meeting Date</a>
+                        <i id="sorticonmd" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th>
+                        <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl00_lnkMeetingType" title="Click to Sort" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptMeetings$ctl00$lnkMeetingType&#39;,&#39;&#39;)">Meeting Type</a>
+                        <i id="sorticonmt" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th class="mobile-portrait-hidden">
+                        <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl00_lnkMeetingLocation" title="Click to Sort" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptMeetings$ctl00$lnkMeetingLocation&#39;,&#39;&#39;)">Meeting Location</a>
+                        <i id="sorticonml" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th id="ctl00_ContentPlaceHolder1_rptMeetings_ctl00_thPublicSiteShowAgendaHtml" class="mobile-portrait-hidden" style="text-align: center;">Online Agenda</th>
+
+                    <th id="ctl00_ContentPlaceHolder1_rptMeetings_ctl00_thPublicSiteShowAgendaPdf" class="mobile-portrait-hidden" style="text-align: center;">Download Agenda</th>
+
+
+
+                    <th id="ctl00_ContentPlaceHolder1_rptMeetings_ctl00_thPublicSiteShowMinutesPdf" class="mobile-portrait-hidden" style="text-align: center;">Legal Minutes</th>
+
+
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;width: 5%">
+                        <div style="text-align: center;">
+
+
+                        </div>
+                    </td>
+                    <td style="width: 8%">07/14/26</td>
+                    <td style="width: 18%" class="mobile-table">
+                        <div class="visible-xs-inline">
+                        <label class="btn btn-link" role="button" data-toggle="collapse" data-target="#extendedMeeting3703" style="white-space:normal;text-align:left">
+                            Notice of Possible Quorum
+                        </label>
+                        </div>
+                        <div class="mobile-table-td-div">
+                            Notice of Possible Quorum
+                        </div>
+                    </td>
+                    <td style="width: 32%" class="mobile-portrait-hidden">Shops at Willow Bend, 6121 W. Park, Plano TX</td>
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl01_tdPublicSiteShowAgendaHtml" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl01_hypHTMLAgendaView"><img src="images/icon_files.gif" alt="HTML View" /></a>
+                        </div>
+                    </td>
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl01_tdPublicSiteShowAgendaPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl01_hypAdgendaPDF" href="DisplayAgendaPDF.ashx?MeetingID=3703" target="_blank"><img src="images/ico_pdf.gif" alt="Agenda PDF" /></a>
+                        </div>
+                    </td>
+
+
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl01_tdPublicSiteShowMinutesPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+
+
+                </tr>
+                <tr class="collapse" id="extendedMeeting3703">
+                    <td class="mobile-table-td" colspan="7" style="white-space:normal">
+                        <div class="form-group">
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">Shops at Willow Bend, 6121 W. Park, Plano TX</div>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl01_hypHTMLAgendaViewExtended" style="display: block">Online Agenda</a>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl01_hypAdgendaPDFExtended" href="DisplayAgendaPDF.ashx?MeetingID=3703" target="_blank" style="display: block">Agenda PDF</a>
+
+
+
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;width: 5%">
+                        <div style="text-align: center;">
+
+
+                        </div>
+                    </td>
+                    <td style="width: 8%">07/08/26</td>
+                    <td style="width: 18%" class="mobile-table">
+                        <div class="visible-xs-inline">
+                        <label class="btn btn-link" role="button" data-toggle="collapse" data-target="#extendedMeeting3702" style="white-space:normal;text-align:left">
+                            Notice of Possible Quorum
+                        </label>
+                        </div>
+                        <div class="mobile-table-td-div">
+                            Notice of Possible Quorum
+                        </div>
+                    </td>
+                    <td style="width: 32%" class="mobile-portrait-hidden">Shops at Willow Bend, 6121 W. Park, Plano TX</td>
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl02_tdPublicSiteShowAgendaHtml" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl02_hypHTMLAgendaView"><img src="images/icon_files.gif" alt="HTML View" /></a>
+                        </div>
+                    </td>
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl02_tdPublicSiteShowAgendaPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl02_hypAdgendaPDF" href="DisplayAgendaPDF.ashx?MeetingID=3702" target="_blank"><img src="images/ico_pdf.gif" alt="Agenda PDF" /></a>
+                        </div>
+                    </td>
+
+
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl02_tdPublicSiteShowMinutesPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+
+
+                </tr>
+                <tr class="collapse" id="extendedMeeting3702">
+                    <td class="mobile-table-td" colspan="7" style="white-space:normal">
+                        <div class="form-group">
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">Shops at Willow Bend, 6121 W. Park, Plano TX</div>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl02_hypHTMLAgendaViewExtended" style="display: block">Online Agenda</a>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl02_hypAdgendaPDFExtended" href="DisplayAgendaPDF.ashx?MeetingID=3702" target="_blank" style="display: block">Agenda PDF</a>
+
+
+
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;width: 5%">
+                        <div style="text-align: center;">
+
+
+                        </div>
+                    </td>
+                    <td style="width: 8%">06/22/26</td>
+                    <td style="width: 18%" class="mobile-table">
+                        <div class="visible-xs-inline">
+                        <label class="btn btn-link" role="button" data-toggle="collapse" data-target="#extendedMeeting3695" style="white-space:normal;text-align:left">
+                            City Council Regular Meeting
+                        </label>
+                        </div>
+                        <div class="mobile-table-td-div">
+                            City Council Regular Meeting
+                        </div>
+                    </td>
+                    <td style="width: 32%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_tdPublicSiteShowAgendaHtml" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;MeetingView.aspx?MeetingID=3695&amp;MinutesMeetingID=914&amp;doctype=Agenda&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=800,height=600&#39;);ViewHTML.focus();" style="cursor:pointer"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_tdPublicSiteShowAgendaPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_hypAdgendaPDF" href="DisplayAgendaPDF.ashx?MeetingID=3695" target="_blank"><img src="images/ico_pdf.gif" alt="Agenda PDF" /></a>
+                        </div>
+                    </td>
+
+
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_tdPublicSiteShowMinutesPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_hypMinutesPDF" href="DisplayAgendaPDF.ashx?MinutesMeetingID=914" target="_blank"><img src="images/ico_pdf.gif" alt="Legal Minutes" /></a>
+                        </div>
+                    </td>
+
+
+                </tr>
+                <tr class="collapse" id="extendedMeeting3695">
+                    <td class="mobile-table-td" colspan="7" style="white-space:normal">
+                        <div class="form-group">
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">1520 K Avenue, Plano TX 75074</div>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;MeetingView.aspx?MeetingID=3695&amp;MinutesMeetingID=914&amp;doctype=Agenda&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=800,height=600&#39;);ViewHTML.focus();" style="cursor:pointer">Online Agenda</a>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_hypAdgendaPDFExtended" href="DisplayAgendaPDF.ashx?MeetingID=3695" target="_blank" style="display: block">Agenda PDF</a>
+
+
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl03_hypMinutesPDFExtended" href="DisplayAgendaPDF.ashx?MinutesMeetingID=914" target="_blank" style="display: block">Legal Minutes</a>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;width: 5%">
+                        <div style="text-align: center;">
+
+
+                        </div>
+                    </td>
+                    <td style="width: 8%">06/22/26</td>
+                    <td style="width: 18%" class="mobile-table">
+                        <div class="visible-xs-inline">
+                        <label class="btn btn-link" role="button" data-toggle="collapse" data-target="#extendedMeeting3692" style="white-space:normal;text-align:left">
+                            City Council POM Meeting
+                        </label>
+                        </div>
+                        <div class="mobile-table-td-div">
+                            City Council POM Meeting
+                        </div>
+                    </td>
+                    <td style="width: 32%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_tdPublicSiteShowAgendaHtml" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;MeetingView.aspx?MeetingID=3692&amp;MinutesMeetingID=913&amp;doctype=Agenda&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=800,height=600&#39;);ViewHTML.focus();" style="cursor:pointer"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_tdPublicSiteShowAgendaPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_hypAdgendaPDF" href="DisplayAgendaPDF.ashx?MeetingID=3692" target="_blank"><img src="images/ico_pdf.gif" alt="Agenda PDF" /></a>
+                        </div>
+                    </td>
+
+
+
+                    <td id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_tdPublicSiteShowMinutesPdf" style="text-align: center;" class="mobile-portrait-hidden" width="12%">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_hypMinutesPDF" href="DisplayAgendaPDF.ashx?MinutesMeetingID=913" target="_blank"><img src="images/ico_pdf.gif" alt="Legal Minutes" /></a>
+                        </div>
+                    </td>
+
+
+                </tr>
+                <tr class="collapse" id="extendedMeeting3692">
+                    <td class="mobile-table-td" colspan="7" style="white-space:normal">
+                        <div class="form-group">
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">1520 K Avenue, Plano TX 75074</div>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;MeetingView.aspx?MeetingID=3692&amp;MinutesMeetingID=913&amp;doctype=Agenda&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=800,height=600&#39;);ViewHTML.focus();" style="cursor:pointer">Online Agenda</a>
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_hypAdgendaPDFExtended" href="DisplayAgendaPDF.ashx?MeetingID=3692" target="_blank" style="display: block">Agenda PDF</a>
+
+
+                            <a id="ctl00_ContentPlaceHolder1_rptMeetings_ctl04_hypMinutesPDFExtended" href="DisplayAgendaPDF.ashx?MinutesMeetingID=913" target="_blank" style="display: block">Legal Minutes</a>
+
+                        </div>
+                    </td>
+                </tr>
+
+                </table>
+
+    </div>
+
+
+
+</div>
+<div role="tabpanel" class="tab-pane" id="items">
+    <div class="table-responsive">
+        <input type="hidden" name="ctl00$ContentPlaceHolder1$hSortIconItems" id="ctl00_ContentPlaceHolder1_hSortIconItems" />
+        <input type="hidden" name="ctl00$ContentPlaceHolder1$hSortFieldItems" id="ctl00_ContentPlaceHolder1_hSortFieldItems" />
+
+                <table class="table table-condensed table-hover table-striped">
+                <tr>
+                    <th>
+                        <a id="ctl00_ContentPlaceHolder1_rptItems_ctl00_lnkDate" title="Click to Sort" class="hrefclass" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptItems$ctl00$lnkDate&#39;,&#39;&#39;)">Date</a>
+                        <i id="sorticonitemmd" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th>
+                        <a id="ctl00_ContentPlaceHolder1_rptItems_ctl00_lnkTitle" title="Click to Sort" class="hrefclass" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptItems$ctl00$lnkTitle&#39;,&#39;&#39;)">Title</a>
+                        <i id="sorticonitemtitle" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th class="mobile-portrait-hidden">Item Video</th>
+                    <th class="mobile-portrait-hidden">
+                        <a id="ctl00_ContentPlaceHolder1_rptItems_ctl00_lnkCategory" title="Click to Sort" class="hrefclass" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptItems$ctl00$lnkCategory&#39;,&#39;&#39;)">Category</a>
+                        <i id="sorticonitemcat" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th class="mobile-portrait-hidden">
+                        <a id="ctl00_ContentPlaceHolder1_rptItems_ctl00_lnkItemMeetingType" title="Click to Sort" class="hrefclass" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptItems$ctl00$lnkItemMeetingType&#39;,&#39;&#39;)">Meeting Type</a>
+                        <i id="sorticonitemmt" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th class="mobile-portrait-hidden">
+                        <a id="ctl00_ContentPlaceHolder1_rptItems_ctl00_lnkItemLocation" title="Click to Sort" class="hrefclass" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$rptItems$ctl00$lnkItemLocation&#39;,&#39;&#39;)">Location</a>
+                        <i id="sorticonitemml" class="glyphicon glyphicon-triangle-bottom" style="display: inline-block; font-size: 8px; visibility: hidden;"></i>
+                    </th>
+                    <th class="mobile-portrait-hidden">Online Item</th>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PARK062226-01 Los Rios Park Trail - Advanced Funding Agreement
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PARK062226-01 Los Rios Park Trail - Advanced Funding Agreement
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Adoption of Resolutions</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl01_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10732&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Adoption of Resolutions
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl01_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10732&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-21 Purchase of Fire Hydrants, Accessories, and Waterline Parts
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-21 Purchase of Fire Hydrants, Accessories, and Waterline Parts
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Purchase from Existing Contract</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl02_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10734&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Purchase from Existing Contract
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl02_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10734&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-163 Water Rehabilitation - Parkway Estates and Whiffletree Addition, Project No. ENG-CMB-00006
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-163 Water Rehabilitation - Parkway Estates and Whiffletree Addition, Project No. ENG-CMB-00006
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Expenditure</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl03_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10748&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Expenditure
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl03_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10748&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-161 Water Rehabilitation - Park Boulevard Phase 1 (Preston Road to US 75), Project No. 7573
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-161 Water Rehabilitation - Park Boulevard Phase 1 (Preston Road to US 75), Project No. 7573
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Change Order</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl04_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10817&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Change Order
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl04_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10817&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-111 Group Critical Illness ILA
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-111 Group Critical Illness ILA
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Contract / Agreement</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl05_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10847&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Contract / Agreement
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl05_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10847&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            CMGR062226-01 National Parks and Recreation Month
+                        </label>
+                        <div class="mobile-table-td-div">
+                            CMGR062226-01 National Parks and Recreation Month
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Proclamations and Special Recognition</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl06_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10853&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Proclamations and Special Recognition
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl06_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10853&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-101 Shady Brook Trail at Riverside Drive Erosion Control, Project PKR-D-00009
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-101 Shady Brook Trail at Riverside Drive Erosion Control, Project PKR-D-00009
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Contract Modification</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl07_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10863&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Contract Modification
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl07_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10863&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-51 Lease Vehicle Program for Police
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-51 Lease Vehicle Program for Police
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Purchase from Existing Contract</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl08_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10889&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Purchase from Existing Contract
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl08_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10889&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            BUDG062226-01 Delinquent Tax Collection
+                        </label>
+                        <div class="mobile-table-td-div">
+                            BUDG062226-01 Delinquent Tax Collection
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Contract / Agreement</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl09_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10900&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Contract / Agreement
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl09_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10900&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            POLC062226-01 2025 JAG Program
+                        </label>
+                        <div class="mobile-table-td-div">
+                            POLC062226-01 2025 JAG Program
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Items for Individual Consideration</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl10_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10902&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Items for Individual Consideration
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl10_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10902&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-11 Paving Improvements - Pinehurst Drive, Royal Circle, Granada Place, Grand Canyon Drive, Glen Canyon Drive, Project No. ENG-S-00012
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-11 Paving Improvements - Pinehurst Drive, Royal Circle, Granada Place, Grand Canyon Drive, Glen Canyon Drive, Project No. ENG-S-00012
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Award/Rejection of Bid/Proposal</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl11_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10906&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Award/Rejection of Bid/Proposal
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl11_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10906&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-52 Drug Analysis ILA
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-52 Drug Analysis ILA
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Contract / Agreement</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl12_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10907&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Contract / Agreement
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl12_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10907&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            ENGR062226-30 Pecan Hollow Maintenance Building Renovations Project
+                        </label>
+                        <div class="mobile-table-td-div">
+                            ENGR062226-30 Pecan Hollow Maintenance Building Renovations Project
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Expenditure</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl13_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10908&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Expenditure
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl13_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10908&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-41 Spring Creek Interceptor Phase 1 (7593), Project No. ENG-SS-00002
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-41 Spring Creek Interceptor Phase 1 (7593), Project No. ENG-SS-00002
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Change Order</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl14_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10909&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Change Order
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl14_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10909&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width: 10%">06/22/26</td>
+                    <td style="width: 20%" class="mobile-table">
+                        <label class="mobile-table-td-label" role="button" data-toggle="collapse" data-target="#extendedItem914">
+                            PURC062226-53 Professional Consulting Services for Police Training Center
+                        </label>
+                        <div class="mobile-table-td-div">
+                            PURC062226-53 Professional Consulting Services for Police Training Center
+                        </div>
+                    </td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+
+                        </div>
+                    </td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">Approval of Expenditure</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">City Council Regular Meeting</td>
+                    <td style="width: 20%" class="mobile-portrait-hidden">1520 K Avenue, Plano TX 75074</td>
+                    <td style="width: 10%" class="mobile-portrait-hidden">
+                        <div style="text-align: center;">
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl15_hypHTMLAgendaView" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10910&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#"><img src="images/icon_files.gif" alt="View Agenda HTML" /></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="collapse" id="extendedItem914">
+                    <td class="mobile-table-td" colspan="8">
+                        <div class="form-group">
+                        <label style="display: block">Agenda Category</label>
+                        <div style="display: block">
+                            Approval of Expenditure
+                            <label style="display: block">Meeting Type</label>
+                            <div style="display: block">
+                                City Council Regular Meeting
+                            </div>
+                            <label style="display: block">Meeting Location</label>
+                            <div style="display: block">
+                                1520 K Avenue, Plano TX 75074
+                            </div>
+                            <a id="ctl00_ContentPlaceHolder1_rptItems_ctl15_hypHTMLAgendaViewExtended" onClick="javascript:ViewHTML=window.open(&#39;Coversheet.aspx?ItemID=10910&amp;MeetingID=3695&#39;,&#39;ViewHTML&#39;,&#39;toolbar=yes,location=0,directories=0,status=0,menubar=yes,scrollbars=yes,resizable=yes,width=960,height=600&#39;);ViewHTML.focus();" href="#" style="display: block">HTML View</a>
+                        </div>
+                    </td>
+                </tr>
+
+                </table>
+
+    </div>
+
+    <div id="ctl00_ContentPlaceHolder1_itemsPaging" style="text-align: center">
+        <div class="btn-group" role="group">
+            <button onclick="__doPostBack('ctl00$ContentPlaceHolder1$btnFirstItems','')" id="ctl00_ContentPlaceHolder1_btnFirstItems" class="btn btn-default" CommandName="FirstItems" aria-label="First Items" style="cursor:default;pointer-events:none;">
+                <i class="glyphicon glyphicon-fast-backward"></i>
+            </button>
+            <button onclick="__doPostBack('ctl00$ContentPlaceHolder1$btnPreviousItems','')" id="ctl00_ContentPlaceHolder1_btnPreviousItems" class="btn btn-default" CommandName="PreviousItems" aria-label="Previous Items" style="cursor:default;pointer-events:none;">
+                <i class="glyphicon glyphicon-backward"></i>
+            </button>
+            <div style="float: left; padding-top: 5px; position: relative; vertical-align: middle;">
+                <table id="ctl00_ContentPlaceHolder1_dlItemPaging" cellspacing="0">
+	<tr>
+		<td>
+                        <a id="ctl00_ContentPlaceHolder1_dlItemPaging_ctl00_lnkbtnItemPaging" class="aspNetDisabled" style="color:#337ab7;"><b><font color="Black">1</font></b></a>&nbsp;
+                    </td><td>
+                        <a id="ctl00_ContentPlaceHolder1_dlItemPaging_ctl01_lnkbtnItemPaging" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dlItemPaging$ctl01$lnkbtnItemPaging&#39;,&#39;&#39;)"><font color="Black">2</font></a>&nbsp;
+                    </td><td>
+                        <a id="ctl00_ContentPlaceHolder1_dlItemPaging_ctl02_lnkbtnItemPaging" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dlItemPaging$ctl02$lnkbtnItemPaging&#39;,&#39;&#39;)"><font color="Black">3</font></a>&nbsp;
+                    </td>
+	</tr>
+</table>
+            </div>
+            <button onclick="__doPostBack('ctl00$ContentPlaceHolder1$btnNextItems','')" id="ctl00_ContentPlaceHolder1_btnNextItems" class="btn btn-default" CommandName="NextItems" aria-label="Next Items" style="cursor:pointer;pointer-events:auto;">
+                <i class="glyphicon glyphicon-forward"></i>
+            </button>
+            <button onclick="__doPostBack('ctl00$ContentPlaceHolder1$btnLastItems','')" id="ctl00_ContentPlaceHolder1_btnLastItems" class="btn btn-default" CommandName="LastItems" aria-label="Last Items" style="cursor:pointer;pointer-events:auto;">
+                <i class="glyphicon glyphicon-fast-forward"></i>
+            </button>
+        </div>
+    </div>
+    <div id="ctl00_ContentPlaceHolder1_itemsPagingLabel" style="text-align: center;">
+        <span id="ctl00_ContentPlaceHolder1_lblItemPageInfo">Page 1 of 3</span>
+    </div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="videoPlaceHolder">
+                    <div class="container">
+                        <h4>Meeting Video</h4>
+                        <div class="container">
+                            <div id="vodplayer"></div>
+                        </div>
+                        <div id="scriptdiv"></div>
+                    </div >
+                </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="videoModalLive" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="videoPlaceHolderLive">
+                    <div class="container">
+                        <h4>Meeting Video</h4>
+                        <div class="container">
+                            <div id="liveplayer"></div>
+                        </div>
+                        <div id="scriptdivlive"></div>
+                    </div >
+                </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+</form>
+</div>
+
+
+    </div>
+</body>
+</html>

@@ -48,7 +48,7 @@ function commonsCapture(release: KnownRelease): PortraitCapture {
     observedAt: release.retrievedAt, httpStatus: release.httpStatus, transport: "REACHABLE", partial: false };
 }
 
-export function wikidataCandidatePortraitQuery(subject: CampaignSiteIdentity): string {
+function wikidataCandidatePortraitQuery(subject: CampaignSiteIdentity): string {
   const name = JSON.stringify(`${subject.givenName} ${subject.familyName}`.replace(/\s+/g, " ").trim());
   return `PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>

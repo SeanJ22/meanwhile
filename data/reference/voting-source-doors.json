@@ -154,7 +154,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Denver, CO",
     "url": "https://www.sos.state.co.us/pubs/elections/main.html",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "CO",
       "ocdId": "ocd-division/country:us/state:co",
@@ -177,7 +180,27 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.co.us/pubs/elections/main.html\">https://www.sos.state.co.us/pubs/elections/main.html</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+    ],
+    "ballotMeasuresUrls": [
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/95Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/177Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/302Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/362Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/234Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/256Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/195Final.pdf",
+      "https://leg.colorado.gov/bill_files/116503/download",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/85Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/108Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/109Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/110Final.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/232FinalCorrected.pdf",
+      "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/308Final.pdf"
+    ]
   },
   {
     "id": "fec-ct-chief",
@@ -334,7 +357,10 @@
     "publisher": "Office of Elections, Honolulu, HI",
     "url": "https://elections.hawaii.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "HI",
       "ocdId": "ocd-division/country:us/state:hi",
@@ -357,7 +383,14 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://elections.hawaii.gov/\">https://elections.hawaii.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://elections.hawaii.gov/candidates/candidate-reports/",
+      "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94"
+    ],
+    "ballotMeasureUrls": [
+      "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/"
+    ]
   },
   {
     "id": "fec-id-chief",
@@ -1084,7 +1117,10 @@
     "publisher": "Elections Division, Office of the Secretary of State, Columbus, OH",
     "url": "https://www.sos.state.oh.us/elections/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "OH",
       "ocdId": "ocd-division/country:us/state:oh",
@@ -1107,14 +1143,19 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.sos.state.oh.us/elections/\">https://www.sos.state.oh.us/elections/</a>"
-    }
+    },
+    "candidateListUrl": "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
+    "ballotMeasuresUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf"
   },
   {
     "id": "fec-ok-chief",
     "publisher": "State Election Board, Oklahoma City, OK",
     "url": "https://oklahoma.gov/elections.html",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "OK",
       "ocdId": "ocd-division/country:us/state:ok",
@@ -1137,7 +1178,17 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://oklahoma.gov/elections.html\">https://oklahoma.gov/elections.html</a>"
-    }
+    },
+    "candidateListUrl": "https://hosting.okelections.gov/electionlist.html",
+    "ballotMeasuresUrl": "https://oklahoma.gov/elections/elections-results/state-question-info.html",
+    "candidateListUrls": [
+      "https://hosting.okelections.gov/electionlist.html"
+    ],
+    "ballotMeasureUrls": [
+      "https://oklahoma.gov/elections/elections-results/state-question-info.html",
+      "https://www.sos.ok.gov/documents/questions/845.pdf",
+      "https://www.sos.ok.gov/documents/questions/847.pdf"
+    ]
   },
   {
     "id": "fec-or-chief",

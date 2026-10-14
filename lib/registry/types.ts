@@ -71,6 +71,8 @@ export type AgendaSourceType =
   | "SUITEONE"
   | "GRANICUS"
   | "PRIMEGOV"
+  | "NOVUSAGENDA"
+  | "SWAGIT"
   | "SIMBLI"
   | "ICAL"
   | "RSS"

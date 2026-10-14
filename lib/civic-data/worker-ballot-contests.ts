@@ -21,6 +21,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
+import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
 
 const words = (value: unknown) => String(value ?? "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const text = (value: unknown) => typeof value === "string" ? value : "";
@@ -147,7 +148,8 @@ export async function publishWorkerBallotContestsResults(input: {
       const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results,
         registry: await readRegistryRuntimePrior(input.store, input.now) });
       const prior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
-      const candidate = manualProjectionCandidate(mergeBallotContests(checked.package, prior));
+      const merged = mergeBallotContests(checked.package, prior);
+      const candidate = manualProjectionCandidate(merged);
       candidateId = candidate.id; verified = true;
       const contests = Object.values((checked.package.payload as GenericBallotProjection).ballots).flatMap(ballot => ballot.contests);
       const before = Object.values((prior?.payload as GenericBallotProjection | undefined)?.ballots ?? {}).flatMap(ballot => ballot.contests);
@@ -158,6 +160,10 @@ export async function publishWorkerBallotContestsResults(input: {
         { workerResultId: parser.id, stage: "CHECKED", records: contests.length, changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       requirePublication(published.promoted && published.readerReadback?.status === "PASS", `BALLOT_READER_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);
       versionId = published.promoted.versionId;
+      requirePublication(plan.contract.schemaVersion === 2, "BALLOT_CONTRACT_UNRESOLVED");
+      const state = plan.contract.jurisdiction.state.toUpperCase();
+      await publishOfficialBallotCandidacies({ store: input.store, now: input.now, sourceReceipt: merged.sourceReceipt,
+        ballots: Object.values((merged.payload as GenericBallotProjection).ballots).filter(ballot => ballot.election.state === state) });
       await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: contests.length, changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: checked.heldContests.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",

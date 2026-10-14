@@ -27,7 +27,7 @@ import {
 
 await installRegistryAuthority();
 
-import { campaignMoneyForTarget } from "../lib/funding/campaign-money.ts";
+import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { canonicalOfficialAliases } from "../lib/ask/official-identity.ts";
 import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
@@ -47,12 +47,6 @@ import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 
-/*
- * Synthetic ballots for the three pilot counties, each race named by the canonical contest key the reader
- * uses; synthetic finance holdings for one candidacy per state; the federal votes, statement and publication
- * holdings; and the recorded 85701 meetings. Names on the ballots are the registry's own officeholders or
- * labelled test candidates; every total, address and passage is synthetic.
- */
 const FINANCE = {
   AZ: { key: "ballot-az-pima:governor:hobbs-katie", receipts: 2_000_000, expenditures: 1_000_000 },
   NJ: { key: "ballot-nj-morris:county-commissioner:selen", receipts: 30_000, expenditures: 15_000 },
@@ -355,9 +349,11 @@ test("direct official vote IDs never fall through to another same-name person", 
   assert.ok(known.records.length > 0);
 });
 
-test("multiple verified roles share an Ask subject only through the committed person bridge", async () => {
+test("a sourced delegation role stays a direct Ask subject after its cross-seat candidacy link is rejected", async () => {
   const aliases = canonicalOfficialAliases([KAREN_RETIRED_ID, KAREN_ROLE_ID, "unresolved:Karen Ebel"], [KAREN_ROLE_ID]);
-  assert.equal(aliases.get(KAREN_ROLE_ID), KAREN_ROLE_ID);
+  assert.equal(aliases.has(KAREN_ROLE_ID), false);
+  assert.equal(resolvedCandidacyForOfficial(KAREN_ROLE_ID), null);
+  assert.deepEqual(readerPersonKeys(KAREN_ROLE_ID).keys, [KAREN_ROLE_ID]);
   assert.equal(aliases.has(KAREN_RETIRED_ID), false, "the retired intermediary identity cannot win the Reader subject");
   assert.equal(aliases.has("unresolved:Karen Ebel"), false);
   const body = await ask("What does Karen Ebel say about Hampshire?", "AZ", {
@@ -369,6 +365,12 @@ test("multiple verified roles share an Ask subject only through the committed pe
     record.canonicalSubjectId !== KAREN_RETIRED_ID && !record.id.includes(KAREN_RETIRED_ID)
   ));
   assert.ok(body.gaps.every((gap) => !/bills she signed|letters about individual bills/.test(gap.statement)));
+  const contact = await ask("How do I contact Karen Ebel?", "NH", {
+    surface: "MAP", activeSubjects: [{ id: KAREN_ROLE_ID, name: "Karen Ebel", kind: "PERSON", focused: true }],
+  });
+  assert.equal(contact.subject?.id, KAREN_ROLE_ID);
+  assert.ok(contact.records.some(record => record.kind === "CONTACT" && record.id === `office:${KAREN_ROLE_ID}` &&
+    record.text.includes("(603) 796-6800") && record.sourceUrl));
 });
 
 test("raw acquisition, extraction PASS, and unresolved finance never become a state-money answer", () => {

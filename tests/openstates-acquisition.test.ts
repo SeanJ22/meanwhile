@@ -245,6 +245,35 @@ test("the same native person in legislative and municipal files keeps both membe
   assert.equal(indexByDivision([{...after.value.roster,divisions:[...after.value.roster.divisions,{...link,bodyId:null}]}]).has(link.ocdId),false,
     "even a stale explicit division link cannot render a retired membership");
 });
+test("native tenure retirement survives the canonical office vocabulary with held source identifiers", async () => {
+  const acquire = async (ended: boolean) => {
+    const release = ended ? "b".repeat(40) : sha;
+    const expired = yaml("expired", "Expired Member").replace("    start_date: '2025-01-01'", "    start_date: '2025-01-01'" + (ended ? "\n    end_date: '2026-09-01'" : ""));
+    const archive = zip([
+      { name: `people-${release}/data/az/legislature/Current.yml`, data: Buffer.from(yaml("current", "Current Member")) },
+      { name: `people-${release}/data/az/legislature/Expired.yml`, data: Buffer.from(expired) },
+      ...(ended ? [{ name: `people-${release}/data/az/legislature/Malformed.yml`, data: Buffer.from("name: Missing identity\n") }] : []),
+    ], "2026-10-01");
+    const { locks } = createMemoryRepositories();
+    return acquireStatePeople({ state: "az", store: new MemoryEvidenceStore(), locks, now: () => at,
+      signal: AbortSignal.timeout(10_000), divisions: [],
+      fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha: release }]) : new Response(archive)) as typeof fetch });
+  };
+  const store = new MemoryRoutineDataStore(), initial = await acquire(false);
+  for (const person of initial.roster.officeholders) {
+    person.memberships = person.memberships?.map(row => ({ ...row,
+      officeId: `openstates-office:az:${row.chamber}:${row.district ?? ""}` }));
+  }
+  assert.ok((await publishStatePeople({ store, ...initial, now: at })).outcome.promoted);
+  const successor = await acquire(true);
+  assert.equal(successor.roster.currentMembershipComplete, false);
+  assert.ok(successor.roster.endedMemberships?.some(row => row.personId === "plural:expired" && row.officeId.includes(":state_senator:")));
+  const publication = await publishStatePeople({ store, ...successor, now: at });
+  assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
+  const read = await readStatePeopleProjection("US-AZ", { store, now: at, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.deepEqual(read.value.roster.officeholders.map(person => person.name), ["Current Member"]);
+});
 test("an explicitly ended final office retires during a partial refresh while malformed roles preserve held people", async () => {
   const municipal = (id:string,place:string,end?:string) => `id: ocd-person/${id}\nname: Mayor ${id}\nroles:\n  - type: mayor\n    jurisdiction: ocd-jurisdiction/country:us/state:az/place:${place}/government\n    start_date: '2025-01-01'\n${end ? `    end_date: '${end}'\n` : ""}`;
   const acquire = async (stage:0|1|2) => {
@@ -313,6 +342,8 @@ test("an explicitly ended final office retires during a partial refresh while ma
   ].filter(row=>row.id === endedId);
   reject(candidate=>{for(const row of endedRows(candidate))row.personId="plural:somebody-else";},"another native person cannot prove retirement");
   reject(candidate=>{for(const row of endedRows(candidate))row.officeId="openstates-office:another-office";},"another office cannot prove this tenure ended");
+  reject(candidate=>{for(const row of endedRows(candidate))Object.assign(row,{officeTitle:"Governor"});},"another canonical office cannot prove this tenure ended");
+  reject(candidate=>{for(const row of endedRows(candidate))Object.assign(row,{district:"another district"});},"another district cannot prove this tenure ended");
   reject(candidate=>{for(const row of endedRows(candidate))row.termEnd="2026-02-30";},"an invalid native date cannot prove retirement");
   reject(candidate=>{for(const row of endedRows(candidate))row.termEnd="2027";},"a future end date cannot retire a current office");
   reject(candidate=>{for(const row of endedRows(candidate))row.termEnd="2026-08-01";},"agreeing projections cannot forge a different past end from the captured YAML");

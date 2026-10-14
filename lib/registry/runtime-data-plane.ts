@@ -18,6 +18,10 @@ import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlace
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
+import { sameSeatDiscriminators } from "../officials/office-seat.ts";
+import { nameParts, namesAgree, namesAgreeLoosely, splitDisplayName } from "../ballot/incumbency.ts";
+import type { BallotSet } from "../ballot/types.ts";
 
 export const REGISTRY_RUNTIME_SOURCE_ID = "registry-reviewed-bindings" as const;
 export const REGISTRY_RUNTIME_SCOPE = "US:reader-registry-runtime-bindings" as const;
@@ -41,7 +45,7 @@ export interface OfficialCandidacyBridgeRow {
     readonly name: string;
     readonly officeTitle: string;
     readonly divisions: readonly string[];
-    readonly authority: "FEDERAL_DIRECTORY" | "REGISTRY_STATEWIDE_EXECUTIVE" | "REGISTRY_BODY_ROSTER";
+    readonly authority: "FEDERAL_DIRECTORY" | "STATE_PEOPLE" | "REGISTRY_STATEWIDE_EXECUTIVE" | "REGISTRY_BODY_ROSTER";
     readonly sourceUrl: string | null;
   };
   readonly status: "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED" | "NOT_CHECKED";
@@ -56,12 +60,87 @@ export interface OfficialCandidacyBridgeRow {
   } | null;
   readonly reason: string;
   readonly unresolvedCandidacyIds: readonly string[];
+  readonly ballotSourceUrls?: readonly string[];
 }
 
 export interface OfficialCandidacyBridge {
   readonly formatVersion: 1;
   readonly rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE";
   readonly rows: readonly OfficialCandidacyBridgeRow[];
+}
+
+export function officialCandidacySeatMatches(row: OfficialCandidacyBridgeRow): boolean {
+  const candidacy = row.status === "RESOLVED" ? row.candidacy : null;
+  const office = officeIdentity(row.holder.officeTitle);
+  if (!candidacy || !office || !row.holder.divisions.includes(candidacy.divisionId) || officeIdentity(candidacy.contestTitle) !== office ||
+    !sameSeatDiscriminators(candidacy.contestTitle, row.holder.officeTitle, candidacy.divisionId)) return false;
+  const holder = splitDisplayName(row.holder.name), candidate = splitDisplayName(candidacy.candidateName);
+  const left = nameParts(holder.givenName, holder.familyName), right = nameParts(candidate.givenName, candidate.familyName);
+  return namesAgree(left, right) || namesAgreeLoosely(left, right);
+}
+
+export function reconcileOfficialCandidacies(input: {
+  readonly bridge: OfficialCandidacyBridge;
+  readonly ballots: readonly BallotSet[];
+  readonly holders?: readonly OfficialCandidacyBridgeRow["holder"][];
+}): OfficialCandidacyBridge {
+  const holders = new Map(input.bridge.rows.map(row => [row.holder.id, row.holder]));
+  for (const holder of input.holders ?? []) holders.set(holder.id, holder);
+  const contests = input.ballots.flatMap(ballot => ballot.contests.filter(contest => contest.type === "CANDIDACY")
+    .map(contest => ({ ballot, contest, office: officeIdentity(contest.title),
+      candidates: ballot.candidacies.filter(candidate => candidate.contestId === contest.id).map(candidate => {
+        const display = [candidate.givenName, candidate.familyName].filter(Boolean).join(" ");
+        const parts = candidate.givenName ? candidate : splitDisplayName(display);
+        return { candidate, display, name: nameParts(parts.givenName, parts.familyName) };
+      }) })));
+  const bySeat = new Map<string, typeof contests>();
+  for (const contest of contests) if (contest.office) {
+    const key = `${contest.contest.ocdId}\u0000${contest.office}`;
+    bySeat.set(key, [...bySeat.get(key) ?? [], contest]);
+  }
+  const rows = new Map(input.bridge.rows.map(row => [row.holder.id, row]));
+  for (const holder of holders.values()) {
+    const office = officeIdentity(holder.officeTitle);
+    if (!office) continue;
+    const exact = holder.divisions.flatMap(division => bySeat.get(`${division}\u0000${office}`) ?? [])
+      .filter(({ contest }) => sameSeatDiscriminators(contest.title, holder.officeTitle, contest.ocdId));
+    if (!exact.length) continue;
+    const latest = exact.map(row => row.ballot.election.date).sort().at(-1);
+    const current = exact.filter(row => row.ballot.election.date === latest);
+    const parts = splitDisplayName(holder.name), name = nameParts(parts.givenName, parts.familyName);
+    const matches = current.flatMap(row => row.candidates.filter(candidate => namesAgree(name, candidate.name) || namesAgreeLoosely(name, candidate.name))
+      .map(candidate => ({ ...row, ...candidate })));
+    if (matches.length !== 1) {
+      if (matches.length) rows.set(holder.id, { holder, status: "IDENTITY_UNRESOLVED", candidacy: null,
+        reason: "The exact seat has more than one ballot candidacy matching this officeholder.",
+        unresolvedCandidacyIds: matches.map(row => row.candidate.id).sort(),
+        ballotSourceUrls: httpsUrls(current.map(row => row.contest.provenance.sourceUrl)) });
+      else if (current.every(row => row.contest.candidateListComplete === true)) rows.set(holder.id, { holder,
+        status: "NO_APPLICABLE_CANDIDACY", candidacy: null, reason: "The complete sourced ballot for this exact seat does not list the current officeholder.",
+        unresolvedCandidacyIds: [], ballotSourceUrls: httpsUrls(current.map(row => row.contest.provenance.sourceUrl)) });
+      continue;
+    }
+    const match = matches[0];
+    if (!match.candidate.provenance.sourceUrl) continue;
+    const seatHolders = [...holders.values()].filter(other => other.divisions.includes(match.contest.ocdId) &&
+      officeIdentity(other.officeTitle) === office && sameSeatDiscriminators(match.contest.title, other.officeTitle, match.contest.ocdId));
+    const matchingHolders = seatHolders.filter(other => {
+      const parts = splitDisplayName(other.name), otherName = nameParts(parts.givenName, parts.familyName);
+      return namesAgree(otherName, match.name) || namesAgreeLoosely(otherName, match.name);
+    });
+    if (matchingHolders.length !== 1) {
+      rows.set(holder.id, { holder, status: "IDENTITY_UNRESOLVED", candidacy: null,
+        reason: "The candidacy's exact seat has more than one matching current officeholder.", unresolvedCandidacyIds: [match.candidate.id],
+        ballotSourceUrls: httpsUrls([match.contest.provenance.sourceUrl]) });
+      continue;
+    }
+    rows.set(holder.id, { holder, status: "RESOLVED", candidacy: {
+      candidacyId: match.candidate.id, contestId: match.contest.id, contestTitle: match.contest.title,
+      divisionId: match.contest.ocdId, electionId: match.ballot.election.id, candidateName: match.display,
+      sourceUrl: match.candidate.provenance.sourceUrl,
+    }, reason: "The current officeholder and a unique candidate on the sourced ballot agree on name, exact division, office and seat.", unresolvedCandidacyIds: [] });
+  }
+  return { ...input.bridge, rows: [...rows.values()] };
 }
 
 export interface RegistryRuntimeReadModel {
@@ -235,6 +314,7 @@ function candidacyEvidenceUrls(
   row: OfficialCandidacyBridgeRow,
   fallback: readonly string[],
 ): string[] {
+  if (row.ballotSourceUrls?.length) return httpsUrls(row.ballotSourceUrls);
   if (row.status === "NOT_CHECKED") return httpsUrls([row.holder.sourceUrl]);
   if (row.candidacy?.sourceUrl) return httpsUrls([row.candidacy.sourceUrl]);
   if (row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE") {
@@ -580,7 +660,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
     ...memberIds,
     ...executiveIds,
     ...rosterReaderDispositions.flatMap((row) => [row.sourceId, row.canonicalId ?? ""]),
-    ...bridgeRows.map((row) => row.holder.id),
+    ...bridgeRows.filter(row => row.holder.authority !== "STATE_PEOPLE").map((row) => row.holder.id),
   ].filter((id) => officialStateVoteScopeForOfficeholderId(id) !== null);
   if (reservedOfficialStateRosterIds.length > 0) {
     issues.push(`OFFICIAL_STATE_LEGISLATOR_SUBJECT_AUTHORITY_OVERLAP:${[...new Set(reservedOfficialStateRosterIds)].sort().join(",")}`);
@@ -592,6 +672,8 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (officialCandidacies?.formatVersion !== 1 || officialCandidacies?.rule !== "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE") issues.push("OFFICIAL_CANDIDACY_BRIDGE_FORMAT_INVALID");
   if (duplicate(bridgeRows.map((row) => row.holder.id))) issues.push("OFFICIAL_CANDIDACY_HOLDER_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => !row.holder.name || !row.holder.officeTitle || !row.holder.sourceUrl || !row.reason)) issues.push("OFFICIAL_CANDIDACY_REQUIRED_FACT_MISSING");
+  if (bridgeRows.some(row => row.ballotSourceUrls !== undefined && (!Array.isArray(row.ballotSourceUrls) ||
+    row.ballotSourceUrls.some(url => typeof url !== "string" || !/^https:\/\//.test(url))))) issues.push("OFFICIAL_CANDIDACY_BALLOT_SOURCE_INVALID");
   if (bridgeRows.some((row) => row.status === "RESOLVED" && !row.holder.divisions.length)) issues.push("OFFICIAL_CANDIDACY_RESOLVED_DIVISION_MISSING");
   if (bridgeRows.some((row) => row.status === "RESOLVED"
     ? !row.candidacy?.candidacyId || !row.candidacy.contestId || !row.candidacy.divisionId || !row.candidacy.sourceUrl

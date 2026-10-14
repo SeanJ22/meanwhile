@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { FRESHNESS_WINDOW_HOURS } from "../control-plane/promotion/section3.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { recordSourceDisposition } from "./source-capture.ts";
+import { recordSourceDisposition, retireSourceDoors } from "./source-capture.ts";
 import { classifySourceContent, SOURCE_FAMILIES } from "./source-content.ts";
 import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { MAX_CHECK_MINUTES, MIN_CHECK_MINUTES, normalizeHost, upsertDerivedDoor, isDoorRecord, type DoorDraft, type DoorRepository } from "./registry.ts";
@@ -109,7 +109,7 @@ export function foundPages(result: ScoutResult): PublishedPage[] {
     : []);
 }
 
-export type SourceCaptureReader = (id: string) => Promise<{ canonicalUrl: string; text: string; contentType?: string }>;
+type SourceCaptureReader = (id: string) => Promise<{ canonicalUrl: string; text: string; contentType?: string }>;
 export function namesOfDivision(id: string | null | undefined): string[] {
   return id?.split("/").slice(3).map(part => part.split(":").slice(1).join(":").split("#")[0]!.replace(/[_-]/g, " ")) ?? [];
 }
@@ -152,7 +152,13 @@ async function recordPages(repo: DoorRepository, pages: readonly PublishedPage[]
     if (url && seen.has(url)) continue;
     if (url) seen.add(url);
     try {
-      if (!page.content || classifySourceContent({ url: page.url, ...page.content, owed: SOURCE_FAMILIES }).kind !== "DOOR") { skipped++; continue; }
+      if (!page.content) { skipped++; continue; }
+      const disposition = classifySourceContent({ url: page.url, ...page.content, owed: SOURCE_FAMILIES });
+      if (disposition.kind !== "DOOR") {
+        await retireSourceDoors(repo, { url: page.url, ocdId: page.ocdId ?? page.bodyId ?? "", workItemId: page.workItemId ?? undefined,
+          disposition, capture: { bytes: new TextEncoder().encode(page.content.text), contentType: page.content.contentType } }, now);
+        skipped++; continue;
+      }
       const probe = pageDoorDraft(page);
       if (probe === null) { skipped += 1; continue; }
       const matches = (await repo.listWhere(["config", "url"], url!)).filter(row => pageAddress(String(row.value.config.url))?.url === url);

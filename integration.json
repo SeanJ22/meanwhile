@@ -2775,5 +2775,89 @@
     "tested_sha": "9b36ff25c9cd1d5d99ed9445575d95b1558ba5f7",
     "gates": "pass",
     "at": "2026-10-14T18:36:33Z"
+  },
+  {
+    "lane": "ballot-bl-11",
+    "steps": [
+      "BL-11"
+    ],
+    "ready_sha": "4bab43589ba0b538298b6d886cc0997137670f48",
+    "merge_sha": "1289313a97dfee722df3dd2a0706ffa00a560c60",
+    "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "gates": "pass",
+    "at": "2026-10-14T20:06:29Z"
+  },
+  {
+    "lane": "ballot-bl-12",
+    "steps": [
+      "BL-12"
+    ],
+    "ready_sha": "3a255529567a2be6f3546b259ef739f26d9d9eca",
+    "merge_sha": "74d5dc6df7044c43718ceb839079eea2c448bcdd",
+    "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "gates": "pass",
+    "at": "2026-10-14T20:06:29Z"
+  },
+  {
+    "lane": "ballot-bl-13",
+    "steps": [
+      "BL-13"
+    ],
+    "ready_sha": "e34f61e7fccd823af23fbb97e50d2c00bc204e2d",
+    "merge_sha": "065a65f35d0f2938ef761f8bef894b2297fad463",
+    "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "gates": "pass",
+    "at": "2026-10-14T20:06:29Z"
+  },
+  {
+    "lane": "ballot-bl-15",
+    "steps": [
+      "BL-15"
+    ],
+    "ready_sha": "9292be7293f5f702802249b71c83809e89a5f23f",
+    "merge_sha": "07ef3c4e4f629e4c40e07ac939cf2cc1048d7e8a",
+    "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "gates": "pass",
+    "at": "2026-10-14T20:06:29Z"
+  },
+  {
+    "lane": "ballot-bl-16",
+    "steps": [
+      "BL-16"
+    ],
+    "ready_sha": "c13e47c06fa163cf70f5325dd80a2f4549eb2467",
+    "merge_sha": "e5c458759dc74b9b986cef86243c07bd2246811d",
+    "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "gates": "pass",
+    "at": "2026-10-14T20:06:29Z"
+  },
+  {
+    "lane": "ballot-national",
+    "steps": [
+      "BL-10"
+    ],
+    "ready_sha": "0083f9d2b20153c055670d9c7d3c8daa69683caa",
+    "merge_sha": "88ba7d2bccfc3b35fd32fa25d182ecdd31633839",
+    "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "gates": "pass",
+    "at": "2026-10-14T20:06:29Z"
+  },
+  {
+    "lane": "field-manual",
+    "steps": [
+      "FM-07"
+    ],
+    "ready_sha": "9a0201f97ff2063bc7837af205cd845a96d24734",
+    "merge_sha": "3a627c1a3911c45f47daaf86dfc2f747074975a2",
+    "river_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "tested_sha": "0e9d37e0829974dbf3c91800fe7e3cb12360f00e",
+    "gates": "pass",
+    "at": "2026-10-14T20:06:29Z"
   }
 ]

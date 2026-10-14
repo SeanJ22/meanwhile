@@ -262,3 +262,10 @@ One line per batch folded into river.
 - 2026-10-14T17:40:41Z · ballot-bl-16 · BL-16 · ready f32b510a72cf · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
 - 2026-10-14T17:40:41Z · ballot-parity · BL-20 · ready 20cc658b06f2 · river 8db8c14b0739 · pnpm gates pass on 8db8c14b0739
 - 2026-10-14T18:36:33Z · platform-granicus · R3-GRANICUS · ready df57db75a01b · river 9b36ff25c9cd · pnpm gates pass on 9b36ff25c9cd
+- 2026-10-14T20:06:29Z · ballot-bl-11 · BL-11 · ready 4bab43589ba0 · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
+- 2026-10-14T20:06:29Z · ballot-bl-12 · BL-12 · ready 3a255529567a · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
+- 2026-10-14T20:06:29Z · ballot-bl-13 · BL-13 · ready e34f61e7fccd · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
+- 2026-10-14T20:06:29Z · ballot-bl-15 · BL-15 · ready 9292be7293f5 · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
+- 2026-10-14T20:06:29Z · ballot-bl-16 · BL-16 · ready c13e47c06fa1 · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
+- 2026-10-14T20:06:29Z · ballot-national · BL-10 · ready 0083f9d2b201 · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299
+- 2026-10-14T20:06:29Z · field-manual · FM-07 · ready 9a0201f97ff2 · river 0e9d37e08299 · pnpm gates pass on 0e9d37e08299

@@ -99,7 +99,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
       const scheduled = scheduledWorkerObligation(task);
       const toolkit = buildScoutToolkit({root,obligation:{...scheduled,obligation:{...scheduled.obligation,autonomousPlan:item.autonomousPlan}},route:null,providerId:null,attemptId,workItemId,routeTaskId,
         holder,bound:RESEARCH_BOUNDS.perDispatch,now:tools.now,
-        inherited:{artifactIds:[],summary:learned.projection.lines.join("\n"),manualEntries:learned.store.entries},...durableResearchTools(tools,{project:item.project,attemptId,workItemId,routeTaskId}),
+        handed:{artifactIds:[]},...durableResearchTools(tools,{project:item.project,attemptId,workItemId,routeTaskId}),
         openBytes: async request => {
           return (tools.openBytesFor?.(item.subject)??tools.openBytes??realOpenBytes)(request);
         }});

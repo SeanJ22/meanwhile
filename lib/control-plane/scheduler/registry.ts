@@ -8,7 +8,6 @@
 import type { ExecutorKind } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
 import type { AutonomousWorkPlan } from "../workers/autonomous-plan.ts";
-import { routeWorkPlan } from "../workers/route-plan.ts";
 
 
 /** How an unattended executor opens a route. `NOT_MACHINE_EXECUTABLE` is a fact about our tooling (REQUIRES_NEW_ADAPTER), never about the record. */
@@ -149,7 +148,6 @@ export class ObligationIdCollision extends Error {
 }
 
 /** Run every provider and flatten to scheduled units. A provider that throws is recorded as its own `readFailure`; the rest still schedule. */
-const withPlan = (plan: AutonomousWorkPlan | null) => plan ? { autonomousPlan: plan } : {};
 
 export function buildRegistry(
   providers: readonly ObligationProvider[],
@@ -203,8 +201,7 @@ export function buildRegistry(
               ? { declaredCycleHours: record.declaredCycleHours }
               : {}),
             lastWorkedAt: record.lastWorkedAt,
-            ...(record.autonomousPlans?.[route.routeId] ? { autonomousPlan: record.autonomousPlans[route.routeId] }
-              : withPlan(routeWorkPlan({ providerId: provider.id, record, route }))),
+            ...(record.autonomousPlans?.[route.routeId] ? { autonomousPlan: record.autonomousPlans[route.routeId] } : {}),
           },
         });
         count += 1;

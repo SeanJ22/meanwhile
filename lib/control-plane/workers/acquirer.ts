@@ -49,24 +49,24 @@ function exactSpan(held: VaultedResearchEvidence, span: ResearchSpan): string {
   return text;
 }
 function responseStatus(call: ScoutToolCallResult): number | null {
-  if (call.rung?.httpStatus !== undefined) return call.rung.httpStatus;
-  return Number(/\bHTTP (\d{3})\b/.exec(call.rung?.observed ?? "")?.[1]) || null;
+  if (call.step?.httpStatus !== undefined) return call.step.httpStatus;
+  return Number(/\bHTTP (\d{3})\b/.exec(call.step?.observed ?? "")?.[1]) || null;
 }
 /**
- * The access control the retrieval met, from the machine-written rung: a 401/402/403/407/429/451 answer, or the kind
+ * The access control the retrieval met, from the machine-written step: a 401/402/403/407/429/451 answer, or the kind
  * the toolkit names when a bot challenge answered in place of the page (`HTTP 200 (CHALLENGE)`). Null when none.
  */
 function accessControlOf(call: ScoutToolCallResult, status: number | null): AccessControlKind | null {
-  const named = /\((AUTHENTICATION|PAYMENT|FORBIDDEN|RATE_LIMIT|LEGAL|CHALLENGE)\)/.exec(call.rung?.observed ?? "")?.[1];
+  const named = /\((AUTHENTICATION|PAYMENT|FORBIDDEN|RATE_LIMIT|LEGAL|CHALLENGE)\)/.exec(call.step?.observed ?? "")?.[1];
   if (named !== undefined) return named as AccessControlKind;
   return status === null ? null : ACCESS_CONTROL_STATUSES[status] ?? null;
 }
 function responseTransport(call: ScoutToolCallResult): TransportState | "NOT_ATTEMPTED" {
-  if (call.rung?.transport !== undefined) return call.rung.transport;
+  if (call.step?.transport !== undefined) return call.step.transport;
   const s = responseStatus(call);
   if (s !== null) return s >= 200 && s < 300 ? "REACHABLE" : [401, 403, 429].includes(s) ? "CHALLENGED" : "FAILED_AT_RUNG";
-  if (/timeout|timed out|abort/i.test(call.rung?.observed ?? "")) return "TIMEOUT";
-  return /transport failure/i.test(call.rung?.observed ?? "") ? "OTHER_NAMED_FAILURE" : "NOT_ATTEMPTED";
+  if (/timeout|timed out|abort/i.test(call.step?.observed ?? "")) return "TIMEOUT";
+  return /transport failure/i.test(call.step?.observed ?? "") ? "OTHER_NAMED_FAILURE" : "NOT_ATTEMPTED";
 }
 
 /** HUNTER is the ACQUIRER role, with no promotion capability or new persistence path. */
@@ -192,19 +192,16 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
     addStep("source-backoff", "Known source outage; no repeated request sent.", "NOT_WALKED", [...artifactIds], "NOT_ATTEMPTED");
     return result("BLOCKED");
   }
-  for (const tool of ["read_permission", route.retrieval] as const) {
-    const call = await runtime.toolkit.call(tool, { url: route.url, rung: "linked-documents-or-bulk-download", why: route.applicableBecause }, "linked-documents-or-bulk-download");
+  {
+    const call = await runtime.toolkit.call(route.retrieval, { url: route.url });
     requests += call.requestCount; bytesFetched += call.bytesFetched;
-    permission = call.rung?.permission ?? permission;
+    permission = call.step?.permission ?? permission;
     for (const a of call.artifacts) artifactIds.add(a.artifactId);
     const transport = responseTransport(call);
     const status = responseStatus(call);
-    if (tool === "read_permission") {
-      /* Recorded, never a gate: whatever the verdict, the retrieval tool runs next and its own answer decides. */
-      addStep("permission", call.rung?.observed ?? `robots.txt was not read: ${call.forModel.slice(0, 200)}`,
-        call.ok ? "WALKED_AND_FOUND" : "NOT_WALKED", call.artifacts.map(a => a.artifactId), transport);
-      continue;
-    }
+    /* Recorded, never a gate: robots.txt is read with the retrieval and its own answer decides. */
+    addStep("permission", call.step?.permission ? `robots.txt verdict ${call.step.permission}` : "robots.txt verdict not recorded",
+      call.step?.permission ? "WALKED_AND_FOUND" : "NOT_WALKED", [], call.step?.permission ? "REACHABLE" : "NOT_ATTEMPTED");
     for (const offered of call.artifacts.filter(a => a.canonicalUrl === route.url)) {
       try {
         const held = await runtime.readVault(offered.artifactId);
@@ -216,8 +213,8 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
     }
     const verdict: AcquirerResult["verdict"] = artifacts.some(a => a.completeness === "PARTIAL") ? "PARTIAL" :
       artifacts.some(a => a.completeness === "COMPLETE") ? "ACQUIRED" : artifacts.some(a => a.completeness === "EMPTY") ? "EMPTY" : "BLOCKED";
-    const emptyRead = transport === "REACHABLE" && /\(0 bytes\)/.test(call.rung?.observed ?? "");
-    addStep(route.retrieval, call.rung?.observed ?? "The shared retrieval tool could not run.",
+    const emptyRead = transport === "REACHABLE" && /\(0 bytes\)/.test(call.step?.observed ?? "");
+    addStep(route.retrieval, call.step?.observed ?? "The shared retrieval tool could not run.",
       verdict === "EMPTY" || emptyRead ? "WALKED_AND_EMPTY" : verdict === "BLOCKED" ? "BLOCKED" : "WALKED_AND_FOUND",
       call.artifacts.map(a => a.artifactId), transport, verdict === "EMPTY" || emptyRead ? 0 : artifacts.length || null);
     if (verdict === "BLOCKED" && !blockers.length) {
@@ -225,9 +222,8 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
       const control = accessControlOf(call, status);
       block(control === "RATE_LIMIT" ? "RATE_LIMITED" : control !== null ? "PUBLISHER_AUTHENTICATION" :
         transport === "REACHABLE" ? "DOCUMENT_INACCESSIBLE" : "TRANSPORT_FAILED",
-      "The exact public record was not acquired; the machine-recorded rung preserves the robots.txt verdict and the transport outcome.", true);
+      "The exact public record was not acquired; the machine-recorded step preserves the robots.txt verdict and the transport outcome.", true);
     }
     return result(blockers.length ? "BLOCKED" : verdict);
   }
-  throw new Error("ACQUIRER_RETRIEVAL_NOT_RUN");
 }

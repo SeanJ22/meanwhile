@@ -1,12 +1,12 @@
 /**
  * After the held-captures pass, every person is searched on the open web for
- * the same topics with the same queries. A hit is only a lead for the Scout to
+ * the same topics with the same queries. A hit is only a lead for a hunter to
  * open and save; it is never shown as a statement. Due dates come from the
  * `statements.sweepSchedule` setting (tighter nearer the election). Pure: the
  * search function (which owns the paid budget) and the clock are arguments.
  */
 import { registerSetting, type SettingValue } from "../control-plane/settings.ts";
-import type { ScoutSearch } from "../control-plane/scheduler/scout-contract.ts";
+import type { HuntSearch } from "../hunt/search.ts";
 import { POSITION_TOPICS } from "./positions.ts";
 import type { SweepPerson } from "./statement-sweep.ts";
 
@@ -128,7 +128,7 @@ export interface SweepLead {
 export interface SweepSearchRecord {
   readonly subjectId: string;
   readonly searched: readonly SweepSearchRun[];
-  /** Pointers for the Scout to open and save. Never shown to a reader. */
+  /** Pointers for a hunter to open and save. Never shown to a reader. */
   readonly leads: readonly SweepLead[];
   /** Every topic got every query kind, and none was refused. */
   readonly complete: boolean;
@@ -139,7 +139,7 @@ const DEFAULT_TOPICS: readonly SweepSearchTopic[] = POSITION_TOPICS.map((t) => (
 /** Search one person: every topic, every query kind, in a fixed order. */
 export async function searchSweepPerson(
   person: SweepPerson,
-  search: ScoutSearch,
+  search: HuntSearch,
   topics: readonly SweepSearchTopic[] = DEFAULT_TOPICS,
 ): Promise<SweepSearchRecord> {
   const searched: SweepSearchRun[] = [];
@@ -150,7 +150,7 @@ export async function searchSweepPerson(
       try {
         const result = await search({ query });
         // A provider erroring with no answer from any other is a refused query.
-        const refused = result.providersUsed.length === 0 && result.errors.length > 0;
+        const refused = result.provider === null && result.errors.length > 0;
         searched.push({ topic: topic.id, kind, query, hits: result.hits.length, error: refused ? result.errors.join("; ") : null });
         if (!refused) {
           for (const hit of result.hits) {
@@ -174,7 +174,7 @@ export async function searchSweepPerson(
 /** The same search for every person, one after another (the paid budget meters each query). */
 export async function searchSweepPeople(
   people: readonly SweepPerson[],
-  search: ScoutSearch,
+  search: HuntSearch,
   topics: readonly SweepSearchTopic[] = DEFAULT_TOPICS,
 ): Promise<SweepSearchRecord[]> {
   const out: SweepSearchRecord[] = [];

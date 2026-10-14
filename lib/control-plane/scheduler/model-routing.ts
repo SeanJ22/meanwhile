@@ -46,14 +46,13 @@ export type StepRoute =
     };
 
 export const SCOUT_STEPS = {
-  /** Acquisition starts with Haiku; configuration is not evidence of quality.
-   * A failed standard must carry an observed reason before escalation. */
+  /** The hunter's loop: one model for the whole job; a hunter is never moved to a dearer model. */
   "scout-research-loop": {
     kind: "MODEL",
     modelClass: "haiku",
     role: "SCOUT",
-    escalateTo: "sonnet",
-    why: "Acquisition starts with Haiku after deterministic routes; an evidenced failure may escalate to Sonnet. Ask comparisons do not establish acquisition routing.",
+    escalateTo: null,
+    why: "Hunting runs on Haiku for the whole job; facts are checked once, on the Slide, so a dearer model buys nothing.",
   },
   /** HTML/JSON/PDF -> title, visible text, links, extracted text. Code, in scout-tools.ts. */
   "page-to-representation": {
@@ -66,12 +65,6 @@ export const SCOUT_STEPS = {
     kind: "DETERMINISTIC",
     implementedIn: "lib/control-plane/scheduler/robots.ts (evaluatePermission)",
     why: "a permission verdict is a rule evaluation over a document; a model reading robots.txt would be a guess wearing a verdict",
-  },
-  /** observedOn from the cited artifacts' retrievedAt. Code, in scout-result.ts. */
-  "date-parsing": {
-    kind: "DETERMINISTIC",
-    implementedIn: "lib/control-plane/scheduler/scout-result.ts (deriveCandidateProvenance)",
-    why: "provenance dates are written by the machine from the artifact record; a model's date is a claim",
   },
   /** A sub-call that extracts a field from a representation. Haiku, escalating to Sonnet. */
   extraction: {
@@ -292,13 +285,10 @@ assertModelClassesWithinCeiling();
 
 /** The outer byte bound on a whole tool result handed to the model. Past it the result is truncated with a stated truncation and the artifact id(s). */
 export const REPRESENTATION_BUDGETS: Readonly<Record<string, number>> = {
-  fetch_public: 16_000,
-  browse: 16_000,
-  read_permission: 4_000,
-  read_inherited: 12_000,
-  read_held: 16_000,
-  // A ranked pointer list (URLs + titles), no page content — small by construction.
-  search: 12_000,
+  fetch_public: 9_000,
+  browse: 9_000,
+  read_held: 6_000,
+  search: 10_000,
 };
 
 /** The budget for a tool, or the smallest budget when the tool is not named (never unbounded). */

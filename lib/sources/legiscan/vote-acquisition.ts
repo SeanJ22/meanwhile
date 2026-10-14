@@ -9,7 +9,7 @@ const DATASET_RESPONSE_LIMIT = 384 * 1024 * 1024;
 type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now">;
 export const legiscanDatasetListUrl = (state: string) => `https://api.legiscan.com/?op=getDatasetList&state=${legiscanState(state)}`;
 const datasetUrl = (session: LegiscanSession) => `https://api.legiscan.com/?op=getDataset&id=${session.sessionId}&dataset_hash=${session.datasetHash}`;
-export type LegiscanDatasetResult = Awaited<ReturnType<typeof parseLegiscanDataset>> & { session: LegiscanSession };
+type LegiscanDatasetResult = Awaited<ReturnType<typeof parseLegiscanDataset>> & { session: LegiscanSession };
 
 /** Neither the API credential nor vendor dataset access keys enter source URLs or saved bytes. */
 function privateTransport(state: string, apiKey: string | undefined, transport: typeof fetch): typeof fetch {

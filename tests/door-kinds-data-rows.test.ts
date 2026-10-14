@@ -19,6 +19,8 @@ const SAMPLE_ROWS: BodySourceWiring[] = [
     config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", titleMatch: sharedCategory.eventName, categoryId: String(sharedCategory.categoryId) } },
   { bodyId: "ocd-division/country:us/state:nd/place:mandan#governing", ocdId: "ocd-division/country:us/state:nd/place:mandan", jurisdiction: "Mandan, ND", publishingOrg: "City of Mandan", timeZone: "America/Chicago", verifiedAt: "2026-10-13T19:21:00Z", agendaSourceType: "CIVICCLERK" as const,
     config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", bodyMatch: mandan.categoryName, categoryId: String(mandan.categoryId) } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "NOVUSAGENDA" as const,
+    config: { portalUrl: "https://coalinga.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx", bodyMatch: "City Council Meeting" } },
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "ESCRIBE" as const, config: { portalUrl: "https://pub-lamesa.escribemeetings.com", meetingTypes: "City Council" } },
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "GRANICUS" as const,
     config: { publisherUrl: "https://alexandria.granicus.com/ViewPublisher.php?view_id=57", bodyMatch: "City Council", bodyName: "City Council" } },

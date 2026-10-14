@@ -19,7 +19,7 @@ export interface ModelSpendRaw {
   readonly promptBand: number;
 }
 
-export interface ModelSpendLine {
+interface ModelSpendLine {
   readonly day: string;
   readonly role: string;
   readonly dollars: number | null;

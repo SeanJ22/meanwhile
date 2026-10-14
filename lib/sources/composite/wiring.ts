@@ -7,6 +7,7 @@ import {
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
 import { makeGranicusSource } from "../granicus/index.ts";
+import { makeNovusAgendaSource } from "../novusagenda/index.ts";
 import { makeEscribeSource } from "../escribe/index.ts";
 import { makeBoardDocsSource } from "../boarddocs/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
@@ -101,6 +102,10 @@ export const CAPABILITIES: Array<{
   {
     name: "boarddocs", types: ["BOARDDOCS"],
     make: (rows, fetchImpl) => makeBoardDocsSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "novusagenda", types: ["NOVUSAGENDA"],
+    make: (rows, fetchImpl) => makeNovusAgendaSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "clerksboards",

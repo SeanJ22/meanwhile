@@ -104,6 +104,7 @@ const EDGE = {
   profiles: "edge-test:ballot:profiles",
   corpus: "edge-test:ballot:corpus",
   funding: "edge-test:ballot:fec",
+  campaignFinance: "edge-test:ballot:campaign-finance",
   nhMembers: "edge-test:ballot:nh-members",
   stateMoney: (state: string) => `edge-test:ballot:money:${state}`,
 };
@@ -119,7 +120,10 @@ const PROMOTED_BALLOT_FAMILIES: Partial<Record<PromotedAuthorityFamily, { value:
   "ballot-navigation": promotedFamily([manual("ballot-navigation", navigation, "edge-test:ballot:navigation")], "edge-test:ballot:navigation"),
   "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "edge-test:filings:absent"),
   "nh-members": promotedFamily([provenEdgeEntry({ recordClass: nhRoster.recordClass, scope: nhRoster.scope, sourceId: nhRoster.sourceId, versionId: EDGE.nhMembers, value: nhMembers })], EDGE.nhMembers),
-  "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: funding })], EDGE.funding),
+  "federal-funding": promotedFamily([
+    provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: funding }),
+    manual("campaign-finance", { kind: "campaign-finance", records: [] }, EDGE.campaignFinance),
+  ], EDGE.funding),
   "state-money": promotedFamily(stateMoneyFixtureEntries(EDGE.stateMoney), "edge-test:ballot:money"),
 };
 

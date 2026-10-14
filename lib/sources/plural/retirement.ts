@@ -3,6 +3,7 @@ import { pluralRetirementCheckConsumer } from "./targets.ts";
 import type { CandidateVersionRecord, DependentCheck, RoutineCandidate } from "../../civic-data/types.ts";
 import type { StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
 import type { Officeholder, OfficeholderSet, PersonMembership } from "../../officials/types.ts";
+import { sameOffice } from "../../officials/office-identity.ts";
 
 const MAX_NATIVE_RECORD_BYTES = 16 * 1024 * 1024;
 
@@ -28,7 +29,8 @@ export function statePeopleRetirementSourceCheck(candidate:RoutineCandidate,prio
     cache.set(key,result); return result;
   };
   const sameTenure=(left:PersonMembership,right:PersonMembership)=>left.id === right.id && left.personId === right.personId &&
-    left.officeId === right.officeId && left.jurisdiction === right.jurisdiction && (left.termStart ?? null) === (right.termStart ?? null);
+    sameOffice(left.officeTitle,right.officeTitle) && (left.district ?? null) === (right.district ?? null) &&
+    left.jurisdiction === right.jurisdiction && (left.termStart ?? null) === (right.termStart ?? null);
   try {
     for (const delta of candidate.changeSet?.removed ?? []) {
       const person=delta.before as Officeholder;
@@ -38,7 +40,7 @@ export function statePeopleRetirementSourceCheck(candidate:RoutineCandidate,prio
         const end=ended.find(row=>sameTenure(row,membership));
         if (!end) return fail(`No exact ended native tenure is held for ${membership.id}.`);
         const currentRows=capturedMemberships(candidate,end.sourceUrl,now).ended;
-        if (!currentRows.some(row=>sameTenure(row,end) && row.current === false && row.termEnd === end.termEnd)) return fail(`The captured native source does not state end ${end.termEnd ?? ""} for ${membership.id}.`);
+        if (!currentRows.some(row=>sameTenure(row,end) && row.officeId === end.officeId && row.current === false && row.termEnd === end.termEnd)) return fail(`The captured native source does not state end ${end.termEnd ?? ""} for ${membership.id}.`);
       }
     }
     return {consumer,passed:true,detail:"The original and updated native YAML independently establish every affected person, office, tenure and explicit past end date."};

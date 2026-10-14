@@ -22,7 +22,6 @@ export interface CampaignFinanceRecord extends Readonly<Record<string, unknown>>
 }
 export interface CampaignFinanceProjection { readonly kind: "campaign-finance"; readonly records: readonly CampaignFinanceRecord[] }
 
-/** Unknown amounts or filing periods leave a source document, never a Money figure. */
 export function campaignFinanceRecordKind(record: StateMoneyRecord): CampaignFinanceRecord["kind"] {
   return typeof record.totals.coveringPeriod === "string" && Boolean(record.totals.coveringPeriod.trim()) &&
     [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand, record.funding?.individualTotal,
@@ -62,19 +61,22 @@ export async function readCampaignFinance(ocdId: string, options: PromotedCivicD
   return result;
 }
 
-/** Existing card/Ask readers use only this request's already loaded scoped edge entries; no optional database wake. */
 const checkedEntries = new WeakMap<object, readonly CampaignFinanceRecord[]>();
-export async function settleCampaignFinanceReads(): Promise<string[]> {
+export async function settleCampaignFinanceReads(divisions?: readonly string[]): Promise<string[]> {
   const entries = [...currentReaderAuthorityEdge()?.promoted ?? []].filter(([key]) =>
-    key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`));
+    key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) &&
+    (!divisions || divisions.includes(key.slice(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`.length))));
   const read = await Promise.allSettled(entries.map(async ([key, entry]) => {
     checkedEntries.delete(entry);
     const division = key.slice(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`.length);
     const result = await readCampaignFinance(division, { edge: entry });
+    if (result.kind === "STORE_UNREACHABLE") throw new Error(result.detail);
     if (result.kind !== "PROMOTED") return null;
     checkedEntries.set(entry, result.value.records);
     return `${key}:${result.metadata.versionId}`;
   }));
+  const failures = read.filter(result => result.status === "rejected");
+  if (failures.length) throw new AggregateError(failures.map(result => result.reason), "Applicable campaign-finance holdings could not be read.");
   return read.flatMap(result => result.status === "fulfilled" && result.value ? [result.value] : []);
 }
 export function campaignFinanceForTarget(targetKey: string): StateMoneyRecord[] {
@@ -83,8 +85,6 @@ export function campaignFinanceForTarget(targetKey: string): StateMoneyRecord[] 
     if (!key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) || entry.kind !== "PROMOTED") continue;
     const scope = key.slice("CURATED_READER_RECORD:".length);
     for (const row of checkedEntries.get(entry) ?? []) if (campaignFinanceScope(row.ocdId) === scope && row.record.targetKeys.includes(targetKey)) {
-      // Preserve all source cells in the typed holding; summary consumers show
-      // only the document name/link while incomplete Money facts remain owed.
       records.push(row.kind === "CAMPAIGN_FINANCE_DOCUMENT" ? { ...row.record,
         funding: undefined, totals: { ...row.record.totals, receipts: null, expenditures: null, cashOnHand: null } } : row.record);
     }

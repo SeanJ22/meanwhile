@@ -1141,7 +1141,10 @@
     "publisher": "State Board of Elections, Albany, NY",
     "url": "https://www.elections.ny.gov/",
     "shape": "list-page",
-    "covers": [],
+    "covers": [
+      "CANDIDATE_LIST",
+      "BALLOT_MEASURES"
+    ],
     "scope": {
       "state": "NY",
       "ocdId": "ocd-division/country:us/state:ny",
@@ -1164,7 +1167,14 @@
     "officialLinkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
       "html": "<!-- Exact destination and visible URL from the FEC directory, read 2026-10-13; normalized link excerpt, not original response bytes. -->\n<a href=\"https://www.elections.ny.gov/\">https://www.elections.ny.gov/</a>"
-    }
+    },
+    "candidateListUrls": [
+      "https://elections.ny.gov/certification-november-3-2026-general-election"
+    ],
+    "ballotMeasureUrls": [
+      "https://www.broomevotes.com/candidates",
+      "https://elections.ny.gov/ballot-certifications-elections"
+    ]
   },
   {
     "id": "fec-nc-chief",

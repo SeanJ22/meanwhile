@@ -1,4 +1,4 @@
-import { visibleText } from "../control-plane/scheduler/scout-tools.ts";
+import { visibleText } from "../extract/visible-text.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { SavedCopy } from "./check.ts";
 import type { Query } from "./publish.ts";

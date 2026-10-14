@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { indexReportedFinding, indexScoutFindings } from "../lib/control-plane/box.ts";
+import { indexDetectiveFindings, indexReportedFinding, indexScoutFindings } from "../lib/control-plane/box.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -85,12 +85,14 @@ test("Box findings publish on their own page with no model turn: a held copy ins
     usd: 0.01, elapsedMs: 1, artifactIds: [tccc], methodCandidateIds: [], refusal: null, startedAt: NOW, recordedAt: NOW };
   await repos.scoutResults.append(candidates.obligationId, candidates.attemptId, candidates, NOW);
   await indexScoutFindings(repos.boxFindings, candidates, NOW);
+  await indexDetectiveFindings(repos.boxFindings, { id: "dr-1", workItemId: "wi-hunt", endedAt: NOW, result: { role: "DETECTIVE", findings: [], artifactIds: [tccc],
+    spans: [{ artifactId: tccc, contentHash: "h", start: 0, end: 9, quote: "Ned Beman", offsetUnit: "UTF16_CODE_UNITS" }], question: { subjectId: TCCC } } }, new Map(), NOW);
 
   const input = { repos, facts, vault, fetch, clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 8, published: 4, refused: 1, byPlace: undefined,
-    waitingByClass: { directory: 1, rosters: 1, candidates: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
-  assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 2 });
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined,
+    waitingByClass: { directory: 1, rosters: 1, candidates: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
+  assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 3 });
   assert.deepEqual(report.byPlace[AGENDA], { published: 1, refused: 1, waiting: 0 });
   assert.deepEqual(fetched.sort(), [AGENDA_URL, "https://unreachable.tucsonaz.gov/agenda"], "the held TCCC copy is inside its clock; the stale agenda copy is read again once");
 
@@ -103,6 +105,6 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   assert.deepEqual(await facts.query("SELECT stage, reason FROM blank WHERE entity_id = $1 AND field = 'member_name'", [AGENDA]), [{ stage: "ACQUIRE", reason: "SOURCE_BLOCKED" }]);
 
   const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
-  assert.deepEqual(waiting, ["CANDIDATE_CLASS_NOT_MOVED", "DIRECTORY_CLASS_NOT_MOVED", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
+  assert.deepEqual(waiting, ["CANDIDATE_CLASS_NOT_MOVED", "DETECTIVE_SPAN_NAMES_NO_FIELD", "DIRECTORY_CLASS_NOT_MOVED", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
   assert.equal((await publishBoxFindings(input)).looked, 0, "a held finding is looked at again only when the slot map moves");
 });

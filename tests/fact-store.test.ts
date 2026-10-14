@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { visibleText } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { visibleText } from "../lib/extract/visible-text.ts";
 import { boundedIndexOf, checkFact, isOfficialUrl, type CheckEntity, type Claim, type SavedCopy } from "../lib/facts/check.ts";
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { decide } from "../lib/facts/decide.ts";

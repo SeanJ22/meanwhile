@@ -63,10 +63,8 @@ export async function publishBoxFindings(input: {
     (row.state === "waiting" && row.waitingFor?.slots !== FINDING_SLOTS_VERSION || row.state === "taken" && row.claim !== null && row.claim.expiresAt <= input.now) &&
     row.origins.some(origin => Date.parse(origin.recordedAt) >= since)).slice(0, input.limit);
   const results = new Map<string, Promise<ScoutResult | undefined>>();
-  let unkeyed: Promise<readonly ScoutResult[]> | undefined;
-  const resultOf = (origin: BoxOrigin) => {
-    if (!results.has(origin.resultId)) results.set(origin.resultId, (origin.resultKey
-      ? repos.scoutResults.readWhere(origin.resultKey, ["attemptId"], origin.resultId) : unkeyed ??= repos.scoutResults.readAll())
+  const resultOf = (origin: BoxOrigin & { resultKey: string }) => {
+    if (!results.has(origin.resultId)) results.set(origin.resultId, repos.scoutResults.readWhere(origin.resultKey, ["attemptId"], origin.resultId)
       .then(found => found.find(result => result.attemptId === origin.resultId)));
     return results.get(origin.resultId)!;
   };
@@ -91,8 +89,9 @@ export async function publishBoxFindings(input: {
   const ready: { finding: Finding; slot: Exclude<FindingSlot, { waiting: string }>; body: NonNullable<Awaited<ReturnType<typeof bodyForSubject>>> }[] = [];
   for (const row of rows) {
     report.looked++;
-    const origin = row.origins.find(o => o.kind === "SCOUT" && Date.parse(o.recordedAt) >= since) ?? row.origins[0]!;
-    const result = origin.reported ? undefined : await resultOf(origin);
+    const origin = row.origins.find(o => o.kind === "SCOUT" && (o.reported || o.resultKey) && Date.parse(o.recordedAt) >= since);
+    if (!origin) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
+    const result = origin.reported || !origin.resultKey ? undefined : await resultOf({ ...origin, resultKey: origin.resultKey });
     const raw: Partial<ScoutFinding> = origin.reported ? { field: origin.reported.field, value: origin.reported.value } : result?.findings[origin.findingIndex] ?? {};
     if (!raw.field || raw.value === undefined || raw.value === null || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
     const slot = slotFor(raw.field, raw.value, result?.recordClass ?? null);

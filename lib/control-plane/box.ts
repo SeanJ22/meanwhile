@@ -20,7 +20,7 @@ export interface BoxOrigin {
   readonly reported?: { readonly field: string; readonly value: string | number | boolean; readonly subjectHint: string | null };
 }
 /** What a finding claims, held on its row so a builder never reads the whole result it came from. */
-export interface BoxFact { readonly field: string; readonly value: string | number | boolean; readonly recordClass: string | null }
+interface BoxFact { readonly field: string; readonly value: string | number | boolean; readonly recordClass: string | null }
 export interface BoxInput {
   readonly subjectId: string;
   readonly exactQuote: string | null;
@@ -57,7 +57,7 @@ export interface BoxFinding {
 }
 
 /** The Box's reads for builders, filtered and limited by the store rather than read whole. */
-export interface BoxQueue {
+interface BoxQueue {
   /** Rows a pass must look at: waiting under another slot map, or taken past their lease; recorded since `since`, at most `limit`. */
   due(input: { readonly slots: string; readonly now: string; readonly since: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
@@ -174,7 +174,7 @@ export function findingFact(row: BoxFinding): (BoxFact & { readonly origin: BoxO
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
-export type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId" | "recordClass">>;
+type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId" | "recordClass">>;
 export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, result: BoxScoutResult, now: string): Promise<readonly BoxFinding[]> {
   const indexed: BoxFinding[] = [];
   for (const [findingIndex, finding] of result.findings.entries()) indexed.push(await indexBoxFinding(repo, {

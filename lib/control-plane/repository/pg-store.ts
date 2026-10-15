@@ -855,7 +855,7 @@ const BOX_DUE_SQL = `SELECT id, value FROM (
 const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
 
 /** The Box with its builder queue answered by the partial indexes on state, slot map, lease and reason. */
-export function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
+function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
   const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),

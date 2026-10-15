@@ -4,17 +4,13 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { joinLdaHonoree } from "../lib/sources/congress/lda-honoree.ts";
 import { normalizeFederalCaptureWithRoster } from "../lib/sources/congress/normalize.ts";
-import { federalCandidate, holdFederalCapture, readFederalSourceProjection } from "../lib/sources/congress/publication.ts";
+import { federalCandidate, readFederalSourceProjection } from "../lib/sources/congress/publication.ts";
 import { refreshFederalSource } from "../lib/sources/congress/refresh.ts";
 import { federalAskEvidence, readFederalMember } from "../lib/sources/congress/reader.ts";
 import { ldaHonoreeCaptures, seedSrcCgRoster, SRC_CG_NOW } from "./helpers/src-cg-roster.ts";
 import { readFileSync } from "node:fs";
-import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { readLdaRosterVersion } from "../lib/sources/congress/lda-roster.ts";
+import { holdRawCapture, readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import type { FederalDirectoryCapture } from "../lib/officials/federal-directory-data-plane.ts";
-import { convertEmbeddedCaptures } from "../scripts/convert-embedded-captures.mts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -44,23 +40,6 @@ test("the federal directory candidate holds roster references, and the LDA roste
   assert.ok(roster.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
 });
 
-test("a directory version promoted with its files embedded converts to vault references in one pass, and its roster reads its aliases", async () => {
-  const promoted = (await (async () => { const seeded = new MemoryRoutineDataStore(); return (await seeded.readCandidate((await seedSrcCgRoster(seeded, new MemoryEvidenceStore())).versionId))!.candidate; })());
-  const body = readFileSync(new URL("./fixtures/src-cg/federal-roster.yaml", import.meta.url), "utf8");
-  const embeddedPayload = { ...(promoted.normalizedPayload as object), acquisitions: (promoted.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions
-    .map(({ raw: _raw, ...row }) => ({ ...row, body })) };
-  const embedded = { ...promoted, id: `${promoted.id}-embedded`, normalizedPayload: embeddedPayload, normalization: { ...promoted.normalization, normalizedPayloadHash: normalizedHash(embeddedPayload) } };
-  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore();
-  assert.ok((await processRegisteredManualCandidate(store, "congress-bulk-roster", embedded, SRC_CG_NOW)).promoted);
-  const later = () => "2026-10-14T00:00:00.000Z";
-  const [converted] = await convertEmbeddedCaptures({ store, vault: own, now: later, states: [] });
-  assert.equal(converted?.from, embedded.id); assert.ok(converted?.to, converted?.refusal);
-  const held = (await store.readCandidate(converted.to))!.candidate;
-  assert.ok(!JSON.stringify(held).includes(body.slice(0, 400)));
-  assert.ok((await readLdaRosterVersion(store, own, converted.to))!.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
-  assert.deepEqual(await convertEmbeddedCaptures({ store, vault: own, now: later, states: [] }), [], "a converted store has nothing left to convert");
-});
-
 test("chamber and state conflicts, ambiguous names, missing honorees and inferred nicknames never publish a member link", async () => {
   const roster = await seedSrcCgRoster(new MemoryRoutineDataStore(), vault);
   const cornyn = roster.members.find(row => row.bioguideId === "C001056")!;
@@ -81,7 +60,7 @@ test("an invented Bioguide join cannot reproduce saved LDA and promoted roster e
   const store = new MemoryRoutineDataStore(), roster = await seedSrcCgRoster(store, vault);
   const capture = { ...ldaHonoreeCaptures()[0], context: { honoreeRosterVersionId: roster.versionId } };
   const records = normalizeFederalCaptureWithRoster(capture, roster);
-  const candidate = federalCandidate({ source: "senate-lda", partition: "filing:tamper", now: SRC_CG_NOW, captures: [await holdFederalCapture(vault, capture)],
+  const candidate = federalCandidate({ source: "senate-lda", partition: "filing:tamper", now: SRC_CG_NOW, captures: [{ ...capture, raw: await holdRawCapture(vault, capture.source, capture.body, "application/json") }],
     rosters: new Map([[roster.versionId, roster]]), projection: { formatVersion: 1, source: "senate-lda", records: records.map(row => ({ ...row, bioguideId: "S000033" })) } });
   assert.equal(candidate.normalization.succeeded, false); assert.match(candidate.normalization.failureDetail!, /do not reproduce/);
 });

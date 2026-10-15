@@ -12,7 +12,6 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { parseVotingCapture, votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { mergeVotingSourceRead, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { readRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 import type { VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
 
 const PDF = readFileSync(join(process.cwd(), "tests/fixtures/cochise-2026-vote-centers.pdf"));
@@ -57,7 +56,7 @@ test("the generic PDF mapping reads all 18 official countywide vote centers, hou
   assert.equal(createHash("sha256").update(PDF).digest("hex"), "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c");
   assert.equal((await capturedJurisdiction()).model, "VOTE_CENTER");
   const vault = new MemoryEvidenceStore(), evidence = await holdVotingRawEvidence(vault, read);
-  assert.deepEqual(Buffer.from(await readRawCapture(vault, evidence[0]!)), PDF);
+  assert.deepEqual(Buffer.from((await vault.get(evidence[0]!.vaultKey))!.bytes), PDF);
 });
 
 test("an incomplete PDF fails without producing a replacement list", async () => {
@@ -88,7 +87,7 @@ test("a scoped county successor promotes through the existing pointer and leaves
   assert.deepEqual(payload.acquisition, [{ url: DOOR.url, contentType: "application/pdf", vaultKey: payload.acquisition[0]!.vaultKey,
     rawHash: "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c", byteLength: PDF.byteLength }]);
   assert.ok(JSON.stringify(candidate).length < 64 * 1024, "the candidate holds refs, not the PDF");
-  assert.deepEqual(Buffer.from(await readRawCapture(vault, payload.acquisition[0]!)), PDF);
+  assert.deepEqual(Buffer.from((await vault.get(payload.acquisition[0]!.vaultKey))!.bytes), PDF);
   const published = await processRegisteredManualCandidate(store, "voting-sites", candidate, T1);
   assert.ok(published.promoted);
   assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));

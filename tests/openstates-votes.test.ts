@@ -5,9 +5,12 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes } from "../lib/sources/plural/vote-acquisition.ts";
-import { pluralVoteJurisdiction, pluralVotesScope, mergePluralVotes, parsePluralBill, readPluralVotesForPerson, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
+import { pluralVoteJurisdiction, pluralVotesScope, mergePluralVotes, parsePluralBill, readPluralVotesForPerson, type PluralBillEvidence } from "../lib/sources/plural/votes.ts";
 import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
+import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+
+type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
 
 const AT = "2026-10-01T12:00:00.000Z";
 const native = (kind: string, value: number) => `ocd-${kind}/00000000-0000-4000-8000-${String(value).padStart(12, "0")}`;

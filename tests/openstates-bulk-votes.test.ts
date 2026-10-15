@@ -7,8 +7,11 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes, PLURAL_SESSION_CATALOG, pluralJurisdictionUrl } from "../lib/sources/plural/vote-acquisition.ts";
 import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
-import { parsePluralBill, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
+import { parsePluralBill, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence } from "../lib/sources/plural/votes.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
+import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+
+type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
 
 interface Example { personId: string; position: string; billNumber: string; billTitle: string; date: string; voteId: string }
 interface Sample { state: string; session: string; sourceUrl: string; fixtureArchive: string; fixtureArchiveSha256: string; metadataFixture: string; readerExample?: Example }

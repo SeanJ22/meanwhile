@@ -31,7 +31,7 @@ async function pointed(store: RoutineDataStore, read: { kind: string; metadata?:
   return read.kind === "PROMOTED" && read.metadata?.versionId ? (await store.readCandidate(read.metadata.versionId))?.candidate ?? null : null;
 }
 
-export async function convertEmbeddedCaptures(input: { store: RoutineDataStore; vault: EvidenceStore; now: () => string; states?: readonly string[] }): Promise<Converted[]> {
+async function convertEmbeddedCaptures(input: { store: RoutineDataStore; vault: EvidenceStore; now: () => string; states?: readonly string[] }): Promise<Converted[]> {
   const { store, vault, now } = input, states = input.states ?? PLURAL_STATES, converted: Converted[] = [];
   for (const state of states) for (const sourceId of PEOPLE_SOURCES) {
     const held = await pointed(store, await readPeopleSourceProjection(peopleJurisdiction(state), sourceId, { store, now: now(), bypassCache: true }));

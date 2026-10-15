@@ -346,8 +346,11 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   iqm2: "iqm2",
   boardbook: "boardbook",
   boarddocs: "boarddocs",
+  granicus: "granicus-vp",
   novusagenda: "novusagenda",
+  swagit: "swagit",
   escribe: "escribe",
+  primegov: "primegov",
   "official-page-events": null,
 };
 
@@ -360,9 +363,12 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   "civicclerk-api": "a CivicClerk events list whose rows carry id",
   iqm2: "an IQM2 calendar with at least one meeting row",
   boardbook: "a BoardBook organization page with at least one meeting link",
+  granicus: "a Granicus ViewPublisher table with dated meetings and public event or clip identities",
   escribe: "a public eScribe calendar list with meeting identities, types, local dates and document links",
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
   novusagenda: "a public NovusAgenda meeting grid with published meeting ids, dates and body labels",
+  swagit: "a public Swagit meeting list with dated event or video links and published body titles or category headings",
+  primegov: "a public PrimeGov meeting list with committee ids, local dates and published document templates",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 

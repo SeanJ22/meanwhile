@@ -313,7 +313,14 @@ export type RoutineRemovalEvidence =
   | CensusPlaceholderBodyRemovalEvidence
   | RosterDepartureRemovalEvidence
   | AuditPullRemovalEvidence
-  | MovedToHistoryRemovalEvidence;
+  | MovedToHistoryRemovalEvidence
+  | MovedToFactStoreRemovalEvidence;
+
+/** A roster row removed from the registry partition: its members publish as facts. */
+export interface MovedToFactStoreRemovalEvidence {
+  readonly key: string;
+  readonly code: "MOVED_TO_FACT_STORE";
+}
 
 /** A published member an auditor broke; the candidate must also hold it as an `AUDIT_PULLED_FROM_VERSION` excluded fact. */
 export interface AuditPullRemovalEvidence {

@@ -8,12 +8,15 @@ import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
+import { makeGranicusSource } from "../../sources/granicus/index.ts";
 import { makeNovusAgendaSource } from "../../sources/novusagenda/index.ts";
 import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
+import { makePrimeGovSource } from "../../sources/primegov/index.ts";
 import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
 import { makeEscribeSource } from "../../sources/escribe/index.ts";
 import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
 import { makeIqm2Source } from "../../sources/iqm2/index.ts";
+import { makeSwagitSource } from "../../sources/swagit/index.ts";
 import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/index.ts";
 import { legistarClientsFromWiring } from "../../sources/legistar/client-registry.ts";
 import type { LegistarEvent } from "../../sources/legistar/types.ts";
@@ -93,11 +96,15 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "ESCRIBE", "IQM2", "NOVUSAGENDA"].includes(row.kind)) {
+    } else if (row.kind === "SWAGIT") {
+      meetings = makeSwagitSource([wiring]).normalizeWithDrops([{ wiring, pages: [{ url: row.route, text }], collectedAt: reading.evidence.retrievedAt }], new Date(now)).meetings;
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "PRIMEGOV"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
-      if (row.kind === "ESCRIBE") {
+      if (row.kind === "GRANICUS") {
+        meetings = makeGranicusSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "ESCRIBE") {
         meetings = makeEscribeSource([wiring]).normalizeWithDrops([{ wiring, text, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "CIVICPLUS") {
         meetings = makeCivicPlusSource([wiring]).normalizeWithDrops([{ wiring, ical: "", agendaPages: [{ url: wiring.config.agendaCenterUrl, text, collectedAt }], collectedAt }], new Date(now)).meetings;
@@ -107,6 +114,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
         meetings = makeCivicClerkSource([wiring]).normalizeWithDrops([{ wiring, events, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "BOARDBOOK") {
         meetings = makeBoardBookSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "PRIMEGOV") {
+        meetings = makePrimeGovSource([wiring]).normalizeWithDrops([{ wiring, text, sourceUrl: row.route, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "NOVUSAGENDA") {
         meetings = makeNovusAgendaSource([wiring]).normalizeWithDrops([{ wiring, pages: [{ url: row.route, html: text }], collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "IQM2") {

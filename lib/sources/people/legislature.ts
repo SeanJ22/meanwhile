@@ -184,7 +184,6 @@ export async function acquireLegislatureRosters(input:PeopleAcquisitionOptions):
           {...person,profileUrls:[...new Set([...person.profileUrls??[],page.finalUrl])]}:person)}:known;
       const parsed=normalizeOfficialLegislaturePage(html,page.finalUrl,{...options,roster:redirected??undefined},page.retrievedAt);
       appendRoster(roster,parsed);
-      if(parsed.officeholders.length)await options.onPerson?.(result(options,roster,acquisitions,gaps));
       for(const observed of legislatureRosterLinks(html,page.finalUrl))if(!seen.has(observed)&&!queue.includes(observed))queue.push(observed);
       for(const holder of parsed.officeholders)if(holder.websiteUrl&&!seen.has(holder.websiteUrl)&&!queue.includes(holder.websiteUrl))queue.push(holder.websiteUrl);
       if(!parsed.officeholders.length&&profiles.includes(sourceUrl))gaps.push({sourceUrl,detail:"OFFICIAL_LEGISLATURE_PERSON_BINDING_OWED:The page did not explicitly bind its held person and office; no member was inferred."});

@@ -4,8 +4,11 @@ export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
   "BOARDDOCS",
+  "GRANICUS",
   "NOVUSAGENDA",
+  "SWAGIT",
   "ESCRIBE",
+  "PRIMEGOV",
   "CIVICCLERK",
   "IQM2",
   "REVIZE",
@@ -43,6 +46,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     route: { key: "orgId", as: "lastPathSegment" },
     allowed: [], required: [],
   },
+  GRANICUS: {
+    sourceName: "granicus", agendaSourceType: "GRANICUS", entry: "lib/sources/granicus/index.ts",
+    route: { key: "publisherUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
+  },
   ESCRIBE: {
     sourceName: "escribe", agendaSourceType: "ESCRIBE", entry: "lib/sources/escribe/index.ts",
     route: { key: "portalUrl", as: "origin" },
@@ -58,10 +66,20 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     route: { key: "portalUrl", as: "url" },
     allowed: ["bodyMatch"], required: ["bodyMatch"],
   },
+  SWAGIT: {
+    sourceName: "swagit", agendaSourceType: "SWAGIT", entry: "lib/sources/swagit/index.ts",
+    route: { key: "portalUrl", as: "url" },
+    allowed: ["bodyMatch"], required: ["bodyMatch"],
+  },
   CIVICCLERK: {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",
     route: { key: "apiBase", as: "origin" },
     allowed: ["portalBase", "bodyMatch", "categoryId", "titleMatch"], required: ["portalBase", "categoryId"],
+  },
+  PRIMEGOV: {
+    sourceName: "primegov", agendaSourceType: "PRIMEGOV", entry: "lib/sources/primegov/index.ts",
+    route: { key: "portalUrl", as: "origin" },
+    allowed: ["committeeId"], required: ["committeeId"],
   },
   IQM2: {
     sourceName: "iqm2", agendaSourceType: "IQM2", entry: "lib/sources/iqm2/index.ts",

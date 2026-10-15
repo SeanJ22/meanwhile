@@ -1,0 +1,143 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet href="browserfriendlyRSS_Layout.xslt" type="text/xsl" media="screen"?>
+<rss version="2.0"
+    xmlns:dc="https://purl.org/dc/elements/1.1/"
+    xmlns:gran="https://www.granicus.com/schema/rss-supplements" >
+<channel>
+  <title>City of Alexandria: All City Dockets (Minutes Feed)</title>
+  <gran:sourceURL>https://alexandria.granicus.com/ViewPublisherRSS.php?view_id=57&amp;mode=minutes</gran:sourceURL>
+  <link>https://alexandria.granicus.com/ViewPublisher.php?view_id=57</link>
+  <description></description>
+  <language>en-us</language>
+<item>
+  <guid isPermaLink="false">34ed7e5e-c338-11f1-89ef-005056a84798</guid>
+  <title>Board of Architectural Review - Oct 07, 2026</title>
+  <pubDate>Thu, 08 Oct 2026 04:15:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='10' day='08' hr='16' min='15' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6982</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for Board of Architectural Review dated Wednesday, 07 October 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6982" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6982</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">1d7d8c8f-211e-41e9-a1a4-be6280fa1a5d</guid>
+  <title>City Council Legislative Meeting - Oct 02, 2026</title>
+  <pubDate>Fri, 02 Oct 2026 05:30:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='10' day='02' hr='05' min='30' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6974</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for City Council Legislative Meeting dated Friday, 02 October 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6974" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6974</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">79e173df-6364-41b6-97df-e19607da8ee9</guid>
+  <title>City Council Legislative Meeting - Sep 22, 2026</title>
+  <pubDate>Tue, 22 Sep 2026 02:30:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='09' day='22' hr='14' min='30' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6965</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for City Council Legislative Meeting dated Tuesday, 22 September 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6965" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6965</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">6bc62086-9e80-4486-a9a5-e74a0ffe062d</guid>
+  <title>City Council Public Hearing - Sep 19, 2026</title>
+  <pubDate>Sat, 19 Sep 2026 06:30:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='09' day='19' hr='06' min='30' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6963</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for City Council Public Hearing dated Saturday, 19 September 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6963" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6963</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">30ed82b3-71e2-465b-a909-f547af4c9bf6</guid>
+  <title>Board of Zoning Appeals Public Hearing - Sep 14, 2026</title>
+  <pubDate>Mon, 14 Sep 2026 04:00:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='09' day='14' hr='16' min='00' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6958</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for Board of Zoning Appeals Public Hearing dated Monday, 14 September 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6958" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6958</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">9d32ab56-02b5-4f45-8168-53c6dad0f8b2</guid>
+  <title>City Council Legislative Meeting - Sep 08, 2026</title>
+  <pubDate>Tue, 08 Sep 2026 03:00:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='09' day='08' hr='15' min='00' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6954</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for City Council Legislative Meeting dated Tuesday, 08 September 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6954" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6954</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">347ac829-a7b8-11f1-a028-005056a89546</guid>
+  <title>Board of Architectural Review - Sep 02, 2026</title>
+  <pubDate>Thu, 03 Sep 2026 04:15:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='09' day='03' hr='16' min='15' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6951</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for Board of Architectural Review dated Wednesday, 02 September 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6951" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6951</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">a9e7cc57-a718-11f1-a028-005056a89546</guid>
+  <title>Planning Commission Public Hearing  - Sep 01, 2026</title>
+  <pubDate>Tue, 01 Sep 2026 04:00:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='09' day='01' hr='16' min='00' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6949</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for Planning Commission Public Hearing  dated Tuesday, 01 September 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6949" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6949</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">2225fbbb-9104-433f-b274-661544ca8a63</guid>
+  <title>Board of Zoning Appeals Public Hearing - Jul 22, 2026</title>
+  <pubDate>Wed, 22 Jul 2026 04:00:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='07' day='22' hr='16' min='00' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6922</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for Board of Zoning Appeals Public Hearing dated Wednesday, 22 July 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6922" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6922</a>
+      </p>
+    ]]>
+  </description>
+</item><item>
+  <guid isPermaLink="false">3b1c8b2b-8133-11f1-98fd-005056a89546</guid>
+  <title>Board of Architectural Review Public Hearing - Jul 15, 2026</title>
+  <pubDate>Thu, 16 Jul 2026 04:00:00 -0800</pubDate>
+  <gran:pubDateParts yr='2026' mo='07' day='16' hr='16' min='00' sec='0' tz='7' />
+  <link>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6920</link>
+  <description>
+    <![CDATA[
+      <p style='margin-top:2px;'>
+The agenda for Board of Architectural Review Public Hearing dated Wednesday, 15 July 2026  has been archived. Access it here:<br />      <a href="https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6920" style='margin-right:50px;'>https://alexandria.granicus.com/MinutesViewer.php?view_id=57&amp;clip_id=6920</a>
+      </p>
+    ]]>
+  </description>
+</item>
+</channel></rss>

@@ -6,7 +6,8 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
 import { parseDispatchTarget, unitMatchesTarget, type DispatchTarget } from "../scheduler/dispatch-target.ts";
 import type { MeetingPartitionOwnership } from "../scheduler/provider-inputs.ts";
-import { jurisdictionRequirements, requirementBodyId, requirementPlan } from "../scheduler/providers/local-jurisdictions.ts";
+import { jurisdictionRequirements } from "../scheduler/providers/local-jurisdictions.ts";
+import { huntPacketObligation } from "../../hunt/packet-plan.ts";
 import {
   MEETINGS_DISCOVERY_RECORD_CLASS,
   meetingsDiscoveryObligationId,
@@ -196,13 +197,8 @@ export async function applyManualSourceGaps(
   if (applicable.length === 0) return { created, carried, deferred };
   const heldIds = new Set((await repos.workItems.list()).map(row => row.id));
   for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
-    if (row.mode !== "REVIEWED_INPUT" && row.mode !== "SCOPED_ADAPTER_OWED") continue;
-    const receipts = [...row.instructionIds];
-    // An unscoped adapter gap is owed by every resolved hunt, irrespective of ZIP.
-    if (row.mode === "SCOPED_ADAPTER_OWED") {
-      receipts.push(...applicable.map(scope => scope.decision.receiptId));
-    }
-    for (const receipt of new Set(receipts)) {
+    if (row.mode !== "SCOPED_ADAPTER_OWED") continue;
+    for (const receipt of row.instructionIds) {
       const scope = applicable.find(candidate => candidate.decision.receiptId === receipt);
       if (!scope) continue;
       const work = createWorkItem({ project: "freshness", subject: `manual-source:${scope.decision.key}`,
@@ -251,8 +247,6 @@ export type DispatchWorkTarget =
       readonly scope: PlannedScope;
       /** The questions the owner asked of this Send; recorded on every obligation it reaches. */
       readonly questions?: readonly WorkQuestion[];
-      /** Only a new Send opts into missing-family discovery; deployment does not expand old instructions. */
-      readonly sourceWorkVersion?: 1;
     }
   | {
       readonly kind: "DISPATCH";
@@ -291,16 +285,13 @@ export interface DispatchWorkWorld {
   readonly censusUnitsByState?: ReadonlyMap<string, number> | null;
   /** Registries the promoted bundle carries that the runtime's reader refuses, by lower-case state, with the reason. */
   readonly refusedRegistries?: ReadonlyMap<string, string>;
-  /**
-   * The information families already live for a government (`liveFamiliesByGovernment`). A government listed here
-   * gets no paid discovery Scout for that family. Absent means not read.
-   */
-  readonly liveFamilies?: ReadonlyMap<string, ReadonlySet<string>>;
+  /** Every division each target's place touches, by target key: one hunt packet each. Absent means not read. */
+  readonly packetDivisions?: ReadonlyMap<string, readonly string[]>;
 }
 
 /* ---------------------------------------------------------- requirements */
 
-export type RequirementKind = "MEETINGS_DISCOVERY" | "REGISTRY_ROUTE";
+export type RequirementKind = "MEETINGS_DISCOVERY" | "REGISTRY_ROUTE" | "HUNT_PACKET";
 
 /** One requirement instance the registry defines for one government. */
 export interface RequirementInstance {
@@ -339,17 +330,12 @@ export function requirementsFor(
   j: Jurisdiction,
   need: MeetingsDiscoveryNeed | null,
   meetingPartitions: MeetingPartitionOwnership,
-  discoverMissingFamilies = false,
-  liveFamilies?: ReadonlySet<string>,
 ): RequirementInstance[] {
   const out: RequirementInstance[] = [];
   const from = registrySourceOf(reg);
-  const bodyId = requirementBodyId(j, meetingPartitions);
-  for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies, liveFamilies)) {
-    // The same plan the local-jurisdictions provider gives this row, so both writers agree.
-    const autonomousPlan = requirementPlan(j, r, bodyId, discoverMissingFamilies);
+  for (const r of jurisdictionRequirements(reg, j, meetingPartitions)) {
     out.push({
-      obligation: { ...obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from), ...(autonomousPlan ? { autonomousPlan } : {}) },
+      obligation: obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from),
       kind: "REGISTRY_ROUTE",
       executor: r.route.executorClass,
       carriage: r.carriage === "HERE" ? "OWED" : r.carriage,
@@ -366,6 +352,12 @@ export function requirementsFor(
     });
   }
   return out.sort((a, b) => (a.obligation.id < b.obligation.id ? -1 : a.obligation.id > b.obligation.id ? 1 : 0));
+}
+
+/** One hunt packet per division: the government's open blanks, hunted as one job. */
+function packetRequirements(divisions: readonly string[]): RequirementInstance[] {
+  return [...new Set(divisions)].sort().map(id => ({ obligation: huntPacketObligation(id), kind: "HUNT_PACKET" as const,
+    executor: "BOUNDED_MODEL_WORKER" as const, carriage: "OWED" as const }));
 }
 
 /* ------------------------------------------------------------------- units */
@@ -669,9 +661,11 @@ export function planDispatchWork(input: {
     const units = target.kind === "SCOPE" ? scopeUnits(target.scope, world) : dispatchUnits(target.target, world);
     const instances: RequirementInstance[] = [];
     for (const { reg, jurisdiction } of units.placed) {
-      instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions,
-        target.kind === "SCOPE" && target.sourceWorkVersion === 1, world.liveFamilies?.get(jurisdiction.id)));
+      instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions));
     }
+    const packetDivisions = world.packetDivisions?.get(target.key) ??
+      (target.kind === "DISPATCH" ? units.placed.flatMap(({ jurisdiction }) => jurisdiction.ocdId ? [jurisdiction.ocdId] : []) : []);
+    instances.push(...packetRequirements(packetDivisions));
     /* Does the row already record this Send, in any relation? */
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
 
@@ -1129,7 +1123,6 @@ export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
     budgetUsd: d.budgetUsd,
     scope,
     ...(d.questions !== undefined && d.questions.length > 0 ? { questions: d.questions } : {}),
-    ...(d.sourceWorkVersion === 1 ? { sourceWorkVersion: 1 as const } : {}),
   };
 }
 

@@ -44,7 +44,8 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { factReader } from "../lib/facts/db.ts";
+import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { today } from "./doc-dates.mjs";
 import { judgeUrl } from "./robots-sweep.mts";
 
@@ -250,18 +251,21 @@ interface RosterResult {
 }
 
 async function main(): Promise<void> {
-  const limit = Number(arg("limit") ?? BODY_ROSTERS.length);
+  const facts = factReader();
+  if (!facts) throw new Error("VERIFY REFUSED — set DATABASE_URL: the live rosters are facts in the reader database.");
+  const rosters = (await readFactRosters(facts)).rosters;
+  const limit = Number(arg("limit") ?? rosters.length);
   const stamp = today();
 
-  if (BODY_ROSTERS.length === 0) {
+  if (rosters.length === 0) {
     /* RULING 159 — a denominator of zero is an ERROR, never a clean board. */
-    throw new Error("VERIFY REFUSED — BODY_ROSTERS is empty. A sweep with no denominator did not run.");
+    throw new Error("VERIFY REFUSED — no live roster. A sweep with no denominator did not run.");
   }
 
   const results: RosterResult[] = [];
   let n = 0;
 
-  for (const roster of BODY_ROSTERS) {
+  for (const roster of rosters) {
     if (n >= limit) break;
     n += 1;
     const url = roster.sourceUrl;
@@ -361,7 +365,7 @@ async function main(): Promise<void> {
     "",
     "| | Count |",
     "|---|---|",
-    `| Rosters sampled | **${n} of ${BODY_ROSTERS.length}** |`,
+    `| Rosters sampled | **${n} of ${rosters.length}** |`,
     `| Rosters read | ${readable.length} |`,
     `| Rosters unreadable or refused | ${results.length - readable.length} |`,
     `| **Rosters where every name AGREED** | **${bodiesClean} of ${readable.length}** |`,

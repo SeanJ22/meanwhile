@@ -21,7 +21,7 @@ import { namesItself, routeHintsFingerprint, routeHintsFor, type JurisdictionRou
 import { hitStanding, plannedQueries, requestPrice, type SearchProvider } from "../../hunt/discovery-search.ts";
 import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
-import type { SearchHit } from "../scheduler/scout-contract.ts";
+import type { SearchHit } from "../../hunt/search.ts";
 import {
   CIVICPLUS_CALENDAR_INDEX_PATH,
   civicPlusCategoryFeeds,
@@ -46,6 +46,7 @@ import { fieldManualEntryId, type FieldManualEntry } from "../field-manual.ts";
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts";
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
 import { boardDocsListUrl, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
+import { parsePrimeGovCommittees, primeGovBase } from "../../sources/primegov/index.ts";
 import { categoryBodyOf } from "./auto-crosswalk.ts";
 import type { OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
@@ -601,6 +602,27 @@ export async function walkMeetingsDiscoveryNeed(
     }
   }
   let proposals: readonly RecipeCandidate[] = [];
+  const primeGovSelectors = new Map<string, NonNullable<Awaited<ReturnType<typeof get>>> | null>();
+  async function readPrimeGov(candidate: EndpointCandidate, got: NonNullable<Awaited<ReturnType<typeof get>>>, via: Via): Promise<void> {
+    const selectorUrl = `${primeGovBase(got.finalUrl)}/api/committee/GetCommitteeesListByShowInPublicPortal`;
+    if (!primeGovSelectors.has(selectorUrl)) {
+      const selector = await get(selectorUrl, "endpoint", "application/json");
+      primeGovSelectors.set(selectorUrl, selector);
+      leads.push({ vendor: "primegov", url: selectorUrl, basis: candidate.basis, evidence: candidate.evidence, detail: "Public committee identities and names", via });
+    }
+    const selector = primeGovSelectors.get(selectorUrl);
+    try {
+      if (!selector) throw new Error("the public committee selector could not be read");
+      parsePrimeGovCommittees(selector.body);
+      const check = verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
+      const base = { vendor: "primegov", url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail,
+        via: { page: selectorUrl, artifactId: selector.artifactId } };
+      if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got.artifactId });
+      else leads.push(base);
+    } catch (error) {
+      leads.push({ vendor: "primegov", url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: String(error), via });
+    }
+  }
   let homeOrigin: string | null = null;
   let homeHtml: string | null = null;
   const recipeSkips: { recipeId: string; why: string }[] = [];
@@ -669,6 +691,11 @@ export async function walkMeetingsDiscoveryNeed(
     if (got !== null && /html/i.test(got.contentType)) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl, artifactId: got.artifactId });
     if (candidate.verifiable && candidate.vendor === "boarddocs" && got !== null) {
       await readBoardDocs(candidate, got, via);
+      checks.set(candidate.url, { check: null, read: true });
+      return;
+    }
+    if (candidate.vendor === "primegov" && got !== null) {
+      await readPrimeGov(candidate, got, via);
       checks.set(candidate.url, { check: null, read: true });
       return;
     }
@@ -848,6 +875,7 @@ export async function walkMeetingsDiscoveryNeed(
       (lastRead.get(a.candidate.url) ?? "").localeCompare(lastRead.get(b.candidate.url) ?? ""));
     for (const candidate of planned) await checkCandidate(candidate);
 
+
     {
       const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url), ...(civicPlusIndex === null ? [] : [civicPlusIndex])]);
       const nextHop: { candidate: EndpointCandidate; via: Via }[] = [];
@@ -867,6 +895,10 @@ export async function walkMeetingsDiscoveryNeed(
         checked += 1;
         if (candidate.vendor === "boarddocs" && got !== null) {
           await readBoardDocs(candidate, got, via);
+          continue;
+        }
+        if (candidate.vendor === "primegov" && got !== null) {
+          await readPrimeGov(candidate, got, via);
           continue;
         }
         const check = got === null
@@ -935,6 +967,10 @@ export async function walkMeetingsDiscoveryNeed(
             const via: Via = onPage.includes(c) ? { page: page.finalUrl, artifactId: page.artifactId } : null;
             if (c.vendor === "boarddocs") {
               await readBoardDocs(c, body, via);
+              continue;
+            }
+            if (c.vendor === "primegov") {
+              await readPrimeGov(c, body, via);
               continue;
             }
             const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, await pageIdentity(null, body.finalUrl));

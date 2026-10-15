@@ -135,7 +135,7 @@ export function crosswalkRowIssue(value: unknown): string | null {
   const calendar = evidence?.calendar;
   if (!page || !calendar || !text(evidence?.readAt) || !Number.isFinite(Date.parse(evidence.readAt))) return `${who} carries no dated evidence`;
   const pageHost = httpsHost(page.url);
-  if (pageHost === null || (bareHost(pageHost) !== bareHost(routeHost) && !["LEGISTAR", "DILIGENT", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "NOVUSAGENDA"].includes(kind))) {
+  if (pageHost === null || (bareHost(pageHost) !== bareHost(routeHost) && !["LEGISTAR", "DILIGENT", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind))) {
     return `${who}: the page naming the body is not on the government's own host ${routeHost}`;
   }
   if (!SHA256.test(page.sha256) || !SHA256.test(calendar.sha256)) return `${who}: evidence is cited by its sha256, bare hex`;

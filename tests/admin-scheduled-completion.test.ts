@@ -21,13 +21,13 @@ test("after waits for the child to be Done, including after the first schedule i
  assert.equal((await fireDueOrders(d,NOW)).length,1);assert.equal((await fireDueOrders(d,NOW)).length,0);
 });
 test("a late finish-by still sends, records its due date and preserves a config action's value",async()=>{
- const {repos,d}=setup();const order=await schedule(d,"late-config-one","config.setSetting",{key:"detective.shutThreshold",value:3},{startAt:"2026-10-04T18:00:00Z",finishBy:"2026-10-04T19:00:00Z"});assert.equal(order.ok,true,order.receipt.says);
+ const {repos,d}=setup();const order=await schedule(d,"late-config-one","config.setSetting",{key:"alerts.on",value:true},{startAt:"2026-10-04T18:00:00Z",finishBy:"2026-10-04T19:00:00Z"});assert.equal(order.ok,true,order.receipt.says);
  const fired=await fireDueOrders(d,NOW);assert.equal(fired.length,1);assert.equal(fired[0].ok,true);
- const config=(await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value;assert.equal(config.settings!["detective.shutThreshold"],3);assert.equal(config.scheduledOrders!.length,0);
+ const config=(await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value;assert.equal(config.settings!["alerts.on"],true);assert.equal(config.scheduledOrders!.length,0);
  const receipt=(await repos.adminReceipts.readAll()).find(r=>r.type==="config.setSetting")!;assert.equal(receipt.scheduleOrigin!.finishBy,"2026-10-04T19:00:00Z");assert.equal((await fireDueOrders(d,NOW)).length,0);
 });
 test("a repeating config action advances once and restart uses its saved occurrence",async()=>{
- const {repos,d}=setup();const scheduled=await schedule(d,"repeat-config-one","config.setSetting",{key:"detective.shutThreshold",value:3},{startAt:NOW,repeat:"hourly"});assert.equal(scheduled.ok,true);
+ const {repos,d}=setup();const scheduled=await schedule(d,"repeat-config-one","config.setSetting",{key:"alerts.on",value:true},{startAt:NOW,repeat:"hourly"});assert.equal(scheduled.ok,true);
  assert.equal((await fireDueOrders(d,NOW)).length,1);assert.equal((await fireDueOrders(d,"2026-10-05T18:30:00Z")).length,0);assert.equal((await fireDueOrders(d,"2026-10-05T19:00:00Z")).length,1);
  assert.equal((await repos.adminReceipts.readAll()).filter(r=>r.type==="config.setSetting").length,2);
 });

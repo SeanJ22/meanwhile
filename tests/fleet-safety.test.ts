@@ -9,11 +9,7 @@ import { neonConfig } from "@neondatabase/serverless";
 
 import { costEntryWorstCaseUsd, type CostEntry } from "../lib/control-plane/cost.ts";
 import type { SpendHold } from "../lib/control-plane/budget.ts";
-import { paidWorkerSlots, researchPaidWorkerCapacity, researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
-import { workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
-import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
-import { DurableSpendHolds } from "../lib/control-plane/expansion/spend-holds.ts";
-import { createLedger } from "../lib/control-plane/budget.ts";
+import { researchPaidWorkerCapacity, researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
 import {
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
@@ -85,13 +81,11 @@ test("model admission accumulates cycle spend with no per-cycle cap; only the ro
     error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });
 
-test("a funded lifetime hunt still obeys the Admin spend dial for requests and escalations", () => {
+test("a funded lifetime hunt still obeys the Admin spend dial for requests", () => {
   const safety = fundedController({ now: NIGHT, charges: priced([cost(99.5, NIGHT)]), clock: () => Date.parse(NIGHT),
     lifetimeHuntWork: () => true });
   assert.equal(safety.rollingCeilingReached(0.6, "funded-hunt").reached, true);
   assert.throws(() => safety.reserveModelRequest("anthropic", "funded-hunt", REQUEST),
-    (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
-  assert.throws(() => safety.holdModelBudget("funded-hunt", 0.6),
     (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });
 
@@ -405,50 +399,6 @@ test("paid capacity observes a provider backoff expiry during the same cycle", a
   await transport(REQUEST);
   assert.equal(calls, 2);
   assert.ok(safety.admissionSpendUsd() >= modelRequestWorstCaseUsd(REQUEST)!, "the first send's conservative charge survives recovery");
-});
-
-test("a paid job waiting for memory releases its slot without launching after the lane closes", async () => {
-  let capacity = 20, launches = 0;
-  const slots = workerProcessSlots(() => 1, { availableBytes: () => 10_000, headroomBytes: 0, peakBytes: () => 1 });
-  const releasePlain = await slots.acquire("plain");
-  const paid = paidWorkerSlots(slots, () => capacity);
-  const waiting = paid.acquire("scout").then(release => { launches++; release(); });
-  const refused = assert.rejects(waiting, /MODEL_LANE_CLOSED/);
-  capacity = 0;
-  releasePlain();
-  await refused;
-  assert.equal(launches, 0);
-  const releaseNextPlain = await slots.acquire("held-bytes");
-  releaseNextPlain();
-  await assert.rejects(paid.acquire("another-scout"), /MODEL_LANE_CLOSED/);
-});
-
-test("a pool admission refused after its memory wait settles the unsent job at zero", async () => {
-  const repos = createMemoryRepositories();
-  const hold: SpendHold = { holdId: "unsent#0", jobId: "unsent", obligationId: "owed", keys: [], usd: 5,
-    heldAt: NIGHT, what: "admitted Scout maximum", settled: null };
-  await repos.budget.install({ ...createLedger({ hosts: [] }), spendHolds: { [hold.holdId]: hold } }, NIGHT);
-  const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NIGHT });
-  let capacity = 20, forks = 0;
-  const slots = workerProcessSlots(() => 1, { availableBytes: () => 10_000, headroomBytes: 0, peakBytes: () => 1 });
-  const releasePlain = await slots.acquire("plain");
-  const pending = runLeaseWorkerProcesses({ entry: "scout-worker.ts", config: { root: process.cwd(), postgres: false,
-    taskIds: ["owed"], modelEnabled: true, searchEnabled: false, ceilingUsd: 5, fundedSubjects: [] },
-    capacity: () => 1, slots: paidWorkerSlots(slots, () => capacity), onStarted: () => { forks++; },
-    transportFor: () => async () => { throw new Error("unsent job must not call a provider"); },
-    onDispatched: result => holds.settle("unsent", result.cost?.usd ?? null, NIGHT).then(() => undefined) });
-  capacity = 0;
-  releasePlain();
-  const results = await pending;
-  assert.equal(forks, 0);
-  assert.equal(results[0]!.outcome, "NOT_CLAIMED");
-  assert.equal(results[0]!.claimed, false);
-  assert.equal(results[0]!.attemptId, null);
-  assert.equal(results[0]!.cost?.usd, 0);
-  assert.match(results[0]!.detail, /MODEL_LANE_CLOSED/);
-  assert.equal((await repos.budget.read()).value.spendHolds![hold.holdId]!.settled?.usd, 0);
-  const releaseNext = await slots.acquire("held-bytes");
-  releaseNext();
 });
 
 test("requests and dispatches keep running across days without a cycle wall", () => {

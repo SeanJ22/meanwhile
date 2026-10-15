@@ -13,9 +13,12 @@ import { refreshPeoplePortraits } from "../scripts/people-portraits-refresh.mts"
 import type { RoutineDataStore } from "../lib/civic-data/store.ts";
 import type { StandingPortraitOptions } from "../lib/photos/portrait-work.ts";
 import heldProfiles from "./fixtures/plural/held-native-profile-leads.json" with {type:"json"};
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+
+const vault = new MemoryEvidenceStore();
 
 async function refreshStatePortraits(input:{store:RoutineDataStore;state:string;now?:string;signal?:AbortSignal},options:StandingPortraitOptions = {}) {
-  return refreshPeoplePortraits({store:input.store,state:input.state,options:{...options,signal:input.signal,
+  return refreshPeoplePortraits({ vault, store:input.store,state:input.state,options:{...options,signal:input.signal,
     now:options.now ?? (()=>input.now ?? new Date().toISOString())}});
 }
 
@@ -30,7 +33,7 @@ async function seed(count=1) {
   });
   const people=acquisitions.flatMap(row=>yamlToPeople(row.body,"az",row.requestedUrl,START));
   const roster=normalize(people,new Map([["az|upper|7","ocd-division/country:us/state:az/sldu:7"]]),SOURCE_DATE,"US-AZ");
-  const published=await publishStatePeople({store,state:"az",roster:{...roster,currentMembershipComplete:true},acquisitions,releaseId:sha,now:START});
+  const published=await publishStatePeople({ vault, store,state:"az",roster:{...roster,currentMembershipComplete:true},acquisitions,releaseId:sha,now:START});
   assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
   return {store,roster,acquisitions};
 }
@@ -119,7 +122,7 @@ test("per-person portrait publication preserves a concurrently refreshed phone a
     acquire:async options=>{
       if(!changed){
         changed=true;
-        const publication=await publishStatePeople({store,state:"az",roster:{...roster,officeholders:[{...roster.officeholders[0],phone:"202-225-2222"},extra]},
+        const publication=await publishStatePeople({ vault, store,state:"az",roster:{...roster,officeholders:[{...roster.officeholders[0],phone:"202-225-2222"},extra]},
           acquisitions,releaseId:sha,now:VERIFIED});
         assert.ok(publication.outcome.promoted);
       }
@@ -176,7 +179,7 @@ async function seedHeldProfile(row:typeof heldProfiles[number],extraLinks=""){
   const url=`https://raw.githubusercontent.com/openstates/people/${releaseId}/${row.member}`;
   const body=row.body+extraLinks;
   const roster=normalize(yamlToPeople(body,state,url,HELD_NOW),new Map(),row.retrieved_at,`US-${state.toUpperCase()}`);
-  const published=await publishStatePeople({store,state,roster,acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,
+  const published=await publishStatePeople({ vault, store,state,roster,acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,
     retrievedAt:row.retrieved_at,body}],releaseId,now:HELD_NOW});
   assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
   return {store,state,person:roster.officeholders[0]};

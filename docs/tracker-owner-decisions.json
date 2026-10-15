@@ -1,7 +1,0 @@
-{
-  "formatVersion": 1,
-  "note": "The owner's dashboard decisions, exported from the control plane. WRITTEN ONLY by scripts/owner-decisions-pull.mts (pnpm owner:decisions:pull); never hand-edited, never written by anything else. pnpm tracker:move reads it to close the Needs Sean rows Sean decided and to open the work each decision implies (RULING 271). Merged by intent id on every pull: an intent is never dropped from this file.",
-  "pulledAt": "2026-09-05T03:01:36.670Z",
-  "pulledFromSha": "c35029a4ed3d7a2031750f3974bec457646a84f4",
-  "intents": []
-}

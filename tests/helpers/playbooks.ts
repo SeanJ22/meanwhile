@@ -12,7 +12,7 @@ import { ASK_PLAYBOOK_ROLES, type ReaderSettingsSnapshot } from "../../lib/civic
 /** The one-time control-plane seed is the fixture; runtime code never loads it from here. */
 export const playbookRows: readonly FieldManualEntry[] = PLAYBOOK_SEED_ROWS;
 export const fixturePlaybooks = (roles: readonly FieldManualRole[]) => playbookRows.filter(row => roles.includes(row.role));
-export const fixtureRolePlaybook = async (role: "SCOUT" | "DETECTIVE") => rolePlaybook(playbookRows, role);
+export const fixtureRolePlaybook = async (role: "HUNTER" | "DETECTIVE") => rolePlaybook(playbookRows, role);
 export function createMemoryRepositories() {
   const repos = emptyRepositories();
   for (const row of playbookRows) void repos.fieldManual.put(row.id, row, "2026-10-12T00:00:00Z");

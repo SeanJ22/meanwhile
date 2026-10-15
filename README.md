@@ -3,7 +3,6 @@
 Anyone in the United States opens Meanwhile and right away understands everything government does that touches them.
 
 - **Rules:** [docs/rulings.md](docs/rulings.md) is the only rulebook. Only Sean edits it.
-- **How the system works:** the system guide, [docs/how-meanwhile-works.md](docs/how-meanwhile-works.md).
 - **Working guide for agents:** [CLAUDE.md](CLAUDE.md) (copied to [AGENTS.md](AGENTS.md) for Codex).
 
 ## Getting started

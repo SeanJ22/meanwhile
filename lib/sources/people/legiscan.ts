@@ -60,7 +60,6 @@ export async function acquireLegiscanPeople(options: PeopleAcquisitionOptions): 
         acquisitions.push(acquisition(release));
         const parsed = normalizeLegiscanPeople(json(release), options, sourceUrl, release.retrievedAt, sessionId);
         appendRoster(roster,parsed);
-        if(parsed.officeholders.length)await options.onPerson?.(result(options,roster,acquisitions,gaps));
       } catch (error) { gap(gaps, options, sourceUrl, error); }
     }
     // Special-session rosters are positive facts; they cannot retire a regular-session membership.

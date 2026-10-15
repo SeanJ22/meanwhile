@@ -3,7 +3,7 @@ import {
   refreshPrlFromPromoted,
 } from "@/lib/sources/prl/snapshot";
 import { readPrlForSubject } from "@/lib/sources/prl/person";
-import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { ensureReaderAuthorityEdge, readReaderAuthorityManifest } from "@/lib/meetings/edge-serving";
 import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 
 export const runtime = "nodejs";
@@ -11,7 +11,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ sub
   const subject = decodeURIComponent((await params).subject);
   if (!subject || subject.length > 128) return Response.json({ error: "subject required" }, { status: 400 });
   try {
-    const manifest = await readReaderManifest().catch(() => null);
+    const manifest = await readReaderAuthorityManifest().catch(() => null);
     const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "federal-directory", "prl-archives"]) : null;
     return await withReaderAuthorityEdge(edge, async () => {
       const [profile, archive] = await Promise.allSettled([

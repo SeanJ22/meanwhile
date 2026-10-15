@@ -1,6 +1,10 @@
-import { divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
+import { readRegistryPlace } from "@/lib/registry/reader-place";
+import { withRegistryPlaceRead } from "@/lib/registry/runtime-read-model";
+import { parseCensusGeographies } from "@/lib/geo/census-geocoder";
+import { currentRepresentationSelection } from "@/lib/census-geography/selection";
+import { divisionsForCensusGeographies, divisionsByOcdIds } from "@/lib/registry/server";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { readReaderManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
+import { readReaderAuthorityManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import { loadVotingSites, readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { answerVotingSites, votingJurisdictionCovers, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
@@ -30,13 +34,12 @@ export async function POST(request: Request) {
 
   const isZip = /^\d{5}$/.test(address);
   const geocoded = isZip ? Promise.resolve(null) : censusVotingAddress(address, requestFetch);
-  const manifest = await readReaderManifest().catch(() => null);
+  const manifest = await readReaderAuthorityManifest().catch(() => null);
   if (manifest?.authorityArtifacts) {
-    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["census-districts", "registry-runtime", "voting-sites"]).catch(() => null);
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["census-districts", "voting-sites"]).catch(() => null);
     if (edge) enterReaderAuthorityEdge(edge);
   }
   try {
-    const projection = readVotingSitesProjection().then(() => true, () => false);
     let place: VotingReaderPlace;
     let readerAddress: VotingAddressInput = { address };
     const located = await geocoded;
@@ -44,18 +47,24 @@ export async function POST(request: Request) {
     if (zipInput) {
       const zip = await zipDivisionEntry(zipInput);
       if (!zip) return empty();
-      const divisions = await divisionsByOcdIds(zip.ids, { zip: zipInput });
+      const registry = await readRegistryPlace(zip.ids, [], manifest);
+      const divisions = await withRegistryPlaceRead(registry, () => divisionsByOcdIds(zip.ids, { zip: zipInput }));
       place = votingPlaceFromDivisions(divisions, "ZIP", null);
       place.divisionIds = [...new Set([...place.divisionIds, ...zip.ids])];
       place.states = [...new Set([...place.states, ...zip.ids.flatMap(id => /\/(?:state|district|territory):([a-z]{2})/.exec(id)?.[1]?.toUpperCase() ?? [])])];
     } else {
       if (!located) return empty();
       readerAddress = censusVotingAddressFields(address, located.payload);
-      const divisions = await divisionsAt(located.point.lat, located.point.lng);
+      const geographic = parseCensusGeographies(located.payload);
+      const divisions = await divisionsForCensusGeographies(geographic?.geographies ?? {}, currentRepresentationSelection(), "Current_Current", {});
       place = addCensusVotingGeographies(votingPlaceFromDivisions(divisions, "ADDRESS", located.point), located.payload);
     }
-    if (!await projection) throw new Error("Voting-location projection unavailable");
-    const file = loadVotingSites();
+    const files = await Promise.all(place.states.map(async state => {
+      await readVotingSitesProjection(state);
+      return loadVotingSites(state);
+    }));
+    const file = { generatedAt: files.map(row => row.generatedAt).sort().at(-1) ?? "",
+      jurisdictions: files.flatMap(row => row.jurisdictions).filter(row => votingJurisdictionCovers(row, place)) };
     const covering = file.jurisdictions.filter(j => votingJurisdictionCovers(j, place));
     const needsPrecinct = covering.some(j => j.sites.some(site => site.kind === "ELECTION_DAY" && site.precinct));
     if (place.point && needsPrecinct && !covering.some(j => j.boundaries?.some(b => b.kind === "OFFICIAL_PRECINCT"))) {

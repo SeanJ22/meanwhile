@@ -1,10 +1,11 @@
+import { requireBallotState } from "./state-scopes.ts";
 import { createHash } from "node:crypto";
 import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
-import { listDoors, upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
+import { upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { holdRawCapture } from "../civic-data/raw-capture-vault.ts";
-import { VOTING_SITES_CONTRACT, type VotingRawCapture } from "./voting-sites-data-plane.ts";
+import { VOTING_SITES_SOURCE_ID, type VotingRawCapture } from "./voting-sites-data-plane.ts";
 import type { VotingJurisdiction, VotingSitesFile, VotingSource } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
 
@@ -13,9 +14,9 @@ export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
 export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSourceDoor, now: string): Promise<void> {
   const address = pageAddress(door.url);
   if (!address) throw new Error("Voting source has no public URL");
-  const matches = (await repo.listWhere(["kind"], VOTING_SOURCE_DOOR_KIND)).filter(row => row.value.kind === VOTING_SOURCE_DOOR_KIND &&
-    pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
   const heldPages = await repo.listWhere(["config", "url"], address.url);
+  const matches = heldPages.filter(row => row.value.kind === VOTING_SOURCE_DOOR_KIND &&
+    pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
   const prior = matches.find(row => row.value.status !== "SUSPENDED") ?? matches[0] ?? heldPages.find(row => row.value.status !== "SUSPENDED");
   const mappings = [...new Map([...matches.flatMap(row => [JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor,
     ...JSON.parse(String(row.value.config.votingMappings ?? "[]")) as VotingSourceDoor[]]), door].map(source => [source.id, source])).values()];
@@ -25,7 +26,7 @@ export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSou
   await upsertDerivedDoor(repo, {
     doorId: prior?.id ?? pageDoorId(address), kind: VOTING_SOURCE_DOOR_KIND, ocdId: primary.scope.ocdId,
     hosts: [...new Set([address.host, ...mappings.flatMap(source => source.extraction?.dataUrl ? [new URL(source.extraction.dataUrl, source.url).hostname] : [])])],
-    config: { ...prior?.value.config, url: address.url, votingSource: JSON.stringify(primary), votingMappings: JSON.stringify(mappings.slice(1)) }, holds: [...new Set([...(prior?.value.holds ?? []), ...holds])],
+    config: { ...prior?.value.config, ...Object.fromEntries(mappings.map(source => [`votingState_${requireBallotState(source.scope.state)}`, true])), url: address.url, votingSource: JSON.stringify(primary), votingMappings: JSON.stringify(mappings.slice(1)) }, holds: [...new Set([...(prior?.value.holds ?? []), ...holds])],
     checkEveryMinutes: checkEveryFor("VOTING_SITE"), notes: `${primary.publisher}: ${primary.shape}; ${primary.electionDate}`,
   }, now, now);
   for (const duplicate of matches.filter(row => row.id !== prior?.id && row.value.status !== "SUSPENDED")) {
@@ -34,12 +35,12 @@ export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSou
   }
 }
 
-export async function registeredVotingSourceDoors(repo: DoorRepository): Promise<VotingSourceDoor[]> {
-  return (await listDoors(repo)).doors.filter(row => row.kind === VOTING_SOURCE_DOOR_KIND && row.status !== "SUSPENDED").flatMap(row => {
+export async function registeredVotingSourceDoors(repo: DoorRepository, state: string): Promise<VotingSourceDoor[]> {
+  return (await repo.listWhere(["config", `votingState_${requireBallotState(state)}`], "true")).map(row => row.value).filter(row => row.kind === VOTING_SOURCE_DOOR_KIND && row.status !== "SUSPENDED").flatMap(row => {
     const sources = [JSON.parse(String(row.config.votingSource)) as VotingSourceDoor,
       ...JSON.parse(String(row.config.votingMappings ?? "[]")) as VotingSourceDoor[]];
     for (const source of sources) if (!source.scope?.ocdId || !source.url || !source.publisher) throw new Error(`Unreadable voting source door ${row.doorId}`);
-    return sources;
+    return sources.filter(source => source.scope.state === requireBallotState(state));
   });
 }
 
@@ -87,14 +88,14 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
 export async function holdVotingRawEvidence(vault: EvidenceStore, read: Pick<VotingSourceRead, "rawBodies">): Promise<VotingRawCapture[]> {
   const held: VotingRawCapture[] = [];
   for (const body of read.rawBodies) held.push({ url: body.url, contentType: body.contentType,
-    ...await holdRawCapture(vault, VOTING_SITES_CONTRACT.sourceId, body.bytes, body.contentType) });
+    ...await holdRawCapture(vault, VOTING_SITES_SOURCE_ID, body.bytes, body.contentType) });
   return held;
 }
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {
   const hash = createHash("sha256").update(read.rawBodies.map(body => createHash("sha256").update(body.bytes).digest("hex")).join("\n")).digest("hex");
   const address = pageAddress(door.url)!;
-  const old = (await repo.listWhere(["kind"], VOTING_SOURCE_DOOR_KIND)).find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&
+  const old = (await repo.listWhere(["config", "url"], address.url)).find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&
     pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
   if (!old) return;
   const doorId = old.id;

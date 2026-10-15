@@ -1,3 +1,4 @@
+import { stateFromBallotScope } from "../ballot/state-scopes.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { factReader, statementQuery } from "../facts/db.ts";
 import { withFactRegistry } from "../facts/registry-overlay.ts";
@@ -21,8 +22,8 @@ export type PlaceCaptureRead<T> = {
 const array = (path: string, where: string) => `(SELECT COALESCE(jsonb_agg(x), '[]'::jsonb) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(${path})='array' THEN ${path} ELSE '[]'::jsonb END) x WHERE ${where})`;
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
 const serves = `${division} OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
-const objectMap = (path: string) => `(SELECT COALESCE(jsonb_object_agg(k,v), '{}'::jsonb) FROM jsonb_each(
-  CASE WHEN jsonb_typeof(${path})='object' THEN ${path} ELSE '{}'::jsonb END) e(k,v) WHERE k=ANY($5::text[]))`;
+const objectMap = (path: string, where = "k=ANY($5::text[])") => `(SELECT COALESCE(jsonb_object_agg(k,v), '{}'::jsonb) FROM jsonb_each(
+  CASE WHEN jsonb_typeof(${path})='object' THEN ${path} ELSE '{}'::jsonb END) e(k,v) WHERE ${where})`;
 
 /** Only the selected divisions and their bodies cross the wire. All filters
  * run against the existing canonical pointer in the existing read-only store. */
@@ -55,10 +56,14 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   const versions = JSON.stringify(Object.fromEntries(scopes.flatMap(scope => carried.has(scope) ? [[scope, carried.get(scope)!.version]] : [])));
   let value: string;
   if (recordClass === "REGISTRY_RUNTIME_BINDING") {
+    const executives = array("payload->'statewideExecutives'", "x->>'stateOcdId'=ANY($3::text[]) OR x->'holder'->>'id'=ANY($5::text[])");
+    const candidacies = array("payload->'officialCandidacies'->'rows'", "x->'holder'->'divisions' ?| $3::text[] OR x->'holder'->>'id'=ANY($5::text[])");
+    const holders = `SELECT x->'holder'->>'id' FROM jsonb_array_elements(${executives} || ${candidacies}) x`;
     value = `jsonb_build_object('registry', jsonb_build_object('divisions', ${array("payload->'registry'->'divisions'", division)},
       'bodies', ${array("payload->'registry'->'bodies'", serves)}),
-      'statewideExecutives', ${array("payload->'statewideExecutives'", "x->>'stateOcdId'=ANY($3::text[])")},
-      'officialCandidacies', jsonb_build_object('rows', ${array("payload->'officialCandidacies'->'rows'", "x->'holder'->'divisions' ?| $3::text[]")}))`;
+      'statewideExecutives', ${executives}, 'officialCandidacies', jsonb_build_object('rows', ${candidacies}),
+      'officialPhotos', jsonb_build_object('photos', ${array("payload->'officialPhotos'->'photos'", `x->>'officeholderId'=ANY($5::text[]) OR x->>'officeholderId' IN (${holders})`)}),
+      'rosterPhotos', ${objectMap("payload->'rosterPhotos'", `k=ANY($5::text[]) OR k IN (${holders})`)})`;
   } else if (recordClass === "MEETING") {
     value = `jsonb_build_object('meetings', ${array("payload->'meetings'", `${division} OR x->>'bodyId'=ANY($4::text[])`)})`;
   } else if (recordClass === "MEETING_OUTCOME") {
@@ -68,19 +73,33 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
     value = `jsonb_build_object('roster', ((payload->'roster') - 'divisions' - 'officeholders' - 'unmatched') || jsonb_build_object(
       'divisions', ${members}, 'unmatched', '[]'::jsonb,
       'officeholders', ${array("payload->'roster'->'officeholders'", `x->>'id' IN (SELECT m->>'officeholderId' FROM jsonb_array_elements(${members}) m)`)}))`;
-  } else if (recordClass === "BALLOT_CANDIDACY" || recordClass === "BALLOT_FILING") {
-    const contests = array("payload->'ballot'->'contests'", division);
+  } else if (recordClass === "BALLOT_CANDIDACY") {
+    const contests = array("ballot->'contests'", division);
     const inContest = `x->>'contestId' IN (SELECT c->>'id' FROM jsonb_array_elements(${contests}) c)`;
-    value = `jsonb_build_object('ballot', ((payload->'ballot') - 'contests' - 'candidacies' - 'measures') || jsonb_build_object(
-      'contests', ${contests}, 'candidacies', ${array("payload->'ballot'->'candidacies'", inContest)},
-      'measures', ${array("payload->'ballot'->'measures'", inContest)}),
-      'generalLineup', jsonb_build_object('contests', ${array("payload->'generalLineup'->'contests'", `x->>'contestId' IN (SELECT c->>'id' FROM jsonb_array_elements(${contests}) c)`)}))`;
+    const byContest = ["candidacies", "filingCandidacies", "measures", "measureRecords", "removals"]
+      .map(field => `'${field}', ${array(`ballot->'${field}'`, inContest)}`).join(",");
+    const candidateIds = `SELECT c->>'id' FROM jsonb_array_elements(${array("ballot->'candidacies'", inContest)}) c`;
+    value = `jsonb_build_object('kind', 'ballot-contests', 'ballots', (SELECT COALESCE(jsonb_object_agg(ballot_key,
+      jsonb_build_object('election', ballot->'election', 'contests', ${contests}, ${byContest},
+        'absences', ${array("ballot->'absences'", division)}, 'heldContests', ${array("ballot->'heldContests'", division)},
+        'contacts', ${array("ballot->'contacts'", `x->>'candidacyId' IN (${candidateIds})`)},
+        'coverageNotes', COALESCE(ballot->'coverageNotes','[]'::jsonb),
+        'scopedCoverageNotes', COALESCE(ballot->'scopedCoverageNotes','[]'::jsonb),
+        'generalLineup', (COALESCE(ballot->'generalLineup','{}'::jsonb)-'contests') || jsonb_build_object('contests', ${array("ballot->'generalLineup'->'contests'", inContest)}),
+        'measureAnalyses', (COALESCE(ballot->'measureAnalyses','{}'::jsonb)-'analyses') || jsonb_build_object('analyses', ${array("ballot->'measureAnalyses'->'analyses'", inContest)}),
+        'lineupReconciliation', (COALESCE(ballot->'lineupReconciliation','{}'::jsonb)-'rows') || jsonb_build_object('rows', ${array("ballot->'lineupReconciliation'->'rows'", inContest)}))), '{}'::jsonb)
+      FROM jsonb_each(CASE WHEN jsonb_typeof(payload->'ballots')='object' AND NOT (payload->'ballots') ? '$civicPayloadPart'
+        THEN payload->'ballots' ELSE '{}'::jsonb END) b(ballot_key,ballot)
+      WHERE EXISTS (SELECT 1 FROM unnest($3::text[]) d(id)
+        WHERE lower(split_part(ballot_key, ':', 1))=substring(d.id from '/(?:state|district):([a-z]{2})(?:/|$)'))))`;
   } else if (recordClass === "CANDIDATE_PROFILE") {
-    value = `jsonb_build_object('cards', jsonb_build_object('cards', ${objectMap("payload->'cards'->'cards'")}),
-      'links', jsonb_build_object('links', ${objectMap("payload->'links'->'links'")}))`;
+    value = `jsonb_build_object('cards', jsonb_build_object('cards', ${objectMap("payload->'cards'->'cards'")},
+        'hunts', ${array("payload->'cards'->'hunts'", "x->>'key'=ANY($5::text[])")}),
+      'links', jsonb_build_object('links', ${objectMap("payload->'links'->'links'")},
+        'hunts', ${array("payload->'links'->'hunts'", "x->>'key'=ANY($5::text[])")}))`;
   } else if (recordClass === "CANDIDATE_PUBLICATION") {
     value = `jsonb_build_object('documents', ${array("payload->'documents'", "x->>'candidateKey'=ANY($5::text[])")})`;
-  } else if (recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived")) {
+  } else if (recordClass === "CURATED_READER_RECORD" && scopes.every(scope => stateFromBallotScope(scope, "candidate-campaign-sites-derived") !== null)) {
     value = `(payload - 'records' - 'portraits') || jsonb_build_object('records', ${array("payload->'records'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])" )}, 'portraits', ${array("payload->'portraits'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])")})`;
   } else if (recordClass === "FEC_FUNDING") {
     value = `(payload - 'candidates') || jsonb_build_object('candidates', ${array("payload->'candidates'", "x->'targetKeys' ?| $5::text[]")})`;

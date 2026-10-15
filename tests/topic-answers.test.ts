@@ -22,7 +22,7 @@ const corpus: StatementCorpus = { snapshots: [snap({})] };
 test("a chip and Ask retain the same exact page evidence without assigning its speaker", () => {
   const stored = buildTopicAnswer(person, housing, corpus)!;
   const question = chipQuestion(person.name, housing.label);
-  const found = statementEvidenceFor({ kind: "PERSON", id: person.subjectId, name: person.name }, question, [], () => corpus, [person.subjectId]);
+  const found = statementEvidenceFor([], { kind: "PERSON", id: person.subjectId, name: person.name }, question, [], () => corpus, [person.subjectId]);
   const asked = composeOwnWordsAnswer({ subject: { kind: "PERSON", id: person.subjectId, name: person.name }, question, records: found.records });
   assert.equal(stored.prose, asked?.answer ?? null);
   assert.equal(asked, null, "a page match does not verify who said the quoted words");

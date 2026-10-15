@@ -1,28 +1,22 @@
-import { readerBallotSourceForTargetId } from "./reader-sources.ts";
-import {
-  BALLOT_SOURCES,
-  type RegisteredBallotSource,
-} from "./registry.ts";
-import { getGeneralLineup } from "./general-lineup.ts";
+import { readerBallotSourceForTargetId, readerBallotSources, type RegisteredBallotSource } from "./reader-sources.ts";
 
 async function addCandidateTargets(
   ids: Set<string>,
-  { state, source }: RegisteredBallotSource,
+  { source }: RegisteredBallotSource,
 ): Promise<void> {
   const data = source.normalize(await source.fetch());
-  for (const candidate of data.candidacies ?? []) ids.add(candidate.id);
-  if (state !== "az") return;
-  for (const contest of getGeneralLineup()?.contests ?? []) {
+  for (const candidate of [...data.candidacies, ...data.filingCandidacies ?? []]) ids.add(candidate.id);
+  for (const contest of data.generalLineup?.contests ?? []) {
     for (const nominee of contest.nominees) {
       ids.add(`${contest.contestId}|${nominee.name}`);
     }
   }
 }
 
-export async function getCandidateTargetIds(targetId?: string): Promise<Set<string>> {
+export async function getCandidateTargetIds(divisions: readonly string[], targetId?: string): Promise<Set<string>> {
   const ids = new Set<string>();
-  const exact = targetId === undefined ? null : await readerBallotSourceForTargetId(targetId);
-  const sources = targetId === undefined ? BALLOT_SOURCES : exact ? [exact] : [];
+  const exact = targetId === undefined ? null : await readerBallotSourceForTargetId(targetId, divisions);
+  const sources = targetId === undefined ? await readerBallotSources(divisions) : exact ? [exact] : [];
   for (const source of sources) await addCandidateTargets(ids, source);
   if (targetId !== undefined) return ids;
   if (ids.size === 0) {

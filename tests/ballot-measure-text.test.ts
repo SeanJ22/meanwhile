@@ -1,3 +1,4 @@
+import { azBallot } from "./helpers/ballot-district-fixtures.ts";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -28,9 +29,7 @@ function code(src: string): string {
     .join("\n");
 }
 
-const SET = JSON.parse(
-  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
-) as BallotSet;
+const SET = azBallot as BallotSet;
 
 const measureOf = (contestId: string) =>
   SET.measures.find((m) => m.contestId === contestId) ?? null;

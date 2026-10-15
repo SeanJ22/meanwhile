@@ -29,7 +29,9 @@ function appliedRows() {
 }
 
 export function neon(connection) {
-  const database = new URL(connection).pathname.slice(1);
+  const address = new URL(connection);
+  if (!["postgres:", "postgresql:"].includes(address.protocol)) throw new Error("migration fixture requires PostgreSQL");
+  const database = address.pathname.slice(1);
   const sql = async (strings) => {
     const statement = textOf(strings);
     record(SQL_PREFIX, statement);

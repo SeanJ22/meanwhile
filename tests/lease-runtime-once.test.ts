@@ -15,12 +15,14 @@ import { installRegistryRuntime } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryRuntime();
 
-test("a lease worker builds its runtime once per process; the old per-task build stays behind its switch", async () => {
+test("a lease worker shares one scoped runtime across tasks with guards for the current subject", async () => {
   const source = await readFile(new URL("../lib/control-plane/workers/lease-worker.ts", import.meta.url), "utf8");
   assert.equal(source.match(/autonomousStandingRuntime\(/g)?.length, 1, "one construction site");
-  assert.match(source, /shared \?\?= await buildRuntime\(null\)/);
-  assert.match(source, /WTP_LEASE_RUNTIME_PER_TASK/);
-  assert.match(source, /openBytesFor: s => safety\.guardedOpenBytes\("public-web", s\)/, "the website guard follows each task's subject");
+  assert.match(source, /shared \?\?= await buildRuntime\(\)/);
+  assert.match(source, /scopedReads: true/);
+  assert.doesNotMatch(source, /WTP_LEASE_RUNTIME_PER_TASK|WTP_SCOPED_TASK_READS/);
+  assert.match(source, /openBytesFor: subject => safety\.guardedOpenBytes\("public-web", subject\)/, "the website guard follows each task's subject");
+  assert.match(source, /transportFor: jurisdiction => \{ broker\.assignment\(current, jurisdiction\);/, "model calls follow the current task's jurisdiction");
 });
 
 test("beginTask refreshes one task's worker history on a runtime that serves many tasks", async t => {
@@ -29,7 +31,7 @@ test("beginTask refreshes one task's worker history on a runtime that serves man
   t.after(() => rm(root, { recursive: true, force: true }));
   const method: MethodKnowledge = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
-  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 });
+  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true });
   const tasks = await h.repos.routeTasks.list();
   assert.ok(typeof runtime.beginTask === "function");
   for (const row of tasks) await runtime.beginTask!(row.value);

@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "../ballot/state-scopes.ts";
 import { candidatePortraitFromCommonsFile, type CandidatePortraitPatch, type CommonsPortraitRuntime } from "../ballot/candidate-portraits.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CampaignSiteIdentity } from "../candidates/campaign-site-verifier.ts";
@@ -23,13 +24,12 @@ import { readPromotedCivicData } from "./read-model.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { ManualSourceReview } from "./types.ts";
 
-const PROFILES = requiredManualProductionContract("candidate-profiles");
 const EMPTY_CARD: CandidateCardData = { photoUrl: null, photoSource: null, bio: null, bioSourceUrl: null, bioSourceLabel: null,
   email: null, phone: null, phoneLabel: null, filedAddress: null, filedAddressSource: null };
 const KIND: Readonly<Record<string, FieldKind>> = { "CAN-06": "contact", "CAN-16": "statement", "CAN-17": "portrait" };
 const PROVENANCE = new Set<string>(["OFFICIAL", "CAMPAIGN", "FILING", "REFERENCE", "NEWS"]);
 const COMMONS_HOSTS = ["commons.wikimedia.org", "upload.wikimedia.org"];
-const PROFILE_CLASSES = new Set<string>(sourceAuthority(PROFILES.sourceId)?.manualReceiptPromotion?.allowedSourceClasses ?? []);
+const PROFILE_CLASSES = new Set<string>(sourceAuthority("candidate-primary-publications")?.manualReceiptPromotion?.allowedSourceClasses ?? []);
 
 /** A candidate a finding can be about: its identity on the ballot and every key readers look its card up by. */
 export type CandidateFindingSubject = CampaignSiteIdentity & { readonly readerKeys: readonly string[] };
@@ -70,7 +70,10 @@ export async function publishCandidateFindings(input: {
   const report = { published: {} as Record<string, number>, refused: {} as Record<string, number>, waiting: 0 };
   const now = new Date(input.now);
   const settled: { row: BoxFinding; field: string; outcome: Outcome; subject: CandidateFindingSubject | null }[] = [];
-  for (const { value: row } of await input.boxFindings.listWhere(["state"], "waiting")) {
+  const subjectIds = [...new Set(input.subjects.flatMap(subject => [subject.candidacyId, ...subject.readerKeys]))];
+  const findings = (await Promise.all(subjectIds.map(id => input.boxFindings.listWhere(["subjectId"], id)))).flat();
+  for (const { value: row } of findings) {
+    if (row.state !== "waiting") continue;
     if (row.waitingFor?.reason !== CANDIDATE_PROFILE_LEAD) continue;
     const subject = input.subjects.find(s => s.candidacyId === row.subjectId || s.readerKeys.includes(row.subjectId));
     if (!subject) { report.waiting++; continue; }
@@ -83,29 +86,31 @@ export async function publishCandidateFindings(input: {
 
   const ready = settled.filter((entry): entry is typeof entry & { outcome: Extract<Outcome, { patch: unknown }>; subject: CandidateFindingSubject } =>
     "patch" in entry.outcome && entry.subject !== null);
-  let held: string | null = null;
-  if (ready.length) {
+  const held = new Map<string, string>();
+  for (const state of new Set(ready.map(entry => entry.subject.stateCode))) {
+    const stateReady = ready.filter(entry => entry.subject.stateCode === state);
+    const PROFILES = requiredManualProductionContract(stateBallotContractId("candidate-profiles", state));
     const prior = await readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, { store: input.store, now: input.now, bypassCache: true });
     const priorCards = prior.kind === "PROMOTED" ? prior.value.cards.cards : {};
     const cards: Record<string, CandidateCardData> = {};
-    for (const { subject, outcome } of ready) for (const key of [subject.candidacyId, ...subject.readerKeys]) {
+    for (const { subject, outcome } of stateReady) for (const key of [subject.candidacyId, ...subject.readerKeys]) {
       cards[key] = { ...EMPTY_CARD, ...priorCards[key], ...cards[key], ...outcome.patch };
     }
-    const sources = [...new Map(ready.flatMap(entry => entry.outcome.sources).map(source => [`${source.finalUrl}\n${source.rawHash}`, source])).values()];
+    const sources = [...new Map(stateReady.flatMap(entry => entry.outcome.sources).map(source => [`${source.finalUrl}\n${source.rawHash}`, source])).values()];
     try {
-      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor({ contractId: "candidate-profiles", version: input.now,
+      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor({ contractId: stateBallotContractId("candidate-profiles", state), version: input.now,
         sourceThrough: input.now, sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:checkFact", sources },
         payload: { cards: { curatedAt: input.now, note: "Hunters' findings, each held to checkFact on its saved page.", cards, hunts: [] },
           links: { curatedAt: input.now, note: "", links: {}, hunts: [] } } }, input.store, input.now);
-      const outcome = await processRegisteredManualCandidate(input.store, "candidate-profiles", candidate, input.now, expectedBaseVersionId);
-      if (!outcome.promoted) held = `CANDIDATE_PROFILE_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`;
-    } catch (error) { held = `CANDIDATE_PROFILE_PUBLICATION_HELD:${error instanceof Error ? error.message : String(error)}`; }
+      const outcome = await processRegisteredManualCandidate(input.store, stateBallotContractId("candidate-profiles", state), candidate, input.now, expectedBaseVersionId);
+      if (!outcome.promoted && !outcome.confirmed) held.set(state, `CANDIDATE_PROFILE_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
+    } catch (error) { held.set(state, `CANDIDATE_PROFILE_PUBLICATION_HELD:${error instanceof Error ? error.message : String(error)}`); }
   }
 
-  for (const { row, field, outcome } of settled) {
+  for (const { row, field, outcome, subject } of settled) {
     const claim = await takeBoxFinding(input.boxFindings, row.id, "candidate-profile-writer", input.now, new Date(now.getTime() + 120_000).toISOString());
     if (!claim) continue;
-    const refused = "refused" in outcome ? outcome.refused : held;
+    const refused = "refused" in outcome ? outcome.refused : held.get(subject!.stateCode);
     if (refused) {
       await finishBoxFinding(input.boxFindings, row.id, claim.token, { state: "refused", reason: refused }, input.now);
       report.refused[refused.split(":")[0]!] = (report.refused[refused.split(":")[0]!] ?? 0) + 1;

@@ -6,6 +6,7 @@ import test from "node:test";
 
 import { compareSchemaState, describeSchemaState } from "../lib/db/schema-state.ts";
 import { errorCodeOf, errorMessageOf } from "../lib/db/write-alarm.ts";
+import { migrationTagsIn } from "../lib/db/shipping-invariant.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
@@ -214,22 +215,26 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   // An empty journal has no head, and "unknown" is the named gap rather than
   // a plausible tag.
   assert.equal(compareSchemaState([], []).codeHead, "unknown");
+
+  const pendingSteps = [...journal,
+    { idx: 3, when: 4, tag: "ZZ-02_pending_expand" },
+    { idx: 4, when: 5, tag: "AA-01_pending_contract" },
+  ];
+  const pending = compareSchemaState(pendingSteps, [1, 2, 3]);
+  assert.equal(pending.codeHead, "AA-01_pending_contract", "the journal defines the head, regardless of filename sorting");
+  assert.deepEqual(pending.missing, ["ZZ-02_pending_expand", "AA-01_pending_contract"]);
 });
 
-test("6.1: the committed journal head matches the newest migration file", () => {
+test("6.1: the committed journal names every migration file exactly once", () => {
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
-  const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
-    .map((f) => f.trim())
-    .filter((f) => /\/\d{4}_[^/]+\.sql$/.test(f))
-    .map((f) => f.replace(/^lib\/db\/migrations\//, "").replace(/\.sql$/, ""))
-    .sort();
+  const files = migrationTagsIn(filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] }));
   const tags = journal.entries.map((e) => e.tag).sort();
   assert.deepEqual(
     tags,
     files,
-    "every numbered migration is journalled; River numbers step-named lane migrations",
+    "every numbered or step-named migration is journalled exactly once",
   );
 });
 

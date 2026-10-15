@@ -33,7 +33,7 @@ export function placeDivisionForMeasureTarget(id: string): string | null {
 
 export function placeMeasureProblems(value: PlaceMeasureProjection): string[] {
   if (!value || value.kind !== "ballot-measures" || !isPlaceMeasureScope(`${PLACE_MEASURE_SCOPE}:${value.ocdId}`)) return ["Local measures lack their exact place."];
-  const problems = genericBallotProblems({ kind: "ballot-contests", ballots: value.ballots }, value.ocdId);
+  const problems = genericBallotProblems({ kind: "ballot-contests", ballots: value.ballots }, jurisdictionFromOcdId(value.ocdId)?.usps, value.ocdId);
   if (Object.values(value.ballots ?? {}).some(ballot => ballot.contests.some(contest => contest.ocdId !== value.ocdId || contest.type !== "MEASURE") || ballot.candidacies.length || ballot.absences.length)) {
     problems.push("Local measure records contain another place or record type.");
   }

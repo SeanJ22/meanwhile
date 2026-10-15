@@ -245,23 +245,20 @@ function Publication() {
           <div className={s.stack}>
             <h3 className={s.h3}>State ballots</h3>
             <Actions actions={[{ kind: "ballot-publish", target: "ballot-contests" }]} />
-            {p.ballotPublication ? <>
-              <p className={s.small}>{p.ballotPublication.status === "PUBLISHED" ? "Published" : "Held"} {when(p.ballotPublication.at)}</p>
-              <p className={s.small}>Merged: {p.ballotPublication.merged.map(file => file.slice(0, 2).toUpperCase()).join(", ") || "none"}</p>
-              {p.ballotPublication.reason && <p className={s.small}>{p.ballotPublication.reason}</p>}
-              {p.ballotPublication.skipped.length ? <ul className={s.stack}>
-                {p.ballotPublication.skipped.map(row => <li key={row.file} className={s.small}>Skipped {row.file.slice(0, 2).toUpperCase()}: {row.reason}</li>)}
-              </ul> : <p className={s.small}>Skipped: none</p>}
-              {p.ballotPublication.heldContests?.length ? <ul className={s.stack}>
-                {[...new Set(p.ballotPublication.heldContests.map(row => row.state))].sort().map(state => <li key={state} className={s.small}>
-                  <details>
-                    <summary>Held contests in {state} ({p.ballotPublication!.heldContests!.filter(row => row.state === state).length})</summary>
-                    <ul className={s.stack}>{p.ballotPublication!.heldContests!.filter(row => row.state === state).map(row =>
-                      <li key={row.contestId}>{row.title}: {row.reason}</li>)}</ul>
-                  </details>
-                </li>)}
-              </ul> : <p className={s.small}>Held contests: none</p>}
-            </> : <p className={s.small}>No ballot publication reported yet.</p>}
+            {Object.values(p.ballotPublications ?? {}).length ? Object.values(p.ballotPublications ?? {}).map(report => {
+              const held = "heldContests" in report ? report.heldContests : undefined;
+              const heldCount = "heldContestCount" in report ? report.heldContestCount : held?.length ?? 0;
+              return <details key={report.state}>
+                <summary>{report.state}: {report.status === "PUBLISHED" ? "Published" : "Held"} {when(report.at)}</summary>
+                {report.reason && <p className={s.small}>{report.reason}</p>}
+                {"skipped" in report && report.skipped.map(row => <p key={row.file} className={s.small}>{row.reason}</p>)}
+                {held?.length ? <ul className={s.stack}>
+                  {held.map(row => <li key={row.contestId} className={s.small}>{row.title}: {row.reason}</li>)}
+                </ul> : heldCount ? <p className={s.small}>{count(heldCount)} incomplete contests. <button type="button"
+                  className={s.btnLink} onClick={() => v.setScope(`st:${report.state.toLowerCase()}`)}>View {report.state} contests</button></p>
+                  : <p className={s.small}>Held contests: none</p>}
+              </details>;
+            }) : <p className={s.small}>No ballot publication reported yet.</p>}
           </div>
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {p.counts.map((c) => <li key={c.verdict} className={s.small}><strong>{count(c.count)} of {count(p.total)}</strong> {c.words.charAt(0).toLowerCase() + c.words.slice(1)}</li>)}

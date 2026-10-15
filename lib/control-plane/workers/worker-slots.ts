@@ -12,11 +12,17 @@ export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
+// Full-state publication and successor peaks include all 6,934 Illinois governments and school systems.
+const STATE_BALLOT_PEAK_MIB: Readonly<Record<string, number>> = {
+  "ballot-contests": 4096,
+  "candidate-profiles": 4096,
+  "candidate-corpus": 2048,
+  "voting-sites": 1536,
+};
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
-const ROUTINE_ENTRY_MEMORY_MIB: Readonly<Record<string, number | { readonly minimumMiB: number }>> = {
-  // A complete 113 MiB Illinois session parsed and promoted in the fixture
-  // store peaked at 3,013 MiB. Round up for these state-scoped bulk writers;
-  // the existing host observer still accounts for their whole process trees.
+const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
+  // A complete 113 MiB Illinois session peaked at 3,013 MiB.
+  // The host observer also accounts for each writer's descendants.
   "openstates-votes-refresh.mts": 3072,
   "legiscan-votes-refresh.mts": 3072,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
@@ -29,8 +35,9 @@ const ROUTINE_ENTRY_MEMORY_MIB: Readonly<Record<string, number | { readonly mini
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "people-portraits-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "campaign-finance-az-pima-transactions.mts": 368,
-  "build-nj-morris-ballot.mts": 345,
-  "translate-national-measures.mts": { minimumMiB: 1258 },
+  "assemble-ballot-package.mts": STATE_BALLOT_PEAK_MIB["ballot-contests"]!,
+  "fetch-voting-sites.mts": STATE_BALLOT_PEAK_MIB["voting-sites"]!,
+  "translate-national-measures.mts": 1258,
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
@@ -167,6 +174,7 @@ export interface WorkerMemoryLimit {
   readonly availableBytes?: () => number;
   readonly headroomBytes?: number;
   readonly peakBytes?: (entry: string) => number;
+  readonly minimumPeakBytes?: (entry: string) => number;
   /** Measured parent peak; current RSS is already excluded from OS free memory. */
   readonly parentPeakBytes?: number;
   readonly host?: WorkerMemoryHost;
@@ -184,16 +192,20 @@ export interface WorkerProcessSlots {
 const rosterPublication = (entry: string): boolean => entry === "registry-runtime-bindings" ||
   entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
 
-function routineEntryPeakMiB(entry: string): number | undefined {
-  const profile = ROUTINE_ENTRY_MEMORY_MIB[entry.split(/[\\/]/).at(-1)!];
-  return typeof profile === "object" ? profile.minimumMiB : profile;
+function routineMinimumPeakBytes(entry: string): number {
+  const family = /^(?:worker-publication:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
+  if (family) return STATE_BALLOT_PEAK_MIB[family]! * MIB;
+  const script = entry.split(/[\\/]/).at(-1)!;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "translate-national-measures.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
+    // Recent small-state runs cannot lower the full-state publication reservation.
+    minimumPeakBytes: memory.minimumPeakBytes ?? routineMinimumPeakBytes,
     peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
       rosterPublication(entry) ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
-          ? WORKER_ENTRY_PEAK_MIB.national! : routineEntryPeakMiB(entry) ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
+          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
@@ -206,7 +218,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
   const host = memory.host ?? (memory.availableBytes ? workerMemoryHost({ processes: () => [] }) : sharedHost);
   const peakFor = memory.peakBytes ?? (entry => {
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
-    return (routineEntryPeakMiB(entry) ?? WORKER_ENTRY_PEAK_MIB[kind]!) * MIB;
+    return (ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB[kind]!) * MIB;
   });
   const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
   const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
@@ -269,9 +281,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
         const reserve = (entry: string): number => {
           const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
-          const profile = ROUTINE_ENTRY_MEMORY_MIB[entry.split(/[\\/]/).at(-1)!];
-          const minimum = typeof profile === "object" ? profile.minimumMiB * MIB : 0;
-          return Math.max(minimum, measured?.length ? measuredReservationBytes(measured) : peakFor(entry));
+          return Math.max(measured?.length ? measuredReservationBytes(measured) : peakFor(entry), memory.minimumPeakBytes?.(entry) ?? routineMinimumPeakBytes(entry));
         };
         while (active < maximum && waiting.length) {
           const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +
@@ -335,10 +345,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
 /** How often a wait for host memory says it is still waiting. */
 export const MEMORY_WAIT_REPORT_EVERY_MS = 60_000;
 
-/**
- * A wait for host memory reports once a minute that it is still waiting, so the
- * runner's no-output timeout does not end it as a crash. Quick admissions print nothing.
- */
+/** Report pending admission so the runner's no-output timeout does not mistake a wait for a crash. */
 export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   readonly write?: (line: string) => void;
   readonly everyMs?: number;
@@ -365,12 +372,7 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   } };
 }
 
-/**
- * What the host holds, for the runner's heartbeat. Read-only: the reservation
- * file is read without its lock (writers replace it whole). `fitLeaseWorkers`
- * is free memory less the 0.75 GiB margin and reserved growth, over one lease
- * worker's peak.
- */
+/** Heartbeat reads the atomically replaced reservation file without taking the admission lock. */
 export interface HostMemoryReading {
   readonly at: string;
   readonly totalBytes: number;

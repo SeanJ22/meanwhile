@@ -9,13 +9,12 @@ import { documentsFor, failuresFor } from "../lib/candidates/positions.ts";
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { answerFor, type CandidateCorpus, type CandidateDocument } from "../lib/candidates/corpus.ts";
 import { createHash } from "node:crypto";
-import { installAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
-import { servableAzBallot } from "./helpers/reader-fixtures.ts";
+import { installBallots, syntheticAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
 import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
 
 await installRegistryAuthority();
 // The governor's certified card, reconciled to the governor's candidacy.
-await installAzBallot(servableAzBallot([{
+await installBallots(syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",
   candidacies: [{ id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" }],
@@ -36,10 +35,20 @@ const extra = [
   ...bridged.map((row, i) => page(row.candidacy!.candidacyId, `https://bridged-${i + 1}.example.test/`,
     `Synthetic test page ${i + 1}. Our libraries need longer hours and every reader deserves a library within walking distance. This page was written for a test and describes no real campaign; it is long enough to be held as a readable publication.`)),
 ];
-await installCandidateCorpus({ ...base, attempted: base.attempted + extra.length, documents: [...base.documents, ...extra] });
+const placeFor = (key: string) => {
+  const row = bridged.find(row => row.holder.id === key || row.candidacy?.candidacyId === key);
+  const divisions = row?.holder.divisions ?? ["ocd-division/country:us/state:az"];
+  const state = divisions.flatMap(id => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase() ?? [])[0]!;
+  return { state, divisions };
+};
+const states = [...new Set(["AZ", ...bridged.map(row => placeFor(row.holder.id).state)])];
+for (const state of states) {
+  const documents = [...(state === "AZ" ? base.documents : []), ...extra.filter(row => placeFor(row.candidateKey).state === state)];
+  await installCandidateCorpus({ ...base, attempted: documents.length, documents }, state);
+}
 
 test("every held statement identity bridge gives the Positions API the same complete answer from each current person/card identity", async () => {
-  const corpus = unifiedCorpus();
+  const corpus = unifiedCorpus(states);
   const groups = new Map<string, { keys: string[]; subjectId: string; topic: string }>();
   for (const snapshot of corpus.snapshots.filter((snapshot) => snapshot.extraction === "ok" && snapshot.text)) {
     const keys = readerPersonKeys(snapshot.subjectId).keys;
@@ -49,18 +58,19 @@ test("every held statement identity bridge gives the Positions API the same comp
   }
   assert.ok(groups.size >= 10);
   for (const { keys, subjectId, topic } of groups.values()) {
-    const expected = readerPositionsFor(subjectId, topic, corpus);
+    const { state, divisions } = placeFor(subjectId);
+    const expected = readerPositionsFor([state], subjectId, topic, unifiedCorpus([state]));
     assert.ok(expected.passages.length > 0);
     for (const key of keys) {
-      const response = await GET(new Request("https://wtp.test/api/positions"), { params: Promise.resolve({ subject: encodeURIComponent(key), topic }) });
+      const response = await GET(new Request(`https://wtp.test/api/positions?${new URLSearchParams(divisions.map(id => ["division", id]))}`), { params: Promise.resolve({ subject: encodeURIComponent(key), topic }) });
       assert.equal(response.status, 200, key);
       const payload = await response.json() as ReaderPositionAnswer & { totalMatches: number };
       assert.deepEqual(payload.canonicalSubjectKeys, expected.canonicalSubjectKeys, key);
       assert.deepEqual(payload.passages, expected.passages, key);
       assert.deepEqual(payload.searched, expected.searched, key);
       assert.equal(payload.totalMatches, payload.passages.length, key);
-      assert.deepEqual(documentsFor(key).map((document) => document.id), documentsFor(subjectId).map((document) => document.id));
-      assert.deepEqual(failuresFor(key), failuresFor(subjectId));
+      assert.deepEqual(documentsFor(state, key).map((document) => document.id), documentsFor(state, subjectId).map((document) => document.id));
+      assert.deepEqual(failuresFor(state, key), failuresFor(state, subjectId));
     }
   }
 });
@@ -68,15 +78,15 @@ test("every held statement identity bridge gives the Positions API the same comp
 test("Hobbs map, ballot and Ask use the held Governor passage while a foreign supplied key cannot supply it", () => {
   const official = "statewide:az/governor";
   const card = "ballot-az-pima:governor|Katie Hobbs";
-  assert.equal(positionsFor(official, "Governor", unifiedCorpus()).passages.length, 0, "measured old exact-ID seam");
-  const expected = readerPositionsFor(card, "Governor");
+  assert.equal(positionsFor(official, "Governor", unifiedCorpus(["AZ"])).passages.length, 0, "measured old exact-ID seam");
+  const expected = readerPositionsFor(["AZ"], card, "Governor");
   assert.ok(expected.passages.length > 0);
-  assert.deepEqual(readerPositionsFor(official, "Governor"), expected);
-  const answer = statementEvidenceFor({ kind: "PERSON", id: official, name: "Katie Hobbs" }, "What does Katie Hobbs say about Governor?", ["unresolved:other-person"]);
+  assert.deepEqual(readerPositionsFor(["AZ"], official, "Governor"), expected);
+  const answer = statementEvidenceFor(["AZ"], { kind: "PERSON", id: official, name: "Katie Hobbs" }, "What does Katie Hobbs say about Governor?", ["unresolved:other-person"]);
   assert.equal(answer.records.length, expected.passages.length);
   for (const passage of expected.passages) assert.ok(answer.records.some((record) => record.id === passage.snapshotId && record.text.includes(passage.quote) && record.sourceUrl === passage.url && record.retrievedAt === passage.retrievedAt));
-  assert.equal(readerPositionsFor("unresolved:former-candidate", "Governor").passages.length, 0);
-  const unknown = statementEvidenceFor({ kind: "PERSON", id: "unresolved:former-candidate", name: "Katie Hobbs" }, "What does Katie Hobbs say about Governor?", [official, card]);
+  assert.equal(readerPositionsFor(["AZ"], "unresolved:former-candidate", "Governor").passages.length, 0);
+  const unknown = statementEvidenceFor(["AZ"], { kind: "PERSON", id: "unresolved:former-candidate", name: "Katie Hobbs" }, "What does Katie Hobbs say about Governor?", [official, card]);
   assert.equal(unknown.records.length, 0, "an external alias hint cannot override the committed identity graph");
 });
 
@@ -121,11 +131,11 @@ test("verified person aliases search each exact captured source once while retai
   const corpus: CandidateCorpus = { formatVersion: 1, fetchedAt: metadataRevision.retrievedAt, attempted: 3,
     failures: [], documents: [...originals, ...copies, foreign] };
 
-  const selected = documentsFor(official, corpus);
+  const selected = documentsFor("AZ", official, corpus);
   assert.deepEqual(selected, originals);
   selected.forEach((row, index) => assert.equal(row, originals[index], "retain the untouched original source object"));
-  assert.deepEqual(documentsFor(card, corpus), selected, "representative selection must not depend on requested alias");
-  assert.deepEqual(documentsFor(unrelated, corpus), [foreign], "another person keeps their own exact source capture");
+  assert.deepEqual(documentsFor("AZ", card, corpus), selected, "representative selection must not depend on requested alias");
+  assert.deepEqual(documentsFor("AZ", unrelated, corpus), [foreign], "another person keeps their own exact source capture");
   const candidateAnswer = answerFor(selected, ["housing"]);
   assert.equal(candidateAnswer.kind, "MATCHED");
   if (candidateAnswer.kind !== "MATCHED") return;
@@ -140,11 +150,11 @@ test("verified person aliases search each exact captured source once while retai
   const unified = unifiedCorpusFromHoldings({ candidateCorpus: corpus });
   assert.equal(unified.snapshots.length, 7, "the global corpus retains each person's original rows");
   assert.equal(unified.snapshots[0]!.sourceRevision, old.sourceRevision, "carry the held capture envelope without rewriting it");
-  const expected = readerPositionsFor(official, "housing", unified);
+  const expected = readerPositionsFor(["AZ"], official, "housing", unified);
   assert.equal(expected.searched.snapshots, 3);
   assert.equal(expected.passages.length, 2);
-  assert.deepEqual(readerPositionsFor(card, "housing", unified), expected);
-  assert.deepEqual(readerPositionsFor(unrelated, "housing", unified).passages.map((passage) => passage.snapshotId), [foreign.id]);
+  assert.deepEqual(readerPositionsFor(["AZ"], card, "housing", unified), expected);
+  assert.deepEqual(readerPositionsFor(["AZ"], unrelated, "housing", unified).passages.map((passage) => passage.snapshotId), [foreign.id]);
   assert.equal(expected.passages.find((passage) => passage.snapshotId === metadataRevision.id)?.changedSince, old.retrievedAt);
   for (const key of [official, card]) {
     const result = await settlePositionHoldingAnswer(key, "housing", {
@@ -169,8 +179,8 @@ test("identical alias text without exact captured-source provenance remains sepa
   }));
   const corpus: CandidateCorpus = { formatVersion: 1, fetchedAt: documents[0]!.retrievedAt, attempted: 2,
     failures: [], documents };
-  assert.deepEqual(documentsFor(official, corpus), documents);
-  const answer = readerPositionsFor(official, "housing", unifiedCorpusFromHoldings({ candidateCorpus: corpus }));
+  assert.deepEqual(documentsFor("AZ", official, corpus).sort((a, b) => a.id.localeCompare(b.id)), [...documents].sort((a, b) => a.id.localeCompare(b.id)));
+  const answer = readerPositionsFor(["AZ"], official, "housing", unifiedCorpusFromHoldings({ candidateCorpus: corpus }));
   assert.equal(answer.searched.snapshots, 2);
   assert.equal(answer.passages.length, 2, "URL, clock and readable text alone do not establish an exact raw capture");
 });

@@ -1,7 +1,6 @@
 import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
-import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { AcsNationalLoad, AcsLoadCounts } from "../sources/census-acs-population/national.ts";
@@ -1399,94 +1398,6 @@ export function meetingsCandidate(input: {
           record: meeting,
         })),
     ],
-  };
-}
-
-type BallotCandidateDocument = {
-  readonly formatVersion?: number;
-  readonly election?: { readonly id?: string; readonly date?: string };
-  readonly contests?: readonly { readonly id?: string; readonly ocdId?: string; readonly provenance?: { readonly sourceUrl?: string } }[];
-  readonly candidacies?: readonly { readonly id?: string; readonly contestId?: string; readonly familyName?: string; readonly givenName?: string }[];
-  readonly measures?: readonly unknown[];
-  readonly absences?: readonly unknown[];
-  readonly removals?: readonly { readonly id?: string; readonly firstAbsentOn?: string }[];
-};
-
-export function njMorrisFilingCandidate(input: {
-  readonly ballot: BallotCandidateDocument;
-  readonly contacts: unknown;
-  readonly rawBodies: readonly string[];
-  readonly currentDocumentSet: {
-    readonly generalCandidatesUrl: string;
-    readonly schoolCandidatesUrl: string;
-  };
-  readonly finalUrl: string;
-  readonly retrievedAt: string;
-  readonly inputRecords: number;
-  readonly refused: readonly { readonly key: string; readonly detail: string; readonly record?: unknown }[];
-}): RoutineCandidate {
-  const contests = input.ballot.contests ?? [];
-  const candidacies = input.ballot.candidacies ?? [];
-  const removals = input.ballot.removals ?? [];
-  const contactRows = (
-    input.contacts && typeof input.contacts === "object" &&
-    Array.isArray((input.contacts as { readonly contacts?: unknown }).contacts)
-  ) ? (input.contacts as { readonly contacts: readonly { readonly candidacyId?: string }[] }).contacts : [];
-  const readModel = { ballot: input.ballot, contacts: input.contacts };
-  const normalizedPayload = { rawDocumentCount: input.rawBodies.length, ballot: input.ballot, contacts: input.contacts };
-  const rawHash = sha256(input.rawBodies.map((body) => sha256(body)).join("\n"));
-  const contestIds = new Set(contests.map((contest) => contest.id));
-  const violations: string[] = [];
-  const onClerkHost = (url: string) => /^https:\/\/www\.morriscountyclerk\.org\//i.test(url);
-  const generalDocumentIsCurrent = onClerkHost(input.currentDocumentSet.generalCandidatesUrl) &&
-    isMorrisGeneralCandidatesDocument(input.currentDocumentSet.generalCandidatesUrl);
-  const schoolDocumentIsCurrent = onClerkHost(input.currentDocumentSet.schoolCandidatesUrl) &&
-    isMorrisSchoolCandidatesDocument(input.currentDocumentSet.schoolCandidatesUrl);
-  const completeDocumentSet =
-    input.rawBodies.length >= 3 &&
-    generalDocumentIsCurrent &&
-    schoolDocumentIsCurrent &&
-    input.currentDocumentSet.generalCandidatesUrl !== input.currentDocumentSet.schoolCandidatesUrl;
-  if (!completeDocumentSet) {
-    violations.push("The clerk page's current general-candidate and school-candidate documents were not both acquired.");
-  }
-  if (contests.length === 0 || candidacies.length === 0) violations.push("The current clerk filing produced zero contests or candidacies.");
-  if (new Set(contests.map((row) => row.id)).size !== contests.length) violations.push("Contest identifiers are duplicated.");
-  if (new Set(candidacies.map((row) => row.id)).size !== candidacies.length) violations.push("Candidacy identifiers are duplicated.");
-  if (new Set(removals.map((row) => row.id)).size !== removals.length) violations.push("Removal identifiers are duplicated.");
-  if (new Set(contactRows.map((row) => row.candidacyId)).size !== contactRows.length) violations.push("Filed-contact candidacy identifiers are duplicated.");
-  if (candidacies.some((row) => !row.id || !row.contestId || !contestIds.has(row.contestId))) violations.push("A candidacy lacks a stable id or exact retained contest.");
-  const candidacyIds = new Set(candidacies.map((row) => row.id));
-  if (contactRows.some((row) => !row.candidacyId || !candidacyIds.has(row.candidacyId))) violations.push("A filed contact lacks an exact current candidacy identity.");
-  if (removals.some((row) => !row.id || !row.firstAbsentOn)) violations.push("A removed candidacy lacks its stable id or first-observed absence date.");
-  if (candidacies.length + input.refused.length !== input.inputRecords) violations.push("Filing rows do not reconcile to built plus explicitly refused rows.");
-  const electionDate = input.ballot.election?.date ?? "2026-11-03";
-  return {
-    id: candidateId("nj-morris-county-clerk", "US-NJ:county:morris:2026-general", rawHash, input.retrievedAt),
-    sourceId: "nj-morris-county-clerk",
-    recordClass: "BALLOT_FILING",
-    scope: "US-NJ:county:morris:2026-general",
-    sourceProjectionEvidence: sourceProjectionEvidence("nj-morris-county-clerk", "BALLOT_FILING", "US-NJ:county:morris:2026-general"),
-    retrieval: { succeeded: input.rawBodies.length > 0, requestedUrl: "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates", finalUrl: input.finalUrl, httpStatus: input.rawBodies.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: input.rawBodies.length > 0 ? rawHash : null, failureDetail: input.rawBodies.length > 0 ? undefined : "No clerk filing bytes were acquired." },
-    normalization: { succeeded: true, parserVersion: "nj-morris-filing/2", schemaVersion: `NJBallot:${input.ballot.formatVersion ?? 1}:${electionDate}`, normalizedHash: normalizedHash(readModel), normalizedPayloadHash: normalizedHash(normalizedPayload), inputRecords: input.inputRecords, outputRecords: candidacies.length, droppedRecords: input.refused.length, missingRequiredFields: candidacies.some((row) => !row.id || !row.contestId) ? ["candidacy.id/contestId"] : [] },
-    identities: candidacies.map((row) => ({ subjectId: row.id ?? "missing", jurisdiction: "US-NJ", identifiers: { candidacy_id: row.id ?? "missing", contest_id: row.contestId ?? "missing", division_id: contests.find((contest) => contest.id === row.contestId)?.ocdId ?? "missing" }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
-    temporal: { version: electionDate, expectedVersion: "2026-11-03", sourceThrough: input.retrievedAt, staleAtRetrieval: electionDate !== "2026-11-03" },
-    semantics: { factKind: "county-clerk filed candidacy, contest, contact, and removal history", violations },
-    horizon: { kind: "BOUNDED", query: "newest current general and school candidate PDFs linked by the clerk page; input dispositions reconcile separately", returnedRecords: candidacies.length, declaredTotal: candidacies.length, paginationComplete: true, claimsComplete: true },
-    absence: { claimsAbsence: removals.length > 0, basis: removals.length > 0 ? "BOUNDED_AUTHORITATIVE_QUERY" : "NONE", exactSubject: removals.length > 0 ? "previously filed candidacies absent from the current clerk revision" : null, exactHorizon: removals.length > 0 ? "the newest linked Morris County general-election filing PDFs" : null },
-    dependentChecks: [
-      { consumer: "Morris Clerk current filing horizon", passed: completeDocumentSet, detail: completeDocumentSet ? "The clerk page and both current filing document classes were acquired." : "The clerk page plus distinct general and school candidate documents are required." },
-      { consumer: "lib/sources/ballot-nj-morris/index.ts", passed: contests.length > 0 && candidacies.length > 0, detail: `${contests.length} contests and ${candidacies.length} current candidacies.` },
-      { consumer: "questionnaire invitations", passed: input.contacts !== null, detail: "Filed contact projection is retained separately from public ballot fields." },
-    ],
-    normalizedPayload,
-    readModel,
-    excludedFacts: input.refused.map((row) => ({
-      key: row.key,
-      code: "NJ_FILING_ROW_REFUSED",
-      detail: row.detail,
-      ...(Object.hasOwn(row, "record") ? { record: row.record } : {}),
-    })),
   };
 }
 

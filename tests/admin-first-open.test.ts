@@ -1,20 +1,7 @@
-/**
- * The first open of an Admin page waits only for what it must:
- *
- * ```
- *   bodies      the watched-body read leaves out the change history; only an opened routine read
- *               asks for its own body's history
- *   drilldown   an opened piece of standing work is read in as few dependent round trips as its
- *               keys allow, returning the same records in the same order
- *   page        Work reads it beside its other reads and reads the newest digest alone
- * ```
- *
- * Round trips are counted with gated repositories: every read waits until the test releases the
- * reads in flight, so one release is one dependent round trip.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { readLatestDigest } from "../lib/control-plane/admin-data.ts";
 import { buildBodyViews, type BodyStoreFacts, type BodyView, type VersionFacts, type WatchedContract } from "../lib/control-plane/admin-view/bodies.ts";
 import { readAssignmentSourcesById } from "../lib/control-plane/assignment-read.ts";
@@ -26,7 +13,6 @@ const NOW = "2026-09-25T20:00:00.000Z";
 const OB = "freshness:campaign-finance:ballot-az-pima:prop-423#AZ_PIMA_COUNTY_CAMPAIGN_FINANCE_PAGE";
 const BASE = { nowIso: NOW, activation: null, pilotZips: [] as string[] };
 
-/* ------------------------------------------------------------------ gated repositories */
 
 interface Gated {
   readonly repos: ControlPlaneRepositories;
@@ -88,7 +74,6 @@ function gated(repos: ControlPlaneRepositories): Gated {
   };
 }
 
-/* ------------------------------------------------------------------ fixtures */
 
 const any = <T>(value: unknown): T => value as T;
 
@@ -105,12 +90,15 @@ async function ordinary(): Promise<ControlPlaneRepositories> {
     await repos.attempts.put(`at-${n}`, any({ id: `at-${n}`, routeTaskId: `rt-${n}`, outcome: { kind: "SUCCEEDED" } }), NOW);
   }
   await repos.artifacts.append("wi-1", "art-1", any({ id: "art-1" }), NOW);
-  await repos.costs.append("wi-2", "cost-1", any({ id: "cost-1", usd: 0.01 }), NOW);
+  await repos.costs.append("wi-2", "cost-1", {
+    attemptId: "at-2", workItemId: "wi-2", routeTaskId: "rt-2", routeId: "route-1", source: null,
+    jurisdiction: null, project: "freshness", role: "SCOUT", model: null,
+    cost: { ...ZERO_COST, usd: 0.01 }, recordedAt: NOW,
+  }, NOW);
   await repos.dispositions.append("rt-1", "dc-1", any({ id: "dc-1" }), NOW);
   return repos;
 }
 
-/* ------------------------------------------------------------------ the drilldown */
 
 test("an ordinary drilldown is four dependent round trips, and the pipeline no longer waits behind the attempts", async () => {
   const g = gated(await ordinary());
@@ -157,7 +145,7 @@ test("the drilldown returns the same records, in the same order, however its rea
   assert.deepEqual((v.dispositions ?? []).map((d) => (d as unknown as { id: string }).id), ["dc-1", "dc-9"]);
   assert.deepEqual((v.leases ?? []).map((l) => (l as unknown as { routeTaskId: string }).routeTaskId), ["rt-9"]);
   assert.deepEqual(v.artifacts.map((a) => (a as unknown as { id: string }).id), ["art-1"]);
-  assert.deepEqual(v.costs.map((c) => (c as unknown as { id: string }).id), ["cost-1"]);
+  assert.deepEqual(v.costs.map((c) => c.attemptId), ["at-2"]);
   assert.equal(v.debts.length, 1);
   assert.equal(v.scoutResults.length, 1);
   assert.deepEqual(v.pipeline, []);
@@ -194,7 +182,6 @@ test("an id that names nothing is NOT_RECORDED after two round trips, never an e
   assert.equal(rounds.length, 2);
 });
 
-/* ------------------------------------------------------------------ the newest digest */
 
 test("the runner card's digest is one row from the tail of the log, the newest", async () => {
   const repos = createMemoryRepositories();
@@ -208,7 +195,6 @@ test("the runner card's digest is one row from the tail of the log, the newest",
   assert.equal(value.kind === "HELD" ? (value.value as unknown as { n: number }).n : null, 3);
 });
 
-/* ------------------------------------------------------------------ the body read */
 
 const AZ = "ocd-division/country:us/state:az";
 const contract = (id: string, bodyId: string): WatchedContract => ({

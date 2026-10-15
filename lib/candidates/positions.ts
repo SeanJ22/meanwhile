@@ -10,15 +10,29 @@ import { DEFAULT_STANCE_TOPICS, type StanceTopic } from "../stances/topics.ts";
 import { verifiedReaderPersonKeys } from "../identity/reader-person.ts";
 import { currentCandidateCorpusProjection } from "../civic-data/manual-read-models.ts";
 
-export function getCandidateCorpus(): CandidateCorpus {
-  return currentCandidateCorpusProjection();
+export function getCandidateCorpus(state: string): CandidateCorpus {
+  return currentCandidateCorpusProjection(state);
 }
 
-export function documentsFor(candidateKey: string, corpus?: CandidateCorpus, holderId?: string): CandidateDocument[] {
+const documentIndexes = new WeakMap<CandidateCorpus, ReadonlyMap<string, CandidateDocument[]>>();
+export function candidateDocumentsByKey(corpus: CandidateCorpus): ReadonlyMap<string, CandidateDocument[]> {
+  let index = documentIndexes.get(corpus);
+  if (!index) {
+    const built = new Map<string, CandidateDocument[]>();
+    for (const document of corpus.documents) {
+      const rows = built.get(document.candidateKey);
+      if (rows) rows.push(document); else built.set(document.candidateKey, [document]);
+    }
+    index = built; documentIndexes.set(corpus, index);
+  }
+  return index;
+}
+
+export function documentsFor(state: string, candidateKey: string, corpus?: CandidateCorpus, holderId?: string): CandidateDocument[] {
   const keys = [...verifiedReaderPersonKeys(candidateKey), ...(holderId ? verifiedReaderPersonKeys(holderId) : [])];
   const seen = new Map<string, string>();
-  return (corpus ?? getCandidateCorpus()).documents.filter((document) => {
-    if (!keys.includes(document.candidateKey)) return false;
+  const index = candidateDocumentsByKey(corpus ?? getCandidateCorpus(state));
+  return [...new Set(keys)].flatMap(key => index.get(key) ?? []).filter((document) => {
     const capture = sourceCaptureFingerprint(document.sourceRevision, document.contentHash,
       document.documentUrl, document.retrievedAt);
     if (capture === null) return true;
@@ -29,9 +43,9 @@ export function documentsFor(candidateKey: string, corpus?: CandidateCorpus, hol
   });
 }
 
-export function failuresFor(candidateKey: string) {
+export function failuresFor(state: string, candidateKey: string) {
   const keys = verifiedReaderPersonKeys(candidateKey);
-  return getCandidateCorpus().failures.filter(
+  return getCandidateCorpus(state).failures.filter(
     (f) => keys.includes(f.candidateKey),
   );
 }
@@ -43,12 +57,13 @@ export interface IssuePosition {
 }
 
 export function positionsFor(
+  state: string,
   candidateKey: string,
   ownSiteUrl: string | null = null,
   topics: readonly StanceTopic[] = DEFAULT_STANCE_TOPICS,
   holderId?: string,
 ): IssuePosition[] {
-  const documents = documentsFor(candidateKey, undefined, holderId);
+  const documents = documentsFor(state, candidateKey, undefined, holderId);
   return topics.map((issue) => {
     const answer = answerFor(documents, issue.phrases, ownSiteUrl);
     return { issue, answer, sentence: answerSentence(answer, issue.label) };

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
-import { currentPromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { currentPromotedEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
   CandidateVersionRecord,
@@ -228,6 +228,7 @@ export function promotedEdgeEntryOf<T>(
 }
 
 const verifiedEdgeEntries = new WeakSet<object>();
+const provenEdgeEntries = new WeakSet<object>();
 
 function promotedEdgeIssue(
   recordClass: RoutineRecordClass,
@@ -238,6 +239,7 @@ function promotedEdgeIssue(
   if (projection.key !== projectionKey(recordClass, scope) || projection.recordClass !== recordClass || projection.scope !== scope) {
     return "the edge copy names another class or scope";
   }
+  if (provenEdgeEntries.has(entry)) return null;
   if (projection.lastKnownGoodVersionId !== projection.versionId) return "the current pointer and last-known-good pointer diverge";
   if (attested.recordClass !== recordClass || attested.scope !== scope || attested.versionId !== projection.versionId) {
     return "the attestation does not name the pointed version";
@@ -251,6 +253,7 @@ function promotedEdgeIssue(
     if (promotedPayloadSha256(projection.payload) !== attested.payloadSha256) return "the payload does not hash to the attested payload";
     verifiedEdgeEntries.add(entry);
   }
+  provenEdgeEntries.add(entry);
   return null;
 }
 
@@ -315,11 +318,30 @@ interface CachedPromotion {
   readonly candidate: CandidateVersionRecord;
 }
 
-const cache = new Map<string, CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
+class PlaceBoundedProjectionMap<V extends { readonly projection: PromotedProjection | null }> extends Map<string, V> {
+  private readonly placeKeys = new Set<string>();
+  override set(key: string, value: V): this {
+    this.delete(key);
+    super.set(key, value);
+    const scope = value.projection?.scope ?? key.slice(key.indexOf(":") + 1);
+    if (/^US-[A-Z]{2}:(?:state-election-ballots|candidate-profiles|candidate-publications|voting-sites|candidate-campaign-sites-derived)$/.test(scope) ||
+      /^US:(?:ballot-measures|plain-english-translations):ocd-division\//.test(scope)) this.placeKeys.add(key);
+    while (this.placeKeys.size > 8) this.delete(this.placeKeys.values().next().value!);
+    return this;
+  }
+  override delete(key: string): boolean {
+    this.placeKeys.delete(key);
+    return super.delete(key);
+  }
+  override clear(): void {
+    this.placeKeys.clear();
+    super.clear();
+  }
+}
 
-// Immutable versions are memoized only after GOOD proof; the pointer is
-// always re-read, and bypassCache neither reads nor fills this memo.
-const provenByVersion = new Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>();
+const cache = new PlaceBoundedProjectionMap<CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
+
+const provenByVersion = new PlaceBoundedProjectionMap<{ projection: PromotedProjection; candidate: CandidateVersionRecord }>();
 
 /** Per store and scope, the version last proved, so an unmoved pointer is served without refetching. `bypassCache` never consults it. */
 const DEFAULT_STORE: object = {};
@@ -343,7 +365,7 @@ function provenPointersOf(store: CivicDataReadStore | undefined): Map<string, { 
   const scope = store ?? DEFAULT_STORE;
   let pointers = provenPointers.get(scope);
   if (pointers === undefined) {
-    pointers = new Map();
+    pointers = new PlaceBoundedProjectionMap();
     provenPointers.set(scope, pointers);
   }
   return pointers;
@@ -436,7 +458,7 @@ export async function readPromotedCivicData<T>(
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
   if (!injected && !options.bypassCache) {
-    const edge = currentPromotedEdge(recordClass, scope);
+    const edge = await ensurePromotedEdge(recordClass, scope);
     if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);
     refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
   }

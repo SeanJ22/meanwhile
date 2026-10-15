@@ -238,6 +238,26 @@ test("legacy registry roster publications reserve their measured RSS and queue u
   }
 });
 
+test("state publishers retain full-state headroom after small-state measurements", async () => {
+  const mib = 1024 * 1024;
+  for (const [family, script, measured] of [
+    ["ballot-contests", "assemble-ballot-package.mts", 3_818_700_800],
+    ["candidate-profiles", "promote-manual-civic-projection.mts", 3_705_548_800],
+    ["candidate-corpus", "promote-manual-civic-projection.mts", 1_934_823_424],
+    ["voting-sites", "fetch-voting-sites.mts", 1_432_571_904],
+  ] as const) {
+    const host = workerMemoryHost({ processes: () => [] });
+    host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
+    const slots = routineProcessSlots({ host, availableBytes: () => 2 * measured + 768 * mib - 1 });
+    const first = await slots.acquire(`${family}:IL/${script}`, Date.now() + 500);
+    host.transact(state => assert.ok(state.reservations[0]!.peak >= measured), false);
+    await assert.rejects(slots.acquire(`worker-publication:${family}:TX:next/${script}`, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+    first();
+    const next = await slots.acquire(`worker-publication:${family}:TX:next/${script}`, Date.now() + 500);
+    next();
+  }
+});
+
 test("OS-free memory reserves only unreached child peaks and the research parent's growth", async () => {
   let childRss = 0;
   const host = workerMemoryHost({ processes: () => [

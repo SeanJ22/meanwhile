@@ -52,7 +52,7 @@ test("Ask retrieves compact measure provisions and attributed guide excerpts fro
       sourceUrl: law.sourceUrl, sourceHash: law.sourceHash, sourceHashKind: "HELD_TEXT", writtenAt: law.retrievedAt, citation: "measure-source" }] };
   const subject = ballotAskInventory(set, set.contests).subjects.get(held.id)!;
   const result = ballotRecordsFor(subject, { set, contests: set.contests, absences: [], measureSummary: () => null,
-    measureProvisions: id => provisionsForContest(id, set.measureRecords) });
+    measureProvisions: id => provisionsForContest(id, set.measureRecords!) });
   assert.ok(result.records.every(record => typeof record.text === "string"));
   assert.equal(result.records.some(record => record.id.endsWith("#full-law") || record.kind === "MEASURE_SUMMARY"), false);
   assert.equal(result.denominators.provisionsRecorded, 1);

@@ -27,22 +27,22 @@ const payload: CandidateProfilesProjection = {
 async function promoteFixture(): Promise<void> {
   const store = new MemoryRoutineDataStore();
   const pkg: ManualProjectionPackage = {
-    contractId: "candidate-profiles", version: AT, sourceThrough: AT,
+    contractId: "candidate-profiles:NJ", version: AT, sourceThrough: AT,
     sourceReceipt: { contractVersion: 1, reviewedAt: AT, reviewedBy: "owner-test", sources: [{
       requestedUrl: "https://www.janedoe.example", finalUrl: "https://www.janedoe.example", publisher: "www.janedoe.example", sourceClass: "CANDIDATE_CONTROLLED",
       retrievedAt: AT, httpStatus: 200, rawHash: "a".repeat(64), reviewedEvidence: "Exact response bytes reviewed by the owner.",
     }] },
     payload,
   };
-  const outcome = await processRegisteredManualCandidate(store, "candidate-profiles", manualProjectionCandidate(pkg), AT, null);
+  const outcome = await processRegisteredManualCandidate(store, "candidate-profiles:NJ", manualProjectionCandidate(pkg), AT, null);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
-  await refreshCandidateProfilesFromPromoted({ store, bypassCache: true, now: AT });
+  await refreshCandidateProfilesFromPromoted("NJ", { store, bypassCache: true, now: AT });
 }
 
 await promoteFixture();
 
 test("every link was fetch-verified: url, verification sentence, and date present", () => {
-  const { links, hunts } = allCandidateLinks();
+  const { links, hunts } = allCandidateLinks("NJ");
   assert.ok(Object.keys(links).length > 0);
   for (const [key, entry] of Object.entries(links)) {
     for (const side of ["official", "campaign"] as const) {
@@ -69,7 +69,7 @@ test("every link was fetch-verified: url, verification sentence, and date presen
 });
 
 test("no ranking vocabulary anywhere in the links file", () => {
-  const raw = JSON.stringify(allCandidateLinks()).toLowerCase();
+  const raw = JSON.stringify(allCandidateLinks("NJ")).toLowerCase();
   for (const banned of ['"score"', '"rank"', '"rating"', '"match"', '"fit"', '"grade"', '"alignment"', '"recommendation"']) {
     assert.ok(!raw.includes(banned), `banned key ${banned} in candidate-links`);
   }

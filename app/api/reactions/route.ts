@@ -5,7 +5,7 @@ import { writeReaction } from "@/lib/db/reactions";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { noteSubmission } from "@/lib/db/intake-limiter";
 import { markerFromRequest } from "@/lib/db/run-marker";
-import { coverageAt } from "@/lib/registry/server";
+import { ballotPlaceDivisions } from "@/lib/ballot/reader-place";
 import { ripcordPulled } from "@/lib/ripcords";
 import {
   classifySubmission,
@@ -36,34 +36,13 @@ import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane"
 import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
 import { FEDERAL_CONTEST, directFundingTargetPlan } from "@/lib/funding/target-authorities";
 
-/**
- * POST /api/reactions. Validation fails closed and is never behind a flag: anything unknown, invented,
- * oversized or malformed is a 400 and nothing is stored.
- *
- * Protections, cheapest first, inside `ripcord.rateLimits`:
- *
- * 1. Same-origin.
- * 2. In-memory sliding windows per device key and per IP. The IP appears in no log, row or error message.
- * 3. The authoritative counters (lib/db/intake-limiter.ts): past the hard limit, refused; past the soft
- *    threshold, stored but quarantined; counters unavailable, stored quarantined as LIMITER_UNAVAILABLE.
- *
- * The limiter's digest cannot join the reaction store. `ripcord.reactionIntake` closes the route with a 503.
- * A missing database is a 202 (accepted, not stored).
- */
-
 export const runtime = "nodejs";
-
-/**
- * The instance-local first line. Limits are read from env once per
- * instance — the authoritative cross-instance numbers live in the DB
- * counters, so a stale window limit here only affects the cheap pre-check.
- */
 
 const MAX_BODY_BYTES = 4096;
 
 interface ReactionAuthorityReaders {
-  readonly candidateTargets: (targetId: string) => Promise<Set<string>>;
-  readonly provisionTargets: (targetId: string) => Set<string> | Promise<Set<string>>;
+  readonly candidateTargets: (divisions: readonly string[], targetId: string) => Promise<Set<string>>;
+  readonly provisionTargets: (divisions: readonly string[], targetId: string) => Set<string> | Promise<Set<string>>;
   readonly refreshFunding: () => Promise<unknown>;
   readonly fundingTargets: () => Set<string>;
   readonly refreshStateMoney: (state: StateCampaignFinanceJurisdiction) => Promise<unknown>;
@@ -75,8 +54,8 @@ interface ReactionAuthorityReaders {
 
 const reactionAuthorityReaders: ReactionAuthorityReaders = {
   candidateTargets: getCandidateTargetIds,
-  provisionTargets: async (targetId) => {
-    const authority = await readerBallotSourceForTargetId(targetId);
+  provisionTargets: async (divisions, targetId) => {
+    const authority = await readerBallotSourceForTargetId(targetId, divisions);
     if (!authority) return new Set();
     const ballot = authority.source.normalize(await authority.source.fetch());
     return getProvisionTargetIds(measureRecordsForBallot(ballot));
@@ -95,25 +74,18 @@ const reactionAuthorityReaders: ReactionAuthorityReaders = {
   voteTargets: getVoteIds,
 };
 
-/**
- * Open only the authority named by the validated target class. Intake for a
- * candidate must not depend on FEC or roll-call availability, and the two
- * latter authorities must not become one all-or-nothing preload domain.
- */
 export async function validReactionTargetsFor(
   targetType: ReactionTargetType,
   targetId: string,
   readers: ReactionAuthorityReaders = reactionAuthorityReaders,
+  divisions: readonly string[] = [],
 ): Promise<Set<string>> {
   switch (targetType) {
     case "CANDIDATE":
-      return readers.candidateTargets(targetId);
+      return readers.candidateTargets(divisions, targetId);
     case "MEASURE_PROVISION":
-      return readers.provisionTargets(targetId);
+      return readers.provisionTargets(divisions, targetId);
     case "FUNDING_TOTAL_REACTION": {
-      // A state or local candidacy key (`ballot-xx-...`) is valid when that
-      // state's promoted money holds a committee for it; anything else is an
-      // FEC candidate id, as before.
       const state = directFundingTargetPlan(targetId).state;
       if (state !== null && !FEDERAL_CONTEST.test(targetId)) {
         await readers.refreshStateMoney(state);
@@ -132,9 +104,6 @@ export async function validReactionTargetsFor(
 }
 
 async function postWithSettings(request: Request) {
-  // The master ripcord: intake closed means every write refused
-  // before anything is read or counted. The reader's tap renders the
-  // honest not-counted line; nothing silently records.
   if (ripcordPulled("ripcord.reactionIntake")) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
@@ -161,6 +130,7 @@ async function postWithSettings(request: Request) {
     zip?: unknown;
     lat?: unknown;
     lng?: unknown;
+    divisions?: string[];
   };
 
   if (!isValidTargetType(submission.targetType)) {
@@ -175,26 +145,19 @@ async function postWithSettings(request: Request) {
   if (!isPlausibleTargetId(submission.targetId)) {
     return Response.json({ error: "malformed targetId" }, { status: 400 });
   }
-  // The verbatim's SHAPE is checked here and always — validation is never
-  // behind any flag. Whether the
-  // text is CAPTURED is the ripcord's business, further down.
   if (!isValidFreeText(submission.text)) {
     return Response.json({ error: "malformed text" }, { status: 400 });
   }
 
-  // The target must exist in the canonical data for its type — votes in
-  // the promoted vote projection, candidates in the ballot projection, funding
-  // reactions in the FEC projection. An unavailable authority fails closed —
-  // better to refuse a reaction than to store one against a target nothing
-  // can render. The CONTRIBUTOR_REACTION set is empty while
-  // ripcord.fecContributorDisplay is pulled, so the control's write path
-  // dies with its display — a ripcord that only hid pixels would not be
-  // a ripcord.
   let validTargets: Set<string>;
+  let ocdIds: string[];
   try {
+    ocdIds = await ballotPlaceDivisions(submission);
     validTargets = await validReactionTargetsFor(
       submission.targetType,
       submission.targetId,
+      undefined,
+      ocdIds,
     );
   } catch {
     return Response.json({ error: "target data unavailable" }, { status: 503 });
@@ -203,19 +166,6 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "unknown targetId" }, { status: 400 });
   }
 
-  // The context table: a value whose meaning depends on the contest's
-  // shape is refused wherever that shape does not hold. SOMEONE_ELSE only
-  // means what it says in a race with one candidate; accepted on a contested
-  // race it would pour a different question's answers into the same bucket.
-  // Enforced here rather than trusted to the UI — the UI decides what to
-  // offer, the server decides what is true.
-  // The scale gate runs in BOTH directions: a
-  // five-point funding answer is refused on a vote, AND yes/no/unsure is
-  // refused on a funding target. The second direction is what keeps the
-  // scale break clean — a stale client writing v1 answers into a v2 column
-  // would blend two instruments, which is the whole thing scale versioning
-  // exists to stop. The server decides what question was asked; the row's
-  // scaleVersion is derived from the target type, never sent.
   if (!isValueOnScaleFor(submission.targetType, submission.reaction)) {
     return Response.json(
       { error: "that answer is not on this question's scale" },
@@ -232,7 +182,7 @@ async function postWithSettings(request: Request) {
     }
     let uncontested: Set<string>;
     try {
-      uncontested = await getSingleCandidateTargetIds(submission.targetId);
+      uncontested = await getSingleCandidateTargetIds(ocdIds, submission.targetId);
     } catch {
       return Response.json({ error: "target data unavailable" }, { status: 503 });
     }
@@ -246,9 +196,6 @@ async function postWithSettings(request: Request) {
 
   let suspectReason: "VELOCITY" | "LIMITER_UNAVAILABLE" | null = null;
   if (!ripcordPulled("ripcord.rateLimits")) {
-    // Same-origin: taps come from pages this site served. A browser
-    // attaches Origin to every POSTed fetch; a script pumping writes from
-    // outside either omits it or names a foreign origin.
     if (!isSameOriginSubmission(request)) {
       return Response.json(
         { error: "cross-origin submissions are not accepted" },
@@ -292,26 +239,6 @@ async function postWithSettings(request: Request) {
     }
   }
 
-  // Where the reader was looking — resolved server-side from the map view,
-  // the same approximate-location basis as the search log. Optional: a
-  // reaction with no resolvable view stores with no divisions rather than
-  // guessed ones.
-  /* The guard requires an actual number on the wire: `Number(null)` is 0, so a null is absent, not the equator. */
-  const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
-  const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
-  let ocdIds: string[] = [];
-  if (Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lng) && lng >= -180 && lng <= 180) {
-    try {
-      const coverage = await coverageAt(lat, lng, 0);
-      ocdIds = [
-        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
-        ...coverage.seats.map((s) => s.ocdId),
-      ];
-    } catch {
-      // A failed resolution is an empty list, never a fabricated one.
-    }
-  }
-
   // Everything a reader types is captured; the verbatim
   // is still validated and scrubbed by `normalizeFreeText`.
   const freeText = normalizeFreeText(submission.text);
@@ -325,11 +252,6 @@ async function postWithSettings(request: Request) {
       ocdIds,
       suspectReason,
       freeText,
-      // The declaration is required by `writeReaction`, and this is
-      // the one place a reaction row learns whose traffic it is. An absent
-      // header resolves to ORGANIC here — a real browser is still a reader,
-      // decided in a function that can be read rather than by a default
-      // sitting in a column definition where nobody looks.
       marker: markerFromRequest(request),
     });
     return new Response(null, { status: stored ? 204 : 202 });

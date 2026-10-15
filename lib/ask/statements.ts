@@ -6,10 +6,11 @@ import type { StatementCorpus } from "../corpus/types.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
 export function statementEvidenceFor(
+  states: readonly string[],
   subject: EvidenceSubject,
   question: string,
   _canonicalKeys: readonly string[],
-  readCorpus: () => StatementCorpus = unifiedCorpus,
+  readCorpus: () => StatementCorpus = () => unifiedCorpus(states),
   provenKeys?: readonly string[],
 ): { records: EvidenceRecord[]; gaps: EvidenceGap[]; denominators: Record<string, number> } {
   const records: EvidenceRecord[] = [];
@@ -29,7 +30,7 @@ export function statementEvidenceFor(
     return { records, gaps, denominators };
   }
   let answer;
-  try { answer = provenKeys ? readerPositionsForKeys(subject.id, topic, corpus, provenKeys) : readerPositionsFor(subject.id, topic, corpus); }
+  try { answer = provenKeys ? readerPositionsForKeys(subject.id, topic, corpus, provenKeys) : readerPositionsFor(states, subject.id, topic, corpus); }
   catch (error) {
     denominators[error instanceof ReaderPersonIdentityError ? "statementIdentityUnresolved" : "statementLoaderFailures"] = 1;
     gaps.push({ whose: "OURS", statement: error instanceof ReaderPersonIdentityError ? error.message : `The published statements for ${subject.name} could not be read for this answer.` });

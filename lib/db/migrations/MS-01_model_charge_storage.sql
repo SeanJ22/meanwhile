@@ -85,6 +85,12 @@ DO $$ BEGIN
     END IF;
   END $$;
 --> statement-breakpoint
+CREATE INDEX IF NOT EXISTS cp_log_costs_charge_at ON cp_log_costs (cp_cost_recorded_at(record), log_key, position);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS cp_log_research_intents_action_time ON cp_log_research_intents (log_key,(record #>> '{action}'),(record #>> '{requestedAt}') DESC,position DESC) WHERE record @> '{"kind":"INTENT"}'::jsonb;
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS cp_log_research_intents_intent ON cp_log_research_intents (log_key,(record #>> '{intentId}'),position DESC) WHERE record @> '{"kind":"INTENT"}'::jsonb;
+--> statement-breakpoint
 DO $$ BEGIN
   IF coalesce((SELECT version FROM cp_schema_version WHERE singleton),0) < 33 THEN
   IF to_regclass('cp_spend_window') IS NOT NULL THEN
@@ -114,6 +120,27 @@ CREATE TABLE IF NOT EXISTS cp_spend_holds (
      cost_recorded_at timestamptz,
      changed_at       timestamptz NOT NULL DEFAULT now()
    );
+--> statement-breakpoint
+DO $do$ BEGIN
+  IF to_regclass('cp_spend_holds_keys') IS NULL THEN
+    CREATE INDEX IF NOT EXISTS cp_spend_holds_keys ON cp_spend_holds USING gin (keys);
+  END IF;
+  IF to_regclass('cp_spend_holds_job') IS NULL THEN
+    CREATE INDEX IF NOT EXISTS cp_spend_holds_job ON cp_spend_holds (job_id);
+  END IF;
+  IF to_regclass('cp_spend_holds_unsettled') IS NULL THEN
+    CREATE INDEX IF NOT EXISTS cp_spend_holds_unsettled ON cp_spend_holds (held_at) WHERE cost_recorded_at IS NULL;
+  END IF;
+  IF to_regclass('cp_spend_holds_settled') IS NULL THEN
+    CREATE INDEX IF NOT EXISTS cp_spend_holds_settled ON cp_spend_holds (cost_recorded_at) WHERE cost_recorded_at IS NOT NULL;
+  END IF;
+  IF to_regclass('cp_spend_holds_held_at') IS NULL THEN
+    CREATE INDEX IF NOT EXISTS cp_spend_holds_held_at ON cp_spend_holds (held_at);
+  END IF;
+  IF to_regclass('cp_spend_holds_rolling_expiry') IS NULL THEN
+    CREATE INDEX IF NOT EXISTS cp_spend_holds_rolling_expiry ON cp_spend_holds (held_at) WHERE cardinality(lifetime_keys) = 0;
+  END IF;
+END $do$;
 --> statement-breakpoint
 CREATE OR REPLACE FUNCTION cp_adjust_spend_line(h cp_spend_holds, direction integer) RETURNS void LANGUAGE plpgsql AS $$
   DECLARE k text; held numeric := extract(epoch FROM h.held_at)*1000000 + 9223372036854775808::numeric;

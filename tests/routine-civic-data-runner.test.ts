@@ -1,5 +1,6 @@
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
+import { BALLOT_STATES } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -477,7 +478,6 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "nj-state-rollcalls",
     "census-acs-population",
     "census-geography-overlaps",
-    "nj-morris-filing",
     "pima-legistar-outcomes",
     "mesa-legistar-minutes-outcomes",
     "dotgov",
@@ -486,7 +486,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-body-crosswalk-derived",
     "meeting-doors",
     "meeting-source-wiring",
-    "candidate-campaign-sites-derived",
+    ...BALLOT_STATES.map(state => `candidate-campaign-sites-derived:${state}`),
     "legiscan-bulk",
     "google-civic-voterinfo",
     ...PEOPLE_SOURCE_CONTRACTS.map(contract => contract.id),
@@ -598,7 +598,6 @@ test("routine release output labels the seven-zero constant as structural, never
     "scripts/nh-gencourt-members.mts",
     "scripts/acs-population-promote.mts",
     "scripts/ingest.ts",
-    "scripts/build-nj-morris-ballot.mts",
     "scripts/fetch-dotgov.mts",
     "scripts/routine-civic-data-runner.mts",
   ]) {
@@ -1626,7 +1625,6 @@ test("every standing source child emits its exact contract id and the supervisor
     ["scripts/fetch-fec.mts", "fec-funding"],
     ["scripts/nh-gencourt-members.mts", "nh-members"],
     ["scripts/acs-population-promote.mts", "census-acs-population"],
-    ["scripts/build-nj-morris-ballot.mts", "nj-morris-filing"],
     ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
     ["scripts/legistar-insite-minutes-ingest.mts", "mesa-legistar-minutes-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],
@@ -2283,10 +2281,10 @@ test("national people children share one serial lane: one at a time, back to bac
 
 test("scoped source passes repair only matching reader pointers, including narrow meeting domains", () => {
   const all = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
-  const voting = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === "voting-sites")!;
+  const voting = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === "voting-sites:AZ")!;
   const selected = selectedReaderRepairContracts(all, [voting]);
-  assert.deepEqual(selected.map(contract => contract.id), ["voting-sites"]);
-  assert.deepEqual(routineReaderRepairDomains(selected).map(domain => domain.id), ["reader-readback:voting-sites"]);
+  assert.deepEqual(selected.map(contract => contract.id), ["voting-sites:AZ"]);
+  assert.deepEqual(routineReaderRepairDomains(selected).map(domain => domain.id), ["reader-readback:voting-sites:AZ"]);
   const meetings = MEETING_PARTITION_CONTRACTS.slice(0, 2);
   const domains = routineReaderRepairDomains(selectedReaderRepairContracts(all, meetings));
   assert.equal(domains.length, 1);

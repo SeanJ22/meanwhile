@@ -11,9 +11,11 @@ test("shared publication decides the meeting carry before it reads the prepared 
   const rowRead = child.indexOf("await readPreparedMeetingsProjection(");
   const publish = child.indexOf("await publishReaderEdgeArtifacts(");
   assert.ok(manifestRead > 0 && manifestRead < carry, "the served manifest is read before the decision");
-  assert.match(child.slice(carry, current), /servedManifest\.composition === prepared\.composition/, "carry compares the serving copy's actual composition");
-  assert.match(child.slice(carry, current), /servedManifest\?\.meetingLayout === "governing-area"/, "old state pieces read the prepared row once to repartition");
-  assert.match(child.slice(carry, current), /servedManifest\.meetingRegistryVersion === meetingRegistryVersion/, "registry-only changes rebuild body areas");
+  assert.match(child, /const servedMeetings = preparesMeetings \? \(await artifactStore\.readManifest\(\)\)/,
+    "authority-only publication never reads the meeting catalogue");
+  assert.match(child.slice(carry, current), /servedMeetings\.composition === prepared\.composition/, "carry compares the serving copy's actual composition");
+  assert.match(child.slice(carry, current), /servedMeetings\?\.meetingLayout === "governing-area"/, "old state pieces read the prepared row once to repartition");
+  assert.match(child.slice(carry, current), /servedMeetings\.meetingRegistryVersion === meetingRegistryVersion/, "registry-only changes rebuild body areas");
   assert.match(child, /pointer\.recordClass === "REGISTRY_RUNTIME_BINDING"/, "registry publication prepares the meeting dependency");
   assert.ok(carry < current && current < rowRead && rowRead < publish, "the prepared row is read only past the carry");
   assert.match(child.slice(rowRead, publish), /readPreparedMeetingsProjection\(\{ store, expectedSequence: prepared\.sequence \}\)/,

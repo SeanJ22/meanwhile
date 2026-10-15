@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -51,7 +52,7 @@ function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R
   return { ...repos, workerResults: { ...repos.workerResults, readAll: whole, readSince: whole } };
 }
 
-async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
+async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings" | "ballot-contests" | "voting-sites", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -72,7 +73,9 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
     (!["official-filings", "ballot-contests"].includes(contractId) || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
   const publisherDivisionId = body.ocdId;
   const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
-  const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : WORKER_READER_CLASSES[contractId]);
+  const publicationContract = contractId === "ballot-contests" || contractId === "voting-sites"
+    ? stateBallotContractId(contractId, division.state) : contractId;
+  const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : WORKER_READER_CLASSES[publicationContract as WorkerReaderContract]);
   const supplied = typeof facts === "function" ? facts(prior, body.id) : facts;
   const rows: Record<string, string | number>[] = (Array.isArray(supplied) ? supplied : [supplied]).map(fact => ({ bodyName: body.name!, ...(["official-filings","ballot-contests"].includes(contractId) ? { jurisdictionName: division.label } : {}), ...(directory ? {
     jurisdictionName: division.label, coverage: "entire jurisdiction", coverageEvidence: `This body serves all of ${division.label}.` } : {}), ...fact }));
@@ -80,12 +83,12 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const fields = Object.fromEntries(Object.keys(rows[0]).map(field => [field, { source: `/${field}`, type: typeof rows[0][field] === "number" ? "NUMBER" as const : "STRING" as const }]));
   const extraction = { format: "JSON_RECORDS" as const, rowsPointer: "", fields };
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text }, plan: plan => ({ ...plan,
-    ownerInstructions: ["offline-send"], publication: { contractId, bodyId: body.id }, auditScope: "SOURCE_UNIVERSE",
+    ownerInstructions: ["offline-send"], publication: { contractId: publicationContract, bodyId: body.id }, auditScope: "SOURCE_UNIVERSE",
     ...(directory ? { directorySubject: { divisionId: body.ocdId, jurisdiction: { id: plan.contract.subjectId,
       stateCode: "NH", name: division.label, govClass: "COUNTY" as const, countyName: null, enumeratedFrom: "offline-fixture", ownWebAddress: FIXTURE_URL,
       sourceIds: [], ocdId: body.ocdId, bodyId: body.id } } } : {}),
     sources: plan.sources.map(route => ({ ...route, recordClass })),
-    contract: { ...plan.contract, ...(["official-filings","ballot-contests"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "ballot-contests" ? body.ocdId : plan.contract.subjectId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"] },
+    contract: { ...plan.contract, ...(["official-filings","ballot-contests","voting-sites"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "official-filings" ? plan.contract.subjectId : body.ocdId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"] },
       requiredFields: Object.keys(fields), extraction, verification: { required: true, authorities: [] } } as never }) });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-rule", routeLabel: "Offline independent rule record", target: "https://register.example.gov/rules.json", inherited: false, now: h.now() });
   await registerRouteTask(h.repos, task, h.now());
@@ -127,10 +130,14 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "no auditor is dispatched");
   const queued = workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
   assert.equal(queued.length, 1);
-  if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 2), ["scripts/fetch-voting-sites.mts", "--promote"], "the existing voting command handles worker results before legacy acquisition");
-  else if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
+  if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 3), ["scripts/fetch-voting-sites.mts", `--state=${division.state}`, "--promote"], "the state voting command handles only its workers");
+  else if (!directory) assert.ok(queued[0].command.includes(`--contract=${publicationContract}`));
   assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-directories" : "worker-results"}=${h.item.id}`));
-  const input = { repos: h.repos, store, facts: await factDb(), contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
+  const input = { repos: h.repos, store, facts: await factDb(), contractId: publicationContract as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
+    readRegistrySlice: async (ids: readonly string[], bodyIds: readonly string[]) => ({
+      divisions: prior.payload.registry.divisions.filter(row => ids.includes(row.ocdId)),
+      bodies: prior.payload.registry.bodies.filter(row => bodyIds.includes(row.id)),
+    }),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false }; } };
   return { input, h, store, body, rows, results, artifact, ready, prior, runtime };
@@ -458,7 +465,7 @@ test("completed polling workers publish every registered site through the existi
     autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
   const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos), vault: new MemoryEvidenceStore() });
   assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
-  const read = await readVotingSitesProjection({ store: f.store, now: f.h.now(), bypassCache: true });
+  const read = await readVotingSitesProjection(f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state, { store: f.store, now: f.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     const sites = read.value.jurisdictions.find(j => j.ocdId === f.body.ocdId)!.sites;
@@ -474,7 +481,7 @@ test("normal complete candidate workers publish their whole contest into general
   const f=await workerFixture("ballot-contests",facts);
   const published=await publishWorkerReaderResults({...f.input,repos:withoutWholeResultLog(f.h.repos)});
   assert.equal(published[0].outcome.status,"PUBLISHED",JSON.stringify(published));
-  const read=await readGenericBallotProjection({store:f.store,now:f.h.now(),bypassCache:true});
+  const read=await readGenericBallotProjection(f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state, {store:f.store,now:f.h.now(),bypassCache:true});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")throw new Error("General ballot missing");
   const ballot=Object.values(read.value.ballots)[0];
   assert.equal(ballot.candidacies.length,2);
@@ -484,7 +491,7 @@ test("normal complete candidate workers publish their whole contest into general
   assert.ok(general);
   assert.equal(general.source.normalize(await general.source.fetch()).candidacies.length,2);
   const curatedAt=f.h.now();
-  const inventory=candidateEnrichmentUniversesFromHoldings({az:null,nh:null,nj:null,general:read.value,profiles:{cards:{curatedAt,note:"Offline empty enrichment",cards:{},hunts:[]},links:{curatedAt,note:"Offline empty enrichment",links:{},hunts:[]}},corpus:{formatVersion:1,fetchedAt:curatedAt,attempted:0,documents:[],failures:[]},failures:[]},f.h.now());
+  const inventory=candidateEnrichmentUniversesFromHoldings({general:read.value,profiles:{cards:{curatedAt,note:"Offline empty enrichment",cards:{},hunts:[]},links:{curatedAt,note:"Offline empty enrichment",links:{},hunts:[]}},corpus:{formatVersion:1,fetchedAt:curatedAt,attempted:0,documents:[],failures:[]},failures:[]},f.h.now());
   const universe=inventory.universes[ballot.election.state.toLowerCase()];
   assert.equal(universe?.candidacies.length,2);
   assert.deepEqual(new Set(universe!.candidacies.flatMap(row=>row.pilotIds)),new Set(ballot.candidacies.map(row=>row.id)));

@@ -15,12 +15,13 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 // The read model memoises proven versions and these tests reuse one fixture versionId.
 beforeEach(() => clearPromotedReadModelCache());
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { VALIDATION_CHECKS, sourceProjectionEvidence, type ValidationReceipt } from "../lib/civic-data/types.ts";
 import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { readPopulationProjection } from "../lib/reference/acs-population.ts";
 import { nhLegislativeHolders, refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
-import { meetingPartitionFreshnessMs, routineFreshnessMs } from "../lib/civic-data/contracts.ts";
+import { meetingPartitionFreshnessMs } from "../lib/civic-data/contracts.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 
 const noPointer: CivicDataReadStore = {
@@ -63,15 +64,17 @@ test("canonical scalar and batch reads use the request's edge copies without a d
   });
 });
 
-function promotedStore<T>(payload: T): CivicDataReadStore {
+function promotedStore<T>(payload: T, pointer: { recordClass: RoutineRecordClass; scope: string; versionId: string } =
+  { recordClass: "FEC_FUNDING", scope: "federal-supported", versionId: "candidate-1" }): CivicDataReadStore {
+  const { recordClass, scope, versionId } = pointer;
   const payloadHash = normalizedHash(payload);
   const receipt: ValidationReceipt = {
     contractVersion: 2,
     decision: "GOOD",
-    candidateId: "candidate-1",
+    candidateId: versionId,
     sourceId: "fec-open-api",
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
+    recordClass,
+    scope,
     validatedAt: "2026-09-01T00:01:00.000Z",
     checks: VALIDATION_CHECKS.map((check) => ({
       check,
@@ -82,23 +85,23 @@ function promotedStore<T>(payload: T): CivicDataReadStore {
     excludedFacts: [],
   };
   const projection = {
-    key: "FEC_FUNDING:federal-supported",
+    key: `${recordClass}:${scope}`,
     sourceId: "fec-open-api",
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    versionId: "candidate-1",
-    lastKnownGoodVersionId: "candidate-1",
+    recordClass,
+    scope,
+    versionId,
+    lastKnownGoodVersionId: versionId,
     promotedAt: "2026-09-02T00:00:00.000Z",
     payload,
     receipt,
   } satisfies PromotedProjection<T>;
   const candidate = {
     candidate: {
-      id: "candidate-1",
+      id: versionId,
       sourceId: "fec-open-api",
-      recordClass: "FEC_FUNDING",
-      scope: "federal-supported",
-      sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+      recordClass,
+      scope,
+      sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", recordClass, scope),
       retrieval: {
         succeeded: true,
         requestedUrl: "https://api.open.fec.gov/v1/candidates/search/",
@@ -130,8 +133,8 @@ function promotedStore<T>(payload: T): CivicDataReadStore {
     state: "PROMOTED",
     acquisitionSucceeded: true,
     receipt,
-    promotedVersion: "candidate-1",
-    lastKnownGoodVersion: "candidate-1",
+    promotedVersion: versionId,
+    lastKnownGoodVersion: versionId,
     failureCode: null,
     failureDetail: null,
   } satisfies CandidateVersionRecord;
@@ -140,6 +143,49 @@ function promotedStore<T>(payload: T): CivicDataReadStore {
     readCandidate: async () => candidate,
   };
 }
+
+
+test("place proof caches evict older places and rehydrate their proof", async () => {
+  for (const family of ["ballot-measures", "plain-english-translations"] as const) {
+    clearPromotedReadModelCache();
+    const recordClass: RoutineRecordClass = family === "ballot-measures" ? "BALLOT_CANDIDACY" : "CURATED_READER_RECORD";
+    const pointers = Array.from({ length: 9 }, (_, i) => ({ recordClass,
+      scope: `US:${family}:ocd-division/country:us/state:co/county:place-${i}`, versionId: `${family}-${i}` }));
+    const stores = pointers.map(pointer => promotedStore({ answer: pointer.scope }, pointer));
+    let proofs = 0;
+    const store: CivicDataReadStore = {
+      readPromotion: (recordClass, scope) => stores[pointers.findIndex(pointer => pointer.scope === scope)].readPromotion(recordClass, scope),
+      readCandidate: id => { proofs++; return stores[pointers.findIndex(pointer => pointer.versionId === id)].readCandidate(id); },
+    };
+    for (const pointer of pointers) assert.equal((await readPromotedCivicData(recordClass, pointer.scope, { store })).kind, "PROMOTED");
+    assert.equal(proofs, 9);
+    assert.equal(attestPromotedVersion(recordClass, pointers[0].scope, store), null, "evicted places retain no strong proof pointer");
+    assert.ok(attestPromotedVersion(recordClass, pointers[8].scope, store));
+    assert.equal((await readPromotedCivicData(recordClass, pointers[8].scope, { store })).kind, "PROMOTED");
+    assert.equal(proofs, 9);
+    assert.equal((await readPromotedCivicData(recordClass, pointers[0].scope, { store })).kind, "PROMOTED");
+    assert.equal(proofs, 10, "an evicted version must rehydrate its proof before it can be served");
+  }
+});
+
+test("answered-absent state and place caches evict old requests", async t => {
+  const previous = process.env.DATABASE_URL;
+  process.env.DATABASE_URL = "postgres://fixture:fixture@localhost/fixture";
+  t.after(() => { if (previous === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = previous; });
+  let reads = 0;
+  t.mock.method(PostgresRoutineDataStore.prototype, "readPromotion", async () => { reads++; return null; });
+  for (const scopes of [Array.from({ length: 9 }, (_, i) => `US:ballot-measures:ocd-division/country:us/state:co/county:place-${i}`),
+    ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL"].map(state => `US-${state}:state-election-ballots`)]) {
+    clearPromotedReadModelCache(); reads = 0;
+    assert.equal((await readPromotedCivicData("BALLOT_CANDIDACY", scopes[0])).kind, "NOT_RECORDED");
+    await readPromotedCivicData("BALLOT_CANDIDACY", scopes[0]);
+    assert.equal(reads, 1);
+    for (const scope of scopes.slice(1)) await readPromotedCivicData("BALLOT_CANDIDACY", scope);
+    assert.equal(reads, 9);
+    await readPromotedCivicData("BALLOT_CANDIDACY", scopes[0]);
+    assert.equal(reads, 10, "answered-absent requests share the same fixed place bound");
+  }
+});
 
 async function historicalFixture() {
   const base = promotedStore({ answer: 42 });
@@ -389,7 +435,5 @@ test("NH synchronous selector consumes an explicitly established bootstrap proje
 
 test("Reader freshness derives from the canonical source contract", () => {
   const day = 24 * 60 * 60 * 1_000;
-  assert.equal(routineFreshnessMs("nj-morris-filing", "2026-11-03T23:59:59.999Z"), day);
-  assert.equal(routineFreshnessMs("nj-morris-filing", "2026-11-04T00:00:00.000Z"), 7 * day);
   assert.equal(meetingPartitionFreshnessMs("2026-11-04T00:00:00.001Z"), 7 * day);
 });

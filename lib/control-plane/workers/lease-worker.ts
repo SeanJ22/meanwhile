@@ -39,22 +39,18 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   const safety = new FleetSafetyController({ now: safetyStartedAt, spend: fleetSpendAt([], safetyStartedAt), rollingCeilingUsd: config.ceilingUsd,
     websiteSize: url => websiteSize(url), websitePacing: repos.websitePacing,
     ...(config.hostConcurrency === undefined ? {} : { hostConcurrency: () => config.hostConcurrency! }) });
-  // The per-task guards read `current`, so one runtime built once per process serves every task it runs
-  // (a process runs one lease at a time). `subject` is only set on the old per-task path.
+  // The process runs one task at a time; shared guards follow its current assignment.
   let current = "";
   let fundedSubject: string | null = null;
-  const perTask = process.env.WTP_LEASE_RUNTIME_PER_TASK === "1";
-  // Each task reads only its own history by default; WTP_SCOPED_TASK_READS=0 restores the whole-table path.
-  const scopedReads = process.env.WTP_SCOPED_TASK_READS !== "0";
   let shared: Awaited<ReturnType<typeof autonomousStandingRuntime>> | undefined;
-  const buildRuntime = (subject: string | null) => autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
+  const buildRuntime = () => autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
     browse: browseWithPlaywright,
-    ...(subject === null ? { openBytesFor: s => safety.guardedOpenBytes("public-web", s) } : { openBytes: safety.guardedOpenBytes("public-web", subject) }),
+    openBytesFor: subject => safety.guardedOpenBytes("public-web", subject),
     ...(config.modelEnabled ? { transport: request => broker.call<ModelResponse>("model", request),
       transportFor: jurisdiction => { broker.assignment(current, jurisdiction); return request => broker.call<ModelResponse>("model", request); } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call<HuntSearchResult>("search", request),
       searchBudget: { take: host => broker.call<string | null>("search-take", host), done: async host => { await broker.call("search-done", host); } } } : {}),
-    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => subject === fundedSubject, scopedReads,
+    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => subject === fundedSubject, scopedReads: true,
     endsAt, progress: () => broker.send("progress", "", null) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
@@ -79,9 +75,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         fundedSubject = await broker.call<boolean>("lifetime-hunt", null) ? item.subject : null;
         // The lane's per-job clock: which task this worker is on (process-pool.ts StandingPoolOptions).
         broker.send("task-start", "", id);
-        // Old path (one runtime per task) stays behind WTP_LEASE_RUNTIME_PER_TASK=1 until the shared runtime is checked live.
-        const runtime = perTask ? await buildRuntime(item.subject)
-          : (shared ??= await buildRuntime(null));
+        const runtime = shared ??= await buildRuntime();
         observer.finish("runtime");
         await runtime.beginTask?.(task, item);
         const result = await dispatchAutonomousTask(runtime, task);

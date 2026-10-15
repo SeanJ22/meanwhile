@@ -9,12 +9,12 @@ import {
 } from "../lib/ask/local-finance.ts";
 import type { EvidenceSubject } from "../lib/ask/evidence.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
-import { installAzBallot, installPimaLocalFinance, installRegistryAuthority, installStateMoney, syntheticAzBallot, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
+import { installBallots, installPimaLocalFinance, installRegistryAuthority, installStateMoney, syntheticAzBallot, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 /* The governor's committed candidacy is on a synthetic ballot and carries one synthetic FILED state record; the county board carries none. */
 await installPimaLocalFinance();
-await installAzBallot(syntheticAzBallot([{ id: "ballot-az-pima:governor", title: "Governor", candidacies: [{ id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" }] }]));
+await installBallots(syntheticAzBallot([{ id: "ballot-az-pima:governor", title: "Governor", candidacies: [{ id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" }] }]));
 const arizonaMoney = stateMoneyFixture("AZ");
 await installStateMoney("AZ", { ...arizonaMoney, records: [...arizonaMoney.records, syntheticFiledStateMoneyRecord("AZ", "ballot-az-pima:governor:hobbs-katie")] });
 

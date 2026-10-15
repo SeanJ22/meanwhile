@@ -25,7 +25,7 @@ const IMAGE = "https://janedoeforcouncil.com/img/jane-doe.jpg";
 const JANE: CandidateFindingSubject = { candidacyId: "ballot-oh-2026:columbus-council:doe-jane", givenName: "Jane", familyName: "Doe",
   officeTitle: "City Council", ocdId: "ocd-division/country:us/state:oh/place:columbus", stateCode: "OH", cycle: 2026,
   readerKeys: ["ballot-oh-2026:columbus-council:doe-jane"] };
-const PROFILES = requiredManualProductionContract("candidate-profiles");
+const PROFILES = requiredManualProductionContract("candidate-profiles:OH");
 const png = () => sharp({ create: { width: 200, height: 240, channels: 3, background: "#335577" } }).png().toBuffer();
 
 /** A vault of the pages hunters cited, a Box holding their findings as the Box pass hands them on, and the store readers read. */
@@ -72,7 +72,7 @@ test("a hunter's bio, campaign phone and campaign-site portrait publish on the c
   await s.report("ballot-oh-2026:columbus-council:roe-richard", "CAN-16", "x", "x", SITE);
 
   const report = await s.run();
-  assert.deepEqual(report, { published: { "CAN-16": 1, "CAN-06": 1, "CAN-17": 1 }, refused: { CONTACT_NOT_ON_THE_CAMPAIGN_SITE: 1 }, waiting: 1 }, JSON.stringify(report));
+  assert.deepEqual(report, { published: { "CAN-16": 1, "CAN-06": 1, "CAN-17": 1 }, refused: { CONTACT_NOT_ON_THE_CAMPAIGN_SITE: 1 }, waiting: 0 }, JSON.stringify(report));
   const card = (await s.card())!;
   assert.equal(card.bio, "Jane Doe is a nurse who has lived in Columbus for twenty years.");
   assert.equal(card.bioSourceUrl, SITE);

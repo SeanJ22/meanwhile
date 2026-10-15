@@ -1,3 +1,8 @@
+import { readRegistryPlace } from "@/lib/registry/reader-place";
+import { withRegistryPlaceRead } from "@/lib/registry/runtime-read-model";
+import type { ReaderAuthorityManifest } from "@/lib/meetings/edge-artifacts";
+import { ensureReaderAuthorityEdge, readReaderAuthorityManifest } from "@/lib/meetings/edge-serving";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { readerPositionsForKeys, type ReaderPositionAnswer } from "@/lib/corpus/reader-positions";
 import { ReaderPersonIdentityError } from "@/lib/identity/reader-person";
 import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
@@ -6,22 +11,13 @@ import { unifiedCorpusFromHoldings } from "@/lib/corpus/unified";
 import type { StatementCorpus } from "@/lib/corpus/types";
 import type { CandidateCorpus } from "@/lib/candidates/corpus";
 import { getCandidateCorpus } from "@/lib/candidates/positions";
-import {
-  refreshAzBallotFromPromoted,
-  refreshCandidateCorpusFromPromoted,
-} from "@/lib/civic-data/manual-read-models";
+import { refreshCandidateCorpusFromPromoted } from "@/lib/civic-data/manual-read-models";
+import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
 import { currentOfficeholderStatements } from "@/lib/corpus/data-plane";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
-import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
-
-/**
- * GET /api/positions/<subject>/<topic>
- *
- * Subject and topic are path segments because both vary the body and every cache keys on the path; the
- * response is also `no-store`. Returns the corpus's own words with URL and read date, or a named gap. No model.
- */
 
 export const runtime = "nodejs";
 
@@ -39,42 +35,51 @@ export type PositionHoldingSettlement =
   | { readonly kind: "IDENTITY_UNRESOLVED"; readonly error: ReaderPersonIdentityError }
   | { readonly kind: "HOLDING_UNAVAILABLE"; readonly unavailableAuthorities: string[] };
 
-function currentPositionIdentityKeys(subject: string): Promise<string[]> {
+function currentPositionIdentityKeys(subject: string, divisions: readonly string[]): Promise<string[]> {
   return positionIdentityKeys(subject, {
     refreshRegistry: () => refreshRegistryRuntimeFromPromoted(),
     refreshFederal: () => refreshFederalDirectoryFromPromoted(),
-    refreshAz: () => refreshAzBallotFromPromoted(),
-    relatedAuthorities: (id) => {
-      const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
-        row.holder.id === id || row.candidacy?.candidacyId === id,
-      );
-      return {
-        federal: related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY"),
-        az: related.some((row) => row.candidacy?.candidacyId.startsWith("ballot-az-")),
-      };
+    refreshBallot: async () => {
+      for (const { source } of await readerBallotSourcesForDivisions(divisions)) source.normalize(await source.fetch());
     },
+    relatedAuthorities: (id) => ({ federal: id.startsWith("congress:"), ballot: divisions.length > 0 }),
     personKeys: verifiedReaderPersonKeys,
   });
 }
 
-const defaultReaders: PositionHoldingReaders = {
-  candidateCorpus: async () => {
-    await refreshCandidateCorpusFromPromoted();
-    return getCandidateCorpus();
-  },
-  officeholderStatements: async () => {
-    await refreshOfficeholderStatementsFromPromoted();
-    return currentOfficeholderStatements();
-  },
-  identityKeys: currentPositionIdentityKeys,
-};
+function defaultReadersFor(subject: string, divisions: readonly string[], manifest?: ReaderAuthorityManifest | null): PositionHoldingReaders {
+  const identity = readRegistryPlace(divisions, [subject], manifest).then(registry =>
+    withRegistryPlaceRead(registry, () => currentPositionIdentityKeys(subject, divisions)));
+  identity.catch(() => undefined);
+  return {
+    candidateCorpus: async () => {
+      const keys = new Set(await identity);
+      const corpora = await Promise.all(ballotStatesForDivisions(divisions).map(async state => {
+        await refreshCandidateCorpusFromPromoted(state);
+        return getCandidateCorpus(state);
+      }));
+      return { formatVersion: 1, attempted: corpora.reduce((n, corpus) => n + corpus.attempted, 0),
+        fetchedAt: corpora.map(corpus => corpus.fetchedAt).sort().at(-1) ?? "",
+        documents: corpora.flatMap(corpus => corpus.documents.filter(document => keys.has(document.candidateKey))),
+        failures: corpora.flatMap(corpus => corpus.failures.filter(failure => keys.has(failure.candidateKey))) };
+    },
+    officeholderStatements: async () => {
+      await refreshOfficeholderStatementsFromPromoted();
+      const keys = new Set(await identity);
+      return { snapshots: currentOfficeholderStatements().snapshots.filter(snapshot => keys.has(snapshot.subjectId)) };
+    },
+    identityKeys: () => identity,
+  };
+}
 
 /** Settle independent corpora and exact-target identity without false absence. */
 export async function settlePositionHoldingAnswer(
   subject: string,
   topic: string,
-  readers: PositionHoldingReaders = defaultReaders,
+  readers?: PositionHoldingReaders,
+  divisions: readonly string[] = [],
 ): Promise<PositionHoldingSettlement> {
+  readers ??= defaultReadersFor(subject, divisions);
   const [candidateResult, statementResult, identityResult] = await Promise.allSettled([
     Promise.resolve().then(() => readers.candidateCorpus()),
     Promise.resolve().then(() => readers.officeholderStatements()),
@@ -114,7 +119,7 @@ export async function settlePositionHoldingAnswer(
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ subject: string; topic: string }> },
 ) {
   const { subject: rawSubject, topic: rawTopic } = await params;
@@ -125,7 +130,13 @@ export async function GET(
     return Response.json({ error: "subject and topic are required" }, { status: 400 });
   }
 
-  const settled = await settlePositionHoldingAnswer(subject, topic);
+  const manifest = await readReaderAuthorityManifest().catch(() => null);
+  if (manifest) {
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]).catch(() => null);
+    if (edge) enterReaderAuthorityEdge(edge);
+  }
+  const divisions = await ballotPlaceFromRequest(request);
+  const settled = await settlePositionHoldingAnswer(subject, topic, defaultReadersFor(subject, divisions, manifest), divisions);
   if (settled.kind === "IDENTITY_UNRESOLVED") {
     return Response.json({ error: settled.error.message, holdingStatus: "IDENTITY_UNRESOLVED" }, { status: 409 });
   }

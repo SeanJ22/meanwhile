@@ -1,9 +1,3 @@
-/**
- * A task's reads of its own work item, subject and lineage, scoped instead of
- * listing whole tables. Each returns exactly what the whole-table read returned
- * after the caller's filter. Opt in with `scopedReads` (runner switch
- * WTP_SCOPED_TASK_READS=1); otherwise every read is the whole-table one.
- */
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import { keysWhere } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
@@ -34,13 +28,8 @@ export async function readScoutResultsForSubjects(repos: ControlPlaneRepositorie
   return out;
 }
 
-/**
- * An audit's work items and captures (`generalizedIndependentContext`): the owner and every item about the
- * contract's subject, and every capture recorded for one of them, for a work item the owner's plan says it
- * inherited from, or under one of the audit's required artifact IDs. That is every row the audit reads; the
- * logs are read in the whole log's key order so "the first capture of an ID" is the same capture. Null when the
- * store cannot answer the filtered reads (the caller then reads every row as before).
- */
+// Include the subject's captures, inherited captures and required artifact IDs.
+// Preserve log order so repeated artifact IDs resolve to the same first capture.
 export async function readAuditHistory(repos: ControlPlaneRepositories, input: { readonly workItemId?: string;
   readonly subjectId: string; readonly requiredArtifactIds: readonly string[] }): Promise<{ readonly artifacts: readonly ArtifactRecord[]; readonly items: readonly WorkItem[] } | null> {
   if (!repos.artifacts.keysWhere) return null;
@@ -61,14 +50,7 @@ export async function readAuditHistory(repos: ControlPlaneRepositories, input: {
 
 type LinkedWorkItem = WorkItem & { readonly planRepair?: { readonly parentWorkItemId?: string } };
 
-/**
- * Everything `selectStandingLineages` and `brokeredSiblingCaptures` read for the lineage one work item belongs to:
- * the occurrences of every standing obligation the item (or a repair ancestor) was opened for, the items those
- * occurrences opened and their repair families (found through the version-20 lineage index), and those items'
- * captures, attempts, completed worker results and their subjects' Scout results. A lineage is one obligation's
- * occurrences, so its group, ranking and brokered captures come out as the whole-table computation gives them.
- * Null when the store cannot answer the filtered reads.
- */
+// Include every occurrence and repair descendant so sibling ranking and capture reuse agree across tasks.
 export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string) {
   if (!repos.artifacts.keysWhere || !repos.scoutResults.keysWhere) return null;
   const items = new Map<string, WorkItem>();

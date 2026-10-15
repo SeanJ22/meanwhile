@@ -1,3 +1,4 @@
+import { parseStateBallotContractId } from "../ballot/state-scopes.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -69,7 +70,7 @@ function verifierIdFor(contract: ReaderContract): string {
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   if (contract.sourceId === "plural-openstates-votes") return "lib/sources/plural/votes.ts#readPluralVotesProjection";
   if (contract.sourceId === "legiscan" && contract.recordClass === "STATE_ROLL_CALL") return "lib/sources/legiscan/votes.ts#readLegiscanVotesProjection";
-  switch (contract.id) {
+  switch (parseStateBallotContractId(contract.id)?.family ?? contract.id) {
     case "legiscan-bulk": return "lib/sources/legiscan/reader.ts#readBulkProjection";
     case "google-civic-voterinfo": return "lib/sources/google-civic/reader.ts#readCivicProjection";
     case "socrata-discovery":
@@ -83,7 +84,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
     case "census-acs-population": return "lib/reference/acs-population.ts#readPopulationProjection";
-    case "nj-morris-filing": return "lib/sources/ballot-nj-morris/index.ts#readNjMorrisFiling";
     case "congress-bulk-roster": return "lib/officials/federal-directory-read-model.ts#readFederalDirectoryProjection";
     case "registry-runtime-bindings": return "lib/registry/runtime-read-model.ts#readRegistryRuntimeProjection";
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
@@ -95,8 +95,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
     case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
     case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
-    case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
-    case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
     case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
     case "candidate-corpus": return "lib/civic-data/manual-read-models.ts#readCandidateCorpusProjection";
     case "officeholder-statements": return "lib/corpus/data-plane.ts#readOfficeholderStatementsProjection";
@@ -168,7 +166,8 @@ export async function verifyRoutineReaderProjection(
         : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now, bypassCache: true});
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
     }
-    switch (contract.id) {
+    const family = parseStateBallotContractId(contract.id)?.family ?? contract.id;
+    switch (family) {
       case "legiscan-bulk": {
         const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
         return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"LegiScan bills");
@@ -184,7 +183,7 @@ export async function verifyRoutineReaderProjection(
         const prefix = `${contract.id}:`;
         const scope = options.scope ?? contract.scope;
         if (!scope.startsWith(prefix)) return fail(verifierId, "Open-data readback requires its native source partition.");
-        return verifyExactVersion(verifierId, await readOpenDataProjection(contract.id,scope.slice(prefix.length), {
+        return verifyExactVersion(verifierId, await readOpenDataProjection(family as "socrata-discovery" | "epa-echo",scope.slice(prefix.length), {
           store:options.store,now:options.now,bypassCache:true,
         }), options.expectedVersionId, contract.id);
       }
@@ -268,11 +267,6 @@ export async function verifyRoutineReaderProjection(
         const result = await readPopulationProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "ACS");
       }
-      case "nj-morris-filing": {
-        const { readNjMorrisFiling } = await import("../sources/ballot-nj-morris/index.ts");
-        const result = await readNjMorrisFiling({ store: options.store, now: options.now, bypassCache: true });
-        return verifyExactVersion(verifierId, result, options.expectedVersionId, "Morris ballot");
-      }
       case "congress-bulk-roster": {
         const { readFederalDirectoryProjection } = await import("../officials/federal-directory-read-model.ts");
         return verifyExactVersion(verifierId, await readFederalDirectoryProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-directory");
@@ -291,7 +285,7 @@ export async function verifyRoutineReaderProjection(
       }
       case "ballot-contests": {
         const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
-        return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
+        return verifyExactVersion(verifierId, await readGenericBallotProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
       }
       case "ballot-measures": {
         const { readPlaceMeasureProjection, PLACE_MEASURE_SCOPE, isPlaceMeasureScope } = await import("../ballot/place-measures.ts");
@@ -327,18 +321,12 @@ export async function verifyRoutineReaderProjection(
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Budget readback requires its exact jurisdiction.");
         return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
-      case "az-sos-ballot":
-      case "nh-curated-ballot":
       case "candidate-profiles":
       case "candidate-corpus": {
         const readers = await import("./manual-read-models.ts");
-        const result = contract.id === "az-sos-ballot"
-          ? await readers.readAzBallotProjection({ store: options.store, now: options.now, bypassCache: true })
-          : contract.id === "nh-curated-ballot"
-            ? await readers.readNhBallotProjection({ store: options.store, now: options.now, bypassCache: true })
-            : contract.id === "candidate-profiles"
-              ? await readers.readCandidateProfilesProjection({ store: options.store, now: options.now, bypassCache: true })
-              : await readers.readCandidateCorpusProjection({ store: options.store, now: options.now, bypassCache: true });
+        const result = parseStateBallotContractId(contract.id)?.family === "candidate-profiles"
+          ? await readers.readCandidateProfilesProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true })
+          : await readers.readCandidateCorpusProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, contract.readerProjection?.id ?? contract.id);
       }
       case "officeholder-statements": {
@@ -372,7 +360,7 @@ export async function verifyRoutineReaderProjection(
       }
       case "voting-sites": {
         const { readVotingSitesProjection } = await import("../ballot/voting-sites-server.ts");
-        return verifyExactVersion(verifierId, await readVotingSitesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "voting-sites");
+        return verifyExactVersion(verifierId, await readVotingSitesProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "voting-sites");
       }
       case "prl": {
         const { readPrlProjection } = await import("../sources/prl/snapshot.ts");
@@ -402,7 +390,7 @@ export async function verifyRoutineReaderProjection(
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");
-        return verifyExactVersion(verifierId, await readCuratedReaderProjection(contract.id, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readCuratedReaderProjection(family as Parameters<typeof readCuratedReaderProjection>[0], { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "meeting-source-wiring": {
         const { readDerivedMeetingWiring } = await import("./derived-meeting-wiring.ts");
@@ -418,7 +406,7 @@ export async function verifyRoutineReaderProjection(
       }
       case "candidate-campaign-sites-derived": {
         const { readDerivedCampaignSites } = await import("./derived-campaign-sites.ts");
-        return verifyExactVersion(verifierId, await readDerivedCampaignSites({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readDerivedCampaignSites(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "everyday-routing": {
         const { readEverydayRoutingProjection } = await import("../routing/everyday-data-plane.ts");
@@ -579,10 +567,6 @@ export interface ReaderVerifierClosureAttestation {
   readonly detail: string;
 }
 
-/**
- * A PASS is carried to the executing commit only when every file the typed Reader verifiers execute is byte-identical
- * at both commits; the database admits the new receipt only while the pointer still names that version.
- */
 export type ReaderVerifierClosureAttestor = (
   priorVerifierCodeSha: string,
   currentVerifierCodeSha: string,

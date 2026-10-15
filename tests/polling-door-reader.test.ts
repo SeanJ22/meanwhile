@@ -1,3 +1,4 @@
+import { jurisdictionFromOcdId } from "../lib/coverage/states.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { publishPollingDoor } from "../lib/civic-data/worker-polling-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -91,12 +92,13 @@ test("registered polling doors publish through the normal Slide and typed ballot
   for (const [kind, ocdId] of [
     ["polling-places-csv", division], ["polling-places-json", "ocd-division/country:us/state:mi/place:alder"],
     ["polling-places-html", "ocd-division/country:us/district:dc/ward:2"],
-    ["polling-places-pdf-text", "ocd-division/country:us/territory:pr/municipio:alder"],
+    ["polling-places-pdf-text", "ocd-division/country:us/state:oh/county:birch"],
   ] as const) {
     const input = fixture(kind, rows, ocdId);
+    const state = jurisdictionFromOcdId(ocdId)!.usps;
     const published = await publishPollingDoor({ ...input, store, now: at, vault });
     assert.ok(published.promoted);
-    const read = await readVotingSitesProjection({ store, now: at, bypassCache: true });
+    const read = await readVotingSitesProjection(state, { store, now: at, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") throw new Error("Polling sites absent");
     const current = read.value.jurisdictions.find(j => j.ocdId === ocdId)!;
@@ -104,9 +106,14 @@ test("registered polling doors publish through the normal Slide and typed ballot
     assert.equal(current.sites[1].serves, null); assert.equal(current.sites[0].election, null);
     if (kind === "polling-places-pdf-text") assert.equal(current.sourceRawSha256, hash("%PDF-1.4 fixture bytes").slice(7));
     await assert.rejects(publishPollingDoor({ ...input, capture: { ...input.capture, partial: true }, store, now: at, vault }));
-    assert.equal((await readVotingSitesProjection({ store, now: at, bypassCache: true })).metadata.versionId, published.promoted.versionId);
+    assert.equal((await readVotingSitesProjection(state, { store, now: at, bypassCache: true })).metadata.versionId, published.promoted.versionId);
   }
-  const final = await readVotingSitesProjection({ store, now: at, bypassCache: true });
+  const final = await readVotingSitesProjection("OH", { store, now: at, bypassCache: true });
   assert.equal(final.kind, "PROMOTED");
-  if (final.kind === "PROMOTED") assert.equal(final.value.jurisdictions.length, 4);
+  if (final.kind === "PROMOTED") assert.equal(final.value.jurisdictions.length, 2);
+  for (const state of ["MI", "DC"]) {
+    const separate = await readVotingSitesProjection(state, { store, now: at, bypassCache: true });
+    assert.equal(separate.kind, "PROMOTED");
+    if (separate.kind === "PROMOTED") assert.equal(separate.value.jurisdictions.length, 1);
+  }
 });

@@ -11,7 +11,7 @@ import { installManualValue, installRegistryRuntime } from "./helpers/promoted-f
 
 // A promoted candidate publication corpus holding one other candidate's page;
 // "nobody-at-all" holds none, so every topic reads as not found.
-installManualValue<CandidateCorpus>("candidate-corpus", {
+installManualValue<CandidateCorpus>("candidate-corpus:AZ", {
   formatVersion: 1,
   fetchedAt: "2026-09-25T12:00:00.000Z",
   attempted: 1,
@@ -31,12 +31,12 @@ installManualValue<CandidateCorpus>("candidate-corpus", {
   }],
   failures: [],
 });
-await Promise.all([installRegistryRuntime(), readCandidateCorpusProjection()]);
+await Promise.all([installRegistryRuntime(), readCandidateCorpusProjection("AZ")]);
 
 test("CA-10: the person card and the ballot card read the same ten plain nouns", () => {
   assert.equal(DEFAULT_STANCE_TOPICS.length, 10);
   assert.deepEqual(POSITION_TOPICS, DEFAULT_STANCE_TOPICS.map((t) => t.label));
-  assert.deepEqual(positionsFor("nobody-at-all").map((p) => p.issue.label), [...POSITION_TOPICS]);
+  assert.deepEqual(positionsFor("AZ", "nobody-at-all").map((p) => p.issue.label), [...POSITION_TOPICS]);
   assert.deepEqual([...POSITION_TOPICS], ["housing", "water", "schools", "taxes", "immigration", "health care", "public safety", "jobs", "environment", "transportation"]);
 });
 
@@ -52,5 +52,5 @@ test("CA-10: the list is a reader-facing setting that only accepts exactly ten v
 
 test("CA-10: a changed list is searched for every person in its own order", () => {
   const changed = [...DEFAULT_STANCE_TOPICS].reverse();
-  assert.deepEqual(positionsFor("nobody-at-all", null, changed).map((p) => p.issue.id), changed.map((t) => t.id));
+  assert.deepEqual(positionsFor("AZ", "nobody-at-all", null, changed).map((p) => p.issue.id), changed.map((t) => t.id));
 });

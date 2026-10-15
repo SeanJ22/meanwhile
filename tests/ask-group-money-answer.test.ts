@@ -1,3 +1,4 @@
+import { azBallot } from "./helpers/ballot-district-fixtures.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -23,7 +24,7 @@ import type { CampaignMoney } from "../lib/funding/campaign-money.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 
-const AZ_BALLOT = JSON.parse(readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8")) as BallotSet;
+const AZ_BALLOT = azBallot as BallotSet;
 
 const GOVERNOR = "ballot-xx:governor";
 const SENATE_7 = "ballot-xx:state-senate-7";

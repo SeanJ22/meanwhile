@@ -4,9 +4,9 @@ import { canonicalCivicDataJson } from "./changes.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import {
-  DERIVED_CAMPAIGN_SITES_CONTRACT_ID,
+  derivedCampaignSitesContractId,
   DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
-  DERIVED_CAMPAIGN_SITES_SCOPE,
+  derivedCampaignSitesScope,
   DERIVED_CAMPAIGN_SITES_SOURCE_ID,
   derivedCampaignSitesProjectionIssue,
   derivedCandidateDocumentId,
@@ -451,7 +451,7 @@ export function derivedCampaignSitesProjection(plan: DerivedCampaignSitesPlan): 
   return { kind: "candidate-campaign-sites-derived", formatVersion: 1, records: plan.records, ...(plan.portraits?.length ? { portraits: plan.portraits } : {}) };
 }
 
-export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, attemptedAt: string): RoutineCandidate {
+export function derivedCampaignSitesCandidate(state: string, plan: DerivedCampaignSitesPlan, attemptedAt: string): RoutineCandidate {
   const readModel = derivedCampaignSitesProjection(plan);
   const retrieval = derivedRetrieval(plan.inputs);
   const succeeded = retrieval.retrievedAt !== null;
@@ -459,7 +459,7 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
   const shapeIssue = derivedCampaignSitesProjectionIssue(readModel);
   const cited = new Set(plan.inputs.flatMap((i) => (i.kind === "VAULTED_EVIDENCE" ? [i.artifactId] : i.kind === "PIPELINE_APPROVAL" ? [i.recordId] : [])));
   const priorValid = plan.prior !== undefined && plan.prior.input.recordClass === DERIVED_CAMPAIGN_SITES_RECORD_CLASS &&
-    plan.prior.input.scope === DERIVED_CAMPAIGN_SITES_SCOPE &&
+    plan.prior.input.scope === derivedCampaignSitesScope(state) &&
     sha256Hex(canonicalCivicDataJson(plan.prior.projection)) === plan.prior.input.readModelSha256 &&
     plan.inputs.some(input => canonicalCivicDataJson(input) === canonicalCivicDataJson(plan.prior!.input));
   const inherited = new Map((priorValid ? plan.prior!.projection.records : []).map(record => [record.id, record]));
@@ -493,14 +493,14 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
     decisions: { published: plan.published.map((p) => p.key), held: plan.held.map((h) => `${h.code}:${h.key}`) },
   };
   return {
-    id: `cv-${sha256Hex(`${DERIVED_CAMPAIGN_SITES_CONTRACT_ID}\u001f${DERIVED_CAMPAIGN_SITES_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
+    id: `cv-${sha256Hex(`${derivedCampaignSitesContractId(state)}\u001f${derivedCampaignSitesScope(state)}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: DERIVED_CAMPAIGN_SITES_SOURCE_ID,
     recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
-    scope: DERIVED_CAMPAIGN_SITES_SCOPE,
-    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CAMPAIGN_SITES_SOURCE_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE),
+    scope: derivedCampaignSitesScope(state),
+    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CAMPAIGN_SITES_SOURCE_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state)),
     retrieval: {
       succeeded,
-      requestedUrl: derivedRequestedUrl(DERIVED_CAMPAIGN_SITES_SOURCE_ID, DERIVED_CAMPAIGN_SITES_SCOPE),
+      requestedUrl: derivedRequestedUrl(DERIVED_CAMPAIGN_SITES_SOURCE_ID, derivedCampaignSitesScope(state)),
       finalUrl: null,
       httpStatus: null,
       retrievedAt,
@@ -521,12 +521,12 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
     },
     identities: [...readModel.records, ...(readModel.portraits ?? [])].map((record) => ({
       subjectId: record.id,
-      jurisdiction: "US",
+      jurisdiction: `US-${state}`,
       identifiers: { record_id: record.id, candidacy_id: record.candidacyId },
       matchBasis: "EXACT_SCOPED_ID" as const,
       ambiguous: false,
     })),
-    temporal: { version: DERIVED_CAMPAIGN_SITES_SCOPE, expectedVersion: DERIVED_CAMPAIGN_SITES_SCOPE, sourceThrough: retrievedAt, staleAtRetrieval: false },
+    temporal: { version: derivedCampaignSitesScope(state), expectedVersion: derivedCampaignSitesScope(state), sourceThrough: retrievedAt, staleAtRetrieval: false },
     semantics: { factKind: FACT_KIND, violations },
     horizon: {
       kind: "OPEN_FACT_SET",
@@ -553,20 +553,20 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
   };
 }
 
-export function derivedCampaignSitesFailedCandidate(attemptedAt: string, failureDetail: string): RoutineCandidate {
+export function derivedCampaignSitesFailedCandidate(state: string, attemptedAt: string, failureDetail: string): RoutineCandidate {
   return {
-    id: `cv-${sha256Hex(`${DERIVED_CAMPAIGN_SITES_CONTRACT_ID}\u001f${DERIVED_CAMPAIGN_SITES_SCOPE}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
+    id: `cv-${sha256Hex(`${derivedCampaignSitesContractId(state)}\u001f${derivedCampaignSitesScope(state)}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
     sourceId: DERIVED_CAMPAIGN_SITES_SOURCE_ID,
     recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
-    scope: DERIVED_CAMPAIGN_SITES_SCOPE,
-    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CAMPAIGN_SITES_SOURCE_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE),
-    retrieval: { succeeded: false, requestedUrl: derivedRequestedUrl(DERIVED_CAMPAIGN_SITES_SOURCE_ID, DERIVED_CAMPAIGN_SITES_SCOPE), finalUrl: null, httpStatus: null, retrievedAt: attemptedAt, rawHash: null, failureDetail },
+    scope: derivedCampaignSitesScope(state),
+    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CAMPAIGN_SITES_SOURCE_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state)),
+    retrieval: { succeeded: false, requestedUrl: derivedRequestedUrl(DERIVED_CAMPAIGN_SITES_SOURCE_ID, derivedCampaignSitesScope(state)), finalUrl: null, httpStatus: null, retrievedAt: attemptedAt, rawHash: null, failureDetail },
     normalization: {
       succeeded: false, parserVersion: DERIVED_CAMPAIGN_SITES_PARSER, schemaVersion: "candidate-campaign-sites-derived:1", normalizedHash: null,
       inputRecords: 0, outputRecords: 0, droppedRecords: 0, missingRequiredFields: [], failureDetail,
     },
     identities: [],
-    temporal: { version: DERIVED_CAMPAIGN_SITES_SCOPE, expectedVersion: DERIVED_CAMPAIGN_SITES_SCOPE, sourceThrough: attemptedAt, staleAtRetrieval: false },
+    temporal: { version: derivedCampaignSitesScope(state), expectedVersion: derivedCampaignSitesScope(state), sourceThrough: attemptedAt, staleAtRetrieval: false },
     semantics: { factKind: FACT_KIND, violations: [] },
     horizon: { kind: "OPEN_FACT_SET", query: "no inputs read", returnedRecords: 0, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
@@ -577,6 +577,7 @@ export function derivedCampaignSitesFailedCandidate(attemptedAt: string, failure
 }
 
 export function derivedCampaignSitesPass(input: {
+  readonly state: string;
   readonly approvals: readonly PublishableCampaignSiteApproval[] | { readonly unreadable: string };
   readonly held: (record: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
   readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
@@ -586,13 +587,13 @@ export function derivedCampaignSitesPass(input: {
   readonly now: string;
 }): { readonly candidate: RoutineCandidate; readonly plan: DerivedCampaignSitesPlan | null } {
   if ("unreadable" in input.approvals) {
-    return { candidate: derivedCampaignSitesFailedCandidate(input.now, `The pipeline's campaign-site approvals could not be read: ${input.approvals.unreadable}`), plan: null };
+    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The pipeline's campaign-site approvals could not be read: ${input.approvals.unreadable}`), plan: null };
   }
   if (input.profiles !== null && "unreadable" in input.profiles) {
-    return { candidate: derivedCampaignSitesFailedCandidate(input.now, `The promoted candidate-profiles version could not be read: ${input.profiles.unreadable}`), plan: null };
+    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The promoted candidate-profiles version could not be read: ${input.profiles.unreadable}`), plan: null };
   }
   if (input.prior && "unreadable" in input.prior) {
-    return { candidate: derivedCampaignSitesFailedCandidate(input.now, `The prior GOOD campaign-sites version could not be read: ${input.prior.unreadable}`), plan: null };
+    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The prior GOOD campaign-sites version could not be read: ${input.prior.unreadable}`), plan: null };
   }
   const plan = planDerivedCampaignSites({ approvals: input.approvals, held: input.held, profiles: input.profiles, prior: input.prior,
     linkedPublications: input.linkedPublications });
@@ -600,7 +601,7 @@ export function derivedCampaignSitesPass(input: {
     const why = input.approvals.length === 0
       ? "NO_APPROVED_SITE_YET: the campaign-site chain has approved no site"
       : `NO_PUBLISHABLE_SITE: all ${input.approvals.length} approval(s) are held (${plan.held.map((h) => `${h.code} ${h.key}`).join("; ")})`;
-    return { candidate: derivedCampaignSitesFailedCandidate(input.now, `${why}; nothing is published and the prior sites, if any, stay live.`), plan };
+    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `${why}; nothing is published and the prior sites, if any, stay live.`), plan };
   }
-  return { candidate: derivedCampaignSitesCandidate(plan, input.now), plan };
+  return { candidate: derivedCampaignSitesCandidate(input.state, plan, input.now), plan };
 }

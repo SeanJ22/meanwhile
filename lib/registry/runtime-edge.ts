@@ -1,3 +1,5 @@
+import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "../ballot/state-scopes.ts";
+import type { StateAuthorityFamily, PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 
 import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
@@ -43,7 +45,13 @@ export interface RegistrationsEdge {
   readonly load: (state: string) => Promise<{ readonly value: RegistrationReadModel; readonly versionId: string } | null>;
 }
 
+export interface StateAuthoritiesEdge {
+  readonly states: Readonly<Partial<Record<StateAuthorityFamily, ReadonlySet<string>>>>;
+  readonly load: (family: StateAuthorityFamily, state: string) => Promise<PromotedFamilyArtifactValue | null>;
+}
+
 export interface ReaderAuthorityEdgeBundle {
+  readonly stateAuthorities?: StateAuthoritiesEdge;
   readonly censusDistricts?: { readonly value: CensusDistrictEdge; readonly versionId: string };
   readonly registryRuntime?: RegistryRuntimeEdgeValue;
   readonly federalDirectory?: FederalDirectoryEdgeValue;
@@ -98,9 +106,31 @@ export async function settleEdgeFirst<T>(
 
 /** The edge's copy of one pointer for this request, or null when it carries none. */
 export function currentPromotedEdge(recordClass: RoutineRecordClass, scope: string): EdgeServedValue<PromotedEdgeEntry> | null {
-  const entry = edgeStore.getStore()?.promoted?.get(`${recordClass}:${scope}`);
+  const bundle = edgeStore.getStore();
+  const entry = bundle?.promoted?.get(`${recordClass}:${scope}`) ?? (bundle ? loadedStateEntries.get(bundle)?.get(`${recordClass}:${scope}`) : null);
   if (!entry) return null;
   return { value: entry, versionId: entry.kind === "PROMOTED" ? entry.projection.versionId : "NOT_RECORDED" };
+}
+
+const loadedStateEntries = new WeakMap<ReaderAuthorityEdgeBundle, Map<string, PromotedEdgeEntry>>();
+
+export async function ensurePromotedEdge(recordClass: RoutineRecordClass, scope: string): Promise<EdgeServedValue<PromotedEdgeEntry> | null> {
+  const current = currentPromotedEdge(recordClass, scope);
+  if (current) return current;
+  const bundle = edgeStore.getStore(), stateEdge = bundle?.stateAuthorities;
+  if (!bundle || !stateEdge) return null;
+  for (const scopedFamily of STATE_BALLOT_FAMILIES) {
+    const state = stateFromBallotScope(scope, scopedFamily);
+    const family: StateAuthorityFamily = scopedFamily === "candidate-corpus" ? "candidate-publications" : scopedFamily;
+    if (!state || !stateEdge.states[family]) continue;
+    if (!stateEdge.states[family]!.has(state)) return null;
+    let entries = loadedStateEntries.get(bundle);
+    if (!entries) { entries = new Map(); loadedStateEntries.set(bundle, entries); }
+    const loaded = await stateEdge.load(family, state);
+    for (const entry of loaded?.entries ?? []) entries.set(entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`, entry);
+    return currentPromotedEdge(recordClass, scope);
+  }
+  return null;
 }
 
 export async function readPromotedEdgeFirst<R>(
@@ -109,6 +139,7 @@ export async function readPromotedEdgeFirst<R>(
   read: (options: PromotedCivicDataReadOptions) => Promise<R>,
   what: string,
 ): Promise<R> {
+  await ensurePromotedEdge(recordClass, scope);
   let result: { readonly value: R } | null = null;
   await settleEdgeFirst(
     () => currentPromotedEdge(recordClass, scope),

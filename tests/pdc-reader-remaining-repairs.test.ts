@@ -12,10 +12,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 
-
 import { telHref } from "../lib/officials/phone-numbers.ts";
 
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+import { currentRegistryPlaceRead, withRegistryPlaceRead } from "../lib/registry/runtime-read-model.ts";
 
 const compile = (source: string) => ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
 
@@ -54,12 +55,26 @@ test("contactless grounded bodies retain the routed topic and correctly attribut
 });
 
 test("ballot leaves empty funding fields out and contributes partial holdings to the card", async () => {
-  const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "CandidateFunding")!;
+  const all = nodes("app/ballot/page.tsx");
+  const fn = all.find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "CandidateFunding")!;
+  const context = all.find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "withBallotReader")!;
+  assert.ok(fn && context, "exercise the production funding section and its place context");
   const envelope = { kind: "ANSWER", holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: { stale: "STALE", sourceThrough: "2026-08-19" } };
-  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", "CardGapContribution", compile(`${fn.getText()}; return CandidateFunding;`));
+  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", "withRegistryPlaceRead", "CardGapContribution", compile(`${context.getText()}; ${fn.getText()}; return CandidateFunding;`));
   const unexpected = () => { throw new Error("none must not fabricate funding records"); };
-  const component = make(React, () => ({ kind: "none" }), async () => envelope, unexpected, unexpected, unexpected, withReaderAuthorityEdge, CardGapContribution);
-  const props = { targetKey: "congress:test", context: null, available: true, readerEdge: null };
+  const divisions = ["ocd-division/country:us/state:az/cd:1"];
+  const registryPlace = { value: {} as never, versionId: "test:registry", selectorKey: JSON.stringify(divisions) };
+  const readerEdge = {};
+  const props = { targetKey: "congress:test", context: null, available: true, readerEdge, registryPlace, divisions };
+  const assertContext = () => {
+    assert.equal(currentReaderAuthorityEdge(), readerEdge);
+    assert.equal(currentRegistryPlaceRead(), registryPlace);
+  };
+  const component = make(React, () => { assertContext(); return { kind: "none" }; }, async (...args: unknown[]) => {
+    assertContext();
+    assert.deepEqual(args, [props.targetKey, undefined, undefined, divisions], "funding settles only the card's divisions");
+    return envelope;
+  }, unexpected, unexpected, unexpected, withReaderAuthorityEdge, withRegistryPlaceRead, CardGapContribution);
   assert.equal(await component(props), null, "held empty answers do not render a funding field or a freshness placeholder");
   envelope.dataMetadata.stale = "UNKNOWN";
   assert.equal(await component(props), null);

@@ -1,16 +1,3 @@
-/**
- * Registration on the reader edge. Pure. The reader reads each state's registration from its own edge
- * artifact (`ReaderManifest.registrations`), never from the database on an ordinary visit. From each
- * pointer's identity alone, the runner decides:
- *
- * ```
- *   carried   the manifest already serves exactly this version
- *   publish   a state the manifest does not serve, or serves at another version: read once, proven,
- *             and written
- * ```
- *
- * A state the published section does not name has no promoted registration.
- */
 import type { AuthorityArtifactRef } from "../meetings/edge-artifacts.ts";
 import { REGISTRATION_TARGETS } from "./publication.ts";
 

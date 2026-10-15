@@ -274,6 +274,20 @@
       "when": 1790889600004,
       "tag": "MS-01_model_charge_retirement",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1790889600005,
+      "tag": "BL-30_candidate_scopes",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1790889600006,
+      "tag": "BL-30_retire_candidate_scopes",
+      "breakpoints": true
     }
   ]
 }

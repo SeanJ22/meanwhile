@@ -1,9 +1,9 @@
 import { contentHash, fingerprint } from "../ids.ts";
 import { accessControlIn } from "../../hunt/access-control.ts";
-import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
-import type { WorkerRole } from "../attempt.ts";
+import { canonicalJson, readByKeys, type AppendOnlyRepository, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
+import type { Attempt, WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
-import { appendTransition, contextFromRepositories, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
+import { appendTransition, contextFromRecords, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
 import { findingFact, finishBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
 import { checkFact, linkQuote } from "../../facts/check.ts";
 import { factClocks } from "../../facts/clocks.ts";
@@ -96,17 +96,9 @@ export interface CampaignSiteChainOptions {
   readonly now: string;
   /** Distinct lead URLs read in one run at most; the rest stay owed, named. */
   readonly maxReads?: number;
-  /**
-   * A lead our own ACQUIRER read more recently than this is judged again from
-   * its vaulted bytes instead of being read again: the run's bounded reads go
-   * to leads never read, or read too long ago. Absent, every lead is read.
-   */
+  // Reuse recent saved reads so acquisition slots reach leads never read.
   readonly recheckAfterMs?: number;
-  /**
-   * Orders the held items by a digest of this and their id, so the bounded
-   * reads of successive runs rotate through every held item instead of always
-   * reaching the same first few. Absent, the log's order.
-   */
+  // Rotate tied items so a bounded pass cannot starve the same backlog.
   readonly rotation?: string;
   /** Candidacies whose profile already carries a campaign link; their leads are read last. Order only. */
   readonly linkedCandidacies?: ReadonlySet<string>;
@@ -232,12 +224,6 @@ async function scoutLeads(state: PipelineItemState, ctx: PipelineContext, subjec
   return leads;
 }
 
-/**
- * Saved pages of other publishers that could support a campaign, by the hosts
- * they link to. Each saved HTML page recent enough to count is read once per
- * pass; a lead then re-reads only the pages that link to its own host, instead
- * of every page in the vault.
- */
 interface ProfileIndex {
   readonly linking: (host: string) => Promise<readonly ArtifactRecord[]>;
 }
@@ -320,12 +306,6 @@ export function normalizeMarginaliaSearch(body: string): { readonly rows: readon
   return { rows, noHit: `NO_HIT: the index answered ${JSON.stringify(query)} with no result — a dated fact about one query to one index, never a statement about the candidate` };
 }
 
-/**
- * A Marginalia pointer is a lead only when its host could be a candidate's own
- * site AND either the host or the index's title names the candidate. The index
- * is a keyword index: without that, every hit would be fetched to find the one
- * page that is theirs.
- */
 export function marginaliaLeads(held: HeldMarginaliaResponse, subject: CampaignSiteSubject): { readonly leads: readonly (CampaignSiteLead & { readonly rank: number })[]; readonly refused: readonly { readonly url: string; readonly refusal: CampaignSiteRefusal }[]; readonly noHit: boolean } {
   const normalized = normalizeMarginaliaSearch(held.body);
   const forms = campaignNameForms(subject).map((f) => f.form);
@@ -370,12 +350,7 @@ export function campaignSiteChecks(input: {
     ? { name: "CLAIM_RESOLVES_TO_SOURCE_SPAN", result: "PASS", detail: `in ${artifact.artifactId} (${artifact.contentHash}): ${span("name", m.name)}; ${span("office", m.office)}; ${span("district", m.district)}; cycle ${m.cycle.span.year} beside "${m.cycle.span.phrase}" (${m.cycle.span.where}${m.cycle.source ? ` ${m.cycle.source.artifactId}, sha256-${m.cycle.source.sha256}, ${m.cycle.source.finalUrl}` : ""})` }
     : { name: "CLAIM_RESOLVES_TO_SOURCE_SPAN", result: "FAIL", detail: verdict.verdict === "REFUSED" ? verdict.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ") : "a span is missing" });
 
-  /*
-   * The name found on the page identifies exactly one canonical candidacy: no
-   * other candidacy in the universe shares that exact name form AND is named
-   * here with its own office or district. Running mates named on one joint
-   * site are different people and do not collide; two people with one name do.
-   */
+  // Joint tickets can name different people without creating an identity collision.
   const form = m?.name?.form ?? null;
   const sharing = form === null ? [] : [...input.subjects.values()].filter((other) => campaignNameForms(other).some((f) => f.form === form));
   const filedHost = subject.filingWebsites?.some(website => siteHost(website.url) === siteHost(artifact.canonicalUrl));
@@ -389,10 +364,6 @@ export function campaignSiteChecks(input: {
     ? { name: "CANONICAL_IDENTITY_UNIQUE", result: "PASS", detail: `"${form}" names exactly one of ${input.subjects.size} canonical candidacies with its office or district here (${subject.candidacyId}); ${subject.readerKeys.length} exact Reader key(s)` }
     : { name: "CANONICAL_IDENTITY_UNIQUE", result: "FAIL", detail: form === null ? "the page names no form of the candidate" : `"${form}" is shared by ${sharing.length} candidacy(ies), ${placed.length} placed here (${placed.map((p) => p.candidacyId).join(", ") || "none"}); ${subject.readerKeys.length} Reader key(s)` });
 
-  /*
-   * Campaign-site burdens: HTTPS 2xx with no access control in front, robots.txt read first and recorded,
-   * a candidate-owned host, fresh, hashed. The robots verdict is evidence, never a burden by itself.
-   */
   const burdens: string[] = [];
   if (m === null) burdens.push("no measurement");
   else {
@@ -428,44 +399,84 @@ function zeroStages(): Record<PipelineStage, number> {
   return { SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 };
 }
 
-/**
- * Whether the item's log already holds exactly this refusal: the same offer,
- * byte for byte. Re-offering it would append nothing (`refuse` derives the
- * refusal's id from the offer's content), so the run skips the store calls.
- * An offer that differs in any byte (a burden that moved, a new read) is
- * offered again.
- */
+// An identical refusal appends nothing; new evidence still receives a new decision.
 function alreadyRefused(state: PipelineItemState | undefined, offered: TransitionRecord): RefusedRecord | null {
   if (state === undefined) return null;
   const wanted = canonicalJson(offered);
   return state.records.find((r): r is RefusedRecord => r.stage === "REFUSED" && r.offered.recordId === offered.recordId && canonicalJson(r.offered) === wanted) ?? null;
 }
 
-/**
- * Offer every stage the evidence supports for every held campaign-site lead.
- * Idempotent: record ids derive from evidence, so a re-run re-offers the same
- * records and the log dedupes them; a new read is a new record.
- */
+async function scopedMatches<T>(log: AppendOnlyRepository<T>, path: readonly string[], values: readonly string[]): Promise<T[]> {
+  if (!log.keysWhere) throw new Error("CAMPAIGN_STATE_FILTER_UNAVAILABLE");
+  const out: T[] = [];
+  const seen = new Set<string>();
+  for (let offset = 0; offset < values.length; offset += 16) {
+    const batches = await Promise.all(values.slice(offset, offset + 16).map(async value => {
+      const keys = await log.keysWhere!(path, value);
+      return (await Promise.all(keys.map(key => log.readWhere(key, path, value)))).flat();
+    }));
+    for (const row of batches.flat()) {
+      const key = canonicalJson(row);
+      if (!seen.has(key)) { seen.add(key); out.push(row); }
+    }
+  }
+  return out;
+}
+
 export async function projectCampaignSiteChains(repos: ControlPlaneRepositories, options: CampaignSiteChainOptions): Promise<CampaignSiteChainReport> {
   const offers: { stage: PipelineStage; itemId: string; accepted: boolean; refusalCodes: string[] }[] = [];
   const leadsOut: CampaignSiteLeadOutcome[] = [];
   const unjoined: { itemId: string; subjectId: string }[] = [];
   const maxReads = options.maxReads ?? 200;
-  let ctx = await contextFromRepositories(repos);
-  /* Every artifact the log holds, read once; this run's reads are added as they are recorded. */
-  const allArtifacts: ArtifactRecord[] = [...(await repos.artifacts.readAll())];
-  const profiles = profileIndex(allArtifacts, options);
-  /*
-   * Only this pass's items, read by key: every state below is filtered to the campaign-site class, so the rest of the
-   * promotion log (every other record class) never crosses the wire. An item whose only record is a refused offer
-   * carries its class on the offer.
-   */
-  const readCampaignStates = async () => new Map((await readPipelineStatesWhere(repos, [
-    { path: ["recordClass"], value: CAMPAIGN_SITE_RECORD_CLASS },
-    { path: ["offered", "recordClass"], value: CAMPAIGN_SITE_RECORD_CLASS },
-  ])).map((s) => [s.itemId, s] as const));
+  const subjectIds = [...new Set([...options.subjects.values()].flatMap(subject => [subject.candidacyId, ...subject.readerKeys]))];
+  const scouts = await scopedMatches(repos.scoutResults, ["subjectId"], subjectIds);
+  const workIds = new Set(scouts.map(row => row.workItemId));
+  const leads: { value: BoxFinding }[] = [];
+  for (let offset = 0; offset < subjectIds.length; offset += 16) {
+    const ids = subjectIds.slice(offset, offset + 16);
+    const [work, findings] = await Promise.all([
+      Promise.all(ids.flatMap(id => [id, `campaign-site:${id}`]).map(id => repos.workItems.listWhere(["subject"], id))),
+      Promise.all(ids.map(id => repos.boxFindings.listWhere(["subjectId"], id))),
+    ]);
+    for (const row of work.flat()) workIds.add(row.id);
+    leads.push(...findings.flat().filter(row => row.value.state === "waiting" && row.value.waitingFor?.reason === CAMPAIGN_SITE_LEAD));
+  }
+  if (!repos.promotionPipeline.keysWhere) throw new Error("CAMPAIGN_STATE_FILTER_UNAVAILABLE");
+  const readCampaignStates = async () => new Map((await readPipelineStatesWhere(repos, subjectIds.flatMap(value => [
+    { path: ["subjectId"], value }, { path: ["offered", "subjectId"], value },
+  ]))).filter(row => row.recordClass === CAMPAIGN_SITE_RECORD_CLASS).map(row => [row.itemId, row]));
   let heldStates = await readCampaignStates();
-  let recordedThisRun = 0;
+  const cited = [...new Set([...heldStates.values()].flatMap(row => row.records.flatMap(record =>
+    "artifactIds" in record ? record.artifactIds ?? [] : [])))];
+  const allArtifacts: ArtifactRecord[] = [];
+  const byArtifact = new Map<string, ArtifactRecord>();
+  const heldReads = new Map<string, ArtifactRecord>();
+  const attempts = new Map<string, Attempt>();
+  const results = [...(await readByKeys(repos.workerResults, [...workIds])).values()].flat();
+  let ctx: PipelineContext = contextFromRecords([], [], results);
+  const includeArtifacts = async (rows: readonly ArtifactRecord[]) => {
+    for (const row of rows) if (!byArtifact.has(row.artifactId)) {
+      byArtifact.set(row.artifactId, row);
+      allArtifacts.push(row);
+      const previous = heldReads.get(row.canonicalUrl);
+      if (/html/i.test(row.contentType) && !row.partial && (!previous || row.recordedAt > previous.recordedAt)) heldReads.set(row.canonicalUrl, row);
+    }
+    const ids = [...new Set(rows.map(row => row.attemptId).concat(results.map(row => row.attemptId),
+      (options.marginalia ?? []).map(row => row.attemptId)))].filter(id => !attempts.has(id));
+    const found = repos.attempts.readMany ? await repos.attempts.readMany(ids)
+      : (await Promise.all(ids.map(id => repos.attempts.read(id)))).filter(row => row !== null);
+    for (const row of found) attempts.set(row.id, row.value);
+    ctx = contextFromRecords(allArtifacts, [...attempts.values()], results);
+  };
+  await includeArtifacts([...[...(await readByKeys(repos.artifacts, [...workIds])).values()].flat(),
+    ...await scopedMatches(repos.artifacts, ["artifactId"], cited)]);
+  const loadedUrls = new Set<string>();
+  const includeUrl = async (url: string) => {
+    if (loadedUrls.has(url)) return;
+    loadedUrls.add(url);
+    await includeArtifacts(await scopedMatches(repos.artifacts, ["canonicalUrl"], [url]));
+  };
+  const profiles = profileIndex(allArtifacts, options);
   const offer = async (record: TransitionRecord): Promise<PipelineItemState> => {
     const held = heldStates.get(record.itemId);
     const refused = alreadyRefused(held, record);
@@ -494,7 +505,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
 
   // Paid Scout findings can precede every parser result. Their existing
   // SCOUTED representation must reach this plain-code pass independently.
-  for (const scout of await repos.scoutResults.readAll()) {
+  for (const scout of scouts) {
     if (scout.recordClass !== CAMPAIGN_SITE_RECORD_CLASS) continue;
     for (const scouted of scoutedFromScoutResult(scout)) {
       if (!heldStates.get(scouted.itemId)?.byStage.SCOUTED) await offer(scouted);
@@ -502,7 +513,6 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   }
 
   // A hunter's campaign-site finding becomes a lead once checkFact holds it on its own saved page; one for a candidacy no ballot holds waits.
-  const leads = (await repos.boxFindings.listWhere(["state"], "waiting")).filter(row => row.value.waitingFor?.reason === CAMPAIGN_SITE_LEAD);
   const windowHours = leads.length ? factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).windowHours : () => 0;
   for (const { value: finding } of leads) {
     const subject = options.subjects.get(finding.subjectId) ?? [...options.subjects.values()].find(row => row.readerKeys.includes(finding.subjectId));
@@ -556,31 +566,15 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   };
   const pastScouted = (s: PipelineItemState): boolean => s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.stage !== null && s.stage !== "SCOUTED";
 
-  /*
-   * Saved reads already held, newest per URL, whichever job captured them.
-   * Within `recheckAfterMs` a lead is judged again from these bytes, so the
-   * run's reads go to what was never read.
-   */
-  const heldReads = new Map<string, ArtifactRecord>();
-  for (const a of allArtifacts) {
-    if (!/html/i.test(a.contentType) || a.partial) continue;
-    const newest = heldReads.get(a.canonicalUrl);
-    if (newest === undefined || a.recordedAt > newest.recordedAt) heldReads.set(a.canonicalUrl, a);
-  }
-
-  /*
-   * APPROVED — from the vault, for an item past SCOUTED. The items an earlier
-   * run verified are advanced first from held sources; leads are read next,
-   * then newly verified items advance.
-   */
   let readsUsed = 0;
   const approved: CampaignSiteApprovedRecord[] = [];
   const rereadsUsed = 0;
   const approve = async (state: PipelineItemState, subject: CampaignSiteSubject): Promise<PipelineItemState> => {
     const verifiedRecord = state.byStage.VERIFIED!;
     const artifactId = verifiedRecord.artifactIds?.[0] ?? "";
-    const artifact = allArtifacts.find((a) => a.artifactId === artifactId) ?? null;
+    const artifact = byArtifact.get(artifactId) ?? null;
     if (artifact === null) return state;
+    await includeUrl(artifact.canonicalUrl);
     const read = await options.heldPage(artifact);
     if (read === null) return state;
     /* The verdict the approval rests on is re-made from the vaulted bytes, never carried from the read. */
@@ -590,10 +584,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     const scouted = state.byStage.SCOUTED!;
     const failedChecks = verifiedRecord.checks.filter((c) => c.result !== "PASS").map((c) => c.name);
     const host = siteHost(artifact.canonicalUrl) ?? "";
-    /*
-     * A later read of THIS PAGE that no longer verifies contradicts it. Another page of the same site (its donate or
-     * press page, which need not name the office) is not a contradiction, and never holds the site's approval.
-     */
+    // Only a later read of this exact page can contradict it, not another page on the same host.
     const newer = allArtifacts.filter((a) => a.canonicalUrl === artifact.canonicalUrl && a.recordedAt > artifact.recordedAt && a.attemptId !== artifact.attemptId && ctx.attemptRoleById(a.attemptId) === "ACQUIRER")
       .sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1))[0];
     const newerPage = newer === undefined ? null : await options.heldPage(newer);
@@ -655,13 +646,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     advancedFirst.add(initial.itemId);
     await advance(initial);
   }
-  const recordedBeforeLeads = recordedThisRun;
 
-  /*
-   * VERIFIED, in two passes: every lead of every held item at SCOUTED without
-   * a saved page is read robots-first and recorded (each distinct URL once per
-   * run, within the read bound); then each item is verified on its saved page.
-   */
   const readCache = new Map<string, { result: LeadReadResult; artifact: ArtifactRecord | null; via: "READ" | "VAULT" }>();
   let judgedFromVault = 0;
   const pending: { state: PipelineItemState; subject: CampaignSiteSubject; verdicts: { lead: CampaignSiteLead; verdict: CampaignSiteVerdict; artifact: ArtifactRecord }[] }[] = [];
@@ -675,6 +660,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     for (const lead of (await scoutLeads(state, ctx, subject, options.heldPage)).slice(0, MAX_LEADS_PER_ITEM)) {
       const pre = campaignSiteHostRefusal(lead.url);
       if (pre !== null) { leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "REFUSED", refusals: [pre], historical: null, via: "NONE" }); continue; }
+      await includeUrl(lead.url);
       let cached = readCache.get(lead.url);
       const earlier = cached === undefined && options.recheckAfterMs !== undefined ? heldReads.get(lead.url) : undefined;
       if (earlier !== undefined && Date.parse(options.now) - Date.parse(earlier.recordedAt) < options.recheckAfterMs!) {
@@ -696,8 +682,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
         if (!result.ok && result.refusal.code === "NOT_READ") readsUsed -= 1;
         const artifact = result.ok ? await options.recordRead(subject.candidacyId, lead, result.read) : null;
         if (artifact !== null) {
-          recordedThisRun += 1;
-          allArtifacts.push(artifact);
+          await includeArtifacts([artifact]);
         }
         cached = { result, artifact, via: "READ" };
         readCache.set(lead.url, cached);
@@ -714,16 +699,6 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
         refusals: verdict.verdict === "REFUSED" ? verdict.refusals : [], historical: verdict.verdict === "REFUSED" ? verdict.historical?.years ?? null : null, via: cached.via });
     }
     pending.push({ state, subject, verdicts });
-  }
-  /* Only acquisition artifacts and Attempts changed; the held worker result context stands. */
-  if (recordedThisRun > recordedBeforeLeads) {
-    const [artifacts, attempts] = await Promise.all([repos.artifacts.readAll(), repos.attempts.list()]);
-    const byArtifact = new Map(artifacts.map(artifact => [artifact.artifactId, artifact]));
-    const byAttempt = new Map(attempts.map(attempt => [attempt.id, attempt.value]));
-    ctx = { ...ctx,
-      artifactById: id => byArtifact.get(id) ?? null,
-      attemptRoleById: id => byAttempt.get(id)?.worker.role ?? null,
-    };
   }
   for (const { state, subject, verdicts } of pending) {
     const verified = verdicts.filter((v) => v.verdict.verdict === "VERIFIED");

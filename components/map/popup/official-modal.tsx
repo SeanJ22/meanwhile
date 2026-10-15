@@ -37,12 +37,6 @@ import { PositionsSection } from "@/components/officials/positions-section";
 import { OfficeBlurb, RecentVotes } from "./official-popup";
 import { LegislatorBills } from "@/components/officials/legislator-bills";
 
-/**
- * The officeholder's large card: identity, contact, the roll-call record with
- * reaction capture, and what the office does. The parent keeps one large
- * surface open at a time.
- */
-
 interface OfficialModalProps {
   holder: SeatHolder;
   seatLabel: string | null;
@@ -75,11 +69,6 @@ export function OfficialModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, embedded]);
 
-  /*
-   * Directory facts (accounts, committee seats, offices) cite their project
-   * once on the Sources section; money, votes and PRL keep per-section
-   * citations. A state legislator's offices come from Open States.
-   */
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
   const { directory } = useMemberDirectory(holder.id,holder.state);
   const officeSource = directory?.officeDetails?.[0];
@@ -93,10 +82,6 @@ export function OfficialModal({
     ],
   );
 
-  /*
-   * No pushed history entry: it makes the App Router remount the island
-   * holding this modal's state. ×, Escape and backdrop click close.
-   */
   return (
     <div
       ref={cardRef}
@@ -121,7 +106,7 @@ export function OfficialModal({
         contact={<>{office && <DistrictOffice office={office} />}<ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
         sections={{
           office: <OfficeBlurb holder={holder} bare />,
-          positions: <PositionsSection subjectId={holder.id} subjectName={holder.name} contentOnly />,
+          positions: <PositionsSection context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} subjectName={holder.name} contentOnly />,
           committees: memberDirectoryReaches(holder.id, "committees") ? <MemberCommitteesContent holder={holder} /> : null,
           offices: memberDirectoryReaches(holder.id, "offices") ? <MemberOfficesContent holder={holder} /> : null,
           money: <FundingBlock holder={holder} reactionContext={reactionContext} bare />,
@@ -132,7 +117,7 @@ export function OfficialModal({
           {!holder.id.startsWith("congress:") && <LegislatorBills key={holder.id} holder={holder} />}
           {holder.id.startsWith("congress:") && <FederalCommentRules />}
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
-          <OfficialActions subjectId={holder.id} />
+          <OfficialActions context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} />
           <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />
         </>}
       />

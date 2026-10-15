@@ -1,3 +1,4 @@
+import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
@@ -5,10 +6,9 @@ import { join } from "node:path";
 import test from "node:test";
 
 import type { CandidateCorpus, CandidateDocument } from "../lib/candidates/corpus.ts";
-import { MEASURE_PROVISIONS } from "../lib/ballot/measure-provisions.ts";
 import { measureRecordsForBallot, type MeasureRecord } from "../lib/ballot/measure-records.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
-import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
+import { readGenericBallotProjection, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   manualProjectionCandidate,
@@ -16,10 +16,8 @@ import {
   type ManualProjectionPackage,
 } from "../lib/civic-data/manual-projections.ts";
 import {
-  readAzBallotProjection,
   readCandidateCorpusProjection,
   readCandidateProfilesProjection,
-  readNhBallotProjection,
 } from "../lib/civic-data/manual-read-models.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -75,7 +73,7 @@ function candidateDocument(candidateKey: string, documentUrl: string, contentHas
 
 function candidateCorpusPackage(documents: readonly CandidateDocument[], at: string): ManualProjectionPackage {
   return {
-    contractId: "candidate-corpus",
+    contractId: "candidate-corpus:AZ",
     version: at,
     sourceThrough: at,
     sourceReceipt: {
@@ -136,21 +134,7 @@ function ballotPayload(state: "AZ" | "NH", familyName = "DOE") {
     absences: [],
     coverageNotes: [],
   };
-  if (state === "NH") return { ballot };
-  return {
-    ballot,
-    generalLineup: { contests: [{ contestId, nominees: [{ name: `Jane ${familyName}` }] }] },
-    measureAnalyses: { analyses: [{ contestId: "measure:test", sourceUrl: URL }] },
-    candidateFilings: { contests: [], candidacies: [] },
-    identityRegistry: {
-      generatedAt: T0,
-      contests: [],
-      candidates: [{ identityId: candidacyId }],
-    },
-    lineupReconciliation: {
-      rows: [{ cardKey: candidacyId, canonicalCandidacyId: candidacyId, contestId, outcome: "MATCHED" }],
-    },
-  };
+  return { kind: "ballot-contests", ballots: { [`${state}:${ballot.election.id}`]: ballot } };
 }
 
 function packageFor(
@@ -159,16 +143,16 @@ function packageFor(
   rawHash = HASH_A,
   familyName = "DOE",
 ): ManualProjectionPackage {
-  if (contractId === "az-sos-ballot" || contractId === "nh-curated-ballot") {
+  if (contractId === "ballot-contests:NH") {
     return {
       contractId,
       version: "2026-11-03",
       sourceThrough: at,
       sourceReceipt: receipt(at, "ELECTION_AUTHORITY", rawHash),
-      payload: ballotPayload(contractId === "az-sos-ballot" ? "AZ" : "NH", familyName),
+      payload: ballotPayload("NH", familyName),
     } as unknown as ManualProjectionPackage;
   }
-  if (contractId === "candidate-profiles") {
+  if (contractId === "candidate-profiles:AZ") {
     return {
       contractId,
       version: at,
@@ -210,9 +194,9 @@ function packageFor(
   } as unknown as ManualProjectionPackage;
 }
 
-test("the four former tracked authorities promote through the canonical candidate/event/pointer plane", async () => {
+test("national ballot and candidate authorities promote through the canonical candidate/event/pointer plane", async () => {
   const store = new MemoryRoutineDataStore();
-  for (const id of ["az-sos-ballot", "nh-curated-ballot", "candidate-profiles", "candidate-corpus"] as const) {
+  for (const id of ["ballot-contests:NH", "candidate-profiles:AZ", "candidate-corpus:AZ"] as const) {
     const candidate = manualProjectionCandidate(packageFor(id));
     const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", id);
@@ -222,54 +206,54 @@ test("the four former tracked authorities promote through the canonical candidat
   }
 
   const reads = await Promise.all([
-    readAzBallotProjection({ store, bypassCache: true, now: T0 }),
-    readNhBallotProjection({ store, bypassCache: true, now: T0 }),
-    readCandidateProfilesProjection({ store, bypassCache: true, now: T0 }),
-    readCandidateCorpusProjection({ store, bypassCache: true, now: T0 }),
+    readGenericBallotProjection("NH", { store, bypassCache: true, now: T0 }),
+    readCandidateProfilesProjection("AZ", { store, bypassCache: true, now: T0 }),
+    readCandidateCorpusProjection("AZ", { store, bypassCache: true, now: T0 }),
   ]);
-  assert.deepEqual(reads.map((read) => read.kind), ["PROMOTED", "PROMOTED", "PROMOTED", "PROMOTED"]);
+  assert.deepEqual(reads.map((read) => read.kind), ["PROMOTED", "PROMOTED", "PROMOTED"]);
 });
 
 test("measure records survive civic-data promotion and change without a software release", async () => {
   const store = new MemoryRoutineDataStore();
-  const original = packageFor("nh-curated-ballot");
-  const payload = structuredClone(original.payload) as NhBallotProjection;
-  const contest = { ...payload.ballot.contests[0]!, id: "ballot-nh-test:measure", type: "MEASURE" as const };
-  payload.ballot.contests.push(contest);
+  const original = packageFor("ballot-contests:NH");
+  const payload = structuredClone(original.payload) as GenericBallotProjection;
+  const contest = { ...payload.ballots["NH:nh-2026"].contests[0]!, id: "ballot-nh-test:measure", type: "MEASURE" as const };
+  payload.ballots["NH:nh-2026"].contests.push(contest);
+  payload.ballots["NH:nh-2026"].measures.push({ id: "measure:test", contestId: contest.id, questionText: "Create a program?", officialStatement: null, provenance: contest.provenance });
   const record: MeasureRecord = { contestId: contest.id, whatItDoes: "Creates a program.",
     yesMeans: null, noMeans: null, parts: [], sourceUrl: URL, sourceHash: HASH_A, writtenAt: T0 };
   for (const [at, whatItDoes] of [[T0, "Creates a program."], [T1, "Changes the program."]] as const) {
     const input = { ...original, sourceThrough: at, sourceReceipt: receipt(at, "ELECTION_AUTHORITY", HASH_A),
-      payload: { ...payload, ballot: { ...payload.ballot, measureRecords: [{ ...record, whatItDoes }] } } };
+      payload: { ...payload, ballots: { ...payload.ballots, "NH:nh-2026": { ...payload.ballots["NH:nh-2026"], measureRecords: [{ ...record, whatItDoes }] } } } };
     const candidate = manualProjectionCandidate(input);
-    const published = await processRegisteredManualCandidate(store, "nh-curated-ballot", candidate, at);
+    const published = await processRegisteredManualCandidate(store, "ballot-contests:NH", candidate, at);
     assert.equal(published.candidate.state, "PROMOTED");
-    const read = await readNhBallotProjection({ store, now: at, bypassCache: true });
+    const read = await readGenericBallotProjection("NH", { store, now: at, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     assert.ok(read.value);
-    assert.equal(summaryForContest(contest.id, measureRecordsForBallot(read.value.ballot))?.summary, whatItDoes);
+    assert.equal(summaryForContest(contest.id, measureRecordsForBallot(read.value.ballots["NH:nh-2026"]))?.summary, whatItDoes);
     assert.ok(candidate.civicRecords?.some(row => row.key === `measure-record:${contest.id}`));
   }
 });
 
 test("a changed ballot yields an exact record delta; a bad successor is held and cannot erase LKG", async () => {
   const store = new MemoryRoutineDataStore();
-  const first = manualProjectionCandidate(packageFor("nh-curated-ballot"));
-  await processRegisteredManualCandidate(store, "nh-curated-ballot", first, T0);
+  const first = manualProjectionCandidate(packageFor("ballot-contests:NH"));
+  await processRegisteredManualCandidate(store, "ballot-contests:NH", first, T0);
 
-  const changed = manualProjectionCandidate(packageFor("nh-curated-ballot", T1, HASH_B, "ROE"));
-  const promoted = await processRegisteredManualCandidate(store, "nh-curated-ballot", changed, T1);
+  const changed = manualProjectionCandidate(packageFor("ballot-contests:NH", T1, HASH_B, "ROE"));
+  const promoted = await processRegisteredManualCandidate(store, "ballot-contests:NH", changed, T1);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.deepEqual(promoted.candidate.candidate.changeSet?.changed.map((record) => record.key), ["candidacy:ballot-nh-test:office:jane-doe"]);
 
-  const brokenPackage = structuredClone(packageFor("nh-curated-ballot", T2, "c".repeat(64), "BAD"));
+  const brokenPackage = structuredClone(packageFor("ballot-contests:NH", T2, "c".repeat(64), "BAD"));
   const brokenPayload = brokenPackage.payload as unknown as ReturnType<typeof ballotPayload>;
-  brokenPayload.ballot.candidacies[0].contestId = "missing-contest";
+  brokenPayload.ballots["NH:nh-2026"].candidacies[0].contestId = "missing-contest";
   const broken = manualProjectionCandidate(brokenPackage);
-  const refused = await processRegisteredManualCandidate(store, "nh-curated-ballot", broken, T2);
+  const refused = await processRegisteredManualCandidate(store, "ballot-contests:NH", broken, T2);
   assert.equal(refused.promoted, null);
   assert.equal(refused.candidate.state, "SEMANTIC_INVALID");
-  assert.equal((await store.readPromotion("BALLOT_CANDIDACY", "US-NH:merrimack:2026-general"))?.versionId, changed.id);
+  assert.equal((await store.readPromotion("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH")))?.versionId, changed.id);
 });
 
 test("one candidate-publication receipt mismatch cannot hold an unrelated exact document version", async () => {
@@ -281,7 +265,7 @@ test("one candidate-publication receipt mismatch cannot hold an unrelated exact 
     candidateDocument("ballot-az-test:two", secondUrl, HASH_B, T0),
   ];
   const first = manualProjectionCandidate(candidateCorpusPackage(firstDocs, T0));
-  await processRegisteredManualCandidate(store, "candidate-corpus", first, T0, null);
+  await processRegisteredManualCandidate(store, "candidate-corpus:AZ", first, T0, null);
 
   const validNew = candidateDocument("ballot-az-test:one", firstUrl, HASH_C, T1);
   const mismatchedNew = candidateDocument("ballot-az-test:two", secondUrl, HASH_D, T1);
@@ -302,7 +286,7 @@ test("one candidate-publication receipt mismatch cannot hold an unrelated exact 
       sourceReceipt: first.retrieval.manualSourceReceipt!,
     },
   });
-  const outcome = await processRegisteredManualCandidate(store, "candidate-corpus", next, T1, first.id);
+  const outcome = await processRegisteredManualCandidate(store, "candidate-corpus:AZ", next, T1, first.id);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.deepEqual(outcome.candidate.candidate.changeSet?.removed, []);
   assert.ok(outcome.candidate.candidate.changeSet?.added.some(({ key }) => key === `document:${validNew.id}`));
@@ -316,13 +300,13 @@ test("one candidate-publication receipt mismatch cannot hold an unrelated exact 
 });
 
 test("candidate-publication admission refuses a content hash that does not identify the normalized text", async () => {
-  const input = packageFor("candidate-corpus");
+  const input = packageFor("candidate-corpus:AZ");
   const payload = structuredClone(input.payload) as CandidateCorpus;
   payload.documents[0]!.text = "Different normalized words with the old content identity.";
   const candidate = manualProjectionCandidate({ ...input, payload });
   const outcome = await processRegisteredManualCandidate(
     new MemoryRoutineDataStore(),
-    "candidate-corpus",
+    "candidate-corpus:AZ",
     candidate,
     T0,
   );
@@ -331,7 +315,7 @@ test("candidate-publication admission refuses a content hash that does not ident
 });
 
 test("manual Reader proof is bound to the exact source, class, and scope", async () => {
-  const candidate = manualProjectionCandidate(packageFor("candidate-profiles"));
+  const candidate = manualProjectionCandidate(packageFor("candidate-profiles:AZ"));
   const mismatched = {
     ...candidate,
     id: `${candidate.id}-wrong-projection-proof`,
@@ -343,7 +327,7 @@ test("manual Reader proof is bound to the exact source, class, and scope", async
   };
   const outcome = await processRegisteredManualCandidate(
     new MemoryRoutineDataStore(),
-    "candidate-profiles",
+    "candidate-profiles:AZ",
     mismatched,
     T0,
   );
@@ -362,35 +346,20 @@ test("store failure never opens a bundled ballot/profile/corpus seed", async () 
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all([
-    readAzBallotProjection({ store: brokenStore, bypassCache: true }),
-    readNhBallotProjection({ store: brokenStore, bypassCache: true }),
-    readCandidateProfilesProjection({ store: brokenStore, bypassCache: true }),
-    readCandidateCorpusProjection({ store: brokenStore, bypassCache: true }),
+    readGenericBallotProjection("NH", { store: brokenStore, bypassCache: true }),
+    readCandidateProfilesProjection("AZ", { store: brokenStore, bypassCache: true }),
+    readCandidateCorpusProjection("AZ", { store: brokenStore, bypassCache: true }),
   ]);
   assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(candidateReads, 0);
 
-  const citation = Object.getOwnPropertyDescriptor(MEASURE_PROVISIONS[0]!, "citesUrl");
-  assert.equal(typeof citation?.get, "function", "route import must defer the canonical citation read until request time");
-  const mutableEnvironment = process.env as Record<string, string | undefined>;
-  const previousNodeEnv = mutableEnvironment["NODE_ENV"];
-  mutableEnvironment["NODE_ENV"] = "production";
-  try {
-    assert.throws(
-      () => MEASURE_PROVISIONS[0]!.citesUrl,
-      /Arizona ballot projection is STORE_UNREACHABLE/,
-      "a compile-safe provision must still fail closed instead of retaining a bundled citation after store failure",
-    );
-  } finally {
-    if (previousNodeEnv === undefined) delete mutableEnvironment["NODE_ENV"];
-    else mutableEnvironment["NODE_ENV"] = previousNodeEnv;
-  }
+
 });
 
 test("manual authorities have no clock and Admin reuses the canonical outcome projection", () => {
-  const ids = new Set(["az-sos-ballot", "nh-curated-ballot", "candidate-profiles", "candidate-corpus"]);
+  const ids = new Set(["ballot-contests:NH", "candidate-profiles:AZ", "candidate-corpus:AZ"]);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
-  assert.equal(contracts.length, 4);
+  assert.equal(contracts.length, 3);
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);
@@ -428,4 +397,15 @@ test("tracked writers and alternate Reader doors stay retired", () => {
   const promoter = readFileSync(join(ROOT, "scripts/promote-manual-civic-projection.mts"), "utf8");
   assert.doesNotMatch(promoter, /\b(?:writeFileSync|appendFileSync|execSync|spawnSync)\s*\(/);
   assert.match(promoter, /MANUAL_PROMOTION_PACKAGE_MUST_BE_OUTSIDE_REPOSITORY/);
+});
+
+
+test("state candidate publications bind generated worker IDs and reject another state's explicit IDs", () => {
+  const key = `ballot-candidacy:${"a".repeat(24)}`;
+  const candidate = manualProjectionCandidate(candidateCorpusPackage([candidateDocument(key, URL, HASH_A, T0)], T0));
+  assert.deepEqual(candidate.semantics.violations, []);
+  assert.deepEqual(candidate.normalization.missingRequiredFields, []);
+  assert.ok(candidate.identities.every(row => row.jurisdiction === "US-AZ"));
+  const otherState = manualProjectionCandidate(candidateCorpusPackage([candidateDocument("ballot-nh-test:jane-doe", URL, HASH_A, T0)], T0));
+  assert.ok(otherState.semantics.violations.length > 0);
 });

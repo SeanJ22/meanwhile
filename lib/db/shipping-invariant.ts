@@ -1,4 +1,5 @@
 import { compareSchemaState, type JournalEntry, type SchemaState } from "./schema-state.ts";
+import { MIGRATION_SQL_PATH } from "./migration-immutability.ts";
 import {
   declaredPhase,
   PHASE_ORDERING,
@@ -69,7 +70,7 @@ export function schemaInvolvement(changed: readonly string[] | null): SchemaInvo
 export function migrationTagsIn(changed: readonly string[]): string[] {
   const tags = changed
     .map(normalisePath)
-    .map((p) => /^lib\/db\/migrations\/((?:[0-9]{4}|[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)_[A-Za-z0-9_]+)\.sql$/.exec(p)?.[1])
+    .map((p) => MIGRATION_SQL_PATH.exec(p)?.[1])
     .filter((t): t is string => typeof t === "string");
   return [...new Set(tags)].sort();
 }

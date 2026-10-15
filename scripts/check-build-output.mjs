@@ -1,16 +1,4 @@
 #!/usr/bin/env node
-/**
- * Postbuild check of the deployed artifact itself, not the source:
- *
- *   1. No file under `tests/` appears in any trace manifest.
- *   2. No traced repo file carries a credential-shaped VALUE.
- *   3. The server-trace and client-JS budgets in `scripts/bundle-budget.json`.
- *
- * Check 2 matches value shapes only; env-var NAMES appear legitimately in code
- * that reads configuration. `evaluate` is a pure read of a directory tree so
- * every refusal can be planted against a synthetic `.next`.
- */
-
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 
@@ -180,7 +168,7 @@ export function evaluate({ root, budget }) {
         `  Bundles: ${bundles.join(", ")}\n` +
         `  First few: ${testFiles.slice(0, 5).join(", ")}\n` +
         `  Cause is almost always a filesystem read over a path the bundler cannot see.\n` +
-        `  See lib/sources/ballot-curated/index.ts for the shape that fixes it.`,
+        `  Use explicit source paths so the bundler can trace each file.`,
     );
   }
 
@@ -325,7 +313,7 @@ export function evaluate({ root, budget }) {
         "  the shape R23 had, where a runtime-computed path made Turbopack trace the whole\n" +
         "  project. Diff this build's trace manifests against a clean build's to see WHICH\n" +
         "  files joined; fix the read at the source with the\n" +
-        "  static-map pattern in lib/sources/ballot-curated/index.ts, or re-measure and\n" +
+        "  explicit source paths, or re-measure and\n" +
         "  re-commit the BASELINE in scripts/bundle-budget.json with the file list as its\n" +
         "  reason — the ceiling is then re-derived from it by the HEADROOM rule, never\n" +
         "  raised on its own.",

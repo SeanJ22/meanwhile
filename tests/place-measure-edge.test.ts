@@ -22,6 +22,7 @@ test("place publications and reads never open a country manifest, and current po
   const artifacts = new LocalFileArtifactStore(directory);
   let manifests = 0, immutableReads = 0, payloadReads = 0;
   const store = new Proxy(artifacts, { get(target, key) {
+    if (key === "readAuthorityManifest" || key === "writeAuthorityManifest") throw new Error("a place never reads or writes the reference index");
     if (key === "readManifest") return async (path?: string) => {
       assert.ok(path?.startsWith("reader/places/"), "a place never reads the country index");
       manifests++;

@@ -69,13 +69,16 @@ async function prepare() {
   const objects = JSON.parse(await readFile(join(transfer, "objects.json"), "utf8")) as CatalogObject[];
   for (const object of objects) await saveCatalog({ ...object, path: join(transfer, object.path) });
   const files = new Map(nationalStates.map(state => [state.usps, createWriteStream(join(directory, "governments", `${state.usps}.jsonl`))]));
-  const counts: Record<string, number> = {}, kinds: Record<string, number> = {};
+  const counts: Record<string, number> = {}, kinds: Record<string, number> = {}, identities = new Set<string>();
   try {
     for (const dependent of [false, true]) {
       for await (const row of csvRecords(join(process.cwd(), "data/reference", dependent ? "census_govt_units_2022_dependent_school_systems.csv" : "census_govt_units_2022.csv"))) {
         const state = nationalStates.find(state => state.fips === row.fips_state.padStart(2, "0"));
         assert.ok(state, `Unknown Census FIPS ${row.fips_state}`);
-        const government: Government = { id: row.census_id_gidid, state: state.usps, name: row.unit_name, type: row.gov_type, dependent };
+        const id = row.census_id_pid6.trim();
+        assert.match(id, /^\d{6}$/);
+        assert.ok(!identities.has(id), `Duplicate Census identity ${id}`); identities.add(id);
+        const government: Government = { id, state: state.usps, name: row.unit_name, type: row.gov_type, dependent };
         const file = files.get(state.usps)!;
         if (!file.write(`${JSON.stringify(government)}\n`)) await once(file, "drain");
         counts[state.usps] = (counts[state.usps] ?? 0) + 1;
@@ -83,7 +86,8 @@ async function prepare() {
       }
     }
   } finally { await Promise.all([...files.values()].map(async file => { file.end(); await once(file, "finish"); })); }
-  const result = { objects: objects.length, states: nationalStates.length, units: Object.values(counts).reduce((a, b) => a + b, 0), counts, kinds };
+  assert.equal(identities.size, 92_150);
+  const result = { objects: objects.length, states: nationalStates.length, units: identities.size, joinKey: "census_id_pid6", counts, kinds };
   await writeFile(join(directory, "prepared.json"), JSON.stringify(result, null, 2));
   return result;
 }
@@ -185,7 +189,11 @@ async function writer() {
     const sourceBytes = Buffer.byteLength(sourceText);
     let requests = 0, sourceReads = 0, measureCount = 0, rawPlaces = 0;
     const edgeBytes = { readBytes: 0, writtenBytes: 0, immutableWrites: 0, manifestWrites: 0, readerRequests: 0 };
-    const artifacts = new LocalFileArtifactStore(join(directory, "reader-artifacts", new URL(process.env.DATABASE_URL!).pathname.slice(1), state));
+    const databaseUrl = new URL(process.env.DATABASE_URL!);
+    assert.ok(["postgres:", "postgresql:"].includes(databaseUrl.protocol));
+    const databaseName = decodeURIComponent(databaseUrl.pathname.slice(1));
+    assert.match(databaseName, /^[a-z][a-z0-9_]*$/);
+    const artifacts = new LocalFileArtifactStore(join(directory, "reader-artifacts", databaseName, state));
     const artifactStore = new Proxy(artifacts, { get(target, name) {
       if (name === "readManifest") return async (...args: Parameters<typeof artifacts.readManifest>) => {
         const value = await target.readManifest(...args); if (value) edgeBytes.readBytes += Buffer.byteLength(JSON.stringify(value.manifest)); return value;
@@ -215,7 +223,7 @@ async function writer() {
       let count = 0;
       for await (const line of createInterface({ input: createReadStream(join(directory, "governments", `${state}.jsonl`)), crlfDelay: Infinity })) {
         const government = JSON.parse(line) as Government;
-        government.id ||= digest(line).slice(0, 24);
+        assert.match(government.id, /^\d{6}$/);
         const division = `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}/special:${prefix}_${government.id}`;
         const sourceUrl = `https://ms01-benchmark.gov/${state}/${prefix}/${government.id}/law`;
         const source: MeasureSourceReference = { sourceUrl, sourceHash, retrievedAt: at, publisher: "Generated scale fixture",

@@ -48,5 +48,4 @@ test("national-shaped source authorities accept every registration target", () =
     for (const target of REGISTRATION_TARGETS) assert.ok(SOURCE_AUTHORITIES[id].jurisdictions.includes(target.jurisdiction), `${id}: ${target.jurisdiction}`);
   }
   assert.ok(SOURCE_AUTHORITIES["meetings-public-bodies"].jurisdictions.includes("SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"));
-  assert.deepEqual(SOURCE_AUTHORITIES["az-election-authorities"].jurisdictions, ["US-AZ"], "state-specific authorities keep their sourced scope");
 });

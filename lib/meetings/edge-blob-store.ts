@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
-import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
-import type { ReaderArtifactStore, StoredManifest } from "./edge-store.ts";
+import type { ReaderAuthorityManifest, ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
+import type { ReaderArtifactStore, StoredAuthorityManifest, StoredManifest } from "./edge-store.ts";
 
 export const READER_ARTIFACT_STORE_NAME = "reader-artifacts";
 export const READER_MANIFEST_KEY = "reader/manifest.json";
+export const READER_AUTHORITY_MANIFEST_KEY = "reader/authority-manifest.json";
 
 export function immutableKey(bytes: Uint8Array, suffix: "json" | "json.gz"): string {
   return `reader/artifacts/${createHash("sha256").update(bytes).digest("hex")}.${suffix}`;
@@ -36,12 +37,20 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
   }
 
   async readManifest(key: string = READER_MANIFEST_KEY): Promise<StoredManifest | null> {
+    return this.readManifestAt<ReaderManifest>(key);
+  }
+
+  async readAuthorityManifest(): Promise<StoredAuthorityManifest | null> {
+    return this.readManifestAt<ReaderAuthorityManifest>(READER_AUTHORITY_MANIFEST_KEY);
+  }
+
+  private async readManifestAt<T>(key: string): Promise<{ manifest: T; etag: string | null } | null> {
     // Eventual consistency is correct for the reader: the CDN layer, not this
     // read, is the reader's hot path, and a <=60s-stale pointer is honest.
     const store = await this.store("eventual");
     const res = await store.getWithMetadata(key, { type: "json" });
     if (!res || res.data == null) return null;
-    return { manifest: res.data as ReaderManifest, etag: res.etag ?? null };
+    return { manifest: res.data as T, etag: res.etag ?? null };
   }
 
   async readArtifact(key: string): Promise<ReaderGeoArtifact | null> {
@@ -55,6 +64,14 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
     expectedEtag: string | null,
     key: string = READER_MANIFEST_KEY,
   ): Promise<{ modified: boolean; etag: string | null }> {
+    return this.writeManifestAt(key, manifest, expectedEtag);
+  }
+
+  async writeAuthorityManifest(manifest: ReaderAuthorityManifest, expectedEtag: string | null) {
+    return this.writeManifestAt(READER_AUTHORITY_MANIFEST_KEY, manifest, expectedEtag);
+  }
+
+  private async writeManifestAt(key: string, manifest: ReaderManifest | ReaderAuthorityManifest, expectedEtag: string | null) {
     // Strong consistency so the read-before-write and the CAS see the truth.
     const store = await this.store("strong");
     const result = await store.setJSON(

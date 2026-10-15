@@ -1,3 +1,4 @@
+import { parseStateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import { readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve } from "node:path";
 
@@ -35,7 +36,7 @@ if (workerResults) {
   if (receipt) console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
   if (exitCode) process.exitCode = exitCode;
 } else {
-const packageContracts = MANUAL_PROJECTION_CONTRACT_IDS.filter(id => id !== "ballot-contests" && id !== "plain-english-translations");
+const packageContracts = MANUAL_PROJECTION_CONTRACT_IDS.filter(id => parseStateBallotContractId(id)?.family !== "ballot-contests" && id !== "plain-english-translations");
 if (!contractId || !packageContracts.some(id => id === contractId) || !packageArgument) {
   throw new Error(
     `usage: tsx scripts/promote-manual-civic-projection.mts --contract=${packageContracts.join("|")} --package=<absolute path outside repository>`,

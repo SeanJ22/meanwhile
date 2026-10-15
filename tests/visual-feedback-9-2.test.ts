@@ -3,7 +3,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summary.ts";
+import { summaryForContest } from "../lib/ballot/measure-summary.ts";
+import { azBallot } from "./helpers/ballot-district-fixtures.ts";
+
+const records = azBallot.measureRecords ?? [];
+const summaries = records.map(record => summaryForContest(record.contestId, records)!);
 
 const ROOT = process.cwd();
 const read = (rel: string) => readFileSync(join(ROOT, rel), "utf8");
@@ -60,7 +64,7 @@ test("BAL-40: on every wordmark-above-headline page the logo is larger than the 
 });
 
 test("BAL-46: every local measure carries a plain-language summary, cited to its own source, never advocacy", () => {
-  const local = MEASURE_SUMMARIES.filter((s) => s.citation === "measure-source");
+  const local = summaries.filter((s) => s.citation === "measure-source");
   assert.ok(local.length >= 4, `expected the four local-measure summaries, found ${local.length}`);
   const forbidden = /\b(should|vote yes|vote no|good|bad|dangerous|we recommend|we support|we oppose)\b/i;
   for (const s of local) {
@@ -97,7 +101,7 @@ test("BAL-48: extended election-mechanics text collapses behind a disclosure by 
 test("POS-5: the statewide measure treatment the owner praised is intact — summary, part-by-part, collapsed analysis", () => {
   const ids = ["ballot-az-pima:prop-319", "ballot-az-pima:prop-320"];
   for (const id of ids) {
-    const s = MEASURE_SUMMARIES.find((x) => x.contestId === id);
+    const s = summaries.find((x) => x.contestId === id);
     assert.ok(s, `${id}: the statewide summary is gone`);
     assert.notEqual(s.citation, "measure-source", `${id}: a statewide measure must cite its Legislative Council analysis`);
   }

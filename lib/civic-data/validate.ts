@@ -217,23 +217,32 @@ function completeBallotRemovalCheck(candidate: RoutineCandidate, prior: Candidat
   const next = candidate.readModel as GenericBallotProjection;
   const before = prior.candidate.readModel as GenericBallotProjection;
   if (next.kind !== "ballot-contests" || before.kind !== "ballot-contests") return null;
-  const complete = completeOfficialBallotContests(next, candidate.retrieval.manualSourceReceipt);
-  const old = Object.values(before.ballots).flatMap(ballot => ballot.candidacies.map(candidacy => ({ ballot, candidacy })));
+  const complete = new Map(completeOfficialBallotContests(next, candidate.retrieval.manualSourceReceipt)
+    .map(row => [`${row.ballot.election.id}:${row.contest.id}`, row]));
+  const old = new Map<string, { ballot: GenericBallotProjection["ballots"][string]; candidacy: GenericBallotProjection["ballots"][string]["candidacies"][number]; contest: GenericBallotProjection["ballots"][string]["contests"][number] | undefined }>();
+  for (const ballot of Object.values(before.ballots)) {
+    const contests = new Map(ballot.contests.map(row => [row.id, row]));
+    const contacts = new Set(ballot.contacts?.map(row => row.candidacyId));
+    for (const candidacy of ballot.candidacies) {
+      const held = { ballot, candidacy, contest: contests.get(candidacy.contestId) };
+      old.set(`candidacy:${candidacy.id}`, held);
+      if (contacts.has(candidacy.id)) old.set(`contact:${candidacy.id}`, held);
+    }
+  }
+  const holds = new Map(Object.values(next.ballots).flatMap(ballot => (ballot.heldContests ?? []).map(row => [`${ballot.election.id}:${row.id}`, row] as const)));
   if (!(candidate.changeSet?.removed ?? []).every(delta => {
-    const held = old.find(row => delta.key === `candidacy:${row.candidacy.id}`);
-    if (!held) return false;
-    const oldContest = held.ballot.contests.find(contest => contest.id === held.candidacy.contestId);
-    const hold = next.ballots[`${held.ballot.election.state}:${held.ballot.election.id}`]?.heldContests?.find(row => row.id === oldContest?.id);
-    if (oldContest?.candidateListComplete !== true && hold && hold.ocdId === oldContest?.ocdId &&
-      hold.provenance.sourceUrl === oldContest.provenance.sourceUrl &&
+    const held = old.get(delta.key);
+    if (!held?.contest) return false;
+    const key = `${held.ballot.election.id}:${held.candidacy.contestId}` as const, hold = holds.get(key);
+    if (held.contest.candidateListComplete !== true && hold && hold.ocdId === held.contest.ocdId &&
+      hold.provenance.sourceUrl === held.contest.provenance.sourceUrl &&
       Date.parse(hold.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt)) return true;
-    const matches = complete.filter(row => row.contest.id === held.candidacy.contestId &&
-      row.ballot.election.id === held.ballot.election.id && row.ballot.election.date === held.ballot.election.date &&
-      row.contest.ocdId === held.ballot.contests.find(contest => contest.id === held.candidacy.contestId)?.ocdId);
-    return matches.length === 1 && Date.parse(matches[0].contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
+    const match = complete.get(key);
+    return match !== undefined && match.ballot.election.date === held.ballot.election.date &&
+      match.contest.ocdId === held.contest.ocdId && Date.parse(match.contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
   })) return null;
   return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "COMPLETE_OFFICIAL_CONTEST_REMOVAL",
-    "Each removed candidacy belongs to a newer complete official list or an explicitly held incomplete contest; no hold claims absence.");
+    "Removed candidacies and their contacts belong to a newer complete official list or a source-bound incomplete contest named as held.");
 }
 
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {

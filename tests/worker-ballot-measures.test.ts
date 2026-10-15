@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -50,7 +51,7 @@ async function fixture(state = "OH", prefix = `state:${state.toLowerCase()}/coun
   const parsed = parseCivicRecords({ attemptId: "parsed", worker: { role: "PARSER", instance: "fixture", provider: "deterministic", version: "2" }, evidence, contract });
   assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed));
   const parser = { id: "parsed", workItemId: "measure", endedAt: now, result: parsed } as WorkerResultRecord;
-  const plan = { contract, publication: { contractId: "ballot-contests", bodyId: "fixture-body" } } as AutonomousWorkPlan;
+  const plan = { contract, publication: { contractId: division.split("/").length > 3 ? "ballot-measures" : stateBallotContractId("ballot-contests", state), bodyId: "fixture-body" } } as AutonomousWorkPlan;
   const registry = { payload: { registry: { divisions: [{ state, label: "Alder County", ocdId: division, sourceDataset: "fixture" }] } } } as unknown as RegistryRuntimePrior;
   const evidenceStore = new MemoryEvidenceStore();
   const captures = await Promise.all([evidence, document].map(async evidence => {
@@ -65,7 +66,7 @@ async function fixture(state = "OH", prefix = `state:${state.toLowerCase()}/coun
 }
 
 test("local measures publish in their own place with full official text references and reach Ask", async () => {
-  assert.equal(workerReaderClassMatches("ballot-contests", "BALLOT_MEASURE"), true);
+  assert.equal(workerReaderClassMatches("ballot-contests:OH", "BALLOT_MEASURE"), true);
   for (const [state, prefix] of [["OH", "state:oh/county:alder"], ["OH", "state:oh/place:alder"], ["OH", "state:oh/school_district:alder"], ["MI", "state:mi/county:alder"], ["DC", "district:dc/ward:1"], ["PR", "territory:pr/municipio:alder"]]) {
     const input = await fixture(state, prefix), checked = workerBallotContestsPackage(input), store = new MemoryRoutineDataStore();
     assert.deepEqual(checked.heldContests, []);
@@ -128,20 +129,20 @@ test("national measure reaction authority attaches checked parts absent from the
   assert.ok(outcome.promoted, JSON.stringify(outcome.candidate));
   const scopes: string[] = [], read = store.readPromotion.bind(store);
   store.readPromotion = async (recordClass, scope) => { scopes.push(scope); return read(recordClass, scope); };
-  const authority = await readerBallotSourceForTargetId(part.id, { store, now, bypassCache: true });
+  const authority = await readerBallotSourceForTargetId(part.id, [input.division], { store, now, bypassCache: true });
   assert.ok(authority);
   const held = authority.source.normalize(await authority.source.fetch());
   assert.ok(getProvisionTargetIds(measureRecordsForBallot(held)).has(part.id));
   assert.deepEqual(new Set(scopes.filter(scope => scope.startsWith("US:plain-english-translations"))), new Set([translationScope(input.division)]));
-  assert.equal(await readerBallotSourceForTargetId(`${prior.contestId}#invented`, { store, now, bypassCache: true }), null);
-  assert.equal(await readerBallotSourceForTargetId(`other-measure#library`, { store, now, bypassCache: true }), null);
+  assert.equal(await readerBallotSourceForTargetId(`${prior.contestId}#invented`, [input.division], { store, now, bypassCache: true }), null);
+  assert.equal(await readerBallotSourceForTargetId(`other-measure#library`, [input.division], { store, now, bypassCache: true }), null);
   const elsewhere = "ocd-division/country:us/state:mi";
   const foreignPart = { ...part, id: `${prior.contestId}#elsewhere` };
   const foreign = { ...translation.record, ocdId: elsewhere, measure: { ...measure, parts: [foreignPart] },
     sentences: translation.record.sentences.map(row => ({ ...row, field: row.field.replace(part.id, foreignPart.id) })),
     checked: translation.record.checked.map(row => ({ ...row, field: row.field.replace(part.id, foreignPart.id) })) };
   assert.ok((await publishMeasureTranslation(store, { record: foreign, captures: input.captures, now })).promoted);
-  assert.equal(await readerBallotSourceForTargetId(foreignPart.id, { store, now, bypassCache: true }), null);
+  assert.equal(await readerBallotSourceForTargetId(foreignPart.id, [input.division], { store, now, bypassCache: true }), null);
 });
 
 test("translation input keysets one state's place pointers and loads only the yielded place", async () => {
@@ -164,7 +165,7 @@ test("translation input keysets one state's place pointers and loads only the yi
     const after = String(statement.params[1]); cursors.push(after);
     return scopes.filter(scope => scope > after).slice(0, 2).map(scope => ({ scope }));
   });
-  const inputs = readMeasurePlaces("OH", { store, now: () => now, readState: async () => [], query });
+  const inputs = readMeasurePlaces("OH", { store, now: () => now, readState: async () => ({ division: "ocd-division/country:us/state:oh", ballots: [] }), query });
   assert.deepEqual((await inputs.next()).value, { division: "ocd-division/country:us/state:oh", ballots: [] });
   assert.equal(reads.length, 0);
   assert.equal((await inputs.next()).value?.division, "ocd-division/country:us/state:oh/county:alder");
@@ -180,7 +181,7 @@ test("translation input keysets one state's place pointers and loads only the yi
     return scopes.filter(scope => scope > after).slice(0, 2).map(scope => ({ scope, current_measure_count: 1 }));
   });
   const current = [];
-  for await (const place of readMeasurePlaces("OH", { store, now: () => now, readState: async () => [], query: currentQuery })) current.push(place);
+  for await (const place of readMeasurePlaces("OH", { store, now: () => now, readState: async () => ({ division: "ocd-division/country:us/state:oh", ballots: [] }), query: currentQuery })) current.push(place);
   assert.equal(reads.length, 0, "current raw and checked payloads never load");
   assert.deepEqual(current.slice(1).map(place => place.currentMeasureCount), [1, 1, 1]);
   assert.ok(current.slice(1).every(place => place.ballots.length === 0));

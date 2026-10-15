@@ -17,42 +17,74 @@ import type { TranslationBallotSource } from "./projection-contract.ts";
 import { currentMeasureTranslation } from "./runtime.ts";
 import { readTranslationProjection, readTranslations } from "./projection-reader.ts";
 import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../coverage/states.ts";
-import { GENERIC_BALLOT_SCOPE, genericBallotProblems } from "../ballot/generic-projection.ts";
+import { genericBallotProblems } from "../ballot/generic-projection.ts";
+import { requireBallotState, stateBallotScope } from "../ballot/state-scopes.ts";
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { PLACE_MEASURE_SCOPE, readPlaceMeasureProjection } from "../ballot/place-measures.ts";
 
-export async function readNationalBallotState(state: string, query: ReadOnlyQuery | null = readerQuery()): Promise<readonly BallotSet[]> {
-  if (!query) throw new Error("Held national ballot reader is not configured.");
-  if (!US_JURISDICTIONS.some(row => row.usps === state)) throw new Error("National ballot reader requires one jurisdiction.");
-  const [rows] = await query([{ text: `WITH RECURSIVE walk(step,node) AS (
-    SELECT 0,payload FROM civic_data_promotions WHERE record_class='BALLOT_CANDIDACY' AND scope=$1
+export async function readNationalBallotState(state: string, query: ReadOnlyQuery | null = readerQuery()): Promise<MeasurePlaceInput> {
+  const jurisdiction = US_JURISDICTIONS.find(row => row.usps === requireBallotState(state))!;
+  const division = `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
+  if (!query) throw new Error("Held state ballot reader is not configured.");
+  const [rows] = await query([{ text: `WITH RECURSIVE source AS (
+    SELECT scope,current_version_id,payload FROM civic_data_promotions WHERE record_class='BALLOT_CANDIDACY' AND scope=$1
+  ), checked AS (
+    SELECT CASE WHEN v.payload->'sourceBallot'->>'versionId'=s.current_version_id AND v.payload->'sourceBallot'->>'scope'=s.scope
+      THEN v.payload->'sourceBallot'->'measureCount' END measure_count
+    FROM source s LEFT JOIN civic_data_promotions t ON t.record_class='CURATED_READER_RECORD' AND t.scope=$2
+    LEFT JOIN civic_data_payload_parts p ON p.hash=t.payload->>'$civicPayloadPart'
+    CROSS JOIN LATERAL (SELECT CASE WHEN p.hash IS NULL THEN t.payload WHEN p.payload->>'kind'='object' THEN p.payload->'value' ELSE p.payload END payload) v
+  ), walk(step,ballot,field,node) AS (
+    SELECT 0,NULL::text,NULL::text,payload FROM source WHERE NOT EXISTS(SELECT 1 FROM checked WHERE measure_count::text ~ '^[1-9][0-9]*$' AND measure_count<='9007199254740991'::jsonb)
     UNION ALL
-    SELECT n.step,n.node FROM walk w
+    SELECT n.step,n.ballot,n.field,n.node FROM walk w
       LEFT JOIN civic_data_payload_parts p ON p.hash=w.node->>'$civicPayloadPart'
       CROSS JOIN LATERAL (SELECT CASE WHEN p.hash IS NULL THEN w.node
-        WHEN p.payload->>'kind'='object' THEN p.payload->'value' ELSE p.payload END node) r
+        WHEN p.payload->>'kind'='object' THEN p.payload->'value'
+        WHEN p.payload->>'kind'='array' THEN p.payload->'groups' ELSE p.payload END node) r
       CROSS JOIN LATERAL (
-        SELECT 1 step,r.node->'ballots' node WHERE w.step=0
+        SELECT 1 step,w.ballot,w.field,r.node->'ballots' node WHERE w.step=0
         UNION ALL
-        SELECT 2,e.value FROM jsonb_each(CASE WHEN jsonb_typeof(r.node)='object' THEN r.node ELSE '{}'::jsonb END) e
-          WHERE w.step=1 AND split_part(e.key,':',1)=$2
+        SELECT 2,e.key,NULL::text,e.value FROM jsonb_each(CASE WHEN w.step=1 AND jsonb_typeof(r.node)='object' THEN r.node ELSE '{}'::jsonb END) e
+        UNION ALL
+        SELECT 3,w.ballot,e.key,e.value FROM jsonb_each(CASE WHEN w.step=2 AND jsonb_typeof(r.node)='object' THEN r.node ELSE '{}'::jsonb END) e
+          WHERE e.key=ANY($3::text[])
+        UNION ALL
+        SELECT 3,w.ballot,w.field,e.node FROM jsonb_array_elements(CASE WHEN w.step=3 AND jsonb_typeof(r.node)='array' THEN r.node ELSE '[]'::jsonb END) e(node)
+        UNION ALL
+        SELECT 3,w.ballot,w.field,r.node WHERE w.step=3 AND p.hash IS NOT NULL AND jsonb_typeof(r.node)='object'
       ) n WHERE n.node IS NOT NULL
-  ) SELECT node value FROM walk WHERE step=2
-    UNION ALL SELECT jsonb_build_object('$missing',node) FROM walk WHERE step<2 AND node ? '$civicPayloadPart'
-      AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart')`,
-    params: [GENERIC_BALLOT_SCOPE, state] }]);
-  if (rows.some(row => row.value && typeof row.value === "object" && "$missing" in row.value)) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+  ) SELECT ballot,field,jsonb_agg(node) value FROM walk WHERE step=3 AND NOT node ? '$civicPayloadPart' AND jsonb_typeof(node)='object'
+      AND (field<>'contests' OR node->>'type'='MEASURE' AND node->>'ocdId'=$4) GROUP BY ballot,field
+    UNION ALL SELECT NULL,'$missing',node FROM walk WHERE node ? '$civicPayloadPart'
+      AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart')
+    UNION ALL SELECT NULL,'$source',jsonb_build_object('scope',scope,'versionId',current_version_id,
+      'measureCount',(SELECT measure_count FROM checked)) FROM source`,
+    params: [stateBallotScope("ballot-contests", state), translationScope(division),
+      ["election", "contests", "measures", "measureRecords", "sourceAuthorities", "sourceCorpus"], division] }]);
+  if (rows.some(row => row.field === "$missing")) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+  const identity = rows.find(row => row.field === "$source")?.value as { scope: string; versionId: string; measureCount?: number } | undefined;
+  if (!identity) return { division, ballots: [] };
+  const sourceBallot = { scope: identity.scope, versionId: identity.versionId };
+  if (Number.isSafeInteger(identity.measureCount) && identity.measureCount! > 0) return { division, ballots: [], sourceBallot, currentMeasureCount: identity.measureCount };
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => { throw new Error("READ_ONLY"); },
     read: async hashes => {
       const [found] = await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [[...hashes]] }]);
       return found as unknown as { hash: string; payload: unknown }[];
     } });
-  const ballots = await parts.load(rows.map(row => row.value)) as BallotSet[];
-  const problems = genericBallotProblems({ kind: "ballot-contests", ballots: Object.fromEntries(ballots.map(ballot => [`${ballot.election?.state}:${ballot.election?.id}`, ballot])) });
-  if (problems.length || ballots.some(ballot => ballot.election.state !== state)) throw new Error(`Held national ballot ${state} is invalid: ${problems.join(" ")}`);
-  return ballots;
+  const held: Record<string, BallotSet> = {};
+  for (const row of rows) if (row.field !== "$source") {
+    const key = String(row.ballot), field = String(row.field);
+    const ballot = held[key] ??= { contests: [], candidacies: [], measures: [], measureRecords: [], absences: [] } as unknown as BallotSet;
+    const decoded = await parts.load(row.value) as unknown[];
+    Object.assign(ballot, { [field]: field === "election" || field === "sourceCorpus" ? decoded[0] : decoded });
+  }
+  const ballots = Object.values(held).filter(ballot => ballot.contests.length);
+  const problems = ballots.length ? genericBallotProblems({ kind: "ballot-contests", ballots: Object.fromEntries(ballots.map(ballot => [`${ballot.election?.state}:${ballot.election?.id}`, ballot])) }, state) : [];
+  if (problems.length) throw new Error(`Held state ballot ${state} is invalid: ${problems.join(" ")}`);
+  return { division, ballots, sourceBallot };
 }
 
 function sourceCapture(source: MeasureSourceReference, text: string): WorkerPublicationCapture {
@@ -93,14 +125,14 @@ export interface MeasurePlaceInput {
 
 export async function* readMeasurePlaces(state: string, input: {
   readonly store: RoutineDataStore; readonly now: () => string;
-  readonly readState?: (state: string) => Promise<readonly BallotSet[]>;
+  readonly readState?: (state: string) => Promise<MeasurePlaceInput>;
   readonly query?: ReadOnlyQuery | null;
 }): AsyncGenerator<MeasurePlaceInput> {
   const jurisdiction = US_JURISDICTIONS.find(row => row.usps === state);
   if (!jurisdiction) throw new Error("Measure input requires one state.");
   const division = `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
-  yield { division, ballots: await (input.readState ?? readNationalBallotState)(state) };
   const query = input.query === undefined ? readerQuery() : input.query;
+  yield await (input.readState ? input.readState(state) : readNationalBallotState(state, query));
   if (!query) throw new Error("Local measure input reader is not configured.");
   const prefix = `${PLACE_MEASURE_SCOPE}:${division}/`;
   let after = prefix;

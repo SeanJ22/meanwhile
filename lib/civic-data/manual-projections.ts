@@ -1,3 +1,4 @@
+import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "../ballot/state-scopes.ts";
 import { campaignFinanceRecordIssue } from "../funding/campaign-finance-reader.ts";
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
@@ -13,14 +14,10 @@ import { genericBallotProblems, type GenericBallotProjection } from "../ballot/g
 import { placeMeasureProblems, type PlaceMeasureProjection } from "../ballot/place-measures.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
-import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CandidateLinks, RecordedHunt } from "../ballot/candidate-sites.ts";
-import type { GeneralLineup } from "../ballot/general-lineup.ts";
-import type { AnalysesFile } from "../ballot/analyses.ts";
 import type { CandidateCorpus } from "../candidates/corpus.ts";
 import type { StatementCorpus } from "../corpus/types.ts";
-import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
 import {
   everydayRoutingProjectionFromRecords,
   everydayRoutingProjectionProblems,
@@ -59,12 +56,10 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "special-district-boundaries",
   "government-budgets",
   "campaign-finance",
-  "ballot-contests",
   "ballot-measures",
-  "az-sos-ballot",
-  "nh-curated-ballot",
-  "candidate-profiles",
-  "candidate-corpus",
+  ...BALLOT_STATES.map(state => stateBallotContractId("ballot-contests", state)),
+  ...BALLOT_STATES.map(state => stateBallotContractId("candidate-profiles", state)),
+  ...BALLOT_STATES.map(state => stateBallotContractId("candidate-corpus", state)),
   "officeholder-statements",
   "official-filings",
   "ballot-navigation",
@@ -76,21 +71,9 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "meeting-body-crosswalk",
 ] as const;
 export type ManualProjectionContractId = (typeof MANUAL_PROJECTION_CONTRACT_IDS)[number];
-
-export type MeasureAnalysesProjection = AnalysesFile;
-
-export interface AzBallotProjection {
-  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
-  readonly generalLineup: GeneralLineup;
-  readonly measureAnalyses: MeasureAnalysesProjection;
-  readonly candidateFilings: unknown;
-  readonly identityRegistry: AzIdentityRegistry;
-  readonly lineupReconciliation: LineupReconciliation;
-}
-
-export interface NhBallotProjection {
-  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
-}
+type ManualProjectionFamily = Exclude<ManualProjectionContractId, StateBallotContractId> | "ballot-contests" | "candidate-profiles" | "candidate-corpus";
+const projectionFamily = (id: ManualProjectionContractId): ManualProjectionFamily =>
+  (parseStateBallotContractId(id)?.family ?? id) as ManualProjectionFamily;
 
 export interface CandidateProfilesProjection {
   readonly cards: {
@@ -119,8 +102,6 @@ export type ManualProjectionPayload =
   | TranslationProjection
   | GenericBallotProjection
   | PlaceMeasureProjection
-  | AzBallotProjection
-  | NhBallotProjection
   | CandidateProfilesProjection
   | CandidateCorpus
   | StatementCorpus
@@ -141,13 +122,14 @@ export interface ManualProjectionPrior {
 }
 
 export function completeOfficialBallotContests(payload: GenericBallotProjection, receipt: ManualSourceSetReceipt) {
-  return Object.values(payload.ballots).flatMap(ballot => ballot.contests.filter(contest =>
-    contest.candidateListComplete === true && receipt.sources.some(source =>
-      ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass) && source.reviewOutcome !== "BLOCKED" &&
-      source.httpStatus === 200 && /^[a-f0-9]{64}$/.test(source.rawHash) &&
-      [source.requestedUrl, source.finalUrl].includes(contest.provenance.sourceUrl ?? "") &&
-      source.retrievedAt === contest.provenance.collectedAt))
-    .map(contest => ({ ballot, contest })));
+  const sources = new Set<string>();
+  for (const source of receipt.sources) {
+    if (!["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass) || source.reviewOutcome === "BLOCKED" ||
+      source.httpStatus !== 200 || !/^[a-f0-9]{64}$/.test(source.rawHash)) continue;
+    for (const url of [source.requestedUrl, source.finalUrl]) sources.add(`${url}\n${source.retrievedAt}`);
+  }
+  return Object.values(payload.ballots).flatMap(ballot => ballot.contests.filter(contest => contest.candidateListComplete === true &&
+    sources.has(`${contest.provenance.sourceUrl}\n${contest.provenance.collectedAt}`)).map(contest => ({ ballot, contest })));
 }
 
 export interface ManualProjectionCandidateOptions {
@@ -176,10 +158,10 @@ function string(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
-function jurisdictionForCandidateKey(key: string): string {
+function jurisdictionForCandidateKey(key: string, stateContext?: BallotState): string {
   const slug = /^(?:ballot-)?([a-z]{2})-/.exec(key)?.[1];
   const state = US_JURISDICTIONS.find((row) => row.slug === slug);
-  return state ? `US-${state.usps}` : "UNRESOLVED";
+  return state ? `US-${state.usps}` : stateContext && /^ballot-candidacy:[a-f0-9]{24}$/.test(key) ? `US-${stateContext}` : "UNRESOLVED";
 }
 
 function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetReceipt): string[] {
@@ -193,11 +175,20 @@ function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetRecei
 }
 
 export function ballotProvenanceUrls(value: unknown): Set<string> {
-  if (Array.isArray(value)) return new Set(value.flatMap(row => [...ballotProvenanceUrls(row)]));
-  const row = object(value);
-  if (!row) return new Set();
-  const url = string(object(row.provenance)?.sourceUrl), documentUrl = string(row.sourceHash) ? string(row.sourceUrl) : "";
-  return new Set([...[url, documentUrl].filter(Boolean), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
+  const urls = new Set<string>(), pending: unknown[] = [value];
+  const add = (url: unknown) => { if (typeof url === "string" && url) urls.add(url); };
+  while (pending.length) {
+    const item = pending.pop();
+    if (Array.isArray(item)) { for (const row of item) pending.push(row); continue; }
+    const row = object(item);
+    if (!row) continue;
+    for (const key of ["sourceUrl", "candidacySourceUrl", "citesUrl", "analysisUrl"]) add(row[key]);
+    for (const source of rows(row, "sources")) add(source.url);
+    add(object(row.canvass)?.url); add(object(row.retrieval)?.url);
+    if (Array.isArray(row.sourceUrls)) for (const url of row.sourceUrls) add(url);
+    for (const child of Object.values(row)) if (child && typeof child === "object") pending.push(child);
+  }
+  return urls;
 }
 
 export function mergeBallotSourceReferences(next: BallotSet, before?: BallotSet): Pick<BallotSet, "sourceAuthorities" | "sourceCorpus"> {
@@ -235,7 +226,7 @@ interface BuiltProjection {
   readonly factKind: string;
 }
 
-const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
+const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionFamily>([
   "candidate-profiles",
   "candidate-corpus",
   "officeholder-statements",
@@ -370,8 +361,8 @@ function sourceScopedMembers(
   contractId: ManualProjectionContractId,
   payload: ManualProjectionPayload,
 ): readonly SourceScopedMember[] {
-  if (contractId === "candidate-profiles") return profileMembers(payload);
-  if (contractId === "candidate-corpus") return corpusMembers(payload);
+  if (projectionFamily(contractId) === "candidate-profiles") return profileMembers(payload);
+  if (projectionFamily(contractId) === "candidate-corpus") return corpusMembers(payload);
   if (contractId === "officeholder-statements") return statementMembers(payload);
   if (contractId === "official-filings" || contractId === "ballot-navigation" ||
       contractId === "stances" || contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
@@ -381,19 +372,33 @@ function sourceScopedMembers(
   return [];
 }
 
+function receiptVersionIndex(receipt: ManualSourceSetReceipt): ReadonlyMap<string, ReadonlySet<number>> {
+  const versions = new Map<string, Set<number>>();
+  for (const source of receipt.sources) {
+    if ((source.reviewOutcome ?? "SUPPORTED") !== "SUPPORTED") continue;
+    const key = `${source.finalUrl}\n${source.rawHash}\n${source.retrievedAt}`;
+    const statuses = versions.get(key) ?? new Set<number>();
+    statuses.add(source.httpStatus);
+    versions.set(key, statuses);
+  }
+  return versions;
+}
+
 function sourceScopedMemberIssue(
   contractId: ManualProjectionContractId,
   member: SourceScopedMember,
   receipt: ManualSourceSetReceipt,
+  versions: ReadonlyMap<string, ReadonlySet<number>>,
 ): string | null {
-  if (contractId === "candidate-profiles") {
+  const state = parseStateBallotContractId(contractId)?.state;
+  if (projectionFamily(contractId) === "candidate-profiles") {
     const candidateKey = member.key.replace(/^profile:/, "").replace(/:(?:card|links)$/, "");
-    if (jurisdictionForCandidateKey(candidateKey) === "UNRESOLVED") {
+    if (jurisdictionForCandidateKey(candidateKey, state) !== `US-${state}`) {
       return `${member.key} has no supported exact jurisdiction prefix.`;
     }
     return object(member.record) === null ? `${member.key} is not a profile object.` : null;
   }
-  if (contractId === "candidate-corpus") {
+  if (projectionFamily(contractId) === "candidate-corpus") {
     const row = object(member.record);
     if (!row) return `${member.key} is not a candidate publication object.`;
     const id = string(row.id);
@@ -406,7 +411,7 @@ function sourceScopedMemberIssue(
       ? Boolean(string(row.text).trim())
       : extraction === "failed" && row.text === null && Boolean(string(row.extractionNote).trim());
     const normalizedTextHashValid = extraction !== "html" || sha256(string(row.text)) === contentHash;
-    if (!id || !candidateKey || id !== `${candidateKey}@${contentHash}` ||
+    if (!id || !candidateKey || jurisdictionForCandidateKey(candidateKey, state) !== `US-${state}` || id !== `${candidateKey}@${contentHash}` ||
         !["CAMPAIGN_SITE", "OFFICIAL_SITE"].includes(string(row.sourceClass)) ||
         !["HUNTED_AND_VERIFIED", "STATED_IN_FILING"].includes(string(row.basis)) ||
         !/^https:\/\//.test(documentUrl) || !SHA256_PATTERN.test(contentHash) ||
@@ -414,15 +419,10 @@ function sourceScopedMemberIssue(
         !normalizedTextHashValid) {
       return `${member.key} lacks its exact content-addressed id, candidate/source class, HTTPS document, normalized-text hash, retrieval time, content type, or truthful extraction outcome.`;
     }
-    if (jurisdictionForCandidateKey(candidateKey) === "UNRESOLVED") {
+    if (jurisdictionForCandidateKey(candidateKey, state) === "UNRESOLVED") {
       return `${member.key} has no supported exact candidate jurisdiction.`;
     }
-    if (!receipt.sources.some((source) =>
-      (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED" &&
-      source.finalUrl === documentUrl &&
-      source.rawHash === contentHash &&
-      source.retrievedAt === retrievedAt
-    )) {
+    if (!versions.has(`${documentUrl}\n${contentHash}\n${retrievedAt}`)) {
       return `${member.key} is not bound to supported exact bytes and retrieval time for ${documentUrl}.`;
     }
     return null;
@@ -443,13 +443,7 @@ function sourceScopedMemberIssue(
         id !== `${subjectId}|${url}|${contentHash}`) {
       return `${member.key} lacks a valid identity, exact primary-publication version, or extraction outcome.`;
     }
-    if (!receipt.sources.some((source) =>
-      (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED" &&
-      source.finalUrl === url &&
-      source.rawHash === contentHash &&
-      source.retrievedAt === retrievedAt &&
-      source.httpStatus === row.httpStatus
-    )) {
+    if (!versions.get(`${url}\n${contentHash}\n${retrievedAt}`)?.has(Number(row.httpStatus))) {
       return `${member.key} is not bound to supported exact bytes and retrieval time for ${url}.`;
     }
     return null;
@@ -482,7 +476,7 @@ function rebuildSourceScopedPayload(
 ): ManualProjectionPayload {
   const current = object(currentPayload) ?? {};
   const prior = object(priorPayload) ?? {};
-  if (contractId === "candidate-profiles") {
+  if (projectionFamily(contractId) === "candidate-profiles") {
     const currentCards = object(current.cards) ?? {};
     const currentLinks = object(current.links) ?? {};
     const priorCards = object(prior.cards) ?? {};
@@ -510,7 +504,7 @@ function rebuildSourceScopedPayload(
       },
     } as CandidateProfilesProjection;
   }
-  if (contractId === "candidate-corpus") {
+  if (projectionFamily(contractId) === "candidate-corpus") {
     return {
       formatVersion: 1,
       fetchedAt: string(current.fetchedAt) || string(prior.fetchedAt),
@@ -538,6 +532,7 @@ function sourceScopedProjection(
   prior: ManualProjectionPrior | null,
 ): IsolatedManualProjection {
   const currentMembers = sourceScopedMembers(input.contractId, input.payload);
+  const versions = receiptVersionIndex(input.sourceReceipt);
   const reconciled = reconcileSourceScopedMembers({
     sourceUrls: member => manualRecordSourceUrls(member.record),
     current: currentMembers,
@@ -546,7 +541,7 @@ function sourceScopedProjection(
       members: sourceScopedMembers(input.contractId, prior.payload),
       sourceReceipt: prior.sourceReceipt,
     } : null,
-    memberIssue: (member) => sourceScopedMemberIssue(input.contractId, member, input.sourceReceipt),
+    memberIssue: (member) => sourceScopedMemberIssue(input.contractId, member, input.sourceReceipt, versions),
   });
   let selectedMembers = reconciled.members;
   let excludedFacts = reconciled.excludedFacts;
@@ -643,17 +638,11 @@ function plainEnglishProjection(payload: ManualProjectionPayload): BuiltProjecti
       detail: `${records.length} source-bound translation(s) with independent sentence checks.` }] };
 }
 
-function genericBallotProjection(payload: ManualProjectionPayload): BuiltProjection {
+function genericBallotProjection(payload: ManualProjectionPayload, state?: string): BuiltProjection {
   const value = payload as GenericBallotProjection | PlaceMeasureProjection;
-  const problems = value.kind === "ballot-measures" ? placeMeasureProblems(value) : genericBallotProblems(value);
   const ballots = Object.values(value?.ballots ?? {});
-  const records = ballots.flatMap(ballot => [
-    ...ballot.contests.map(record => ({ key: `contest:${record.id}`, record })),
-    ...(ballot.heldContests ?? []).map(record => ({ key: `contest:${record.id}`, record })),
-    ...ballot.candidacies.map(record => ({ key: `candidacy:${record.id}`, record })),
-    ...ballot.measures.map(record => ({ key: `measure:${record.id}`, record })),
-    ...(ballot.measureRecords ?? []).map(record => ({ key: `measure-record:${record.contestId}`, record })),
-  ]);
+  const records = civicRecordsFor("BALLOT_CANDIDACY", value);
+  const problems = value.kind === "ballot-measures" ? placeMeasureProblems(value) : genericBallotProblems(value, state);
   return { payload, records, identities: ballots.flatMap(ballot => [
     ...[...ballot.contests, ...ballot.heldContests ?? []].map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
@@ -670,110 +659,7 @@ function genericBallotProjection(payload: ManualProjectionPayload): BuiltProject
     factKind: "sourced official ballot contests and candidates" };
 }
 
-function ballotProjection(
-  contractId: "az-sos-ballot" | "nh-curated-ballot",
-  payload: ManualProjectionPayload,
-): BuiltProjection {
-  const original = payload as AzBallotProjection | NhBallotProjection;
-  if (original.ballot) {
-    payload = { ...original, ballot: seedMeasureRecords(original.ballot,
-      "measureAnalyses" in original ? original.measureAnalyses.analyses : []) };
-  }
-  const held = object(payload);
-  const ballot = object(held?.ballot);
-  const contests = rows(ballot, "contests");
-  const candidacies = rows(ballot, "candidacies");
-  const contestIds = contests.map((row) => string(row.id));
-  const candidacyIds = candidacies.map((row) => string(row.id));
-  const measureRecords = rows(ballot, "measureRecords");
-  const jurisdiction = contractId === "az-sos-ballot" ? "US-AZ" : "US-NH";
-  const records: CivicRecordMember[] = [
-    ...contests.map((record) => ({ key: `contest:${string(record.id)}`, record })),
-    ...candidacies.map((record) => ({ key: `candidacy:${string(record.id)}`, record })),
-    ...measureRecords.map((record) => ({ key: `measure-record:${string(record.contestId)}`, record })),
-  ];
-  const identities: IdentityEvidence[] = [
-    ...contests.map((row) => ({
-      subjectId: string(row.id),
-      jurisdiction,
-      identifiers: { contest_id: string(row.id) },
-      matchBasis: "OFFICIAL_ID" as const,
-      ambiguous: false,
-    })),
-    ...candidacies.map((row) => ({
-      subjectId: string(row.id),
-      jurisdiction,
-      identifiers: { candidacy_id: string(row.id), contest_id: string(row.contestId) },
-      matchBasis: "EXACT_SCOPED_ID" as const,
-      ambiguous: false,
-    })),
-  ];
-  const violations = [
-    ...duplicateProblems(measureRecords.map(row => string(row.contestId)), "Measure record"),
-    ...measureRecords.flatMap(row => {
-      const issue = measureRecordIssue(row as unknown as MeasureRecord);
-      const contest = contests.find(contest => contest.id === row.contestId && contest.type === "MEASURE");
-      return issue ? [issue] : contest ? [] : ["A measure record names no exact measure contest."];
-    }),
-    ...duplicateProblems(contestIds, "Contest"),
-    ...duplicateProblems(candidacyIds, "Candidacy"),
-    ...(candidacies.some((row) => !contestIds.includes(string(row.contestId)))
-      ? ["A candidacy names no exact retained contest."]
-      : []),
-  ];
-  if (contractId === "az-sos-ballot") {
-    const lineup = object(held?.generalLineup);
-    const analyses = object(held?.measureAnalyses);
-    const identity = object(held?.identityRegistry);
-    const reconciliation = object(held?.lineupReconciliation);
-    const identityCandidates = rows(identity, "candidates");
-    const identityIds = identityCandidates.map((row) => string(row.identityId));
-    const reconciliationRows = rows(reconciliation, "rows");
-    records.push(
-      ...identityCandidates.map((record) => ({ key: `identity:${string(record.identityId)}`, record })),
-      ...reconciliationRows.map((record) => ({ key: `lineup:${string(record.cardKey)}`, record })),
-    );
-    identities.push(
-      ...identityCandidates.map((row) => ({
-        subjectId: string(row.identityId),
-        jurisdiction,
-        identifiers: { identity_id: string(row.identityId) },
-        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
-        ambiguous: false,
-      })),
-      ...reconciliationRows.map((row) => ({
-        subjectId: string(row.cardKey),
-        jurisdiction,
-        identifiers: { candidacy_id: string(row.canonicalCandidacyId), contest_id: string(row.contestId) },
-        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
-        ambiguous: string(row.outcome) === "AMBIGUOUS",
-      })),
-    );
-    violations.push(
-      ...duplicateProblems(identityIds, "Arizona identity"),
-      ...(rows(lineup, "contests").length === 0 ? ["The Arizona package has no certified-lineup records."] : []),
-      ...(rows(analyses, "analyses").length === 0 ? ["The Arizona package has no retained measure-analysis records."] : []),
-      ...(identityCandidates.length === 0 ? ["The Arizona package has no exact candidate identity registry."] : []),
-      ...(reconciliationRows.length === 0 ? ["The Arizona package has no exact certified-lineup reconciliation."] : []),
-      ...(object(held?.candidateFilings) === null ? ["The Arizona package has no Secretary of State filing corpus."] : []),
-    );
-  }
-  return {
-    payload,
-    records,
-    identities,
-    missingRequiredFields: contests.length && candidacies.length ? [] : ["ballot.contests/candidacies"],
-    violations,
-    schemaVersion: `${contractId}:1`,
-    consumerChecks: [
-      { consumer: "/ballot and /api/ballot/scope", passed: contests.length > 0 && candidacies.length > 0, detail: `${contests.length} contests and ${candidacies.length} candidacies.` },
-      { consumer: "Ask ballot inventory", passed: candidacies.every((row) => contestIds.includes(string(row.contestId))), detail: "Every candidacy resolves to one retained contest." },
-    ],
-    factKind: contractId === "az-sos-ballot" ? "reviewed Arizona ballot, filing, analysis, and identity projection" : "reviewed New Hampshire ballot candidacy projection",
-  };
-}
-
-function profileProjection(payload: ManualProjectionPayload): BuiltProjection {
+function profileProjection(payload: ManualProjectionPayload, state: BallotState): BuiltProjection {
   payload = readerCandidateProfiles(payload as CandidateProfilesProjection);
   const held = object(payload);
   const cards = object(object(held?.cards)?.cards) ?? {};
@@ -782,7 +668,7 @@ function profileProjection(payload: ManualProjectionPayload): BuiltProjection {
   const records = keys.map((key) => ({ key: `profile:${key}`, record: { card: cards[key] ?? null, links: links[key] ?? null } }));
   const identities = keys.map((key) => ({
     subjectId: key,
-    jurisdiction: jurisdictionForCandidateKey(key),
+    jurisdiction: jurisdictionForCandidateKey(key, state),
     identifiers: { candidate_key: key },
     matchBasis: "EXACT_SCOPED_ID" as const,
     ambiguous: false,
@@ -804,23 +690,20 @@ function profileProjection(payload: ManualProjectionPayload): BuiltProjection {
   };
 }
 
-function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourceSetReceipt): BuiltProjection {
+function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourceSetReceipt, state: BallotState): BuiltProjection {
   const held = object(payload);
   const documents = rows(held, "documents");
   const documentIds = documents.map((row) => string(row.id));
   const records = documents.map((record) => ({ key: `document:${string(record.id)}`, record }));
   const identities = documents.map((row) => ({
     subjectId: string(row.candidateKey),
-    jurisdiction: jurisdictionForCandidateKey(string(row.candidateKey)),
+    jurisdiction: jurisdictionForCandidateKey(string(row.candidateKey), state),
     identifiers: { document_id: string(row.id), candidate_key: string(row.candidateKey) },
     matchBasis: "EXACT_SCOPED_ID" as const,
     ambiguous: false,
   }));
-  const complete = documents.every((row) => receipt.sources.some((source) =>
-    source.finalUrl === string(row.documentUrl) &&
-    source.rawHash === string(row.contentHash) &&
-    source.retrievedAt === string(row.retrievedAt)
-  ));
+  const versions = receiptVersionIndex(receipt);
+  const complete = documents.every(row => versions.has(`${string(row.documentUrl)}\n${string(row.contentHash)}\n${string(row.retrievedAt)}`));
   return {
     payload,
     records,
@@ -1015,25 +898,24 @@ export function manualProjectionCandidate(
   if (unauthorizedSource) {
     throw new Error(`MANUAL_SOURCE_RECEIPT_CLASS_NOT_AUTHORIZED:${contract.sourceId}:${unauthorizedSource.sourceClass}`);
   }
-  const isolated = SOURCE_ISOLATED_MANUAL_CONTRACTS.has(input.contractId)
+  const isolated = SOURCE_ISOLATED_MANUAL_CONTRACTS.has(projectionFamily(input.contractId))
     ? sourceScopedProjection(input, options.prior ?? null)
     : null;
   const payload = isolated?.payload ?? input.payload;
   const promotionReceipt = isolated?.sourceReceipt ?? input.sourceReceipt;
-  // Ballot candidacies and their contest evidence must remain in one source version.
-  const built = input.contractId === "plain-english-translations"
+  const family = projectionFamily(input.contractId);
+  const partition = parseStateBallotContractId(input.contractId);
+  const built = family === "plain-english-translations"
     ? plainEnglishProjection(payload)
-    : input.contractId === "ballot-contests" || input.contractId === "ballot-measures"
-    ? genericBallotProjection(payload)
-    : input.contractId === "az-sos-ballot" || input.contractId === "nh-curated-ballot"
-    ? ballotProjection(input.contractId, payload)
-    : input.contractId === "candidate-profiles"
-      ? profileProjection(payload)
-      : input.contractId === "candidate-corpus"
-        ? corpusProjection(payload, promotionReceipt)
-        : input.contractId === "officeholder-statements"
+    : family === "ballot-contests" || family === "ballot-measures"
+    ? genericBallotProjection(payload, partition?.state)
+    : family === "candidate-profiles"
+      ? profileProjection(payload, partition!.state)
+      : family === "candidate-corpus"
+        ? corpusProjection(payload, promotionReceipt, partition!.state)
+        : family === "officeholder-statements"
           ? officeholderStatementProjection(payload, promotionReceipt)
-          : curatedReaderProjection(input.contractId, payload, promotionReceipt);
+          : curatedReaderProjection(family, payload, promotionReceipt);
   const sources = [...input.sourceReceipt.sources].sort((left, right) =>
     `${left.finalUrl}\n${left.rawHash}`.localeCompare(`${right.finalUrl}\n${right.rawHash}`)
   );
@@ -1054,7 +936,7 @@ export function manualProjectionCandidate(
       ? ["The current review supplied no valid member-scoped fact; retained LKG alone cannot turn a failed package into a successful refresh."]
       : []),
   ];
-  const civicRecords = civicRecordsFor(contract.recordClass, built.payload);
+  const civicRecords = family === "ballot-contests" ? built.records : civicRecordsFor(contract.recordClass, built.payload);
   const droppedRecords = isolated?.rejectedCurrentMembers ?? 0;
   return {
     // Profiles and publications share a source and scope; their contract keeps version ids distinct.

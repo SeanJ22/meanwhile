@@ -113,24 +113,38 @@ export interface ReaderManifest {
   /** National per-source accounting the footer reads (shared across scopes). */
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
-  readonly commentAccess?: readonly unknown[];
-  readonly everydayRouting?: unknown;
-  /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
-  readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
-  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
-  /** Legislative people loaded separately for each requested jurisdiction. */
-  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
   readonly place?: { readonly family: PlaceAuthorityFamily; readonly division: string; readonly artifact: AuthorityArtifactRef };
   readonly freshChecks?: Readonly<Record<string, string>>;
   readonly composition?: string;
 }
 
+export interface ReaderAuthorityManifest {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly sequence: number;
+  readonly generatedAt: string;
+  readonly authorityArtifacts?: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>>;
+  readonly stateAuthorities?: Partial<Record<StateAuthorityFamily, Readonly<Record<string, AuthorityArtifactRef>>>>;
+  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+}
+
+export const STATE_AUTHORITY_FAMILIES = ["ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
+export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily | PlaceAuthorityFamily | "state-legislators">;
+export type GlobalPromotedAuthorityFamily = Exclude<PromotedAuthorityFamily, StateAuthorityFamily>;
+export function isGlobalAuthorityFamily(family: string): family is GlobalAuthorityFamily {
+  return (AUTHORITY_FAMILIES as readonly string[]).includes(family) && !isStateAuthorityFamily(family) &&
+    family !== "state-legislators" && family !== "plain-english-translations" && family !== "ballot-measures";
+}
+
+export function isStateAuthorityFamily(family: string): family is StateAuthorityFamily {
+  return (STATE_AUTHORITY_FAMILIES as readonly string[]).includes(family);
+}
+
 /** Each artifact carries one or more proven pointers whole, read through each pointer's own typed Reader. */
 export type PromotedAuthorityFamily =
+  | "candidate-campaign-sites-derived"
   | "ballot-contests"
-  | "ballot-az"
-  | "ballot-nh"
   | "candidate-profiles"
   | "candidate-publications"
   | "ballot-navigation"
@@ -149,9 +163,8 @@ export type PromotedAuthorityFamily =
   | "government-domains";
 
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
+  "candidate-campaign-sites-derived",
   "ballot-contests",
-  "ballot-az",
-  "ballot-nh",
   "candidate-profiles",
   "candidate-publications",
   "ballot-navigation",
@@ -191,6 +204,7 @@ export type AuthorityFamily =
   | PlaceAuthorityFamily
   | "meeting-outcomes"
   | "comment-access"
+  | "everyday-routing"
   | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
@@ -203,6 +217,7 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "ballot-measures",
   "meeting-outcomes",
   "comment-access",
+  "everyday-routing",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 

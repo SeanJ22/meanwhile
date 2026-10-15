@@ -7,7 +7,7 @@ import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
 import { bindNamedEntity, type BindableEntity } from "../lib/routing/named-entity.ts";
-import { AZ_TEST_CANVASS_URL, AZ_TEST_FILINGS_URL, installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { AZ_TEST_CANVASS_URL, AZ_TEST_FILINGS_URL, installBallots, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
@@ -47,7 +47,7 @@ test("a body-roster row and its committed candidacy are one person: the reverse 
 test("a party-conflict card and its filing are the committed pair, one subject with both parties and sources", async () => {
   const contestId = "ballot-az-test:synthetic-office";
   const filingId = `${contestId}:sample-jordan`;
-  await installAzBallot(syntheticAzBallot([{
+  await installBallots(syntheticAzBallot([{
     id: contestId,
     title: "Synthetic Office",
     candidacies: [

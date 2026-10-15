@@ -2,14 +2,12 @@ import { READER_MANIFEST_CACHE_TAG } from "@/lib/meetings/edge-blob-store";
 import { stageTimer } from "@/lib/api/server-timing";
 import {
   ensureReaderAuthorityEdge,
-  readReaderManifest,
+  readReaderAuthorityManifest,
   READER_MAP_AUTHORITY_FAMILIES,
 } from "@/lib/meetings/edge-serving";
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
-
-
 
 export const runtime = "nodejs";
 
@@ -41,9 +39,7 @@ export async function GET(
   const timing = stageTimer();
   // The registry load reads the committed geometry too; start it beside the edge fetch.
   prefetchReaderGeography();
-  // The reader authority edge, entered in this handler's own execution
-  // before any edge-aware read below (see the header note).
-  const manifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
+  const manifest = await timing.time("manifest", () => readReaderAuthorityManifest().catch(() => null));
   if (manifest?.authorityArtifacts) {
     const edge = await timing.time("authority", () =>
       ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
@@ -51,9 +47,6 @@ export async function GET(
     if (edge) enterReaderAuthorityEdge(edge);
   }
 
-  // Both stores, the same two the shared resolver reads: legislative seats
-  // off the officeholder index, local governing bodies off the curated
-  // rosters. Asked by division key, so neither depends on where the reader is.
   const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
 
   // Division labels and roster gaps are separate from a sourced person's identity. A registry

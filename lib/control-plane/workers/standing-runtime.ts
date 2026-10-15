@@ -69,9 +69,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, initialWorkers] = scoped ? [[] as ScoutResult[], [] as Awaited<ReturnType<typeof readCompletedWorkerResults>>] : await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
-  // One worker process builds this runtime once and runs many tasks through it; `beginTask` keeps one task's
-  // worker history current without re-reading everyone's.
-  let priorWorkers = initialWorkers;
   const knowledge=await readMethodKnowledge(input.repos);
   for (const row of scoped ? [] : await input.repos.workItems.list()) {
     const plan = row.value.autonomousPlan;
@@ -122,7 +119,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     const [allWorkRows,allOccurrenceRows,allArtifactRows,allAttemptRows,scouts,workers] = await Promise.all([
       input.repos.workItems.list(),input.repos.occurrences.list(),
       input.repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS) as Promise<readonly LineageArtifact[]>,input.repos.attempts.listNarrowed(LINEAGE_ATTEMPT_FIELDS),
-      scoped ? input.repos.scoutResults.readAll() : prior, scoped ? readCompletedWorkerResults(input.repos) : priorWorkers,
+      scoped ? input.repos.scoutResults.readAll() : prior, scoped ? readCompletedWorkerResults(input.repos) : initialWorkers,
     ]);
     brokerLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWorkRows.map(row=>row.value),
       artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value as LineageAttempt),workerResults:workers,scouts});
@@ -137,8 +134,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   };
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,
     beginTask:async (task)=>{
-      const fresh=await readCompletedWorkerResults(input.repos,task.workItemId);
-      priorWorkers=[...priorWorkers.filter(w=>w.workItemId!==task.workItemId),...fresh];
       if (scoped) {
         // A store without the filtered reads (a test double) brokers from the whole store, as before.
         const history=await readLineageHistory(input.repos,task.workItemId);

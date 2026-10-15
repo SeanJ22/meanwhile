@@ -1,9 +1,15 @@
+import { readRegistryPlace } from "@/lib/registry/reader-place";
+import { withRegistryPlaceRead, type RegistryPlaceRead } from "@/lib/registry/runtime-read-model";
+import type { ReaderAuthorityManifest } from "@/lib/meetings/edge-artifacts";
+import { ensureReaderAuthorityEdge, readReaderAuthorityManifest } from "@/lib/meetings/edge-serving";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { officialActionsForTarget, type ReaderOfficialActions } from "@/lib/officials/reader-actions";
 import { refreshExecutiveActionsFromPromoted } from "@/lib/officials/executive-actions";
-import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
+import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
+import { resolvedCandidacyForOfficial, currentOfficialIdentity } from "@/lib/funding/campaign-money";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import {
-  getRegistryRuntimeReadModel,
   refreshRegistryRuntimeFromPromoted,
 } from "@/lib/registry/runtime-read-model";
 
@@ -11,13 +17,13 @@ export const runtime = "nodejs";
 
 export interface OfficialActionTargetPlan {
   readonly applies: boolean;
-  readonly azIdentity: boolean;
+  readonly ballotIdentity: boolean;
 }
 
 export interface OfficialActionHoldingReaders {
   readonly identityPlan: (subject: string) => Promise<OfficialActionTargetPlan>;
   readonly actions: () => Promise<void>;
-  readonly azIdentity: () => Promise<void>;
+  readonly ballotIdentity: () => Promise<void>;
   readonly answer: (subject: string) => ReaderOfficialActions;
 }
 
@@ -28,24 +34,18 @@ export type OfficialActionHoldingSettlement =
 /** Scope known from the target itself, safe when the identity store is down. */
 export function directOfficialActionTargetPlan(subject: string): OfficialActionTargetPlan {
   const applies = subject.startsWith("statewide:az/") || subject.startsWith("ballot-az-");
-  return { applies, azIdentity: subject.startsWith("ballot-az-") && subject.includes("|") };
+  return { applies, ballotIdentity: subject.startsWith("ballot-az-") && subject.includes("|") };
 }
 
 async function currentOfficialActionTargetPlan(subject: string): Promise<OfficialActionTargetPlan> {
   await refreshRegistryRuntimeFromPromoted();
   const direct = directOfficialActionTargetPlan(subject);
-  const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
-    row.holder.id === subject || row.candidacy?.candidacyId === subject,
-  );
-  const applies = direct.applies
-    || related.some((row) => row.candidacy?.candidacyId.startsWith("ballot-az-"))
-    || related.some((row) => row.holder.divisions.some((division) => division.includes("/state:az")));
-  // A federal directory is supporting identity only when this exact subject's
-  // AZ action/candidacy relationship names a federal holder.
-  if (applies && related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY")) {
-    await refreshFederalDirectoryFromPromoted();
-  }
-  return { applies, azIdentity: direct.azIdentity };
+  if (subject.startsWith("congress:")) await refreshFederalDirectoryFromPromoted();
+  const candidacy = resolvedCandidacyForOfficial(subject);
+  const holder = currentOfficialIdentity(subject);
+  const applies = direct.applies || Boolean(candidacy?.candidacyId.startsWith("ballot-az-"))
+    || Boolean(holder?.divisions.some(division => division.includes("/state:az")));
+  return { applies, ballotIdentity: direct.ballotIdentity };
 }
 
 const emptyAnswer = (subjectId: string): ReaderOfficialActions => ({
@@ -58,18 +58,29 @@ const emptyAnswer = (subjectId: string): ReaderOfficialActions => ({
   records: [],
 });
 
-const defaultReaders: OfficialActionHoldingReaders = {
-  identityPlan: currentOfficialActionTargetPlan,
+function defaultReadersFor(divisions: readonly string[], manifest?: ReaderAuthorityManifest | null): OfficialActionHoldingReaders {
+  let registry: RegistryPlaceRead | Error = new Error("Registry place has not been read");
+  return {
+  identityPlan: async subject => {
+    try { registry = await readRegistryPlace(divisions, [subject], manifest); }
+    catch (error) { registry = error instanceof Error ? error : new Error(String(error)); }
+    return withRegistryPlaceRead(registry, () => currentOfficialActionTargetPlan(subject));
+  },
   actions: async () => { await refreshExecutiveActionsFromPromoted(); },
-  azIdentity: async () => { await refreshAzBallotFromPromoted(); },
-  answer: officialActionsForTarget,
-};
+  ballotIdentity: async () => {
+    if (!divisions.length) throw new Error("Ballot place is required");
+    for (const { source } of await readerBallotSourcesForDivisions(divisions)) source.normalize(await source.fetch());
+  },
+  answer: subject => withRegistryPlaceRead(registry, () => officialActionsForTarget(subject)),
+}; }
 
 /** A non-AZ request never opens the AZ action store; required reads fail closed. */
 export async function settleOfficialActionHoldingAnswer(
   subject: string,
-  readers: OfficialActionHoldingReaders = defaultReaders,
+  readers?: OfficialActionHoldingReaders,
+  divisions: readonly string[] = [],
 ): Promise<OfficialActionHoldingSettlement> {
+  readers ??= defaultReadersFor(divisions);
   const direct = directOfficialActionTargetPlan(subject);
   const [identityResult] = await Promise.allSettled([
     Promise.resolve().then(() => readers.identityPlan(subject)),
@@ -88,15 +99,15 @@ export async function settleOfficialActionHoldingAnswer(
     return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["PERSON_IDENTITY"] };
   }
 
-  const [actionResult, azIdentityResult] = await Promise.allSettled([
+  const [actionResult, ballotIdentityResult] = await Promise.allSettled([
     Promise.resolve().then(() => readers.actions()),
-    plan.azIdentity
-      ? Promise.resolve().then(() => readers.azIdentity())
+    plan.ballotIdentity
+      ? Promise.resolve().then(() => readers.ballotIdentity())
       : Promise.resolve(null),
   ]);
   const unavailableAuthorities: string[] = [];
   if (actionResult.status === "rejected") unavailableAuthorities.push("AZ_OFFICIAL_ACTION");
-  if (plan.azIdentity && azIdentityResult.status === "rejected") unavailableAuthorities.push("AZ_CANDIDACY_IDENTITY");
+  if (plan.ballotIdentity && ballotIdentityResult.status === "rejected") unavailableAuthorities.push("BALLOT_CANDIDACY_IDENTITY");
   if (unavailableAuthorities.length) return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
   try {
     return { kind: "ANSWER", answer: readers.answer(subject) };
@@ -105,10 +116,16 @@ export async function settleOfficialActionHoldingAnswer(
   }
 }
 
-export async function GET(_request: Request, context: { params: Promise<{ subject: string }> }) {
+export async function GET(request: Request, context: { params: Promise<{ subject: string }> }) {
   const { subject } = await context.params;
   if (!subject || subject.length > 512) return Response.json({ error: "subject required" }, { status: 400 });
-  const settled = await settleOfficialActionHoldingAnswer(subject);
+  const manifest = await readReaderAuthorityManifest().catch(() => null);
+  if (manifest) {
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "executive-actions"]).catch(() => null);
+    if (edge) enterReaderAuthorityEdge(edge);
+  }
+  const divisions = await ballotPlaceFromRequest(request);
+  const settled = await settleOfficialActionHoldingAnswer(subject, defaultReadersFor(divisions, manifest), divisions);
   if (settled.kind === "HOLDING_UNAVAILABLE") {
     return Response.json({
       error: "Official-action records are temporarily unavailable",

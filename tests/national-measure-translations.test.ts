@@ -175,29 +175,43 @@ test("national translation binds its official question and uses the full legisla
   assert.ok(vaultGets > 0);
 });
 
-test("the canonical input reader decodes only the selected state's references and refuses invalid source bindings", async () => {
+test("the canonical state input decodes only measure fields and keeps unchanged state reads at pointer identity", async () => {
   const valid: BallotSet = { ...ballot, contests: [{ ...ballot.contests[0], electionId: ballot.election.id,
     measureTextUrl: sourceUrl, provenance: { sourceUrl } as BallotSet["contests"][number]["provenance"] }],
-    measures: [{ ...ballot.measures[0], provenance: { sourceUrl } as BallotSet["measures"][number]["provenance"] }] };
-  const encoded = partitionCivicPayload({ ...valid, coverageNotes: ["Official election coverage.".repeat(3000)] });
-  const loaded = new Set<string>();
+    measures: [{ ...ballot.measures[0], questionText: "Official ballot question ".repeat(3000),
+      provenance: { sourceUrl } as BallotSet["measures"][number]["provenance"] }] };
+  const sourceBallot = { scope: "US-OH:state-election-ballots", versionId: "raw-state-v1" };
+  const encoded = partitionCivicPayload(valid.measures), loaded = new Set<string>();
+  const fields = Object.entries({ election: [valid.election], contests: valid.contests, measures: encoded.value,
+    measureRecords: valid.measureRecords, sourceAuthorities: valid.sourceAuthorities }).map(([field, value]) => ({ ballot: "OH:oh-2026-general", field, value }));
   const query: ReadOnlyQuery = async statements => Promise.all(statements.map(async statement => {
-    if (statement.params[0] === "US:state-election-ballots") {
-      assert.deepEqual(statement.params, ["US:state-election-ballots", "OH"]);
-      assert.match(statement.text, /split_part\(e.key,':',1\)=\$2/);
-      return [{ value: encoded.value }];
+    if (statement.params[0] === sourceBallot.scope) {
+      assert.equal(statement.params[1], translationScope(division));
+      assert.deepEqual(statement.params[2], ["election", "contests", "measures", "measureRecords", "sourceAuthorities", "sourceCorpus"]);
+      assert.equal(statement.params[3], division);
+      assert.match(statement.text, /scope=\$1/);
+      assert.match(statement.text, /node->>'type'='MEASURE'/);
+      assert.ok(!statement.text.includes("US:state-election-ballots"));
+      return [{ field: "$source", value: sourceBallot }, ...fields];
     }
     const hashes = statement.params[0] as string[];
     hashes.forEach(hash => loaded.add(hash));
     return encoded.parts.filter(part => hashes.includes(part.hash));
   }));
   const held = await readNationalBallotState("OH", query);
-  assert.deepEqual(held[0].measures[0].officialText, ballot.measures[0].officialText);
+  assert.deepEqual(held.ballots[0].measures[0].officialText, ballot.measures[0].officialText);
+  assert.deepEqual(held.sourceBallot, sourceBallot);
+  assert.deepEqual(held.ballots[0].candidacies, []);
   assert.equal(JSON.stringify(held).includes(text), false);
   assert.ok(loaded.size > 0);
-  await assert.rejects(readNationalBallotState("OH", async () => [[{ value: { ...valid,
-    measures: [{ ...valid.measures[0], officialText: { ...valid.measures[0].officialText!, text: "Wrong revision" } }] } }]]), /invalid/);
-  await assert.rejects(readNationalBallotState("OH", async () => [[{ value: { $missing: "missing" } }]]), /CIVIC_PAYLOAD_PART_MISSING/);
+  const invalid = fields.map(row => row.field === "measures" ? { ...row, value: [{ ...valid.measures[0],
+    officialText: { ...valid.measures[0].officialText!, text: "Wrong revision" } }] } : row);
+  await assert.rejects(readNationalBallotState("OH", async () => [[{ field: "$source", value: sourceBallot }, ...invalid]]), /invalid/);
+  await assert.rejects(readNationalBallotState("OH", async () => [[{ field: "$missing", value: "missing" }]]), /CIVIC_PAYLOAD_PART_MISSING/);
+  let reads = 0;
+  assert.deepEqual(await readNationalBallotState("OH", async () => { reads++; return [[{ field: "$source", value: { ...sourceBallot, measureCount: 1 } }]]; }),
+    { division, sourceBallot, ballots: [], currentMeasureCount: 1 });
+  assert.equal(reads, 1);
 });
 
 test("national measures require complete vaulted text with matching source and state identities", async () => {

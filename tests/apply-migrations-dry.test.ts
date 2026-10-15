@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
-import test from "node:test";
+import test, { after } from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { declaredPhase } from "../lib/db/migration-phases.ts";
 import { runDbApply } from "../scripts/db-apply.mts";
@@ -13,6 +14,15 @@ const REGISTER = join(ROOT, "tests", "fixtures", "apply-migrations-neon-register
 const SCRIPT = join(ROOT, "scripts", "apply-migrations.mts");
 const SQL_PREFIX = "APPLY_MIGRATIONS_FAKE_SQL ";
 const EVENT_PREFIX = "APPLY_MIGRATIONS_FAKE_EVENT ";
+const FIXTURE_ROOT = mkdtempSync(join(tmpdir(), "migration-committed-fixture-"));
+after(() => rmSync(FIXTURE_ROOT, { recursive: true, force: true }));
+cpSync(join(ROOT, "lib/db/migrations"), join(FIXTURE_ROOT, "lib/db/migrations"), { recursive: true });
+symlinkSync(join(ROOT, "scripts"), join(FIXTURE_ROOT, "scripts"), "dir");
+for (const args of [["init", "--quiet"], ["add", "lib/db/migrations"], ["commit", "--quiet", "--no-gpg-sign", "-m", "Migration fixture"]]) {
+  const child = spawnSync("git", ["-c", "user.name=Migration test", "-c", "user.email=migration@example.test", ...args],
+    { cwd: FIXTURE_ROOT, encoding: "utf8" });
+  assert.equal(child.status, 0, child.stderr);
+}
 
 interface RunResult {
   status: number | null;
@@ -33,7 +43,7 @@ function run(args: string[], env: Record<string, string> = {}, beforeContract?: 
         `import { applyMigrations } from ${JSON.stringify(pathToFileURL(SCRIPT).href)}; await applyMigrations(${JSON.stringify(args)}, { beforeContract: async () => { ${beforeContract} } });`]),
     ],
     {
-      cwd: ROOT,
+      cwd: FIXTURE_ROOT,
       encoding: "utf8",
       env: {
         ...process.env,
@@ -282,6 +292,21 @@ const productionBuild = { NETLIFY: "true", CONTEXT: "production", BRANCH: "main"
   DATABASE_URL: "postgresql://reader:secret@ep-dry-river-axwtolzc-pooler.c-4.us-east-2.aws.neon.tech/neondb",
   WTP_PRODUCTION_DATABASE_URL_WRITE: "" };
 const expandBuildArgs = ["--target=production", "--phase=expand", "--production-build"];
+
+test("production refuses uncommitted journal or SQL bytes before database access", () => {
+  for (const file of ["meta/_journal.json", `${journal().entries[0].tag}.sql`]) {
+    const path = join(FIXTURE_ROOT, "lib/db/migrations", file);
+    const original = readFileSync(path);
+    try {
+      writeFileSync(path, Buffer.concat([original, Buffer.from("\n")]));
+      const result = run(expandBuildArgs, productionBuild, "");
+      assert.equal(result.status, 1);
+      assert.match(result.output, /REFUSED.*differs from its committed (version|SQL)/);
+      assert.deepEqual(result.statements, []);
+      assert.deepEqual(result.events, []);
+    } finally { writeFileSync(path, original); }
+  }
+});
 
 test("production build without a writer passes only when committed expands are already applied", () => {
   // Pending contracts do not hold a zero-write expand build.

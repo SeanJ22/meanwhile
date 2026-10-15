@@ -1,4 +1,6 @@
 import { placeArtifactLoader } from "./place-edge.ts";
+import { createHash } from "node:crypto";
+import { stateBallotScope } from "../ballot/state-scopes.ts";
 import { gzipSync, gunzipSync } from "node:zlib";
 
 import {
@@ -8,14 +10,19 @@ import {
   scopesForStates,
   sha256OfJson,
   AUTHORITY_FAMILIES,
+  STATE_AUTHORITY_FAMILIES,
+  isGlobalAuthorityFamily,
+  type StateAuthorityFamily,
+  type GlobalAuthorityFamily,
+  type GlobalPromotedAuthorityFamily,
   PROMOTED_AUTHORITY_FAMILIES,
   READER_ARTIFACT_FORMAT_VERSION,
   type AuthorityArtifactRef,
   type AuthorityFamily,
-  type PromotedAuthorityFamily,
   type PromotedFamilyArtifactValue,
   type ReaderGeoArtifact,
   type ReaderManifest,
+  type ReaderAuthorityManifest,
   type ReaderManifestScope,
 } from "./edge-artifacts.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
@@ -23,6 +30,8 @@ import type { FederalDirectoryReadModel } from "../officials/federal-directory-d
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
+import type { CommentAccess, CommentAccessProjection } from "../registry/comment-access.ts";
+import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
@@ -77,7 +86,8 @@ function manifestWithChecks(
   sequence: number,
   update: { readonly generatedAt: string; readonly retrievedAt: string | null; readonly checks: PublishReaderChecks | undefined },
 ): ReaderManifest {
-  const { freshChecks: _freshChecks, composition: _composition, ...rest } = manifest;
+  const { freshChecks: _freshChecks, composition: _composition, ...held } = manifest;
+  const rest = Object.fromEntries(Object.entries(held).filter(([key]) => !["authorityArtifacts", "stateAuthorities", "registrations", "stateLegislators", "commentAccess", "everydayRouting", "extrasVersionIds"].includes(key))) as Omit<ReaderManifest, "freshChecks" | "composition">;
   return {
     ...rest,
     sequence,
@@ -105,7 +115,8 @@ export async function publishReaderEdgeChecks(
     return { status: "NOT_COMPOSABLE", detail: "the served manifest was partitioned from another composition" };
   }
   const generatedAt = laterCheck(current.manifest.generatedAt, update.generatedAt) ?? update.generatedAt;
-  if (manifestStatesChecks(current.manifest, generatedAt, update.checks)) {
+  if (!["authorityArtifacts", "stateAuthorities", "registrations", "stateLegislators", "commentAccess", "everydayRouting", "extrasVersionIds"].some(key => Object.hasOwn(current.manifest, key)) &&
+    manifestStatesChecks(current.manifest, generatedAt, update.checks)) {
     return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
   }
   const sequence = current.manifest.sequence + 1;
@@ -120,12 +131,6 @@ export async function publishReaderEdgeChecks(
     : { status: "RACED", sequence };
 }
 
-export interface PublishReaderExtras {
-  readonly commentAccess?: readonly unknown[];
-  readonly everydayRouting?: unknown;
-  readonly versionIds?: ReaderManifest["extrasVersionIds"];
-}
-
 export interface PublishAuthorityValue {
   readonly value: unknown;
   readonly versionId: string;
@@ -134,7 +139,9 @@ export interface PublishAuthorityCarried {
   readonly versionId: string;
   readonly carried: true;
 }
-export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+export type PublishAuthority = Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+export interface PublishedStateAuthority { readonly versionId: string; readonly artifact: AuthorityArtifactRef }
+export type PublishStateAuthorities = Partial<Record<StateAuthorityFamily, Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried | PublishedStateAuthority>>>>;
 /** Complete: one entry per promoted registration pointer, since the reader reads an unnamed state as having none. */
 export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
 
@@ -157,31 +164,24 @@ interface StateLegislatorsArtifactEnvelope {
 }
 
 export function servedAuthorityVersion(
-  manifest: Pick<ReaderManifest, "authorityArtifacts"> | null | undefined,
+  manifest: Pick<ReaderAuthorityManifest, "authorityArtifacts"> | null | undefined,
   family: AuthorityFamily,
 ): string | null {
-  return manifest?.authorityArtifacts?.[family]?.version ?? null;
+  return isGlobalAuthorityFamily(family) ? manifest?.authorityArtifacts?.[family]?.version ?? null : null;
 }
 
 interface AuthorityArtifactEnvelope {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
-  readonly family: AuthorityFamily;
+  readonly family: GlobalAuthorityFamily;
   readonly versionId: string;
   readonly generatedAt: string;
   readonly value: unknown;
 }
 
-function extrasFingerprint(extras: PublishReaderExtras | undefined): string {
-  return sha256OfJson({
-    commentAccess: extras?.commentAccess ?? null,
-    everydayRouting: extras?.everydayRouting ?? null,
-    versionIds: extras?.versionIds ?? null,
-  });
-}
-
 // Blobs reads are eventually consistent (up to 60 s behind a write); holding adds at most this much to that window.
 export const READER_MANIFEST_MEMO_MS = 15_000;
 let manifestMemo: { readonly at: number; readonly value: Promise<ReaderManifest | null> } | null = null;
+let authorityManifestMemo: { readonly at: number; readonly value: Promise<ReaderAuthorityManifest | null> } | null = null;
 
 async function readManifestFrom(store: ReaderArtifactStore): Promise<ReaderManifest | null> {
   try {
@@ -208,6 +208,19 @@ export async function readReaderManifest(
   return memo.value;
 }
 
+export async function readReaderAuthorityManifest(store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  now: () => number = Date.now): Promise<ReaderAuthorityManifest | null> {
+  if (!store) return null;
+  const read = () => store.readAuthorityManifest().then(value => value?.manifest ?? null).catch(() => null);
+  if (store.kind !== "netlify-blobs") return read();
+  const at = now();
+  if (authorityManifestMemo && at - authorityManifestMemo.at >= 0 && at - authorityManifestMemo.at < READER_MANIFEST_MEMO_MS) return authorityManifestMemo.value;
+  const memo = { at, value: read() };
+  authorityManifestMemo = memo;
+  void memo.value.then(manifest => { if (manifest === null && authorityManifestMemo === memo) authorityManifestMemo = null; });
+  return memo.value;
+}
+
 export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "government-domains",
   "census-districts",
@@ -217,14 +230,12 @@ export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "state-legislators",
 ];
 
-const STATE_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = PROMOTED_AUTHORITY_FAMILIES.filter((family) => /^ballot-[a-z]{2}$/.test(family));
-
 export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "registry-runtime",
   "federal-directory",
   "federal-funding",
   "state-money",
-  ...STATE_BALLOT_AUTHORITY_FAMILIES,
+  "ballot-contests",
 ];
 
 const ASK_ONLY_AUTHORITY_FAMILIES: ReadonlySet<AuthorityFamily> = new Set<AuthorityFamily>([
@@ -236,7 +247,7 @@ const ASK_ONLY_AUTHORITY_FAMILIES: ReadonlySet<AuthorityFamily> = new Set<Author
 ]);
 
 export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
-  ...READER_MAP_AUTHORITY_FAMILIES,
+  ...READER_MAP_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime"),
   "plain-english-translations",
   ...PROMOTED_AUTHORITY_FAMILIES.filter((family) => !ASK_ONLY_AUTHORITY_FAMILIES.has(family)),
 ];
@@ -261,12 +272,12 @@ function heldFetch<K, V>(
 }
 
 export async function readAuthorityArtifactValue(
-  family: AuthorityFamily,
+  family: GlobalAuthorityFamily,
   ref: AuthorityArtifactRef | undefined,
   store: ReaderArtifactStore,
 ): Promise<unknown | null> {
   if (!ref?.key || !ref.version) return null;
-  return heldFetch(authorityEdgeCache, family, `${ref.version}:${ref.key}`, async () => {
+  return heldFetch(authorityEdgeCache, family, `${ref.version}:${ref.key}:${ref.sha}`, async () => {
     try {
       const bytes = await store.readBytes(ref.key);
       if (!bytes) return null;
@@ -280,10 +291,32 @@ export async function readAuthorityArtifactValue(
   });
 }
 
-export async function readServedPromotedFamily(family: PromotedAuthorityFamily, ref: AuthorityArtifactRef | undefined,
+export async function readServedPromotedFamily(family: GlobalPromotedAuthorityFamily, ref: AuthorityArtifactRef | undefined,
   store: ReaderArtifactStore): Promise<PromotedFamilyArtifactValue | null> {
   const value = await readAuthorityArtifactValue(family, ref, store) as Partial<PromotedFamilyArtifactValue> | null;
   return value?.kind === "PROMOTED_POINTERS" && Array.isArray(value.entries) ? value as PromotedFamilyArtifactValue : null;
+}
+
+export async function readReaderExtras(manifest: ReaderAuthorityManifest, store: ReaderArtifactStore | null = resolveReaderArtifactStore()): Promise<{
+  commentAccess?: readonly CommentAccess[] | Error;
+  everydayRouting?: EverydayRoutingProjection | null | Error;
+}> {
+  const read = async (family: "comment-access" | "everyday-routing") => {
+    const ref = manifest.authorityArtifacts?.[family];
+    if (!ref) return undefined;
+    const value = store ? await readAuthorityArtifactValue(family, ref, store) : null;
+    return value ?? new Error(`Published ${family} artifact is unavailable`);
+  };
+  const [comments, routing] = await Promise.all([read("comment-access"), read("everyday-routing")]);
+  const commentAccess = comments instanceof Error || comments === undefined ? comments
+    : Array.isArray((comments as CommentAccessProjection).records)
+      ? (comments as CommentAccessProjection).records.map(({ id: _id, ...record }) => record)
+      : new Error("Published comment-access artifact is invalid");
+  const everydayRouting = routing instanceof Error || routing === undefined ? routing
+    : typeof routing === "object" && routing !== null && "projection" in routing
+      ? (routing as { projection: EverydayRoutingProjection | null }).projection
+      : new Error("Published everyday-routing artifact is invalid");
+  return { commentAccess, everydayRouting };
 }
 
 const scopeArtifactCache = new Map<string, { version: string; value: Promise<ReaderGeoArtifact | null> }>();
@@ -321,7 +354,7 @@ async function fetchRegistrationArtifact(
 const stateLegislatorsEdgeCache = new Map<string, { version: string; value: Promise<OfficialStateLegislatorReadModel | null> }>();
 async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore) {
   if (!ref?.key || !ref.version) return null;
-  const value = await heldFetch(stateLegislatorsEdgeCache, jurisdiction, `${ref.version}:${ref.key}`, async () => {
+  const value = await heldFetch(stateLegislatorsEdgeCache, jurisdiction, `${ref.version}:${ref.key}:${ref.sha}`, async () => {
     try {
       const bytes = await store.readBytes(ref.key);
       if (!bytes) return null;
@@ -333,6 +366,49 @@ async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: Authorit
   return value === null ? null : { value, versionId: ref.version };
 }
 
+interface StateAuthorityArtifactEnvelope {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly family: StateAuthorityFamily;
+  readonly state: string;
+  readonly versionId: string;
+  readonly generatedAt: string;
+  readonly value: PromotedFamilyArtifactValue;
+}
+
+export async function prepareStateAuthorityArtifact(family: StateAuthorityFamily, state: string, entry: PublishAuthorityValue,
+  store: ReaderArtifactStore, now: string): Promise<PublishedStateAuthority> {
+  const envelope: StateAuthorityArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION,
+    family, state, versionId: entry.versionId, generatedAt: now, value: entry.value as PromotedFamilyArtifactValue };
+  const bytes = gzipSync(Buffer.from(JSON.stringify(envelope), "utf8"));
+  return { versionId: entry.versionId, artifact: { key: await store.putImmutable(bytes, "json.gz"), version: entry.versionId, sha: bytesHash(bytes) } };
+}
+
+const stateAuthorityCache = new Map<string, { version: string; value: Promise<PromotedFamilyArtifactValue | null> }>();
+const STATE_ARTIFACT_CACHE_LIMIT = 8;
+const bytesHash = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
+
+export async function readStateAuthorityArtifact(family: StateAuthorityFamily, state: string, ref: AuthorityArtifactRef | undefined,
+  store: ReaderArtifactStore): Promise<PromotedFamilyArtifactValue | null> {
+  if (!ref?.key || !ref.version) return null;
+  const cacheKey = `${family}:${state}`;
+  const result = heldFetch(stateAuthorityCache, cacheKey, `${ref.version}:${ref.key}:${ref.sha}`, async () => {
+    try {
+      const bytes = await store.readBytes(ref.key);
+      if (!bytes || bytesHash(bytes) !== ref.sha) return null;
+      const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as StateAuthorityArtifactEnvelope;
+      const scope = stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
+      if (envelope.formatVersion !== READER_ARTIFACT_FORMAT_VERSION || envelope.family !== family || envelope.state !== state ||
+        envelope.versionId !== ref.version || envelope.value?.kind !== "PROMOTED_POINTERS" || !Array.isArray(envelope.value.entries) ||
+        envelope.value.entries.some(entry => (entry.kind === "PROMOTED" ? entry.projection.scope : entry.scope) !== scope)) return null;
+      return envelope.value;
+    } catch { return null; }
+  });
+  const entry = stateAuthorityCache.get(cacheKey);
+  if (entry) { stateAuthorityCache.delete(cacheKey); stateAuthorityCache.set(cacheKey, entry); }
+  while (stateAuthorityCache.size > STATE_ARTIFACT_CACHE_LIMIT) stateAuthorityCache.delete(stateAuthorityCache.keys().next().value!);
+  return result;
+}
+
 export function prefetchReaderEdgeStates(
   manifest: ReaderManifest | null,
   states: readonly string[],
@@ -341,18 +417,25 @@ export function prefetchReaderEdgeStates(
   if (!manifest || !store || states.length === 0) return;
   const wanted = new Set(scopesForStates(states));
   for (const scope of manifest.scopes) if (wanted.has(scope.scope)) void fetchScopeArtifact(scope, store).catch(() => undefined);
-  for (const state of states) {
-    const ref = manifest.registrations?.[state];
-    if (ref) void fetchRegistrationArtifact(state, ref, store);
-  }
 }
 
 export async function ensureReaderAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
+  manifest: Pick<ReaderAuthorityManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "stateAuthorities">,
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
+  const promotedFamilies = new Set<string>();
+  const stateAuthorityRefs = manifest.stateAuthorities;
+  const stateAuthorities = stateAuthorityRefs && store ? { stateAuthorities: {
+    states: Object.fromEntries(STATE_AUTHORITY_FAMILIES.filter(family => families.includes(family) && stateAuthorityRefs[family] !== undefined)
+      .map(family => [family, new Set(Object.keys(stateAuthorityRefs[family]!))])),
+    load: async (family: StateAuthorityFamily, state: string) => {
+      const value = await readStateAuthorityArtifact(family, state, stateAuthorityRefs[family]?.[state], store);
+      if (value) promotedFamilies.add(family);
+      return value;
+    },
+  } } : {};
   const registrationRefs = manifest.registrations;
   const registrations = registrationRefs && store
     ? { registrations: { states: new Set(Object.keys(registrationRefs)), load: (state: string) => fetchRegistrationArtifact(state, registrationRefs[state], store) } }
@@ -367,26 +450,9 @@ export async function ensureReaderAuthorityEdge(
     if (stateLegislatorRefs) {
       stateLegislators.stateLegislators = { jurisdictions: new Set(Object.keys(stateLegislatorRefs)),
         load: (jurisdiction: string) => fetchStateLegislatorsArtifact(jurisdiction, stateLegislatorRefs[jurisdiction], store) };
-    } else if (refs?.["state-legislators"]) {
-      // Reader code may arrive before the ordinary publisher splits the accepted old bundle.
-      // Discover its jurisdictions from the manifest; open its bytes only for a requested state.
-      const ref = refs["state-legislators"];
-      const versions = new Map(ref.version.split("|").map(entry => {
-        const separator = entry.indexOf("=");
-        return [entry.slice(0, separator), entry.slice(separator + 1)] as const;
-      }));
-      if ([...versions].every(([jurisdiction, version]) => /^US-[A-Z]{2}$/.test(jurisdiction) && version.length > 0)) {
-        stateLegislators.stateLegislators = { jurisdictions: new Set(versions.keys()), load: async jurisdiction => {
-          const versionId = versions.get(jurisdiction);
-          if (!versionId) return null;
-          const held = await readAuthorityArtifactValue("state-legislators", ref, store) as Record<string, OfficialStateLegislatorReadModel> | null;
-          const value = held?.[jurisdiction];
-          return value?.jurisdiction === jurisdiction ? { value, versionId } : null;
-        } };
-      }
     }
   }
-  if (!refs || !store) return { ...registrations, ...stateLegislators, ...places };
+  if (!refs || !store) return { ...registrations, ...stateLegislators, ...places, ...stateAuthorities, promotedFamilies };
   const bundle: {
     censusDistricts?: { value: CensusDistrictEdge; versionId: string };
     registryRuntime?: { value: RegistryRuntimeReadModel; versionId: string };
@@ -397,7 +463,7 @@ export async function ensureReaderAuthorityEdge(
   } = {};
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
-    wanted.has(family) ? readAuthorityArtifactValue(family, refs[family], store) : Promise.resolve(null);
+    isGlobalAuthorityFamily(family) && wanted.has(family) ? readAuthorityArtifactValue(family, refs[family], store) : Promise.resolve(null);
   const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(fetchWanted));
   const [registry, federal, campaign, outcomes, commentAccess, censusDistricts] = await Promise.all([
     fetchWanted("registry-runtime"),
@@ -414,7 +480,6 @@ export async function ensureReaderAuthorityEdge(
   if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as import("../registry/comment-access.ts").CommentAccessProjection, versionId: refs["comment-access"]!.version };
   if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };
   const promoted = new Map<string, PromotedEdgeEntry>();
-  const promotedFamilies = new Set<string>();
   const promotedValues = await promotedFetch;
   PROMOTED_AUTHORITY_FAMILIES.forEach((family, index) => {
     const artifact = promotedValues[index] as Partial<PromotedFamilyArtifactValue> | null;
@@ -425,43 +490,32 @@ export async function ensureReaderAuthorityEdge(
       if (typeof pointer === "string") promoted.set(pointer, entry);
     }
   });
-  return { ...bundle, ...registrations, ...stateLegislators, ...places, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
+  return { ...bundle, ...registrations, ...stateLegislators, ...places, ...stateAuthorities, promoted, promotedFamilies };
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {
   return sha256OfJson({ meetings: artifact.meetings, agendaDocuments: artifact.agendaDocuments });
 }
 
-export async function publishReaderEdgeArtifacts(
-  snapshot: MeetingsSnapshot | null,
-  metadata: PublishMetadata,
-  options: {
-    readonly store?: ReaderArtifactStore | null;
-    readonly now?: string;
-    readonly extras?: PublishReaderExtras;
-    readonly authority?: PublishAuthority;
-    readonly registrations?: PublishRegistrations;
-    readonly stateLegislators?: PublishRegistrations;
-    readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
-    readonly meetingRegistryVersion?: string | null;
-    readonly checks?: PublishReaderChecks;
-  } = {},
-): Promise<PublishReaderEdgeResult> {
+export interface PublishReaderEdgeOptions {
+  readonly store?: ReaderArtifactStore | null;
+  readonly now?: string;
+  readonly authority?: PublishAuthority;
+  readonly stateAuthorities?: PublishStateAuthorities;
+  readonly registrations?: PublishRegistrations;
+  readonly stateLegislators?: PublishRegistrations;
+  readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
+  readonly meetingRegistryVersion?: string | null;
+  readonly checks?: PublishReaderChecks;
+}
+
+export async function publishReaderAuthorityArtifacts(options: PublishReaderEdgeOptions): Promise<PublishReaderEdgeResult> {
   const store = options.store ?? resolveReaderArtifactWriteStore();
   if (!store) return { status: "SKIPPED_NO_STORE" };
   const now = options.now ?? new Date().toISOString();
-
-  let artifacts: ReaderGeoArtifact[];
-  try {
-    artifacts = snapshot === null ? [] : partitionSnapshotByScope(snapshot, now, options.meetingBodies);
-  } catch (error) {
-    return { status: "NOT_COMPOSABLE", detail: error instanceof Error ? error.message : String(error) };
-  }
-  const shaByScope = new Map(artifacts.map((a) => [a.scope, scopeDataSha(a)]));
-  const extrasSha = extrasFingerprint(options.extras);
-  const authorityVersions = (m: Pick<ReaderManifest, "authorityArtifacts"> | undefined) =>
-    AUTHORITY_FAMILIES.map((f) => `${f}=${m?.authorityArtifacts?.[f]?.version ?? ""}`).join("|");
-  const newAuthorityVersions = AUTHORITY_FAMILIES
+  const authorityVersions = (m: Pick<ReaderAuthorityManifest, "authorityArtifacts"> | undefined) =>
+    AUTHORITY_FAMILIES.filter(isGlobalAuthorityFamily).map((f) => `${f}=${m?.authorityArtifacts?.[f]?.version ?? ""}`).join("|");
+  const newAuthorityVersions = AUTHORITY_FAMILIES.filter(isGlobalAuthorityFamily)
     .map((f) => `${f}=${options.authority?.[f]?.versionId ?? ""}`)
     .join("|");
   const registrationVersions = (entries: readonly (readonly [string, string])[] | null) =>
@@ -472,77 +526,31 @@ export async function publishReaderEdgeArtifacts(
   const newLegislatorVersions = registrationVersions(options.stateLegislators === undefined ? null : Object.entries(options.stateLegislators).map(([scope, entry]) => [scope, entry.versionId] as const));
 
   let current;
-  try {
-    current = await store.readManifest();
-  } catch (error) {
-    return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
-  }
-
+  try { current = await store.readAuthorityManifest(); }
+  catch (error) { return { status: "FAILED", error: error instanceof Error ? error.message : String(error) }; }
   if (current) {
-    const currentShas = new Map(current.manifest.scopes.map((s) => [s.scope, s.sha256]));
-    const sameSet = snapshot === null || (currentShas.size === shaByScope.size &&
-      [...shaByScope].every(([scope, sha]) => currentShas.get(scope) === sha));
-    const sameExtras = options.extras === undefined || extrasFingerprint({
-      commentAccess: current.manifest.commentAccess,
-      everydayRouting: current.manifest.everydayRouting,
-      versionIds: current.manifest.extrasVersionIds,
-    }) === extrasSha;
-    const sameAuthority = options.authority === undefined || authorityVersions(current.manifest) === newAuthorityVersions;
+    const sameAuthority = !Object.keys(current.manifest.authorityArtifacts ?? {}).some(family => !isGlobalAuthorityFamily(family)) &&
+      (options.authority === undefined || authorityVersions(current.manifest) === newAuthorityVersions);
+    const sameStateAuthorities = Object.entries(options.stateAuthorities ?? {}).every(([family, states]) =>
+      current.manifest.stateAuthorities?.[family as StateAuthorityFamily] !== undefined &&
+      Object.entries(states).every(([state, entry]) => current.manifest.stateAuthorities?.[family as StateAuthorityFamily]?.[state]?.version === entry.versionId));
     const sameRegistrations = options.registrations === undefined || registrationVersions(
       current.manifest.registrations === undefined ? null : Object.entries(current.manifest.registrations).map(([state, ref]) => [state, ref.version] as const),
     ) === newRegistrationVersions;
-    const sameMeetingAreas = snapshot === null || options.meetingRegistryVersion === undefined ||
-      current.manifest.meetingRegistryVersion === options.meetingRegistryVersion;
     const sameLegislators = options.stateLegislators === undefined || registrationVersions(current.manifest.stateLegislators === undefined ? null : Object.entries(current.manifest.stateLegislators).map(([scope, ref]) => [scope, ref.version] as const)) === newLegislatorVersions;
-    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameMeetingAreas) {
-      const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
-      const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
-        ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
-      if (manifestStatesChecks(current.manifest, generatedAt, checks)) {
-        return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
-      }
-      const sequence = current.manifest.sequence + 1;
-      let written;
-      try {
-        written = await store.writeManifest(
-          { ...manifestWithChecks(current.manifest, sequence, { generatedAt, retrievedAt: metadata.retrievedAt, checks }), sources: snapshot?.sources ?? current.manifest.sources },
-          current.etag ?? null,
-        );
-      } catch (error) {
-        return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
-      }
-      return written.modified
-        ? { status: "PUBLISHED", sequence, scopes: current.manifest.scopes.length, meetings: snapshot?.meetings.length ?? current.manifest.scopes.reduce((sum, scope) => sum + scope.meetingCount, 0) }
-        : { status: "RACED", sequence };
-    }
+    if (sameAuthority && sameStateAuthorities && sameRegistrations && sameLegislators)
+      return { status: "CURRENT", sequence: current.manifest.sequence, scopes: 0 };
   }
-
   const sequence = (current?.manifest.sequence ?? 0) + 1;
-  const manifestScopes: ReaderManifestScope[] = snapshot === null ? [...(current?.manifest.scopes ?? [])] : [];
-  const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = options.authority === undefined ? { ...current?.manifest.authorityArtifacts } : {};
+  const authorityArtifacts: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>> = options.authority === undefined
+    ? Object.fromEntries(Object.entries(current?.manifest.authorityArtifacts ?? {}).filter(([family]) => isGlobalAuthorityFamily(family))) : {};
+  const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, AuthorityArtifactRef>>> = Object.fromEntries(
+    Object.entries(current?.manifest.stateAuthorities ?? {}).map(([family, states]) => [family, { ...states }]));
   const registrations: Record<string, AuthorityArtifactRef> = options.registrations === undefined ? { ...current?.manifest.registrations } : {};
   const stateLegislators: Record<string, AuthorityArtifactRef> = options.stateLegislators === undefined ? { ...current?.manifest.stateLegislators } : {};
   try {
-    for (const artifact of artifacts) {
-      const unchanged = current?.manifest.scopes.find(scope => scope.scope === artifact.scope && scope.sha256 === shaByScope.get(artifact.scope));
-      if (unchanged) {
-        manifestScopes.push(unchanged);
-        continue;
-      }
-      const key = await store.putImmutable(Buffer.from(JSON.stringify(artifact), "utf8"), "json");
-      manifestScopes.push({
-        scope: artifact.scope,
-        ...(artifact.ocdId ? { ocdId: artifact.ocdId } : {}),
-        ...(artifact.bounds ? { bounds: artifact.bounds } : {}),
-        ...(artifact.meetingIds ? { meetingIds: artifact.meetingIds } : {}),
-        ...(artifact.agendaOnly ? { agendaOnly: true } : {}),
-        key,
-        sha256: shaByScope.get(artifact.scope)!,
-        meetingCount: artifact.meetings.length,
-        generatedAt: artifact.generatedAt,
-      });
-    }
     for (const family of AUTHORITY_FAMILIES) {
+      if (!isGlobalAuthorityFamily(family)) continue;
       const entry = options.authority?.[family];
       if (!entry) continue;
       if ("carried" in entry) {
@@ -560,6 +568,20 @@ export async function publishReaderEdgeArtifacts(
       };
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
       authorityArtifacts[family] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
+    }
+    for (const family of STATE_AUTHORITY_FAMILIES) {
+      const entries = options.stateAuthorities?.[family];
+      if (!entries) continue;
+      const refs = stateAuthorities[family] ??= {};
+      for (const [state, entry] of Object.entries(entries)) {
+        const served = current?.manifest.stateAuthorities?.[family]?.[state];
+        if ("carried" in entry || served?.version === entry.versionId) {
+          if (!served || served.version !== entry.versionId) return { status: "RACED", sequence };
+          refs[state] = served;
+          continue;
+        }
+        refs[state] = "artifact" in entry ? entry.artifact : (await prepareStateAuthorityArtifact(family, state, entry, store, now)).artifact;
+      }
     }
     for (const [state, entry] of Object.entries(options.registrations ?? {})) {
       if ("carried" in entry) {
@@ -590,6 +612,106 @@ export async function publishReaderEdgeArtifacts(
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
       stateLegislators[jurisdiction] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
     }
+    const manifest: ReaderAuthorityManifest = {
+      formatVersion: READER_ARTIFACT_FORMAT_VERSION, sequence, generatedAt: now,
+      ...(Object.keys(authorityArtifacts).length ? { authorityArtifacts } : {}),
+      ...(Object.keys(stateAuthorities).length ? { stateAuthorities } : {}),
+      ...(options.registrations !== undefined || current?.manifest.registrations !== undefined ? { registrations } : {}),
+      ...(options.stateLegislators !== undefined || current?.manifest.stateLegislators !== undefined ? { stateLegislators } : {}),
+    };
+    const result = await store.writeAuthorityManifest(manifest, current?.etag ?? null);
+    return result.modified ? { status: "PUBLISHED", sequence, scopes: 0, meetings: 0 } : { status: "RACED", sequence };
+  } catch (error) { return { status: "FAILED", error: error instanceof Error ? error.message : String(error) }; }
+}
+
+export async function publishReaderEdgeArtifacts(snapshot: MeetingsSnapshot | null, metadata: PublishMetadata,
+  options: PublishReaderEdgeOptions = {}): Promise<PublishReaderEdgeResult> {
+  const hasAuthority = options.authority !== undefined || options.stateAuthorities !== undefined || options.registrations !== undefined || options.stateLegislators !== undefined;
+  const authority = hasAuthority ? await publishReaderAuthorityArtifacts(options) : null;
+  if (authority && authority.status !== "CURRENT" && authority.status !== "PUBLISHED") return authority;
+  if (snapshot === null && options.checks === undefined && authority) return authority;
+  const meetings = await publishReaderMeetingArtifacts(snapshot, metadata, options);
+  if (!authority || (meetings.status !== "CURRENT" && meetings.status !== "PUBLISHED")) return meetings;
+  const sequence = Math.max(authority.sequence, meetings.sequence);
+  return meetings.status === "CURRENT" && authority.status === "PUBLISHED"
+    ? { ...authority, sequence, scopes: meetings.scopes }
+    : { ...meetings, sequence };
+}
+
+async function publishReaderMeetingArtifacts(snapshot: MeetingsSnapshot | null, metadata: PublishMetadata,
+  options: PublishReaderEdgeOptions): Promise<PublishReaderEdgeResult> {
+  const store = options.store ?? resolveReaderArtifactWriteStore();
+  if (!store) return { status: "SKIPPED_NO_STORE" };
+  const now = options.now ?? new Date().toISOString();
+
+  let artifacts: ReaderGeoArtifact[];
+  try {
+    artifacts = snapshot === null ? [] : partitionSnapshotByScope(snapshot, now, options.meetingBodies);
+  } catch (error) {
+    return { status: "NOT_COMPOSABLE", detail: error instanceof Error ? error.message : String(error) };
+  }
+  const shaByScope = new Map(artifacts.map((a) => [a.scope, scopeDataSha(a)]));
+
+  let current;
+  try {
+    current = await store.readManifest();
+  } catch (error) {
+    return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
+  }
+
+  if (current) {
+    const currentShas = new Map(current.manifest.scopes.map((s) => [s.scope, s.sha256]));
+    const sameSet = snapshot === null || (currentShas.size === shaByScope.size &&
+      [...shaByScope].every(([scope, sha]) => currentShas.get(scope) === sha));
+    const sameMeetingAreas = snapshot === null || options.meetingRegistryVersion === undefined ||
+      current.manifest.meetingRegistryVersion === options.meetingRegistryVersion;
+
+    if (sameSet && sameMeetingAreas && !["authorityArtifacts", "stateAuthorities", "registrations", "stateLegislators", "commentAccess", "everydayRouting", "extrasVersionIds"].some(key => Object.hasOwn(current.manifest, key))) {
+      const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
+      const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
+        ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
+      if (manifestStatesChecks(current.manifest, generatedAt, checks)) {
+        return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
+      }
+      const sequence = current.manifest.sequence + 1;
+      let written;
+      try {
+        written = await store.writeManifest(
+          { ...manifestWithChecks(current.manifest, sequence, { generatedAt, retrievedAt: metadata.retrievedAt, checks }), sources: snapshot?.sources ?? current.manifest.sources },
+          current.etag ?? null,
+        );
+      } catch (error) {
+        return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
+      }
+      return written.modified
+        ? { status: "PUBLISHED", sequence, scopes: current.manifest.scopes.length, meetings: snapshot?.meetings.length ?? current.manifest.scopes.reduce((sum, scope) => sum + scope.meetingCount, 0) }
+        : { status: "RACED", sequence };
+    }
+  }
+
+  const sequence = (current?.manifest.sequence ?? 0) + 1;
+  const manifestScopes: ReaderManifestScope[] = snapshot === null ? [...(current?.manifest.scopes ?? [])] : [];
+
+  try {
+    for (const artifact of artifacts) {
+      const unchanged = current?.manifest.scopes.find(scope => scope.scope === artifact.scope && scope.sha256 === shaByScope.get(artifact.scope));
+      if (unchanged) {
+        manifestScopes.push(unchanged);
+        continue;
+      }
+      const key = await store.putImmutable(Buffer.from(JSON.stringify(artifact), "utf8"), "json");
+      manifestScopes.push({
+        scope: artifact.scope,
+        ...(artifact.ocdId ? { ocdId: artifact.ocdId } : {}),
+        ...(artifact.bounds ? { bounds: artifact.bounds } : {}),
+        ...(artifact.meetingIds ? { meetingIds: artifact.meetingIds } : {}),
+        ...(artifact.agendaOnly ? { agendaOnly: true } : {}),
+        key,
+        sha256: shaByScope.get(artifact.scope)!,
+        meetingCount: artifact.meetings.length,
+        generatedAt: artifact.generatedAt,
+      });
+    }
 
   } catch (error) {
     // Complete immutable bytes precede CAS; partial writes cannot change a served artifact.
@@ -610,18 +732,6 @@ export async function publishReaderEdgeArtifacts(
     promotedThrough: snapshot === null ? current?.manifest.promotedThrough ?? null : metadata.promotedThrough,
     sources: snapshot?.sources ?? current?.manifest.sources ?? [],
     scopes: manifestScopes,
-    ...(options.extras === undefined ? {
-      ...(current?.manifest.commentAccess !== undefined ? { commentAccess: current.manifest.commentAccess } : {}),
-      ...(current?.manifest.everydayRouting !== undefined ? { everydayRouting: current.manifest.everydayRouting } : {}),
-      ...(current?.manifest.extrasVersionIds !== undefined ? { extrasVersionIds: current.manifest.extrasVersionIds } : {}),
-    } : {
-      ...(options.extras.commentAccess !== undefined ? { commentAccess: options.extras.commentAccess } : {}),
-      ...(options.extras.everydayRouting !== undefined ? { everydayRouting: options.extras.everydayRouting } : {}),
-      ...(options.extras.versionIds !== undefined ? { extrasVersionIds: options.extras.versionIds } : {}),
-    }),
-    ...(Object.keys(authorityArtifacts).length > 0 ? { authorityArtifacts } : {}),
-    ...(options.registrations !== undefined || current?.manifest.registrations !== undefined ? { registrations } : {}),
-    ...(options.stateLegislators !== undefined || current?.manifest.stateLegislators !== undefined ? { stateLegislators } : {}),
     ...((options.checks?.freshChecks ?? (snapshot === null ? current?.manifest.freshChecks : undefined)) !== undefined
       ? { freshChecks: options.checks?.freshChecks ?? current!.manifest.freshChecks } : {}),
     ...((options.checks?.composition ?? (snapshot === null ? current?.manifest.composition : undefined)) !== undefined

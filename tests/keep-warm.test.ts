@@ -1,8 +1,3 @@
-/**
- * The keep-warm pinger keeps instances booted and cannot be used to hold them longer: app/api/warm/route.ts
- * holds a marked call for up to a second, and netlify/functions/keep-warm.mts makes ten overlapping calls every
- * five minutes. No live calls.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -41,7 +36,6 @@ test("KEEP-WARM · a hold beyond the cap, a malformed hold and an unknown parame
 
 test("KEEP-WARM · every five minutes the pinger makes fourteen overlapping marked calls to the site's own warm route", async () => {
   assert.equal(config.schedule, "*/5 * * * *");
-  // Fourteen overlapping calls reached 10-11 booted instances in production.
   assert.equal(WARM_INSTANCES, 14);
   assert.ok(HOLD_MS > 0 && HOLD_MS <= MAX_HOLD_MS);
   const seen: { url: string; marker: string | null }[] = [];
@@ -71,15 +65,17 @@ test("KEEP-WARM · a call that fails is counted as not answered and does not sto
   assert.equal(answered, 14 - 4 - 2, "calls 3, 6, 9 and 12 threw; calls 5 and 10 answered 503");
 });
 
-test("KEEP-WARM · C20: a marked call also loads the reader edge a cold Ask reads first, and never the database; an unmarked call loads nothing", async () => {
-  const nothing = { manifest: false, authorityFamilies: 0, meetings: false, places: 0, placesRefused: 0, ask: null };
+test("KEEP-WARM · a marked call loads the separate reader indexes without database fallback; an unmarked call loads nothing", async () => {
+  const nothing = { manifest: false, authorityFamilies: 0, meetings: false, ask: null };
   const marked = await (await call("?hold=0", true)).json();
   assert.deepEqual(marked.primed, nothing, "no edge store here, so nothing is loaded and nothing falls back");
   const unmarked = await (await call("?hold=0", false)).json();
   assert.equal(unmarked.primed, null);
   assert.deepEqual(await primeReaderEdge(), nothing);
   const source = readFileSync("app/api/warm/route.ts", "utf8");
-  assert.match(source, /ensureReaderAuthorityEdge\(manifest\)/);
+  assert.match(source, /readReaderManifest\(\)/, "meeting warming reads the calendar index");
+  assert.match(source, /readReaderAuthorityManifest\(\)/, "authority warming reads its separate index");
+  assert.match(source, /ensureReaderAuthorityEdge\(authorityManifest, undefined, AUTHORITY_FAMILIES\.filter\(family => family !== "registry-runtime"\)\)/);
   assert.match(source, /readReaderEdgeMeetings\(\{\s*manifest,\s*fallback: \(\) => Promise\.reject\(/, "the meetings read's database fallback is refused");
   assert.doesNotMatch(source, /getDb|readPreparedMeetingsProjection|refreshOutcomeSnapshotFromPromoted/);
 });

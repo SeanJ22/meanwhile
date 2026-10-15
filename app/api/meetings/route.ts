@@ -19,6 +19,8 @@ import {
   prefetchReaderEdgeStates,
   readReaderEdgeMeetings,
   readReaderManifest,
+  readReaderAuthorityManifest,
+  readReaderExtras,
   READER_MAP_AUTHORITY_FAMILIES,
   servedWholeFromReaderEdge,
 } from "@/lib/meetings/edge-serving";
@@ -40,11 +42,8 @@ import {
 } from "@/lib/routing/everyday-data-plane";
 import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
-
-
 // The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
-
 
 const CDN_HELD = {
   "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
@@ -102,43 +101,34 @@ export async function GET(request: Request) {
   const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
   const statesHinted = nearZipRead.then(hintedStates);
 
-  // One edge read serves the whole ready-to-display bundle. The manifest
-  // (CDN-cached, no database) carries meetings (via its scope artifacts) AND the
-  // comment-access + everyday-routing families, so a normal visit never wakes the
-  // database. Each family below prefers the embedded edge value and falls back to
-  // its own database read only when the edge has not published it yet.
-  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
+  const [edgeManifest, authorityManifest] = await timing.time("manifest", () => Promise.all([
+    readReaderManifest().catch(() => null), readReaderAuthorityManifest().catch(() => null),
+  ]));
 
-  // Bind the reader-authority edge bundle (registry-runtime division/
-  // coverage/roster bindings, the federal directory, and campaign-site URLs)
-  // request-scoped, so divisionsAt/coverageAt below serve them from the edge and
-  // never wake Neon. Each family is fetched at most once per version per process.
-  // Any family the manifest omits (rollout) falls through to the DB reader.
-  //
-  // Only the families this route reads (`READER_MAP_AUTHORITY_FAMILIES`:
-  // not Ask's recorded outcomes, not the comment-access artifact the manifest
-  // already embeds). The edge is entered HERE, in this handler's own execution:
-  // it is AsyncLocalStorage.enterWith, which never reaches reads
-  // chained on a helper that entered it.
-  if (edgeManifest?.authorityArtifacts) {
+  if (authorityManifest) {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge(authorityManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
     );
-    prefetchReaderEdgeStates(edgeManifest, await statesHinted);
+    if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await statesHinted);
     const authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   } else if (edgeManifest) {
     prefetchReaderEdgeStates(edgeManifest, await statesHinted);
   }
 
+  const extras = authorityManifest ? await readReaderExtras(authorityManifest).catch(error => {
+    const failure = error instanceof Error ? error : new Error(String(error));
+    return { commentAccess: failure, everydayRouting: failure };
+  }) : {};
   let commentAccess: readonly CommentAccess[] = [];
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
-    if (edgeManifest?.commentAccess !== undefined) {
-      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
+    if (extras.commentAccess instanceof Error) throw extras.commentAccess;
+    if (extras.commentAccess !== undefined) {
+      commentAccess = extras.commentAccess as readonly CommentAccess[];
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from its published reader artifact (sequence ${authorityManifest!.sequence}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();
@@ -157,10 +147,11 @@ export async function GET(request: Request) {
   let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
   let everydayRoutingDataDetail: string | null = null;
   try {
-    if (edgeManifest?.everydayRouting !== undefined) {
-      everydayRouting = (edgeManifest.everydayRouting as EverydayRoutingProjection | null) ?? null;
+    if (extras.everydayRouting instanceof Error) throw extras.everydayRouting;
+    if (extras.everydayRouting !== undefined) {
+      everydayRouting = (extras.everydayRouting as EverydayRoutingProjection | null) ?? null;
       everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
-      everydayRoutingDataDetail = `Everyday-routing served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+      everydayRoutingDataDetail = `Everyday-routing served from its published reader artifact (sequence ${authorityManifest!.sequence}).`;
     } else if (process.env.NODE_ENV === "production") {
       const read = await readEverydayRoutingProjection();
       if (read.kind === "PROMOTED") {
@@ -186,16 +177,8 @@ export async function GET(request: Request) {
       : "The everyday-routing projection could not be read.";
   }
 
-  // The coverage graph (rosters, photos, officeholder indexes) builds from
-  // here, beside the division lookup and the meetings read, rather than after
-  // them. Started after the edge is entered, so it reads the edge; a failure is
-  // not held and `coverageAt` below meets it on its own terms.
   const coverageReady = timing.time("coverageGraph", () => prepareCoverage()).catch(() => undefined);
 
-  /*
-   * Which divisions actually contain this point. A meeting held online has no distance, so without this a
-   * virtual sitting is invisible at every radius. Degrades to an empty set rather than failing the request.
-   */
   let divisionsAtPoint = new Set<string>();
   /* Null when the lookup failed, never empty: `coverageAt` must not read a failed resolution as "no body governs here". */
   let resolvedDivisions: Division[] | null = null;
@@ -206,10 +189,6 @@ export async function GET(request: Request) {
     console.error("division lookup failed; online meetings fall back to body-in-view", error);
   }
 
-  /*
-   * On a typed zip, the divisions are widened to every one whose territory reaches inside it. Only when the
-   * point lookup succeeded. A selected source plan replaces its old district family atomically.
-   */
   /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
   if (zipRead.value && resolvedDivisions) {
@@ -225,12 +204,6 @@ export async function GET(request: Request) {
     divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
   }
 
-  // One projection read per request. The search and the freshness meta
-  // both derive from the SAME composed snapshot, instead of each reading,
-  // validating and composing the 124-partition projection independently — two
-  // full passes for one request. The `WTP_MEETING_SOURCE` diagnostic seam
-  // (mock/composite, non-production only) does not read the canonical
-  // projection, so it keeps its own path.
   const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
   let result;
   let snapshotMeta: SnapshotClientMeta | null = null;
@@ -240,13 +213,6 @@ export async function GET(request: Request) {
   let heldMeetings: readonly Meeting[] = [];
   try {
     if (meetingSourceName === "snapshot") {
-      // Read the runner-published geographic edge artifacts for this
-      // ZIP's state(s) — one small edge fetch, no database wake, no 124-partition
-      // compose. The scopes are the states the resolved divisions name (plus the
-      // national `us` bucket); when the division lookup failed we pass none and
-      // the reader loads every published scope rather than guess. Fallback chain
-      // is edge → DB prepared row → live compose, so the result shape is
-      // identical and the freshness meta below is unchanged.
       const readerStates = resolvedDivisions
         ? [...new Set(
             resolvedDivisions
@@ -303,9 +269,6 @@ export async function GET(request: Request) {
     );
   }
 
-  // A coverage statement we cannot stand behind is worse than none, so a
-  // registry that fails to load degrades to the cascade's own answer rather
-  // than failing the whole request or guessing.
   let coverage = null;
   try {
     await coverageReady;
@@ -364,23 +327,9 @@ export async function GET(request: Request) {
     }
   }
 
-  // When the snapshot serves the answer, say how old it is and which sources
-  // it is missing — a failed source's bodies would otherwise show nothing
-  // with no hint that the gap is ours and temporary.
-  // The one projection read above already produced this; no second read.
   const meta = snapshotMeta;
   // A whole-source failure is attributed to the places the published composition says the source serves.
   const composed = meta?.sources.some((s) => !s.ok && !s.unreachableOcdIds) ? await readComposedSourcePlaces() : null;
-  // `meta.carried` rides along untouched: the footer's one age is true of
-  // the fresh rows only, and the count of rows it is NOT true of has to reach
-  // the client or the line keeps speaking for them.
-  //
-  // The wire snapshot is trimmed to exactly what a reader
-  // surface reads — the age, the carried-rows summary, and the failed sources
-  // attributed to bodies. `meta.sources` (124 rows) and `meta.partitions` (124
-  // rows) together ran ~40-50 KB of every response and no client reads either;
-  // they are used here to build `failed`, then dropped. `version` lets a later
-  // format change be detected rather than guessed from shape.
   const snapshot = meta
     ? {
         version: 2 as const,
@@ -390,11 +339,6 @@ export async function GET(request: Request) {
           .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
           .map((s) => ({
             source: s.source,
-            // A PARTIAL refusal names its own divisions and nothing else.
-            // A whole-source failure still attributes to every body the
-            // source serves. A division-less body (null ocdId) has no
-            // division to attribute the failure to; its absence is visible on
-            // the body itself.
             ocdIds:
               s.ok && s.unreachableOcdIds
                 ? s.unreachableOcdIds
@@ -403,13 +347,6 @@ export async function GET(request: Request) {
       }
     : null;
 
-  // The settled-viewport fetch carries no zip: the reader panned, they
-  // didn't type. Resolve the nearest ZCTA centroid so the notices and the
-  // ballot bubble can name the area, and cap it: a center more than 60 km
-  // from every centroid (open water, deep wilderness) honestly has no zip.
-  // Same orientation-only status as a typed zip — never district truth.
-  // Started at the top (`nearZipRead`), from the table loaded on demand
-  // (`lib/geo/zcta-table.ts`).
   const nearZip: string | null = await nearZipRead;
   /* The search log is written by the client's `sendBeacon` to `/api/log`, never on the response path. */
 
@@ -421,9 +358,6 @@ export async function GET(request: Request) {
   /* Which of those divisions the ZIP could not settle, measured on `nearZip`; `null` where the zip is outside the committed geometry. */
   const partialOcdIds = (await zipCertainty(nearZip))?.partial ?? null;
 
-  // The CDN holds only a whole answer (see `CDN_HELD`): meetings served whole
-  // from the published edge, divisions and coverage resolved, and neither
-  // optional family withheld for a failed read.
   const held =
     meetingsWholeFromEdge &&
     resolvedDivisions !== null &&

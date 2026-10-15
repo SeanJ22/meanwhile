@@ -3,42 +3,30 @@ import { execFileSync } from "node:child_process";
 import test from "node:test";
 import { readerCandidateProfiles } from "../lib/ballot/candidate-reader-privacy.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
-import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { candidateContactCensus } from "../lib/ballot/candidate-contacts.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
 import { contactRecord } from "../lib/ask/contacts.ts";
-import { readNjMorrisFiling } from "../lib/sources/ballot-nj-morris/index.ts";
-import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { installBallots } from "./helpers/promoted-fixtures.ts";
+import { njMorrisFiling } from "./helpers/reader-fixtures.ts";
 
-const MORRIS = requiredRoutineContract("nj-morris-filing");
 const SOURCE = { sourceUrl: "https://filing.example.gov/list", sourceOrg: "Election office", collectedAt: "2026-10-01" };
-await readNjMorrisFiling({ now: "2026-10-01T12:00:00.000Z", edge: provenEdgeEntry({
-  recordClass: MORRIS.recordClass, scope: MORRIS.scope, sourceId: MORRIS.sourceId, versionId: "cv-filed-address", retrievedAt: "2026-10-01T12:00:00.000Z",
-  value: {
-    ballot: {
-      formatVersion: 1,
-      election: { id: "example-2026-general", date: "2026-11-03" },
-      contests: [{ id: "example-contest", type: "CANDIDACY", ocdId: "ocd-division/country:us/state:nj/county:example", divisionVintage: "2020", voteFor: 1, provenance: { sourceUrl: SOURCE.sourceUrl } }],
-      candidacies: [
-        { id: "ballot-nj-morris:example-a", contestId: "example-contest", provenance: { sourceUrl: SOURCE.sourceUrl } },
-        { id: "ballot-nj-morris:example-b", contestId: "example-contest", provenance: { sourceUrl: SOURCE.sourceUrl } },
-      ],
-      measures: [],
-      absences: [],
-    },
-    contacts: { generatedAt: "2026-10-01", route: "filing", note: "", contacts: [
-      { candidacyId: "ballot-nj-morris:example-a", email: "campaign@example.test", filedAddress: "123 Private Lane, Example City", ...SOURCE },
-      { candidacyId: "ballot-nj-morris:example-b", email: null, filedAddress: "456 Private Road, Example City", ...SOURCE },
-    ] },
-  },
-}) });
+await installBallots(njMorrisFiling([{
+  id: "example-contest", title: "Example Office", ocdId: "ocd-division/country:us/state:nj/county:example",
+  candidacies: [
+    { id: "ballot-nj-morris:example-a", givenName: "Alex", familyName: "Example" },
+    { id: "ballot-nj-morris:example-b", givenName: "Blair", familyName: "Example" },
+  ],
+}], { contacts: [
+  { candidacyId: "ballot-nj-morris:example-a", email: "campaign@example.test", filedAddress: "123 Private Lane, Example City", ...SOURCE },
+  { candidacyId: "ballot-nj-morris:example-b", email: null, filedAddress: "456 Private Road, Example City", ...SOURCE },
+] }));
 
 test("filing email and its source survive while the filed address cannot reach Ask", () => {
-  const contacts = candidateContactCensus().contacts;
+  const contacts = candidateContactCensus("NJ").contacts;
   assert.equal(contacts.length, 2);
   for (const row of contacts) {
     assert.equal(Object.hasOwn(row, "filedAddress"), false, "the reader contact contract carries no address field at all");
-    const contact = contactForCandidate(row.candidacyId, "Candidate", "Office")!;
+    const contact = contactForCandidate("NJ", row.candidacyId, "Candidate", "Office")!;
     assert.ok(!("filedAddress" in contact) || contact.filedAddress === null);
     assert.equal(contact.email, row.email);
     assert.equal(contactRecord(contact).sourceUrl, row.sourceUrl);

@@ -31,38 +31,40 @@ export interface CandidateLinksFile {
   readonly hunts: readonly RecordedHunt[];
 }
 
-let composedFrom: { readonly profiles: CandidateLinksFile; readonly derived: readonly DerivedCampaignSiteRecord[] } | null = null;
-let composed: { readonly file: CandidateLinksFile; readonly derivedKeys: ReadonlySet<string> } | null = null;
+const cached = new Map<string, { readonly profiles: CandidateLinksFile; readonly derived: readonly DerivedCampaignSiteRecord[];
+  readonly file: CandidateLinksFile; readonly derivedKeys: ReadonlySet<string> }>();
 
-function composedLinks(): { readonly file: CandidateLinksFile; readonly derivedKeys: ReadonlySet<string> } {
-  const profiles = currentCandidateProfilesProjection().links;
-  const derived = currentDerivedCampaignSiteRecords();
-  if (composed !== null && composedFrom?.profiles === profiles && composedFrom.derived === derived) return composed;
+function composedLinks(state: string): { readonly file: CandidateLinksFile; readonly derivedKeys: ReadonlySet<string> } {
+  const profiles = currentCandidateProfilesProjection(state).links;
+  const derived = currentDerivedCampaignSiteRecords(state);
+  const prior = cached.get(state);
+  if (prior?.profiles === profiles && prior.derived === derived) return prior;
   const { links, derivedKeys } = composeCampaignLinks(profiles.links, derived);
-  composed = { file: derivedKeys.size === 0 ? profiles : { ...profiles, links }, derivedKeys };
-  composedFrom = { profiles, derived };
-  return composed;
+  const result = { profiles, derived, file: derivedKeys.size === 0 ? profiles : { ...profiles, links }, derivedKeys };
+  cached.delete(state);
+  cached.set(state, result);
+  if (cached.size > 8) cached.delete(cached.keys().next().value!);
+  return result;
 }
 
-function load(): CandidateLinksFile {
-  return composedLinks().file;
+function load(state: string): CandidateLinksFile { return composedLinks(state).file; }
+
+export function campaignLinkIsDerived(state: string, key: string): boolean {
+  return composedLinks(state).derivedKeys.has(key);
 }
 
-export function campaignLinkIsDerived(key: string): boolean {
-  return composedLinks().derivedKeys.has(key);
-}
-
-export function linksForCandidacy(candidacyId: string): CandidateLinks | null {
-  return load().links[candidacyId] ?? null;
+export function linksForCandidacy(state: string, candidacyId: string): CandidateLinks | null {
+  return load(state).links[candidacyId] ?? null;
 }
 
 export function linksForNominee(
+  state: string,
   contestId: string,
   name: string,
 ): CandidateLinks | null {
-  return load().links[`${contestId}|${name}`] ?? null;
+  return load(state).links[`${contestId}|${name}`] ?? null;
 }
 
-export function allCandidateLinks(): CandidateLinksFile {
-  return load();
+export function allCandidateLinks(state: string): CandidateLinksFile {
+  return load(state);
 }

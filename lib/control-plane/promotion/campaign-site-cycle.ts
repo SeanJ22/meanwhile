@@ -1,5 +1,5 @@
-import { readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../evidence/read-only-vault.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { findHeldCapture, readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../evidence/read-only-vault.ts";
+import { readByKeys, type ControlPlaneRepositories } from "../repository/types.ts";
 import {
   candidateEnrichmentUniversesFromHoldings,
   type CandidateEnrichmentAuthorityHoldings,
@@ -14,7 +14,7 @@ import {
   type LeadReadResult,
 } from "./campaign-site-chain.ts";
 import { campaignSiteReadRecorder } from "./campaign-site-reads.ts";
-import { campaignSiteSubjects, type FilingChannels, type LineupContest } from "../../candidates/campaign-site-subjects.ts";
+import { campaignSiteSubjects, type FilingChannels } from "../../candidates/campaign-site-subjects.ts";
 import { readCampaignSiteLead } from "../../candidates/campaign-site-verifier.ts";
 import { memoryInProcess, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
 
@@ -53,9 +53,9 @@ export interface CampaignSiteCycleInput {
   readonly open: ResearchGet;
   /** The cycle's shared per-host spacer, so this pass and every other lane space one host together. */
   readonly spaceOut?: (host: string) => Promise<void>;
-  /** The runner's vault: new reads are vaulted here, and earlier reads read back from `heldVault`. */
+  /** Exact capture lookups also use this root when no in-memory index is supplied. */
   readonly vaultRoot: string;
-  readonly heldVault: VaultIndex | null;
+  readonly heldVault?: VaultIndex | null;
   readonly methodVersion: number;
   readonly maxReads?: number;
   readonly recheckAfterMs?: number;
@@ -157,21 +157,29 @@ export async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Pr
   return new Map(rows.map(row => [row.id, row.value]));
 }
 
-/**
- * The newest vaulted Marginalia answer for each candidacy, whose work item names it. An answer that cannot be read
- * back or is not the documented search answer is counted, never guessed.
- */
 export async function heldMarginaliaAnswers(
-  repos: Pick<ControlPlaneRepositories, "workItems">,
-  vault: VaultIndex,
+  repos: Pick<ControlPlaneRepositories, "workItems" | "artifacts">,
+  vaultRoot: string,
   now: string,
+  subjects: ReadonlyMap<string, CampaignSiteSubject>,
 ): Promise<{ readonly responses: HeldMarginaliaResponse[]; readonly answers: number; readonly unreadable: number }> {
-  const held = [...vault.byId.values()].filter((artifact) => artifact.methodRouteId === MARGINALIA_ROUTE_ID);
-  const work = await readByIds(repos.workItems, held.flatMap((artifact) => artifact.workItemId ?? []));
+  const subjectKeys = new Map([...subjects.values()].flatMap(subject => [subject.candidacyId, ...subject.readerKeys].map(key => [key, subject.candidacyId])));
+  const work = new Map<string, string>();
+  const keys = [...subjectKeys.keys()];
+  for (let offset = 0; offset < keys.length; offset += 16) {
+    const groups = await Promise.all(keys.slice(offset, offset + 16).map(key => repos.workItems.listWhere(["subject"], key)));
+    for (const row of groups.flat()) work.set(row.id, subjectKeys.get(row.value.subject)!);
+  }
+  const held: HeldVaultArtifact[] = [];
+  for (const rows of (await readByKeys(repos.artifacts, [...work.keys()])).values()) for (const record of rows) {
+    if (!/json/i.test(record.contentType)) continue;
+    const artifact = await findHeldCapture(vaultRoot, record);
+    if (artifact?.methodRouteId === MARGINALIA_ROUTE_ID) held.push(artifact);
+  }
   const newest = new Map<string, HeldVaultArtifact & { readonly attemptId: string }>();
   let unreadable = 0;
   for (const artifact of held) {
-    const subjectId = artifact.workItemId === null ? undefined : work.get(artifact.workItemId)?.subject;
+    const subjectId = artifact.workItemId === null ? undefined : work.get(artifact.workItemId);
     if (subjectId === undefined || artifact.attemptId === null) { unreadable += 1; continue; }
     const prior = newest.get(subjectId);
     if (prior === undefined || (artifact.retrievedAt ?? "") > (prior.retrievedAt ?? "")) newest.set(subjectId, { ...artifact, attemptId: artifact.attemptId });
@@ -195,11 +203,10 @@ export function campaignSiteSubjectsFromHoldings(
   nowIso: string,
 ): { readonly subjects: Map<string, CampaignSiteSubject>; readonly failures: readonly string[]; readonly linked: ReadonlySet<string> } {
   const { universes, failures } = candidateEnrichmentUniversesFromHoldings(holdings, nowIso);
-  const lineups = ((holdings.az?.generalLineup as { contests?: unknown } | undefined)?.contests ?? []) as LineupContest[];
-  const contacts = (holdings.nj?.contacts as { contacts?: unknown } | undefined)?.contacts;
-  const filings: FilingChannels[] = (Array.isArray(contacts) ? contacts : contacts !== null && typeof contacts === "object" ? Object.values(contacts) : [])
-    .filter((row): row is FilingChannels => row !== null && typeof row === "object" && typeof (row as { candidacyId?: unknown }).candidacyId === "string");
-  for (const ballot of [...Object.values(holdings.general?.ballots ?? {}), holdings.az?.ballot, holdings.nh?.ballot, holdings.nj?.ballot]) {
+  const ballots = Object.values(holdings.general?.ballots ?? {});
+  const lineups = ballots.flatMap(ballot => ballot.generalLineup?.contests ?? []);
+  const filings: FilingChannels[] = ballots.flatMap(ballot => ballot.contacts ?? []);
+  for (const ballot of ballots) {
     const candidacies = (ballot as { candidacies?: unknown } | undefined)?.candidacies;
     if (!Array.isArray(candidacies)) continue;
     for (const c of candidacies as { id?: unknown; websiteUrl?: unknown; provenance?: { sourceUrl?: string | null } }[]) {

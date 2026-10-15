@@ -22,11 +22,6 @@ export interface Sourced<T> {
   readonly dependency?: Dependency;
   /** Parts that did not arrive when `load` is `partial`, in plain words. */
   readonly missingParts?: readonly string[];
-  /**
-   * Why a real connection isn't showing live data right now:
-   * waiting (backend doesn't offer it yet), denied (access), incompatible
-   * (version), failed (temporary; last good data kept when there is any).
-   */
   readonly problem?: "waiting" | "denied" | "incompatible" | "failed";
   /** Present for a bounded, indexed section read one window at a time. */
   readonly page?: { readonly total: number | null; readonly nextCursor: string | null; readonly prevCursor: string | null };
@@ -44,12 +39,6 @@ export function notConnected<T>(dependency: Dependency): Sourced<T> {
 
 export type PlaceKind = "Country" | "State" | "County" | "ZIP" | "Area" | "Body";
 
-/**
- * A canonical place. `navParent` drives breadcrumbs only. `within` lists every
- * place this one is inside or overlaps for counting and ownership: a ZIP can
- * reach two counties and a governing body can serve several ZIPs, so the chain
- * of breadcrumbs is never used to decide what a count belongs to.
- */
 export interface Place {
   readonly key: string;
   readonly name: string;
@@ -91,10 +80,6 @@ export function huntLeftUsd(h: Hunt): number | null {
   return h.availableUsd !== undefined ? h.availableUsd : h.limitUsd - h.spentUsd - h.heldUsd;
 }
 
-/**
- * One row of The country: a state at country scope, a congressional district at a
- * state, a ZIP at a district. Every figure is null when it is not known (never zero).
- */
 export interface StateRow {
   readonly population?: import("@/lib/reference/population-facts.ts").PopulationFact | null;
   readonly placeKey: string;
@@ -526,7 +511,8 @@ export interface PublicationRow {
   readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
 }
 export interface PublicationView {
-  readonly ballotPublication?: import("@/lib/civic-data/ballot-publication").BallotPublicationResult | null;
+  readonly ballotPublications?: Readonly<Record<string, import("@/lib/civic-data/ballot-publication").BallotPublicationResult |
+    import("@/lib/civic-data/ballot-publication").BallotPublicationSummary>>;
   readonly total: number;
   readonly counts: readonly { readonly verdict: PublicationRow["verdict"]; readonly words: string; readonly count: number }[];
   readonly latestAttemptFailing: number;

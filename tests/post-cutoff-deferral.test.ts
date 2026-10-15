@@ -173,9 +173,12 @@ test("the campaign-sites lane is bounded at the cutoff plus a settle time that e
   assert.ok(settleMs > CAMPAIGN_SITE_REQUEST_TIMEOUT_MS, "a read in flight at the cutoff can still answer");
   assert.ok(settleMs < RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS, "the lane ends before the round's join would have to defer it");
   assert.match(round, /\}\)\(\), dispatchDeadlineMs \+ CAMPAIGN_SITES_SETTLE_MS - Date\.now\(\)\);/);
-  for (const label of ["the saved-page index", "the held Marginalia answers", "the method version", "the campaign-site chain"]) {
-    assert.ok(round.includes(`step("${label}"`), `the lane labels its wait on ${label}`);
+  const campaign = round.slice(round.indexOf("const runCampaignSitesPass ="), round.indexOf("const runCandidatePublicationsPass ="));
+  assert.ok(campaign.includes('step("the method version"'), "the lane labels its method-version wait");
+  for (const label of ["candidate authorities", "held Marginalia answers", "campaign-site chain"]) {
+    assert.ok(campaign.includes('step(`${state} ' + label + '`'), `the lane labels each state's wait on ${label}`);
   }
+  assert.doesNotMatch(campaign, /\b(?:readRoundVault|indexVault)\s*\(/, "state campaign work does not wait for a country-wide vault index");
   assert.match(round, /return pending\.step\(`campaign-sites:\$\{label\}`, run\);/);
   assert.match(round, /deferred: still waiting on \$\{waitingOn\}/);
   /* The early worker wave was the one unlabelled wait between the lanes' start and their join. */

@@ -57,12 +57,12 @@ function counted(repos: ControlPlaneRepositories) {
 const scout = (obligationId: string, subjectId: string, at: string): ScoutResult => ({ attemptId: `${obligationId}-a`, obligationId, subjectId,
   recordClass: "OFFICIAL_ROSTER", recordedAt: at, refusal: null, candidates: [], findings: [], rungs: [], nextRungs: [], artifactIds: [] }) as unknown as ScoutResult;
 
-test("CH-26: with the switch off, the old whole-table reads still run", async () => {
+test("the research round can read shared history while lease tasks read only their own", async () => {
   const counter = counted(createMemoryRepositories());
   const h = await autonomousHarness({ repos: counter.repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
   counter.reset();
   await nextAutonomousOperation(h.runtime, h.item.id);
-  assert.ok(counter.whole().some(call => call.startsWith("attempts.list")), "the old path is the default");
+  assert.ok(counter.whole().some(call => call.startsWith("attempts.list")), "the research round reads shared history");
   counter.reset();
   await nextAutonomousOperation({ ...h.runtime, scopedReads: true }, h.item.id);
   assert.deepEqual(counter.whole(), []);
@@ -156,6 +156,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
     counter.reset();
     await runtime.beginTask!(row.value);
     assert.deepEqual(counter.whole(), [], "beginning a task reads only its own lineage");
+    assert.equal(counter.calls.get("workerResults.read"), 1, "task history is read once into the current lineage, without a second cross-task cache");
   }
   counter.reset();
   await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 }));
@@ -191,10 +192,13 @@ test("CH-26: schema version 20 builds the scoped indexes online, on the exact ex
 test("CH-26: each lease task reports its repository calls, and the round records their mean as a phase", async () => {
   const { readFile } = await import("node:fs/promises");
   const worker = await readFile(new URL("../lib/control-plane/workers/lease-worker.ts", import.meta.url), "utf8");
-  assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const repos = observer\.repos;/);
+  assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const observed = observer\.repos;/);
+  assert.match(worker, /const repos: typeof observed = \{ \.\.\.observed, costs: \{ \.\.\.observed\.costs,/);
+  assert.match(worker, /const saved = await observed\.costs\.append\(key, id, entry, now\);\s*await broker\.call\("cost-recorded", saved\.record\);\s*return saved;/,
+    "costs remain observed and the parent acknowledges the durable record before append returns");
   assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task, item\);/, "the runtime build is not charged to the task");
   assert.match(worker, /repositoryCalls: observer\.finish\("task"\)\.repositoryCalls/);
-  assert.match(worker, /WTP_SCOPED_TASK_READS !== "0"/, "the scoped path is the default; the whole-table path stays behind its runner switch");
+  assert.match(worker, /scopedReads: true/, "lease tasks always read scoped history");
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /if \(typeof result\.repositoryCalls === "number"\) leaseTaskCalls\.push\(result\.repositoryCalls\);/);
   assert.match(round, /cyclePhases: \[\.\.\.cycleObservation\.phases, \.\.\.leaseTaskReadsPhase\(\)\]/);

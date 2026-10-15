@@ -5,6 +5,7 @@ import { assertPublicUrl } from "../../hunt/egress.ts";
 import { readRouteHints } from "../../doors/route-hints.ts";
 import type { FieldManualEntry } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { WorkItem } from "../work-item.ts";
 import type { ScoutFinding, ScoutResult } from "../scheduler/scout-result.ts";
 
 type HintRepos = Pick<ControlPlaneRepositories, "doors" | "boxFindings" | "scoutResults" | "workItems">;
@@ -30,25 +31,39 @@ function evidenceRoute(input: { url: unknown; body: string; evidence: string; ar
     observed: { at: input.at, by: input.by } };
 }
 
-export async function readDiscoveryRouteHints(repos: HintRepos, need: MeetingsDiscoveryNeed, entries: readonly FieldManualEntry[]) {
-  const publications = await Promise.all([repos.workItems.listWhere(["subject"], need.jurisdictionId),
-    repos.workItems.listWhere(["autonomousPlan", "directorySubject", "jurisdiction", "id"], need.jurisdictionId)]);
+export function routeHintEntriesBySubject(entries: readonly FieldManualEntry[]): ReadonlyMap<string, readonly FieldManualEntry[]> {
+  const index = new Map<string, FieldManualEntry[]>();
+  for (const entry of entries) {
+    if (!["SCOUT_DISCOVERY", "ROUTE"].includes(entry.kind) || !entry.recordClasses.some(meetingClass)) continue;
+    const payload = entry.payload as { subjectId?: string; jurisdictionId?: string; obligationId?: string } | null;
+    const subject = payload?.subjectId ?? payload?.jurisdictionId ?? /^freshness:[^:]+:([^#]+)#/.exec(payload?.obligationId ?? "")?.[1];
+    for (const id of new Set([subject, ...(entry.bodyIds ?? [])])) {
+      if (!id) continue;
+      const rows = index.get(id) ?? [];
+      rows.push(entry);
+      index.set(id, rows);
+    }
+  }
+  return index;
+}
+
+export async function readDiscoveryRouteHints(repos: HintRepos, need: MeetingsDiscoveryNeed, entries: ReadonlyMap<string, readonly FieldManualEntry[]>) {
+  const projection = { publicationOutcome: ["status", "bodyIds"], autonomousPlan: ["publication"] };
+  const publications = await Promise.all([repos.workItems.listWhereNarrowed(["subject"], need.jurisdictionId, projection),
+    repos.workItems.listWhereNarrowed(["autonomousPlan", "directorySubject", "jurisdiction", "id"], need.jurisdictionId, projection)]);
   const bodyIds = new Set(need.bodyIds);
   for (const row of publications.flat()) {
-    const published = row.value.publicationOutcome;
+    const value = row.value as Pick<WorkItem, "publicationOutcome" | "autonomousPlan">;
+    const published = value.publicationOutcome;
     if (!published || published.status === "HELD") continue;
     for (const bodyId of published.bodyIds ?? []) bodyIds.add(bodyId);
-    const bodyId = row.value.autonomousPlan?.publication?.bodyId;
+    const bodyId = value.autonomousPlan?.publication?.bodyId;
     if (published.status === "PUBLISHED" && bodyId) bodyIds.add(bodyId);
   }
   const subjects = new Set([need.jurisdictionId, ...[...bodyIds].flatMap(id => [id, `${id}#calendar`])]);
   const routes: RouteHint[] = [];
-  for (const entry of entries) {
-    if (!["SCOUT_DISCOVERY", "ROUTE"].includes(entry.kind) || !entry.recordClasses.some(meetingClass)) continue;
-    const payload = entry.payload as { subjectId?: string; jurisdictionId?: string; obligationId?: string;
-      evidenceArtifactIds?: string[]; bodyName?: string } | null;
-    const subject = payload?.subjectId ?? payload?.jurisdictionId ?? /^freshness:[^:]+:([^#]+)#/.exec(payload?.obligationId ?? "")?.[1];
-    if (!subjects.has(subject ?? "") && !(entry.bodyIds ?? []).some(id => subjects.has(id))) continue;
+  for (const entry of new Set([...subjects].flatMap(subject => entries.get(subject) ?? []))) {
+    const payload = entry.payload as { evidenceArtifactIds?: string[]; bodyName?: string } | null;
     const route = evidenceRoute({ url: entry.url, body: payload?.bodyName ?? need.name, evidence: `${entry.id}: ${entry.summary}`,
       artifactIds: payload?.evidenceArtifactIds ?? [], at: entry.observedAt, by: entry.id });
     if (route) routes.push(route);
@@ -71,17 +86,13 @@ export async function readDiscoveryRouteHints(repos: HintRepos, need: MeetingsDi
         evidence: `${row.id}: ${row.value.exactQuote ?? ""}`, artifactIds: origin.artifactIds,
         at: origin.recordedAt, by: origin.resultId });
       if (route) routes.push(route);
-    } else if (!results.has(origin.resultId)) {
-      for (const key of await repos.scoutResults.keysWhere(["attemptId"], origin.resultId)) {
-        for (const result of await repos.scoutResults.readWhere(key, ["attemptId"], origin.resultId)) results.set(result.attemptId, result);
-      }
+    } else if (origin.resultKey && !results.has(origin.resultId)) {
+      for (const result of await repos.scoutResults.readWhere(origin.resultKey, ["attemptId"], origin.resultId)) results.set(result.attemptId, result);
     }
   }
   for (const result of results.values()) {
-    const rejected = new Set(result.sourceDeadEnds?.map(row => row.artifactId));
     for (const finding of result.findings) {
-      if (!subjects.has(finding.subjectId ?? result.subjectId) || (!routeField(finding.field) && !routeField(finding.missionPart)) ||
-        finding.artifactIds.some(id => rejected.has(id))) continue;
+      if (!subjects.has(finding.subjectId ?? result.subjectId) || (!routeField(finding.field) && !routeField(finding.missionPart))) continue;
       const route = findingRoute(finding, result, need.name);
       if (route) routes.push(route);
     }

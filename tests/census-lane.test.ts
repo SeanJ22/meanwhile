@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { censusCheckEntry, exactDomainFor, officialWebsiteQuery, runCensusState, websiteNamesGovernment } from "../lib/control-plane/discovery/census-lane.ts";
+import { censusCheckEntry, censusStateNotDue, exactDomainFor, officialWebsiteQuery, runCensusState, websiteNamesGovernment } from "../lib/control-plane/discovery/census-lane.ts";
 import { dotgovDomainLeads, heldCensusWebsiteNeeds } from "../lib/control-plane/discovery/platform-census.ts";
-import { newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, writeFieldManual, readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordedDiscoveryOpen } from "./helpers/recorded-discovery-open.ts";
 import type { DiscoveryRuntime } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
@@ -39,7 +39,7 @@ const hiddenRuntime = (trail: string[], pages: Record<string, { status: number; 
     search: async () => { trail.push("SEARCH"); return { hits: [], requests: [] }; } });
 };
 
-test("the production census reads a seeded hidden route before searches, reports its meetings, and observes a live door edit immediately", async () => {
+test("the production census reads a seeded hidden route before searches, reports its meetings, and observes a live door edit at the next due check", async () => {
   const repos = createMemoryRepositories();
   await seedRouteHintDoors({ repo: repos.doors, hints: [{ jurisdictionId: need.jurisdictionId, officialSite: null, routes: [hint] }], deriveInputAt: NOW, at: NOW });
   const trail: string[] = [];
@@ -58,10 +58,73 @@ test("the production census reads a seeded hidden route before searches, reports
   await repos.doors.compareAndSet(row.id, row.revision, { ...row.value, config: { ...row.value.config,
     "route:00": JSON.stringify({ ...hint, url: revised }) } }, NOW);
   const changed = await runCensusState({ repos, state: "AZ", needs: [need], runtime: { ...hiddenRuntime([], { [revised]: { status: 200, body: fixture("boardbook-amphi-2065.html") } }),
-    now: () => "2026-10-13T12:00:00.001Z" } });
+    now: () => "2026-10-14T00:00:00.000Z" } });
   assert.equal(changed.walked, 1, JSON.stringify(changed));
   assert.equal(changed.notDue, 0);
   assert.equal(changed.hintMeetings[0].url, revised);
+});
+
+test("not-due governments read one marker batch and never read hint, publication, Box, or scout rows", async () => {
+  const repos = createMemoryRepositories();
+  const needs = Array.from({ length: 100 }, (_, index) => ({ ...need, jurisdictionId: `${need.jurisdictionId}-${index}`, ownWebAddress: null }));
+  await runCensusState({ repos, state: "AZ", needs, runtime: runtime() });
+  const readMany = repos.fieldManual.readMany;
+  let batches = 0;
+  repos.fieldManual.readMany = ids => { batches++; return readMany(ids); };
+  const forbidden = async (): Promise<never> => { throw new Error("a not-due government read acquisition data"); };
+  repos.fieldManual.slice = forbidden;
+  repos.doors.read = forbidden;
+  repos.workItems.listWhereNarrowed = forbidden;
+  repos.scoutResults.keysWhere = forbidden;
+  repos.scoutResults.readWhere = forbidden;
+  repos.boxFindings.listWhere = forbidden;
+  const report = await runCensusState({ repos, state: "AZ", needs, runtime: runtime({ open: forbidden }) });
+  assert.equal(report.notDue, needs.length);
+  assert.deepEqual(report.failures, []);
+  assert.equal(batches, 1);
+});
+
+test("the state run wakes at its earliest government check or a changed reference without reading the previous report", async () => {
+  const repos = createMemoryRepositories();
+  const report = await runCensusState({ repos, state: "AZ", needs: [need], runtime: runtime() });
+  assert.equal(report.nextCheck, "2026-10-14T00:00:00.000Z");
+  const run = newFieldManualEntry("census-lane", "az", { role: "SHARED", kind: "PLATFORM_CENSUS_RUN", title: "Arizona", summary: "Census run",
+    outcome: "YIELDED", payload: { ...report, referenceSha256: "reference-a" } });
+  await writeFieldManual(repos, [run], NOW);
+  repos.fieldManual.read = async () => { throw new Error("read the full previous report"); };
+  assert.equal(await censusStateNotDue(repos, "az", "reference-a", NOW), true);
+  assert.equal(await censusStateNotDue(repos, "az", "reference-b", NOW), false);
+  assert.equal(await censusStateNotDue(repos, "az", "reference-a", report.nextCheck!), false);
+  const stopped = await runCensusState({ repos: createMemoryRepositories(), state: "AZ", needs: [need], runtime: runtime({ budget: { spent: () => true } }) });
+  assert.equal(stopped.nextCheck, null);
+});
+
+test("census source records stay in their state even when another state's route is a shared method", async () => {
+  const repos = createMemoryRepositories();
+  const routes = ["az", "nm"].map(state => newFieldManualEntry("source", state, { role: "SHARED", kind: "ROUTE",
+    title: `${state} calendar`, summary: "Saved calendar", states: [state], platforms: ["ical"], recordClasses: ["meetings"],
+    outcome: "REFERENCE", url: `https://${state}.example.gov/calendar.ics`, observedAt: NOW }));
+  await writeFieldManual(repos, routes, NOW);
+  const shared = await readFieldManual(repos, { kinds: ["ROUTE"], state: "az" });
+  assert.equal(shared.store.entries.length, 2);
+  const local = await readFieldManual(repos, { kinds: ["ROUTE"], state: "az", withinState: "az" });
+  assert.deepEqual(local.store.entries.map(entry => entry.id), [routes[0].id]);
+});
+
+test("state manual routes are indexed once while each due government reads only its own entries", async () => {
+  const repos = createMemoryRepositories();
+  let payloadReads = 0;
+  const entries = Array.from({ length: 100 }, (_, index) => {
+    const entry = newFieldManualEntry("hunter", String(index), { kind: "SCOUT_DISCOVERY", role: "SCOUT", title: "Calendar",
+      summary: "Saved calendar", states: ["az"], recordClasses: ["meetings"], outcome: "REFERENCE", observedAt: NOW,
+      url: `https://gov-${index}.example.gov/calendar.ics`, payload: { subjectId: `az:city:gov-${index}`, evidenceArtifactIds: ["copy"] } });
+    const payload = entry.payload;
+    return { ...entry, get payload() { payloadReads++; return payload; } };
+  });
+  const needs = entries.map((_, index) => ({ ...need, jurisdictionId: `az:city:gov-${index}`, ownWebAddress: null }));
+  const report = await runCensusState({ repos, state: "AZ", needs, entries, runtime: runtime() });
+  assert.equal(report.checked, needs.length);
+  assert.ok(payloadReads <= entries.length * 3, `manual payloads read ${payloadReads} times`);
 });
 
 test("a current official-site hint supplies the homepage before searching and keeps its actual source", async () => {

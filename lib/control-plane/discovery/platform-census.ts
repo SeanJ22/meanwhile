@@ -187,7 +187,7 @@ export async function readPlatformCensusNeeds(state: string, registry: Jurisdict
       }
     } catch (error) { failures.push(`Held ${state.toUpperCase()} Census websites could not be read: ${error instanceof Error ? error.message : String(error)}`); }
   }
-  const domains = await readFieldManual(input.repos, { kinds: ["PLATFORM_CENSUS_DOMAIN"], state: state.toLowerCase() });
+  const domains = await readFieldManual(input.repos, { kinds: ["PLATFORM_CENSUS_DOMAIN"], state: state.toLowerCase(), withinState: state });
   for (const entry of domains.store.entries) {
     if (!entry.url) continue;
     const hostname = new URL(entry.url).hostname;
@@ -195,7 +195,7 @@ export async function readPlatformCensusNeeds(state: string, registry: Jurisdict
     needs.push({ jurisdictionId: `${state.toLowerCase()}:domain:${hostname}`, stateCode: state.toUpperCase(), name: entry.title,
       govClass: "DOMAIN", ownWebAddress: entry.url, basis: "SOURCE_DISCOVERY_OWED", sources: [OWN_SITE_MEETINGS_SOURCE] });
   }
-  const tenants = await readFieldManual(input.repos, { kinds: ["MEETINGS_TENANT_LEAD"], state: state.toLowerCase() });
+  const tenants = await readFieldManual(input.repos, { kinds: ["MEETINGS_TENANT_LEAD"], state: state.toLowerCase(), withinState: state });
   for (const entry of tenants.store.entries) {
     if (!entry.url) continue;
     const origin = siteOrigins(entry.url)[0];

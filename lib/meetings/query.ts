@@ -87,6 +87,18 @@ function byStartDescending(a: Meeting, b: Meeting) {
   return Date.parse(b.startsAt) - Date.parse(a.startsAt);
 }
 
+type MeetingBody = Pick<Body, "id" | "ocdId" | "alsoServesOcdIds">;
+const bodyIndexes = new WeakMap<readonly MeetingBody[], ReadonlyMap<string, MeetingBody>>();
+
+function meetingBodyIndex(bodies: readonly MeetingBody[]): ReadonlyMap<string, MeetingBody> {
+  const cached = bodyIndexes.get(bodies);
+  if (cached) return cached;
+  const index = new Map<string, MeetingBody>();
+  for (const body of bodies) index.set(body.id, body);
+  bodyIndexes.set(bodies, index);
+  return index;
+}
+
 export async function searchMeetings(
   lat: number,
   lng: number,
@@ -95,13 +107,13 @@ export async function searchMeetings(
   divisionsAtPoint: ReadonlySet<string> = new Set(),
   injectedSource?: ResolvedMeetingSource,
   shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
-  bodies: readonly Pick<Body, "id" | "ocdId" | "alsoServesOcdIds">[] = [],
+  bodies: readonly MeetingBody[] = [],
 ): Promise<MeetingSearchResult> {
   const source = injectedSource ?? getMeetingSource();
   const shown = shownSettings ?? await readReaderMeetingSettings();
   const horizonMs = shown.shownAheadDays * 86_400_000;
   const lookbackMs = shown.shownBackDays * 86_400_000;
-  const byBody = new Map(bodies.map(body => [body.id, body]));
+  const byBody = meetingBodyIndex(bodies);
   const all = (await source.load({
     lat,
     lng,

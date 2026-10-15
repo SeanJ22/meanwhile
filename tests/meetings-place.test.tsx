@@ -67,6 +67,18 @@ const SNAPSHOT: MeetingsSnapshot = {
 const search = (at: { lat: number; lng: number }) =>
   searchMeetings(at.lat, at.lng, 25, NOW, new Set(at === TOWN ? ["ocd-division/country:us/state:ks/place:example"] : at === REMOTE ? ["ocd-division/country:us/state:ks/place:remote"] : []), snapshotSourceFor(SNAPSHOT));
 
+test("meeting searches reuse the body index and replace it when the registry bodies change", async () => {
+  const division = "ocd-division/country:us/state:ks/place:example";
+  let scans = 0;
+  const bodies = [{ get id() { scans++; return "council"; }, ocdId: division }];
+  const snapshot = { ...SNAPSHOT, meetings: [{ ...MEETINGS[0], bodyId: "council" }] };
+  const query = (rows: typeof bodies) => searchMeetings(TOWN.lat, TOWN.lng, 25, NOW, new Set([division]), snapshotSourceFor(snapshot), undefined, rows);
+  assert.equal((await query(bodies)).meetings.length, 1);
+  assert.equal((await query(bodies)).meetings.length, 1);
+  assert.equal(scans, 1);
+  assert.equal((await query([{ id: "council", ocdId: "ocd-division/country:us/state:az/place:elsewhere" }])).meetings.length, 0);
+});
+
 test("a place with meetings keeps its upcoming and recent calendar", async () => {
   const result = await search(TOWN);
 

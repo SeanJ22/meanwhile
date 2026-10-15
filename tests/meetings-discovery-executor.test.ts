@@ -689,3 +689,29 @@ test("the census owns an independent runner clock outside the research walk budg
   assert.match(source, /timed\("campaign-sites"/);
   assert.match(source, /timed\("candidate-publications"/);
 });
+
+test("a hinted PrimeGov calendar retains its source through the public committee lookup", async () => {
+  const home = "https://fixture-ok.gov/";
+  const base = "https://okc.primegov.com";
+  const url = `${base}/api/v2/PublicPortal/ListUpcomingMeetings`;
+  const subject = { ...need("ok:city:oklahoma-city", home), stateCode: "OK", name: "Oklahoma City" };
+  const { open, seen } = fakeOpen({ [`${home}robots.txt`]: ALLOW, [`${base}/robots.txt`]: ALLOW,
+    [home]: { status: 200, body: "<h1>Oklahoma City</h1>" },
+    [url]: { status: 200, contentType: "application/json", body: readFileSync(new URL("./fixtures/primegov/okc-ok-upcoming.json", import.meta.url), "utf8") },
+    [`${base}/api/committee/GetCommitteeesListByShowInPublicPortal`]: { status: 200, contentType: "application/json",
+      body: readFileSync(new URL("./fixtures/primegov/okc-ok-committees.json", import.meta.url), "utf8") },
+  });
+  const result = await walkMeetingsDiscoveryNeed(subject, runtime(open, { routeHints: [{ jurisdictionId: subject.jurisdictionId,
+    officialSite: null, routes: [{ url, body: "Oklahoma City", kind: "PAGE", platform: "primegov", verifyAs: "primegov",
+      evidence: "Recorded public calendar", observed: { at: NOW, by: "hunter" } }] }],
+    search: async () => { seen.push("SEARCH"); return { hits: [], requests: [] }; } }));
+  const found = result.found.find(row => row.url === url);
+  assert.equal(found?.hintUrl, url);
+  assert.ok((found?.count ?? 0) > 0);
+  assert.ok(seen.indexOf(url) < seen.indexOf("SEARCH"));
+  const witness = await walkMeetingsDiscoveryNeed(subject, runtime(open, { routeHints: [{ jurisdictionId: subject.jurisdictionId,
+    officialSite: null, routes: [{ url, body: "Oklahoma City", kind: "WITNESS", platform: "primegov", verifyAs: null,
+      evidence: "Recorded public calendar", observed: { at: NOW, by: "hunter" } }] }] }));
+  assert.ok(!witness.found.some(row => row.url === url));
+  assert.ok(witness.leads.some(row => row.url === url));
+});

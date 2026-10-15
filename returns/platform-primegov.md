@@ -1,5 +1,13 @@
 # Returned: platform-primegov
 
+Cleanliness findings on R3-PRIMEGOV (7ed33b50d, folded as 95c230727). Fix in your next READY:
+Exports nothing outside their own file imports (unexport; tests count only for the last):
+   lib/sources/primegov/index.ts:15 PrimeGovDocument
+   lib/sources/primegov/index.ts:31 PrimeGovMeeting
+   lib/sources/primegov/index.ts:45 PrimeGovRaw
+   lib/sources/primegov/index.ts:90 primeGovDocumentUrl
+
+
 lane: platform-primegov
 owner: platform-primegov
 writer: the platform-primegov lane

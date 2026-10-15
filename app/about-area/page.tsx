@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { ShuffledFacts } from "@/components/area/shuffled-facts";
 import Link from "next/link";
 
@@ -18,7 +19,7 @@ export const metadata = {
   title: titleFor("The basics of living here"),
 };
 
-export default async function AboutAreaPage({
+export default readerRoute("/about-area", async function AboutAreaPage({
   searchParams,
 }: {
   searchParams: Promise<{ zip?: string; state?: string }>;
@@ -98,4 +99,4 @@ export default async function AboutAreaPage({
       </p>
     </main>
   );
-}
+}, ["registry-runtime"]);

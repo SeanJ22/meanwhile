@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import type { VotesSnapshot } from "@/lib/votes/types";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
 import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
@@ -21,13 +22,7 @@ import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
 import { readNativeMemberVotes } from "@/lib/state-rollcalls/reader-votes";
 import { stateVoteStateForMember } from "@/lib/state-rollcalls/reader-vote-visibility";
 
-/**
- * GET /api/votes?member=congress:<bioguide> — a federal member
- * GET /api/votes?member=<official-source>:<person-id> — a state legislator
- *
- * A member's recent recorded votes, newest first, from proof-validated canonical projections, never a
- * runtime fallback or a live fetch. Legacy state rows carry LegiScan's required CC BY attribution.
- */
+
 
 export const runtime = "nodejs";
 
@@ -98,10 +93,7 @@ async function readCanonicalStateVoteScope(scope: OfficialStateVoteScope): Promi
   };
 }
 
-/**
- * Read the one state authority encoded in the member's source-namespaced identifier. Identity and scope are
- * fixed before the store opens, so one state's request cannot wait on, be erased by, or be satisfied from another's.
- */
+
 export async function settleStateVoteMemberHolding(
   member: string,
   scope: OfficialStateVoteScope,
@@ -137,11 +129,7 @@ function researchFixtureScopeForMember(member: string): OfficialStateVoteScope |
   return matches.length === 1 ? matches[0]! : null;
 }
 
-/**
- * Party labels and the curated key-vote projection are supporting holdings
- * beside the federal roll-call record. Neither is authority for the other,
- * so one unavailable holding must not erase the independently held record.
- */
+
 export async function settleFederalVoteSupportingHoldings(
   member: string,
   readers: FederalVoteSupportingReaders = {
@@ -198,11 +186,6 @@ function stateVotes(member: string, holding: HeldStateVoteScope, unavailableScop
       rollCallUrl: r.rollCallUrl,
       date: r.date,
       position: positions.get(r.id),
-      // A party-by-party count is REFUSED here rather than estimated. We hold
-      // positions only for the members whose district our geometry clips, so
-      // any tally we computed would be a fraction of the chamber's and could
-      // never sum to the recorded result — which is exactly the condition the
-      // federal breakdown refuses on.
       partyBreakdown: null,
       billSummary: null,
       billSummaryPending: false,
@@ -221,7 +204,7 @@ function stateVotes(member: string, holding: HeldStateVoteScope, unavailableScop
   });
 }
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/votes", async function GET(request: Request) {
   const query = new URL(request.url).searchParams;
   const member = query.get("member");
   const historical = query.get("history") === "1";
@@ -303,11 +286,6 @@ export async function GET(request: Request) {
       .map((p) => [p.voteId, p.position]),
   );
 
-  // The party breakdown: pure
-  // arithmetic over the snapshot's positions joined to the roster's
-  // party labels, refused (null) unless it sums exactly to the
-  // chamber's recorded tally. The surface renders the honest
-  // unavailable state on null.
   const supporting = await settleFederalVoteSupportingHoldings(member);
 
   // A member sits in one chamber, so their votes share a chamber and the
@@ -323,10 +301,7 @@ export async function GET(request: Request) {
       billSummaryPending: summaryPendingForBill(v.billUrl),
     }));
 
-  /*
-   * The "When it mattered" rows, served beside the recent ones. `keyVoteRowsFor` is handed a chamber and
-   * never reads the other array; a member with no chamber gets an empty list.
-   */
+
   const { chamber, rows: keyVotes } = supporting.curated;
 
   return Response.json({
@@ -342,4 +317,4 @@ export async function GET(request: Request) {
     keyVotesCriteria: keyVotes.length > 0 ? KEY_VOTES_CRITERIA : null,
     pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, snap.votes, snap.positions, member),
   });
-}
+}, ["registry-runtime","federal-directory","state-legislators","state-votes","federal-votes","federal-key-votes"]);

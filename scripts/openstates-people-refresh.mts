@@ -6,6 +6,7 @@ import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisitio
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -31,7 +32,7 @@ async function main() {
     const failed = await recordRegisteredSourceAcquisitionFailure({ store, contractId, requestedUrl: PLURAL_REVISION_URL, failure });
     console.log(failed.line); process.exitCode = 2; return;
   }
-  const publication = await publishStatePeople({ store, ...acquired, now: new Date().toISOString() });
+  const publication = await publishStatePeople({ store, vault: rawCaptureVault(), ...acquired, now: new Date().toISOString() });
   if (acquired.gaps.length) console.log(`OPENSTATES_SOURCE_GAPS=${JSON.stringify(acquired.gaps)}`);
   printSourceRunnerReceipt(contractId, publication.candidate, publication.outcome);
   if (!publication.outcome.promoted && !publication.outcome.confirmed) process.exitCode = 2;

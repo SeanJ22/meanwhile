@@ -5,11 +5,12 @@ import { useMemo, useState } from "react";
 import { periodDays } from "@/lib/control-plane/admin-view/periods.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 import type { ModelSpendView } from "@/lib/control-plane/admin-view/model-spend.ts";
+import type { HuntCostView } from "@/lib/hunt/cost-per-fact.ts";
 
 import { useV6 } from "./context.tsx";
 import { mst, usd, type Hunt } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
-import { Card, cx, Technical } from "./ui.tsx";
+import { Card, cx, Facts, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const DASH = "—";
@@ -22,6 +23,20 @@ const dayWords = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateStrin
 const percent = (n: number | null) => n === null ? DASH : `${(n * 100).toFixed(1)}%`;
 const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "Page reader", MEASURE_WRITER: "Translator", MEASURE_CHECKER: "Translation checker", ASK: "Ask" }[role]
   ?? role.toLowerCase().replaceAll("_", " ").replace(/^./, char => char.toUpperCase()));
+
+/** What hunting cost for each fact it got published. */
+function HuntCostPanel({ view }: { view: HuntCostView | null }) {
+  if (view === null) return <Card title="Hunting"><p className={cx(s.p, s.small)}>The hunting costs could not be read just now.</p></Card>;
+  return <Card title="Hunting">
+    <Facts rows={[
+      ["Cost per published fact", view.usdPerPublishedFact === null
+        ? view.factsPublished === 0 ? "No hunted fact is published yet" : `Not known: ${view.unpricedRows} charge(s) have no price`
+        : usd(view.usdPerPublishedFact)],
+      [`Spent in ${view.days} days`, `${usd(view.usd)} (search ${usd(view.searchUsd)}) over ${view.jobs.toLocaleString("en-US")} hunt job(s)`],
+      ["Facts", `${view.factsReported.toLocaleString("en-US")} reported into the Box, ${view.factsPublished.toLocaleString("en-US")} published`],
+    ]} />
+  </Card>;
+}
 
 function ModelSpendPanel({ view, days }: { view: ModelSpendView | null; days: readonly string[] }) {
   const [comparison, setComparison] = useState(false);
@@ -171,6 +186,7 @@ export function MoneyScreen() {
       </Card>
 
       <ModelSpendPanel view={spendData?.modelSpend ?? null} days={days.map(day => day.day)} />
+      <HuntCostPanel view={spendData?.huntCost ?? null} />
 
       <Card title={by === "hunt" ? "Hunts" : "Days"} aside={switcher}>
         {by === "day" ? (days.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (

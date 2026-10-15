@@ -5,9 +5,12 @@ import { processRegisteredFanOutCandidate } from "../../civic-data/promotion.ts"
 import type { RoutineDataStore } from "../../civic-data/store.ts";
 import { FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, federalScope, type FederalSourceId } from "./targets.ts";
 import { normalizeFederalCaptureWithRoster } from "./normalize.ts";
-import type { FederalCapture, FederalCounts, FederalFact, FederalProjection, LdaRoster } from "./types.ts";
+import type { FederalCapture, FederalCounts, FederalFact, FederalProjection, HeldFederalCapture, LdaRoster } from "./types.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { readLdaRosterVersion } from "./lda-roster.ts";
+import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
+import { holdRawCapture, readRawCaptureText } from "../../civic-data/raw-capture-vault.ts";
+import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
 
 const factHash = ({ checkedAt: _checkedAt, ...fact }: FederalFact) => normalizedHash(fact);
 export function federalProjectionIssues(value: FederalProjection): string[] {
@@ -31,7 +34,14 @@ export async function readFederalSourceProjection(source: FederalSourceId, parti
   return result;
 }
 
-export function federalCandidate(input: { source: FederalSourceId; partition: string; projection: FederalProjection; captures: FederalCapture[]; now: string; completePartition?: boolean;
+type VaultedCapture = FederalCapture & HeldFederalCapture;
+const RETAINED_READ_CONCURRENCY = 8;
+export async function holdFederalCapture(vault: EvidenceStore, capture: FederalCapture): Promise<VaultedCapture> {
+  return { ...capture, raw: await holdRawCapture(vault, capture.source, capture.body, capture.kind === "bill-text" ? "text/plain" : "application/json") };
+}
+
+/** Facts are verified against the captured bytes; the candidate keeps only their vault references. */
+export function federalCandidate(input: { source: FederalSourceId; partition: string; projection: FederalProjection; captures: VaultedCapture[]; now: string; completePartition?: boolean;
   replaceFilingId?: string; rosters?: ReadonlyMap<string, LdaRoster> }): RoutineCandidate {
   const { source, projection, captures, now } = input, scope = federalScope(source, input.partition);
   const issues = federalProjectionIssues(projection);
@@ -45,8 +55,8 @@ export function federalCandidate(input: { source: FederalSourceId; partition: st
   }
   const evidence = new Set(captures.flatMap(normalize).map(row => `${row.id}|${factHash(row)}`));
   for (const row of projection.records) if (!evidence.has(`${row.id}|${factHash(row)}`)) issues.push(`Saved source bytes do not reproduce ${row.id}.`);
-  const rawHash = sha256(captures.map(capture => sha256(capture.body)).join("\n"));
-  const normalizedPayload = { captures };
+  const rawHash = sha256(captures.map(capture => capture.raw.rawHash).join("\n"));
+  const normalizedPayload = { captures: captures.map(({ body: _body, ...held }): HeldFederalCapture => held) };
   const count = projection.records.length + 2; // The cursor and count entries are part of this projection's existing civic-record set.
   return { id: `cv-${sha256(`${scope}|${rawHash}|${normalizedHash(projection)}|${now}`).slice(0, 32)}`,
     sourceId: source, recordClass: FEDERAL_RECORD_CLASS, scope, sourceProjectionEvidence: sourceProjectionEvidence(source, FEDERAL_RECORD_CLASS, scope),
@@ -67,7 +77,7 @@ export function federalCandidate(input: { source: FederalSourceId; partition: st
 
 /** Each partition publishes as its page arrives; an outage never rolls back earlier verified pages. */
 export async function publishFederalPartition(input: { source: FederalSourceId; partition: string; captures: FederalCapture[]; records: FederalFact[];
-  store: RoutineDataStore; now: string; cursor?: string; counts?: FederalCounts; completePartition?: boolean; replaceFilingId?: string }) {
+  store: RoutineDataStore; vault: EvidenceStore; now: string; cursor?: string; counts?: FederalCounts; completePartition?: boolean; replaceFilingId?: string }) {
   const prior = await readFederalSourceProjection(input.source, input.partition, { store: input.store, now: input.now, bypassCache: true });
   if (prior.kind === "STORE_UNREACHABLE") throw new Error(prior.detail);
   const held = prior.kind === "PROMOTED" ? prior.value : null;
@@ -80,22 +90,27 @@ export async function publishFederalPartition(input: { source: FederalSourceId; 
     ...(input.cursor !== undefined ? { cursor: input.cursor } : held?.cursor ? { cursor: held.cursor } : {}),
     ...(input.counts ? { counts: input.counts } : held?.counts ? { counts: held.counts } : {}) };
   const priorCandidate = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
-  const previousCaptures = (priorCandidate?.candidate.normalizedPayload as { captures?: FederalCapture[] } | null)?.captures ?? [];
-  const evidence = new Map(input.captures.map(row => [row.url, row]));
+  const previousCaptures = (priorCandidate?.candidate.normalizedPayload as { captures?: HeldFederalCapture[] } | null)?.captures ?? [];
+  const fresh = await Promise.all(input.captures.map(capture => holdFederalCapture(input.vault, capture)));
+  const evidence = new Map(fresh.map(row => [row.url, row.raw.rawHash]));
   // Replaced pages can retain records absent from the latest partial response. Keep their original bytes.
-  const captures = [...input.captures, ...previousCaptures.filter(row => !evidence.has(row.url) || evidence.get(row.url)!.body !== row.body)];
+  const reads = await runBoundedWorkPool(previousCaptures.filter(row => evidence.get(row.url) !== row.raw.rawHash), RETAINED_READ_CONCURRENCY,
+    async (row): Promise<VaultedCapture> => ({ ...row, body: await readRawCaptureText(input.vault, row.raw) }));
+  const unread = reads.find(read => !read.ok);
+  if (unread) throw new Error(unread.error!);
+  const captures = [...fresh, ...reads.flatMap(read => read.ok ? [read.value] : [])];
   const rosters = new Map<string, LdaRoster>();
   for (const version of new Set(captures.flatMap(capture => capture.context?.honoreeRosterVersionId ? [capture.context.honoreeRosterVersionId] : []))) {
-    const roster = await readLdaRosterVersion(input.store, version);
+    const roster = await readLdaRosterVersion(input.store, input.vault, version);
     if (roster) rosters.set(version, roster);
   }
   // Retain only captures which reproduce an extant fact, plus the current listing for cursor evidence.
   const needed = new Set(projection.records.map(row => `${row.id}|${factHash(row)}`));
   const seen = new Set<string>();
   const kept = captures.filter(capture => {
-    const key = `${capture.url}|${sha256(capture.body)}|${normalizedHash(capture.context ?? {})}`;
+    const key = `${capture.url}|${capture.raw.rawHash}|${normalizedHash(capture.context ?? {})}`;
     if (seen.has(key)) return false;
-    if (!input.captures.includes(capture) && !normalizeFederalCaptureWithRoster(capture, rosters.get(capture.context?.honoreeRosterVersionId ?? "")).some(row => needed.has(`${row.id}|${factHash(row)}`))) return false;
+    if (!fresh.includes(capture) && !normalizeFederalCaptureWithRoster(capture, rosters.get(capture.context?.honoreeRosterVersionId ?? "")).some(row => needed.has(`${row.id}|${factHash(row)}`))) return false;
     seen.add(key); return true;
   });
   const candidate = federalCandidate({ ...input, projection, captures: kept, rosters });

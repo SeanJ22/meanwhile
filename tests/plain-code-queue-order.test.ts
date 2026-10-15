@@ -108,10 +108,6 @@ async function dispatcherRun(input: { readonly cycles: number; readonly perCycle
       ...(input.placeFirst ? { placeFirst: input.placeFirst } : {}),
       research: {
         decide: () => ({ kind: "DETERMINISTIC", why: "fixture: a derived HTTP_GET shape", disagreement: null }),
-        admitScout: () => ({ admit: false, code: "PAUSED", why: "fixture" }),
-        modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => { throw new Error("no Scout may start"); } },
-        workerCapacity: 1,
-        scoutLeaseTtlMs: 60_000,
       },
     });
     debts = cycle.debts;

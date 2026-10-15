@@ -1,12 +1,14 @@
 import { parse } from "yaml";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
-import { FEDERAL_DIRECTORY_SCOPE, FEDERAL_DIRECTORY_SOURCE_ID, federalDirectoryProjectionIssues, type FederalDirectoryReadModel } from "../../officials/federal-directory-data-plane.ts";
+import { readRawCaptureText } from "../../civic-data/raw-capture-vault.ts";
+import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
+import { FEDERAL_DIRECTORY_SCOPE, FEDERAL_DIRECTORY_SOURCE_ID, federalDirectoryProjectionIssues, type FederalDirectoryCapture, type FederalDirectoryReadModel } from "../../officials/federal-directory-data-plane.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import type { LdaRoster } from "./types.ts";
 
 const caches = new WeakMap<RoutineDataStore, Map<string, Promise<LdaRoster | undefined>>>();
 /** Resolve an immutable promoted roster version; every LDA filing keeps this evidence reference. */
-export async function readLdaRosterVersion(store: RoutineDataStore, versionId: string): Promise<LdaRoster | undefined> {
+export async function readLdaRosterVersion(store: RoutineDataStore, vault: EvidenceStore, versionId: string): Promise<LdaRoster | undefined> {
   let cache = caches.get(store);
   if (!cache) { cache = new Map(); caches.set(store, cache); }
   if (cache.has(versionId)) return cache.get(versionId)!;
@@ -16,11 +18,11 @@ export async function readLdaRosterVersion(store: RoutineDataStore, versionId: s
       saved.candidate.sourceId !== FEDERAL_DIRECTORY_SOURCE_ID || saved.candidate.scope !== FEDERAL_DIRECTORY_SCOPE) return undefined;
     const projection = saved.candidate.readModel as FederalDirectoryReadModel;
     if (federalDirectoryProjectionIssues(projection).length) return undefined;
-    const acquisitions = (saved.candidate.normalizedPayload as { acquisitions?: { finalUrl: string; body: string }[] })?.acquisitions ?? [];
+    const acquisitions = (saved.candidate.normalizedPayload as { acquisitions?: FederalDirectoryCapture[] })?.acquisitions ?? [];
     const core = acquisitions.find(row => row.finalUrl.endsWith(`/${projection.sourceSha}/legislators-current.yaml`));
     const names = new Map<string, string[]>();
     if (core) {
-      const raw = parse(core.body, { maxAliasCount: 0, uniqueKeys: true }) as { id?: { bioguide?: string }; name?: { first?: string; middle?: string; last?: string; nickname?: string; official_full?: string } }[];
+      const raw = parse(await readRawCaptureText(vault, core.raw), { maxAliasCount: 0, uniqueKeys: true }) as { id?: { bioguide?: string }; name?: { first?: string; middle?: string; last?: string; nickname?: string; official_full?: string } }[];
       for (const row of raw) {
         const name = row.name;
         if (!row.id?.bioguide || !name?.first || !name.last) continue;

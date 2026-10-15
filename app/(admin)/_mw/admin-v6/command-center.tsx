@@ -170,7 +170,8 @@ export function CommandCenter(props: CommandCenterProps) {
     });
     update(receipt);
     setDialog(null);
-    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, when:send.when, payload: ref.payload }, update);
+    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, when:send.when,
+      payload: send.place === undefined ? ref.payload : { ...ref.payload, words: send.place } }, update);
   };
 
   const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => {

@@ -17,7 +17,7 @@ export type FindingSlot =
   | { readonly class: string; readonly waiting: string };
 
 /** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
-export const FINDING_SLOTS_VERSION = "4";
+export const FINDING_SLOTS_VERSION = "5";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
@@ -111,6 +111,18 @@ const COMMENT: Readonly<Record<string, "comment:detail" | "comment:signup" | "co
   "publiccomment.attend": "comment:attend", attend: "comment:attend",
 };
 
+/** The checklist id a candidate finding's own field name stands for, from its words and its value's shape. */
+export function candidateChecklistId(field: string, value: unknown): string | null {
+  if (/^CAN-\d{2}$/.test(field.trim())) return field.trim();
+  const key = field.toLowerCase().replace(/[^a-z0-9.]/g, ""), text = String(value).trim();
+  if (/(^|\.)(bio|biography)(\.|$)/.test(key)) return "CAN-16";
+  if (/(photo|portrait|headshot|image)/.test(key)) return "CAN-17";
+  if (/(campaignsite|campaignwebsite|website|site)$/.test(key)) return "CAN-04";
+  if (/(email|phone|contact)/.test(key) && (EMAIL.test(text) || PHONE.test(text))) return "CAN-06";
+  if (/(position|statement|stance|issue|priorit)/.test(key)) return "CAN-07";
+  return null;
+}
+
 /** A checklist id, or a hunter's own field name matched to a slot by its words; candidate findings belong to the ballot classes. */
 export function slotFor(field: string, value: unknown, recordClass: string | null, quote = ""): FindingSlot {
   const item = /^([A-Z]{3})-\d{2}$/.exec(field.trim());
@@ -119,7 +131,10 @@ export function slotFor(field: string, value: unknown, recordClass: string | nul
   // Hunters annotate names, as in `officeholder.name (Board Member)` or `officeholder.name/office`.
   const key = field.replace(/\(.*?\)/g, "").split("/")[0]!.toLowerCase().replace(/[^a-z0-9.]/g, "");
   const dot = key.lastIndexOf("."), head = dot < 0 ? "" : key.slice(0, dot), last = key.slice(dot + 1);
-  if (key.startsWith("candidate") || recordClass === "candidate-enrichment") return { class: "candidates", waiting: "CANDIDATE_CLASS_NOT_MOVED" };
+  if (key.startsWith("candidate") || recordClass === "candidate-enrichment") {
+    const id = candidateChecklistId(field, value);
+    return id === null ? { class: "candidates", waiting: "NO_FACT_SLOT" } : CHECKLIST[id]?.(String(value).trim(), quote) ?? { class: "candidates", waiting: checklistWait(id) };
+  }
   if (key === "commentperiod") return /^(yes|no)$/i.test(String(value)) ? { class: "comment rules", slot: "comment:period" } : { class: "comment rules", slot: "comment:detail" };
   if (COMMENT[key]) return { class: "comment rules", slot: COMMENT[key] };
   if (key === "meeting.schedule" || key === "body.meetingschedule" || key === "meetingschedule") return { class: "schedules", slot: "meeting_cadence" };

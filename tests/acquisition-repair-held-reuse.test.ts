@@ -29,7 +29,7 @@ test("linked successor reuses exact completed ancestor bytes, while an undeclare
     now: () => now, route, held: [held] };
   let network = 0;
   const toolkit: ScoutToolkit = { call: async () => { network++; throw new Error("network must not run"); },
-    specs: [], vaultedArtifactIds: new Set(), toolCalls: 0, requestCount: 0, bytesFetched: 0 };
+    specs: [], vaultedArtifactIds: new Set(), reported: [], toolCalls: 0, requestCount: 0, bytesFetched: 0 };
   const saved = { artifact, key: objectKey(project, artifact), bytes: Buffer.from(text) };
   const runtime = { toolkit, readVault: async () => saved,
     authorizeInheritedHeld: async (link: { originWorkItemId: string; childWorkItemId: string; artifactId: string; project: string }) =>

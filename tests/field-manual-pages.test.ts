@@ -18,7 +18,6 @@ import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
 import { readValidatorManual } from "../lib/control-plane/promotion/validator-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { Persisted } from "../lib/control-plane/repository/types.ts";
-import { fieldManualBriefLines, scoutFieldManualCatalog, scoutFieldManualProjection, scoutFieldManualQuery } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { engineerJob } from "../lib/control-plane/workers/engineering-adapter.ts";
 import { routeParse } from "../lib/control-plane/workers/model-parser.ts";
 import { acquirerQuery } from "../lib/control-plane/workers/research-runtime.ts";
@@ -67,11 +66,6 @@ async function renderAfter(repos: ReturnType<typeof createMemoryRepositories>) {
     (reads[role] ??= {})[job] = read;
   };
   for (const job of jobs) {
-    const opts = { subjectId: job.ocdId, obligationId: job.workItemId, recordClass: job.recordClass, limit: 30 };
-    const scout = await readFieldManual(repos, scoutFieldManualQuery(opts));
-    const lines = fieldManualBriefLines(scoutFieldManualProjection(scout, opts));
-    put("SCOUT", job.key, { prompt: (await readRolePlaybook(repos, "SCOUT")).text, manual: lines }, scout);
-    put("DETECTIVE", job.key, { prompt: (await readRolePlaybook(repos, "DETECTIVE")).text, manual: lines }, scout);
     const parser = await readFieldManual(repos, { role: "PARSER", state: job.state, recordClass: job.recordClass });
     const route = routeParse(parser.store, { recordClass: job.recordClass, host: job.host });
     put("PARSER", job.key, { prompt: (await readRolePlaybook(repos, "PARSER")).text, manual: [route.reason, `fields: ${route.knownFieldNames.join(",")}`] }, parser);
@@ -105,7 +99,6 @@ const INTENDED = {
   ITS_STATE: "its state's lessons rank next, ahead of other places' doors",
   NATIONAL: "what applies everywhere (and platform lessons when the job's platform is unknown) ranks after its state",
   ROLE_INSTRUCTIONS: "canonical role rows are read directly, outside the place-filtered manual list",
-  COUNTS: "the header counts the rows the job read, not the whole manual",
 } as const;
 
 const strip = (line: string) => line.replace(/^\s+• /, "").replace(/ \[(works here|untried here[^\]]*|fails here[^\]]*)\]$/, "");
@@ -142,6 +135,8 @@ test("every role's starting page is the old page except for the listed intended 
   const rows = (await repos.fieldManual.list()).map((row) => row.value);
   const tally: Record<string, Record<string, number>> = {};
   for (const [role, byJob] of Object.entries(before.pages)) {
+    // The Scout's brief page is gone; hunters read the manual through their packet's brief.
+    if (role === "SCOUT" || role === "DETECTIVE") continue;
     for (const [key, old] of Object.entries(byJob)) {
       const now = after.pages[role]![key]!;
       assert.equal(now.prompt, old.prompt, `${role} ${key}: the written instructions are unchanged`);
@@ -151,22 +146,12 @@ test("every role's starting page is the old page except for the listed intended 
       }
       const job = jobs.find((j) => j.key === key) ?? (role === "ENGINEER" ? { ...jobs[0]!, platform: "legistar" } : null);
       const read = after.reads[role]![key]!;
-      // A Scout's page wraps its lines in a header and a note; every other page is the lines themselves.
-      const brief = role === "SCOUT" || role === "DETECTIVE";
-      const entryLine = (line: string) => !brief || line.startsWith("  • ");
-      if (brief) {
-        const wallNote = (line: string) => line.startsWith("  A BLOCKED or FAILED door is a wall");
-        const frame = (lines: readonly string[]) => lines.filter((line) => !entryLine(line) && !wallNote(line)).map((line) => line.replace(/\d+/g, "#"));
-        assert.deepEqual(frame(now.manual), frame(old.manual), `${role} ${key}: the header is unchanged but for counts (${INTENDED.COUNTS})`);
-        assert.equal(now.manual.some(wallNote), now.manual.some((line) => /^ {2}• \S+\/\S+ (BLOCKED|FAILED) \(/.test(line)),
-          `${role} ${key}: the wall note shows exactly when a dead door is on the page`);
-      }
-      const removed = old.manual.filter((line) => !now.manual.includes(line) && entryLine(line));
-      const added = now.manual.filter((line) => !old.manual.includes(line) && entryLine(line));
+      const removed = old.manual.filter((line) => !now.manual.includes(line));
+      const added = now.manual.filter((line) => !old.manual.includes(line));
       for (const [side, lines, other] of [["removed", removed, added], ["added", added, removed]] as const) {
         for (const line of lines) {
           const why = classify(line, side, rows, read, job, other);
-          assert.ok(why, `${role} ${key}: an unlisted ${side} line: ${line}`);
+          assert.ok(why && INTENDED[why], `${role} ${key}: an unlisted ${side} line: ${line}`);
           (tally[role] ??= {})[`${side}:${why}`] = ((tally[role] ??= {})[`${side}:${why}`] ?? 0) + 1;
         }
       }

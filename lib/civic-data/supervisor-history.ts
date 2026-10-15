@@ -18,6 +18,7 @@ export const ROUTINE_SUPERVISOR_HISTORY_FIELDS = {
     "verifiedSourceSuccesses",
     "verifiedSourceFailures",
     "failures",
+    "crashedTasks",
     "taskReceipts",
     "taskReceiptEvidence",
   ],

@@ -6,8 +6,10 @@ import { parseV6PlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { scopeKeyOf, expansionScopesOf, type ExpansionScopeGeography } from "../expansion/scopes.ts";
 import type { OperatorContext } from "./context.ts";
 export interface PlainOrder { readonly type:string; readonly subject:string; readonly input:Readonly<Record<string,unknown>>; readonly willDo:string }
+/** "Send agents to X", "hunt X" and "find everything in X" all send agents to X. */
+const SEND_AGENTS = /^(?:send agents (?:to|in)|hunt(?: in)?|find everything (?:in|about|for))\s+/i;
 export function plainOrderType(words:string):string|null {
- if (/^send agents (?:to|in)\b/i.test(words)) return "fleet.deployHere";
+ if (SEND_AGENTS.test(words)) return "fleet.deployHere";
  if (/^start (?:a )?mission in\b/i.test(words)) return "expansion.scope.set";
  if (/^set (?:the )?(?:daily |spend )?budget to \$?[\d,.]+\s*[.!]?$/i.test(words)) return "config.setFleetSpendCeiling";
  if (/^(?:pause|resume) (?:all workers|workers|the runner|runner|paid research|research)\s*[.!]?$/i.test(words)) return /^pause/i.test(words) ? /research/i.test(words)?"research.pause":"runner.pause" : /research/i.test(words)?"research.resume":"runner.resume";
@@ -26,7 +28,7 @@ function geographyOf(key:string):ExpansionScopeGeography|null {
 export function parsePlainOrder(words:string,context:OperatorContext):PlainOrder|{why:string}|null {
  const type=plainOrderType(words);if(!type)return null;
  if(type==="fleet.deployHere"){
-  let target=words.replace(/^send agents (?:to|in)\s*/i,"").replace(/[.!]$/,"").trim();
+  let target=words.replace(SEND_AGENTS,"").replace(/[.!]$/,"").trim();
   let shown=target;
   if(/\b(?:this|selected|my)\s+(?:place|district|state|county)\b/i.test(target)){
    const key=askedPlace(target,context.from);const geo=key?geographyOf(key):null;

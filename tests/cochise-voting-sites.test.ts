@@ -4,13 +4,15 @@ import { join } from "node:path";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import { VOTING_SITES_CONTRACT, retainFailedVotingSiteScopes, votingSitesCandidate,
-  votingSitesScopedSuccessor, votingSitesStandardSuccessor } from "../lib/ballot/voting-sites-data-plane.ts";
+  votingSitesScopedSuccessor, votingSitesStandardSuccessor, type VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import { loadVotingSites, readVotingSitesProjection, resetVotingSitesCache } from "../lib/ballot/voting-sites-server.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { parseVotingCapture, votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
-import { mergeVotingSourceRead, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { mergeVotingSourceRead, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { readRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 import type { VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
 
 const PDF = readFileSync(join(process.cwd(), "tests/fixtures/cochise-2026-vote-centers.pdf"));
@@ -54,8 +56,8 @@ test("the generic PDF mapping reads all 18 official countywide vote centers, hou
   assert.equal(read.rules[0]?.text, "Voters may vote at any of the Vote Centers listed below.");
   assert.equal(createHash("sha256").update(PDF).digest("hex"), "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c");
   assert.equal((await capturedJurisdiction()).model, "VOTE_CENTER");
-  const evidence = votingRawEvidence(read);
-  assert.deepEqual(Buffer.from(evidence[0]!.split("\n\n")[1]!, "base64"), PDF);
+  const vault = new MemoryEvidenceStore(), evidence = await holdVotingRawEvidence(vault, read);
+  assert.deepEqual(Buffer.from(await readRawCapture(vault, evidence[0]!)), PDF);
 });
 
 test("an incomplete PDF fails without producing a replacement list", async () => {
@@ -66,21 +68,27 @@ test("a scoped county successor promotes through the existing pointer and leaves
   resetVotingSitesCache();
   const store = new MemoryRoutineDataStore();
   const prior = priorFile();
-  const base = votingSitesCandidate({ current: prior, prior: null, failures: [], rawBodies: ["original official bytes"],
+  const vault = new MemoryEvidenceStore();
+  const original = await holdVotingRawEvidence(vault, { rawBodies: [{ url: "https://elections.wa-example.gov/vote-centers",
+    contentType: "text/html", bytes: new TextEncoder().encode("original official bytes") }] });
+  const base = votingSitesCandidate({ current: prior, prior: null, failures: [], acquisition: original,
     successfulAuthorityReads: 1, requestedUrl: "https://elections.wa-example.gov/vote-centers", finalUrl: "https://elections.wa-example.gov/vote-centers", retrievedAt: T0 });
   assert.ok((await processRegisteredManualCandidate(store, "voting-sites", base, T0)).promoted);
   const cochise = await capturedJurisdiction();
   const successor = votingSitesScopedSuccessor(prior, cochise, "2026-09-28");
   assert.deepEqual(successor.jurisdictions.filter(row => row.ocdId !== COCHISE),
     [...prior.jurisdictions].sort((left, right) => left.ocdId.localeCompare(right.ocdId)));
-  const frames = votingRawEvidence(await capturedRead());
-  const candidate = votingSitesCandidate({ current: successor, prior, failures: [], rawBodies: frames,
+  const acquisition = await holdVotingRawEvidence(vault, await capturedRead());
+  const candidate = votingSitesCandidate({ current: successor, prior, failures: [], acquisition,
     successfulAuthorityReads: 1, requestedUrl: cochise.sourceUrl, finalUrl: cochise.sourceUrl, retrievedAt: T1,
-    retainRawBodies: true, carriedFromVersionId: base.id });
-  const payload = candidate.normalizedPayload as { acquisition: string[]; carriedFromVersionId: string; projection: VotingSitesFile };
+    carriedFromVersionId: base.id });
+  const payload = candidate.normalizedPayload as { acquisition: VotingRawCapture[]; carriedFromVersionId: string; projection: VotingSitesFile };
   assert.equal(payload.carriedFromVersionId, base.id);
   assert.deepEqual(payload.projection, successor);
-  assert.deepEqual(Buffer.from(payload.acquisition[0]!.split("\n\n")[1]!, "base64"), PDF);
+  assert.deepEqual(payload.acquisition, [{ url: DOOR.url, contentType: "application/pdf", vaultKey: payload.acquisition[0]!.vaultKey,
+    rawHash: "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c", byteLength: PDF.byteLength }]);
+  assert.ok(JSON.stringify(candidate).length < 64 * 1024, "the candidate holds refs, not the PDF");
+  assert.deepEqual(Buffer.from(await readRawCapture(vault, payload.acquisition[0]!)), PDF);
   const published = await processRegisteredManualCandidate(store, "voting-sites", candidate, T1);
   assert.ok(published.promoted);
   assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));

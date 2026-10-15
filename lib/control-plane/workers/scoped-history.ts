@@ -12,7 +12,6 @@ import type { Attempt } from "../attempt.ts";
 import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./types.ts";
-import { readSubjectScoutHistory } from "./detective.ts";
 
 /** The Scout logs that ever held a record about one of these subjects, or null when the store cannot say without a full read. */
 async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly string[] | null> {
@@ -33,20 +32,6 @@ export async function readScoutResultsForSubjects(repos: ControlPlaneRepositorie
   const out: ScoutResult[] = [];
   for (const key of keys) out.push(...await repos.scoutResults.read(key));
   return out;
-}
-
-/**
- * `readSubjectScoutHistory` over only the logs that ever held these subjects. It keeps a log whose NEWEST
- * record is about the subject, so a log with no record about the subject can never be kept, and narrowing
- * its key list first changes nothing it returns.
- */
-export async function readSubjectScoutHistoryScoped(repos: ControlPlaneRepositories,
-  subjects: readonly { subjectId: string; recordClass: string }[], scoped: boolean): Promise<ScoutResult[]> {
-  const keys = scoped ? await scoutKeysFor(repos, subjects.map(row => row.subjectId)) : null;
-  if (keys === null) return readSubjectScoutHistory(repos, subjects);
-  const narrowed: ControlPlaneRepositories["scoutResults"] = Object.assign(Object.create(repos.scoutResults) as ControlPlaneRepositories["scoutResults"],
-    { keys: async () => keys });
-  return readSubjectScoutHistory({ ...repos, scoutResults: narrowed }, subjects);
 }
 
 /**

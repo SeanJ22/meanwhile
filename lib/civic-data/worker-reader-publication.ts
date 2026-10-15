@@ -2,6 +2,7 @@ import { recordPublicationFlow } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { parserFieldSources } from "./field-sources.ts";
 import { publishWorkerPollingResults } from "./worker-polling-publication.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -194,7 +195,7 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
 }
 
 export async function publishWorkerReaderResults(input: {
-  repos: ControlPlaneRepositories; store: RoutineDataStore; contractId: WorkerReaderContract; workItemIds: readonly string[]; now: string;
+  repos: ControlPlaneRepositories; store: RoutineDataStore; contractId: WorkerReaderContract; workItemIds: readonly string[]; now: string; vault?: EvidenceStore;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
   readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {

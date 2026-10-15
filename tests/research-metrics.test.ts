@@ -134,7 +134,7 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
 
 test("funnel: SCOUTED counts distinct non-refused obligations; pipeline stages read 'none recorded' by default; candidate stages come from the store counts", () => {
   const f = graduationFunnel({
-    results: [result({ attemptId: "a" }), result({ attemptId: "b", obligationId: "obl-a" }), result({ attemptId: "c", refusal: [{ code: "SCOUT_NO_FINISH", detail: "x" }] })],
+    results: [result({ attemptId: "a" }), result({ attemptId: "b", obligationId: "obl-a" }), result({ attemptId: "c", refusal: [{ code: "SCOUT_TRANSPORT_FAILED", detail: "x" }] })],
     candidateCounts: { proposed: 0, validated: 7, admitted: 0, rejected: 0 },
     pipeline: [],
     pipelineSource: "none recorded (lib/control-plane/promotion is another lane's)",

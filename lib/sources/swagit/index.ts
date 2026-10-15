@@ -7,7 +7,7 @@ import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
 
-export interface SwagitMeeting {
+interface SwagitMeeting {
   id: string;
   title: string;
   category: string;
@@ -20,7 +20,7 @@ export interface SwagitMeeting {
   excerpt: string;
 }
 
-export interface SwagitRaw {
+interface SwagitRaw {
   wiring: BodySourceWiring;
   pages: { url: string; text: string }[];
   collectedAt: string;

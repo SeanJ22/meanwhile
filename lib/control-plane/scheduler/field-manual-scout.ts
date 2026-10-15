@@ -1,27 +1,10 @@
 import {
-  fieldManualEntryId,
-  foldEntries,
-  isTransferableMethod,
-  readFieldManual,
   projectFieldManual,
-  writeFieldManual,
   type FieldManualEntry,
   type FieldManualProjection,
   type FieldManualQuery,
   type FieldManualRead,
-  type FieldManualStore,
-  type FieldManualRepos,
 } from "../field-manual.ts";
-import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { attemptFromScoutResult } from "../../method/fix-map-record.ts";
-import { recordAttemptsKeepingHistory } from "../fix-history.ts";
-import { doorMethodEntries, type SavedDoorPage } from "../bank-methods.ts";
-import { exhaustedRungEntries } from "../bank-exhausted-rungs.ts";
-import { scoutJobCostEntries } from "../bank-job-cost.ts";
-
-/** The source label a scout's own write-backs carry, so a re-observation updates one row. */
-export const SCOUT_DISCOVERY_SOURCE = "scout-discovery";
 
 const STATE_TOKEN = /\b(az|nh|nj|a[klrz]|c[aot]|d[ce]|fl|ga|hi|i[adln]|k[sy]|la|m[adeinost]|n[cdehjmvy]|o[hkr]|pa|ri|s[cd]|t[nx]|ut|v[at]|w[aivy])\b/i;
 const OCD_STATE = /state:([a-z]{2})/i;
@@ -45,12 +28,36 @@ export interface ScoutManualOptions {
   readonly obligationId?: string | null;
   /** The divisions the walk's obligation covers. */
   readonly divisions?: readonly string[];
-  readonly recordClass?: string | null;
+  /** The record classes of the blanks the walk is for; notes on them rank first. */
+  readonly recordClasses?: readonly string[];
   readonly limit?: number;
 }
 
+/** The field manual's record class for each checklist family's blanks. */
+const FAMILY_RECORD_CLASS: Readonly<Record<string, string>> = {
+  GOV: "local-jurisdiction", OFF: "official_roster", MTG: "meetings", DOC: "meetings", PAR: "public_comment_rule",
+  ELE: "ballot_contest", CAN: "candidate-enrichment", CAM: "campaign_finance_filing",
+};
+
+/** The note classes that also bear on each record class. */
+const RELATED: Readonly<Record<string, readonly string[]>> = {
+  "local-jurisdiction": ["official_board_directory", "body", "jurisdiction", "roster", "verifiedpage"],
+  official_roster: ["officeholder", "official", "roster", "contact", "email", "photo", "verifiedpage"],
+  meetings: ["meetings-discovery", "meeting", "agenda", "minutes", "packet", "document", "outcome", "vote", "official_document_sitemap"],
+  public_comment_rule: ["service_contact", "meeting", "agenda", "contact"],
+  ballot_contest: ["voter_access_route", "election", "contest", "ballot", "measure", "voting_site"],
+  "candidate-enrichment": ["candidate_filing_document", "candidate", "candidacy", "campaignsite", "contact", "photo", "blurb", "filing"],
+  campaign_finance_filing: ["campaign_finance_document", "filing", "document", "contribution", "expenditure"],
+};
+
+/** The record class of a blank, by its checklist id; null for a field that is not a checklist item. */
+export function blankRecordClass(checklistId: string): string | null {
+  const family = /^([A-Z]+)-\d+$/.exec(checklistId)?.[1];
+  return family === undefined ? null : FAMILY_RECORD_CLASS[family] ?? family.toLowerCase();
+}
+
 /** The walk's own places: its subject when that is a division, and the divisions its obligation covers. */
-export function scoutPlaces(subjectId: string | null | undefined, divisions: readonly string[] = []): string[] {
+function scoutPlaces(subjectId: string | null | undefined, divisions: readonly string[] = []): string[] {
   const subject = subjectId?.split("#")[0];
   return [...new Set([...(subject?.startsWith("ocd-division/") ? [subject] : []), ...divisions.filter((d) => d.startsWith("ocd-division/"))])];
 }
@@ -76,193 +83,17 @@ export function scoutFieldManualProjection(
   opts: ScoutManualOptions,
 ): FieldManualProjection {
   const store = read.store;
-  // Rank applicable field hints first; cross-family methods keep the remaining slots.
-  const related: Readonly<Record<string, readonly string[]>> = {
-    OFFICIAL_ROSTER: ["officeholder", "roster", "contact", "verifiedpage", "photo", "body", "officials"],
-    OFFICIAL_BOARD_DIRECTORY: ["body", "jurisdiction", "roster", "verifiedpage"],
-    PUBLIC_COMMENT_RULE: ["meeting", "agenda", "minutes", "body", "verifiedpage"],
-    CANDIDATE_FILING_DOCUMENT: ["candidate", "contest", "filing", "document"],
-    CAMPAIGN_FINANCE_FILING: ["filing", "document", "contribution", "expenditure"],
-  };
-  const hints = new Set([opts.recordClass?.toLowerCase() ?? "", ...(related[opts.recordClass ?? ""] ?? [])]);
+  const classes = new Set((opts.recordClasses ?? []).map(value => value.toLowerCase()));
+  const hints = new Set([...classes].flatMap(value => [value, ...(RELATED[value] ?? [])]));
   const full = projectFieldManual(store, { ...scoutFieldManualQuery(opts), limit: store.entries.length }, read.evidence);
   const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
   const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, tier: full.tiers[index]!, entry: byId.get(id)! }))
-    .filter(row => row.entry.kind !== "PLAYBOOK" && (row.entry.kind !== "EXHAUSTED_RUNGS" || !opts.recordClass || row.entry.recordClasses.includes(opts.recordClass.toLowerCase())));
-  // Within each rank, the record class's own fields first.
-  const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
-  indexed.sort((a, b) => a.tier - b.tier || affinity(a.entry) - affinity(b.entry));
+    .filter(row => row.entry.kind !== "PLAYBOOK" && (row.entry.kind !== "EXHAUSTED_RUNGS" || classes.size === 0 || row.entry.recordClasses.some(value => classes.has(value))));
+  // Notes on the blanks' own record classes first; then by rank, notes for any class ahead of other classes.
+  const helps = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : 1;
+  const anyClass = (entry: FieldManualEntry) => entry.recordClasses.length === 0 ? 0 : 1;
+  indexed.sort((a, b) => helps(a.entry) - helps(b.entry) || a.tier - b.tier || anyClass(a.entry) - anyClass(b.entry));
   const chosen = indexed.slice(0, opts.limit ?? 30);
   return { lines: chosen.map(row => row.line), entryIds: chosen.map(row => row.id), tiers: chosen.map(row => row.tier),
     leftOutFailingHere: full.leftOutFailingHere, matched: full.matched, total: full.total };
-}
-
-/** Every entry of the scout's read that applies to its walk, for on-demand local search.
- * Only the capped projection goes into the model prompt; this catalog stays
- * outside that prefix until find_manual/read_manual is called. */
-export function scoutFieldManualCatalog(
-  read: Pick<FieldManualRead, "store" | "evidence">,
-  opts: ScoutManualOptions,
-): readonly FieldManualEntry[] {
-  const applicable = new Set(projectFieldManual(read.store, { ...scoutFieldManualQuery(opts), limit: read.store.entries.length }, read.evidence).entryIds);
-  return read.store.entries.filter(entry => entry.kind !== "PLAYBOOK" && applicable.has(entry.id));
-}
-
-/** A projected door recorded as dead (BLOCKED or FAILED), from its rendered line (`<role>/<kind> <outcome> (...)`). */
-const DEAD_DOOR_LINE = /^\S+\/\S+ (BLOCKED|FAILED) \(/;
-/** An access control named on a door: the only thing that makes a dead door a wall. */
-const ACCESS_CONTROL_NAMED = /\b(HTTP )?(401|402|403|407|429|451)\b|challenge|captcha|login|sign[- ]in|paywall|rate[- ]limit|forbidden|authenticat/i;
-/** A robots.txt verdict named on a door. */
-const ROBOTS_VERDICT_NAMED = /\b(DISALLOWED|CANNOT_TELL)\b|robots\.txt|permission (was )?(denied|unknown)/i;
-
-/** Whether a dead door was recorded for robots.txt alone (no access control named). Such a door is not a wall, so the scout walks it. */
-export function isRobotsOnlyDeadDoor(line: string): boolean {
-  return DEAD_DOOR_LINE.test(line) && ROBOTS_VERDICT_NAMED.test(line) && !ACCESS_CONTROL_NAMED.test(line);
-}
-
-export function fieldManualBriefLines(projection: FieldManualProjection): string[] {
-  if (projection.total === 0) return [];
-  if (projection.entryIds.length === 0) {
-    return [`FIELD MANUAL (${projection.total} entries): none apply to this jurisdiction/record class yet — you are opening a new branch.`];
-  }
-  const dead = projection.lines.some((l) => DEAD_DOOR_LINE.test(l));
-  return [
-    `FIELD MANUAL — ${projection.entryIds.length} inherited door(s) of ${projection.total}; walk what already worked before novelty, and do not rebuild a door already listed here:`,
-    ...(dead
-      ? [
-          "  A BLOCKED or FAILED door is a wall only when an access control stopped it (a login or 401, a paywall, a 403 or bot challenge, a 429): never bypass it, walk another public route. " +
-            "A door recorded dead for robots.txt alone is NOT a wall: robots.txt is recorded and never refuses a public page (owner decision 2026-09-25), so walk it.",
-        ]
-      : []),
-    ...projection.lines.map((l) => `  • ${l}${isRobotsOnlyDeadDoor(l) ? " [robots.txt only — not a wall; walk it]" : ""}`),
-  ];
-}
-
-/**
- * A scout's grounded candidates, as field-manual entries to write back live.
- * Only candidates the Attempt actually opened become YIELDED doors; the store's
- * own upsert dedups by id so a re-discovery refreshes rather than forks.
- */
-export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly string[], pages: readonly SavedDoorPage[] = []): FieldManualEntry[] {
-  const rejected = new Set((result.sourceDeadEnds ?? []).map(source => source.artifactId));
-  const discoveries: FieldManualEntry[] = (result.refusal === null ? result.candidates : []).filter(c =>
-    !c.evidenceArtifactIds.some(id => rejected.has(id))).map((c: ScoutCandidate) => ({
-    id: fieldManualEntryId(SCOUT_DISCOVERY_SOURCE, `${result.subjectId}:${c.routeId}`),
-    role: "SCOUT",
-    kind: "SCOUT_DISCOVERY",
-    title: c.title,
-    summary: `${c.procedure} — ${c.relevance}`.slice(0, 300),
-    states: [...stateHint],
-    recordClasses: [c.recordClass],
-    platforms: [],
-    foundBy: result.researchRole === "DETECTIVE" ? "DETECTIVE" : "SCOUT",
-    outcome: "YIELDED",
-    url: c.url,
-    source: SCOUT_DISCOVERY_SOURCE,
-    observedAt: (result.recordedAt ?? "").slice(0, 10) || null,
-    tier: null,
-    payload: {
-      routeId: c.routeId,
-      url: c.url,
-      procedure: c.procedure,
-      permission: c.permission,
-      recordClass: c.recordClass,
-      obligationId: result.obligationId,
-      subjectId: result.subjectId,
-      attemptId: result.attemptId,
-      evidenceArtifactIds: c.evidenceArtifactIds,
-    },
-  }));
-  const methods = discoveries.flatMap(door => doorMethodEntries(door, pages));
-  const stamped = discoveries.map(door => ({ ...door, platforms: methods.filter(method =>
-    (method.payload as { doorEntryIds: string[] }).doorEntryIds.includes(door.id)).flatMap(method => method.platforms) }));
-  return [...stamped, ...methods, ...scoutJobCostEntries(result), ...exhaustedRungEntries(result, stateHint), ...(result.sourceDeadEnds ?? []).map(source => ({
-    id: fieldManualEntryId('source-dead-end', `${result.subjectId}:${result.recordClass}:${source.url}`),
-    role: 'SHARED' as const, kind: 'SOURCE_DEAD_END', title: `Historical source: ${source.url}`,
-    summary: `${source.sourceDate ?? 'Unknown source date'}: ${source.reason}`.slice(0, 300),
-    states: [...stateHint], recordClasses: [result.recordClass], platforms: [], outcome: 'FAILED' as const,
-    url: source.url, source: 'source-dead-end', observedAt: result.recordedAt, tier: null,
-    payload: { ...source, subjectId: result.subjectId, recordClass: result.recordClass, attemptId: result.attemptId },
-  }))];
-}
-
-/** Every route id the manual already holds; a newly built candidate matching one is a rebuilt-existing defect. */
-export function knownRouteIds(store: FieldManualStore): ReadonlySet<string> {
-  const ids = new Set<string>();
-  for (const e of store.entries) {
-    const p = e.payload as { routeId?: unknown; id?: unknown } | null | undefined;
-    const rid = typeof p?.routeId === "string" ? p.routeId : typeof p?.id === "string" ? p.id : null;
-    if (rid) ids.add(rid);
-  }
-  return ids;
-}
-
-/** The reported pair for one walk: inherited doors offered, newly built, and any rebuilt-existing defect. */
-export interface CompoundingPair {
-  readonly inheritedCount: number;
-  readonly newlyBuilt: number;
-  readonly rebuiltExisting: readonly string[];
-}
-
-export function compoundingPair(
-  inheritedCount: number,
-  result: ScoutResult,
-  known: ReadonlySet<string>,
-): CompoundingPair {
-  const rebuilt = result.candidates.map((c) => c.routeId).filter((id) => known.has(id));
-  return { inheritedCount, newlyBuilt: result.candidates.length, rebuiltExisting: rebuilt };
-}
-
-/** A URL or route id, compared loosely: host case, a trailing slash and a fragment never make two doors different. */
-function doorKey(value: string): string {
-  const trimmed = value.trim();
-  try {
-    const u = new URL(trimmed);
-    return `${u.protocol}//${u.host.toLowerCase()}${u.pathname.replace(/\/+$/, "")}${u.search}`;
-  } catch {
-    return trimmed;
-  }
-}
-
-/** Which inherited doors the walk actually went through: only a successful machine-recorded rung on the URL or route id counts, once per door. */
-export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly string[], store: FieldManualStore): string[] {
-  if (handedIds.length === 0) return [];
-  const walked = new Set<string>(result.rungs.filter(rung => rung.ok === true &&
-    ["fetch_public", "browse"].includes(rung.tool)).flatMap(rung => [doorKey(rung.target), doorKey(rung.rung)]));
-  const byId = new Map(store.entries.map((e) => [e.id, e] as const));
-  const creditedDoors = new Set<string>();
-  return handedIds.filter((id) => {
-    const entry = byId.get(id);
-    if (entry === undefined) return false;
-    const routeId = (entry.payload as { routeId?: unknown } | null | undefined)?.routeId;
-    const urlKey = typeof entry.url === "string" && entry.url !== "" ? doorKey(entry.url) : null;
-    const routeKey = typeof routeId === "string" && routeId !== "" ? doorKey(routeId) : null;
-    const matched = [urlKey, routeKey].find((key): key is string => key !== null && walked.has(key));
-    if (!matched) return false;
-    const door = urlKey ?? routeKey ?? matched;
-    if (creditedDoors.has(door)) return false;
-    creditedDoors.add(door);
-    return true;
-  });
-}
-
-export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string) {
-  const fingerprints = await readFieldManual(repos, { kinds: ["PLATFORM_FINGERPRINT"], everywhere: true });
-  const methods = entries.flatMap(door => doorMethodEntries(door, [], fingerprints.store.entries));
-  return writeFieldManual(repos, foldEntries([...entries, ...methods]), now);
-}
-
-/** Record in the fix map, at each of the walk's places, what it did with the methods it opened from its page; the words of a failure, or null. */
-export async function recordScoutMethods(repos: Pick<ControlPlaneRepositories, "fixMap" | "adminConfig">, result: ScoutResult,
-  handed: FieldManualStore, divisions: readonly string[] = []): Promise<string | null> {
-  const places = scoutPlaces(result.subjectId, divisions);
-  if (places.length === 0) return null;
-  const methods = new Set(handed.entries.filter(isTransferableMethod).map((entry) => entry.id));
-  const titles = new Map(handed.entries.map((entry) => [entry.id, entry.title] as const));
-  const attempts = places.map((place) => {
-    const attempt = attemptFromScoutResult(result, place);
-    return { ...attempt, methodIds: attempt.methodIds.filter((id) => methods.has(id)) };
-  });
-  const done = await recordAttemptsKeepingHistory(repos.fixMap, repos, attempts, (id) => titles.get(id) ?? null);
-  return done.failed > 0 ? `the fix map was not updated for ${done.failed} method result(s)` : null;
 }

@@ -231,8 +231,8 @@ const waiting = Object.fromEntries(SECTION_IDS.map((id) => [id, { phase: "waitin
 
 test("with nothing announced, the production bundle is real reference data plus waiting states — no zeros, no samples", () => {
   const b = buildLiveBundle(waiting, ref, workerStatusFromPulse(null));
-  assert.equal(b.checklist.data?.definitionCount, 325, "all 325 definitions stay in scope");
-  assert.equal(checklistDefinitions().length, 325);
+  assert.equal(b.checklist.data?.definitionCount, 327, "all 327 definitions stay in scope");
+  assert.equal(checklistDefinitions().length, 327);
   assert.equal(b.places.data?.filter((p) => p.kind === "State").length, 56);
   assert.ok(b.national.data?.every((r) => r.hunts === null && r.stuck === null && r.checklistItems === null), "unknown national figures are null, never 0");
   for (const id of ["stuck", "results", "money", "fixes", "scoreboard", "history", "hunts"] as const) {

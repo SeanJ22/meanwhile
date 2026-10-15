@@ -1,9 +1,7 @@
 import { createHash } from "node:crypto";
 import { FRESHNESS_WINDOW_HOURS } from "../control-plane/promotion/section3.ts";
-import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { recordSourceDisposition, retireSourceDoors } from "./source-capture.ts";
+import { retireSourceDoors } from "./source-capture.ts";
 import { classifySourceContent, SOURCE_FAMILIES } from "./source-content.ts";
-import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { MAX_CHECK_MINUTES, MIN_CHECK_MINUTES, normalizeHost, upsertDerivedDoor, isDoorRecord, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 export const PAGE_DOOR_KIND = "page";
@@ -100,48 +98,8 @@ export async function recordPublishedPages(repo: DoorRepository, pages: readonly
   return recordPages(repo, pages, now, true);
 }
 
-/** The sources a recorded Scout or detective result found: each candidate's page, with what it was found for. */
-export function foundPages(result: ScoutResult): PublishedPage[] {
-  if (result.refusal !== null || !Array.isArray(result.candidates)) return [];
-  const foundBy = finderOfRole(result.researchRole);
-  return result.candidates.flatMap((candidate) => typeof candidate?.url === "string"
-    ? [{ url: candidate.url, retrievedAt: result.recordedAt, recordClass: candidate.recordClass || result.recordClass, bodyId: null, ocdId: divisionOfPage(result.subjectId), workItemId: result.workItemId, foundBy }]
-    : []);
-}
-
-type SourceCaptureReader = (id: string) => Promise<{ canonicalUrl: string; text: string; contentType?: string }>;
 export function namesOfDivision(id: string | null | undefined): string[] {
   return id?.split("/").slice(3).map(part => part.split(":").slice(1).join(":").split("#")[0]!.replace(/[_-]/g, " ")) ?? [];
-}
-export async function recordFoundSources(repos: Pick<ControlPlaneRepositories, "doors" | "fieldManual">, results: readonly ScoutResult[], now: string, readCapture: SourceCaptureReader): Promise<PageDoorsResult> {
-  const pages: PublishedPage[] = [];
-  const seen = new Set<string>();
-  for (const result of results) for (const page of foundPages(result)) {
-    const address = pageAddress(page.url);
-    if (!address || seen.has(address.url)) continue;
-    seen.add(address.url);
-    const names = namesOfDivision(result.subjectId);
-    let captured = false;
-    const candidate = result.candidates.find(candidate => candidate.url === page.url)!;
-    for (const id of candidate.evidenceArtifactIds) {
-      try {
-        const capture = await readCapture(id);
-        if (pageAddress(capture.canonicalUrl)?.url !== pageAddress(page.url)?.url) continue;
-        const content = { text: capture.text, contentType: capture.contentType ?? "", names };
-        const disposition = classifySourceContent({ url: page.url, ...content, owed: SOURCE_FAMILIES });
-        await recordSourceDisposition(repos, { url: address.url, ocdId: page.ocdId ?? result.subjectId,
-          state: /\/state:([a-z]{2})/.exec(result.subjectId)?.[1] ?? "us", names, disposition }, id, now);
-        pages.push({ ...page, content });
-        captured = true;
-        break;
-      } catch { /* An unread capture cannot establish a publishing source. */ }
-    }
-    if (!captured) await recordSourceDisposition(repos, { url: address.url, ocdId: page.ocdId ?? result.subjectId,
-      state: /\/state:([a-z]{2})/.exec(result.subjectId)?.[1] ?? "us", names,
-      disposition: { kind: "SKIP", family: null, recordClass: null, belongs: false, quote: "", reason: "Target content is not held; a linking page is not evidence of what it holds" } }, null, now);
-  }
-  const counts = await recordPages(repos.doors, pages, now, false);
-  return { ...counts, skipped: counts.skipped + results.flatMap(foundPages).length - pages.length };
 }
 
 async function recordPages(repo: DoorRepository, pages: readonly PublishedPage[], now: string, worked: boolean): Promise<PageDoorsResult> {

@@ -1,5 +1,5 @@
 /**
- * The discovery search seam over Brave and Exa (`scheduler/scout-search.ts`),
+ * The discovery search seam over Brave and Exa (`hunt/search.ts`),
  * pointers only. Every provider request is admitted first by the cycle's search
  * cap, a per-day cap across both providers in the durable shared budget ledger
  * (vendor `discovery-search`), and FleetSafety on its own provider key.
@@ -12,12 +12,12 @@
 import type { BudgetLedger, HostBudget, VendorBudget } from "../budget.ts";
 import { createLedger, tryAcquire, release } from "../budget.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import type { SearchHit } from "../scheduler/scout-contract.ts";
-import { braveSearch, exaSearch, SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../scheduler/scout-search.ts";
+import type { SearchHit } from "../../hunt/search.ts";
+import { braveSearch, exaSearch, SEARCH_HOSTS, SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../../hunt/search.ts";
 import type { DiscoverySearch, SearchRequestRecord } from "./meetings-discovery-executor.ts";
 
 export const DISCOVERY_SEARCH_VENDOR = "discovery-search";
-export const SEARCH_HOSTS = { brave: "api.search.brave.com", exa: "api.exa.ai" } as const;
+export { SEARCH_HOSTS };
 /** Conservative starting caps; shown on the dial. */
 export const DEFAULT_SEARCH_BUDGET = { perCycle: 50, perDay: 200 } as const;
 /** Time allowed per query for the budget ledger's admission and release calls, on top of the provider requests. */

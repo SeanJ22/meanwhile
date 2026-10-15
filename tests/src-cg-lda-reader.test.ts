@@ -4,16 +4,19 @@ import { createServer } from "node:http";
 import { mkdir } from "node:fs/promises";
 import { build } from "esbuild";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { normalizeFederalCaptureWithRoster } from "../lib/sources/congress/normalize.ts";
 import { publishFederalPartition } from "../lib/sources/congress/publication.ts";
 import { readFederalMember } from "../lib/sources/congress/reader.ts";
 import { launchGuarded } from "../scripts/browser.mts";
 import { ldaHonoreeCaptures, seedSrcCgRoster, SRC_CG_NOW } from "./helpers/src-cg-roster.ts";
 
+const vault = new MemoryEvidenceStore();
+
 test("a real joined LDA filing reaches the hydrated member card and its single Sources footer", async () => {
-  const store = new MemoryRoutineDataStore(), roster = await seedSrcCgRoster(store);
+  const store = new MemoryRoutineDataStore(), roster = await seedSrcCgRoster(store, vault);
   const capture = { ...ldaHonoreeCaptures()[0], context: { honoreeRosterVersionId: roster.versionId } };
-  await publishFederalPartition({ source: "senate-lda", partition: "congress:C001056", store, now: SRC_CG_NOW, captures: [capture], records: normalizeFederalCaptureWithRoster(capture, roster) });
+  await publishFederalPartition({ vault, source: "senate-lda", partition: "congress:C001056", store, now: SRC_CG_NOW, captures: [capture], records: normalizeFederalCaptureWithRoster(capture, roster) });
   const member = await readFederalMember("congress:C001056", { store, now: SRC_CG_NOW });
   const output = await build({ stdin: { contents: `
     import React from "react";import {createRoot} from "react-dom/client";

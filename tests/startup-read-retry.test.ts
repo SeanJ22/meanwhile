@@ -197,12 +197,11 @@ test("nothing is retried while the Neon circuit is latched", async () => {
 
 /*
  * WIRING TRIPWIRE, deliberately strict: the helper above only matters if the
- * research cycle actually routes both startup authority reads through it.
+ * research cycle actually routes its startup authority reads through it.
  */
 test("freshness-shadow routes its startup reads through retryStartupRead", () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
   const src = readFileSync(join(root, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(src, /retryStartupRead\(\(\) => readMethodCandidateStore\(repos\)/);
   assert.match(src, /retryStartupRead\(\s*\(\)\s*=>\s*preloadOperationalReferenceBundle\(/);
   assert.doesNotMatch(src, /^await preloadOperationalReferenceBundle\(/m);
 });

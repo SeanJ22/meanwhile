@@ -3,25 +3,27 @@ import { civicRecordsFor } from "../../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_PARSER_VERSION, GOOGLE_CIVIC_RECORD_CLASS, GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import { assertCivicProjection, civicElectionRows, civicLookupFromRaw, type CivicProjection } from "./model.ts";
+import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
+import { holdRawCapture } from "../../civic-data/raw-capture-vault.ts";
 
-export function civicCandidate(scope: string, projection: CivicProjection, rawBodies: readonly string[], route: "elections" | "voterinfo"): RoutineCandidate {
+export async function civicCandidate(vault: EvidenceStore, scope: string, projection: CivicProjection, raw: string, route: "elections" | "voterinfo"): Promise<RoutineCandidate> {
   assertCivicProjection(projection);
   const checkedAt = projection.checkedAt;
-  if (rawBodies.length !== 1) throw new Error("A Google Civic projection requires its exact saved source response.");
   const joined = new Set(projection.rows.flatMap(row => row.joinedDivisionId ?? []));
   const sourceRows = projection.kind === "LOOKUP"
-    ? civicLookupFromRaw(rawBodies[0], projection.electionId, checkedAt, joined).rows
-    : civicElectionRows(rawBodies[0], checkedAt, joined);
+    ? civicLookupFromRaw(raw, projection.electionId, checkedAt, joined).rows
+    : civicElectionRows(raw, checkedAt, joined);
   if (normalizedHash(sourceRows) !== normalizedHash(projection.rows)) throw new Error("Google Civic facts differ from the saved source response.");
   const records = civicRecordsFor(GOOGLE_CIVIC_RECORD_CLASS, projection);
   // Saved public-source evidence only; transient reader lookups never enter publication.
-  const normalizedPayload = { projection, rawBodies };
-  const rawHash = sha256(rawBodies.map(sha256).join("\n"));
+  const rawCapture = await holdRawCapture(vault, GOOGLE_CIVIC_SOURCE_ID, raw, "application/json");
+  const normalizedPayload = { projection, rawCapture };
+  const rawHash = sha256(rawCapture.rawHash);
   return {
     id: `cv-${sha256(`${scope}:${rawHash}:${checkedAt}:${normalizedHash(projection)}`).slice(0, 32)}`,
     sourceId: GOOGLE_CIVIC_SOURCE_ID, recordClass: GOOGLE_CIVIC_RECORD_CLASS, scope,
     sourceProjectionEvidence: sourceProjectionEvidence(GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_RECORD_CLASS, scope),
-    retrieval: { succeeded: rawBodies.length > 0, requestedUrl: `${GOOGLE_CIVIC_API}${route}`, finalUrl: `${GOOGLE_CIVIC_API}${route}`,
+    retrieval: { succeeded: true, requestedUrl: `${GOOGLE_CIVIC_API}${route}`, finalUrl: `${GOOGLE_CIVIC_API}${route}`,
       httpStatus: 200, retrievedAt: checkedAt, rawHash },
     normalization: { succeeded: true, parserVersion: GOOGLE_CIVIC_PARSER_VERSION, schemaVersion: "google-civic/1",
       normalizedHash: normalizedHash(projection), normalizedPayloadHash: normalizedHash(normalizedPayload),
@@ -40,10 +42,11 @@ export function failureCandidate(scope: string, reason: string, at: string): Rou
     requestedUrl: `${GOOGLE_CIVIC_API}voterinfo`, attemptedAt: at, failureDetail: reason, parserVersion: GOOGLE_CIVIC_PARSER_VERSION });
 }
 
-export function parseFailureCandidate(scope: string, raw: string, reason: string, at: string): RoutineCandidate {
+export async function parseFailureCandidate(vault: EvidenceStore, scope: string, raw: string, reason: string, at: string): Promise<RoutineCandidate> {
   const base = failureCandidate(scope, reason, at);
-  return { ...base, id: `cv-${sha256(`${scope}:${sha256(raw)}:${at}:parse-failure`).slice(0, 32)}`,
-    retrieval: { ...base.retrieval, succeeded: true, finalUrl: `${GOOGLE_CIVIC_API}voterinfo`, httpStatus: 200, rawHash: sha256(raw) },
-    normalization: { ...base.normalization, normalizedPayloadHash: normalizedHash({ raw }), failureDetail: reason },
-    normalizedPayload: { raw } };
+  const rawCapture = await holdRawCapture(vault, GOOGLE_CIVIC_SOURCE_ID, raw, "application/json");
+  return { ...base, id: `cv-${sha256(`${scope}:${rawCapture.rawHash}:${at}:parse-failure`).slice(0, 32)}`,
+    retrieval: { ...base.retrieval, succeeded: true, finalUrl: `${GOOGLE_CIVIC_API}voterinfo`, httpStatus: 200, rawHash: rawCapture.rawHash },
+    normalization: { ...base.normalization, normalizedPayloadHash: normalizedHash({ rawCapture }), failureDetail: reason },
+    normalizedPayload: { rawCapture } };
 }

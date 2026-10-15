@@ -16,8 +16,6 @@ import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/c
 import { methodStandings } from "../lib/control-plane/fix-standing.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
-import { recordScoutMethods, scoutFieldManualQuery } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { plainTrier, replayUrl } from "../lib/method/method-try.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { memoryWebsitePacing, type WebsitePacing } from "../lib/control-plane/website-pacing.ts";
@@ -159,20 +157,6 @@ test("a method that is not a plain request is checked for its platform and left 
   assert.equal((await repos.fixMap.forPlace(MORRIS))[0]!.attemptId, SPREAD_ATTEMPT.PLAIN_TRIED, "outside a Send, no paid try");
   const page = await readFieldManual(repos, { role: "SCOUT", ocdIds: [MARICOPA] });
   assert.match(page.projection.lines.find((l) => l.includes("hydration"))!, /\[untried here: try it and record the result; worked in pima AZ\]/);
-});
-
-test("a Scout whose subject is not a division reads and records at the divisions its obligation covers, so the spread has somewhere to start", async () => {
-  const repos = createMemoryRepositories();
-  const method = newFieldManualEntry("door-method", "legistar|meetings|get", { role: "SHARED", kind: "METHOD", title: "legistar: meetings", summary: "GET {door}",
-    outcome: "YIELDED", platforms: ["legistar"], recordClasses: ["meetings"], observedAt: NOW, payload: { procedure: "GET {door}" } });
-  const subjectId = "az:2026:state-az-sldl-7:state-representative-district-7:someone";
-  assert.deepEqual(scoutFieldManualQuery({ subjectId, divisions: [MARICOPA, "not-a-division"] }).ocdIds, [MARICOPA]);
-  const result = { attemptId: "at-1", outcome: "ROUTE_CANDIDATE", refusal: null, researchRole: "SCOUT", unverified: [], recordedAt: NOW, subjectId,
-    knowledgeReads: [{ kind: "MANUAL_ENTRY", id: method.id, contentHash: "h", offset: 0, length: 1 }] } as unknown as ScoutResult;
-  assert.equal(await recordScoutMethods(repos, result, { entries: [method] }, [MARICOPA]), null);
-  assert.equal((await repos.fixMap.forPlace(MARICOPA))[0]!.state, "WORKS");
-  assert.equal(await recordScoutMethods(repos, { ...result, attemptId: "at-2" }, { entries: [method] }), null, "no division, nothing recorded");
-  assert.equal((await repos.fixMap.workingMethods(10)).length, 1);
 });
 
 test("a small publisher gets at most ten requests an hour, counted with every other reader; robots.txt is read once per website", async () => {

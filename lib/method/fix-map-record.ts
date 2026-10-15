@@ -3,7 +3,6 @@
  * failed write is counted and returned, never thrown into the attempt it describes.
  */
 
-import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { applyFixResult, latestWorking, methodWorksOf, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
 
 export const ATTEMPT_KINDS = ["SCOUT", "DETECTIVE", "ROUTE_RUN", "ACQUIRER_VERDICT", "AUDIT"] as const;
@@ -79,24 +78,5 @@ export function memoryFixMap(): FixMapRepository & { readonly rows: () => readon
     worksFor: async (methodIds) => methodWorksOf([...rows.values()], methodIds),
     workingMethods: async (limit = 200) => latestWorking([...rows.values()], limit),
     put: async (row) => { rows.set(key(row), applyFixResult(rows.get(key(row)) ?? null, row)); },
-  };
-}
-
-/** A Scout's or detective's attempt: the manual entries it opened are the methods it used. */
-export function attemptFromScoutResult(
-  result: Pick<ScoutResult, "attemptId" | "outcome" | "refusal" | "knowledgeReads" | "researchRole" | "unverified" | "recordedAt">,
-  placeId: string,
-): MethodAttempt {
-  const succeeded = result.outcome === "ROUTE_CANDIDATE" || result.outcome === "EVIDENCE_FOUND";
-  const failed = result.outcome === "NO_PROGRESS" || result.outcome === "BLOCKED";
-  const refused = result.refusal !== null;
-  return {
-    kind: result.researchRole === "DETECTIVE" ? "DETECTIVE" : "SCOUT",
-    attemptId: result.attemptId,
-    placeId,
-    methodIds: (result.knowledgeReads ?? []).filter((read) => read.kind === "MANUAL_ENTRY").map((read) => read.id),
-    outcome: refused ? "INCONCLUSIVE" : succeeded ? "SUCCEEDED" : failed ? "FAILED" : "INCONCLUSIVE",
-    cause: failed ? (result.outcome === "BLOCKED" ? "an access control stood in the way" : result.unverified[0] ?? "the walk found nothing that advanced") : null,
-    at: result.recordedAt,
   };
 }

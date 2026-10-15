@@ -8,7 +8,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import {
-  DETECTIVE_SHUT_THRESHOLD_SETTING, meetingCheckInterval, readSetting, registerSetting, runnerSettingsEcho, SETTING_HISTORY_MAX,
+  meetingCheckInterval, readSetting, registerSetting, runnerSettingsEcho, SETTING_HISTORY_MAX,
   settingUndo, withSetting,
 } from "../lib/control-plane/settings.ts";
 import {
@@ -24,6 +24,10 @@ const at = "2026-10-04T06:00:00Z";
 const COPY_KEY = "copy.settingsTest";
 registerSetting({ key: COPY_KEY, label: "Empty section", defaultValue: "We're working on getting this info",
   readerFacing: true, validate: (value): value is string => typeof value === "string" && value.length < 500 });
+const RUNNER_KEY = "runner.settingsTest";
+registerSetting({ key: RUNNER_KEY, label: "Failures before a test pause", defaultValue: 3, unit: "failures in a row",
+  readerFacing: false, control: "number",
+  validate: (value): value is number => typeof value === "number" && Number.isSafeInteger(value) && value > 0 && value <= 100 });
 
 function depsAt(repos = createMemoryRepositories(), now = at) {
   return { repos, now: () => now, currentStateVersion: null, codeSha: null };
@@ -44,15 +48,15 @@ const beat = (settings: RunnerHeartbeat["settings"]): RunnerHeartbeat => ({ form
 
 test("settings gateway survives a fresh read, replays once and undoes through the same action", async () => {
   const deps = depsAt();
-  const request = { type: "config.setSetting", subject: DETECTIVE_SHUT_THRESHOLD_SETTING,
-    input: { key: DETECTIVE_SHUT_THRESHOLD_SETTING, value: 5, why: "Try more routes before escalating" },
+  const request = { type: "config.setSetting", subject: RUNNER_KEY,
+    input: { key: RUNNER_KEY, value: 5, why: "Try more routes before escalating" },
     stateVersion: null, idempotencyKey: "setting-first", caller: "OWNER_SESSION" as const, actorRef: "owner-session" };
   const first = await submit(request, deps);
   assert.equal(first.ok, true);
-  assert.equal(first.receipt.says, "Failures before a detective is sent is now 5 failures in a row.");
+  assert.equal(first.receipt.says, "Failures before a test pause is now 5 failures in a row.");
   assert.equal((await submit(request, deps)).replayed, true);
   const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
-  assert.equal(readSetting(config, DETECTIVE_SHUT_THRESHOLD_SETTING, 3), 5);
+  assert.equal(readSetting(config, RUNNER_KEY, 3), 5);
   assert.equal(config.settingHistory?.length, 1);
   assert.equal(config.settingHistory?.[0].before, 3);
   assert.equal(config.settingHistory?.[0].at, at);
@@ -60,7 +64,7 @@ test("settings gateway survives a fresh read, replays once and undoes through th
   const undo = settingUndo(config, config.settingHistory![0].id)!;
   assert.equal((await submit({ ...request, input: undo, idempotencyKey: "setting-undo" }, deps)).ok, true);
   const undone = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
-  assert.equal(readSetting(undone, DETECTIVE_SHUT_THRESHOLD_SETTING, 3), 3);
+  assert.equal(readSetting(undone, RUNNER_KEY, 3), 3);
   assert.equal(undone.settingHistory?.[1].before, 5);
   assert.equal(undone.settingHistory?.[1].undoOf, config.settingHistory![0].id);
   assert.equal(undone.apiFallback.enabled, false);
@@ -69,12 +73,12 @@ test("settings gateway survives a fresh read, replays once and undoes through th
 
 test("a note is optional; unknown keys, invalid values and agents cannot change settings", async () => {
   const deps = depsAt();
-  const noNote = await submit({ type: "config.setSetting", subject: DETECTIVE_SHUT_THRESHOLD_SETTING, input: { key: DETECTIVE_SHUT_THRESHOLD_SETTING, value: 4 },
+  const noNote = await submit({ type: "config.setSetting", subject: RUNNER_KEY, input: { key: RUNNER_KEY, value: 4 },
     stateVersion: null, idempotencyKey: "no-note-key", caller: "OWNER_SESSION", actorRef: "test" }, deps);
   assert.equal(noNote.ok, true);
   const fresh = depsAt();
-  for (const [key, value, caller] of [["spend.limit", 100, "OWNER_SESSION"], [DETECTIVE_SHUT_THRESHOLD_SETTING, 0, "OWNER_SESSION"],
-    [DETECTIVE_SHUT_THRESHOLD_SETTING, 1.5, "OWNER_SESSION"], [DETECTIVE_SHUT_THRESHOLD_SETTING, 8, "AGENT"]] as const) {
+  for (const [key, value, caller] of [["spend.limit", 100, "OWNER_SESSION"], [RUNNER_KEY, 0, "OWNER_SESSION"],
+    [RUNNER_KEY, 1.5, "OWNER_SESSION"], [RUNNER_KEY, 8, "AGENT"]] as const) {
     const result = await submit({ type: "config.setSetting", subject: key, input: { key, value, why: "test" },
       stateVersion: null, idempotencyKey: `invalid-${key}-${value}`, caller, actorRef: "test" }, fresh);
     assert.equal(result.ok, false);
@@ -88,13 +92,13 @@ test("a note is optional; unknown keys, invalid values and agents cannot change 
 test("the runner re-reads each pass and its heartbeat echo shows the new value in force", async () => {
   const deps = depsAt();
   const before = runnerSettingsEcho(null, at);
-  assert.equal(before.values[DETECTIVE_SHUT_THRESHOLD_SETTING], 3);
+  assert.equal(before.values[RUNNER_KEY], 3);
   assert.equal(before.values[COPY_KEY], undefined, "reader-facing keys are not the runner's");
-  await submit({ type: "config.setSetting", subject: DETECTIVE_SHUT_THRESHOLD_SETTING, input: { key: DETECTIVE_SHUT_THRESHOLD_SETTING, value: 6, why: "" },
+  await submit({ type: "config.setSetting", subject: RUNNER_KEY, input: { key: RUNNER_KEY, value: 6, why: "" },
     stateVersion: null, idempotencyKey: "six-failures", caller: "OWNER_SESSION", actorRef: "test" }, deps);
   const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
   const row = (heartbeat: RunnerHeartbeat | null) => projectSettings({ config, heartbeat, published: null, observedAt: at }).rows
-    .find((r) => r.key === DETECTIVE_SHUT_THRESHOLD_SETTING)!;
+    .find((r) => r.key === RUNNER_KEY)!;
   assert.deepEqual(row(null).inForce, { where: "runner", yes: null, since: null });
   assert.equal(inForceWords(row(null)).words, "Runner hasn't reported it yet");
   assert.equal(row(beat(before)).inForce.yes, false, "the last pass still ran on the old value");
@@ -115,7 +119,7 @@ test("reader settings publish only public values, purge on replay, cannot regres
   const config = withSetting(defaultAdminConfig(at), { id: "copy-one", key: COPY_KEY, after: "Working on it", at, why: "Plain words" });
   assert.equal(await publishReaderSettings(config, 2, { store, purge }), true);
   assert.equal(await readReaderSetting(COPY_KEY, "fallback", store), "Working on it");
-  assert.equal(await readReaderSetting(DETECTIVE_SHUT_THRESHOLD_SETTING, 3, store), 3, "runner keys never reach readers");
+  assert.equal(await readReaderSetting(RUNNER_KEY, 3, store), 3, "runner keys never reach readers");
   assert.equal(await publishReaderSettings(config, 2, { store, purge }), true);
   assert.equal(purges, 2);
   assert.equal(await publishReaderSettings(defaultAdminConfig(at), 1, { store, purge }), false);
@@ -133,7 +137,7 @@ test("reader settings publish only public values, purge on replay, cannot regres
 
 test("the log keeps the newest changes only, and the newest can always be undone", () => {
   let config: AdminConfig = defaultAdminConfig(at);
-  for (let n = 0; n < SETTING_HISTORY_MAX + 5; n++) config = withSetting(config, { id: `c${n}`, key: DETECTIVE_SHUT_THRESHOLD_SETTING, after: (n % 9) + 1, at, why: "" });
+  for (let n = 0; n < SETTING_HISTORY_MAX + 5; n++) config = withSetting(config, { id: `c${n}`, key: RUNNER_KEY, after: (n % 9) + 1, at, why: "" });
   assert.equal(config.settingHistory?.length, SETTING_HISTORY_MAX);
   assert.ok(settingUndo(config, `c${SETTING_HISTORY_MAX + 4}`));
   assert.equal(settingUndo(config, `c${SETTING_HISTORY_MAX + 3}`), null);
@@ -169,22 +173,22 @@ test("BR-06: changing the daily budget and pressing Undo restores the old value;
 test("the Settings view's sends carry the exact gateway input, with no machine key on screen", async () => {
   const deps = depsAt();
   const view = projectSettings({ config: null, heartbeat: null, published: null, observedAt: at });
-  const row = view.rows.find((r) => r.key === DETECTIVE_SHUT_THRESHOLD_SETTING)!;
+  const row = view.rows.find((r) => r.key === RUNNER_KEY)!;
   for (const r of view.rows) assert.doesNotMatch(`${r.label} ${r.valueWords}`, /\w+\.\w+[A-Z]/, "labels are words, not keys");
   const [change] = settingActions(row);
   assert.equal(change.kind, "setting-set");
   assert.equal(actionDef("setting-set").gateway?.type, "config.setSetting");
   const input = actionInput("setting-set", { target: change.target, scopeKey: "us", option: null, words: " Fewer walks ", amount: "7", selected: [], payload: change.payload });
-  assert.deepEqual(input, { key: DETECTIVE_SHUT_THRESHOLD_SETTING, value: 7, why: "Fewer walks" });
+  assert.deepEqual(input, { key: RUNNER_KEY, value: 7, why: "Fewer walks" });
   assert.equal((await submit({ type: "config.setSetting", subject: change.target, input, stateVersion: null, idempotencyKey: "ui-change-seven", caller: "OWNER_SESSION", actorRef: "t" }, deps)).ok, true);
   const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
-  const changed = projectSettings({ config, heartbeat: null, published: null, observedAt: at }).rows.find((r) => r.key === DETECTIVE_SHUT_THRESHOLD_SETTING)!;
+  const changed = projectSettings({ config, heartbeat: null, published: null, observedAt: at }).rows.find((r) => r.key === RUNNER_KEY)!;
   const undo = settingActions(changed)[1];
   assert.equal(undo.kind, "setting-undo");
   assert.equal(undo.label, "Undo (back to 3 failures in a row)");
   const undoInput = actionInput("setting-undo", { target: undo.target, scopeKey: "us", option: null, words: "", amount: "", selected: [], payload: undo.payload });
   assert.equal((await submit({ type: "config.setSetting", subject: undo.target, input: undoInput, stateVersion: null, idempotencyKey: "ui-undo-seven", caller: "OWNER_SESSION", actorRef: "t" }, deps)).ok, true);
-  assert.equal(readSetting((await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value, DETECTIVE_SHUT_THRESHOLD_SETTING, 3), 3);
+  assert.equal(readSetting((await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value, RUNNER_KEY, 3), 3);
   assert.equal(gatewayActionKind("config.setSetting"), "setting-set", "history maps setting receipts to their own kind");
   assert.equal(settingValueFromInput("number", "x", null), undefined);
   assert.equal(settingValueFromInput("boolean", "", "on"), true);

@@ -1,0 +1,26 @@
+{
+  "n": 42,
+  "branch": "release/42",
+  "river_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+  "tested_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+  "steps": [
+    "R3-NOVUS",
+    "R3-PRIMEGOV",
+    "R3-SWAGIT",
+    "R0"
+  ],
+  "lanes": [
+    "hunter-v2",
+    "platform-novusagenda",
+    "platform-primegov",
+    "platform-swagit",
+    "road"
+  ],
+  "integration_from": 219,
+  "integration_count": 224,
+  "pr": {
+    "number": 751,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/751"
+  },
+  "at": "2026-10-15T16:10:26Z"
+}

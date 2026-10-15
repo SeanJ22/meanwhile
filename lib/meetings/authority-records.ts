@@ -136,11 +136,15 @@ export async function readAuthorityRecords(index: RecordIndex, store: ReaderArti
     for (const key of ref.path.slice(0, -1)) parent = parent[key] as Record<string | number, unknown>;
     parent[ref.path.at(-1)!] = value;
   }
+  const heldOrListed = (set: unknown) => {
+    const { contests, heldContests } = (set ?? {}) as { contests?: unknown[]; heldContests?: unknown[] };
+    return Boolean(contests?.length || heldContests?.length);
+  };
   // Sparse array positions preserve references while reconstructing, then ordinary collections keep their original order.
   const compact = (row: unknown, field = ""): unknown => {
     if (Array.isArray(row)) return field === "containers" ? row : row.filter(child => child !== undefined).map(child => compact(child));
     if (row && typeof row === "object") return Object.fromEntries(Object.entries(row)
-      .filter(([, child]) => !selection || field !== "ballots" || (child as { contests?: unknown[] })?.contests?.length)
+      .filter(([, child]) => !selection || field !== "ballots" || heldOrListed(child))
       .map(([key, child]) => [key, compact(child, key)]));
     return row;
   };

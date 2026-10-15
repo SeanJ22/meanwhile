@@ -1,5 +1,15 @@
 # Returned: platform-municode
 
+Cleanliness findings on R3-MUNICODE (25e501e90, folded as e18f8699e). Fix in your next READY:
+Exports nothing outside their own file imports (unexport; tests count only for the last three):
+   lib/meetings/shared-fetch.ts:5 MeetingFetchPass
+   lib/sources/municode/index.ts:10 MunicodeMeeting
+   lib/sources/municode/index.ts:23 MUNICODE_MAX_PAGES
+   lib/sources/municode/index.ts:90 municodeNextPage
+Fixtures nothing references: tests/fixtures/municode/bremerton.meta.json, hideout.html, hideout.meta.json, manor.meta.json.
+A new code file nothing imports: scripts/municode-scale.mts (wire it into package.json or delete it).
+
+
 lane: platform-municode
 owner: platform-municode
 writer: the platform-municode lane

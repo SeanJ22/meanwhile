@@ -1,4 +1,4 @@
-/** Republishes every pointed version that still embeds source bodies as a successor that holds vault references. */
+/** The runner's one-time child: republishes every pointed version that still embeds source bodies as one holding vault references. */
 import { pathToFileURL } from "node:url";
 import { publishPeopleSource, readPeopleSourceProjection, peopleJurisdiction } from "../lib/civic-data/people-source-publication.ts";
 import { publishStatePeople, type StatePeopleAcquisition } from "../lib/civic-data/state-people-publication.ts";
@@ -14,6 +14,8 @@ import { readOpenStatesPeopleProjection } from "../lib/state-rollcalls/legislato
 import { pluralVotesCandidate, pluralVotesContract, readPluralVotesProjection, type PluralBillEvidence, type PluralVotesProjection } from "../lib/sources/plural/votes.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { captureConversionLine } from "../lib/civic-data/capture-conversion.ts";
 
 const PEOPLE_SOURCES = ["official-state-people", "statewide-executive-sources", "congress-api"] as const;
 /* Facts the builders derive again from the roster and gaps; carrying them would list them twice. */
@@ -69,10 +71,9 @@ export async function convertEmbeddedCaptures(input: { store: RoutineDataStore; 
 }
 
 async function main() {
-  if (!process.argv.includes("--promote")) throw Error("Run with --promote.");
+  assertRuntimeAuthority({ capabilities: ["CAPTURE_CONVERSION"] });
   installNeonRequestDeadline(); prepareProductionCivicDataWrite();
   const converted = await convertEmbeddedCaptures({ store: new PostgresRoutineDataStore(), vault: rawCaptureVault(), now: () => new Date().toISOString() });
-  for (const row of converted) console.log(JSON.stringify(row));
-  if (converted.some(row => !row.to)) process.exitCode = 2;
+  for (const row of converted) console.log(captureConversionLine(row));
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main();

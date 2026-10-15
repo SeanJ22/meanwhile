@@ -1,3 +1,4 @@
+import { CAPTURE_CONVERSION_LOG_KEY, captureConversionRecord, captureConversionRecorded } from "../lib/civic-data/capture-conversion.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
 import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
@@ -675,6 +676,26 @@ if (!PUBLISH_NOW) {
     if (loaded.length) console.log(`fact store entities: loaded ${loaded.join(", ")}`);
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+  if (controlPlaneUrlFromEnv()) {
+    step = "converting held versions that embed source pages, once";
+    try {
+      const conversionRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
+      if (!await captureConversionRecorded(conversionRepos.ownerDigests)) {
+        const [run] = await runBoundedChildPass([{ id: CAPTURE_CONVERSION_LOG_KEY, failureDomain: "derived:capture-conversion",
+          executable: process.execPath, args: ["--experimental-strip-types", "scripts/convert-embedded-captures.mts"],
+          env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "CAPTURE_CONVERSION", parentPid: process.pid }),
+        }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
+        const at = new Date().toISOString(), record = run ? captureConversionRecord(run, at, RUNNING_CODE_SHA) : null;
+        if (record) {
+          await conversionRepos.ownerDigests.append(CAPTURE_CONVERSION_LOG_KEY, record.digestId, record, at);
+          console.log(`RCD_TASK routine-civic-data-runner: ${record.headline}`);
+        } else supervisorFailures.push({ taskId: CAPTURE_CONVERSION_LOG_KEY, code: "CAPTURE_CONVERSION_UNFINISHED",
+          detail: safeFailure(run?.errorMessage ?? run?.stderr.trim().split("\n").at(-1) ?? "no answer") });
+      }
+    } catch (error) {
+      supervisorFailures.push({ taskId: CAPTURE_CONVERSION_LOG_KEY, code: "CAPTURE_CONVERSION_UNFINISHED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+    }
   }
   step = "carrying the rosters, office contacts and comment rules readers already see onto facts";
   try {

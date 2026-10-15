@@ -262,6 +262,11 @@ export function routineDataStoreCandidateAuthorityIssue(
       ? null
       : `routine supervisor cannot mutate source candidate ${contract.id}`;
   }
+  // The one-time capture conversion republishes held people, vote and directory versions, and nothing else.
+  if (authority.capability === "CAPTURE_CONVERSION") {
+    return !hasAuthorityTransferMarker && (/^(?:people-|openstates-people-|openstates-votes-)/.test(contract.id) || contract.id === "congress-bulk-roster")
+      ? null : `capture conversion cannot mutate ${contract.id}`;
+  }
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {
     return `contract ${contract.id} requires ${expectedCapability}, not ${authority.capability}`;

@@ -1,34 +1,20 @@
 # Returned: ballot-three-states
 
-Cleanliness findings on BL-30 (3d2b6615f, folded as a2d950742). Fix in your next READY:
-Exports nothing outside their own file imports (unexport, or delete if unused in the file too):
-   lib/civic-data/ballot-publication.ts:26 BallotPublicationResults tests=0
-   lib/civic-data/manual-projections.ts:173 ballotProvenanceUrls tests=0
-   lib/civic-data/promoted-edge-publication.ts:87 statePromotedEdgePointers tests=1
-   lib/control-plane/repository/pg-store.ts:979 migrateVotingDoorScopes tests=1
-   lib/meetings/edge-serving.ts:517 PublishReaderEdgeOptions tests=0
-   lib/meetings/edge-serving.ts:529 publishReaderAuthorityArtifacts tests=0
-   lib/meetings/edge-store.ts:9 READER_AUTHORITY_MANIFEST_KEY tests=0
-   lib/meetings/edge-store.ts:17 StoredAuthorityManifest tests=0
-   lib/registry/runtime-edge.ts:48 StateAuthoritiesEdge tests=0
-A new code file nothing imports: scripts/ballot-scale.mts (wire it into package.json or delete it).
-
-
 lane: ballot-three-states
 owner: ballot-three-states
 writer: the ballot-three-states lane
-check: fold-conflict
+check: at-scale
 ready: no step ids unknown
 river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
-at: 2026-10-15T23:04:38Z
+at: 2026-10-15T23:21:26Z
 state: returned
-fix_subject: fix:00439967
-fix: River · stream/ballot-three-states — fold-conflict failed for ballot-three-states: BL-30 (3d2b6615f) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: app/(admin)/_mw/admin-v6/model.ts, app/api/agenda/route.ts, app/api/ask/grounded/route.ts, app/api/ballot/scope/route.ts, app/api/funding/[targe
+fix_subject: fix:92f7c14b
+fix: River · stream/ballot-three-states — at-scale failed for ballot-three-states: BL-30 (3d2b6615f): AT SCALE peak comes from a whole state. The message says each assembler child reads one state's file and worker results; a job's peak must come from the largest single item it handles at once (one contest, one candidate f
 
 ## Failure
 
 ```
-BL-30 (3d2b6615f) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: app/(admin)/_mw/admin-v6/model.ts, app/api/agenda/route.ts, app/api/ask/grounded/route.ts, app/api/ballot/scope/route.ts, app/api/funding/[target]/route.ts, app/api/meetings/route.ts, app/api/official-actions/[subject]/route.ts, app/api/positions/[subject]/[topic]/route.ts, app/api/profile/[subject]/route.ts, app/api/reactions/route.ts, app/api/representation/[...division]/route.ts, app/api/votes/local/route.ts, app/api/voting-sites/route.ts, app/ballot/page.tsx, lib/civic-data/manual-read-models.ts, lib/civic-data/promoted-edge-publication.ts, lib/civic-data/read-model.ts, lib/civic-data/reader-edge-publication.ts, lib/meetings/edge-artifacts.ts, lib/meetings/edge-serving.ts, lib/registration/edge.ts, lib/registry/runtime-edge.ts, lib/registry/runtime-read-model.ts, lib/registry/server.ts, tests/promoted-edge.test.ts, tests/reader-edge.test.ts, tests/registration-edge.test.ts. Merge origin/river into stream/ballot-three-states, settle those files so both sides' behavior is kept (NE-01's reader-edge reads and request accounting, municode's bounded portal reads), run the focused tests, push a new READY with AT SCALE numbers in the message.
+BL-30 (3d2b6615f): AT SCALE peak comes from a whole state. The message says each assembler child reads one state's file and worker results; a job's peak must come from the largest single item it handles at once (one contest, one candidate file, one place), never a whole state. Name the stage that holds the state (the assembler child's read of the state file and its worker results) and make it stream one contest at a time, then report the peak at the largest contest. Also open: the 6.7 MB migration breaks scripts/apply-migrations.mts (git show ENOBUFS); 34 files conflict with river 3282584e2 (reader routes, manual-read-models, edge-serving, edge-artifacts, runtime-edge, pg-schema and tests); cleanliness list is the section above.
 ```
 
 ## Repair

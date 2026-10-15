@@ -112,6 +112,8 @@ function candidateReadOnlyStore(
     transition: readOnly,
     promote: readOnly,
     appendEvidence: readOnly,
+    recordRecheck: readOnly,
+    latestCandidate: async () => null,
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,

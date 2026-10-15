@@ -4,7 +4,7 @@ import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } fro
 import type { WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
 import { appendTransition, contextFromRepositories, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
-import { finishBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
+import { findingFact, finishBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
 import { checkFact, linkQuote } from "../../facts/check.ts";
 import { factClocks } from "../../facts/clocks.ts";
 import type { Clocks } from "../../facts/publish.ts";
@@ -183,9 +183,9 @@ const displayName = candidateDisplayName;
 /** A hunter's reported campaign site, held to checkFact on the page it cited, as a SCOUTED lead; or why it is refused. */
 async function boxLead(repos: ControlPlaneRepositories, finding: BoxFinding, subject: CampaignSiteSubject,
   options: Pick<CampaignSiteChainOptions, "heldPage" | "now">, windowHours: Clocks["windowHours"]): Promise<ScoutedRecord | { readonly refused: string }> {
-  const origin = finding.origins.find(row => row.reported);
-  if (!origin?.reported || finding.exactQuote === null) return { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" };
-  const url = String(origin.reported.value);
+  const fact = await findingFact(repos.scoutResults, finding);
+  if (!fact || finding.exactQuote === null) return { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" };
+  const { origin } = fact, url = String(fact.value);
   const artifact = (await repos.artifacts.read(origin.workItemId)).find(row => origin.artifactIds.includes(row.artifactId));
   const page = artifact ? await options.heldPage(artifact) : null;
   if (page === null) return { refused: "CITED_PAGE_NOT_SAVED" };

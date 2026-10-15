@@ -103,6 +103,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
+    const heldIds = new Set(ballot.heldContests?.map(row => row.id));
     const keepsMeasure = (contestId: string, sourceUrl: string | null) => !ids.has(contestId) ||
       !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
     const measures = new Map<string, Measure>((before?.measures ?? []).filter(row =>
@@ -125,8 +126,12 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
     ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },
       ...mergeBallotSourceReferences(ballot, before),
-      contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests],
-      candidacies: [...before.candidacies.filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
+      ...(before.heldContests !== undefined || ballot.heldContests !== undefined ? {
+        heldContests: [...before.heldContests ?? []].filter(row => !complete.has(row.id) &&
+          !ballot.heldContests?.some(next => next.id === row.id)).concat([...ballot.heldContests ?? []]) } : {}),
+      contests: [...before.contests.filter(row => !ids.has(row.id) && !heldIds.has(row.id)), ...ballot.contests],
+      candidacies: [...before.candidacies.filter(row => !heldIds.has(row.contestId) && !ballot.candidacies.some(next => next.id === row.id) &&
+
         !ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
           Date.parse(contest.provenance.collectedAt) >= Date.parse(before.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? ""))), ...ballot.candidacies],
       measures: [...measures.values()],
@@ -134,6 +139,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
         measureRecords: [...records.values()] } : {}) } : ballot;
   }
   const urls = ballotProvenanceUrls({ ballots });
+
   const sources = [...input.sourceReceipt.sources, ...prior?.sourceReceipt.sources ?? []].filter(row => urls.has(row.finalUrl) || urls.has(row.requestedUrl));
   return { ...input, payload: { kind: "ballot-contests", ballots }, sourceReceipt: { ...input.sourceReceipt,
     sources: sources.filter((source, at) => sources.findIndex(row => row.finalUrl === source.finalUrl && row.rawHash === source.rawHash) === at) } };

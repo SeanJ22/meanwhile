@@ -103,6 +103,7 @@ export interface CandidacyRemoval {
 export interface BallotSet {
   sourceDocuments?: readonly MeasureSourceReference[];
   sourceAuthorities?: readonly MeasureSourceReference[];
+  heldContests?: readonly HeldBallotContest[];
   measureRecords?: readonly MeasureRecord[];
   election: Election;
   contests: Contest[];
@@ -113,6 +114,10 @@ export interface BallotSet {
   coverageNotes?: string[];
   // Local coverage notes must not be widened to every reader of the state source.
   scopedCoverageNotes?: readonly ScopedBallotCoverageNote[];
+}
+
+export interface HeldBallotContest extends Pick<Contest, "id" | "electionId" | "ocdId" | "title" | "provenance"> {
+  readonly reason: string;
 }
 
 export interface ScopedBallotCoverageNote {

@@ -16,6 +16,9 @@ import { verifyStatewideOfficialPage, statewideRoster } from "../lib/sources/sta
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import { collectPeopleCoverage,comparePeopleCoverage } from "../lib/officials/people-coverage-report.ts";
 import { civicRecordFacts } from "../lib/civic-data/changes.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+
+const vault = new MemoryEvidenceStore();
 
 const at="2026-10-12T00:00:00.000Z";
 function person(id:string,changes:Partial<Officeholder>={}):Officeholder {
@@ -65,7 +68,7 @@ test("a verified appointed secretary reaches the state root, its card and Ask",a
   const verified=verifyStatewideOfficialPage(lead,{url:sourceUrl,html,retrievedAt:at});
   assert.ok("person" in verified);if(!("person" in verified))return;
   const store=new MemoryRoutineDataStore(),roster=statewideRoster("nj",[verified.person],at);
-  const published=await publishPeopleSource({store,state:"nj",sourceId:"statewide-executive-sources",roster,
+  const published=await publishPeopleSource({ vault, store,state:"nj",sourceId:"statewide-executive-sources",roster,
     acquisitions:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,httpStatus:200,body:html,retrievedAt:at}],releaseId:"fixture-1",now:at});
   assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
   const read=await readStatePeopleProjection("US-NJ",{store,now:at,bypassCache:true});assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
@@ -79,12 +82,12 @@ test("Open States and an official association officer produce one reader person 
   const store=new MemoryRoutineDataStore(),revision="a".repeat(40),pluralUrl=`https://raw.githubusercontent.com/openstates/people/${revision}/data/nj/executive/reader.yml`;
   const body="id: ocd-person/00000000-0000-0000-0000-000000000001\nname: Jordan Reader\nroles:\n- type: secretary_of_state\n  jurisdiction: ocd-jurisdiction/country:us/state:nj/government\nlinks:\n- url: https://office.example.gov/about-jordan\n";
   const roster=normalize(yamlToPeople(body,"nj",pluralUrl,at),new Map(),at,"US-NJ");
-  const initial=await publishStatePeople({store,state:"nj",roster,acquisitions:[{requestedUrl:pluralUrl,finalUrl:pluralUrl,httpStatus:200,body,retrievedAt:at}],releaseId:revision,now:at});
+  const initial=await publishStatePeople({ vault, store,state:"nj",roster,acquisitions:[{requestedUrl:pluralUrl,finalUrl:pluralUrl,httpStatus:200,body,retrievedAt:at}],releaseId:revision,now:at});
   assert.ok(initial.outcome.promoted);
   const url="https://office.example.gov/about-jordan",html="<h1>Jordan Reader</h1><p>New Jersey Secretary of State Jordan Reader was appointed by the Governor.</p>";
   const bound=verifyStatewideOfficialPage({sourceId:"nass",sourceOrg:"Association",sourceUrl:"https://www.nass.org/members",collectedAt:at,state:"nj",name:"Jordan Reader",officeTitle:"Secretary of State",profileUrls:[url],nativeIds:{nass:["member-1"]}}, {url,html,retrievedAt:at});
   assert.ok("person" in bound);if(!("person" in bound))return;
-  const official=await publishPeopleSource({store,state:"nj",sourceId:"statewide-executive-sources",contractId:peopleSourceContractId("nj","statewide-executive-sources"),
+  const official=await publishPeopleSource({ vault, store,state:"nj",sourceId:"statewide-executive-sources",contractId:peopleSourceContractId("nj","statewide-executive-sources"),
     roster:statewideRoster("nj",[bound.person],at),acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,body:html,retrievedAt:at}],releaseId:"association-1",now:at});
   assert.ok(official.outcome.promoted,JSON.stringify(official.outcome.candidate.receipt));
   const read=await readStatePeopleProjection("US-NJ",{store,now:at,bypassCache:true});assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;

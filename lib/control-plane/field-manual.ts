@@ -11,6 +11,7 @@ import { jobCostProfiles } from "./bank-job-cost.ts";
 
 /** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
 export const FIELD_MANUAL_ROLES = [
+  "HUNTER",
   "SCOUT",
   "ACQUIRER",
   "PARSER",

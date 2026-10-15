@@ -11,10 +11,8 @@ import { ROUTINE_RECORD_CLASSES } from "../lib/civic-data/types.ts";
 import { RECORD_CLASSES } from "../lib/answerability/record-class.ts";
 import { buildPlaceOwedList, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { openBlanksOf } from "../lib/coverage/open-blanks.ts";
-import { requirementsFor } from "../lib/control-plane/expansion/dispatch-work.ts";
-import { UNREAD_MEETING_PARTITIONS } from "../lib/control-plane/scheduler/provider-inputs.ts";
-import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
-import { bodyDirectoryDiscoveryPlan, publicCommentDiscoveryPlan, type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
+import type { Jurisdiction, JurisdictionRecordClass } from "../lib/hunt/jurisdiction-universe.ts";
+import { jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan, type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import {
   DEFAULT_MISSION_PARTS, missionPartOfPlan, missionWorkCounts, MISSION_PARTS_SETTING, missionPartCounts, missionPartOf, missionPartsOf, squadsOf, validMissionParts,
 } from "../lib/control-plane/expansion/mission-parts.ts";
@@ -99,23 +97,21 @@ test("CH-16: every plan built for a government's owed families carries its missi
     id: "xx:school:example-unified", stateCode: "XX", name: "Example Unified School District", govClass: "SCHOOL_DISTRICT",
     countyName: "EXAMPLE", enumeratedFrom: "census-govt-units", ownWebAddress: "https://www.example.k12.xx.us/", sourceIds: [],
   };
-  const reg: JurisdictionRegistry = {
-    formatVersion: 1, stateCode: "XX", generatedBy: "test", generatedOn: "2026-10-05", _note: [],
-    enumerationSources: [{ id: "census-govt-units", describe: "Census of Governments", path: "census", rowsRead: 1 }],
-    counts: {}, disagreements: [], sourceCatalog: {}, jurisdictions: [school],
-  };
   const government = { ...school, bodyId: "fixture:registered-school-board" };
-  const plans = requirementsFor(reg, government, null, UNREAD_MEETING_PARTITIONS, true)
-    .map((r) => r.obligation.autonomousPlan).filter((plan): plan is AutonomousWorkPlan => plan !== undefined);
+  const families: JurisdictionRecordClass[] = ["OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS", "BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "PUBLIC_COMMENT"];
+  const plans = families.map((recordClass) => {
+    const routeId = `coverage-discovery:${recordClass.toLowerCase()}`;
+    return jurisdictionDiscoveryPlan(government, { recordClass, authority: government.name, authorityBasis: "fixture", scope: "THIS_JURISDICTION",
+      routeId, url: government.ownWebAddress, state: "DISCOVERY_OWED", owed: null, citation: "fixture" }, routeId);
+  }).filter((plan): plan is AutonomousWorkPlan => plan !== null);
   assert.ok(plans.length >= 5);
   const byClass = Object.fromEntries(plans.map((plan) => [plan.contract.recordClass, plan.missionPart]));
   assert.deepEqual(byClass, {
-    OFFICIAL_BOARD_DIRECTORY: "governments-meetings", OFFICIAL_ROSTER: "people-money", SERVICE_CONTACT: "governments-meetings",
+    OFFICIAL_ROSTER: "people-money", SERVICE_CONTACT: "governments-meetings",
     VOTER_ACCESS_ROUTE: "ballot", BALLOT_CONTEST: "ballot", CAMPAIGN_FINANCE_FILING: "people-money", PUBLIC_COMMENT_RULE: "governments-meetings",
   });
   const comment = publicCommentDiscoveryPlan(government, "fixture:body")!;
   assert.equal(comment.missionPart, "governments-meetings", "a comment plan built from a roster template is re-parted by its own class");
-  assert.equal(bodyDirectoryDiscoveryPlan(government, null).missionPart, "governments-meetings");
 });
 
 test("CH-16: a mission's work is counted by part; held plans from before CH-16 are parted by their record class", () => {

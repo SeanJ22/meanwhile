@@ -17,10 +17,16 @@ export function genericBallotProblems(value: GenericBallotProjection): string[] 
   const problems: string[] = [];
   for (const [key, ballot] of Object.entries(value.ballots)) {
     if (!ballot?.election || key !== ballotElectionKey(ballot) || !/^[A-Z]{2}$/.test(ballot.election.state) ||
-      !Array.isArray(ballot.contests) || !Array.isArray(ballot.candidacies) || !ballot.contests.length) {
+      !Array.isArray(ballot.contests) || !Array.isArray(ballot.candidacies) ||
+      !ballot.contests.length && !ballot.heldContests?.length) {
       problems.push("A ballot lacks its exact state/election key or contests."); continue;
     }
     const ids = new Set(ballot.contests.map(row => row.id));
+    if (ballot.heldContests !== undefined && (!Array.isArray(ballot.heldContests) ||
+      new Set(ballot.heldContests.map(row => row.id)).size !== ballot.heldContests.length ||
+      ballot.heldContests.some(row => !row.id || ids.has(row.id) || row.electionId !== ballot.election.id ||
+        !row.title?.trim() || !row.reason?.trim() || jurisdictionFromOcdId(row.ocdId)?.usps !== ballot.election.state ||
+        !row.provenance?.sourceUrl))) problems.push("A held contest lacks its exact election, territory, source or reason.");
     if (ids.size !== ballot.contests.length || new Set(ballot.candidacies.map(row => row.id)).size !== ballot.candidacies.length) problems.push("A ballot repeats an identity.");
     if (ballot.contests.some(row => row.electionId !== ballot.election.id || !row.title || jurisdictionFromOcdId(row.ocdId)?.usps !== ballot.election.state ||
       !row.provenance?.sourceUrl || (row.type === "CANDIDACY" && !ballot.candidacies.some(candidate => candidate.contestId === row.id)) ||

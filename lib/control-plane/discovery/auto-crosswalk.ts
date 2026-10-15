@@ -30,6 +30,7 @@ import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
 import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
 import { parseSwagitMeetings, swagitMatchesBody } from "../../sources/swagit/index.ts";
+import { parsePrimeGovCommittees, parsePrimeGovMeetings } from "../../sources/primegov/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import { parseNovusMeetings } from "../../sources/novusagenda/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
@@ -72,7 +73,7 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", granicus: "GRANICUS", swagit: "SWAGIT", escribe: "ESCRIBE",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", granicus: "GRANICUS", swagit: "SWAGIT", primegov: "PRIMEGOV", escribe: "ESCRIBE",
   novusagenda: "NOVUSAGENDA",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
@@ -453,6 +454,14 @@ type Selected = Selection | { readonly held: AutoCrosswalkHoldReason; readonly d
 const titleHas = (title: string, terms: readonly string[]): boolean => terms.some((t) => low(title).includes(low(t)));
 
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
+  if (kind === "PRIMEGOV") {
+    const selected = events.filter(event => event.categories.some(name => canonical(name, jurisdictionId) === proposal.key));
+    const ids = [...new Set(selected.map(event => event.scopeId))];
+    if (ids.length !== 1 || !ids[0] || events.some(event => event.scopeId === ids[0] && !selected.includes(event))) {
+      return { held: "AMBIGUOUS_TITLE", detail: "PrimeGov has no unique published committee for this body" };
+    }
+    return { filter: { committeeId: ids[0] }, selected };
+  }
   if (kind === "SWAGIT") {
     const bodyMatch = events.map(event => event.context).find(context => {
       const names = printedNames(context, jurisdictionId).filter(name => tokenize(name.text).length >= 2);
@@ -692,7 +701,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -765,6 +774,17 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     } else if (kind === "CIVICPLUS") {
       events = parseAgendaCenterCategories(calendar.text).flatMap(category => parseAgendaCenter(calendar.text, category.id).map(row => ({ title: flat(category.name), context: flat(row.title), categories: [flat(category.name)],
         scopeId: category.id, identity: `${category.id}|${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.agendaHref ? new URL(row.agendaHref, route).toString() : route })));
+    } else if (kind === "PRIMEGOV") {
+      let rows: ReturnType<typeof parsePrimeGovMeetings> = [];
+      try { rows = parsePrimeGovMeetings(calendar.text); } catch { /* Changed lists cannot establish bodies. */ }
+      const selector = find.via?.artifactId ? input.held(find.via.artifactId) : null;
+      let committees: ReturnType<typeof parsePrimeGovCommittees> = [];
+      try { if (selector) committees = parsePrimeGovCommittees(selector.text); } catch { /* Unreadable selectors cannot name bodies. */ }
+      events = rows.flatMap(row => {
+        const committee = committees.find(committee => committee.id === row.committeeId);
+        return committee ? [{ title: flat(committee.name), context: "", categories: [flat(committee.name)], scopeId: String(row.committeeId),
+          identity: `${row.committeeId}|${row.id}|${row.dateTime}`, tzid: stateZone, utc: false, floating: /T\d{2}:\d{2}/.test(row.dateTime), url: route }] : [];
+      });
     } else if (kind === "SWAGIT") {
       let rows: ReturnType<typeof parseSwagitMeetings> = [];
       try { rows = parseSwagitMeetings(calendar.text, route); } catch { rows = []; }

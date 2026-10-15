@@ -1,24 +1,27 @@
 import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { RepositoryLockHeld } from "../repository/types.ts";
-import type { ModelResponse, ScoutEscalationAdmission } from "../scheduler/scout-executor.ts";
+import type { ModelResponse } from "../scheduler/scout-executor.ts";
 import { FleetSafetyController } from "../fleet-safety.ts";
 import { websiteSizeForObligation, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 import { autonomousStandingRuntime } from "./standing-runtime.ts";
-import type { MissionBlank } from "./mission-brief.ts";
 import { observeCyclePhases } from "../scheduler/cycle-phases.ts";
 import { dispatchAutonomousTask } from "./coordinator.ts";
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
 import { workerBroker } from "./worker-broker.ts";
 import { workerDispatchFailure, type LeaseWorkerConfig } from "./process-pool.ts";
 import { join } from "node:path";
+import type { HuntSearchResult } from "../../hunt/search.ts";
 import { readFromHeldCopies } from "../repository/incremental-reads.ts";
 
 readFromHeldCopies();
 
 const broker = workerBroker<LeaseWorkerConfig>(work);
+/** A long job stops this far before the pool would end the process, so it can record what it has. */
+const WALL_MARGIN_MS = 60_000;
 
 async function work(config: LeaseWorkerConfig): Promise<void> {
+  const endsAt = Date.now() + (config.wallMs ?? Number.POSITIVE_INFINITY) - WALL_MARGIN_MS;
   const url = config.postgres ? controlPlaneUrlFromEnv() : null;
   if (config.postgres && !url) throw new Error("CONTROL_PLANE_DATABASE_UNCONFIGURED");
   const stores = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
@@ -41,16 +44,11 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
     browse: browseWithPlaywright,
     ...(subject === null ? { openBytesFor: s => safety.guardedOpenBytes("public-web", s) } : { openBytes: safety.guardedOpenBytes("public-web", subject) }),
     ...(config.modelEnabled ? { transport: request => broker.call<ModelResponse>("model", request),
-      transportFor: jurisdiction => { broker.assignment(current, jurisdiction); return request => broker.call<ModelResponse>("model", request); },
-      reserveScoutEscalation: async request => {
-        const response = await broker.call<(Omit<Extract<ScoutEscalationAdmission, { admit: true }>, "draw" | "release"> & { reservationId: string }) |
-          Extract<ScoutEscalationAdmission, { admit: false }>>("escalation", request);
-        return response.admit ? { ...response, draw: usd => broker.send("draw", response.reservationId, usd), release: () => broker.send("release", response.reservationId, null) } : response;
-      } } : {}),
-    ...(config.searchEnabled ? { search: request => broker.call("search", request) } : {}),
+      transportFor: jurisdiction => { broker.assignment(current, jurisdiction); return request => broker.call<ModelResponse>("model", request); } } : {}),
+    ...(config.searchEnabled ? { search: request => broker.call<HuntSearchResult>("search", request),
+      searchBudget: { take: host => broker.call<string | null>("search-take", host), done: async host => { await broker.call("search-done", host); } } } : {}),
     auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads,
-    // The parent holds the mission's owed list; ask it for this government's blanks as each task begins.
-    readMissionBlanks: subject => broker.call<readonly MissionBlank[]>("mission-blanks", subject) });
+    endsAt, progress: () => broker.send("progress", "", null) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
   // The first process to claim wins in the existing repository dispatcher.

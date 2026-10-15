@@ -11,15 +11,12 @@ import {
   type FreeWalkSubject,
 } from "../lib/control-plane/discovery/free-walks.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { FREE_WALK_FIRST, MEETINGS_DISCOVERY_NAMESPACE, paidDiscoveryHold } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { DiscoveryOutcome, MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
 const ROOT = process.cwd();
 const AJ = "az:city:city-of-apache-junction";
 const COOLIDGE = "az:city:city-of-coolidge";
-const AJ_ROW = `${MEETINGS_DISCOVERY_NAMESPACE}${AJ}#own-site-meetings`;
-const COOLIDGE_ROW = `${MEETINGS_DISCOVERY_NAMESPACE}${COOLIDGE}#find-own-site`;
 const SUBJECTS: readonly FreeWalkSubject[] = [
   { jurisdictionId: AJ, walkable: true },
   { jurisdictionId: COOLIDGE, walkable: false },
@@ -49,39 +46,32 @@ function attempt(outcome: DiscoveryOutcome, finishedAt: string, leads: MeetingsD
   } as MeetingsDiscoveryAttempt;
 }
 
-const held = (row: string, walks: Parameters<typeof paidDiscoveryHold>[1]) => paidDiscoveryHold(row, walks)?.code ?? "PAID LANE MAY TAKE IT";
-
-test("EVERY READING REACHES ITS HOLD DECISION: found and unread hold, not-walked or an unsuccessful walk permits paid discovery; the newest walk decides", async () => {
+test("EVERY WALK HAS A READING: not walked, no site, unread, found or walked-not-found; the newest walk decides", async () => {
   for (const [label, repos] of await eachStore("wtp-free-walks-")) {
     const before = await readFreeDiscoveryWalks(repos, SUBJECTS);
     assert.equal(before.latestFor(AJ), "NOT_WALKED", `${label}: no walk recorded yet`);
-    assert.equal(held(AJ_ROW, before), "PAID LANE MAY TAKE IT", `${label}: useful paid discovery need not wait for a free walk`);
     assert.equal(before.latestFor(COOLIDGE), "NO_SITE_TO_WALK");
-    assert.equal(held(COOLIDGE_ROW, before), "PAID LANE MAY TAKE IT", `${label}: with no site to walk, the free lane has nothing to try`);
     assert.equal(before.latestFor("az:city:underivable"), "UNREAD");
     assert.equal(before.latestFor("az:city:not-dispatched"), "UNREAD", `${label}: a government nobody asked about is held, not guessed`);
-    assert.equal(held(`${MEETINGS_DISCOVERY_NAMESPACE}az:city:underivable#own-site-meetings`, before), FREE_WALK_FIRST);
 
-    const decisions: [DiscoveryOutcome, string, string][] = [
-      ["FOUND", "FOUND", FREE_WALK_FIRST],
-      ["LEAD", "WALKED_NOT_FOUND", "PAID LANE MAY TAKE IT"],
-      ["NOTHING_DETECTED", "WALKED_NOT_FOUND", "PAID LANE MAY TAKE IT"],
-      ["BLOCKED", "WALKED_NOT_FOUND", "PAID LANE MAY TAKE IT"],
-      ["COULD_NOT_READ", "WALKED_NOT_FOUND", "PAID LANE MAY TAKE IT"],
-      ["FOUND", "FOUND", FREE_WALK_FIRST],
+    const readings: [DiscoveryOutcome, string][] = [
+      ["FOUND", "FOUND"],
+      ["LEAD", "WALKED_NOT_FOUND"],
+      ["NOTHING_DETECTED", "WALKED_NOT_FOUND"],
+      ["BLOCKED", "WALKED_NOT_FOUND"],
+      ["COULD_NOT_READ", "WALKED_NOT_FOUND"],
+      ["FOUND", "FOUND"],
     ];
-    for (const [i, [outcome, reading, decision]] of decisions.entries()) {
+    for (const [i, [outcome, reading]] of readings.entries()) {
       const at = `2026-09-2${i}T00:00:00.000Z`;
       await repos.discoveryAttempts.append(AJ, `da-${i}`, attempt(outcome, at), at);
       const walks = await readFreeDiscoveryWalks(repos, SUBJECTS);
       assert.equal(walks.latestFor(AJ), reading, `${label}: a newest walk of ${outcome} reads ${reading}`);
-      assert.equal(held(AJ_ROW, walks), decision, `${label}: ${reading} → ${decision}`);
     }
-    assert.equal(held("freshness:jurisdiction:az:county:county-of-pima#ballot-and-candidates-1", before), "PAID LANE MAY TAKE IT", "no other work is held by it");
   }
 });
 
-test("A FAILED READ HOLDS EVERY ROW: the log that cannot be read answers UNREAD, names why, and hands the Scout nothing", async () => {
+test("A FAILED READ ANSWERS UNREAD: the log that cannot be read names why and hands on no evidence", async () => {
   const repos = {
     discoveryAttempts: {
       readLatest: async () => {
@@ -91,8 +81,6 @@ test("A FAILED READ HOLDS EVERY ROW: the log that cannot be read answers UNREAD,
   } as unknown as Pick<ControlPlaneRepositories, "discoveryAttempts">;
   const walks = await readFreeDiscoveryWalks(repos, SUBJECTS);
   for (const s of SUBJECTS) assert.equal(walks.latestFor(s.jurisdictionId), "UNREAD");
-  assert.equal(held(AJ_ROW, walks), FREE_WALK_FIRST);
-  assert.equal(held(COOLIDGE_ROW, walks), FREE_WALK_FIRST, "a failed read opens nothing this cycle");
   assert.match(walks.source, /could not be read \(CONTROL_PLANE_REQUEST_TIMEOUT.*every dispatched discovery row stays held/);
   assert.equal(walks.evidenceFor?.(AJ), null);
 });
@@ -117,7 +105,7 @@ test("ONE BATCHED READ, CUT TO THREE FIELDS: only the governments with a site ar
   assert.equal(calls.length, 1, "no government with a site, no read");
 });
 
-test("A WALK RECORD THE LANE CANNOT READ HOLDS ITS ROW: no known outcome or no finish time is never guessed at, and a lead without an address is dropped", async () => {
+test("A WALK RECORD THE LANE CANNOT READ READS UNREAD: no known outcome or no finish time is never guessed at, and a lead without an address is dropped", async () => {
   assert.equal(asFreeWalkRecord({ outcome: "SOMETHING_NEW", finishedAt: "2026-09-24T01:00:00.000Z" }), null);
   assert.equal(asFreeWalkRecord({ outcome: "LEAD" }), null);
   assert.equal(asFreeWalkRecord({ outcome: "LEAD", finishedAt: "2026-09-24T01:00:00.000Z", leads: "not a list" }), null);
@@ -135,12 +123,11 @@ test("A WALK RECORD THE LANE CANNOT READ HOLDS ITS ROW: no known outcome or no f
   } as unknown as Pick<ControlPlaneRepositories, "discoveryAttempts">;
   const walks = await readFreeDiscoveryWalks(repos, SUBJECTS);
   assert.equal(walks.latestFor(AJ), "UNREAD");
-  assert.equal(held(AJ_ROW, walks), FREE_WALK_FIRST, "an unreadable record opens nothing");
   assert.equal(walks.latestFor(COOLIDGE), "NO_SITE_TO_WALK", "the other governments' readings stand");
   assert.match(walks.source, /1 walk record\(s\) could not be read, and their rows stay held/);
 });
 
-test("THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and what it could not confirm, as evidence only", () => {
+test("THE BRIEF STARTS FROM THE LEADS: the brief names the walk's outcome and what it could not confirm, as evidence only", () => {
   const leads = Array.from({ length: 8 }, (_, i) => ({
     vendor: i === 0 ? "granicus" : "own-site-meetings-page",
     url: `https://www.ajcity.net/m${i}`,
@@ -161,14 +148,11 @@ test("THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and wh
   assert.equal(freeWalkBrief(undefined, undefined), null);
 });
 
-test("THE RUNNER IS WIRED: it reads the walk before dispatch, and hands the reading to the hold, the Scout's brief and the walk list", () => {
+test("THE RUNNER IS WIRED: it reads the walk before dispatch", () => {
   const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
   const read = runner.indexOf("readFreeDiscoveryWalks(repos, freeWalkSubjects)");
   const dispatch = runner.indexOf("const cycle = await runCycle({");
   assert.ok(read > 0 && dispatch > read, "the reading is taken before dispatch");
-  assert.match(runner, /paidDiscoveryHold\(row\.obligation\.id, freeWalks\)/, "the hold reads it");
-  assert.doesNotMatch(runner, /paidDiscoveryHold\([^)]*UNREAD_FREE_DISCOVERY_WALKS/, "the hold no longer reads the unwired stand-in");
-  assert.match(runner, /freeWalks\.evidenceFor\?\.\(discovery\.jurisdictionId\)/, "the Scout's brief carries the walk's line");
   const census = readFileSync(join(ROOT, "scripts/platform-census-runner.mts"), "utf8");
   assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}/);
   assert.match(census, /runCensusState\(\{ repos, state, needs: reading.needs/);

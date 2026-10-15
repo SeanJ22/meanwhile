@@ -4,7 +4,6 @@ import {createMemoryRepositories} from '../lib/control-plane/repository/memory.t
 import {readFieldManual,writeFieldManual} from '../lib/control-plane/field-manual.ts';
 import {installedAdapterGuides,installedAdapterVersion} from '../lib/control-plane/scheduler/scout-adapters.ts';
 import {learnInstalledAdapters,workAdapterQueue} from '../lib/control-plane/workers/engineering-adapter.ts';
-import {hasUntriedAdapter} from '../lib/control-plane/workers/detective.ts';
 import type {ScoutResult} from '../lib/control-plane/scheduler/scout-result.ts';
 
 test('installed code teaches a new bank once per implementation version through the shared calls',async()=>{
@@ -37,7 +36,4 @@ test('Engineer offers installed extraction to other tenants before buying anothe
   transportFor:()=>async()=>{models++;throw Error('Installed code comes first');},
   request:async()=>{pulls++;throw Error('No duplicate adapter PR');}});
  assert.deepEqual(opened,[]);assert.equal(models,0);assert.equal(pulls,0);
- const manual=await readFieldManual(repos,{role:'DETECTIVE'});
- for(const result of results)assert.equal(hasUntriedAdapter(result,['sparqdata-policy'],manual.store.entries),true);
- assert.equal(hasUntriedAdapter({...results[0],recordClass:'officials'},['sparqdata-policy'],manual.store.entries),false);
 });

@@ -15,6 +15,8 @@ import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { LEGISCAN_ATTRIBUTION } from "../lib/sources/legiscan/types.ts";
 
+const vault = new MemoryEvidenceStore();
+
 const fixture = (file: string) => readFileSync(new URL(`./fixtures/legiscan/${file}`, import.meta.url), "utf8");
 const at = "2026-10-13T12:00:00.000Z", personId = "ocd-person/2fd6fcd3-9676-42a4-b879-e317576ff18f";
 const metadata = JSON.parse(fixture("tx-dataset-metadata.json"));
@@ -97,7 +99,7 @@ test("weekly listing changes trigger source checks while immutable saved dataset
 test("actual source fixtures promote through the per-state routine contract and repeat checks confirm unchanged reader facts", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories(), { fetchImpl } = transport();
   const roster = normalize(yamlToPeople(fixture("openstates-alma-allen.yml"), "tx", sourceUrl, at), indexDivisions([]), at, "US-TX");
-  const published = await publishStatePeople({ store: civicStore, state: "tx", roster, releaseId: "fixture-actual-openstates",
+  const published = await publishStatePeople({ vault, store: civicStore, state: "tx", roster, releaseId: "fixture-actual-openstates",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: at }], now: at });
   assert.ok(published.outcome.promoted);
   const input = { state: "tx", civicStore, store, locks, fetchImpl, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000) };
@@ -113,7 +115,7 @@ test("actual source fixtures promote through the per-state routine contract and 
   // A new capture of the same real native person is a distinct source version;
   // the earlier verified crosswalk keeps the exact source version it used.
   const later = at;
-  const republished = await publishStatePeople({ store: civicStore, state: "tx", roster: { ...roster, generatedAt: later }, releaseId: "fixture-actual-openstates-next",
+  const republished = await publishStatePeople({ vault, store: civicStore, state: "tx", roster: { ...roster, generatedAt: later }, releaseId: "fixture-actual-openstates-next",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: later }], now: later, confirmUnchanged: false });
   assert.ok(republished.outcome.promoted);
   const historical = structuredClone(first.publication.candidate);
@@ -123,7 +125,7 @@ test("actual source fixtures promote through the per-state routine contract and 
 test("a successful empty weekly listing is a confirmed unchanged check and establishes no absent votes", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
   const roster = normalize(yamlToPeople(fixture("openstates-alma-allen.yml"), "tx", sourceUrl, at), indexDivisions([]), at, "US-TX");
-  await publishStatePeople({ store: civicStore, state: "tx", roster, releaseId: "fixture-empty-list-roster",
+  await publishStatePeople({ vault, store: civicStore, state: "tx", roster, releaseId: "fixture-empty-list-roster",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: at }], now: at });
   const input = { state: "tx", civicStore, store, locks, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000),
     fetchImpl: (async () => new Response(JSON.stringify({ status: "OK", datasetlist: [] }))) as typeof fetch };

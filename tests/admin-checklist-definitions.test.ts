@@ -21,8 +21,8 @@ test("every adopted definition appears exactly once across stable, bounded natio
     cursor = page.nextCursor;
     assert.ok(seen.length <= CHECKLIST_PROFILE.definitionCount, "paging repeated or expanded the fixed profile");
   } while (cursor);
-  assert.equal(seen.length, 325);
-  assert.equal(new Set(seen).size, 325);
+  assert.equal(seen.length, 327);
+  assert.equal(new Set(seen).size, 327);
   assert.deepEqual(seen, CHECKLIST_PROFILE.definitions.map(row => row.id).sort());
 });
 

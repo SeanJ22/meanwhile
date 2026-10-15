@@ -6,7 +6,11 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes } from "../lib/sources/plural/vote-acquisition.ts";
 import { pluralVoteJurisdiction, pluralVotesScope, mergePluralVotes, parsePluralBill, readPluralVotesForPerson, type PluralBillEvidence } from "../lib/sources/plural/votes.ts";
+import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
+import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+
+type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
 
 const AT = "2026-10-01T12:00:00.000Z";
 const native = (kind: string, value: number) => `ocd-${kind}/00000000-0000-4000-8000-${String(value).padStart(12, "0")}`;
@@ -67,7 +71,7 @@ function harness() {
     if (failFirst && value === 1) return new Response("unavailable", { status: 503 });
     return new Response(evidence(value).body);
   };
-  return { input: { state: "az", store, locks, fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested, failFirst: () => { failFirst = true; } };
+  return { input: { state: "az", store, locks, vault: new MemoryEvidenceStore(), fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested, failFirst: () => { failFirst = true; } };
 }
 test("known cached bill evidence reuses original source observations and one bad bill leaves the next fact available", async () => {
   const h = harness(); h.failFirst();
@@ -90,6 +94,20 @@ test("the source writer publishes a native vote before the next bill request and
   const rows = await readPluralVotesForPerson("az", person, { store: civicStore, bypassCache: true, now: AT });
   assert.equal(rows.length, 2); assert.equal(rows[0].position, "yes");
   assert.deepEqual(await readPluralVotesForPerson("az", "az-legislature:1", { store: civicStore, now: AT }), []);
+});
+
+test("each vote candidate holds a raw-capture reference, never the bill bytes, and the vault returns them exactly", async () => {
+  const h = harness(), civicStore = new MemoryRoutineDataStore(), held: PluralVoteAcquisition[][] = [];
+  const result = await refreshStateVotes({ ...h.input, civicStore, onBill: async () => {
+    const saved = await civicStore.readCandidate((await civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope("az")))!.versionId);
+    held.push((saved!.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions);
+  } });
+  assert.ok(result.publication.outcome.promoted); assert.equal(held.length, 2);
+  for (const [index, [acquisition]] of held.entries()) {
+    const body = evidence(index + 1).body;
+    assert.equal("body" in acquisition, false); assert.equal(acquisition.raw?.rawHash, acquisition.sha256);
+    assert.equal(await readRawCaptureText(h.input.vault, acquisition.raw!), body);
+  }
 });
 
 test("a source check with no votes succeeds, then confirms the held empty projection unchanged", async () => {

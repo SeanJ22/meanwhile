@@ -181,13 +181,13 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
     if (typeof url !== "string") return false;
     const path=/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/([a-f0-9]{40})\/(data\/[a-z]{2}\/(?:legislature|executive|municipal|municipalities)\/.+\.ya?ml)$/.exec(url);
     if (!path || candidate.scope.slice(3,5).toLowerCase() !== path[2].split("/")[1]) return false;
-    return rows(object(source.normalizedPayload)?.acquisitions).some(acquisition=>{
+    return rows(object(source.normalizedPayload)?.captures).some(acquisition=>{
       const origin=object(acquisition.extractedFrom);
       return origin?.member === path[2] && acquisition.requestedUrl === `https://codeload.github.com/openstates/people/zip/${path[1]}` &&
         origin.requestedUrl === acquisition.requestedUrl && origin.finalUrl === acquisition.finalUrl &&
         typeof origin.sha256 === "string" && SHA256.test(origin.sha256) && origin.sha256 === acquisition.rawHash &&
         typeof acquisition.httpStatus === "number" && acquisition.httpStatus >= 200 && acquisition.httpStatus < 300 &&
-        typeof acquisition.body === "string" && acquisition.body.length > 0;
+        Number(object(acquisition.capture)?.byteLength) > 0;
     });
   };
   const removed=candidate.changeSet?.removed ?? [];
@@ -222,13 +222,18 @@ function completeBallotRemovalCheck(candidate: RoutineCandidate, prior: Candidat
   if (!(candidate.changeSet?.removed ?? []).every(delta => {
     const held = old.find(row => delta.key === `candidacy:${row.candidacy.id}`);
     if (!held) return false;
+    const oldContest = held.ballot.contests.find(contest => contest.id === held.candidacy.contestId);
+    const hold = next.ballots[`${held.ballot.election.state}:${held.ballot.election.id}`]?.heldContests?.find(row => row.id === oldContest?.id);
+    if (oldContest?.candidateListComplete !== true && hold && hold.ocdId === oldContest?.ocdId &&
+      hold.provenance.sourceUrl === oldContest.provenance.sourceUrl &&
+      Date.parse(hold.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt)) return true;
     const matches = complete.filter(row => row.contest.id === held.candidacy.contestId &&
       row.ballot.election.id === held.ballot.election.id && row.ballot.election.date === held.ballot.election.date &&
       row.contest.ocdId === held.ballot.contests.find(contest => contest.id === held.candidacy.contestId)?.ocdId);
     return matches.length === 1 && Date.parse(matches[0].contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
   })) return null;
   return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "COMPLETE_OFFICIAL_CONTEST_REMOVAL",
-    "Each removed candidacy is absent from its exact contest's newer complete election-authority list.");
+    "Each removed candidacy belongs to a newer complete official list or an explicitly held incomplete contest; no hold claims absence.");
 }
 
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {

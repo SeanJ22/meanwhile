@@ -10,7 +10,7 @@ import {
   makeDiscoverySearch,
   type SearchBudget,
 } from "../lib/control-plane/discovery/search-runtime.ts";
-import { SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../lib/control-plane/scheduler/scout-search.ts";
+import { SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../lib/hunt/search.ts";
 import { SEARCH_PRICES, hitStanding, plannedQueries, requestPrice } from "../lib/hunt/discovery-search.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { SEED_RECIPES, identityFor, knownRecipes } from "../lib/hunt/meetings-recipes.ts";

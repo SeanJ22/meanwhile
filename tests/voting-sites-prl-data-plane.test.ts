@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -33,6 +34,9 @@ const ROOT = process.cwd();
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T13:00:00.000Z";
 const SOURCE_URL = "https://elections.example.gov/az/locations";
+// Hash-only refs: these candidates never read their bytes back.
+const capture = (body: string, url = SOURCE_URL) => [{ url, contentType: "text/html", vaultKey: `test/${body}`,
+  rawHash: createHash("sha256").update(body).digest("hex"), byteLength: Buffer.byteLength(body) }];
 
 function votingFixture(): VotingSitesFile {
   const site = (id: string, name: string, address: string, lat: number, lng: number, election: string) =>
@@ -89,7 +93,7 @@ function votingCandidate(file: VotingSitesFile, at: string, raw: string, failure
     current: file,
     prior: null,
     failures,
-    rawBodies: [raw],
+    acquisition: capture(raw),
     successfulAuthorityReads: 1,
     requestedUrl: SOURCE_URL,
     finalUrl: SOURCE_URL,
@@ -151,7 +155,7 @@ test("any state or DC publishes sourced voting sites without editing an authorit
       ocdId: `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`,
       model: "ASSIGNED" as const, sites: original.sites.slice(0, 1) };
     const candidate = votingSitesCandidate({ current: { generatedAt: "2026-09-08", jurisdictions: [jurisdiction] },
-      prior: null, failures: [], rawBodies: ["test official source bytes"], successfulAuthorityReads: 1,
+      prior: null, failures: [], acquisition: capture("test official source bytes", url), successfulAuthorityReads: 1,
       requestedUrl: url, finalUrl: url, retrievedAt: T0 });
     const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", `${state}: ${outcome.candidate.failureDetail}`);
@@ -164,7 +168,7 @@ test("a vendor voting-site source carries its official linking page; an unlinked
   const jurisdiction = { ...original, sourceUrl, sites: original.sites.slice(0, 1) };
   const build = (row: typeof jurisdiction) => votingSitesCandidate({
     current: { generatedAt: "2026-09-08", jurisdictions: [row] }, prior: null, failures: [],
-    rawBodies: ["test source bytes and linking page"], successfulAuthorityReads: 1,
+    acquisition: capture("test source bytes and linking page", sourceUrl), successfulAuthorityReads: 1,
     requestedUrl: sourceUrl, finalUrl: sourceUrl, retrievedAt: T0,
   });
   const unlinked = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", build(jurisdiction), T0);
@@ -198,7 +202,7 @@ test("one failed voting authority retains only its prior scope while healthy aut
     current,
     prior,
     failures: [{ state: "NJ", code: "MORRIS_UNAVAILABLE", detail: "official publisher unavailable" }],
-    rawBodies: ["healthy AZ and NH bytes; failed NJ response"],
+    acquisition: capture("healthy AZ and NH bytes; failed NJ response"),
     successfulAuthorityReads: 2,
     requestedUrl: SOURCE_URL,
     finalUrl: SOURCE_URL,

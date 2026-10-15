@@ -15,7 +15,7 @@ import {
   type MeetingsDiscoveryNeed,
 } from "../../../hunt/meetings-discovery.ts";
 import { requiredJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
-import { NOTHING_MATERIALIZED, promotedRegistries, type FreeDiscoveryWalks, type MaterializedReading } from "../provider-inputs.ts";
+import { NOTHING_MATERIALIZED, promotedRegistries, type MaterializedReading } from "../provider-inputs.ts";
 import { siteOrigins } from "../../../hunt/meetings-site-discovery.ts";
 import type { ObligationProvider, ProvidedObligation, ProviderContext, ProviderYield, RouteDescriptor } from "../registry.ts";
 
@@ -81,24 +81,6 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
         : `${need.stateCode.toUpperCase()}'s registration names this government (promoted version ${reg.registration.versionId}), and the Census records no web address for it, so none is invented (basis NO_MEETINGS_SOURCE_RECORDED)`),
     awaitingAdapter: "the meetings discovery executor",
   };
-}
-
-/** Whether the paid lane must wait for the free walk. A confirmed route is never re-walked by the paid lane, and an unread log holds. Null for any other obligation, or one the paid lane may take. */
-export const FREE_WALK_FIRST = "FREE_WALK_FIRST";
-
-export function paidDiscoveryHold(
-  obligationId: string,
-  walks: FreeDiscoveryWalks,
-): { readonly code: typeof FREE_WALK_FIRST; readonly why: string } | null {
-  const parsed = parseMeetingsDiscoveryId(obligationId);
-  if (parsed === null) return null;
-  const outcome = walks.latestFor(parsed.jurisdictionId);
-  if (outcome === "WALKED_NOT_FOUND" || outcome === "NO_SITE_TO_WALK" || outcome === "NOT_WALKED") return null;
-  const why =
-    outcome === "FOUND"
-      ? "the free discovery walk already found this government's meetings, and the paid lane never re-walks what the free lane read"
-      : `the free discovery walk's record could not be read (${walks.source}), so the paid lane waits rather than risk re-walking what the free lane read`;
-  return { code: FREE_WALK_FIRST, why };
 }
 
 /** The needs the owner's dispatch materialized, each with the registry it derives from. A state whose registry cannot be read is named. */

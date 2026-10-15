@@ -41,6 +41,7 @@ const MEETING_ROUTE_BY_TYPE: Partial<Record<AgendaSourceType, string>> = {
   NOVUSAGENDA: "novusagenda",
   SWAGIT: "swagit",
   ESCRIBE: "escribe",
+  PRIMEGOV: "primegov",
   IQM2: "iqm2",
   REVIZE: "revize",
   SCHEDULEPAGE: "schedulepage",

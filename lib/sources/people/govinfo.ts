@@ -91,7 +91,6 @@ export async function acquireGovinfoDirectory(options: PeopleAcquisitionOptions)
           const parsed = normalizeGovinfoMember(data, document, options, summaryUrl, summary.retrievedAt,documentSource);
           roster.officeholders.push(...parsed.officeholders.filter(holder=>!roster.officeholders.some(prior=>prior.id===holder.id)));
           roster.divisions.push(...parsed.divisions); roster.unmatched.push(...parsed.unmatched);
-          if(parsed.officeholders.length)await options.onPerson?.(result(options,roster,acquisitions,gaps));
         } catch(error) { gap(gaps,options,summaryUrl,error); }
       }
       sourceUrl = url(data.nextPage) ?? "";

@@ -13,6 +13,45 @@ export interface DialogSend {
   readonly amount: string;
   readonly selected: readonly string[];
   readonly when?: OrderWhen;
+  /** The place chosen when the words named several. */
+  readonly place?: string;
+}
+
+const CHOICES_SHOWN = 20;
+type PlaceChoice = { readonly label: string; readonly words: string };
+type PacketsReading =
+  | { readonly state: "READ"; readonly governments: readonly unknown[]; readonly held: number; readonly blanks: number; readonly estimatedUsd: number | null;
+      readonly families: readonly { readonly family: string; readonly name: string; readonly blanks: number; readonly held: number }[] }
+  | { readonly state: "CHOICES"; readonly choices: readonly PlaceChoice[] }
+  | { readonly state: "REFUSED"; readonly says: string };
+
+/** What agents would hunt here, read before anything is sent. Words that name several places hand back their choices. */
+function PacketsPreview(props: { readonly place: string; readonly onChoices: (choices: readonly PlaceChoice[]) => void }) {
+  const { onChoices } = props;
+  const [reading, setReading] = useState<PacketsReading | "loading" | "failed">("loading");
+  useEffect(() => {
+    const ctl = new AbortController();
+    void fetch(`/api/admin/v6/hunt-preview?place=${encodeURIComponent(props.place)}`, { signal: ctl.signal, headers: { accept: "application/json" } })
+      .then(res => res.ok ? res.json() as Promise<PacketsReading> : Promise.reject(new Error(`HTTP ${res.status}`)))
+      .then(read => { setReading(read); if (read.state === "CHOICES") onChoices(read.choices); }, () => { if (!ctl.signal.aborted) setReading("failed"); });
+    return () => ctl.abort();
+  }, [props.place, onChoices]);
+  if (reading === "loading") return <p className={s.meta}>Reading what we hold here…</p>;
+  if (reading === "failed") return <p className={s.meta}>What we hold here could not be read just now.</p>;
+  if (reading.state === "REFUSED") return <p className={s.meta}>{reading.says}</p>;
+  if (reading.state === "CHOICES") return <p className={s.meta}>These words name {reading.choices.length} places. Choose the one you mean.</p>;
+  const open = reading.families.filter(f => f.blanks > 0).sort((a, b) => b.blanks - a.blanks);
+  return (
+    <div className={s.stack} style={{ gap: 4 }}>
+      <Facts rows={[
+        ["Governments", reading.governments.length.toLocaleString("en-US")],
+        ["Already held", `${reading.held.toLocaleString("en-US")} facts, never looked for again`],
+        ["Blanks to hunt", reading.blanks.toLocaleString("en-US")],
+        ["Estimated cost", reading.blanks === 0 ? "Nothing: every blank is held" : reading.estimatedUsd === null ? "Not known: the hunter's model has no stated price" : `About $${reading.estimatedUsd.toFixed(2)}`],
+      ]} />
+      {open.length > 0 && <p className={s.meta}>{open.slice(0, 8).map(f => `${f.name} ${f.blanks.toLocaleString("en-US")}`).join(" · ")}{open.length > 8 ? ` · and ${open.length - 8} more` : ""}</p>}
+    </div>
+  );
 }
 
 export function ActionDialog(props: {
@@ -41,6 +80,8 @@ export function ActionDialog(props: {
   const offersWhen = !!def.gateway && !def.gateway.requiresStateVersion && !def.gateway.type.startsWith("orders.");
   const timing = orderWhen(whenMode,startTime,afterOrder,repeat,finishTime);
   const [sent, setSent] = useState(false);
+  const [placeChoices, setPlaceChoices] = useState<readonly PlaceChoice[] | null>(null);
+  const [chosenPlace, setChosenPlace] = useState<string | null>(null);
 
   useEffect(() => {
     opener.current = document.activeElement;
@@ -53,7 +94,8 @@ export function ActionDialog(props: {
   const chosen = preview.options?.find((o) => o.id === option) ?? null;
   const needOption = !!preview.options?.length && !chosen;
   const whenInvalid = offersWhen && timing===null ? "Choose when this order should run." : null;
-  const invalid = whenInvalid ?? preview.invalid?.({ option, words, amount, selected: selected.length }) ?? null;
+  const placeInvalid = placeChoices !== null && chosenPlace === null ? "Choose which place you mean." : null;
+  const invalid = whenInvalid ?? placeInvalid ?? preview.invalid?.({ option, words, amount, selected: selected.length }) ?? null;
   const reason = props.blocked ?? (chosen?.blocked ?? null) ?? invalid;
   const off = sent || needOption || !!reason;
   const global = preview.level === "global";
@@ -62,7 +104,7 @@ export function ActionDialog(props: {
   const send = () => {
     if (off) return;
     setSent(true);
-    props.onSend({ option, words, amount, selected, ...(offersWhen && timing ? {when:timing} : {}) });
+    props.onSend({ option, words, amount, selected, ...(offersWhen && timing ? {when:timing} : {}), ...(chosenPlace !== null ? { place: chosenPlace } : {}) });
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -85,6 +127,17 @@ export function ActionDialog(props: {
         </div>
         <h2 id={titleId} className={s.h2}>{preview.title}</h2>
         <Facts rows={preview.rows.map(([k, v]) => [k, v] as const).concat(items.length ? [["Selected", `${selected.length} of ${items.length}`] as const] : [])} />
+        {preview.packetsFor && props.mode === "live" && <PacketsPreview place={chosenPlace ?? preview.packetsFor} onChoices={setPlaceChoices} />}
+        {placeChoices !== null && (
+          <div className={s.stack} role="radiogroup" aria-label="Which place">
+            {placeChoices.length > CHOICES_SHOWN && <p className={s.meta}>Showing {CHOICES_SHOWN} of {placeChoices.length}. Add the state, like “Springfield, IL”, to narrow them.</p>}
+            {placeChoices.slice(0, CHOICES_SHOWN).map((c) => (
+              <button key={c.words} type="button" role="radio" aria-checked={chosenPlace === c.words} className={s.option} onClick={() => setChosenPlace(c.words)}>
+                <strong style={{ fontSize: 13 }}>{c.label}</strong>
+              </button>
+            ))}
+          </div>
+        )}
 
         {!!preview.options?.length && (
           <div className={s.stack} role="radiogroup" aria-label="Choose one">

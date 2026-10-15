@@ -30,6 +30,8 @@ const SAMPLE_ROWS: BodySourceWiring[] = [
     config: { portalUrl: "https://go.boarddocs.com/mi/grand/Board.nsf/Public", committeeId: "A4EP6J588C05" } },
   { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "SWAGIT" as const,
     config: { portalUrl: "https://chandleraz.new.swagit.com/views/155/", bodyMatch: "City Council" } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "PRIMEGOV" as const,
+    config: { portalUrl: "https://okc.primegov.com/Public/Portal", committeeId: "1" } },
 ];
 
 function sampleFilter(kind: (typeof DATA_DOOR_KINDS)[number]): Record<string, string> {

@@ -172,34 +172,6 @@ test("published Legistar native body IDs each become one derived door, including
   }
 });
 
-test("the shut-door repair follows its subject through a generated worker ID", async () => {
-  const { shutDoorForWork } = await import("../lib/control-plane/scheduler/providers/shut-doors.ts");
-  const { routeWorkPlan } = await import("../lib/control-plane/workers/route-plan.ts");
-  const { shutDoorRoute } = await import("../lib/control-plane/scheduler/providers/shut-doors.ts");
-  const repos = createMemoryRepositories();
-  const draft = pageDoorDraft({ url: "https://www.cochise.az.gov/Calendar.aspx", retrievedAt: NOW, recordClass: "MEETING", foundBy: null })!;
-  await upsertDerivedDoor(repos.doors, draft, NOW, NOW);
-  const door = (await repos.doors.mustRead(draft.doorId)).value;
-  const plan = routeWorkPlan({ providerId: "shut-doors", record: { subjectId: door.doorId, recordClass: "door-repair", readerImpactAt: NOW, observedChangeRateHours: null, lastWorkedAt: null, routes: [] }, route: shutDoorRoute(door) })!;
-  assert.equal(shutDoorForWork({ id: "wi-generated", subject: door.doorId, autonomousPlan: plan }), door.doorId);
-  assert.equal(shutDoorForWork({ id: "wi-other", subject: door.doorId }), null);
-});
-
-test("shut-door investigation waits for the runner transport check", async () => {
-  const { shutDoorsProvider } = await import("../lib/control-plane/scheduler/providers/shut-doors.ts");
-  const repos = createMemoryRepositories();
-  const draft = pageDoorDraft({ url: "https://www.cochise.az.gov/Calendar.aspx", retrievedAt: NOW, recordClass: "MEETING", foundBy: null })!;
-  await upsertDerivedDoor(repos.doors, draft, NOW, NOW);
-  const row = await repos.doors.mustRead(draft.doorId);
-  const door = { ...row.value, status: "SHUT" as const, shutSince: NOW };
-  await repos.doors.compareAndSet(row.id, row.revision, door, NOW);
-  const ctx = { root: process.cwd(), nowIso: NOW };
-  assert.equal(shutDoorsProvider({ doors: () => ({ doors: [door] }) }).enumerate(ctx).obligations.length, 0);
-  await recheckShutDoors(repos, runtime({ open: recordedDiscoveryOpen({}) }), [door]);
-  const checked = (await repos.doors.mustRead(row.id)).value;
-  assert.equal(shutDoorsProvider({ doors: () => ({ doors: [checked] }) }).enumerate(ctx).obligations.length, 1);
-});
-
 test("NCES supplies the school website even when its directory row has no city field", async () => {
   const { resolveCensusWebsite, censusReader } = await import("../lib/control-plane/discovery/census-lane.ts");
   const repos = createMemoryRepositories();

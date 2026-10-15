@@ -1,7 +1,5 @@
-/**
- * The Exa agent lane as a job: the packet goes to Exa's research agent, and each fact it returns goes into the Box
- * through the same report path a hunter uses, so the cited page is saved and the fact is checked the same way.
- */
+/** Exa's facts go into the Box through the hunter's own report path,
+ * so each cited page is saved and each fact is checked the same way. */
 import type { DeclaredExecutor, WorkOutcome } from "../control-plane/scheduler/dispatch.ts";
 import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import type { ScoutToolContext, ScoutToolkit } from "../control-plane/scheduler/scout-contract.ts";
@@ -13,7 +11,7 @@ import type { FetchLike, SearchBudget } from "./search.ts";
 import { dispositionForHunt } from "../control-plane/scheduler/scout-executor.ts";
 
 export const EXA_AGENT_ROUTE_ID = "hunter:exa-agent";
-export const EXA_AGENT_MODEL = `exa-agent-${EXA_AGENT_EFFORT}`;
+const EXA_AGENT_MODEL = `exa-agent-${EXA_AGENT_EFFORT}`;
 const EXA_AGENT_WALL_MS = 15 * 60_000;
 
 const cost = (usd: number | null, durationMs: number, requests: number, bytes: number): AttemptCost => ({

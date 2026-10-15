@@ -49,7 +49,7 @@ export interface HuntPacket {
 const CANDIDATE_BLANKS = new Set(["CAN-04", "CAN-05", "CAN-06", "CAN-07", "CAN-16", "CAN-17"]);
 
 /** Items an agent can find on a public page: not system, process, delivery or ZIP geography work. */
-export function huntableItem(checklistId: string): boolean {
+function huntableItem(checklistId: string): boolean {
   const rule = checklistItem(checklistId);
   return rule !== undefined && rule.unit !== "system" && rule.unit !== "zip" && HUNTABLE_PREDICATES.has(rule.predicateKind) &&
     rule.countsAs !== "superseded";
@@ -158,7 +158,7 @@ export function packetFamilies(packets: readonly HuntPacket[]): FamilyCount[] {
 }
 
 /** What sending these packets is expected to cost: model turns plus searches, before any caching. */
-export interface PacketCostRates {
+interface PacketCostRates {
   readonly inputUsdPerMillion: number;
   readonly outputUsdPerMillion: number;
   readonly searchUsd: number;

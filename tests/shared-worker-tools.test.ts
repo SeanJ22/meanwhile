@@ -5,7 +5,7 @@ import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { availableWorkerMemoryBytes, measuredReservationBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -18,6 +18,9 @@ import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
+
+/* A measured child reserves its largest recent peak, 5% over, rounded up to a whole MiB. */
+const reservedFor = (peaks: readonly number[]) => Math.ceil(Math.max(...peaks) * 1.05 / 1048576) * 1048576;
 
 test("Windows and Linux process probes leave timers and the host lock available", async context => {
   const nativeRequire = createRequire(import.meta.url);
@@ -395,7 +398,7 @@ test("a script's reservation follows its measured peak, and a never-measured scr
   const people = "people-wikidata-people-ca/national-people-refresh.mts";
   await assert.rejects(slots.acquire(people, Date.now() + 25), /WORKER_MEMORY_DEADLINE/,
     "the 1,258 MiB table value would fit; the measured 3.57 GB does not");
-  free = measuredReservationBytes([crashed]) + 768 * mib;
+  free = reservedFor([crashed]) + 768 * mib;
   const release = await slots.acquire(people, Date.now() + 100);
   host.transact(state => { assert.ok(state.reservations[0]!.peak >= crashed); }, false);
   release();
@@ -422,6 +425,6 @@ test("a running child's high-water memory is sampled, raises its live reservatio
   assert.equal(recorded.length, 1);
   assert.ok(recorded[0]! >= 160 * mib);
   const next = await slots.acquire("probe/peak-probe.mts");
-  host.transact(state => { assert.equal(state.reservations[0]!.peak, measuredReservationBytes(recorded)); }, false);
+  host.transact(state => { assert.equal(state.reservations[0]!.peak, reservedFor(recorded)); }, false);
   next();
 });

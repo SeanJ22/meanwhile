@@ -8,12 +8,12 @@ import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts
 import { feedDoorDrafts } from "../lib/doors/seed-feeds.ts";
 import { federalClient, federalPages, regulationPages } from "../lib/sources/congress/acquire.ts";
 import { normalizeFederalCapture } from "../lib/sources/congress/normalize.ts";
-import { countFederalFacts, federalCandidate, holdFederalCapture, publishFederalPartition, readFederalSourceProjection } from "../lib/sources/congress/publication.ts";
+import { countFederalFacts, federalCandidate, publishFederalPartition, readFederalSourceProjection } from "../lib/sources/congress/publication.ts";
 import { federalAskEvidence, isOpenFederalRule, readFederalMember, readFederalRules } from "../lib/sources/congress/reader.ts";
 import { federalApiTimestamp, refreshFederalSource } from "../lib/sources/congress/refresh.ts";
 import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, type FederalSourceId } from "../lib/sources/congress/targets.ts";
 import type { FederalCapture, HeldFederalCapture } from "../lib/sources/congress/types.ts";
-import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
+import { holdRawCapture, readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { federalCalendarDate, federalDeadlineDate } from "../lib/sources/congress/presentation.ts";
 
 const vault = new MemoryEvidenceStore();
@@ -112,7 +112,7 @@ test("the saved official LDA page retains all reports and contributions without 
 
 test("publication refuses a changed amount or title that saved official bytes do not support", async () => {
   const c = bill(), records = normalizeFederalCapture(c), store = new MemoryRoutineDataStore();
-  const candidate = federalCandidate({ source: "congress-api", partition: "congress:C001078", captures: [await holdFederalCapture(vault, c)], now: NOW,
+  const candidate = federalCandidate({ source: "congress-api", partition: "congress:C001078", captures: [{ ...c, raw: await holdRawCapture(vault, c.source, c.body, "application/json") }], now: NOW,
     projection: { formatVersion: 1, source: "congress-api", records: records.map(row => ({ ...row, title: "Invented title" })) } });
   const outcome = await processRegisteredFanOutCandidate(store, "congress-api", candidate, NOW);
   assert.equal(outcome.promoted, null); assert.equal(outcome.candidate.receipt?.decision, "FAIL");

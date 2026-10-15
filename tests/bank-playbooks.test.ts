@@ -1,4 +1,3 @@
-import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 import { fixturePlaybooks } from "./helpers/playbooks.ts";
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -6,7 +5,7 @@ import { readRolePlaybook, workerSystemPrompt, rolePlaybook } from '../lib/contr
 import { writeFieldManual } from '../lib/control-plane/field-manual.ts';
 import { createMemoryRepositories } from '../lib/control-plane/repository/memory.ts';
 import { hunterExecutor, scoutStaticPrefix, type ModelRequest } from '../lib/control-plane/scheduler/scout-executor.ts';
-import { HUNTER_TOOL_SPECS } from '../lib/control-plane/scheduler/scout-tools.ts';
+import { HUNTER_SPECS } from './helpers/hunter-tool-specs.ts';
 
 test('a changed role playbook is read on the next start and changes the cached system block', async () => {
   const repos = createMemoryRepositories();
@@ -41,7 +40,7 @@ test('the next actual hunter transport request reads the current Bank playbook',
     let sent: ModelRequest | undefined;
     const executor = hunterExecutor({ role: 'HUNTER', playbookFor: role => readRolePlaybook(repos, role),
       transport: async request => { sent ??= request; throw new Error('Captured mock request; no provider called'); },
-      toolkitFor: () => ({ specs: HUNTER_TOOL_SPECS, vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0, toolCalls: 0,
+      toolkitFor: () => ({ specs: HUNTER_SPECS, vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0, toolCalls: 0,
         call: async () => { throw new Error('No acquisition requested'); } }),
       contextFor: async () => ({ brief: 'playbook request', reason: 'playbook request', blanks: 1, handed: { artifactIds: [] },
         tools: { vault: async () => ({ stored: true, where: 'memory', why: 'test' }), spaceOut: async () => undefined } }),

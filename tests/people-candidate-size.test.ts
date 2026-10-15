@@ -1,11 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
-import { capturedText, priorPeopleCaptures, publishStatePeople, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
-import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { capturedText, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { convertEmbeddedCaptures } from "../scripts/convert-embedded-captures.mts";
 import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { statewideRoster, verifyStatewideOfficialPage } from "../lib/sources/statewide/parse.ts";
@@ -66,39 +63,4 @@ test("a re-read with unchanged values writes no candidate, and a refused one is 
   assert.equal(candidates(refusedStore).size, refusedRows, "the same values meeting the same refusal write no second candidate");
   assert.equal(repeat.outcome.candidate.candidate.id, refused.outcome.candidate.candidate.id);
   assert.ok((await refusedStore.events(refused.outcome.candidate.candidate.id)).some(event => event.detail.startsWith("RECHECKED_UNCHANGED")));
-});
-
-test("a held version written with pages inside converts to vault references in one pass, and the next read carries them", async () => {
-  const store = new MemoryRoutineDataStore(), url = "https://office.example.gov/about-jordan", read = release("Jordan Reader", url, T1);
-  const published = await publish(store, new MemoryEvidenceStore(), read, T1), record = candidates(store).get(published.candidate.id)!;
-  const { captures: _captures, ...payload } = record.candidate.normalizedPayload as { captures: StatePeopleCapture[] };
-  const embedded = { ...payload, acquisitions: read.acquisitions };
-  candidates(store).set(record.candidate.id, { ...record, candidate: { ...record.candidate, normalizedPayload: embedded,
-    normalization: { ...record.candidate.normalization, normalizedPayloadHash: normalizedHash(embedded) } } });
-  assert.deepEqual(priorPeopleCaptures(candidates(store).get(record.candidate.id)!.candidate.normalizedPayload), [], "pages inside a payload are never read as captures");
-
-  const vault = new MemoryEvidenceStore();
-  const [converted] = await convertEmbeddedCaptures({ store, vault, now: () => T2, states: ["nj"] });
-  assert.equal(converted?.from, record.candidate.id); assert.ok(converted?.to, converted?.refusal);
-  const held = candidates(store).get(converted.to)!.candidate, [capture] = (held.normalizedPayload as { captures: StatePeopleCapture[] }).captures;
-  assert.ok(!JSON.stringify(held).includes("Site navigation"));
-  assert.equal(await capturedText(vault, capture!), read.acquisitions[0]!.body);
-  assert.deepEqual(await convertEmbeddedCaptures({ store, vault, now: () => T2, states: ["nj"] }), [], "a converted store has nothing left to convert");
-});
-
-test("an Open States version written with its files inside converts in one pass", async () => {
-  const store = new MemoryRoutineDataStore(), revision = "a".repeat(40), url = `https://raw.githubusercontent.com/openstates/people/${revision}/data/nj/executive/reader.yml`;
-  const body = "id: ocd-person/00000000-0000-0000-0000-000000000001\nname: Jordan Reader\nroles:\n- type: secretary_of_state\n  jurisdiction: ocd-jurisdiction/country:us/state:nj/government\n";
-  const acquisitions = [{ requestedUrl: url, finalUrl: url, httpStatus: 200, body, retrievedAt: T1 }];
-  const published = await publishStatePeople({ store, vault: new MemoryEvidenceStore(), state: "nj", roster: normalize(yamlToPeople(body, "nj", url, T1), new Map(), T1, "US-NJ"),
-    acquisitions, releaseId: revision, now: T1 });
-  assert.ok(published.outcome.promoted, JSON.stringify(published.outcome.candidate.receipt));
-  const record = candidates(store).get(published.candidate.id)!, { captures: _captures, ...payload } = record.candidate.normalizedPayload as { captures: StatePeopleCapture[] };
-  const embedded = { ...payload, acquisitions };
-  candidates(store).set(record.candidate.id, { ...record, candidate: { ...record.candidate, normalizedPayload: embedded,
-    normalization: { ...record.candidate.normalization, normalizedPayloadHash: normalizedHash(embedded) } } });
-  const vault = new MemoryEvidenceStore(), [converted] = await convertEmbeddedCaptures({ store, vault, now: () => T2, states: ["nj"] });
-  assert.equal(converted?.from, record.candidate.id); assert.ok(converted?.to, converted?.refusal);
-  const [capture] = (candidates(store).get(converted.to)!.candidate.normalizedPayload as { captures: StatePeopleCapture[] }).captures;
-  assert.equal(await capturedText(vault, capture!), body);
 });

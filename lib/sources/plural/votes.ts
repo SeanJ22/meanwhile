@@ -48,7 +48,7 @@ export interface PluralVoteFact {
 export interface PluralVotesProjection { formatVersion: 1; state: string; rollCalls: PluralVoteFact[] }
 export interface PluralBillEvidence { requestedUrl: string; finalUrl: string; body: string; retrievedAt: string; sha256: string; sourceCheck?: SourceCheckEvidence; vaultKey?: string }
 /** Held evidence keeps a raw-capture reference; a bulk archive (empty body) keeps its release vault key. */
-export type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
+type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
 
 /** A malformed vote is isolated. Complete neighboring votes still publish independently. */
 export function parsePluralBill(state: string, evidence: PluralBillEvidence): { votes: PluralVoteFact[]; held: { key: string; detail: string }[] } {

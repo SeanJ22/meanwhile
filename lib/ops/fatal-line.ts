@@ -10,12 +10,8 @@ export function fatalLine(child: string, step: string, error: unknown): string {
   return `${FATAL_LINE_PREFIX}${child}: ${step} — ${sanitizedErrorDiagnostic(error)}`;
 }
 
-/**
- * Route an uncaught exception or unhandled rejection through `fatalLine`,
- * then exit 1, the code Node would have used. Install it before the first
- * await: in Node 24 a rejected top-level await arrives as an uncaught
- * exception.
- */
+/** Route an uncaught exception or unhandled rejection through `fatalLine`, then exit 1 as Node would.
+ * Install before the first await: Node 24 delivers a rejected top-level await as an uncaught exception. */
 export function installFatalLine(
   child: string,
   step: () => string,
@@ -42,11 +38,8 @@ export function installFatalLine(
 /** How much of a child's own fatal line a parent's digest quotes. */
 export const FATAL_QUOTE_MAX_CHARS = 600;
 
-/**
- * The last `RCD_FATAL` line in a child's output, without its prefix, redacted
- * again and clipped. Null when the child left none. A parent quotes this line
- * and still never a child's raw stderr.
- */
+/** The last `RCD_FATAL` line in a child's output, unprefixed, redacted again and clipped; null when none.
+ * A parent quotes this line and never a child's raw stderr. */
 export function childFatalLine(output: string, maxChars: number = FATAL_QUOTE_MAX_CHARS): string | null {
   const fatal = output.split(/\r?\n/)
     .flatMap((line) => line.startsWith(FATAL_LINE_PREFIX) ? [line.slice(FATAL_LINE_PREFIX.length).trim()] : [])
@@ -70,10 +63,8 @@ export function nativeAbortLine(stderr: string): string | null {
     .filter((line) => /^(?:FATAL ERROR:|# Fatal error|Fatal process out of memory|Assertion failed|.*: Assertion `)/.test(line)).at(-1) ?? null;
 }
 
-/**
- * Why a started source child died without a receipt from a signal or a native abort (out of memory), or null.
- * Its work stays owed for the task's next turn; the pass is not failed by it.
- */
+/** Why a started source child died without a receipt from a signal or native abort (out of memory), or null.
+ * Its work stays owed for the task's next turn; the pass is not failed by it. */
 export function childCrash(run: BoundedChildResult): string | null {
   if (run.termination === "TIMED_OUT" || run.termination === "OUTPUT_LIMIT_EXCEEDED" || run.status === 0 || /^RCD_RECEIPT=/m.test(run.stdout)) return null;
   const abort = nativeAbortLine(run.stderr);

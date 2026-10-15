@@ -10,7 +10,6 @@ import type { RecordExtractionShape } from "../lib/control-plane/workers/types.t
 import type { Registry } from "../lib/registry/types.ts";
 import { votingChiefRoots, votingScopeResolvers, votingSourceEvidence, votingReadHasFacts } from "../scripts/fetch-voting-sites.mts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { readRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 
 const doors = JSON.parse(readFileSync("data/reference/voting-legacy-doors.json", "utf8")) as VotingSourceDoor[];
 const named = (id: string) => { const door = doors.find(row => row.id === id); assert.ok(door); return door; };
@@ -54,7 +53,7 @@ test("source publication needs acquired facts and keeps only its own source evid
     bytes: readFileSync("tests/fixtures/voting-sources/cochise-voter-information-official-extract.html") }]);
   assert.equal(evidence.length, 1);
   assert.equal(evidence[0]!.url, door.url);
-  assert.deepEqual(Buffer.from(await readRawCapture(vault, evidence[0]!)), raw.bytes);
+  assert.deepEqual(Buffer.from((await vault.get(evidence[0]!.vaultKey))!.bytes), raw.bytes);
   assert.equal((await vault.list("")).length, 1, "an unrelated capture is never held");
 });
 

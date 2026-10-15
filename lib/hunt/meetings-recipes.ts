@@ -350,6 +350,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   novusagenda: "novusagenda",
   swagit: "swagit",
   escribe: "escribe",
+  primegov: "primegov",
   "official-page-events": null,
 };
 
@@ -367,6 +368,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   boarddocs: "a public BoardDocs committee list whose dated rows carry published meeting identities; the committee is named by the attested portal selector",
   novusagenda: "a public NovusAgenda meeting grid with published meeting ids, dates and body labels",
   swagit: "a public Swagit meeting list with dated event or video links and published body titles or category headings",
+  primegov: "a public PrimeGov meeting list with committee ids, local dates and published document templates",
   "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 

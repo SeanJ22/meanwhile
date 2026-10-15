@@ -8,7 +8,7 @@ import type { AskedGap } from "../control-plane/ask-gap-observations.ts";
 import { blankFingerprint, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
 import { SEARCH_PRICE_USD } from "./search.ts";
 
-export type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
+type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
 const readHeld: HeldReader = (ids, now) => readHeldPlaceCapture(ids, { now, bypassCache: true });
 
 /** Each government's packet as it stands now, recomputed from held data and what Ask could not answer. A government with nothing open has no blanks. */
@@ -34,7 +34,7 @@ export async function divisionsOfPlace(zips: readonly string[], states: readonly
   return unionDivisions([...byZip.values()], always).map(division => division.id).sort();
 }
 
-export interface PacketPreview {
+interface PacketPreview {
   readonly state: "READ";
   readonly label: string;
   readonly governments: readonly { readonly governmentId: string; readonly label: string; readonly held: number; readonly blanks: number; readonly fingerprint: string }[];

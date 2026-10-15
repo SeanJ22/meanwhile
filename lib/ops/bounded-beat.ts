@@ -1,7 +1,5 @@
-/**
- * A repeating write that never queues behind itself: a call while the last write is still inside `boundMs`
- * shares it, and a write past `boundMs` is left to finish alone so the next call starts a fresh one.
- */
+/** A repeating write that never queues behind itself: a call during a write inside `boundMs` shares it,
+ * and a write past `boundMs` finishes alone so the next call starts fresh. */
 export function boundedBeat(write: () => Promise<void>, boundMs: number, onLate: () => void = () => undefined): () => Promise<void> {
   let current: Promise<void> | null = null;
   return () => {

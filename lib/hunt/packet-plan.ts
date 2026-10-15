@@ -1,7 +1,5 @@
-/**
- * The standing work a hunt packet runs as: one obligation and one work plan per government, keyed by its OCD
- * division, so the work, its blanks and what is held all use the same id.
- */
+/** One obligation and one work plan per government, keyed by its OCD division,
+ * so the work, its blanks and what is held share one id. */
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import { OWNER_DISPATCH, type FreshnessObligation } from "../control-plane/scheduler/obligation.ts";
 import type { RouteDescriptor } from "../control-plane/scheduler/registry.ts";

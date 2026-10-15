@@ -3,18 +3,20 @@
 lane: site-reads
 owner: site-reads
 writer: the site-reads lane
-check: fold-conflict
-ready: no step ids unknown
-river: d9107da58a23f9d38b60d300552af7e9d2509561
-at: 2026-10-15T04:44:34Z
+check: cleanliness
+ready: NE-01 8782164ddb2f125249f206ab13dc9b2c5b42b3c9
+river: be06573dcbd3a61b776ddab90e6f20519d3eefbf
+at: 2026-10-15T14:32:28Z
 state: returned
-fix_subject: fix:89d58a29
-fix: River · stream/site-reads — fold-conflict failed for site-reads: NE-01 (22303b781) conflicts with river d9107da58 in lib/db/migration-immutability.ts and tests/migration-immutability.test.ts. PB-01-FIX2 is now in river and changes the retraction check (applied row's sha256 must match the retracted file).
+fix_subject: fix:3bf489cb
+fix: River · stream/site-reads — cleanliness failed for site-reads: Cleanliness findings on NE-01 (8782164dd, folded as 1041944e6). Fix in your next READY:
 
 ## Failure
 
 ```
-NE-01 (22303b781) conflicts with river d9107da58 in lib/db/migration-immutability.ts and tests/migration-immutability.test.ts. PB-01-FIX2 is now in river and changes the retraction check (applied row's sha256 must match the retracted file). Take river's version of both files, merge origin/river into stream/site-reads, keep only NE-01's own changes, run the focused tests, push a new READY.
+Cleanliness findings on NE-01 (8782164dd, folded as 1041944e6). Fix in your next READY:
+Export nothing imports (unexport or delete if unused in the file too):
+   lib/api/reader-route.ts:21 selectionForReader
 ```
 
 ## Repair

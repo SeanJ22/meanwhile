@@ -12,17 +12,16 @@ import type { PublishedLookupState } from "../lib/census-geography/reader.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { composeCrosswalk, derivedCrosswalkCandidate, planDerivedCrosswalk, readDerivedMeetingBodyCrosswalk } from "../lib/civic-data/derived-crosswalk.ts";
-import { buildDerivedFamily, derivedFamilyCandidate, type FamilyMemberRead } from "../lib/civic-data/derived-meeting-family.ts";
+import { installReviewedMeetingDoors, publishReviewedMeetingBody } from "./helpers/meeting-body-publication.ts";
 import { bodySourceWiringFor, derivedWiringCandidate, derivedWiringKey, familyMembers, readDerivedMeetingWiring } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
-import { derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import {
   clearRegistrationJurisdictionRegistries,
   installOperationalReferenceBundle,
   operationalReferenceBundle,
   requiredJurisdictionRegistry,
 } from "../lib/civic-data/operational-references.ts";
-import { processRegisteredManualCandidate, processRegisteredMeetingPartitionCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredManualCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { registrationGovernments, type ReadOnlyQuery, type Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes } from "../lib/control-plane/discovery/auto-crosswalk.ts";
@@ -448,23 +447,16 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   if (wiring.kind !== "PROMOTED") return;
   const members = familyMembers(wiring.value, "US-OH");
   assert.deepEqual(members.map((m) => [m.id, m.status]), [[derivedWiringKey("ICAL", COLUMBUS_BODY, COLUMBUS_ROUTE), "ACTIVE"]]);
-  const reads: FamilyMemberRead[] = members.map((member) => ({
-    member,
-    acquisitions: [{ requestedUrl: member.row.route, finalUrl: member.row.route, httpStatus: 200, rawHash: vault.get(attempt!.found[0]!.artifactId!)!.sha256, byteCount: COLUMBUS_FEED.length }],
-    ok: true,
-    error: null,
-    freshMeetings: makeIcalSource([bodySourceWiringFor(member.row)]).normalizeWithDrops([{ wiring: bodySourceWiringFor(member.row), ics: COLUMBUS_FEED, collectedAt: T_FAMILY, sourceUrl: member.row.route }], new Date(T_FAMILY)).meetings,
-    freshAgendaDocuments: [],
-    retrievedAt: T_FAMILY,
-  }));
-  const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-OH"));
-  const build = buildDerivedFamily({
-    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
-    members, reads, previous: null, generatedAt: T_FAMILY,
-    reconcile: (r) => ({ meetings: r.freshMeetings, agendaDocuments: [], removalEvidence: [] }),
-  });
-  const familyOutcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, derivedFamilyCandidate(partition, build), T_FAMILY);
-  assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
+  installReviewedMeetingDoors(members, T_FAMILY);
+  for (const member of members) {
+    const meetings = makeIcalSource([bodySourceWiringFor(member.row)]).normalizeWithDrops([
+      { wiring: bodySourceWiringFor(member.row), ics: COLUMBUS_FEED, collectedAt: T_FAMILY, sourceUrl: member.row.route },
+    ], new Date(T_FAMILY)).meetings;
+    const published = await publishReviewedMeetingBody({ store, member, meetings, now: T_FAMILY,
+      acquisitions: [{ requestedUrl: member.row.route, finalUrl: member.row.route, httpStatus: 200,
+        rawHash: vault.get(attempt!.found[0]!.artifactId!)!.sha256, byteCount: COLUMBUS_FEED.length }] });
+    assert.equal(published.outcome.candidate.state, "PROMOTED", published.outcome.candidate.failureDetail ?? "");
+  }
 
   const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
   assert.equal(reader.kind, "PROMOTED");

@@ -1,3 +1,4 @@
+import { fetchSource } from "../../sources/fetch-source.ts";
 /** Credentialed, read-only government APIs shared by hunters and detectives.
  * Credentials stay in transport, never in source locators or model output. */
 import { readCompleteResponse } from "../../sources/source-bytes.ts";
@@ -47,7 +48,7 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
   const env = options.env ?? process.env;
   const input = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
   const params = input.params && typeof input.params === 'object' ? input.params as Record<string,unknown> : {};
-  const fetcher = options.fetchImpl ?? fetch;
+  const fetcher = options.fetchImpl ?? fetchSource;
   const secrets = Object.entries(env).filter(([key,value]) => /(?:API_KEY|TOKEN)$/.test(key) && value).map(([,value]) => value!);
   const redact = (text:string) => secrets.reduce((s,key) => s.split(key).join('[REDACTED]').split(encodeURIComponent(key)).join('[REDACTED]'), text);
   let requests = 0, bytes = 0;

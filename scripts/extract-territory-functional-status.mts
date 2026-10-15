@@ -1,37 +1,5 @@
-/**
- * @freshness-reads-here — each download receipt's retrievedAt is the instant this script's own census.gov read
- * answered, minted right beside that fetch and kept with the file it read.
- *
- * The territories' governments, in the Census's own words.
- *
- *   node_modules/.bin/tsx scripts/extract-territory-functional-status.mts [--tiger=<dir>]
- *
- * The 2022 Census of Governments, which registers every state's governments,
- * lists nothing for American Samoa, Guam, the Northern Mariana Islands, Puerto
- * Rico or the U.S. Virgin Islands: it does not enumerate the territories. So
- * their registration reads the one Census field that says, per division,
- * whether a government sits on it: TIGER/Line's functional status (FUNCSTAT).
- * It exists only in full TIGER/Line, never in the
- * cartographic files the division ids come from, and the method is the one
- * `scripts/fetch-districts.ts` established: download the TIGER/Line archive,
- * read only its attribute table, join on GEOID.
- *
- * ```
- *   county   tl_2023_us_county.zip, the territories' rows (one national file)
- *   cousub   tl_2023_<fp>_cousub.zip, one per territory
- *   place    tl_2023_<fp>_place.zip,  one per territory
- * ```
- *
- * Writes `data/reference/census_tiger_2023_territory_functional_status.csv`
- * (layer, state FIPS, GEOID, NAME, NAMELSAD, LSAD, CLASSFP, FUNCSTAT; nothing
- * else is kept) and prints each archive's provenance for the dataset's note.
- * Each download's receipt (URL, status, Last-Modified, bytes, sha256, time) is
- * kept beside it in the cache, so a rerun from cache reports the original read
- * rather than a new one. Serialized requests, an identified User-Agent, a
- * batch budget: the compliance of `scripts/fetch-tiger-national.mts`. A row
- * with no GEOID or no FUNCSTAT refuses the run: an empty status is no
- * evidence either way, and this file exists to be evidence.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+/** @freshness-reads-here */
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -85,7 +53,7 @@ async function archive(file: string, url: string): Promise<{ readonly bytes: Buf
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), BATCH_TIMEOUT_MS);
   try {
-    const response = await fetch(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal: controller.signal });
+    const response = await fetchSource(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal: controller.signal });
     const retrievedAt = new Date().toISOString();
     if (!response.ok) throw new Error(`census.gov answered HTTP ${response.status} for ${url}`);
     const finalUrl = response.url || url;

@@ -1,3 +1,4 @@
+import { routineScopeState } from "../civic-data/state-scope.ts";
 import { randomUUID } from "node:crypto";
 import { contentHash } from "./ids.ts";
 import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type AppendOnlyRepository, type ArtifactRecord } from "./repository/types.ts";
@@ -49,6 +50,13 @@ export interface BoxFinding {
   /** Why a waiting finding has no slot yet, under the slot map it was read with; a newer map looks at it again. */
   readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string };
 }
+
+export const BOX_PUBLICATION_STATE_SQL = "coalesce(upper(substring(value->>'subjectId' from '(?i)(?:^|/(?:state|district|territory):|^curated:)([a-z]{2})(?=[:/#]|$)')), upper(substring(jsonb_path_query_first(value, '$.origins[*].resultKey ? (@ like_regex \"/(state|district|territory):[a-z]{2}\")') #>> '{}' from '/(?:state|district|territory):([a-z]{2})')), 'US')";
+export const boxFindingState = (row: Pick<BoxFinding, "subjectId" | "origins">): string => {
+  const subject = routineScopeState(row.subjectId);
+  const packet = row.origins.find(origin => /\/(state|district|territory):[a-z]{2}/i.test(origin.resultKey ?? ""))?.resultKey;
+  return (subject === "US" && packet ? routineScopeState(packet) : subject).replace(/^US-/, "");
+};
 
 /** Missing old evidence is retained by origin; it must not collapse into one empty finding. */
 export function boxFindingId(input: BoxInput): string {

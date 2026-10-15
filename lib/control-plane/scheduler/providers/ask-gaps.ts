@@ -1,16 +1,3 @@
-/**
- * Turns the gaps Ask states for a held body (`heldBodyGaps`) into tracked work, one obligation per body and
- * gap code. Derived from held data, never from questions; counts of what readers were told only raise reader
- * impact or create a `MEETINGS_NOT_HELD` obligation. A carrying routine read past its cadence is
- * `CADENCE_BROKEN`; with no carrier an adapter is owed. A failed read is a `readFailure`, so no gap retires
- * on it. Pure.
- *
- *   id       freshness:ask-gap:<body id>#<code>
- *   route    <code>
- *   class    ask-gap
- *   subject  the body id
- */
-
 import {
   ASK_GAP_RECORD_CLASS,
   heldBodyGaps,
@@ -40,15 +27,9 @@ import type { ObligationProvider, ProvidedObligation, ProviderContext, ProviderY
 
 export { ASK_GAPS_PROVIDER_ID, ASK_GAP_NAMESPACE, askGapObligationId, parseAskGapObligationId } from "../../ask-gap-id.ts";
 
-
 /** A held meeting, as the provider needs it: the gap fields and its body. */
 export type AskGapMeeting = HeldGapMeetingLike & { readonly bodyId?: string | null };
 
-/**
- * Where one carrying routine read stands, as the runner read its clock.
- * `READ` carries the store-observed instants and the cadence the owner's rule
- * requires of it now; `UNREAD` names why its clock could not be read.
- */
 export type CarrierClock =
   | {
       readonly kind: "READ";
@@ -80,33 +61,18 @@ export const UNREAD_ASK_GAP_HOLDINGS: AskGapHoldingsReading = {
   unreadable: "no held-meetings reading was handed to this provider",
 };
 
-
-/** `US-XX` from `ocd-division/country:us/state:xx/...`; null when the id names no state. */
-function stateOfBody(bodyId: string): string | null {
-  const m = /\/state:([a-z]{2})(?=[/#]|$)/.exec(bodyId);
-  return m ? `US-${m[1]!.toUpperCase()}` : null;
-}
-
-/**
- * The routine contracts whose reads close a gap of this record class for this body: for MEETING, the body's
- * own meeting partitions or else its state's derived family; for MEETING_OUTCOME, every contract that follows
- * one of the body's partitions. Empty means an adapter is owed.
- */
 export function askGapCarriers(
   bodyId: string,
   recordClass: AskGapRecordClass,
   registered: {
-    readonly partitions?: readonly Pick<MeetingPartitionContract, "id" | "bodyId" | "derivedFamily">[];
+    readonly partitions?: readonly Pick<MeetingPartitionContract, "id" | "bodyId">[];
     readonly contracts?: readonly Pick<RoutineSourceContract, "id" | "recordClass" | "schedule">[];
   } = {},
 ): readonly string[] {
   const partitions = registered.partitions ?? MEETING_PARTITION_CONTRACTS;
   const contracts = registered.contracts ?? [...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS];
   if (recordClass === "MEETING") {
-    const own = ownMeetingPartitions(bodyId, partitions);
-    if (own.length > 0) return own;
-    const state = stateOfBody(bodyId);
-    return partitions.filter((p) => p.derivedFamily !== null && p.derivedFamily === state).map((p) => p.id);
+    return ownMeetingPartitions(bodyId, partitions);
   }
   return contracts
     .filter((c) => c.recordClass === "MEETING_OUTCOME" && (c.schedule?.follows ?? []).some((f) => f.bodyId === bodyId))
@@ -115,8 +81,8 @@ export function askGapCarriers(
 }
 
 /** The body's own meeting partitions (never a state's derived family), sorted. */
-function ownMeetingPartitions(bodyId: string, partitions: readonly Pick<MeetingPartitionContract, "id" | "bodyId" | "derivedFamily">[]): string[] {
-  return partitions.filter((p) => p.derivedFamily === null && p.bodyId === bodyId).map((p) => p.id).sort();
+function ownMeetingPartitions(bodyId: string, partitions: readonly Pick<MeetingPartitionContract, "id" | "bodyId">[]): string[] {
+  return partitions.filter((p) => p.bodyId === bodyId).map((p) => p.id).sort();
 }
 
 /** The carriers of one gap code. `MEETINGS_NOT_HELD` is carried only by the body's own partitions. */
@@ -131,11 +97,6 @@ export function askGapCarriersFor(
 
 const hours = (ms: number): string => `${(ms / 3_600_000).toFixed(1)} hours`;
 
-/**
- * Where one carrying read stands against the owner's cadence. `failure` is one
- * sentence with no inner full stop, or null when the cadence holds (or cannot
- * be told: an unread clock is said, and is not a failure of the read).
- */
 export function carrierCadence(
   contractId: string,
   clock: CarrierClock,
@@ -162,7 +123,6 @@ export function carrierCadence(
   }
   return { failure: null, nextReadDueAt: clock.nextReadDueAt, words: `${contractId} last succeeded ${clock.lastSucceededAt} (${cadence})${due}` };
 }
-
 
 function sittingWords(gaps: readonly HeldAskGap[]): string {
   const listed = gaps.flatMap((g) => (g.sitting ? [g.sitting] : []));
@@ -192,7 +152,6 @@ function heldEvidence(code: AskGapCode, gaps: readonly HeldAskGap[], nowMs: numb
       return "Ask states that we have not recorded any meetings for this body: no held meeting names it in this reading.";
   }
 }
-
 
 /** The one route for a body's gap: its routine read, or the adapter owed. */
 export function askGapRoute(input: {
@@ -260,15 +219,11 @@ export function askGapRoute(input: {
   };
 }
 
-
 export interface AskGapsInput {
   readonly holdings?: () => AskGapHoldingsReading;
   /** The registered contracts carriage is read from; the committed registries by default. */
   readonly registered?: Parameters<typeof askGapCarriers>[2];
-  /**
-   * What readers were told, counted per body, gap and day (`ask-gap-observations.ts`).
-   * Absent: the held derivation alone, exactly as before. Unreadable: a named read failure.
-   */
+
   readonly observations?: () => AskGapObservationReading;
 }
 

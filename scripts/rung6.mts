@@ -1,19 +1,8 @@
-/**
- * Rung 6 as a command: the live browser with JavaScript executed and content
- * awaited, walked deliberately whatever rung 2 said (a JS-rendered page can
- * answer rung 2 with HTTP 200 and an empty detail region).
- *
- * ```
- * pnpm rung6 <url> [--out <file>] [--wait <ms>] [--selector <css>] [--html]
- * ```
- *
- * Reports the rendered text, bytes before script ran against bytes after, and
- * the contacts in the rendered DOM including those only in an `href`. The
- * browser is opened through `scripts/browser.mts`, so the run declares itself.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { writeFileSync } from "node:fs";
 
 import { launchGuarded } from "./browser.mts";
+import { routeSourceRequests } from "./scout-browse.mts";
 
 function arg(flag: string): string | undefined {
   const i = process.argv.indexOf(flag);
@@ -37,7 +26,7 @@ const UA = "we-the-people civic data (contact: seanj22@gmail.com)";
 let beforeBytes = 0;
 let beforeStatus = 0;
 try {
-  const res = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow" });
+  const res = await fetchSource(url, { headers: { "user-agent": UA }, redirect: "follow" });
   beforeStatus = res.status;
   beforeBytes = (await res.text()).length;
 } catch {
@@ -53,6 +42,7 @@ let finalUrl = url;
 let error: string | null = null;
 
 try {
+  await routeSourceRequests(page, url, 60_000 + waitMs);
   await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 });
   if (selector) {
     await page.waitForSelector(selector, { timeout: 30_000 }).catch(() => {});

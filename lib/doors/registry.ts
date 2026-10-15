@@ -1,4 +1,5 @@
 import { canonicalJson, type AggregateRepository } from "../control-plane/repository/types.ts";
+import { routineScopeState } from "../civic-data/state-scope.ts";
 
 /** Whether a door is read, shut because it stopped working, or deliberately set aside. */
 export const DOOR_STATUSES = ["OPEN", "SHUT", "SUSPENDED"] as const;
@@ -33,8 +34,6 @@ export interface DoorMeeting {
   readonly historyGapReason?: string;
   /** When the settings were last confirmed working. */
   readonly verifiedAt: string;
-  /** The family partition a derived member belongs to; null for a hand-wired door. */
-  readonly family: string | null;
 }
 
 /** What the last first look saw. Stored on the door so the next look can be conditional. */
@@ -49,6 +48,7 @@ export interface DoorValidators {
 }
 
 export interface DoorRecord {
+  readonly scopeState?: string;
   readonly formatVersion: 1;
   /** Stable and readable, e.g. `meetings:<source>:<bodyId>`. Never reused. */
   readonly doorId: string;
@@ -209,8 +209,6 @@ function meetingOf(value: unknown): Checked<DoorMeeting | null> {
   const reason = m.historyGapReason === undefined ? undefined : need("historyGapReason");
   if (reason === null) return { ok: false, why: "the history gap reason must be text" };
   if (m.publishesHistory === false && reason === undefined) return { ok: false, why: "a route with no past meetings must say why" };
-  const family = m.family === undefined || m.family === null ? null : need("family");
-  if (m.family !== undefined && m.family !== null && family === null) return { ok: false, why: "the family must be text" };
   return {
     ok: true,
     value: {
@@ -222,7 +220,6 @@ function meetingOf(value: unknown): Checked<DoorMeeting | null> {
       ...(m.publishesHistory === false ? { publishesHistory: false as const } : {}),
       ...(reason === undefined ? {} : { historyGapReason: reason }),
       verifiedAt,
-      family,
     },
   };
 }
@@ -314,10 +311,15 @@ function healthKept(previous: DoorRecord | null, status: DoorStatus): Partial<Do
 }
 
 /** A new door, or a hand edit of one, with the system's own fields carried over from what was there. */
+export function doorScopeState(door: Pick<DoorDraft, "ocdId" | "bodyIds"> & { readonly config?: DoorDraft["config"] }): string {
+  return routineScopeState(door.ocdId ?? door.bodyIds?.[0] ?? String(door.config?.scope ?? door.config?.jurisdictionId ?? ""));
+}
+
 export function applyManualEdit(previous: DoorRecord | null, draft: Required<DoorDraft>, at: string): DoorRecord {
   return {
     formatVersion: 1,
     ...draft,
+    scopeState: doorScopeState(draft),
     lastSuccessAt: previous?.lastSuccessAt ?? null,
     lastFailureAt: previous?.lastFailureAt ?? null,
     validators: previous?.validators ?? null,
@@ -339,6 +341,7 @@ export function applyDerivedRow(
   const next: DoorRecord = {
     formatVersion: 1,
     ...draft,
+    scopeState: doorScopeState(draft),
     // A derive step never reopens a door someone shut, or shuts one that is open: status stays with the record once it exists.
     status: previous?.status ?? draft.status,
     readNow: previous?.readNow ?? draft.readNow,
@@ -380,8 +383,8 @@ export function editableFieldsOf(record: DoorRecord): Required<DoorDraft> {
 }
 
 /** Every door, shut ones first, then by id. Rows that are not doors are skipped and counted in `unreadable`. */
-export async function listDoors(repo: DoorRepository): Promise<{ readonly doors: readonly DoorRecord[]; readonly unreadable: number }> {
-  const rows = await repo.list();
+export async function listDoors(repo: DoorRepository, state?: string): Promise<{ readonly doors: readonly DoorRecord[]; readonly unreadable: number }> {
+  const rows = state === undefined ? await repo.list() : await repo.listWhere(["scopeState"], state);
   const doors: DoorRecord[] = [];
   let unreadable = 0;
   for (const row of rows) {

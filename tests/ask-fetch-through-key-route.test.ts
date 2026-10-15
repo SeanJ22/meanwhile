@@ -1,5 +1,6 @@
 import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import { installFederalVotes, installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 await installRegistryAuthority();
 await installFederalVotes();
@@ -20,15 +21,15 @@ test("normal Ask detail requests fetch every registered FEC page and deliver eac
   assert.ok(candidate?.principalCommitteeId);
   const target = candidate.targetKeys.find(k => k.startsWith("congress:"))!;
   assert.equal(fundingAnswerForTarget(target).kind, "funding");
-  const priorFetch = globalThis.fetch, priorKey = process.env.FEC_API_KEY;
+  const priorKey = process.env.FEC_API_KEY;
   process.env.FEC_API_KEY = "route-fixture-secret";
   let calls = 0;
-  globalThis.fetch = async (url, init) => {
+  const transport: typeof fetch = async (url, init) => {
     const address = new URL(String(url));
     assert.equal(address.hostname, "api.open.fec.gov", "fixture never permits a real network call");
     assert.equal(address.searchParams.get("api_key"), "route-fixture-secret");
     assert.equal(address.searchParams.get("committee_id"), candidate.principalCommitteeId);
-    assert.equal(init?.redirect, "error"); calls++;
+    assert.equal(init?.redirect, "manual"); calls++;
     return Response.json({ results: [{ sub_id: "filed-row", committee_id: candidate.principalCommitteeId,
       entity_type: "PAC", line_number: "11C", contributor_name: "Fixture Filed PAC", contribution_receipt_amount: 250,
       contribution_receipt_date: "2026-09-01", contributor_street_1: "PRIVATE ADDRESS",
@@ -36,10 +37,10 @@ test("normal Ask detail requests fetch every registered FEC page and deliver eac
   };
   try {
     resetGroundedState();
-    const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST",
+    const response = await withSourceTransport(transport, () => POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST",
       headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ballot-ca36-route" },
       body: JSON.stringify({ question: "List every PAC that gave to Juan Ciscomani this year", today: "2026-10-05", ocdIds: ["ocd-division/country:us/state:az"],
-        activeSubjects: [{ id: target, kind: "PERSON", name: "Juan Ciscomani", focused: true }] }) }));
+        activeSubjects: [{ id: target, kind: "PERSON", name: "Juan Ciscomani", focused: true }] }) })));
     const body = await response.json();
     assert.equal(response.status, 200, JSON.stringify(body));
     assert.equal(body.subject?.kind, "PERSON", JSON.stringify(body)); assert.equal(calls, 1, JSON.stringify(body));
@@ -48,7 +49,6 @@ test("normal Ask detail requests fetch every registered FEC page and deliver eac
     assert.match(body.answer, /requested filed organization receipts/);
     assert.doesNotMatch(JSON.stringify(body), /PRIVATE ADDRESS|route-fixture-secret|api_key/);
   } finally {
-    globalThis.fetch = priorFetch;
     if (priorKey === undefined) delete process.env.FEC_API_KEY; else process.env.FEC_API_KEY = priorKey;
   }
 });

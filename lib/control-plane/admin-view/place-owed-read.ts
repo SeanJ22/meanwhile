@@ -1,4 +1,4 @@
-/** A read of held data only: no agent runs and nothing is written. A failed read is a named refusal, never an empty place. */
+import { fetchSource } from "../../sources/fetch-source.ts";
 import { divisionsForZip, type PlaceDivision } from "../expansion/national-geography.ts";
 import { readHeldPlaceCapture, type HeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
@@ -59,7 +59,7 @@ const TIGER = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Sta
 const fipsOfState = (postal: string) => Object.entries(FIPS_TO_STATE).find(([, e]) => e.postal === postal.toUpperCase())?.[0] ?? null;
 
 async function tigerJson<T>(url: string): Promise<T> {
-  const res = await fetch(url, { signal: AbortSignal.timeout(20_000), headers: { accept: "application/json" } });
+  const res = await fetchSource(url, { signal: AbortSignal.timeout(20_000), headers: { accept: "application/json" } });
   if (!res.ok) throw new Error(`Census returned HTTP ${res.status}`);
   const body = await res.json() as T & { error?: { message?: string } };
   if ((body as { error?: unknown }).error) throw new Error(`Census: ${(body as { error: { message?: string } }).error.message ?? "error"}`);

@@ -1,10 +1,6 @@
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { readZipEntries } from "../lib/sources/archive.ts";
-/** Build one national PMTiles archive from Census boundaries, outside git.
- * node --experimental-strip-types scripts/fetch-districts.ts --output=<file.pmtiles>
- * Requires the official `pmtiles` CLI on PATH (or PMTILES_CLI). No state/county clip.
- * MapLibre's tiler simplifies at each zoom; the original cartographic geometry is
- * retained at max zoom. Each layer runs in a separate process to release its index.
- */
+
 import { createWriteStream, existsSync } from 'node:fs';
 import { mkdir, readFile, rename } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
@@ -88,11 +84,7 @@ type Ring = [number, number][];
 /** One polygon: exterior ring first, then any holes. */
 type Polygon = Ring[];
 
-/**
- * Signed area by the shoelace formula. Positive is counter-clockwise.
- * Shapefiles wind exterior rings clockwise and holes counter-clockwise, so
- * this sign test is what tells an outer ring from a hole.
- */
+
 function signedArea(ring: Ring): number {
   let sum = 0;
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
@@ -163,7 +155,7 @@ async function download(url: string): Promise<Buffer> {
   if (existsSync(dest)) return readFile(dest);
   await mkdir(cache, {recursive:true});
   for (let attempt = 0; ; attempt++) {
-    const response = await fetch(url);
+    const response = await fetchSource(url);
     if (!response.ok || !response.body) {
       if (attempt < 3 && (response.status === 429 || response.status >= 500)) {
         await new Promise(r => setTimeout(r, 1000 * 2 ** attempt)); continue;

@@ -1,5 +1,5 @@
 /** @freshness-reads-here: stamps only the successful fetch whose bytes were just read; replays keep the original time. */
-import { createHash } from "node:crypto";
+import { runWithSourceFetch } from "../sources/fetch-source.ts";
 import type { RoutineCandidate } from "./types.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 
@@ -13,33 +13,14 @@ export type RetainedMeetingCandidate = RoutineCandidate & {
   readonly retainedSourceResponses?: readonly (Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string })[];
 };
 
-/** A fetch that keeps every successful HTTPS response it makes, so the facts a read yields cite the exact bytes. */
-export function retainingFetch(base: typeof fetch) {
-  const responses: RetainedSourceResponse[] = [], refusals: string[] = [];
-  let retainedBytes = 0;
-  const fetch = (async (input, init) => {
-    const requestedUrl = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-    const response = await base(input, init);
-    const finalUrl = response.url || requestedUrl;
-    if (response.ok && finalUrl.startsWith("https://")) {
-      const bytes = new Uint8Array(await response.clone().arrayBuffer());
-      if (retainedBytes + bytes.length <= 16 * 1024 * 1024) {
-        responses.push({ source: "", requestedUrl, finalUrl, httpStatus: response.status,
-          rawHash: createHash("sha256").update(bytes).digest("hex"), byteCount: bytes.length,
-          bytes, retrievedAt: new Date().toISOString(), contentType: response.headers.get("content-type") ?? "" });
-        retainedBytes += bytes.length;
-      } else refusals.push(`RESEARCH_CAPTURE_BOUND_EXCEEDED:${finalUrl}`);
-    }
-    return response;
-  }) as typeof globalThis.fetch;
-  return { fetch, responses, refusals };
-}
-
 export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>) {
-  const originalFetch = globalThis.fetch, retaining = retainingFetch(originalFetch);
-  globalThis.fetch = retaining.fetch;
-  try { return { value: await operation(), responses: retaining.responses, refusals: retaining.refusals }; }
-  finally { globalThis.fetch = originalFetch; }
+  const responses: RetainedSourceResponse[] = [];
+  const value = await runWithSourceFetch({ onResponse: response => {
+    if (response.responseStatus < 200 || response.responseStatus >= 300) return;
+    if (responses.some(held => held.requestedUrl === response.requestedUrl && held.rawHash === response.rawHash)) return;
+    responses.push({ ...response, source: "", httpStatus: response.responseStatus });
+  } }, operation);
+  return { value, responses };
 }
 
 /** The retained responses one source's read traced, named for that source. */

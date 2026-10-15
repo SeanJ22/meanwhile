@@ -1,3 +1,4 @@
+import { fetchSource } from "../../sources/fetch-source.ts";
 import { fetchEvents } from '../../sources/legistar/client.ts';
 import type { SourceApiOptions, SourceApiResult } from './scout-api.ts';
 export type ClientTool = 'legistar_events';
@@ -8,7 +9,7 @@ export async function readClientSource(name: ClientTool, input: Record<string, u
   const fetcher: typeof fetch = async (url, init) => {
     const sourceUrl = String(url);
     await options.spaceOut?.(new URL(sourceUrl).host);
-    const response = await (options.fetchImpl ?? fetch)(url,{...init,signal:AbortSignal.timeout(options.timeoutMs ?? 15000)});
+    const response = await (options.fetchImpl ?? fetchSource)(url,{...init,signal:AbortSignal.timeout(options.timeoutMs ?? 15000)});
     captures.push({sourceUrl,status:response.status,text:await response.clone().text()});
     return response;
   };

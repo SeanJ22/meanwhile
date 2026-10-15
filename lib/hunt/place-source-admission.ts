@@ -11,6 +11,8 @@ import type { RoutineSourceTask } from "../civic-data/runner.ts";
 import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
 import { dueNationalPlaceZips, nationalPlaceSendRequests, readNationalPlaceSendRequests, type NationalPlaceSendRequest } from "./place-source-task.ts";
 import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
+import { stateReferenceZips } from "../control-plane/expansion/state-references.ts";
+import { routineScopeState } from "../civic-data/state-scope.ts";
 
 /** Sends reorder source work; standing source-state contracts need no Send. */
 export async function resolveNationalPlaceSendScopes(sends: readonly ExpansionScopeDecision[], zips: readonly string[]) {
@@ -40,7 +42,8 @@ export function nationalPlaceJobs(zips: readonly string[], owner?: NationalPlace
 }
 
 /** Each due place uses the registered registry door through its own leased job. */
-export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[], args: readonly string[]): Promise<RoutineSourceTask[]> {
+export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[], args: readonly string[], state: string): Promise<RoutineSourceTask[]> {
+  if (state === "US") return [...tasks];
   const explicit = args.find(arg => arg.startsWith("--national-zips="))?.slice("--national-zips=".length);
   const only = args.find(arg => arg.startsWith("--only="))?.slice("--only=".length).split(",");
   if (only && !only.includes("registry-runtime-bindings") && !only.some(id => /^national-place:\d{5}$/.test(id))) return [...tasks];
@@ -57,15 +60,15 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
     if (row && !isAdminConfig(row.value)) throw new Error("The owner's place scope is unreadable");
     const scopes = expansionScopesOf(row?.value ?? null);
     if (scopes.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
-    const sends = scopes.scopes.filter(scope => scope.sourceWorkVersion === 1);
+    const sends = scopes.scopes.filter(scope => scope.sourceWorkVersion === 1 && routineScopeState(scope.geography.stateAbbr) === state);
     const resolved = sends.length ? await resolveScopes(sends, await loadPublishedScopeLookupState(sends.map(send => send.geography)), null) : { scopes: [] };
     const admitted = admittedHuntSourceScopes(resolved.scopes, now);
     zips = admitted.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : []);
     requests = nationalPlaceSendRequests(admitted, zips, now);
     zips = zips.filter(zip => requests.has(zip));
-    // Already established free source work remains scheduled when no new
-    // Send exists. This is a bounded route index, never a national ZIP scan.
-    const held = await repos.obligations.listWhere(["routeId"], "national-place-sources");
+    const ids = stateReferenceZips(process.cwd(), state.slice(3)).map(zip => `national-place:${zip}`);
+    const held = repos.obligations.readMany ? await repos.obligations.readMany(ids)
+      : (await Promise.all(ids.map(id => repos.obligations.read(id)))).filter(row => row !== null);
     zips = [...new Set([...zips, ...held.filter(row => row.value.active).flatMap(row =>
       /^national-place:\d{5}$/.test(row.value.id) ? [row.value.id.slice("national-place:".length)] : [])])];
   } else requests = await readNationalPlaceSendRequests(repos, zips, now);
@@ -73,5 +76,6 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
   zips = await dueNationalPlaceZips(repos, zips, now, requests);
   if (!zips.length) return [...tasks];
-  return [...tasks, ...(await orderNationalPlaceWork(repos, zips, now)).flatMap(zip => nationalPlaceJobs([zip], requests.get(zip)))];
+  return [...tasks, ...(await orderNationalPlaceWork(repos, zips, now)).flatMap(zip => nationalPlaceJobs([zip], requests.get(zip)))
+    .map(task => ({ ...task, command: [...task.command, `--state=${state.slice(3)}`] }))];
 }

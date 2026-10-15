@@ -5,7 +5,8 @@ import test from "node:test";
 import { parseSwagitMeetings, makeSwagitSource } from "../lib/sources/swagit/index.ts";
 import { buildCompositeSource } from "../lib/sources/composite/wiring.ts";
 import { bodySourceWiringFor } from "../lib/civic-data/derived-meeting-wiring.ts";
-import { buildDerivedFamily } from "../lib/civic-data/derived-meeting-family.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installReviewedMeetingDoors, publishReviewedMeetingBody } from "./helpers/meeting-body-publication.ts";
 import { meetingAcquisitionFailureDomain } from "../lib/civic-data/meeting-partitions.ts";
 import { crosswalkRowIssue } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import { reviewDiscoveryWalk, type HeldBytes } from "../lib/control-plane/discovery/auto-crosswalk.ts";
@@ -60,7 +61,7 @@ async function reviewCalendar(tenant: typeof TENANTS[number], calendar: string, 
   return { review, route, ocdId };
 }
 
-for (const tenant of TENANTS) test(`${tenant.state} real Swagit list binds its governing body and reaches the Reader family`, async () => {
+for (const tenant of TENANTS) test(`${tenant.state} real Swagit list binds its governing body and publishes its own body partition`, async () => {
   const calendar = fixture(tenant.name);
   const { review, route, ocdId } = await reviewCalendar(tenant, calendar);
   const reviewed = review.accepted.find(entry => entry.row.bodyId === `${ocdId}#governing`);
@@ -80,13 +81,11 @@ for (const tenant of TENANTS) test(`${tenant.state} real Swagit list binds its g
   const acquisitions = source.lastReport!.children[0].acquisitions!;
   assert.ok(acquisitions.length > 0);
   const member = { id: `${row.bodyId}:swagit`, status: "ACTIVE" as const, row };
-  const family = buildDerivedFamily({ wiringInput: { kind: "PROMOTED_VERSION", recordClass: "SOURCE_WIRING",
-    scope: "US:meeting-source-wiring:v1", versionId: "wiring", readModelSha256: "b".repeat(64), promotedAt: tenant.at },
-    members: [member], reads: [{ member, acquisitions, ok: true, error: null, freshMeetings: meetings, freshAgendaDocuments: [], retrievedAt: tenant.at }],
-    previous: null, generatedAt: tenant.at, reconcile: read => ({ meetings: read.freshMeetings, agendaDocuments: [], removalEvidence: [] }) });
-  assert.equal(family.snapshot.meetings.length, tenant.expected);
-  assert.equal(family.snapshot.derivedMembers?.[0].outcome, "FRESH");
-  assert.ok(family.snapshot.meetings.every(meeting => meeting.publishedLinks?.some(link => link.label === "Video")));
+  installReviewedMeetingDoors([member], tenant.at);
+  const published = await publishReviewedMeetingBody({ store: new MemoryRoutineDataStore(), member, meetings, acquisitions, now: tenant.at });
+  assert.equal(published.outcome.candidate.state, "PROMOTED", published.outcome.candidate.failureDetail ?? "");
+  assert.equal(published.snapshot.meetings.length, tenant.expected);
+  assert.ok(published.snapshot.meetings.every(meeting => meeting.publishedLinks?.some(link => link.label === "Video")));
   assert.equal(meetingAcquisitionFailureDomain("swagit", bodySourceWiringFor(row)), `meeting-upstream:${tenant.host}`);
 });
 
@@ -111,13 +110,15 @@ test("a real commission inside Chandler's council section binds and publishes se
     ["70828", "73733", "74511", "75000"]);
   assert.ok(meetings.filter(meeting => meeting.bodyId === council.row.bodyId).every(meeting => !/Authority/.test(meeting.title)));
   const members = rows.map(row => ({ id: `${row.bodyId}:swagit`, status: "ACTIVE" as const, row }));
-  const family = buildDerivedFamily({ wiringInput: { kind: "PROMOTED_VERSION", recordClass: "SOURCE_WIRING", scope: "US:meeting-source-wiring:v1",
-    versionId: "wiring", readModelSha256: "b".repeat(64), promotedAt: tenant.at }, members,
-    reads: members.map(member => ({ member, acquisitions: source.lastReport!.children[0].acquisitions!, ok: true, error: null,
-      freshMeetings: meetings.filter(meeting => meeting.bodyId === member.row.bodyId), freshAgendaDocuments: [], retrievedAt: tenant.at })),
-    previous: null, generatedAt: tenant.at, reconcile: read => ({ meetings: read.freshMeetings, agendaDocuments: [], removalEvidence: [] }) });
-  assert.equal(family.snapshot.meetings.length, 12);
-  assert.ok(family.snapshot.derivedMembers?.every(member => member.outcome === "FRESH"));
+  installReviewedMeetingDoors(members, tenant.at);
+  const store = new MemoryRoutineDataStore();
+  const published = [];
+  for (const member of members) published.push(await publishReviewedMeetingBody({ store, member, now: tenant.at,
+    meetings: meetings.filter(meeting => meeting.bodyId === member.row.bodyId), acquisitions: source.lastReport!.children[0].acquisitions! }));
+  assert.ok(published.every(result => result.outcome.candidate.state === "PROMOTED"), JSON.stringify(published.map(result => result.outcome.candidate.failureDetail)));
+  assert.equal(published.reduce((sum, result) => sum + result.snapshot.meetings.length, 0), 12);
+  assert.notEqual(published[0].partition.scope, published[1].partition.scope);
+
 });
 
 test("Swagit preserves the publisher's date column and minute precision only where a start time is printed", () => {

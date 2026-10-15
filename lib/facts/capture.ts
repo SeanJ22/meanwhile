@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { recordAcquisition } from "../control-plane/evidence/artifact.ts";
 import { putArtifact, type EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -50,7 +51,7 @@ export async function vaultCapture(input: {
   const text = new TextDecoder().decode(input.bytes);
   const { artifact } = recordAcquisition({ canonicalUrl: input.url, retrievedAt: input.retrievedAt, httpStatus: input.httpStatus,
     contentType: input.contentType, sourceId: new URL(input.url).hostname.toLowerCase(), methodRouteId: "fact-receipt",
-    workItemId: RECEIPT_WORK_ITEM, attemptId: `fact-receipt:${input.retrievedAt}`, permission: "ALLOWED", transport: "REACHABLE" }, text);
+    workItemId: RECEIPT_WORK_ITEM, attemptId: `fact-receipt:${createHash("sha256").update(input.url).digest("hex").slice(0, 24)}:${input.retrievedAt}`, permission: "ALLOWED", transport: "REACHABLE" }, text);
   if (artifact.tier !== "RAW") return { error: "PAGE_HOLDS_CREDENTIALS" };
   await putArtifact(input.vault, "freshness", artifact, new TextEncoder().encode(text));
   const record: ArtifactRecord = { artifactId: artifact.id, workItemId: RECEIPT_WORK_ITEM, routeTaskId: null, attemptId: artifact.attemptId,
@@ -66,6 +67,6 @@ async function saveCapture(input: Parameters<typeof vaultCapture>[0] & { readonl
   Promise<{ readonly capture: WorkerPublicationCapture } | { readonly error: string }> {
   const saved = await vaultCapture(input);
   if ("error" in saved) return saved;
-  await input.repos.artifacts.append(RECEIPT_WORK_ITEM, `${saved.record.artifactId}:${input.retrievedAt}`, saved.record, input.retrievedAt);
+  await input.repos.artifacts.append(RECEIPT_WORK_ITEM, `${saved.record.artifactId}:${saved.record.attemptId}`, saved.record, input.retrievedAt);
   return { capture: saved.capture };
 }

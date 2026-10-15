@@ -1,17 +1,14 @@
-/**
- * `lib/hunt/robots-first-fetch.ts` against a recorded fake transport; no test reaches the network.
- * robots.txt is the first request to every origin, a redirect's new origin is read again, a chain that ends
- * unread is recorded CANNOT_TELL (never "no robots file"), a disallow is recorded with its rule and the
- * public page is still read, recorded walls are never asked anything, an access control on the page is named
- * and never pushed through, and one host is spaced.
- */
+import { runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
+
 
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { carriesCredential } from "../lib/hunt/access-control.ts";
-import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime } from "../lib/hunt/robots-first-fetch.ts";
+import { memoryInProcess, researchFetch, nodeResearchGet, type ResearchGet, type ResearchRuntime } from "../lib/hunt/robots-first-fetch.ts";
 import { DEFAULT_USER_AGENT } from "../lib/control-plane/scheduler/user-agent.ts";
 
 type Reply = { readonly status: number; readonly body?: string; readonly contentType?: string; readonly location?: string } | { readonly transportError: string };
@@ -20,13 +17,17 @@ function fakeRuntime(map: Readonly<Record<string, Reply>>, over: Partial<Researc
   const seen: string[] = [];
   const slept: number[] = [];
   let clock = Date.parse("2026-09-24T20:00:00.000Z");
-  const get: ResearchGet = async ({ url, headers }) => {
-    seen.push(url);
-    assert.match(headers["user-agent"] ?? "", /we-the-people/, "every request identifies the project");
+  const vault = new MemoryEvidenceStore();
+  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, record: async () => {} };
+  const transport: typeof fetch = async (input, init) => {
+    const url = String(input), headers = new Headers(init?.headers); seen.push(url);
+    assert.match(headers.get("user-agent") ?? "", /we-the-people/);
     const reply = map[url] ?? { status: 404, body: "not found" };
-    if ("transportError" in reply) return { status: null, body: new Uint8Array(0), contentType: "", location: null, transportError: reply.transportError };
-    return { status: reply.status, body: new TextEncoder().encode(reply.body ?? ""), contentType: reply.contentType ?? "text/html", location: reply.location ?? null, transportError: null };
+    if ("transportError" in reply) throw new Error(reply.transportError);
+    return new Response(reply.body ?? "", { status: reply.status,
+      headers: { "content-type": reply.contentType ?? "text/html", ...(reply.location ? { location: reply.location } : {}) } });
   };
+  const get: ResearchGet = input => runWithSourceFetch({ vault, runtime: { store, transport } }, () => nodeResearchGet(input));
   const runtime: ResearchRuntime = {
     get,
     memory: memoryInProcess(),
@@ -59,7 +60,7 @@ test("ROBOTS FIRST, EVERY ORIGIN: a redirect onto a new origin asks that origin'
   assert.match(got.sha256 ?? "", /^[0-9a-f]{64}$/);
 });
 
-test("A ROBOTS.TXT THAT ENDS UNREAD IS NEVER 'NO ROBOTS FILE': a chain past five redirects, a 5xx, a transport failure and a 403 are recorded CANNOT_TELL, and the public page is still read", async () => {
+test("unread robots rules remain unknown, and a 5xx holds the shared publisher before another request", async () => {
   const chain: Record<string, Reply> = {};
   for (let i = 0; i < 7; i += 1) chain[i === 0 ? "https://loop.gov/robots.txt" : `https://loop.gov/r${i}.txt`] = { status: 301, location: `https://loop.gov/r${i + 1}.txt` };
   const cases: [string, Record<string, Reply>][] = [
@@ -74,7 +75,12 @@ test("A ROBOTS.TXT THAT ENDS UNREAD IS NEVER 'NO ROBOTS FILE': a chain past five
     assert.equal(got.outcome, "FETCHED", url);
     if (got.outcome !== "FETCHED") continue;
     assert.equal(got.permissions[0]?.verdict, "CANNOT_TELL", `${url}: recorded as unread, never as no robots file`);
-    assert.ok(seen.indexOf(url) > 0 && seen.slice(0, seen.indexOf(url)).every((u) => u.includes("robots.txt") || /\/r\d+\.txt$/.test(u)), `${url}: the rules were asked first: ${seen.join(", ")}`);
+    if (url === "https://down.gov/") {
+      assert.deepEqual(seen, ["https://down.gov/robots.txt"]);
+      assert.match(got.transportError ?? "", /checked again at 2026-09-24T20:01:00.000Z/);
+    } else {
+      assert.ok(seen.indexOf(url) > 0 && seen.slice(0, seen.indexOf(url)).every((u) => u.includes("robots.txt") || /\/r\d+\.txt$/.test(u)), `${url}: the rules were asked first: ${seen.join(", ")}`);
+    }
   }
   const { runtime } = fakeRuntime({ "https://nofile.gov/robots.txt": { status: 404, body: "not found" }, "https://nofile.gov/": { status: 200, body: "home" } });
   const nofile = await researchFetch("https://nofile.gov/", runtime);
@@ -151,14 +157,15 @@ test("AN ACCESS CONTROL IS NAMED AND NEVER PUSHED THROUGH: 401, 403, a challenge
   assert.deepEqual(kinds, ["AUTHENTICATION", "FORBIDDEN", "CHALLENGE", "RATE_LIMIT"]);
   assert.equal(seen.filter((u) => u === "https://guarded.gov/waf").length, 1, "a 403 is asked once, never re-sent");
   await researchFetch("https://guarded.gov/after", watched);
-  assert.ok(slept.at(-1)! >= 60_000, `a 429 backs the host off before anything else is asked of it: ${slept.join(", ")}`);
+  assert.equal(seen.includes("https://guarded.gov/after"), false);
+  assert.deepEqual(slept, []);
   for (const headers of headersSeen) {
     assert.ok(!carriesCredential(headers), `no credential, cookie or session is sent: ${JSON.stringify(headers)}`);
     assert.equal(headers["user-agent"], DEFAULT_USER_AGENT, "every request carries the project's own identity, never a borrowed one");
   }
 });
 
-test("ONE HOST IS SPACED: two seconds between its requests, or its own Crawl-delay when it asks for more", async () => {
+test("publisher Crawl-delay uses the shared request reservation", async () => {
   const { runtime, slept } = fakeRuntime({
     "https://slow.gov/robots.txt": { status: 200, body: "User-agent: *\nCrawl-delay: 10\nAllow: /\n", contentType: "text/plain" },
     "https://slow.gov/a": { status: 200, body: "a" },
@@ -166,26 +173,17 @@ test("ONE HOST IS SPACED: two seconds between its requests, or its own Crawl-del
   });
   await researchFetch("https://slow.gov/a", runtime);
   await researchFetch("https://slow.gov/b", runtime);
-  assert.ok(slept.length >= 2, `it waited between requests: ${slept.join(", ")}`);
-  assert.ok(slept[0] >= 2_000, "at least two seconds after robots.txt");
-  assert.ok(slept.at(-1)! >= 10_000, "the host's own Crawl-delay governs its pages");
+  assert.deepEqual(slept, [10_000]);
 });
 
 test("THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFetch, and package.json names it", () => {
   const cli = readFileSync("scripts/research-fetch.mts", "utf8");
   assert.match(cli, /await researchFetch\(target, \{/);
-  assert.equal((cli.match(/\bfetch\(/g) ?? []).length, 0, "no transport of its own");
-  // The module's transport, asked once more through curl on a 403
-  // (lib/hunt/research-transport.ts). It is handed to researchFetch like the Node one, so robots.txt
-  // is still read first and every redirect's origin asked again.
-  assert.match(cli, /\n\s+get: identifiedResearchGet\(\),\n/, "it hands researchFetch the module's one transport");
+  assert.equal((cli.match(/\bfetchSource\(/g) ?? []).length, 0, "no transport of its own");
+  assert.match(cli, /\n\s+get: nodeResearchGet,\n/, "it hands researchFetch the module's one transport");
   const lib = readFileSync("lib/hunt/robots-first-fetch.ts", "utf8");
   const transport = lib.slice(lib.indexOf("export const nodeResearchGet"), lib.indexOf("\n};", lib.indexOf("export const nodeResearchGet")));
-  assert.equal((transport.match(/\bfetch\(/g) ?? []).length, 1, "one transport");
+  assert.equal((transport.match(/\bfetchSource\(/g) ?? []).length, 1, "one transport");
   assert.match(transport, /redirect: "manual"/, "the transport never follows a redirect itself");
-  const second = readFileSync("lib/hunt/research-transport.ts", "utf8");
-  assert.equal((second.match(/\bfetch\(/g) ?? []).length, 0, "the curl rung wraps the Node transport and has no fetch of its own");
-  assert.match(second, /options\.first \?\? nodeResearchGet/, "the Node transport is asked first");
-  assert.doesNotMatch(second, /"-L"|--location/, "curl never follows a redirect either");
   assert.match(readFileSync("package.json", "utf8"), /"research:fetch": "tsx scripts\/research-fetch\.mts"/);
 });

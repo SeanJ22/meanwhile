@@ -1,3 +1,5 @@
+import { factReader } from "../facts/db.ts";
+import type { Query } from "../facts/publish.ts";
 import { meetingRouteIdentity } from "./meeting-body-crosswalk.ts";
 import { createHash } from "node:crypto";
 
@@ -152,6 +154,24 @@ export async function readDerivedMeetingWiring(
   return result;
 }
 
+export async function readDerivedMeetingWiringForState(state: string, query: Query | null = factReader()): Promise<{
+  records: readonly DerivedWiringRecord[]; promotedAt: string | null; versionId: string | null;
+}> {
+  const scope = `US-${state.replace(/^US-/i, "").toUpperCase()}`;
+  if (!/^US-[A-Z]{2}$/.test(scope)) throw new Error("MEETING_WIRING_STATE_INVALID");
+  if (!query) throw new Error("MEETING_DEPENDENCY_STORE_UNAVAILABLE");
+  const rows = await query(`SELECT projection.current_version_id,projection.promoted_at,dependency.value
+    FROM civic_data_promotions projection LEFT JOIN civic_meeting_dependencies dependency
+      ON dependency.kind = 'wiring' AND dependency.scope = $1 AND dependency.pointer_scope = projection.scope
+      AND dependency.version_id = projection.current_version_id
+    WHERE projection.record_class = $2 AND projection.scope = $3`, [scope,DERIVED_WIRING_RECORD_CLASS,DERIVED_WIRING_SCOPE]);
+  const records = rows.flatMap(row => row.value ? [row.value as DerivedWiringRecord] : []);
+  const issue = derivedWiringProjectionIssue({ kind: "meeting-source-wiring", formatVersion: 1, records });
+  if (issue) throw new Error(`MEETING_WIRING_PROJECTION_INVALID: ${issue}`);
+  return { records, promotedAt: rows[0]?.promoted_at == null ? null : new Date(String(rows[0].promoted_at)).toISOString(),
+    versionId: rows[0]?.current_version_id == null ? null : String(rows[0].current_version_id) };
+}
+
 export function derivedMeetingWiringReadState(): CivicDataReadResult<DerivedWiringProjection> {
   return installed ?? civicDataReadNotInitialized(DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, "The meeting-source wiring has not been read for this process.");
 }
@@ -262,7 +282,7 @@ export function derivedWiringCandidate(
     },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [{
-      consumer: "derived meeting families (lib/civic-data/derived-meeting-family.ts)",
+      consumer: "body meeting partitions (lib/civic-data/meeting-partitions.ts)",
       passed: shapeIssue === null,
       detail: `${readModel.records.filter((r) => r.status === "ACTIVE").length} active and ${readModel.records.filter((r) => r.status === "SUSPENDED").length} suspended connection(s).`,
     }],

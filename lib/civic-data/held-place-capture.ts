@@ -182,8 +182,7 @@ export async function readHeldPlaceCapture(divisionIds: readonly string[], optio
   const bodies = new Set((value?.registry.bodies ?? []).filter(body =>
     [body.ocdId, ...(body.alsoServesOcdIds ?? [])].some(id => id !== null && divisionIds.includes(id))).map(body => body.id));
   const partitions = MEETING_PARTITION_CONTRACTS.filter(partition =>
-    bodies.has(partition.bodyId) || (partition.ocdId !== null && divisionIds.includes(partition.ocdId)) ||
-    (partition.derivedFamily !== null && divisionIds.some(id => id.includes(`/state:${partition.derivedFamily!.slice(3).toLowerCase()}`))));
+    bodies.has(partition.bodyId) || (partition.ocdId !== null && divisionIds.includes(partition.ocdId)));
   const outcomeScopes = ROUTINE_SOURCE_CONTRACTS.filter(contract => contract.recordClass === "MEETING_OUTCOME" &&
     contract.schedule?.follows?.some(partition => bodies.has(partition.bodyId) ||
       partitions.some(known => known.bodyId === partition.bodyId))).map(contract => contract.scope);

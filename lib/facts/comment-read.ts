@@ -6,17 +6,21 @@ export const COMMENT_FIELDS: readonly (readonly [CommentField, string])[] = [["c
   ["writtenComment", "comment:written"], ["attend", "comment:attend"], ["timeLimit", "comment:time_limit"]];
 export const COMMENT_PERIOD = "comment:period";
 
-const COMMENT_SQL = `SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, s.url, b.parent_id
-  FROM fact f JOIN source_copy s ON s.id = f.source_copy_id JOIN entity b ON b.id = f.entity_id
-  WHERE f.status = 'live' AND f.field LIKE 'comment:%' AND ($1::text[] IS NULL OR f.entity_id = ANY($1::text[]))
-  ORDER BY f.entity_id, f.field`;
-
 const KEYS: Readonly<Record<string, CommentField>> = { [COMMENT_PERIOD]: "commentPeriod", ...Object.fromEntries(COMMENT_FIELDS.map(([from, field]) => [field, from])) };
 
 /** Each body's comment rules as readers see them, composed from live facts; a body is listed once it is known to take comment or not. */
-export async function readFactCommentAccess(query: Query, bodyIds: readonly string[] | null = null): Promise<readonly CommentAccess[]> {
+export async function readFactCommentAccess(query: Query, bodyIds: readonly string[] | null = null, state?: string | null): Promise<readonly CommentAccess[]> {
+  state = typeof state === "string" ? state.replace(/^US-/i, "").toUpperCase() : state;
   const byBody = new Map<string, CommentAccess>();
-  for (const row of await query(COMMENT_SQL, [bodyIds])) {
+  const scope = state === undefined ? "TRUE" : state === null || state === "US" ? "b.state IS NULL" : "b.state = $2::char(2)";
+  const rows = await query(`SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, s.url, b.parent_id
+    FROM entity b CROSS JOIN LATERAL (
+      SELECT entity_id, field, value, quote, checked_at, source_copy_id FROM fact
+      WHERE entity_id = b.id AND status = 'live' AND field LIKE 'comment:%' OFFSET 0
+    ) f JOIN source_copy s ON s.id = f.source_copy_id
+    WHERE ($1::text[] IS NULL OR b.id = ANY($1::text[])) AND ${scope} ORDER BY f.entity_id, f.field`,
+  typeof state === "string" && state !== "US" ? [bodyIds, state] : [bodyIds]);
+  for (const row of rows) {
     const bodyId = String(row.entity_id), field = KEYS[String(row.field)];
     if (!field) continue;
     const at = new Date(row.checked_at as string).toISOString();

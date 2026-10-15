@@ -100,7 +100,10 @@ export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row
 export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, zips: readonly string[], now: string, sendRequests?: ReadonlyMap<string, NationalPlaceSendRequest>): Promise<string[]> {
   const unique = [...new Set(zips)];
   if (unique.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
-  const held = new Map((await repos.obligations.listWhere(["routeId"], "national-place-sources")).map(row => [row.id, row.value]));
+  const ids = unique.map(zip => `national-place:${zip}`);
+  const rows = repos.obligations.readMany ? await repos.obligations.readMany(ids)
+    : (await Promise.all(ids.map(id => repos.obligations.read(id)))).filter(row => row !== null);
+  const held = new Map(rows.map(row => [row.id, row.value]));
   const targets = (await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value as { placeTargets?: unknown[] } | undefined;
   const requests = sendRequests ?? await readNationalPlaceSendRequests(repos, unique, now, targets ?? null);
   const belowTarget = targets?.placeTargets?.length ? (await nationalPlaceWorkReading(repos, unique, now)).belowTarget : new Set<string>();
@@ -117,9 +120,7 @@ export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, zips
   });
 }
 
-/** The registered registry source uses the ordinary acquiring Attempt, vault
- * and occurrence lifecycle. It costs no model tokens; remaining blanks stay
- * available to the shared hunt planner after each source publication. */
+
 export async function runNationalPlaceTask(input: {
   tools: ResearchRuntimeTools;
   store: RoutineDataStore;

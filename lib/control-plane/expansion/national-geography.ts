@@ -1,3 +1,4 @@
+import { fetchSource } from "../../sources/fetch-source.ts";
 import { FIPS_TO_STATE, districtIdentity } from "../../ocd/fips.ts";
 import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity, stateBase, subdivisionIdentity } from "../../ocd/divisions.ts";
 import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
@@ -94,7 +95,7 @@ async function readJson<T>(url: string, options: GeographyReadOptions, body?: UR
   const held = await options.readHeld?.(captureUrl);
   if (held !== null && held !== undefined) return JSON.parse(held) as T;
   const response = await politeGetText(url, { accept: "application/json", signal: options.signal ?? AbortSignal.timeout(60_000),
-    fetchImpl: (address, init) => (options.fetchImpl ?? fetch)(address, { ...init, ...(body ? { method: "POST", body } : {}) }) });
+    fetchImpl: (address, init) => (options.fetchImpl ?? fetchSource)(address, { ...init, ...(body ? { method: "POST", body } : {}) }) });
   const text = response.text;
   const value = JSON.parse(text);
   if (value.error) throw new Error(`Geography source: ${value.error.message ?? value.error.code}`);

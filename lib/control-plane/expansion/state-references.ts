@@ -40,6 +40,14 @@ export interface StateReferenceSelection {
   divisions?: ReadonlySet<string>;
 }
 
+export function stateReferenceZips(root: string, state: string): readonly string[] {
+  const key = state.toUpperCase();
+  if (!/^[A-Z]{2}$/.test(key)) throw new Error(`PLACE_REFERENCE_STATE_INVALID:${state}`);
+  const index = JSON.parse(readFileSync(join(root, "data", "derived", "place-reference", `${key.toLowerCase()}.json`), "utf8")) as StateReferenceIndex;
+  if (index.formatVersion !== 2 || index.state !== key) throw new Error(`PLACE_REFERENCE_INVALID:${key}`);
+  return Object.keys(index.byZip);
+}
+
 /** Read the selected rows by byte offset. The manifest contains addresses,
  * never the other places' civic records; no data payload is cached. */
 export function readStateReference(root: string, state: string, selection?: StateReferenceSelection): StateReference {

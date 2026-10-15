@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     }
     try {
       const manifest = await readReaderManifest().catch(() => null);
-      const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["government-domains"]) : null;
+      const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["government-domains"], [state]) : null;
       const page = await withReaderAuthorityEdge(edge, () => governmentListingsForState(state, offset));
       return NextResponse.json(page, { headers: { "Cache-Control": "no-store" } });
     } catch { return NextResponse.json({ status: "UNAVAILABLE", records: [] }, { status: 503 }); }

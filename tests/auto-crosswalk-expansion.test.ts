@@ -1,5 +1,4 @@
 import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
-/** A Send to a county in a state no one has worked before reaches readers with no person and no code change: every step is the production path on in-memory stores, with no network and no model. */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -7,7 +6,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
-import { DERIVED_MEETING_FAMILY_STATES } from "../lib/civic-data/contracts.ts";
 import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
   composeCrosswalk,
@@ -15,7 +13,6 @@ import {
   planDerivedCrosswalk,
   readDerivedMeetingBodyCrosswalk,
 } from "../lib/civic-data/derived-crosswalk.ts";
-import { buildDerivedFamily, derivedFamilyCandidate, type FamilyMemberRead } from "../lib/civic-data/derived-meeting-family.ts";
 import {
   bodySourceWiringFor,
   derivedWiringCandidate,
@@ -24,12 +21,10 @@ import {
   readDerivedMeetingWiring,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
-import { MEETING_PARTITION_CONTRACTS, derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
-import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
-import { promoteDerivedMeetingFamily } from "../scripts/ingest.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { installReviewedMeetingDoors, publishReviewedMeetingBody, reviewedMeetingPartition } from "./helpers/meeting-body-publication.ts";
 import {
   processRegisteredManualCandidate,
-  processRegisteredMeetingPartitionCandidate,
   processRegisteredRoutineCandidate,
 } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -49,7 +44,7 @@ import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdictio
 import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
 import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
-import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
+import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
@@ -145,7 +140,6 @@ async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
 }
 
 test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async () => {
-  assert.ok(DERIVED_MEETING_FAMILY_STATES.includes("US-OH"), "Ohio has a derived family with no code change");
 
   /* 1. The owner's Send creates the work. */
   const repos = createMemoryRepositories();
@@ -313,29 +307,20 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING), T_WIRING);
   assert.equal(wiringOutcome.candidate.state, "PROMOTED", `${wiringOutcome.candidate.failureCode ?? ""} ${wiringOutcome.candidate.failureDetail ?? ""}`);
 
-  /* 5c. Ohio's derived family reads the member on its own attested host and promotes. */
   const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
-  const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-OH"));
   const members = familyMembers(wiring.value, "US-OH");
-  assert.deepEqual(members.map((m) => [m.id, m.status]), [[derivedWiringKey("ICAL", COUNTY_BODY, COUNTY_ROUTE), "ACTIVE"]]);
-  const reads: FamilyMemberRead[] = members.map((member) => {
-    const source = makeIcalSource([bodySourceWiringFor(member.row)]);
-    const fresh = source.normalizeWithDrops([{ wiring: bodySourceWiringFor(member.row), ics: COUNTY_FEED, collectedAt: T_FAMILY, sourceUrl: member.row.route }], new Date(T_FAMILY)).meetings;
-    return {
-      member,
-      acquisitions: [{ requestedUrl: member.row.route, finalUrl: member.row.route, httpStatus: 200, rawHash: vault.get(walks[0]!.attempt.found[0]!.artifactId!)!.sha256, byteCount: COUNTY_FEED.length }],
-      ok: true, error: null, freshMeetings: fresh, freshAgendaDocuments: [], retrievedAt: T_FAMILY,
-    };
-  });
-  const build = buildDerivedFamily({
-    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
-    members, reads, previous: null, generatedAt: T_FAMILY,
-    reconcile: (r) => ({ meetings: r.freshMeetings, agendaDocuments: [], removalEvidence: [] }),
-  });
-  const familyOutcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, derivedFamilyCandidate(partition, build), T_FAMILY);
-  assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
+  assert.deepEqual(members.map(m => [m.id, m.status]), [[derivedWiringKey("ICAL", COUNTY_BODY, COUNTY_ROUTE), "ACTIVE"]]);
+  installReviewedMeetingDoors(members, T_FAMILY);
+  const member = members[0];
+  const source = makeIcalSource([bodySourceWiringFor(member.row)]);
+  const meetings = source.normalizeWithDrops([{ wiring: bodySourceWiringFor(member.row), ics: COUNTY_FEED,
+    collectedAt: T_FAMILY, sourceUrl: member.row.route }], new Date(T_FAMILY)).meetings;
+  const published = await publishReviewedMeetingBody({ store, member, meetings, now: T_FAMILY,
+    acquisitions: [{ requestedUrl: member.row.route, finalUrl: member.row.route, httpStatus: 200,
+      rawHash: vault.get(walks[0]!.attempt.found[0]!.artifactId!)!.sha256, byteCount: COUNTY_FEED.length }] });
+  assert.equal(published.outcome.candidate.state, "PROMOTED", published.outcome.candidate.failureDetail ?? "");
 
   /* 6. The Reader. */
   const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
@@ -350,7 +335,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     assert.equal(m.timeZone, "America/New_York");
   }
   assert.equal(reader.value.meetings.some((m) => m.ocdId === "ocd-division/country:us/state:oh/place:franklin"), false, "the held city publishes nothing");
-  assert.equal(reader.partitions.find((p) => p.contractId === derivedMeetingFamilyId("US-OH"))?.kind, "PROMOTED");
+  assert.equal(reader.partitions.find((p) => p.contractId === reviewedMeetingPartition(member).id)?.kind, "PROMOTED");
   assert.equal(
     reader.value.sources.some((s) => s.source === "derived" && !s.ok),
     false,
@@ -358,31 +343,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   );
 });
 
-test("EVERY REGISTERED STATE HAS A FAMILY: registration's own state list, each family on its own lane, no code naming a state", () => {
-  const families = MEETING_PARTITION_CONTRACTS.filter((p) => p.derivedFamily !== null);
-  assert.deepEqual(families.map((p) => p.derivedFamily), REGISTRATION_TARGETS.map((t) => t.jurisdiction));
-  assert.equal(families.length, 56, "every state, DC and territory in the FIPS table");
-  assert.equal(new Set(families.map((p) => p.acquisitionFailureDomain)).size, families.length, "one state's slow member never waits on another state's");
-  assert.deepEqual(
-    POST_FIXTURE_MEETING_PARTITIONS.filter((id) => id.startsWith("meetings:derived:")),
-    families.map((p) => p.id),
-    "the Reader proof counts every family as registered after the frozen import",
-  );
-});
-
-test("A STATE WITH NO CONNECTED CALENDAR: its family reads the wiring first and refuses by name, with no preload and no publisher read", async () => {
-  const store = new MemoryRoutineDataStore();
-  let prepared = 0;
-  const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-WY"));
-  await promoteDerivedMeetingFamily(store, partition, async () => {
-    prepared += 1;
-  });
-  assert.equal(prepared, 0, "a family with no member never loads the registry and venue projections (about 24 MB a run)");
-  assert.equal(await store.readPromotion("MEETING", partition.scope), null, "nothing is published for a state with no member");
-  const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
-  const main = ingest.slice(ingest.indexOf("async function main()"));
-  assert.ok(
-    main.indexOf("promoteDerivedMeetingFamily(") < main.indexOf("await preloadCanonicalMeetingDependencies({ sourceName: name });"),
-    "the child routes a family before the preload every source/body partition needs",
-  );
+test("states without a connected calendar create no empty meeting partition", () => {
+  installReviewedMeetingDoors([], T_FAMILY);
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, 0);
 });

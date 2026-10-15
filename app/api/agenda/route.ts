@@ -1,3 +1,4 @@
+import { ocdStateCode } from "@/lib/ocd/state-of";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
@@ -6,14 +7,6 @@ import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgend
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { settleOutcomeRead } from "@/lib/outcomes/store";
 import { settleRegistryAuthorityReads } from "@/lib/registry/server";
-
-/**
- * GET /api/agenda?meetingId=<source-namespaced id>
- *
- * The stored agenda documents for one meeting, newest version first. `documents` is exactly what the reader
- * is shown, one row per distinct content; the rows not shown are stated in `documentAccounting`. A document
- * whose extraction failed is returned with its note and null text.
- */
 
 export const runtime = "nodejs";
 
@@ -26,9 +19,11 @@ export async function GET(request: Request) {
   let read;
   try {
     const manifest = await readReaderManifest().catch(() => null);
-    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(() => null) : null;
-    if (authority) enterReaderAuthorityEdge(authority);
     read = await readReaderEdgeMeetings({ meetingId, manifest, window: "HELD" });
+    const states = read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
+      ? [...new Set(read.value.meetings.map(meeting => ocdStateCode(meeting.ocdId)).filter((state): state is string => state !== null))] : [];
+    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"], states).catch(() => null) : null;
+    if (authority) enterReaderAuthorityEdge(authority);
   } catch (error) {
     return Response.json(
       {

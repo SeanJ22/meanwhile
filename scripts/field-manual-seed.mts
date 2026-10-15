@@ -1,15 +1,4 @@
 #!/usr/bin/env tsx
-/**
- * Seeds and grows the field manual from the knowledge stores. Each store is
- * folded into the field manual (one row per entry) as typed entries whose
- * `payload` keeps the original record verbatim. It only ever grows: a re-run
- * refreshes entries in place and never removes one.
- *
- * Usage (writes the LOCAL file provider unless told otherwise):
- *   node --env-file=<main .env.local> --experimental-strip-types \
- *     --import ./scripts/register-test-loader.mjs scripts/field-manual-seed.mts \
- *     [--target=control-plane|file|memory] [--dry]
- */
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -24,6 +13,7 @@ import { platformFingerprintEntries } from "../lib/control-plane/platform-finger
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
 import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
 import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
+import { ROUTINE_STATES, routineScopeState } from "../lib/civic-data/state-scope.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -143,11 +133,6 @@ async function fromMethodCandidates(repos: ControlPlaneRepositories): Promise<Fi
   return collect(src, entries);
 }
 
-/**
- * The vendor tenant registries: bodyId → tenant slug → exact API URL. Reads only
- * the scalar wiring, never the `venues` getter, which resolves against the
- * promoted projection at runtime.
- */
 function fromTenantRegistries(): FieldManualEntry[] {
   const entries: FieldManualEntry[] = [];
   const legistarSrc = "lib/sources/legistar/client-registry.ts";
@@ -232,8 +217,6 @@ function fromTiers(): FieldManualEntry[] {
 
 async function main(): Promise<void> {
   const now0 = new Date().toISOString();
-  const doors = await ensureMeetingDoors();
-  if (!doors.ready) throw new Error(`the vendor tenants come from the meeting doors, which could not be read: ${doors.reason}`);
   let repos: ControlPlaneRepositories;
   if (target === "control-plane") {
     const url = controlPlaneUrlFromEnv();
@@ -249,7 +232,6 @@ async function main(): Promise<void> {
     ...fromPlatforms(),
     ...fromCoverageAudits(),
     ...(target === "control-plane" ? await fromMethodCandidates(repos) : []),
-    ...fromTenantRegistries(),
     ...fromTiers(),
   ];
 
@@ -260,20 +242,24 @@ async function main(): Promise<void> {
     );
   }
 
-  console.log("Field manual seed — entries built per source:");
-  for (const [src, n] of [...perSource.entries()].sort()) console.log(`  ${n.toString().padStart(5)}  ${src}`);
-  console.log(`  ${entries.length.toString().padStart(5)}  TOTAL`);
-
-  if (dry) {
-    console.log("\n--dry: nothing written.");
-    return;
+  let writtenCount = 0;
+  const writeEntries = async (rows: readonly FieldManualEntry[]) => {
+    if (dry || rows.length === 0) return;
+    const result = await writeFieldManual(repos, rows, new Date().toISOString());
+    if (result.error) throw new Error(`field-manual-seed: ${result.error}`);
+    writtenCount += result.written;
+  };
+  await writeEntries(entries);
+  const selected = [...args].find(arg => arg.startsWith("--state="))?.slice(8);
+  const states = selected ? [routineScopeState(selected)] : ROUTINE_STATES;
+  for (const state of states) {
+    const doors = await ensureMeetingDoors({ state, repo: repos.doors });
+    if (!doors.ready) throw new Error(`field-manual-seed: ${state}: ${doors.reason}`);
+    await writeEntries(fromTenantRegistries());
   }
-
-  const written = await writeFieldManual(repos, entries, new Date().toISOString());
-  if (written.error) throw new Error(`field-manual-seed: the write failed: ${written.error}`);
-  const total = (await repos.fieldManual.list()).length;
-  console.log(`
-Wrote the field manual (${target}): ${total} entries total (${written.written} offered by this seed).`);
+  console.log("Field manual seed — entries built per source:");
+  for (const [source, count] of [...perSource.entries()].sort()) console.log(`  ${count.toString().padStart(5)}  ${source}`);
+  console.log(dry ? "Dry run: nothing written." : `Wrote ${writtenCount} field manual entries (${target}).`);
 }
 
 await main();

@@ -5,9 +5,8 @@ import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../../mee
 import { isPlacelessLocation, resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { toZonedIso } from "../../time/zoned.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { recordAcquiredResponse } from "../acquisition-trace.ts";
-import { decodeEntities, REQUEST_SPACING_MS } from "../http.ts";
+import { decodeEntities } from "../http.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck } from "../known-release.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
@@ -167,9 +166,7 @@ export function makePrimeGovSource(rows: BodySourceWiring[], fetchImpl?: typeof 
         }
         const partialScopes: PartialScopeFailure[] = [];
         const collected: PrimeGovRaw[] = [];
-        let reads = 0;
         for (const { url, scope } of routes) {
-          if (reads++ && !fetchImpl) await sourceAcquisitionSleep(REQUEST_SPACING_MS, signal);
           try {
             const endpoint = new URL(url);
             const release = await acquireKnownRelease({ sourceId: "primegov", releaseId: endpoint.pathname + endpoint.search,

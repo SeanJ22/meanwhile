@@ -79,7 +79,7 @@ function outcomeDoorKind(door: DoorRecord): OutcomeDoorKind | null {
 
 export function outcomeDoors(doors: readonly DoorRecord[]): readonly DoorRecord[] {
   return doors.filter((door) =>
-    door.status !== "SUSPENDED" && door.meeting != null && door.meeting.family === null && door.bodyIds.length === 1 &&
+    door.status !== "SUSPENDED" && door.meeting != null && door.bodyIds.length === 1 &&
     outcomeDoorKind(door) !== null && door.holds.includes(OUTCOMES_HOLD));
 }
 

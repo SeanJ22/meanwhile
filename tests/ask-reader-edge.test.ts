@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore, scopedReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -91,11 +91,14 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
-  const result = await publishReaderEdgeArtifacts(snapshot, {
+  const store = new LocalFileArtifactStore(dir);
+  const metadata = { sourceThrough: snapshot.generatedAt, retrievedAt: snapshot.generatedAt, promotedThrough: snapshot.generatedAt };
+  assert.equal((await publishReaderEdgeArtifacts(snapshot, metadata, { store: scopedReaderArtifactStore(store, "AZ") })).status, "PUBLISHED");
+  const result = await publishReaderEdgeArtifacts(null, {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
-  }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority,
+  }, { store, now: new Date().toISOString(), authority,
     registrations: {},
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
       formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",

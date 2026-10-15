@@ -31,11 +31,11 @@ interface CopyRow {
   readonly contentHash: string;
 }
 
-/** One row per vault artifact: the key is the artifact id the vault resolves to its exact bytes. */
+/** Each observed page keeps its URL and check time while identical bytes share the vaulted artifact. */
 async function saveCopy(query: Query, row: CopyRow): Promise<number> {
   const [saved] = await query(`INSERT INTO source_copy (url, final_url, fetched_at, http_status, sha256, blob_key, is_archive)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
-    ON CONFLICT (blob_key) DO UPDATE SET blob_key = EXCLUDED.blob_key RETURNING id`,
+    ON CONFLICT (blob_key, url, fetched_at) DO UPDATE SET blob_key = EXCLUDED.blob_key RETURNING id`,
   [row.url, row.finalUrl, row.fetchedAt, row.httpStatus, row.contentHash.replace(/^sha256-/, ""), `artifact:${row.artifactId}`,
     isArchive(row.finalUrl)]);
   return Number(saved!.id);

@@ -1,8 +1,5 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted at the moment of the fetch.
- */
+import { fetchSource } from "../sources/fetch-source.ts";
+
 import { createHash } from "node:crypto";
 
 import { extractHtmlText } from "../extract/html-text.ts";
@@ -12,14 +9,6 @@ import type { Meeting, OcdId } from "../sources/types.ts";
 import { PUBLISHER_PAGE_SIGNAL, agendaReadableText, sameAgendaContent } from "./agenda-content.ts";
 import { sourceUserAgent } from "../sources/http.ts";
 
-/**
- * Agenda documents as first-class records: the document itself is retrieved
- * and stored, not only its URL.
- *
- * Append-only, never overwrite: a revised agenda is appended beside the old
- * version, and `contentHash` detects the silent revision. The store is
- * in-memory and per-process.
- */
 export interface AgendaDocument {
   /** `<meetingId>@<contentHash>` — one row per distinct version. */
   id: string;
@@ -32,10 +21,7 @@ export interface AgendaDocument {
   contentHash: string;
   retrievedAt: string;
   contentType: string;
-  /**
-   * Extracted text, or null when extraction failed. Never partial text
-   * presented as complete — a failed extraction keeps the link and says so.
-   */
+
   text: string | null;
   extraction: "html" | "pdf" | "failed";
   extractionNote: string | null;
@@ -45,11 +31,6 @@ export interface AgendaDocument {
   verifiedAt: string | null;
 }
 
-/**
- * PostgreSQL JSONB cannot represent U+0000, and binary Office documents are
- * not Reader text. Keeps the URL/hash receipt and makes the failed extraction
- * explicit; binary bytes are never scrubbed into apparently readable prose.
- */
 export function canonicalAgendaDocument(document: AgendaDocument): AgendaDocument {
   if (
     document.text === null ||
@@ -73,12 +54,8 @@ export function canonicalAgendaDocument(document: AgendaDocument): AgendaDocumen
 export class AgendaDocumentStore {
   private byMeeting = new Map<string, AgendaDocument[]>();
 
-  /**
-   * Append a version unless the latest stored version, read from the same
-   * address, carries the same content (`sameAgendaContent`). Returns whether
-   * anything was stored and whether it superseded a prior version (the
-   * silent-revision signal).
-   */
+  clear(): void { this.byMeeting.clear(); }
+
   append(doc: AgendaDocument): { stored: boolean; revised: boolean } {
     const versions = this.byMeeting.get(doc.meetingId) ?? [];
     const latest = versions[versions.length - 1];
@@ -105,10 +82,6 @@ export class AgendaDocumentStore {
     return this.latestFor(meetingId)?.contentHash ?? null;
   }
 
-  /**
-   * Is this URL already stored against a different meeting? A calendar or
-   * portal root retrieved once per sitting is a landing page, not an agenda.
-   */
   isUrlOnAnotherMeeting(documentUrl: string, meetingId: string): boolean {
     for (const [id, versions] of this.byMeeting) {
       if (id === meetingId) continue;
@@ -117,11 +90,6 @@ export class AgendaDocumentStore {
     return false;
   }
 
-  /**
-   * Another sitting's held HTML document, from the same publisher host, whose
-   * readable text is word for word this text: the text-level form of the
-   * landing-page question.
-   */
   publisherPageWitness(doc: {
     readonly meetingId: string;
     readonly documentUrl: string;
@@ -162,12 +130,6 @@ export function contentHashOf(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
-/**
- * Strip an HTML document to its readable text. `repairMojibake` repairs
- * double-encoded UTF-8 some vendors serve, at this custody boundary rather
- * than at render.
- */
-
 /** Extract text from a PDF's bytes. Throws when the file cannot be read. */
 export async function extractPdfText(bytes: Uint8Array): Promise<string> {
   // Imported lazily so only actual retrieval pays for the PDF engine.
@@ -199,32 +161,12 @@ export interface RetrieveOptions {
   fetchImpl?: typeof fetch;
   /** Skip the fetch entirely when the stored hash is known-current. */
   knownHash?: string | null;
-  /**
-   * Fetch this URL instead of the meeting's own agenda link: a body's own
-   * notice page that posts before the vendor portal. The document is recorded
-   * against the URL it came from.
-   */
+
   urlOverride?: string;
-  /**
-   * What is already held, for the one judgment a page cannot make about
-   * itself: whether another sitting's page says the same words. Defaults to
-   * the per-process store the ingest seeds and appends to.
-   */
+
   held?: Pick<AgendaDocumentStore, "publisherPageWitness">;
 }
 
-/**
- * A read that returned nothing of the document is a failed read. Two named
- * signals, neither a length threshold (a one-line notice is a whole document):
- *
- * - No readable text: extraction produced no characters.
- * - The publisher's page: an HTML page's text is word for word what the same
- *   host served for a different sitting (`publisherPageWitness`) and holds no
- *   agenda item. PDFs are not judged this way; two sittings sharing one PDF
- *   share an agenda.
- *
- * Each note opens with its signal's name and is written for readers.
- */
 const NO_READABLE_TEXT = "No readable text";
 
 function failedRead(
@@ -234,13 +176,6 @@ function failedRead(
   return { ...base, text: null, extraction: "failed", extractionNote: note };
 }
 
-/**
- * Fetch a meeting's agenda document and turn it into an `AgendaDocument`.
- *
- * Returns null when the meeting has no agenda URL — that is a real state, not
- * a failure. Extraction failure is *recorded on the row*, never thrown away:
- * the link survives, the text is null, and `extractionNote` says why.
- */
 export async function retrieveAgendaDocument(
   meeting: Meeting,
   options: RetrieveOptions = {},
@@ -248,7 +183,7 @@ export async function retrieveAgendaDocument(
   const url = options.urlOverride ?? meeting.agendaUrl;
   if (!url) return null;
 
-  const impl = options.fetchImpl ?? fetch;
+  const impl = options.fetchImpl ?? fetchSource;
   const response = await impl(url, {
     headers: { "User-Agent": sourceUserAgent() },
   });

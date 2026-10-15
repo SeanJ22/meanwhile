@@ -1,21 +1,4 @@
-/**
- * `pnpm extract` — the extraction toolkit's command line.
- *
- *   pnpm extract text     <file.pdf | url>
- *   pnpm extract tables   <file.pdf | url>
- *   pnpm extract ocr      <file.pdf | url>
- *   pnpm extract payload  <file.html | url>          [--find "<name>"]
- *   pnpm extract roster   <file.html | url>          # who sits on the board
- *   pnpm extract auto     <file | url>               # text, then OCR if scanned
- *
- * Flags: `--json` prints the whole result object. `--find <text>` (payload
- * only) reports every payload string containing it, with its key path.
- *
- * A zero-row extraction exits non-zero: `ZERO_ROWS` ("the layer ran and
- * produced nothing") and `CANNOT_RUN` ("the layer could not look") both fail,
- * so a failed extraction is never recorded as an empty document.
- */
-
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { readFileSync } from "node:fs";
 
 import { describe } from "../lib/extract/types.ts";
@@ -45,7 +28,7 @@ const isUrl = /^https?:\/\//i.test(target);
 
 async function bytesOf(): Promise<Uint8Array> {
   if (!isUrl) return new Uint8Array(readFileSync(target!));
-  const res = await fetch(target!, {
+  const res = await fetchSource(target!, {
     headers: {
       "user-agent":
         "we-the-people/extract (+https://github.com/SeanJ22/meanwhile; seanj22@gmail.com)",

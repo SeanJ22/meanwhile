@@ -1,3 +1,4 @@
+import { fetchSource } from "../sources/fetch-source.ts";
 import { readFinanceDoor } from "../funding/finance-door-reader.ts";
 import { validFinanceDoorDetailSource } from "../funding/finance-detail-source.ts";
 import type { DoorRecord } from "../doors/registry.ts";
@@ -27,7 +28,7 @@ export async function fetchFinanceDocument(input: {
     const remaining = input.deadlineMs - Date.now();
     let timer: ReturnType<typeof setTimeout> | undefined;
     const operation = async () => {
-      const response = await (input.fetchImpl ?? fetch)(url.href, { method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(remaining) });
+      const response = await (input.fetchImpl ?? fetchSource)(url.href, { method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(remaining), source: { sensitiveQueryParameters: source.config.keyParam ? [source.config.keyParam] : [] } });
       if (!response.ok || response.status === 206) return unavailable;
       const bytes = Buffer.from(await response.arrayBuffer());
       if (Date.now() >= input.deadlineMs) return unavailable;

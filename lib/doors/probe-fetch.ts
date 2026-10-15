@@ -1,22 +1,11 @@
-/**
- * The plain fetch door looks and free method tries use: the identified
- * User-Agent, a human pace per website, a timeout, and at most a megabyte
- * read. Every request first asks the one per-website count every reader
- * shares: a website some reader was asked to leave alone waits, and a small
- * publisher takes from its shared hourly allowance. A 429 or 5xx holds the
- * website for every reader.
- */
-
-import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
-import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
-import { sourceUserAgent } from "../sources/http.ts";
+import type { WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
+import type { WebsitePacing } from "../control-plane/website-pacing.ts";
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../sources/fetch-source.ts";
 import type { ProbeFetch } from "./probe.ts";
 
-export const PROBE_HOST_SPACING_MS = 400;
 export const PROBE_TIMEOUT_MS = 15_000;
 const MAX_BYTES = 1_048_576;
 
-/** The website cannot be asked now: it asked every reader to wait, or a small publisher's hour is used. Not a failed request. */
 export class WebsiteWait extends Error {
   readonly until: number;
   readonly why: "ASKED_TO_WAIT" | "HOURLY_ALLOWANCE";
@@ -36,30 +25,18 @@ export function pacedProbeFetch(input: {
   readonly fetchImpl?: typeof fetch;
   readonly sleep?: (ms: number) => Promise<void>;
 }): ProbeFetch {
-  const fetchImpl = input.fetchImpl ?? globalThis.fetch;
-  const sleep = input.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
-  const clock = input.clock ?? Date.now;
-  const lastByHost = new Map<string, Promise<void>>();
   return async (url, headers) => {
-    const host = new URL(url).hostname.toLowerCase();
-    // One request at a time per host, spaced: each waits for the one before it and then for the spacing.
-    const before = lastByHost.get(host) ?? Promise.resolve();
-    const turn = before.then(() => sleep(PROBE_HOST_SPACING_MS));
-    lastByHost.set(host, turn);
-    await before;
-    const admitted = await admitWebsiteRequest(input.pacing, url, websiteRequestLimit(input.sizeFor?.(url)), clock());
-    if (!admitted.ok) throw new WebsiteWait(admitted.until, admitted.why);
-    const response = await fetchImpl(url, {
-      method: "GET",
-      headers: { "User-Agent": sourceUserAgent(), Accept: "*/*", ...headers },
-      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-      redirect: "follow",
-    });
-    await holdWebsiteAfter(input.pacing, url, response.status, response.headers.get("retry-after"), clock());
-    return {
-      status: response.status,
-      headers: response.headers,
-      bytes: async () => new Uint8Array((await response.arrayBuffer()).slice(0, MAX_BYTES)),
-    };
+    try {
+      const response = await runWithSourceFetch({ pacing: input.pacing, websiteSize: input.sizeFor,
+        runtime: { transport: input.fetchImpl, now: input.clock, sleep: input.sleep } }, () => fetchSource(url, {
+        method: "GET", headers: { Accept: "*/*", ...headers },
+        signal: AbortSignal.timeout(PROBE_TIMEOUT_MS), redirect: "follow",
+      }));
+      return { status: response.status, headers: response.headers,
+        bytes: async () => new Uint8Array((await response.arrayBuffer()).slice(0, MAX_BYTES)) };
+    } catch (error) {
+      if (error instanceof SourceFetchDeferred) throw new WebsiteWait(error.until, error.why);
+      throw error;
+    }
   };
 }

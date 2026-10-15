@@ -1,20 +1,8 @@
-/**
- * Turns hand-wired meeting door records back into the wiring rows adapters
- * read. A suspended door is not read; an open or shut one still is. Derived
- * family members are excluded unless asked for. Pure. Row order is by body
- * then source type.
- */
-
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
 import type { AgendaSourceType } from "../registry/types.ts";
 import type { DoorRecord } from "./registry.ts";
 
-export interface DoorRowOptions {
-  /** Include derived family members as well as hand-wired doors. */
-  readonly includeDerived?: boolean;
-}
-
-function rowOf(door: DoorRecord): BodySourceWiring | null {
+export function wiringRowOfDoor(door: DoorRecord): BodySourceWiring | null {
   const meeting = door.meeting;
   if (meeting === null || meeting === undefined || door.bodyIds.length !== 1) return null;
   const config: Record<string, string> = {};
@@ -37,20 +25,19 @@ function rowOf(door: DoorRecord): BodySourceWiring | null {
 export function meetingDoorHosts(doors: readonly DoorRecord[]): string[] {
   const hosts = new Set<string>();
   for (const door of doors) {
-    if (door.status === "SUSPENDED" || door.meeting == null) continue;
+    if (door.meeting == null) continue;
     for (const host of door.hosts) hosts.add(host);
   }
   return [...hosts].sort();
 }
 
 /** The wiring rows the registry's meeting doors describe, one per body and source type. */
-export function wiringRowsFromDoors(doors: readonly DoorRecord[], options: DoorRowOptions = {}): BodySourceWiring[] {
+export function wiringRowsFromDoors(doors: readonly DoorRecord[]): BodySourceWiring[] {
   const rows = new Map<string, BodySourceWiring>();
   for (const door of doors) {
     if (door.status === "SUSPENDED") continue;
     if (door.meeting == null) continue;
-    if (door.meeting.family !== null && options.includeDerived !== true) continue;
-    const row = rowOf(door);
+    const row = wiringRowOfDoor(door);
     if (row === null) continue;
     // One wiring row can produce several doors (one per source it feeds); they carry the same row.
     rows.set(`${row.bodyId}\u0000${row.agendaSourceType}\u0000${JSON.stringify(sortedConfig(row))}`, row);

@@ -1,3 +1,4 @@
+import { fetchSource } from "../fetch-source.ts";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../../meetings/constants.ts";
 import { isPlacelessLocation, resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
@@ -118,7 +119,7 @@ export function makeEscribeSource(rows: BodySourceWiring[], fetchImpl?: typeof f
           // The calendar is the change check: it includes every published
           // document link, so no per-meeting or per-place requests are needed.
           const response = await politeGetText(url, { signal: query?.signal, accept: "application/json",
-            fetchImpl: ((input, init) => (fetchImpl ?? fetch)(input, { ...init, method: "POST", headers: { ...init?.headers, "Content-Type": "application/json; charset=utf-8" }, body: JSON.stringify(escribeCalendarRequest(query)) })) as typeof fetch });
+            fetchImpl: ((input, init) => (fetchImpl ?? fetchSource)(input, { ...init, method: "POST", headers: { ...init?.headers, "Content-Type": "application/json; charset=utf-8" }, body: JSON.stringify(escribeCalendarRequest(query)) })) as typeof fetch });
           parseEscribeMeetings(response.text);
           held = { text: response.text, collectedAt: new Date().toISOString() };
           tenants.set(url, held);

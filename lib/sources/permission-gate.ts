@@ -1,23 +1,5 @@
-/**
- * Robots.txt read and RECORDED before an opted-in meeting adapter's first
- * request. Every verdict is recorded and none refuses
- * (`ROBOTS_BLOCKS_ACQUISITION` is false):
- *
- * ```
- *   ALLOWED | NO_ROBOTS   → recorded; the request proceeds
- *   DISALLOWED            → recorded with the matched rule; the request proceeds
- *   CANNOT_TELL           → recorded as unread; the request proceeds, and the
- *                           page's own answer decides
- * ```
- *
- * What still stops a read is an access control on the page itself (401, 403,
- * 429, a bot challenge), which the polite client reports as a WALL and which
- * is never defeated.
- *
- * The robots document is read once per origin per gate with the evaluator in
- * `lib/control-plane/scheduler/robots.ts`, and its bytes land in the
- * candidate's acquisition evidence.
- */
+import { fetchSource } from "./fetch-source.ts";
+
 
 import {
   evaluatePermission,
@@ -64,7 +46,7 @@ export function robotsUrlFor(url: string): string {
 }
 
 export function makePermissionGate(options: PermissionGateOptions = {}): PermissionGate {
-  const impl = options.fetchImpl ?? fetch;
+  const impl = options.fetchImpl ?? fetchSource;
   const byOrigin = new Map<string, Promise<RobotsRead>>();
   const made: { url: string; reading: PermissionReading }[] = [];
 

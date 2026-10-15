@@ -1,3 +1,4 @@
+import { fetchSource } from "../sources/fetch-source.ts";
 import { acquireKnownRelease, checkKnownSourceRetry, recordKnownSourceRetry, resolveKnownReleaseCache, type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
 import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import type { Provenance } from "./contract.ts";
@@ -51,7 +52,7 @@ export async function heldSourcesUnchanged(provenance: Provenance, urls: readonl
     else if (held!.lastModified) headers.set("if-modified-since", held!.lastModified);
     await checkKnownSourceRetry(store, "census-geography-relationships", held!.url, new Date().toISOString());
     const response = await requestPublisher("Census geography source check", () =>
-      (options.fetchImpl ?? fetch)(held!.url, { method: "HEAD", headers, signal: options.signal }));
+      (options.fetchImpl ?? fetchSource)(held!.url, { method: "HEAD", headers, signal: options.signal }));
     await readPublisherBody("Census geography source check", async () => { await response.body?.cancel(); });
     await recordKnownSourceRetry(store, "census-geography-relationships", held!.url, response, new Date().toISOString());
     if (response.status === 304) continue;

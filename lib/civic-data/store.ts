@@ -1547,8 +1547,12 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
 }
 
 export class PostgresRoutineDataStore implements RoutineDataStore {
-  private readonly db = getDb();
-  private readonly readCache = runtimeCivicReadCache();
+  private readonly db: ReturnType<typeof getDb>;
+  private readonly readCache: ReturnType<typeof runtimeCivicReadCache>;
+  constructor(db = getDb(), readCache = runtimeCivicReadCache()) {
+    this.db = db;
+    this.readCache = readCache;
+  }
   private readonly payloadParts = new CivicPayloadParts({
     existing: async hashes => (await this.db.select({ hash: civicDataPayloadParts.hash }).from(civicDataPayloadParts)
       .where(inArray(civicDataPayloadParts.hash, [...hashes]))).map(row => row.hash),

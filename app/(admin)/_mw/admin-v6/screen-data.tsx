@@ -1,5 +1,6 @@
 "use client";
 
+import { SourceChecksPanel } from "./source-checks.tsx";
 import { CaptureHealthPanel } from "./capture-health.tsx";
 import { DataSwitchesPanel } from "./data-switches.tsx";
 import { ReaderDemandPanel } from "./reader-demand.tsx";
@@ -15,6 +16,7 @@ export function DataBusinessScreen() {
         <h1 className={s.h1}>Data business</h1>
       </header>
       <ReaderDemandPanel />
+      <SourceChecksPanel />
       <CaptureHealthPanel />
       <PopulationPanel />
       <TopicCountsPanel />

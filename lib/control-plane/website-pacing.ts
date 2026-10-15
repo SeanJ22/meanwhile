@@ -1,12 +1,3 @@
-/**
- * Per-website pacing every reader shares, across work items, rounds and
- * worker processes. A small publisher's website (a local government under
- * 10,000 people, a school district under 5,000 students) takes at most its
- * hourly allowance, counted over everything sent to it. A website that answers
- * 429 or 5xx, or sends Retry-After, is left alone by every reader until then.
- * One row per website (`cp_website_pacing`); each take is one atomic statement.
- */
-
 export const WEBSITE_WINDOW_MS = 3_600_000;
 
 /** One website, however it is addressed: its host without a leading www. */
@@ -22,7 +13,7 @@ export interface WebsitePacing {
   /** Leave the site alone until `until`; a later hold already in place stands. */
   hold(site: string, until: number, nowMs: number): Promise<void>;
   /** The sites held at `nowMs`, with when each may be asked again. */
-  heldUntil(nowMs: number): Promise<ReadonlyMap<string, number>>;
+  heldUntil(nowMs: number, site?: string): Promise<ReadonlyMap<string, number>>;
   /** Reserve the next send for `key`, sends `intervalMs` apart for every reader: when this one may go. */
   reserve(key: string, intervalMs: number, nowMs: number): Promise<number>;
 }
@@ -45,8 +36,8 @@ export function memoryWebsitePacing(): WebsitePacing {
     async hold(site, until) {
       holds.set(site, Math.max(holds.get(site) ?? 0, until));
     },
-    async heldUntil(nowMs) {
-      return new Map([...holds].filter(([, until]) => until > nowMs));
+    async heldUntil(nowMs, site) {
+      return new Map([...holds].filter(([host, until]) => until > nowMs && (site === undefined || host === site)));
     },
     async reserve(key, intervalMs, nowMs) {
       const at = Math.max(nowMs, paced.get(key) ?? 0);
@@ -98,7 +89,7 @@ export type WebsiteAdmission =
 /** One request a reader is about to send: a held website waits for every reader; a small one takes from its shared hour. */
 export async function admitWebsiteRequest(pacing: WebsitePacing, url: string, limit: number | null, nowMs: number): Promise<WebsiteAdmission> {
   const site = websiteOf(url);
-  const held = (await pacing.heldUntil(nowMs)).get(site);
+  const held = (await pacing.heldUntil(nowMs, site)).get(site);
   if (held !== undefined && held > nowMs) return { ok: false, until: held, why: "ASKED_TO_WAIT" };
   if (limit === null) return { ok: true };
   const took = await pacing.take(site, limit, nowMs);
@@ -115,8 +106,9 @@ export function retryAfterMs(value: string | null | undefined, nowMs: number): n
 
 /** What a website's answer means for every reader: a 429 or 5xx holds it until its Retry-After, or for a minute. The hold, or null. */
 export async function holdWebsiteAfter(pacing: WebsitePacing, url: string, status: number, retryAfter: string | null | undefined, nowMs: number): Promise<number | null> {
-  if (status !== 429 && status < 500) return null;
-  const until = nowMs + Math.max(WEBSITE_BACKOFF_MS, retryAfterMs(retryAfter, nowMs) ?? 0);
+  const retry = retryAfterMs(retryAfter, nowMs);
+  if (status !== 429 && status < 500 && retry === null) return null;
+  const until = nowMs + Math.max(status === 429 || status >= 500 ? WEBSITE_BACKOFF_MS : 0, retry ?? 0);
   await pacing.hold(websiteOf(url), until, nowMs);
   return until;
 }
@@ -132,8 +124,9 @@ export function createWebsitePacing(query: Query): WebsitePacing {
     async hold(site, until, nowMs) {
       await query(WEBSITE_HOLD_SQL, [site, iso(until), iso(nowMs)]);
     },
-    async heldUntil(nowMs) {
-      return new Map((await query(WEBSITE_HELD_SQL, [iso(nowMs)])).map((row) => [String(row.site), ms(row.hold_until)] as const));
+    async heldUntil(nowMs, site) {
+      const rows = await query(site === undefined ? WEBSITE_HELD_SQL : `${WEBSITE_HELD_SQL} AND site = $2`, site === undefined ? [iso(nowMs)] : [iso(nowMs), site]);
+      return new Map(rows.map((row) => [String(row.site), ms(row.hold_until)] as const));
     },
     async reserve(key, intervalMs, nowMs) {
       return ms((await query(WEBSITE_RESERVE_SQL, [key, iso(nowMs), intervalMs]))[0]?.paced_until) - intervalMs;

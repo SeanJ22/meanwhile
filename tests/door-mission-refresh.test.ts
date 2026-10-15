@@ -113,11 +113,11 @@ describe("DB-56: mission start refreshes the doors already known in the place", 
     assert.ok((await listDoors(repos.doors)).doors.every((door) => !door.readNow));
   });
 
-  it("a derived member is read by its family's partition; a hand-wired door by its own", async () => {
+  it("derived and hand-wired doors both run their own source/body partition", async () => {
     const repos = await seeded();
-    const hand = (await listDoors(repos.doors)).doors.find((door) => door.meeting?.family === null)!;
+    const hand = (await listDoors(repos.doors)).doors.find((door) => door.meeting !== null)!;
     assert.deepEqual(doorPartitionIds(hand), [hand.doorId]);
-    assert.deepEqual(doorPartitionIds({ ...hand, meeting: { ...hand.meeting!, family: "meetings:derived:US-OH" } }), ["meetings:derived:US-OH"]);
+    assert.deepEqual(doorPartitionIds({ ...hand, doorId: "derived-member-id" }), [hand.doorId]);
     assert.deepEqual(doorPartitionIds({ ...hand, meeting: null }), []);
   });
 

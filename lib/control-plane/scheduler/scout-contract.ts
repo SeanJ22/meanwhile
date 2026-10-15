@@ -95,6 +95,7 @@ export type BrowseFn = (input: {
   readonly url: string;
   readonly timeoutMs: number;
   readonly holder: string;
+  readonly websiteSize?: import("./host-supervision.ts").WebsiteSize | null;
 }) => Promise<BrowseObservation>;
 
 /** Vault raw bytes (a PDF, an image) that cannot round-trip as a string. */

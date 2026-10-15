@@ -1,20 +1,19 @@
-/**
- * Records `lastSuccessAt` / `lastFailureAt` on a door after each read: for a
- * hand-wired door or a feed from its task's promotion outcome, for a derived
- * member from that member's own result. A system write: not a hand edit, and nothing
- * else on the record changes.
- */
-
+import { meetingPartitionOfId } from "../civic-data/meeting-partitions.ts";
 import { observeChange } from "./observed-rate.ts";
 import { feedDoorId, isDoorRecord, type DoorRepository } from "./registry.ts";
 
 export type DoorOutcome = "SUCCESS" | "FAILURE";
 
-/** The door a routine task's read lands on: its meeting door (the task's own id) or its feed door. Null when it has neither. */
-export async function taskDoorId(repo: DoorRepository, taskId: string): Promise<string | null> {
-  if ((await repo.read(taskId)) !== null) return taskId;
+export async function taskDoorIds(repo: DoorRepository, taskId: string): Promise<readonly string[]> {
+  const partition = meetingPartitionOfId(taskId);
+  if (partition) {
+    return (await repo.listWhere(["bodyIds", "0"], partition.bodyId))
+      .filter(row => row.value.kind === partition.source && row.value.meeting != null && row.value.status !== "SUSPENDED")
+      .map(row => row.value.doorId);
+  }
+  if ((await repo.read(taskId)) !== null) return [taskId];
   const feed = feedDoorId(taskId);
-  return (await repo.read(feed)) !== null ? feed : null;
+  return (await repo.read(feed)) !== null ? [feed] : [];
 }
 
 /** Returns true when the record was written; false when there is no such door (nothing is invented). */
@@ -39,36 +38,4 @@ export async function recordDoorOutcome(
     }
   }
   return false;
-}
-
-/** One outcome per member of a family read, each recorded on its own door. */
-export async function recordMemberOutcomes(
-  repo: DoorRepository,
-  members: readonly { readonly doorId: string; readonly outcome: DoorOutcome }[],
-  at: string,
-): Promise<{ readonly recorded: number; readonly missing: number }> {
-  let recorded = 0;
-  let missing = 0;
-  for (const member of members) {
-    if (await recordDoorOutcome(repo, member.doorId, member.outcome, at)) recorded += 1;
-    else missing += 1;
-  }
-  return { recorded, missing };
-}
-
-/**
- * Called by the derived family child after its member reads: each member's own
- * result onto its own door. A registry that cannot be written never changes
- * the read's outcome.
- */
-export async function recordFamilyReads(
-  repo: DoorRepository,
-  reads: readonly { readonly ok: boolean; readonly member: { readonly id: string } }[],
-  at: string,
-): Promise<{ readonly recorded: number; readonly missing: number } | null> {
-  try {
-    return await recordMemberOutcomes(repo, reads.map((read) => ({ doorId: read.member.id, outcome: read.ok ? "SUCCESS" : "FAILURE" })), at);
-  } catch {
-    return null;
-  }
 }

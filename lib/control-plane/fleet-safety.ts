@@ -1,11 +1,5 @@
-/**
- * Aggregate unattended-Fleet safety.
- *
- * This is an admission controller over the existing cost ledger and scheduler;
- * it is not a second budget ledger. Historical spend comes only from the
- * spend window the ledger's writes keep (`spend-window.ts`). In-cycle reservations close the race between
- * concurrent model requests until their provider-reported cost is persisted.
- */
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../sources/fetch-source.ts";
+
 import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry, type MeteredCharge } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
@@ -16,10 +10,9 @@ import type { OpenBytes } from "./scheduler/scout-contract.ts";
 import type { OpenOne } from "./scheduler/route-executor.ts";
 import { httpProviderFailure, type FetchOutcome } from "./scheduler/http-executor.ts";
 import { sourceReliabilityKey } from "./scheduler/scout-reliability.ts";
-import { websiteRequestLimit, type WebsiteSizeForUrl } from "./scheduler/host-supervision.ts";
-import { memoryWebsitePacing, websiteOf, type WebsitePacing } from "./website-pacing.ts";
+import { type WebsiteSizeForUrl } from "./scheduler/host-supervision.ts";
+import { memoryWebsitePacing, type WebsitePacing } from "./website-pacing.ts";
 import { enterHostGate, HOST_CONCURRENCY_DEFAULT, providerConcurrency } from "./scheduler/provider-limits.ts";
-import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
 import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
@@ -313,7 +306,6 @@ export function classifyProviderFailure(error: unknown): {
 }
 
 /** How often a reader re-reads which websites every reader is holding. */
-const HELD_REFRESH_MS = 30_000;
 
 export class FleetSafetyRefusal extends Error {
   readonly code: FleetStopCode;
@@ -414,8 +406,6 @@ export class FleetSafetyController {
   /** Every reader's shared count and holds per website; this process's own when the store cannot answer. */
   private readonly pacing: WebsitePacing;
   private readonly localPacing = memoryWebsitePacing();
-  /** The held websites as last read, refreshed every `HELD_REFRESH_MS`, and every hold this process recorded since. */
-  private held: { readonly at: number; readonly until: ReadonlyMap<string, number> } | null = null;
   private readonly websiteSize?: WebsiteSizeForUrl;
   private cycleUsd = 0;
   private cycleModelSpendMeasured = true;
@@ -781,41 +771,6 @@ export class FleetSafetyController {
     return merged;
   }
 
-  /**
-   * One count per website, shared by every reader in every process: a website some reader was asked to leave alone
-   * waits until then, and a small publisher's website takes its hourly allowance across all work and rounds.
-   */
-  private async admitWebsiteRequest(url: string, work: string): Promise<void> {
-    const site = websiteOf(url);
-    const now = this.clock();
-    const until = (await this.heldWebsites(now)).get(site);
-    if (until !== undefined && until > now) this.refuse(work, "WEBSITE_ASKED_TO_WAIT", `${site} asked to be left alone until ${new Date(until).toISOString()}`);
-    const limit = websiteRequestLimit(this.websiteSize?.(url));
-    if (limit === null) return;
-    const took = await this.pacing.take(site, limit, now).catch(() => this.localPacing.take(site, limit, now));
-    if (!took.ok) this.refuse(work, "WEBSITE_REQUEST_CAP", `${site} has had its ${limit} requests in the last hour; small-publisher allowance exhausted until ${new Date(took.until).toISOString()}`);
-  }
-
-  private async heldWebsites(now: number): Promise<ReadonlyMap<string, number>> {
-    if (this.held === null || now - this.held.at >= HELD_REFRESH_MS) {
-      const read = await this.pacing.heldUntil(now).catch(() => null);
-      this.held = { at: now, until: read ?? this.held?.until ?? new Map() };
-    }
-    return this.held.until;
-  }
-
-  /** A 429 or 5xx (with its Retry-After, when sent) holds the website for every reader. */
-  private async holdWebsiteAfter(url: string, response: Response): Promise<void> {
-    if (response.status !== 429 && response.status < 500) return;
-    const now = this.clock();
-    const site = websiteOf(url);
-    const until = now + Math.max(RATE_LIMIT_BACKOFF_MS, this.retryAfterMs(response) ?? 0);
-    const held = new Map(this.held?.until ?? []);
-    held.set(site, Math.max(until, held.get(site) ?? 0));
-    this.held = { at: this.held?.at ?? now, until: held };
-    await this.pacing.hold(site, until, now).catch(() => this.localPacing.hold(site, until, now));
-  }
-
   /** One request's place at its provider: under the in-flight cap (one while half-open), at its published pace, never while open. */
   private async enterProvider(provider: string, url: string, work: string): Promise<() => void> {
     const release = await enterHostGate({ provider, pacing: this.pacing, clock: this.clock, sleep: this.sleep,
@@ -827,7 +782,7 @@ export class FleetSafetyController {
   }
 
   /** A fetch seam that hard-caps application payload consumption by streaming. */
-  guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
+  guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = fetchSource): OpenOne {
     return async ({ url, method, headers, body, timeoutMs }) => {
       // Worker processes broker requests through this shared parent, so every
       // caller waits at one gate per provider.
@@ -853,11 +808,10 @@ export class FleetSafetyController {
           leave?.();
           leave = await this.enterProvider(provider, currentUrl, work);
           observed = this.circuits.get(provider);
-          await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
             requests++;
-            response = await fetchImpl(currentUrl, {
+            response = await runWithSourceFetch({ pacing: this.pacing, websiteSize: this.websiteSize, runtime: { now: this.clock } }, () => fetchImpl(currentUrl, {
               method: currentMethod,
               redirect: "manual",
               // Do not ask JSON APIs for a byte range. The streaming reader
@@ -865,7 +819,7 @@ export class FleetSafetyController {
               headers,
               signal: AbortSignal.timeout(timeoutMs),
               ...(currentBody === undefined ? {} : { body: currentBody }),
-            });
+            }));
             // The bounded reader can reject a partial body before decoding it.
             // Persist that source failure before its download-limit exception.
             if (response.status === 206 || response.headers.has("content-range")) {
@@ -878,6 +832,7 @@ export class FleetSafetyController {
             this.settlePayloadReservation(reservation, merged.byteLength);
           } catch (error) {
             this.settlePayloadReservation(reservation, error instanceof FleetSafetyRefusal ? null : 0);
+            if (error instanceof SourceFetchDeferred) requests--;
             throw error;
           }
           const location = response.headers.get("location");
@@ -906,10 +861,10 @@ export class FleetSafetyController {
           this.latchProvider(provider, failure ?? hard.condition, work, new Date(this.clock()).toISOString(),
             this.retryAfterMs(response), hard.class === "HARD" ? "HARD" : "TRANSIENT");
         } else if (response.ok) this.providerSucceeded(provider, observed);
-        await this.holdWebsiteAfter(currentUrl, response);
         return outcome;
       } catch (error) {
-        if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
+        if (error instanceof SourceFetchDeferred) this.defer(work, error.why === "HOURLY_ALLOWANCE" ? "WEBSITE_REQUEST_CAP" : "WEBSITE_ASKED_TO_WAIT", error.message);
+        else if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
         else if (requests > 0) this.latchProvider(provider,
           `transport failed: ${error instanceof Error ? error.message : String(error)}`, work, new Date(this.clock()).toISOString());
         return { status: null, bytes: 0, contentType: "", body: "", durationMs: Date.now() - started,
@@ -929,7 +884,7 @@ export class FleetSafetyController {
   guardedOpenBytes(
     _provider: string,
     work: string,
-    fetchImpl: typeof fetch = fetch,
+    fetchImpl: typeof fetch = fetchSource,
     options: { readonly followRedirects?: boolean } = {},
   ): OpenBytes {
     const follow = options.followRedirects !== false;
@@ -955,16 +910,15 @@ export class FleetSafetyController {
           leave?.();
           leave = await this.enterProvider(provider, currentUrl, work);
           observed = this.circuits.get(provider);
-          await this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work);
           try {
             sent = true;
             partialFailureObserved = false;
-            response = await fetchImpl(currentUrl, {
+            response = await runWithSourceFetch({ pacing: this.pacing, websiteSize: this.websiteSize, runtime: { now: this.clock } }, () => fetchImpl(currentUrl, {
               method: "GET",
               redirect: "manual",
               headers,
-            });
+            }));
             // The bounded reader may refuse a partial response before it can
             // be classified below. Record this actual failed recovery once;
             // a complete oversized body remains a local memory refusal.
@@ -999,7 +953,6 @@ export class FleetSafetyController {
         else if (!partialFailureObserved && observed && this.hardCircuit(observed) && (failure.class === "TRANSIENT" || recoveryFailure !== null)) {
           this.latchProvider(provider, recoveryFailure ?? failure.condition, work, new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");
         } else if (response.ok && recoveryFailure === null) this.providerSucceeded(provider, observed);
-        await this.holdWebsiteAfter(currentUrl, response);
         return {
           status: response.status,
           bytes: merged,
@@ -1010,7 +963,8 @@ export class FleetSafetyController {
           ...(follow ? {} : { location: [301, 302, 303, 307, 308].includes(response.status) ? location : null }),
         };
       } catch (error) {
-        if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
+        if (error instanceof SourceFetchDeferred) this.defer(work, error.why === "HOURLY_ALLOWANCE" ? "WEBSITE_REQUEST_CAP" : "WEBSITE_ASKED_TO_WAIT", error.message);
+        else if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
         else if (!partialFailureObserved && sent && observed && this.hardCircuit(observed)) {
           const failure = classifyProviderFailure(error);
           this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString(), null,

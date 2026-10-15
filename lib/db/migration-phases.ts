@@ -1,14 +1,4 @@
-/**
- * Which side of its deploy a migration belongs on.
- *   - expand: purely additive; apply BEFORE the code that uses it ships.
- *   - contract: narrows what the database accepts (dropped column or default,
- *     new constraint, NOT NULL with no fill); apply only AFTER the code that
- *     no longer needs the old shape is serving.
- * The phase is derived from the SQL and checked against MIGRATION_PHASES. A
- * migration with no entry there is a failure, never a default.
- */
 
-/** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
 export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";
@@ -135,11 +125,6 @@ const CONTRACT_RULES: readonly {
   },
 ];
 
-/**
- * The statements in a migration file, with SQL comments removed so prose that
- * quotes SQL is not classified. The breakpoint marker is split off before
- * stripping, because it begins with `--`.
- */
 export function statementsIn(sql: string): string[] {
   return sql
     .split("--> statement-breakpoint")
@@ -179,6 +164,12 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "R4_meeting_artifacts": { phase: "expand", why: "Copies existing meeting artifacts into state manifests before state readers ship." },
+  "R4_meeting_dependencies": { phase: "expand", why: "Projects held registry and venue dependencies into indexed body rows before body workers read them." },
+  "R4_meeting_partitions": { phase: "expand", why: "Transfers saved meeting evidence into independently checked body partitions before their readers ship." },
+  "R4_source_copy_observations": { phase: "expand", why: "Adds the unique observation identity used by source copies without removing the old key." },
+  "R4_source_copy_blob_identity": { phase: "contract", why: "Removes content-only identity after writers use each URL and observation time." },
+  "R4_retire_meeting_families": { phase: "contract", why: "Retires state-family pointers after body-partition readers are serving." },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",

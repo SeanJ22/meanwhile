@@ -14,53 +14,34 @@ import type {
 
 const QUERY: MeetingQuery = { lat: 32.2, lng: -110.9, radiusKm: 150 };
 
-test("family members share a calendar response while each keeps its acquisition, and companion feeds share the site allowance", async () => {
+test("a member shares a calendar response across adapters with independent acquisition evidence", async () => {
   let calls = 0;
-  const fetchImpl = meetingFetchPass({ websiteSize: () => ({kind: "local-government", population: 9_999}),
-    fetchImpl: async () => { calls++; return new Response("saved calendar"); } });
+  const read = meetingFetchPass({ fetchImpl: async () => { calls++; return new Response("saved calendar"); } });
   const url = "https://county.example.gov/calendar.ics";
   const captured = await captureSourceAcquisitions(async run => {
-    for (const source of ["ical", "official-page-events"]) await run(source, async () => {
-      assert.equal(await (await fetchImpl(url)).text(), "saved calendar");
-    });
+    await Promise.all(["ical", "official-page-events"].map(source => run(source, async () => {
+      assert.equal(await (await read(url)).text(), "saved calendar");
+    })));
   });
   assert.equal(calls, 1);
-  assert.deepEqual(captured.evidence.map(e => e.source), ["ical", "official-page-events"]);
+  assert.deepEqual(captured.evidence.map(e => e.source).sort(), ["ical", "official-page-events"]);
   assert.equal(captured.evidence[0].rawHash, captured.evidence[1].rawHash);
-  for (let i = 0; i < 9; i++) await fetchImpl(`https://www.county.example.gov/companion-${i}.ics`);
-  await assert.rejects(fetchImpl("https://county.example.gov/eleventh.ics"), /shared website request bound/);
-  assert.equal(calls, 10);
-  assert.equal(await (await fetchImpl(url)).text(), "saved calendar", "held same-pass bytes remain usable after the allowance");
-  await fetchImpl("https://another.example.gov/calendar.ics");
-  assert.equal(calls, 11, "another site has its own allowance");
+  read.clear();
+  assert.equal(await (await read(url)).text(), "saved calendar");
+  assert.equal(calls, 2, "the next member cannot retain the previous member's response cache");
 });
 
-test("shared meeting reads retain the identified curl fallback, its destination and both request costs", async () => {
-  let fetched = 0, curled = 0;
-  const fetchImpl = meetingFetchPass({ websiteSize: () => ({kind: "school-district", students: 4_999}),
-    fetchImpl: async () => { fetched++; return new Response("refused", { status: 403 }); },
-    curl: async url => { curled++; return { status: 200, contentType: "text/calendar", text: "calendar",
-      bytes: new TextEncoder().encode("calendar"), finalUrl: `${url}?final=1` }; } });
-  const url = "https://county.example.gov/calendar.ics";
-  for (let i = 0; i < 2; i++) {
-    const response = await fetchImpl(url);
-    assert.equal(response.url, `${url}?final=1`);
-    assert.equal(await response.text(), "calendar");
-  }
-  assert.deepEqual([fetched, curled], [1, 1]);
-  for (let i = 0; i < 4; i++) await fetchImpl(`https://county.example.gov/companion-${i}.ics`);
-  await assert.rejects(fetchImpl("https://county.example.gov/next.ics"), /shared website request bound/);
-  assert.deepEqual([fetched, curled], [5, 5]);
-});
-
-test("shared meeting reads do not cap unknown, large, state, federal or national publishers", async () => {
-  for (const size of [undefined, {kind: "local-government", population: 10_000}, {kind: "school-district", students: 5_000},
-    {kind: "state"}, {kind: "federal"}, {kind: "national"}] as const) {
-    let calls = 0;
-    const read = meetingFetchPass({websiteSize: () => size, fetchImpl: async () => { calls++; return new Response("calendar"); }});
-    for (let i = 0; i < 12; i++) await read(`https://example.gov/calendar-${i}.ics`);
-    assert.equal(calls, 12);
-  }
+test("a member cache distinguishes page bodies and request headers and discards failed reads", async () => {
+  let calls = 0;
+  const read = meetingFetchPass({ fetchImpl: async () => new Response(String(++calls), { status: calls === 1 ? 503 : 200 }) });
+  const url = "https://county.example.gov/calendar.aspx";
+  assert.equal((await read(url)).status, 503);
+  assert.equal(await (await read(url)).text(), "2");
+  assert.equal(await (await read(url)).text(), "2");
+  assert.equal(await (await read(url, { method: "POST", body: "page=1" })).text(), "3");
+  assert.equal(await (await read(url, { method: "POST", body: "page=2" })).text(), "4");
+  assert.equal(await (await read(url, { headers: { Accept: "text/calendar" } })).text(), "5");
+  assert.equal(calls, 5);
 });
 
 const ZERO: NormalizeDropCounts = {

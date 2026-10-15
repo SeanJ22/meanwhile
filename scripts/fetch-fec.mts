@@ -1,3 +1,4 @@
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../lib/sources/fetch-source.ts";
 /** @freshness-reads-here — stored source observations survive replay and failed refresh. */
 import { config as loadEnv } from "dotenv";
 import { readFileSync } from "node:fs";
@@ -16,7 +17,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { isSourceAcquisitionFailure, sourceAcquisitionFailure, recordRegisteredSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { writeRoutineReceiptLine } from "../lib/civic-data/receipt-output.ts";
-import { isSourceAcquisitionDeadlineError, openSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, sourceAcquisitionSleep } from "../lib/sources/acquisition-deadline.ts";
+import { isSourceAcquisitionDeadlineError, openSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
@@ -37,7 +38,7 @@ if (!roster) gaps.push({ code: "CONGRESS_SOURCE_NOT_HELD", detail: "FEC registra
 const domain = openSourceAcquisitionDomain({ sourceLabel: "FEC national registrations and filings", timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS });
 const rawHashes: string[] = [], attempts = { ...prior.refreshAttempts };
 const sourceReceipts: { retrievedAt: string; check: ReturnType<typeof knownReleaseSourceCheck> }[] = [];
-let observation = "", finalUrl = "https://api.open.fec.gov/v1/", lastAttemptedUrl = finalUrl, nextFecRequestAt = 0, apiRetryAt = 0;
+let observation = "", finalUrl = "https://api.open.fec.gov/v1/", lastAttemptedUrl = finalUrl, apiRetryAt = 0;
 const read: FecReadPage = async (path, params) => {
   if (!key) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "OpenFEC authentication unavailable; using the public FEC bulk files.");
   const url = new URL(`https://api.open.fec.gov/v1${path}`);
@@ -49,29 +50,13 @@ const read: FecReadPage = async (path, params) => {
     fetchImpl: async (resource, init) => {
       if (Date.now() < apiRetryAt) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "OpenFEC Retry-After is pending; the bulk files remain available.");
       const authenticated = new URL(String(resource)); authenticated.searchParams.set("api_key", key);
-      for (let attempt = 0; ; attempt++) {
-        // Keep the existing 250 ms provider spacing across workers;
-        // replaying already-held bytes consumes no provider request.
-        const delayUntilRequest = Math.max(0, nextFecRequestAt - Date.now());
-        nextFecRequestAt = Date.now() + delayUntilRequest + 250;
-        if (delayUntilRequest) await sourceAcquisitionSleep(delayUntilRequest, domain.signal);
-        if (Date.now() < apiRetryAt) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "OpenFEC Retry-After is pending; the bulk files remain available.");
-        const response = await fetch(authenticated, { ...init, redirect: "error", signal: AbortSignal.any([domain.signal, AbortSignal.timeout(60_000)]), headers: { ...Object.fromEntries(new Headers(init?.headers)),
-          "user-agent": "Meanwhile civic data (contact: seanj22@gmail.com)" } });
-        if ((response.status === 429 || response.status >= 500) && attempt < 3) {
-          const retry = response.headers.get("retry-after"), seconds = Number(retry);
-          const delay = retry ? Number.isFinite(seconds) ? seconds * 1000 : Math.max(0, Date.parse(retry) - Date.now()) : 2000 * (attempt + 1);
-          if (response.status === 429 || delay >= 60_000) {
-            apiRetryAt = Date.now() + (Number.isFinite(delay) ? Math.max(delay, 250) : 30_000);
-            // No API request is retried before this provider window. Discovery
-            // can use bulk immediately, without consuming its entire deadline.
-            return new Response(response.body, { status: response.status, statusText: response.statusText, headers: response.headers });
-          }
-          await response.body?.cancel(); await sourceAcquisitionSleep(Number.isFinite(delay) ? delay : 30_000, domain.signal); continue;
-        }
-        // The transport URL contains a credential; the vault stores only
-        // the canonical public URL and the unmodified response bytes.
+      try {
+        const response = await runWithSourceFetch({ sourceId: "fec-open-api", state: "US", spacingMs: 250 }, () =>
+          fetchSource(authenticated, { ...init, redirect: "error", signal: AbortSignal.any([domain.signal, AbortSignal.timeout(60_000)]) }));
         return new Response(response.body, { status: response.status, statusText: response.statusText, headers: response.headers });
+      } catch (error) {
+        if (error instanceof SourceFetchDeferred) apiRetryAt = error.until;
+        throw error;
       }
     }, validate: bytes => { parseFecPage(Buffer.from(bytes).toString("utf8")); },
   }).catch(error => {

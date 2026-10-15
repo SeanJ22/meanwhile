@@ -1,10 +1,10 @@
-import { readDerivedMeetingWiring, type DerivedWiringProjection } from "../../civic-data/derived-meeting-wiring.ts";
+import { readDerivedMeetingWiringForState, type DerivedWiringProjection } from "../../civic-data/derived-meeting-wiring.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../../civic-data/meeting-partitions.ts";
 import type { CivicDataReadResult } from "../../civic-data/read-model.ts";
 import type { RegistrationReadModel } from "../../registration/candidate.ts";
 import { readRegistrationProjection } from "../../registration/reader.ts";
 import { loadRegistrationReference, type LoadedReference } from "../../registration/reference.ts";
-import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
+import { readMeetingRegistryBodyIdsForState } from "../../civic-data/meeting-dependencies.ts";
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { promotedRegistries, type MeetingPartitionOwnership } from "./provider-inputs.ts";
 
@@ -24,20 +24,17 @@ export function reviewedGovernmentPairs(reference: LoadedReference, referenceSha
 /** One cycle's exact government/body join. Never join display names, hosts or county membership. */
 export function createMeetingPartitionOwnership(input: {
   readonly root?: string;
-  readonly readWiring?: () => Promise<CivicDataReadResult<DerivedWiringProjection>>;
+  readonly readWiring?: (state: string) => Promise<CivicDataReadResult<DerivedWiringProjection>>;
   readonly readRegistration?: (state: string) => Promise<CivicDataReadResult<RegistrationReadModel>>;
   readonly staticBodies?: ReadonlySet<string>;
   readonly registryBodies?: () => Iterable<{ readonly id: string; readonly bodyId?: string | null }>;
 } = {}): MeetingPartitionOwnership & { readStates(states: Iterable<string>): Promise<void> } {
-  const staticBodies = input.staticBodies ?? new Set(MEETING_PARTITION_CONTRACTS.filter(p => p.derivedFamily === null).map(p => p.bodyId));
-  const familyStates = new Set<string>(MEETING_PARTITION_CONTRACTS.flatMap(p => p.derivedFamily === null ? [] : [p.derivedFamily]));
+  const staticBodies = input.staticBodies ?? new Set(MEETING_PARTITION_CONTRACTS.map(p => p.bodyId));
   const bodies = new Map<string, Set<string>>();
   const states = new Set<string>();
   const failures = new Map<string, string>();
   const derivedBodies = new Set<string>();
-  let wiringRead = false;
-  let wiringKnown = false;
-  let reviewedBodies: ReadonlySet<string> | null = null;
+  const knownWiringStates = new Set<string>();
   const add = (id: string, bodyId: string) => {
     const set = bodies.get(id) ?? new Set<string>();
     set.add(bodyId);
@@ -49,14 +46,14 @@ export function createMeetingPartitionOwnership(input: {
   });
   return {
     get source() {
-      return `exact registered government/body IDs and production meeting partitions; ${!wiringRead ? "source readings not started" : [...failures.values()].join("; ") || "source readings complete"}`;
+      return `exact registered government/body IDs and production meeting partitions; ${!states.size ? "source readings not started" : [...failures.values()].join("; ") || "source readings complete"}`;
     },
     ownerOf(jurisdictionId) {
       const ids = new Set(bodies.get(jurisdictionId) ?? []);
       if (ids.size !== 1) return "UNKNOWN";
       const body = [...ids][0]!;
       if (staticBodies.has(body) || derivedBodies.has(body)) return "PARTITION";
-      return wiringKnown ? "NONE" : "UNKNOWN";
+      return knownWiringStates.has(jurisdictionId.split(":")[0]!.toLowerCase()) ? "NONE" : "UNKNOWN";
     },
     bodyIdFor(jurisdictionId) {
       const ids = bodies.get(jurisdictionId);
@@ -71,42 +68,30 @@ export function createMeetingPartitionOwnership(input: {
       if (ids.size !== 1) return `${jurisdictionId}: conflicting exact governing-body IDs (${[...ids].sort().join(", ")}); repair the identity conflict`;
       const body = [...ids][0]!;
       if (staticBodies.has(body) || derivedBodies.has(body)) return `${jurisdictionId}: the ${body} production partition owns this meeting clock`;
-      if (!wiringKnown) return `${jurisdictionId}: ${failures.get("wiring") ?? "meeting source wiring has not been read"}; recover that reading before opening a second clock`;
+      if (!knownWiringStates.has(jurisdictionId.split(":")[0]!.toLowerCase())) return `${jurisdictionId}: ${failures.get(`wiring:${jurisdictionId.split(":")[0]!.toLowerCase()}`) ?? "meeting source wiring has not been read"}; recover that reading before opening a second clock`;
       return `${jurisdictionId}: ${body} has no existing production meeting partition; its registered acquisition route owns the work`;
     },
     async readStates(wanted) {
       // A registry can be installed later in this same cycle by an Admin scope.
       for (const row of registryBodies()) if (row.bodyId) add(row.id, row.bodyId);
-      if (!wiringRead) {
-        wiringRead = true;
-        try {
-          const read = await (input.readWiring ?? (() => readDerivedMeetingWiring({ bypassCache: true })))();
-          wiringKnown = read.kind === "PROMOTED" || read.kind === "NOT_RECORDED";
-          if (read.kind === "PROMOTED") {
-            for (const { row } of read.value.records) {
-              if (!familyStates.has(row.state)) continue;
-              // Suspended routes still own their partition and its last verified data.
-              derivedBodies.add(row.bodyId);
-              // A sub-body's clock never claims its entire government's meeting route.
-              if (/#(?:governing|board)$/.test(row.bodyId)) add(row.jurisdictionId, row.bodyId);
-            }
-          } else if (!wiringKnown) failures.set("wiring", `meeting source wiring is ${read.kind}`);
-        } catch (error) {
-          failures.set("wiring", `meeting source wiring unread: ${sanitizedErrorDiagnostic(error)}`);
-        }
-        if (input.root) {
-          try {
-            const read = await readRegistryRuntimeProjection();
-            if (read.kind === "PROMOTED") reviewedBodies = new Set(read.value.registry.bodies.map(body => body.id));
-            else failures.set("reviewed", `reviewed body registry is ${read.kind}; unpaired governments remain UNKNOWN`);
-          } catch (error) {
-            failures.set("reviewed", `reviewed body registry unread: ${sanitizedErrorDiagnostic(error)}`);
-          }
-        }
-      }
       for (const state of new Set([...wanted].map(s => s.toLowerCase()).filter(s => /^[a-z]{2}$/.test(s)))) {
         if (states.has(state)) continue;
         states.add(state);
+        try {
+          let records: DerivedWiringProjection["records"];
+          if (input.readWiring) {
+            const read = await input.readWiring(state);
+            if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED") throw new Error(`meeting source wiring is ${read.kind}`);
+            records = read.kind === "PROMOTED" ? read.value.records : [];
+          } else records = (await readDerivedMeetingWiringForState(state)).records;
+          knownWiringStates.add(state);
+          for (const { row } of records) {
+            derivedBodies.add(row.bodyId);
+            if (/#(?:governing|board)$/.test(row.bodyId)) add(row.jurisdictionId, row.bodyId);
+          }
+        } catch (error) {
+          failures.set(`wiring:${state}`, `meeting source wiring unread: ${sanitizedErrorDiagnostic(error)}`);
+        }
         try {
           const read = await (input.readRegistration ?? ((s) => readRegistrationProjection(s, { bypassCache: true })))(state);
           if (read.kind !== "PROMOTED") {
@@ -114,7 +99,8 @@ export function createMeetingPartitionOwnership(input: {
             continue;
           }
           for (const body of read.value.bodies) if (body.jurisdictionId !== null) add(body.jurisdictionId, body.id);
-          if (input.root && reviewedBodies) {
+          if (input.root) {
+            const reviewedBodies = await readMeetingRegistryBodyIdsForState(state);
             for (const pair of reviewedGovernmentPairs(loadRegistrationReference(input.root, state), read.value.vintage.referenceSha256, reviewedBodies)) add(pair.id, pair.bodyId);
           }
         } catch (error) {

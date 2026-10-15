@@ -1,14 +1,6 @@
 #!/usr/bin/env tsx
-/**
- * Standing official state-roll-call boundary.
- *
- * One invocation owns one ready NH or NJ official-source contract. National
- * native votes use openstates-votes-refresh.mts; a landing page is not a vote source.
- * Acquired facts retain exact source-native identities and their prior LKG.
- *
- * @freshness-reads-here — retrievedAt is minted only after the official
- * roll-call surface returned a non-empty body for the exact state contract.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+/** @freshness-reads-here */
 
 import {
   officialStateIdentityAuthorityEvidence,
@@ -116,11 +108,7 @@ export function parseStateRollCallArguments(args: readonly string[]): StateRollC
   return { state: target.state };
 }
 
-/**
- * The single durable-write seam shared by every state's roll-call promotion. A
- * failure of our own durable write is returned as a source-neutral persistence
- * failure: no receipt, the prior canonical pointer untouched, exit 2.
- */
+
 export type StateRollCallPersistResult =
   | { readonly kind: "PERSISTED"; readonly outcome: PromotionOutcome }
   | { readonly kind: "WRITE_FAILED"; readonly diagnostic: string };
@@ -160,10 +148,7 @@ export async function persistAcquiredStateRollCall(
     processRegisteredRoutineCandidate(store, contractId, candidate, retrievedAt, undefined, { confirmUnchanged: true }));
 }
 
-/**
- * Persist one candidate of a per-legislator fan-out with the same resilience: a
- * source acquisition error propagates; a durable write failure becomes a diagnostic.
- */
+
 async function persistFanOutStateRollCall(
   store: RoutineDataStore,
   contractId: string,
@@ -197,7 +182,7 @@ async function main(): Promise<void> {
             const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
             const result = await requestPublisher(
               "New Hampshire General Court complete roll-call horizon",
-              () => fetch(url, {
+              () => fetchSource(url, {
                 headers: { "user-agent": UA, accept: "text/plain,*/*" },
                 redirect: "follow",
                 signal: requestSignal,
@@ -412,7 +397,7 @@ async function main(): Promise<void> {
           const indexSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
           const indexResponse = await requestPublisher(
             "New Jersey Legislature voting-record session index",
-            () => fetch(NJ_VOTING_RECORDS_INDEX_URL, {
+            () => fetchSource(NJ_VOTING_RECORDS_INDEX_URL, {
               headers: { "user-agent": UA, accept: "application/json" },
               redirect: "follow",
               signal: indexSignal,
@@ -458,7 +443,7 @@ async function main(): Promise<void> {
                 const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
                 const response = await requestPublisher(
                   `New Jersey Legislature ${request.kind === "MEMBER" ? `member ${request.participant.rosterKey}` : request.definition.kind}`,
-                  () => fetch(request.url, {
+                  () => fetchSource(request.url, {
                     headers: {
                       "user-agent": UA,
                       // pub.njleg.gov 406s an Accept naming only zip/octet-stream; a trailing */* gets the archive.

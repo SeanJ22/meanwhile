@@ -1,3 +1,4 @@
+import { routineScopeState } from "./state-scope.ts";
 import { randomUUID } from "node:crypto";
 import { refreshDoorsForPass } from "../doors/install.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
@@ -27,7 +28,8 @@ export function routineRefreshSelection(args: readonly string[]): { contractId: 
 }
 
 export async function requestRoutineRefresh(repos: ControlPlaneRepositories, args: readonly string[], now: string) {
-  await refreshDoorsForPass(repos.doors);
+  const requested = args.find(arg => arg.startsWith("--contract="))?.slice("--contract=".length) ?? "";
+  await refreshDoorsForPass(repos.doors, routineScopeState(requested));
   const selection = routineRefreshSelection(args);
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   const config = row?.value ?? defaultAdminConfig();
@@ -41,14 +43,20 @@ export async function requestRoutineRefresh(repos: ControlPlaneRepositories, arg
 }
 
 /** Reserve before launch: a parent crash cannot turn two requested attempts into an unbounded retry loop. */
-export async function reserveRoutineRefresh(repos: ControlPlaneRepositories, now: string) {
+export async function reserveRoutineRefresh(repos: ControlPlaneRepositories, now: string, state?: string) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if (!row) return null;
   const requests = [...row.value.routineRefreshRequests ?? []];
-  const index = requests.findIndex(request => request.attempts.length < request.maximumAttempts);
+  const index = requests.findIndex(request => {
+    if (request.attempts.length >= request.maximumAttempts) return false;
+    const contract = [...MEETING_PARTITION_CONTRACTS, ...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS].find(row => row.id === request.contractId);
+    return state === undefined || routineScopeState(contract?.scope ?? request.contractId) === state;
+  });
   if (index < 0) return null;
   const request = requests[index];
-  routineRefreshSelection([`--contract=${request.contractId}`, `--attempts=${request.maximumAttempts}`]);
+  if (!request.contractId.startsWith("meetings:")) {
+    routineRefreshSelection([`--contract=${request.contractId}`, `--attempts=${request.maximumAttempts}`]);
+  }
   const ordinal = request.attempts.length;
   requests[index] = { ...request, attempts: [...request.attempts, { startedAt: now, finishedAt: null, exitCode: null }] };
   await repos.adminConfig.compareAndSet(row.id, row.revision, { ...row.value, routineRefreshRequests: requests, updatedAt: now }, now);

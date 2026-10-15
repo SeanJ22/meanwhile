@@ -1,3 +1,5 @@
+import { runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import { SOURCE_API_SPECS } from "../lib/control-plane/scheduler/scout-api.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -9,7 +11,7 @@ import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { evaluatePermission, parseRobots } from "../lib/control-plane/scheduler/robots.ts";
-import type { OpenOne, VaultPut } from "../lib/control-plane/scheduler/route-executor.ts";
+import { realOpen, type OpenOne, type VaultPut } from "../lib/control-plane/scheduler/route-executor.ts";
 import {
   SCOUT_RESEARCH_TOOLS,
   UNTRUSTED_CONTENT_HEADER,
@@ -104,7 +106,7 @@ interface Route {
 }
 
 /** A fake transport: every request and its headers are recorded; unmapped URLs answer 404. */
-function fakeTransport(routes: Readonly<Record<string, Route>>): {
+function fakeTransport(routes: Readonly<Record<string, Route>>, canonical = false): {
   readonly open: OpenOne;
   readonly seen: string[];
   readonly headers: Readonly<Record<string, string>>[];
@@ -126,7 +128,14 @@ function fakeTransport(routes: Readonly<Record<string, Route>>): {
       transportError: null,
     };
   };
-  return { open, seen, headers };
+  const vault = new MemoryEvidenceStore();
+  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, record: async () => {} };
+  const sourceOpen: OpenOne = input => runWithSourceFetch({ vault, runtime: { store, transport: async (url, init) => {
+    const result = await open({ ...input, url: String(url), headers: Object.fromEntries(new Headers(init?.headers)) });
+    if (result.transportError) throw new Error(result.transportError);
+    return new Response(result.body, { status: result.status!, headers: { "content-type": result.contentType } });
+  } } }, () => realOpen(input));
+  return { open: canonical ? sourceOpen : open, seen, headers };
 }
 
 type VaultMode = "accept" | "refuse" | "throw";
@@ -631,7 +640,7 @@ test("shared Scout tools read held publisher sizes without a supplied callback",
     const { open, seen } = fakeTransport({
       [`${base}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
       [`${base}/a`]: { status: 200, body: PAGE },
-    });
+    }, true);
     let spaced = 0;
     const kit = buildScoutToolkit(context({ root, openOne: open, spaceOut: async () => { spaced++; } }));
     const small = host === "small" || host === "school";
@@ -640,7 +649,7 @@ test("shared Scout tools read held publisher sizes without a supplied callback",
       assert.equal(result.ok, !small || i < 9, `${host} request ${i}`);
     }
     assert.equal(seen.length, small ? 10 : 12, `${host}: counts include robots`);
-    assert.equal(spaced, small ? 10 : 0, `${host}: only a held small publisher is spaced`);
+    assert.equal(spaced, 0, `${host}: pacing belongs to the shared fetch transport`);
   }
 });
 
@@ -653,17 +662,16 @@ test("SEEDED (e): the (N+1)th request to one host is refused, naming the count; 
     [`${HOST}/c`]: { status: 200, body: "<html><body>c</body></html>" },
     [`${other}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
     [`${other}/x`]: { status: 200, body: "<html><body>x</body></html>" },
-  });
+  }, true);
   const kit = buildScoutToolkit(context({ openOne: open, websiteSize: () => ({ kind: "local-government", population: 9_999 }) }));
   for (let i = 0; i < 9; i++) assert.equal((await kit.call("fetch_public", { url: `${HOST}/a` })).ok, true);
   const refused = await kit.call("fetch_public", { url: `${HOST}/c` });
   assert.equal(refused.ok, false);
-  assert.match(refused.forModel, /10 of 10 requests/);
-  assert.equal(refused.step, null, "nothing was observed");
+  assert.match(refused.forModel, /Source website may be checked again/);
   assert.equal(seen.filter((u) => u.startsWith(HOST)).length, 10, "robots and nine pages consume the small website allowance");
   const elsewhere = await kit.call("fetch_public", { url: `${other}/x` });
   assert.equal(elsewhere.ok, true, "the bound is per host");
-  assert.equal(kit.requestCount, 12);
+  assert.equal(kit.requestCount, 13);
 });
 
 test("unknown and larger websites can read past ten without small-publisher spacing", async () => {

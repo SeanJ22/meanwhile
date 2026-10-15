@@ -1,18 +1,5 @@
-/**
- * `pnpm tsx scripts/campaign-finance-az-pima-transactions.mts --promote`
- *
- * @freshness-reads-here — successful retrieval time is captured after all
- * official response bodies parse; failed-attempt time describes that attempt.
- *
- * Acquires every EasyVote campaign-finance tenant named in the filing-regime
- * registry: the public filer index plus the contribution and distribution
- * searches. No credential is sent; the API picks its anonymous website user from
- * the tenant named in the `Origin` header, exactly as the county's own public
- * web app does.
- *
- * Contributions and distributions are never summed together, and
- * `ItemizedListType` is kept exactly as filed.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+/** @freshness-reads-here */
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -91,7 +78,7 @@ interface FetchResult {
 
 async function getJson(tenant: EasyVoteTenant, path: string): Promise<FetchResult> {
   const url = `${API_BASE}${path}`;
-  const response = await fetch(url, {
+  const response = await fetchSource(url, {
     headers: {
       Origin: tenant.origin,
       Accept: "application/json, text/plain, */*",
@@ -127,7 +114,7 @@ interface ObjectFetchResult {
 
 async function getObjectJson(tenant: EasyVoteTenant, path: string): Promise<ObjectFetchResult> {
   const url = `${API_BASE}${path}`;
-  const response = await fetch(url, { headers: { Origin: tenant.origin, Accept: "application/json, text/plain, */*" } });
+  const response = await fetchSource(url, { headers: { Origin: tenant.origin, Accept: "application/json, text/plain, */*" } });
   const rawText = await response.text();
   let value: Record<string, unknown> | null = null;
   try {

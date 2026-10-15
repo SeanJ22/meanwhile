@@ -44,6 +44,8 @@ const REASON_WORDS: Readonly<Record<string, string>> = {
 };
 
 function blankWords(stage: string, reason: string): string {
+  if (reason === "RECHECK_DUE") return "due for another source check";
+  if (reason === "RECHECK_SOURCE_FAILED") return "waiting to retry a source check";
   const code = reason.replace(/^CHECK_FAILED:/, "").replace(/^SECOND_/, "");
   const why = REASON_WORDS[code] ?? null;
   const prefix = reason.includes("SECOND_") && code !== "SECOND_SOURCE_REQUIRED" ? "the second source: " : "";

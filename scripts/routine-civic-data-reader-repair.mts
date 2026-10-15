@@ -1,12 +1,9 @@
-/**
- * Killable Reader-delivery evidence boundary for the standing data plane.
- * This process never acquires a publisher, creates a source candidate, moves a
- * pointer, or changes LKG. It only reads canonical promotions and appends
- * typed Reader observations to the already-promoted candidate event stream.
- */
-import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, meetingPartitionOfId, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
+import { installDoorRecords } from "../lib/doors/meeting-doors.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
+import { isDoorRecord } from "../lib/doors/registry.ts";
 import {
   routineReaderRepairRecord,
   serializeRoutineReaderRepairRecord,
@@ -69,11 +66,18 @@ const store = stage
   ? traceMethodCalls(new PostgresRoutineDataStore(), "store", stage)
   : new PostgresRoutineDataStore();
 
-step = "reading the meeting doors";
-{
-  // The meeting partitions read back here are the published doors' partitions; other contracts do not need them.
-  const doors = await ensureMeetingDoors();
-  if (!doors.ready && (meetingAggregate || contractId?.startsWith("meetings:"))) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
+const selectedIds = assignment(argv, "contracts")?.split(",") ?? null;
+if (meetingAggregate) {
+  if (!selectedIds?.length) throw new Error("READER_REPAIR_MEETING_SELECTION_REQUIRED");
+  const bodies = [...new Set(selectedIds.map(id => meetingPartitionOfId(id)?.bodyId))];
+  if (bodies.some(body => !body)) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
+  const connection = controlPlaneUrlFromEnv();
+  if (!connection) throw new Error("MEETING_DOOR_REGISTRY_UNCONFIGURED");
+  const repo = (await createPgRepositories(connection, observedAt, { skipBootstrap: true })).doors;
+  const read = await runBoundedWorkPool(bodies, 8, body => repo.listWhere(["bodyIds", "0"], body!));
+  const failed = read.find(result => !result.ok);
+  if (failed && !failed.ok) throw new Error(failed.error);
+  installDoorRecords(read.flatMap(result => result.ok ? result.value.map(row => row.value).filter(isDoorRecord) : []));
 }
 
 let failed = false;
@@ -90,7 +94,6 @@ if (meetingAggregate) {
       });
     return composing;
   };
-  const selectedIds = assignment(argv, "contracts")?.split(",") ?? null;
   const selectedContracts = selectedIds === null ? MEETING_PARTITION_CONTRACTS : MEETING_PARTITION_CONTRACTS.filter(contract => selectedIds.includes(contract.id));
   if (selectedIds && (selectedIds.length !== selectedContracts.length || selectedContracts.length === 0)) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
   const results = await repairMeetingReaderProjectionReadbacks(
@@ -111,7 +114,6 @@ if (meetingAggregate) {
         : { ok: false, error: safeFailure(result.error) },
     )));
   }
-
 
 } else {
   const contracts = [

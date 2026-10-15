@@ -1,8 +1,5 @@
-/**
- * Web search for hunters and discovery. A hunter's query goes to one provider: Brave LLM Context first, which returns
- * page text with its results, and Exa search with highlights only when Brave returns nothing. The text is handed to
- * the model to read and is never stored.
- */
+import { fetchSource } from "../sources/fetch-source.ts";
+
 
 export type FetchLike = (url: string, init: {
   readonly method: string;
@@ -51,7 +48,7 @@ async function withTimeout<T>(timeoutMs: number, run: (signal: AbortSignal) => P
 }
 
 const redact = (body: string, key: string): string => body.split(key).join("[REDACTED]").slice(0, 160);
-const defaultFetch: FetchLike = (url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>;
+const defaultFetch: FetchLike = (url, init) => fetchSource(url, init as RequestInit) as unknown as ReturnType<FetchLike>;
 const clip = (text: string, chars: number): string => text.length > chars ? `${text.slice(0, chars - 1)}…` : text;
 
 /** Brave web search: result pointers with their short descriptions. Used by meetings discovery. */

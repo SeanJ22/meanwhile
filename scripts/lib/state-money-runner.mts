@@ -1,7 +1,8 @@
 /** @freshness-reads-here — observations are returned by the shared source vault. */
 import { createHash } from "node:crypto";
+import { fetchSource, runWithSourceFetch } from "../../lib/sources/fetch-source.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease } from "../../lib/sources/known-release.ts";
-import { openSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, sourceAcquisitionSleep } from "../../lib/sources/acquisition-deadline.ts";
+import { openSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../../lib/sources/acquisition-deadline.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, stateCampaignFinanceCandidate, type StateCampaignFinanceJurisdiction } from "../../lib/funding/data-plane.ts";
 import { financeYear, upsertStateMoney } from "../../lib/funding/state-native.ts";
 import type { StateMoneyRecord, StateMoneySnapshot } from "../../lib/funding/state-money.ts";
@@ -40,21 +41,9 @@ export async function runStateFinance(state: StateCampaignFinanceJurisdiction, s
           url, parserVersion: contract.parserVersion, signal: domain.signal, maxBytes: 16 * 1024 * 1024,
           checkAfterMs: 24 * 60 * 60_000, headers: options.headers,
           validate: bytes => options.validate?.(Buffer.from(bytes).toString("utf8")),
-          fetchImpl: async (resource, init) => {
-            for (let attempt = 0; ; attempt++) {
-              // Preserve each existing adapter's provider spacing. Vault reuse
-              // never reaches this transport and requires no pacing delay.
-              await sourceAcquisitionSleep(spacingMs, domain.signal);
-              const response = await fetch(resource, { ...init, method: options.body === undefined ? "GET" : "POST", body: options.body,
-                signal: AbortSignal.any([domain.signal, AbortSignal.timeout(60_000)]) });
-              if ((response.status === 429 || response.status >= 500) && attempt < 3) {
-                const retry = response.headers.get("retry-after"), seconds = Number(retry);
-                const delay = retry ? Number.isFinite(seconds) ? seconds * 1000 : Date.parse(retry) - Date.now() : 2000 * (attempt + 1);
-                await response.body?.cancel(); await sourceAcquisitionSleep(Math.max(0, Number.isFinite(delay) ? delay : 30_000), domain.signal); continue;
-              }
-              return response;
-            }
-          },
+          fetchImpl: (resource, init) => runWithSourceFetch({ sourceId: contract.sourceId, state, spacingMs }, () =>
+            fetchSource(resource, { ...init, method: options.body === undefined ? "GET" : "POST", body: options.body,
+              signal: AbortSignal.any([domain.signal, AbortSignal.timeout(60_000)]) })),
         });
         const { bytes, ...receipt } = result; receipts.push(receipt);
         return { text: Buffer.from(bytes).toString("utf8"), receipt };

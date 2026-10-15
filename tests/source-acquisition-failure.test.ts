@@ -1,3 +1,6 @@
+import { runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -23,7 +26,7 @@ import {
   runInSourceAcquisitionDomain,
   sourceAcquisitionSleep,
 } from "../lib/sources/acquisition-deadline.ts";
-import { curlGetText, politeGetText } from "../lib/sources/http.ts";
+import { politeGetText } from "../lib/sources/http.ts";
 import { ROUTINE_CHILD_TIMEOUT_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
 import {
@@ -287,35 +290,6 @@ test("publisher request, body, and retry deadlines cancel their real work before
   }
 });
 
-test("the curl rung receives both a native deadline and an abortable process signal", async () => {
-  let activeProcesses = 0;
-  let observedMaxTime = false;
-  await assert.rejects(
-    runInSourceAcquisitionDomain(
-      { sourceLabel: "curl fixture", timeoutMs: 25 },
-      (signal) => curlGetText(
-        "https://example.invalid/hung",
-        { "User-Agent": "fixture" },
-        signal,
-        (args, options) => new Promise<Buffer>((_resolve, reject) => {
-          activeProcesses += 1;
-          observedMaxTime = args.includes("--max-time") && Number(args[args.indexOf("--max-time") + 1]) >= 1;
-          assert.equal(options.signal, signal);
-          const abort = () => {
-            activeProcesses -= 1;
-            reject(signal.reason);
-          };
-          if (signal.aborted) abort();
-          else signal.addEventListener("abort", abort, { once: true });
-        }),
-      ),
-    ),
-    /acquisition deadline/,
-  );
-  assert.equal(observedMaxTime, true);
-  assert.equal(activeProcesses, 0, "curl process settled from abort before the domain returned");
-});
-
 test("the source deadline leaves a bounded durable-settlement window inside the outer child kill", () => {
   assert.equal(
     ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS + ROUTINE_SOURCE_SETTLEMENT_BUDGET_MS,
@@ -327,7 +301,7 @@ test("the source deadline leaves a bounded durable-settlement window inside the 
   );
 });
 
-test("the shared meeting client cancels hung request/body work and its real retry sleep", async () => {
+test("the shared meeting client cancels hung request and body work", async () => {
   for (const kind of ["request", "body"] as const) {
     let active = 0;
     const fetchImpl = ((_input: URL | RequestInfo, init?: RequestInit) => {
@@ -366,26 +340,7 @@ test("the shared meeting client cancels hung request/body work and its real retr
     assert.equal(active, 0, `meeting ${kind} settled before its failure was reported`);
   }
 
-  let attempts = 0;
-  const started = Date.now();
-  await assert.rejects(
-    runInSourceAcquisitionDomain(
-      { sourceLabel: "meeting retry", timeoutMs: 25 },
-      (signal) => politeGetText("https://example.invalid/meetings", {
-        signal,
-        fetchImpl: async () => {
-          attempts += 1;
-          return new Response("busy", {
-            status: 503,
-            headers: { "retry-after": "60" },
-          });
-        },
-      }),
-    ),
-    /acquisition deadline/,
-  );
-  assert.equal(attempts, 1, "the aborted retry sleep never launches another publisher request");
-  assert.ok(Date.now() - started < 1_000, "Retry-After was interrupted by the source deadline");
+
 });
 
 test("a real acquisition deadline persists one exact source failure while retaining LKG", async () => {
@@ -453,32 +408,19 @@ test("source parsers brand publisher evidence while a missing credential remains
 });
 
 test("dotgov refuses a registry CSV cut short of its declared length", async () => {
-  // acquireDotGov reads the pinned SHA then the raw CSV through the global
-  // fetch, so the completeness check is exercised by standing in a truncated
-  // transfer whose row count would otherwise still have to clear the floor.
-  const realFetch = globalThis.fetch;
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
+  const transport: typeof fetch = async input => {
     const url = String(input);
-    if (url.includes("api.github.com")) {
-      return new Response(JSON.stringify([{ sha: "a".repeat(40) }]), { status: 200 });
-    }
+    if (url.includes("api.github.com")) return new Response(JSON.stringify([{ sha: "a".repeat(40) }]), { status: 200 });
     return new Response("Domain name,Domain type\nwhitehouse.gov,Federal Agency - Executive\n", {
-      status: 200,
-      headers: { "content-length": "5000000" },
+      status: 200, headers: { "content-length": "5000000" },
     });
-  }) as typeof fetch;
-  try {
-    const { acquireDotGov } = await import("../scripts/fetch-dotgov.mts");
-    await assert.rejects(
-      acquireDotGov(),
-      (error: unknown) =>
-        isSourceAcquisitionFailure(error) &&
-        error.code === "PUBLISHER_RESPONSE_REFUSED" &&
-        /short read/.test(error.message),
-    );
-  } finally {
-    globalThis.fetch = realFetch;
-  }
+  };
+  const { acquireDotGov } = await import("../scripts/fetch-dotgov.mts");
+  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, record: async () => {} };
+  await runWithSourceFetch({ vault: new MemoryEvidenceStore(),runtime: { transport,store } }, async () => {
+    await assert.rejects(acquireDotGov(),(error: unknown) => isSourceAcquisitionFailure(error) &&
+      error.code === "PUBLISHER_RESPONSE_REFUSED" && /short read/.test(error.message));
+  });
 });
 
 test("each standing source entrypoint uses the source-aware durable failure door", () => {

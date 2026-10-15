@@ -1,17 +1,8 @@
 #!/usr/bin/env tsx
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { readCompleteResponse } from "../lib/sources/source-bytes.ts";
-/**
- * Standing official state-legislator identity boundary for AZ and NJ.
- *
- * Each invocation reads one publisher's complete current-roster surface,
- * proves its exact chamber/district horizon, and submits one source-scoped
- * candidate. A transport, schema, term, identity, or denominator failure is a
- * durable failed attempt and leaves that source's prior LKG pointer live.
- *
- * @freshness-reads-here — retrievedAt is minted only after the official
- * roster body has returned non-empty and the request remains source-scoped.
- */
+
 
 import {
   officialStateLegislatorsCandidate,
@@ -88,7 +79,7 @@ async function main(): Promise<void> {
         const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
         const result = await requestPublisher(
           `${target.publisher} current legislative roster`,
-          () => fetch(target.probeUrl, {
+          () => fetchSource(target.probeUrl, {
             headers: { "user-agent": UA, accept: "text/html,text/plain;q=0.9,*/*;q=0.5" },
             redirect: "follow",
             signal: requestSignal,

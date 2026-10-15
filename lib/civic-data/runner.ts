@@ -58,6 +58,7 @@ export interface RoutineSourceTask {
   readonly cadenceMs: number;
   readonly retryMs: number;
   readonly childTimeoutMs?: number;
+  readonly clockBoundaryAt?: string;
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;
@@ -122,17 +123,15 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
   };
 }
 
-const routineSourceTasks = (): RoutineSourceTask[] => [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS].map(routineTaskFromContract);
+const routineSourceTasks = (): RoutineSourceTask[] => [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS.filter(partition => !partition.suspended)].map(routineTaskFromContract);
 /** Every standing task, the meeting doors' partitions included; replaced in place whenever this process installs the doors. */
 export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = routineSourceTasks();
 onMeetingPartitionsRefreshed(() => {
   (ROUTINE_SOURCE_TASKS as RoutineSourceTask[]).splice(0, ROUTINE_SOURCE_TASKS.length, ...routineSourceTasks());
 });
 
-/** At most one child from any shared upstream per pass; the next pass rotates to the least-recently-considered task. */
+/** Non-meeting producers rotate shared upstream work between passes. */
 export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
-/** A sitting-window lane takes up to three reads a pass, run one after another with the same-host gap. Other lanes take one. */
-export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
 export { ROUTINE_DATA_ADMISSION_MS };
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
 export const ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK = 2;
@@ -188,9 +187,7 @@ export function routineFailureDomainFrontier(
   for (const group of byDomain.values()) {
     const groupIndex = new Map(group.map(({ task }, index) => [task.id, index]));
     const rotation = rotationSeed % group.length;
-    const slots = group.every(({ deadlineMs }) => deadlineMs !== undefined)
-      ? Math.max(perDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS)
-      : perDomain;
+    for (const { task } of group) if (task.contract.schedule?.kind === "SITTING_WINDOW") admitted.add(task.id);
     group
       .sort((left, right) =>
         deadlineOrder(left) - deadlineOrder(right) ||
@@ -201,7 +198,8 @@ export function routineFailureDomainFrontier(
         ) ||
         registryIndex.get(left.task.id)! - registryIndex.get(right.task.id)!,
       )
-      .slice(0, slots)
+      .filter(({ task }) => task.contract.schedule?.kind !== "SITTING_WINDOW")
+      .slice(0, perDomain)
       .forEach(({ task }) => admitted.add(task.id));
   }
   return candidates.filter(({ task }) => admitted.has(task.id));
@@ -242,14 +240,13 @@ export function routineFrontierPassBound(
   tasks: readonly Pick<RoutineSourceTask, "acquisitionFailureDomain" | "contract">[] = ROUTINE_SOURCE_TASKS,
 ): { readonly commandCount: number; readonly largestFailureDomainSize: number } {
   routineFailureDomainCount(tasks);
-  const lanes = new Map<string, { windowed: boolean; size: number }>();
+  const lanes = new Map<string, { meetings: number; other: number }>();
   for (const task of tasks) {
-    const windowed = task.contract.schedule?.kind === "SITTING_WINDOW";
-    const lane = lanes.get(task.acquisitionFailureDomain) ?? { windowed: true, size: 0 };
-    lanes.set(task.acquisitionFailureDomain, { windowed: lane.windowed && windowed, size: lane.size + 1 });
+    const lane = lanes.get(task.acquisitionFailureDomain) ?? { meetings: 0, other: 0 };
+    lane[task.contract.schedule?.kind === "SITTING_WINDOW" ? "meetings" : "other"] += 1;
+    lanes.set(task.acquisitionFailureDomain, lane);
   }
-  const slots = [...lanes.values()].map(({ windowed, size }) =>
-    Math.min(size, windowed ? SITTING_WINDOW_LANE_SLOTS_PER_PASS : ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS));
+  const slots = [...lanes.values()].map(({ meetings, other }) => meetings + Math.min(other, ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS));
   return { commandCount: slots.reduce((sum, n) => sum + n, 0), largestFailureDomainSize: Math.max(...slots) };
 }
 
@@ -532,32 +529,6 @@ export function sittingWindowSignals(
   return signals;
 }
 
-/**
- * A sitting-window task owes its next read an hour (hot) or twelve hours after its last success, eligible 15 minutes
- * or 2 hours before. A failed later attempt retries on the contract clock; a partition never published owes one
- * twice daily.
- */
-function sittingWindowTaskDue(
-  task: RoutineSourceTask,
-  schedule: SittingWindowSchedule,
-  clock: RoutineTaskClock | undefined,
-  nowMs: number,
-  hot: boolean | undefined,
-): boolean {
-  if (!clock?.lastAttemptedAt) return true;
-  const attempted = Date.parse(clock.lastAttemptedAt);
-  const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
-  if (!Number.isFinite(attempted)) return true;
-  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
-  const { eligibleAtMs } = sittingWindowObligation(
-    schedule,
-    task.retryMs,
-    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) },
-    hot,
-  );
-  return nowMs >= eligibleAtMs;
-}
-
 export function routineTaskDeadlineMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -639,6 +610,41 @@ export function routineCodeChangeRetryTaskIds(reads: readonly RoutineTaskClockRe
   ) ? [read.task.id] : []));
 }
 
+export function routineTaskDueAtMs(
+  task: RoutineSourceTask,
+  clock: RoutineTaskClock | undefined,
+  nowMs: number,
+  sittingHot?: boolean,
+  observedEveryMs?: number,
+): number {
+  const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
+  const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? "");
+  if (task.ownerInvocation) {
+    const requested = Date.parse(task.ownerInvocation.requestedAt);
+    const success = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
+    if (task.ownerInvocation.publicationPending) {
+      return !Number.isFinite(attempted) || attempted < requested ||
+        (Number.isFinite(success) && success >= attempted && success <= nowMs) ? nowMs : attempted + task.retryMs;
+    }
+    if (Number.isFinite(success) && success >= requested && success <= nowMs) return Number.POSITIVE_INFINITY;
+    return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + task.retryMs;
+  }
+  if (!Number.isFinite(attempted) || attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return nowMs;
+  if (clock?.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion) {
+    return attempted + task.retryMs;
+  }
+  const schedule = task.contract?.schedule;
+  if (schedule?.kind === "SITTING_WINDOW") {
+    return sittingWindowObligation(schedule, task.retryMs,
+      { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock ?? {}) }, sittingHot).eligibleAtMs;
+  }
+  if (!Number.isFinite(succeeded) || attempted > succeeded) return attempted + task.retryMs;
+  const policyMs = cadenceMsAt(task.contract, nowMs);
+  const cadence = observedEveryMs === undefined ? policyMs : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS));
+  const boundary = Date.parse(task.clockBoundaryAt ?? "");
+  return Math.min(succeeded + cadence, Number.isFinite(boundary) && boundary > succeeded ? boundary : Number.POSITIVE_INFINITY);
+}
+
 export function routineTaskDue(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -646,32 +652,5 @@ export function routineTaskDue(
   sittingHot?: boolean,
   observedEveryMs?: number,
 ): boolean {
-  if (task.ownerInvocation) {
-    const requested = Date.parse(task.ownerInvocation.requestedAt);
-    const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
-    const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
-    if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
-      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) || nowMs - attempted >= task.retryMs;
-    if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return false;
-    return !Number.isFinite(attempted) || attempted < requested || nowMs - attempted >= task.retryMs;
-  }
-  if (clock?.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion) {
-    // The store scopes attempts to this parser. A prior parser's GOOD remains live,
-    // but cannot postpone a held-byte reparse for the source's full refresh cadence.
-    const attempted = Date.parse(clock.lastAttemptedAt ?? "");
-    return !Number.isFinite(attempted) || attempted > nowMs || nowMs - attempted >= task.retryMs;
-  }
-  const schedule = task.contract?.schedule;
-  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowTaskDue(task, schedule, clock, nowMs, sittingHot);
-  if (!clock?.lastAttemptedAt) return true;
-  const attempted = Date.parse(clock.lastAttemptedAt);
-  const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
-  if (!Number.isFinite(attempted)) return true;
-  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
-  if (!Number.isFinite(succeeded)) return nowMs - attempted >= task.retryMs;
-    // Once a due read fails, the source's retry clock owns the next attempt.
-  if (attempted > succeeded) return nowMs - attempted >= task.retryMs;
-  const policyMs = cadenceMsAt(task.contract, nowMs);
-  return nowMs - succeeded >= (observedEveryMs === undefined ? policyMs
-    : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS)));
+  return routineTaskDueAtMs(task, clock, nowMs, sittingHot, observedEveryMs) <= nowMs;
 }

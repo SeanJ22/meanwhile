@@ -123,13 +123,17 @@ for (const direct of [true, false]) test(`BoardDocs discovery reads an attested 
   assert.ok("attestation" in attestationFor(attempt, find));
 });
 
-test("BoardDocs public form POST uses the shared same-identity alternate client on a refusal", async () => {
-  let form: Readonly<Record<string, string>> | undefined;
+test("BoardDocs public form POST uses the shared source request", async () => {
+  let form: string | null = null;
   const response = await politeGetText("https://go.boarddocs.com/mi/grand/Board.nsf/BD-GetMeetingsList?open", {
-    form: { current_committee_id: "A4EP6J588C05" }, fetchImpl: (async () => new Response("refused", { status: 403 })) as typeof fetch,
-    ladder: { curl: async (_url, _headers, _signal, submitted) => { form = submitted; return { status: 200, contentType: "application/json", text: LIST }; } },
+    form: { current_committee_id: "A4EP6J588C05" },
+    fetchImpl: async (_url, init) => {
+      assert.equal(init?.method, "POST");
+      form = String(init?.body);
+      return new Response(LIST, { headers: { "content-type": "application/json" } });
+    },
   });
-  assert.deepEqual(form, { current_committee_id: "A4EP6J588C05" });
+  assert.equal(form, "current_committee_id=A4EP6J588C05");
   assert.equal(response.text, LIST);
 });
 

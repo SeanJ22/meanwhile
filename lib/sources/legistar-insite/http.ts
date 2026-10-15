@@ -1,19 +1,9 @@
-/**
- * The InSite portal's own transport: a GET, an ASP.NET postback, and the pacing the vendor asks for. Kept
- * here so the shared GET client in `lib/sources/http.ts` never carries one vendor's form-posting quirks.
- * Identification and document validation are not re-implemented: the User-Agent comes from
- * `sourceUserAgent()` and every response goes through `readValidatedResponse()`.
- *
- * Pacing: `legistar.com`'s apex robots.txt publishes `Crawl-delay: 2`; tenant hosts publish no rules of
- * their own, so the whole vendor is paced at the apex's delay. Two seconds between requests, serialized,
- * one tenant at a time.
- */
+import { fetchSource, runWithSourceFetch } from "../fetch-source.ts";
 import {
   SourceHttpError,
   readValidatedResponse,
   sourceUserAgent,
 } from "../http.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 
 /** `Crawl-delay: 2`, as published at https://legistar.com/robots.txt, in the directive's own units. */
 export const INSITE_CRAWL_DELAY_SECONDS = 2;
@@ -43,11 +33,9 @@ export class InSiteSession {
    * another host (e.g. a vendor document host).
    */
   private readonly jar = new Map<string, Map<string, string>>();
-  private readonly spacingMs: number;
   private readonly impl: typeof fetch;
   private readonly signal?: AbortSignal;
   private readonly followRedirects: boolean;
-  private lastAt = 0;
 
   /** Every URL this session actually retrieved, in order. Reported, never guessed. */
   readonly retrieved: string[] = [];
@@ -62,12 +50,10 @@ export class InSiteSession {
      */
     followRedirects?: boolean;
   } = {}) {
-    this.impl = options.fetchImpl ?? fetch;
+    this.impl = options.fetchImpl ?? ((input, init) => runWithSourceFetch({ spacingMs: options.spacingMs ?? INSITE_SPACING_MS }, () => fetchSource(input, init)));
     this.signal = options.signal;
     this.followRedirects = options.followRedirects ?? true;
-    // An injected fetch is a test's own double: it must not sleep, and the
-    // suite must never wait two seconds per fixture.
-    this.spacingMs = options.spacingMs ?? (options.fetchImpl ? 0 : INSITE_SPACING_MS);
+
   }
 
   private static hostOf(url: string): string {
@@ -99,13 +85,6 @@ export class InSiteSession {
     }
   }
 
-  private async pace(): Promise<void> {
-    const wait = this.lastAt + this.spacingMs - Date.now();
-    if (wait > 0) await sourceAcquisitionSleep(wait, this.signal);
-    this.signal?.throwIfAborted();
-    this.lastAt = Date.now();
-  }
-
   private headers(url: string, extra: Record<string, string> = {}): Record<string, string> {
     const cookie = this.cookieHeader(url);
     return {
@@ -119,7 +98,7 @@ export class InSiteSession {
     url: string,
     accept = "*/*",
   ): Promise<{ status: number; contentType: string; text: string }> {
-    await this.pace();
+    this.signal?.throwIfAborted();
     const response = await this.impl(url, {
       headers: this.headers(url, { Accept: accept }),
       signal: this.signal,
@@ -160,7 +139,7 @@ export class InSiteSession {
     url: string,
     accept = "*/*",
   ): Promise<{ status: number; contentType: string; finalUrl: string; bytes: Uint8Array } & DocumentValidators> {
-    await this.pace();
+    this.signal?.throwIfAborted();
     const response = await this.impl(url, {
       headers: this.headers(url, { Accept: accept }),
       signal: this.signal,
@@ -185,7 +164,7 @@ export class InSiteSession {
    * failed is not downloaded again. Never throws for the site: a failed request is `null`.
    */
   async head(url: string, accept = "*/*"): Promise<({ status: number; contentType: string; contentLength: number | null } & DocumentValidators) | null> {
-    await this.pace();
+    this.signal?.throwIfAborted();
     try {
       const response = await this.impl(url, {
         method: "HEAD",
@@ -219,7 +198,7 @@ export class InSiteSession {
     url: string,
     form: Record<string, string>,
   ): Promise<{ status: number; contentType: string; text: string }> {
-    await this.pace();
+    this.signal?.throwIfAborted();
     const response = await this.impl(url, {
       method: "POST",
       headers: this.headers(url, {

@@ -1,3 +1,4 @@
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 /* @freshness-reads-here */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -198,15 +199,13 @@ async function main() {
       const geocodes = new Map<string, { lat: number; lng: number } | null>();
       let callbackFailure: unknown;
       const runtime: VotingSourceRuntime = {
-        fetch, now, captureCache: new Map(), discoverySeen: new Set(), ...votingScopeResolvers(localRegistry),
-        browserFetch: (url, init) => fetch(url, { ...init, headers: { ...init?.headers,
-          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" } }),
+        fetch: fetchSource, now, captureCache: new Map(), discoverySeen: new Set(), ...votingScopeResolvers(localRegistry),
         geocode: async address => {
           if (geocodes.has(address)) return geocodes.get(address)!;
           const url = new URL(CENSUS_GEOCODER_URL);
           url.searchParams.set("address", address); url.searchParams.set("benchmark", CENSUS_BENCHMARK); url.searchParams.set("format", "json");
           let point = null;
-          try { const response = await fetch(url, { headers: { "user-agent": OUTBOUND_USER_AGENT }, signal: AbortSignal.timeout(10_000) });
+          try { const response = await fetchSource(url, { headers: { "user-agent": OUTBOUND_USER_AGENT }, signal: AbortSignal.timeout(10_000) });
             if (response.ok) point = parseCensusPoint(await response.json()); } catch { /* Missing pins remain open source work. */ }
           geocodes.set(address, point); return point;
         },

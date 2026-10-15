@@ -1,3 +1,4 @@
+import { fetchSource, runWithSourceFetch } from "../../sources/fetch-source.ts";
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 import { readClientSource, type ClientTool } from './scout-clients.ts';
 /** The hunter's research tools. robots.txt is read and recorded, never a refusal;
@@ -19,7 +20,7 @@ import { contentHash } from "../ids.ts";
 
 import type { WorkArtifact } from "./dispatch.ts";
 import { DEFAULT_FETCH_TIMEOUT_MS, WALL_STATUSES } from "./http-executor.ts";
-import { websiteRequestLimit, websiteSizeForObligation } from "./host-supervision.ts";
+import { websiteSizeForObligation } from "./host-supervision.ts";
 import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionReading } from "./robots.ts";
 import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts";
 import {
@@ -174,7 +175,7 @@ export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, { method: "GET", signal: controller.signal, redirect: "follow", headers });
+    const response = await fetchSource(url, { method: "GET", signal: controller.signal, redirect: "follow", headers });
     const bytes = new Uint8Array(await response.arrayBuffer());
     return {
       status: response.status,
@@ -452,7 +453,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const token = DEFAULT_ROBOTS_TOKEN;
 
   const robotsByHost = new Map<string, HostRobots>();
-  const hostCounts = new Map<string, number>();
   const vaulted = new Set<string>();
   /** Pages this job saved, by artifact id: what read_held and report_finding reuse without fetching again. */
   const savedPages = new Map<string, SavedPage>();
@@ -477,29 +477,14 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     let first: T;
     try {
       first = await open(secure);
-    } catch (error) {
-      if (overCap(url) !== null) throw error;
+    } catch {
       return open(url);
     }
     if (first.transportError === null && first.status !== null && first.status >= 200 && first.status < 300) return first;
-    return overCap(url) === null ? open(url) : first;
-  }
-
-  function overCap(url: URL): string | null {
-    const host = hostOf(url);
-    const n = hostCounts.get(host) ?? 0;
-    const max = websiteRequestLimit(websiteSize(url.toString()));
-    if (max === null || n < max) return null;
-    return (
-      `${host} has had ${n} of ${max} requests this Attempt (the per-host bound), so this request is ` +
-      "refused. The bound is per host: another host is not bound by this count."
-    );
+    return open(url);
   }
 
   async function retrieve(url: URL, accept: string, acc: CallAccount): Promise<Retrieved> {
-    const host = hostOf(url);
-    hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-    if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
     const headers = { "user-agent": DEFAULT_USER_AGENT, accept };
     let got: Retrieved;
     if (openBytes !== null) {
@@ -731,18 +716,9 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const url = publicUrl(input.url ?? "");
     if (typeof url === "string") return { kind: "REFUSED", result: refusal(url) };
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
-    const capBefore = overCap(url);
-    if (capBefore !== null) return { kind: "REFUSED", result: refusal(capBefore) };
     /* Read and recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false. */
     const robots = await readRobots(url, acc);
     const reading = evaluate(robots, url);
-    const capAfter = overCap(url);
-    if (capAfter !== null) {
-      return {
-        kind: "REFUSED",
-        result: { ...result(false, `REFUSED: the permission read consumed the last slot — ${capAfter}`, null, acc) },
-      };
-    }
     return { kind: "GO", url, acc, reading, robots };
   }
 
@@ -986,11 +962,9 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     try {
       obs = await preferHttps(url, async target => {
         /* Each navigation counts; the page's own calls are observed, not initiated. */
-        hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-        if (websiteRequestLimit(websiteSize(target.toString())) !== null) await ctx.spaceOut(host);
         requestCount += 1;
         acc.requests += 1;
-        const observed = await browseFn({ url: target.toString(), timeoutMs, holder: ctx.holder });
+        const observed = await browseFn({ url: target.toString(), timeoutMs, holder: ctx.holder, websiteSize: websiteSize(target.toString()) });
         const bytes = Buffer.byteLength(observed.html, "utf8");
         bytesFetched += bytes;
         acc.bytes += bytes;
@@ -1176,12 +1150,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     async function sourceApi(name: SourceApiTool | ClientTool, raw: unknown): Promise<ScoutToolCallResult> {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     try {
-      const options = { ...ctx.sourceApi, timeoutMs,
-        spaceOut: async host => { const url = new URL(`https://${host}`);
-          const exceeded = overCap(url); if (exceeded) throw new Error(exceeded);
-          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-          if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
-        } } satisfies import('./scout-api.ts').SourceApiOptions;
+      const options = { ...ctx.sourceApi, timeoutMs };
       const response = name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;
       requestCount += response.requests; bytesFetched += response.bytes;
@@ -1272,7 +1241,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
   return {
     specs: HUNTER_TOOL_SPECS,
-    call,
+    call: (name, input) => runWithSourceFetch({ websiteSize }, () => call(name, input)),
     reported,
     get vaultedArtifactIds(): ReadonlySet<string> {
       return vaulted;

@@ -11,7 +11,6 @@
 export const ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS = 20 * 60_000;
 export const ROUTINE_SOURCE_SETTLEMENT_BUDGET_MS = 10 * 60_000;
 
-const DEADLINE_AT = new WeakMap<AbortSignal, number>();
 
 export class SourceAcquisitionDeadlineError extends Error {
   readonly sourceLabel: string;
@@ -49,8 +48,6 @@ export function openSourceAcquisitionDomain(input: {
   }
 
   const controller = new AbortController();
-  const deadlineAt = Date.now() + input.timeoutMs;
-  DEADLINE_AT.set(controller.signal, deadlineAt);
 
   const abortFromParent = () => {
     controller.abort(input.parentSignal?.reason ?? new DOMException("The parent acquisition was aborted", "AbortError"));
@@ -75,7 +72,6 @@ export function openSourceAcquisitionDomain(input: {
       disposed = true;
       clearTimeout(timer);
       input.parentSignal?.removeEventListener("abort", abortFromParent);
-      DEADLINE_AT.delete(controller.signal);
     },
   };
 }
@@ -120,15 +116,4 @@ export function sourceAcquisitionSleep(ms: number, signal?: AbortSignal): Promis
     };
     signal.addEventListener("abort", onAbort, { once: true });
   });
-}
-
-/** Remaining native-transport budget, rounded up so curl never receives zero. */
-export function sourceAcquisitionSecondsRemaining(
-  signal: AbortSignal | undefined,
-  nowMs = Date.now(),
-): number | null {
-  if (!signal) return null;
-  const deadlineAt = DEADLINE_AT.get(signal);
-  if (deadlineAt === undefined) return null;
-  return Math.max(1, Math.ceil((deadlineAt - nowMs) / 1000));
 }

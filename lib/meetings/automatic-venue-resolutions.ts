@@ -1,3 +1,4 @@
+import { fetchSource } from "../sources/fetch-source.ts";
 import { createHash } from "node:crypto";
 
 import type { ManualProjectionPackage } from "../civic-data/manual-projections.ts";
@@ -138,7 +139,7 @@ export async function automaticVenuePackage(input: {
   readonly fetchImpl?: typeof fetch;
   readonly clock?: () => string;
 }): Promise<{ readonly package: ManualProjectionPackage | null; readonly held: readonly string[] }> {
-  const fetchImpl = input.fetchImpl ?? fetch;
+  const fetchImpl = input.fetchImpl ?? fetchSource;
   const clock = input.clock ?? (() => new Date().toISOString());
   const rows: Array<Readonly<Record<string, unknown>> & { readonly id: string }> = [];
   const sources = new Map<string, ManualSourceReview>();

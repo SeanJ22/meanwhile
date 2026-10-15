@@ -743,9 +743,8 @@ test("a canonical preload outage emits no fabricated source attempt", async () =
   try {
     await assert.rejects(
       preloadCanonicalMeetingDependencies({
-        sourceName: "composite",
-        refreshRegistry: async () => { throw new Error("registry store unavailable"); },
-        refreshVenues: async () => undefined,
+        bodyId: legistar.bodyId, ocdId: legistar.ocdId,
+        query: async () => { throw new Error("registry store unavailable"); },
       }),
       /registry store unavailable/,
     );
@@ -769,30 +768,6 @@ test("production Reader configuration cannot reopen live composite acquisition",
     if (priorMeetingSource === undefined) delete env.WTP_MEETING_SOURCE;
     else env.WTP_MEETING_SOURCE = priorMeetingSource;
   }
-});
-
-test("a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof", async () => {
-  const attestation = {
-    recordClass: "REGISTRY_RUNTIME_BINDING",
-    scope: "US:reader-registry-runtime-bindings",
-    versionId: "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
-    payloadSha256: "d".repeat(64),
-    retrievedAt: "2026-09-14T04:24:35.148Z",
-    staleAtRetrieval: false,
-    version: "2026",
-    sourceThrough: null,
-  };
-  const seen: unknown[] = [];
-  const run = (value: string | undefined) => preloadCanonicalMeetingDependencies({
-    sourceName: "composite",
-    refreshRegistry: async (options) => { seen.push(options); },
-    refreshVenues: async () => undefined,
-    env: { WTP_ROUTINE_ATTESTED_PROMOTIONS: value },
-  });
-  await run(JSON.stringify([attestation]));
-  await run(JSON.stringify([{ ...attestation, payloadSha256: "not-a-hash" }]));
-  await run(undefined);
-  assert.deepEqual(seen, [{ attested: attestation }, {}, {}]);
 });
 
 test("a meeting re-check that finds no new fact is confirmed on the pointed version; a real change still promotes", async () => {

@@ -21,7 +21,6 @@ import {
 } from "../lib/hunt/robots-first-fetch.ts";
 import { makePermissionGate, permittedText } from "../lib/sources/permission-gate.ts";
 import { SourceHttpError, politeGetBytes, politeGetText, sourceUserAgent } from "../lib/sources/http.ts";
-import { identifiedResearchGet } from "../lib/hunt/research-transport.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
 
@@ -205,7 +204,7 @@ test("THE DISCOVERY WALK honours a 429 at robots.txt (nothing more is asked) and
   assert.equal(walled.seen.filter((u) => u === "https://waftown.gov/").length, 1, "a 403 is asked once, never re-sent under another identity");
 });
 
-test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a wall, and the one second ask is the same name through curl", async () => {
+test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a wall", async () => {
   const seen: { url: string; headers: Record<string, string> }[] = [];
   const answering = (status: number, body: string) =>
     (async (url: string | URL | Request, init?: RequestInit) => {
@@ -226,41 +225,6 @@ test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a
     assert.ok(!Object.keys(s.headers).some((h) => /^sec-fetch-/i.test(h)), "no browser-navigation headers");
   }
 
-  /* Rung 4: the same identity through curl, once; its challenge is the wall. */
-  const curled: Record<string, string>[] = [];
-  await assert.rejects(
-    politeGetText("https://waf.example.gov/d", {
-      fetchImpl: answering(403, "<html><title>Just a moment...</title></html>"),
-      ladder: {
-        curl: async (_url, headers) => {
-          curled.push(headers);
-          return { status: 200, contentType: "text/html", text: "<html><title>Just a moment...</title></html>" };
-        },
-      },
-    }),
-    (e: unknown) => e instanceof SourceHttpError && e.rung === 4 && /challenge/.test(e.message),
-  );
-  assert.equal(curled.length, 1, "one second ask, never a third");
-  assert.equal(curled[0]["User-Agent"], sourceUserAgent(), "as who we are");
-  assert.equal(carriesCredential(curled[0]), false);
-});
-
-test("THE RESEARCH TRANSPORT'S SECOND ASK IS WHO WE ARE: a 403 is asked once more through curl with the same User-Agent, and a refusal there stands", async () => {
-  const args: string[][] = [];
-  const get = identifiedResearchGet({
-    first: async () => ({ status: 403, body: new Uint8Array(0), contentType: "text/html", location: null, transportError: null }),
-    curl: async (a) => {
-      args.push([...a]);
-      return Buffer.from("HTTP/1.1 403 Forbidden\r\ncontent-type: text/html\r\n\r\n<title>Just a moment...</title>");
-    },
-  });
-  const got = await get({ url: "https://waf.example.gov/", headers: { "user-agent": DEFAULT_USER_AGENT, accept: "text/html" }, timeoutMs: 5_000 });
-  assert.equal(got.status, 403, "the refusal stands; nothing answers the challenge");
-  assert.equal(args.length, 1);
-  const headerValues = args[0].filter((_, i) => args[0][i - 1] === "-H");
-  assert.ok(headerValues.includes(`user-agent: ${DEFAULT_USER_AGENT}`), "the same identified User-Agent");
-  assert.ok(!headerValues.some((h) => /mozilla|chrome/i.test(h)), "never a browser's");
-  assert.ok(!args[0].includes("-L"), "never follows a redirect");
 });
 
 test("NO WIRING ROW ASKS FOR A DISGUISE", () => {

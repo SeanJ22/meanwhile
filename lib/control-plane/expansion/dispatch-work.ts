@@ -87,10 +87,7 @@ export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zi
   return (await nationalPlaceWorkReading(repos, zips, now)).ordered;
 }
 
-/**
- * A mission's owed list, kept for a few minutes per decision. A whole-state mission spans thousands of divisions, so each
- * pass rebuilds only the scopes whose decision changed or whose reading went stale; the rest reuse their last owed list.
- */
+
 const READING_MEMO_MS = 5 * 60_000;
 const READING_MEMO_MAX = 32;
 const readingMemo = new Map<string, { readonly at: number; readonly items: PlaceOwedItem[] }>();
@@ -107,7 +104,11 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   if (!decisions.scopes.length) return { ordered: [...zips], belowTarget: new Set<string>() };
   let lookup = await loadPublishedAreaLookupState(zips);
-  const resolved = await resolveScopes(decisions.scopes, lookup, null);
+  const states = new Set<string>();
+  for (const zip of zips) for (const membership of (await lookup.lookup.groupingsForZcta(zip)).memberships) {
+    states.add(membership.geography.stateAbbr.toUpperCase());
+  }
+  const resolved = await resolveScopes(decisions.scopes.filter(scope => states.has(scope.geography.stateAbbr.toUpperCase())), lookup, null);
   const scopes = resolved.scopes.filter(scope => scope.kind === "RESOLVED" && zips.some(zip => scope.zctas.has(zip)) ||
     scope.kind === "UNRESOLVED" && scope.decision.geography.type === "zcta" && zips.includes(scope.decision.geography.geoid));
   const selectedZips = new Set(zips);
@@ -319,12 +320,7 @@ function obligationOf(id: string, recordClass: string, subjectId: string, routeI
   };
 }
 
-/**
- * Every requirement instance the registry defines for one government: its
- * registry routes (with the ids the local-jurisdictions provider gives them)
- * and its meetings discovery need (with the ids the meetings-discovery
- * provider gives it). Sorted by id.
- */
+
 export function requirementsFor(
   reg: JurisdictionRegistry,
   j: Jurisdiction,
@@ -594,11 +590,7 @@ export interface TargetPlan {
 /** A MISSING instance queued for writing, with the Send it is written under (the first that reached it). */
 export type PlannedWrite = PlannedInstance & { readonly target: DispatchWorkTarget };
 
-/**
- * A row a Send reached that is already on a clock and does not yet record that
- * Send. It is recorded REORDERED; a created row whose creator is not on record
- * is left unmarked rather than guessed.
- */
+
 export interface PlannedMark {
   readonly obligationId: string;
   readonly target: DispatchWorkTarget;
@@ -625,12 +617,7 @@ export function assignmentEntry(target: DispatchWorkTarget, relation: Obligation
   };
 }
 
-/**
- * Classify every requirement instance of every target, and order the missing
- * ones for writing: DISPATCH targets first (oldest first), then scopes in run
- * order, each target's governments by id. A shared instance is written once,
- * under the first.
- */
+
 export function planDispatchWork(input: {
   readonly targets: readonly DispatchWorkTarget[];
   readonly world: DispatchWorkWorld;
@@ -861,10 +848,7 @@ export interface DispatchWorkTargetReading {
   readonly requirements: DispatchWorkRequirementCounts;
   /** Standing obligations about the target's governments, of every standing obligation this cycle. */
   readonly reordered: { readonly obligations: number; readonly of: number };
-  /**
-   * This Send recorded on the rows it reached this cycle, and the REORDERED
-   * records still to write. Absent on older readings.
-   */
+
   readonly assignment?: { readonly recordedThisCycle: number; readonly marksDeferred: number; readonly marksFailed: number };
   /** Plain sentences: why created work waits, which budgets bind, what is not built. */
   readonly says: readonly string[];
@@ -1066,11 +1050,7 @@ export function dispatchWorkSentence(t: DispatchWorkTargetReading): string {
   );
 }
 
-/**
- * The counts one DISPATCH carries on the owner's dispatch record
- * (`ResearchState.ownerDispatch.work`). The full receipt is the target reading
- * under the same key in `ResearchState.dispatchWork.targets`.
- */
+
 export interface OwnerDispatchWork {
   /** `dispatch:<intent id>`: the target reading's key. */
   readonly key: string;
@@ -1126,12 +1106,7 @@ export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
   };
 }
 
-/**
- * The DISPATCH targets an earlier cycle left with work still owed (deferred,
- * or refused by the store), carried forward from the research state it wrote.
- * A DISPATCH is honored once; the remainder of what it owes is not dropped
- * with the honoring. A scope needs no carrying: it stays selected.
- */
+
 export function carriedDispatchTargets(prior: unknown, cancelled: ReadonlySet<string> = new Set()): DispatchWorkTarget[] {
   if (!isDispatchWorkReading(prior)) return [];
   return prior.targets

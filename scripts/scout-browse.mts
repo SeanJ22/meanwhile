@@ -1,16 +1,9 @@
-/**
- * The scout's real browser: `BrowseFn` for `scout-tools.ts`, opened through
- * `launchGuarded`, the only permitted construction site. Bytes are not vaulted
- * here; the toolkit vaults what this observes.
- *
- * Invariants: the browser is always closed; `networkidle` is bounded and its
- * absence is not a failure; the page evaluate is a string expression, because
- * tsx's `__name` helper does not exist in the page.
- */
-
+import { fetchSource, runWithSourceFetch } from "../lib/sources/fetch-source.ts";
 import { DEFAULT_USER_AGENT } from "../lib/control-plane/scheduler/route-executor.ts";
 import type { BrowseFn, BrowseObservation } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
+import type { Page } from "playwright";
+import type { WebsiteSize } from "../lib/control-plane/scheduler/host-supervision.ts";
 
 type Observed = {
   url: string;
@@ -23,24 +16,31 @@ type Observed = {
 /** How long after `load` to wait for the network to go quiet before giving up on it. */
 const NETWORK_IDLE_CAP_MS = 10_000;
 
-async function observe(browser: GuardedBrowser, { url, timeoutMs }: Parameters<BrowseFn>[0]): Promise<BrowseObservation> {
+export async function routeSourceRequests(page: Page, url: string, timeoutMs: number, websiteSize?: WebsiteSize | null): Promise<void> {
+  const started = Date.now(), sourceHost = new URL(url).hostname;
+  await page.route("**/*", async route => {
+    const request = route.request(), target = request.url();
+    if (!/^https?:/i.test(target)) { await route.abort(); return; }
+    try {
+      const response = await runWithSourceFetch(websiteSize ? { websiteSize: targetUrl => new URL(targetUrl).hostname === sourceHost ? websiteSize : undefined } : {},
+        () => fetchSource(target, { method: request.method(), headers: request.headers(), body: request.postData(), redirect: "manual",
+          signal: AbortSignal.timeout(Math.max(1, timeoutMs - (Date.now() - started))) }));
+      await route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) });
+    } catch { await route.abort(); }
+  });
+}
+
+async function observe(browser: GuardedBrowser, { url, timeoutMs, websiteSize }: Parameters<BrowseFn>[0]): Promise<BrowseObservation> {
   const started = Date.now();
   const requests: Observed[] = [];
   const page = await browser.page({ userAgent: DEFAULT_USER_AGENT });
   try {
-    page.on("request", (request) => {
-      requests.push({
-        url: request.url(),
-        method: request.method(),
-        status: null,
-        resourceType: request.resourceType(),
-        contentType: null,
-      });
+    await routeSourceRequests(page, url, timeoutMs, websiteSize);
+    page.on("request", request => {
+      requests.push({ url: request.url(), method: request.method(), status: null, resourceType: request.resourceType(), contentType: null });
     });
-    page.on("response", (response) => {
-      const requestUrl = response.url();
-      const method = response.request().method();
-      /* The most recent unanswered entry for this url+method is the one this answers. */
+    page.on("response", response => {
+      const requestUrl = response.url(), method = response.request().method();
       for (let i = requests.length - 1; i >= 0; i -= 1) {
         const entry = requests[i];
         if (entry.url === requestUrl && entry.method === method && entry.status === null) {

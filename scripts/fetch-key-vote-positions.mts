@@ -1,17 +1,5 @@
-/**
- * Explicitly refresh every official roll selected by reviewed key-question
- * version v1 and promote its facts/positions to the civic-data plane.
- *
- * `pnpm key-votes:positions`
- *
- * The selected question list and roll identities are a reviewed version
- * input. Question text, tally, official URL verification, and member position
- * are acquired again from House/Senate records. The command has no tracked
- * output mode, no scheduler, and no release side effect.
- *
- * @freshness-reads-here — each roll is stamped only after its official body,
- * tally, and non-empty current-member position set have parsed successfully.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+/** @freshness-reads-here */
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
@@ -61,7 +49,7 @@ async function blocked(detail: string): Promise<never> {
 async function getOfficial(url: string): Promise<string | null> {
   await new Promise((resolve) => setTimeout(resolve, SPACING_MS));
   try {
-    const response = await fetch(url, { headers: { "user-agent": UA } });
+    const response = await fetchSource(url, { headers: { "user-agent": UA } });
     if (!response.ok) {
       failures.push(`${url} -> HTTP ${response.status}`);
       return null;
@@ -78,7 +66,7 @@ async function getOfficial(url: string): Promise<string | null> {
 async function getIdentityBridge(): Promise<string> {
   const url = "https://unitedstates.github.io/congress-legislators/legislators-current.json";
   try {
-    const response = await fetch(url, { headers: { "user-agent": UA } });
+    const response = await fetchSource(url, { headers: { "user-agent": UA } });
     if (!response.ok) return blocked(`Current federal identity bridge ${url} returned HTTP ${response.status}.`);
     return response.text();
   } catch (error) {

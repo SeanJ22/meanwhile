@@ -18,7 +18,6 @@ import {
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineUnreceiptedSupervisorAttemptHistory,
-  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
@@ -37,14 +36,16 @@ import {
   routineChildPassWorstCaseMs,
 } from "../lib/civic-data/bounded-child-pass.ts";
 
-function largestRealDomain(): readonly RoutineSourceTask[] {
+function nonMeetingProviderTasks(): readonly RoutineSourceTask[] {
   const grouped = new Map<string, RoutineSourceTask[]>();
   for (const task of ROUTINE_SOURCE_TASKS) {
+    if (task.contract.schedule?.kind === "SITTING_WINDOW") continue;
     const rows = grouped.get(task.acquisitionFailureDomain) ?? [];
     rows.push(task);
     grouped.set(task.acquisitionFailureDomain, rows);
   }
-  return [...grouped.values()].sort((left, right) => right.length - left.length)[0] ?? [];
+  const shared = [...grouped.values()].sort((left, right) => right.length - left.length)[0]!;
+  return [...shared,{ ...shared[0]!,id: `${shared[0]!.id}:additional-provider-task` }];
 }
 
 test("missing people and previous-parser government baselines admit every state and share the existing pool in source order", () => {
@@ -87,7 +88,7 @@ test("overdue meeting deadlines retain priority while missing meetings do not be
 });
 
 test("one pass admits one least-recently-considered task per provider domain", () => {
-  const shared = largestRealDomain();
+  const shared = nonMeetingProviderTasks();
   assert.ok(shared.length > 2, "the production registry contains a shared provider domain");
   const unrelated = ROUTINE_SOURCE_TASKS.find(
     (task) => task.acquisitionFailureDomain !== shared[0]?.acquisitionFailureDomain,
@@ -115,7 +116,7 @@ test("one pass admits one least-recently-considered task per provider domain", (
 });
 
 test("repeated supervisor faults rotate fairly within one provider without changing other domains", () => {
-  const shared = largestRealDomain().slice(0, 3);
+  const shared = nonMeetingProviderTasks().slice(0, 3);
   assert.equal(shared.length, 3);
 
   const first = routineFailureDomainFrontier(shared.map((task) => ({ task, lastConsideredAt: null })));
@@ -145,7 +146,7 @@ test("repeated supervisor faults rotate fairly within one provider without chang
 });
 
 test("an all-unavailable provider rotates deterministically across frozen admission slots", () => {
-  const shared = largestRealDomain().slice(0, 3);
+  const shared = nonMeetingProviderTasks().slice(0, 3);
   assert.equal(shared.length, 3);
   const candidates = shared.map((task) => ({ task, lastConsideredAt: null }));
   const firstSeed = routineFailureDomainRotationSeed("2026-09-08T12:00:00.000Z");
@@ -167,14 +168,15 @@ test("an all-unavailable provider rotates deterministically across frozen admiss
   assert.throws(() => routineFailureDomainRotationSeed("not-an-instant"), /ROTATION_TIME_INVALID/);
 });
 
-test("the real pass ceiling is based on provider domains, not every partition in a failed provider tail", () => {
+test("the pass ceiling includes every meeting body and the admitted nonmeeting provider frontier", () => {
   const domains = routineFailureDomainCount();
   assert.ok(domains > 1);
   assert.ok(domains < ROUTINE_SOURCE_TASKS.length);
   const frontier = routineFailureDomainFrontier(
     ROUTINE_SOURCE_TASKS.map((task) => ({ task, lastConsideredAt: null })),
   );
-  assert.equal(frontier.length, domains);
+  const bound = routineFrontierPassBound();
+  assert.equal(frontier.length, bound.commandCount);
   assert.equal(
     routineChildPassWorstCaseMs(
       frontier.length,
@@ -182,7 +184,7 @@ test("the real pass ceiling is based on provider domains, not every partition in
       ROUTINE_CHILD_CONCURRENCY,
       ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
     ),
-    Math.ceil(domains / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS,
+    Math.ceil(bound.commandCount / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS,
   );
 });
 
@@ -305,7 +307,7 @@ test("a repaired never-published OpenStates baseline bypasses an old-code boot f
 });
 
 test("a corrupt supervisor row is explicit and cannot erase valid fairness clocks", () => {
-  const [first, second] = largestRealDomain();
+  const [first, second] = nonMeetingProviderTasks();
   assert.ok(first && second);
   const valid = supervisorHistoryRow({
     finishedAt: "2026-09-08T12:00:00.000Z",
@@ -348,7 +350,7 @@ test("a corrupt supervisor row is explicit and cannot erase valid fairness clock
 });
 
 test("an exact task receipt excludes that task from the supervisor-only attempt clock", () => {
-  const [receipted, unreceipted] = largestRealDomain();
+  const [receipted, unreceipted] = nonMeetingProviderTasks();
   assert.ok(receipted && unreceipted);
   const history = routineUnreceiptedSupervisorAttemptHistory([
     supervisorHistoryRow({
@@ -364,7 +366,7 @@ test("an exact task receipt excludes that task from the supervisor-only attempt 
 });
 
 test("a malformed exact receipt cannot suppress a valid prior supervisor attempt", () => {
-  const [task] = largestRealDomain();
+  const [task] = nonMeetingProviderTasks();
   assert.ok(task);
   const valid = supervisorHistoryRow({
     finishedAt: "2026-09-08T12:00:00.000Z",
@@ -392,7 +394,7 @@ test("a malformed exact receipt cannot suppress a valid prior supervisor attempt
  * every field a real outcome does, the Reader readback references included.
  */
 function wholeSupervisorOutcomes(): unknown[] {
-  const [first, second, third] = largestRealDomain();
+  const [first, second, third] = nonMeetingProviderTasks();
   assert.ok(first && second && third);
   const dress = (row: unknown, index: number) => {
     const value = row as { runtimeOutcome: Record<string, unknown> } & Record<string, unknown>;
@@ -485,7 +487,7 @@ test("the frontier decides the same from narrowed outcomes as from whole ones", 
 
 test("the history window spans a day of passes and many rotations of the largest provider domain", () => {
   assert.ok(ROUTINE_SUPERVISOR_HISTORY_WINDOW * ROUTINE_DATA_ADMISSION_MS >= 24 * 3_600_000);
-  const rotation = Math.ceil(largestRealDomain().length / ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS);
+  const rotation = Math.ceil(nonMeetingProviderTasks().length / ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS);
   assert.ok(
     ROUTINE_SUPERVISOR_HISTORY_WINDOW >= 4 * rotation,
     `window ${ROUTINE_SUPERVISOR_HISTORY_WINDOW} passes vs one rotation of ${rotation} passes`,
@@ -512,7 +514,7 @@ test("each Google calendar is its own lane; every other host keeps one lane per 
   assert.ok(newLondon.length > 1);
 });
 
-test("C6: a meeting lane is read earliest deadline first, up to three a pass; every other lane keeps one least-recently-considered", () => {
+test("every due meeting on a shared host is admitted and launches by deadline; other lanes rotate", () => {
   const meetingLanes = new Map<string, RoutineSourceTask[]>();
   for (const task of ROUTINE_SOURCE_TASKS) {
     if (task.contract.schedule?.kind !== "SITTING_WINDOW") continue;
@@ -521,7 +523,6 @@ test("C6: a meeting lane is read earliest deadline first, up to three a pass; ev
   const lane = [...meetingLanes.values()].sort((left, right) => right.length - left.length)[0]!;
   assert.ok(lane.length >= 5);
   const [a, b, c, d, e] = lane as [RoutineSourceTask, RoutineSourceTask, RoutineSourceTask, RoutineSourceTask, RoutineSourceTask];
-  assert.equal(SITTING_WINDOW_LANE_SLOTS_PER_PASS, 3);
   // The oldest-considered task has the latest deadline: deadline order wins.
   const admitted = routineFailureDomainFrontier([
     { task: a, lastConsideredAt: "2026-09-08T00:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:00:00.000Z") },
@@ -530,7 +531,8 @@ test("C6: a meeting lane is read earliest deadline first, up to three a pass; ev
     { task: d, lastConsideredAt: null, deadlineMs: Date.parse("2026-09-08T11:59:00.000Z") },
     { task: e, lastConsideredAt: "2026-09-08T10:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:10:00.000Z") },
   ]);
-  assert.deepEqual(admitted.map(({ task }) => task.id).sort(), [a.id, c.id, d.id].sort());
+  assert.deepEqual(admitted.map(({ task }) => task.id), [a.id,b.id,c.id,d.id,e.id]);
+  assert.deepEqual(routinePassLaunchOrder(admitted).map(({ task }) => task.id), [d.id,a.id,c.id,b.id,e.id]);
   // A task owed at once (never run) goes first.
   const never = routineFailureDomainFrontier([
     { task: a, lastConsideredAt: null, deadlineMs: Number.NEGATIVE_INFINITY },
@@ -538,9 +540,9 @@ test("C6: a meeting lane is read earliest deadline first, up to three a pass; ev
     { task: c, lastConsideredAt: "2026-09-08T11:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:00:00.000Z") },
     { task: d, lastConsideredAt: "2026-09-08T10:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:30:00.000Z") },
   ]);
-  assert.deepEqual(never.map(({ task }) => task.id).sort(), [a.id, b.id, c.id].sort());
+  assert.deepEqual(routinePassLaunchOrder(never).map(({ task }) => task.id), [a.id,b.id,c.id,d.id]);
   // A lane of tasks without deadlines keeps one a pass, least recently considered.
-  const shared = largestRealDomain().filter((task) => task.contract.schedule?.kind !== "SITTING_WINDOW");
+  const shared = nonMeetingProviderTasks().filter((task) => task.contract.schedule?.kind !== "SITTING_WINDOW");
   if (shared.length >= 2) {
     const plain = routineFailureDomainFrontier([
       { task: shared[0]!, lastConsideredAt: "2026-09-08T12:00:00.000Z" },
@@ -550,7 +552,7 @@ test("C6: a meeting lane is read earliest deadline first, up to three a pass; ev
   }
 });
 
-test("C6: no production lane mixes sitting-window tasks with any other task, so deadline order and the extra slots touch meeting lanes only", () => {
+test("the pass bound includes every sitting-window member and one task per other lane", () => {
   const kinds = new Map<string, Set<boolean>>();
   for (const task of ROUTINE_SOURCE_TASKS) {
     const set = kinds.get(task.acquisitionFailureDomain) ?? new Set<boolean>();
@@ -560,18 +562,17 @@ test("C6: no production lane mixes sitting-window tasks with any other task, so 
   const mixed = [...kinds].filter(([, set]) => set.size > 1).map(([lane]) => lane);
   assert.deepEqual(mixed, []);
   const bound = routineFrontierPassBound();
-  /* A meeting lane admits up to its slots and never more tasks than it holds: a one-task lane (a state's derived family) counts one. */
   const sizes = new Map<string, number>();
   for (const task of ROUTINE_SOURCE_TASKS) sizes.set(task.acquisitionFailureDomain, (sizes.get(task.acquisitionFailureDomain) ?? 0) + 1);
   const extra = [...kinds]
     .filter(([, set]) => set.has(true))
-    .reduce((sum, [lane]) => sum + Math.min(sizes.get(lane)!, SITTING_WINDOW_LANE_SLOTS_PER_PASS) - 1, 0);
+    .reduce((sum, [lane]) => sum + sizes.get(lane)! - 1, 0);
   assert.equal(bound.commandCount, routineFailureDomainCount() + extra);
-  assert.equal(bound.largestFailureDomainSize, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+  assert.equal(bound.largestFailureDomainSize, Math.max(...[...kinds].map(([lane,set]) => set.has(true) ? sizes.get(lane)! : 1)));
   assert.equal(
     routineFrontierPassBound([{ acquisitionFailureDomain: "derived-family:US-OH", contract: { schedule: MEETING_SITTING_WINDOW } as never }]).commandCount,
     1,
-    "one task on its own lane is one command, however many slots a meeting lane may take",
+    "one body on its own lane is one command",
   );
 });
 
@@ -646,7 +647,7 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
         lastConsideredAt: clocks.get(body.task.id)?.lastAttemptedAt ?? null,
         deadlineMs: routineTaskDeadlineMs(body.task, clocks.get(body.task.id), hot(body, at)),
       })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
-      assert.ok(admitted.length <= SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+      assert.deepEqual(new Set(admitted.map(({ task }) => task.id)),new Set(due.map(({ task }) => task.id)));
       const result = await replayPass({
         clock,
         admittedAtMs: at,
@@ -705,14 +706,14 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
   return { misses, maxHotGap, maxBaseGap, peakHot, longestPassMs, reads: made, catchUpReads };
 }
 
-test("C6: 30 days on a lane shaped like Tucson's, passes of normal length, the same-host gap and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
+test("30 days on Tucson's board lane with persistent meeting workers and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
   const { misses, maxHotGap, maxBaseGap, peakHot } = await simulateTucsonLane(false);
   assert.ok(peakHot >= 19, `the simulated peak (${peakHot} hourly bodies) is heavier than Tucson's projected 16`);
   assert.deepEqual(misses, [], `${misses.length} late reads; longest hourly gap ${(maxHotGap / 60_000).toFixed(2)} min`);
   assert.ok(maxHotGap <= 3_600_000 && maxBaseGap <= 12 * 3_600_000);
 });
 
-test("C6: 30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with catch-up while a pass is held open: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
+test("30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with catch-up while a pass is held open: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
   for (const seed of [20260925, 10]) {
     const { misses, maxHotGap, maxBaseGap, longestPassMs, reads, catchUpReads } = await simulateTucsonLane(true, seed);
     const detail = `seed ${seed}: longest hourly gap ${(maxHotGap / 60_000).toFixed(2)} min, longest gap ${(maxBaseGap / 3_600_000).toFixed(2)} h, ` +

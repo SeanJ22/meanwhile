@@ -1134,7 +1134,7 @@ test("all standing routine-source destructive classes are enumerated by the cont
     "STATE_LEGISLATOR_VOTES", "STATE_BILL", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
     "GOOGLE_CIVIC_VOTERINFO",
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
-    // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
+    // refused by the generic incomplete-horizon rule (tests/derived-meeting-body.test.ts).
     "CURATED_READER_RECORD",
     // SRC-CG exercises complete native filing corrections and lossless partial source merges.
     "FEDERAL_CIVIC_RECORD",

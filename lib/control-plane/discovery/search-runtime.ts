@@ -1,13 +1,5 @@
-/**
- * The discovery search seam over Brave and Exa (`hunt/search.ts`),
- * pointers only. Every provider request is admitted first by the cycle's search
- * cap, a per-day cap across both providers in the durable shared budget ledger
- * (vendor `discovery-search`), and FleetSafety on its own provider key.
- *
- * A refused request is BUDGET_REFUSED and never sent; a transport failure is
- * FAILED with UNMEASURED cost. `worstCaseMs` covers every provider at its
- * timeout plus the ledger's calls; a query starts only with that much time left.
- */
+import { fetchSource } from "../../sources/fetch-source.ts";
+
 
 import type { BudgetLedger, HostBudget, VendorBudget } from "../budget.ts";
 import { createLedger, tryAcquire, release } from "../budget.ts";
@@ -189,7 +181,7 @@ export function makeDiscoverySearch(options: {
   const braveKey = options.braveKey?.trim() || null;
   const exaKey = options.exaKey?.trim() || null;
   if (braveKey === null && exaKey === null) return null;
-  const fetchImpl = options.fetchImpl ?? ((url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
+  const fetchImpl = options.fetchImpl ?? ((url, init) => fetchSource(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
   const timeoutMs = Math.min(options.timeoutMs ?? 8_000, SEARCH_REQUEST_LIFETIME_MS / 2);
   const perProvider = options.perProvider ?? 5;
   const maxHits = options.maxHits ?? 8;

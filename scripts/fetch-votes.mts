@@ -1,30 +1,6 @@
-/**
- * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
- */
-/**
- * Acquire and promote the recent federal roll-call window.
- *
- * `pnpm votes:fetch -- --window 20`
- *
- * Sources, all official:
- *  - House: https://clerk.house.gov/evs/<year>/roll<NNN>.xml (member votes
- *    keyed by bioguide in `name-id`)
- *  - Senate: https://www.senate.gov/legislative/LIS/roll_call_lists/
- *    vote_menu_<congress>_<session>.xml (the official per-vote title line)
- *    and .../roll_call_votes/vote<congress><session>/vote_..._<NNNNN>.xml
- *    (member votes keyed by LIS id)
- *  - Bill titles: api.congress.gov v3 (official titles; the bill page also
- *    hosts the CRS summary the surface links to)
- *
- * The Senate keys members by LIS id, not bioguide, so the public-domain
- * legislators-current.json provides the lis→bioguide bridge — and the run
- * PRINTS the identifier match rates with denominators; a zero-match join must
- * be loud.
- *
- * Serialized requests, identified User-Agent, bounded window. This explicit
- * owner operation writes only the candidate/event/promotion plane. It has no
- * scheduler and never changes a tracked file or invokes a software release.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+/** @freshness-reads-here */
+
 import type {
   MemberVote,
   RollCallVote,
@@ -79,7 +55,7 @@ async function recordFailure(url: string, detail: string): Promise<void> {
 async function get(url: string, proveOfficial: boolean = true): Promise<string> {
   let response: Response;
   try {
-    response = await fetch(url, { headers: { "user-agent": UA } });
+    response = await fetchSource(url, { headers: { "user-agent": UA } });
   } catch (error) {
     await recordFailure(url, error instanceof Error ? error.message : "official fetch failed");
     throw error;
@@ -130,7 +106,7 @@ async function latestHouseRoll(): Promise<number> {
     const url = `https://clerk.house.gov/evs/${YEAR}/roll${String(mid).padStart(3, "0")}.xml`;
     let response: Response;
     try {
-      response = await fetch(url, { method: "HEAD", headers: { "user-agent": UA } });
+      response = await fetchSource(url, { method: "HEAD", headers: { "user-agent": UA } });
     } catch (error) {
       await recordFailure(url, error instanceof Error ? error.message : "House roll horizon lookup failed");
       throw error;
@@ -313,7 +289,7 @@ if (apiKey) {
       // evidence. The authority/route is provable without its query string.
       const requestedUrl = `https://api.congress.gov/v3/bill/${CONGRESS}/${parsed.type}/${parsed.num}`;
       const credentialedUrl = `${requestedUrl}?api_key=${encodeURIComponent(apiKey)}&format=json`;
-      const response = await fetch(
+      const response = await fetchSource(
         credentialedUrl,
         { headers: { "user-agent": UA } },
       );

@@ -58,10 +58,10 @@ function validate(id: CuratedReaderContractId, value: CuratedReaderProjection, v
 
 export async function readCuratedReaderProjection(
   id: CuratedReaderContractId,
-  options: PromotedCivicDataReadOptions = {},
+  options: PromotedCivicDataReadOptions & { readonly scope?: string } = {},
 ): Promise<CivicDataReadResult<CuratedReaderProjection>> {
   const contract = requiredManualProductionContract(id);
-  const result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
+  const result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, options.scope ?? contract.scope, options);
   if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
   states.set(id, result);
   return result;
@@ -131,8 +131,6 @@ const MEMBER_OFFICES = requiredManualProductionContract("member-offices");
 export const settleMemberOfficesRead = (): Promise<CivicDataReadResult<CuratedReaderProjection>> =>
   readPromotedEdgeFirst(MEMBER_OFFICES.recordClass, MEMBER_OFFICES.scope,
     options => readCuratedReaderProjection("member-offices", options), "The state legislators' offices");
-export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
-  refreshCuratedReaderProjection("venue-resolutions", options);
 
 export function curatedReaderReadState(id: CuratedReaderContractId): CivicDataReadResult<CuratedReaderProjection> {
   return states.get(id) ?? initial(id);
@@ -147,4 +145,13 @@ export function currentCuratedReaderRecords<T>(
   if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value.records as readonly T[];
   if (mayUseTestFixture()) return testSeed;
   throw new Error(`${id} projection is ${state.kind}; initialize its canonical read before using the synchronous Reader projection.`);
+}
+
+export function installMeetingVenueProjection(records: CuratedReaderProjection["records"], versionId: string): void {
+  const contract = requiredManualProductionContract("venue-resolutions");
+  states.set("venue-resolutions", { kind: "BOOTSTRAP", value: { kind: "venue-resolutions", records },
+    detail: "Venue records for this meeting body from the promoted member index.",
+    metadata: { recordClass: contract.recordClass, scope: contract.scope, sourceId: contract.sourceId,
+      version: null, versionId, lastKnownGoodVersionId: versionId, sourceThrough: null, retrievedAt: null,
+      promotedAt: null, stale: "CURRENT", staleAt: null } });
 }

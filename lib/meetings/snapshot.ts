@@ -1,3 +1,4 @@
+import { routineScopeState } from "../civic-data/state-scope.ts";
 import { factReader } from "../facts/db.ts";
 import { withMeetingFacts } from "../facts/meeting-read.ts";
 import { carriedFromAnswer } from "./carry-forward.ts";
@@ -19,7 +20,7 @@ import {
   type HeldMeetingPartition,
   type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";
-import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
+import { meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
 import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "./sitting-merge.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
@@ -90,22 +91,7 @@ export interface MeetingsSnapshot {
   meetings: Meeting[];
   /** Retrieved agenda documents, append-only across refreshes. */
   agendaDocuments: AgendaDocument[];
-  /** Present only on a derived meeting family's version; every meeting in it belongs to exactly one member. */
-  derivedMembers?: DerivedFamilyMemberReport[];
-}
 
-/** One member of a derived meeting family, as its version accounts for it. */
-export interface DerivedFamilyMemberReport {
-  /** The wiring key: `${source}:${bodyId}`. */
-  id: string;
-  /** The adapter its sittings came from, the namespace of their ids. */
-  source: string;
-  bodyId: string;
-  /** ACTIVE: read this pass; SUSPENDED: a review trigger fired, and nothing new is read from it. */
-  status: "ACTIVE" | "SUSPENDED";
-  /** FRESH: its sittings were read this version; HELD: its last verified sittings are carried, and `detail` says why. */
-  outcome: "FRESH" | "HELD";
-  detail?: string;
 }
 
 const DROP_KEYS: Array<keyof NormalizeDropCounts> = [
@@ -128,10 +114,6 @@ export function snapshotCounts(
   };
 }
 
-/**
- * A dropped carried row moves from its own report's `carriedForward` to `carriedCollapsed`, so every carried-row check
- * still reconciles. Reports are restated as copies; the partitions' own reports are never changed.
- */
 export function accountCarriedCollapses(
   partitions: readonly Pick<MeetingsSnapshot, "meetings" | "sources">[],
   sources: readonly SnapshotSourceReport[],
@@ -388,7 +370,7 @@ function assertAttributionIsHonest(snap: MeetingsSnapshot): void {
 
 const validatedProjectionValues = new WeakSet<object>();
 
-export type MeetingsProjectionReadOptions = PromotedCivicDataReadOptions;
+export type MeetingsProjectionReadOptions = PromotedCivicDataReadOptions & { readonly state?: string };
 
 export interface MeetingPartitionReadback {
   readonly contractId: string;
@@ -438,7 +420,6 @@ export async function readMeetingPartitionProjection(
 
 function validateMeetingPartitionProjection(
   partition: Pick<MeetingPartitionContract | HeldMeetingPartition, "id" | "meetingSource" | "bodyId"> & {
-    readonly derivedFamily?: string | null;
     readonly historyOf?: string;
   },
   result: CivicDataReadResult<MeetingsSnapshot>,
@@ -453,29 +434,14 @@ function validateMeetingPartitionProjection(
       validatedProjectionValues.add(result.value);
     }
     if (partition.historyOf !== undefined) {
-      const family = partition.meetingSource === DERIVED_FAMILY_SOURCE;
       for (const meeting of result.value.meetings) {
-        if (!meeting.id || !meeting.bodyId || (!family && (meeting.bodyId !== partition.bodyId || !meeting.id.startsWith(`${partition.meetingSource}:`)))) {
+        if (!meeting.id || !meeting.bodyId || (meeting.bodyId !== partition.bodyId || !meeting.id.startsWith(`${partition.meetingSource}:`))) {
           throw new Error(`MEETING_HISTORY_ROW_SCOPE_MISMATCH:${partition.id}:${meeting.id}`);
         }
       }
       return result;
     }
-    if (partition.derivedFamily) {
-      const members = result.value.derivedMembers;
-      if (!Array.isArray(members) || members.length === 0) throw new Error(`MEETING_FAMILY_MEMBERS_MISSING:${partition.id}`);
-      const memberSources = new Set(members.map((member) => member.source));
-      if (result.value.sources.some((source) => !memberSources.has(source.source))) {
-        throw new Error(`MEETING_FAMILY_SOURCE_NOT_A_MEMBER:${partition.id}`);
-      }
-      for (const meeting of result.value.meetings) {
-        if (!members.some((member) => member.bodyId === meeting.bodyId && meeting.id.startsWith(`${member.source}:`))) {
-          throw new Error(`MEETING_FAMILY_ROW_NOT_A_MEMBER:${partition.id}:${meeting.id}`);
-        }
-      }
-      return result;
-    }
-    if (result.value.sources.length !== 1 || result.value.sources[0]?.source !== partition.meetingSource) {
+    if (result.value.sources.length === 0 || result.value.sources.some(source => source.source !== partition.meetingSource)) {
       throw new Error(`MEETING_PARTITION_SOURCE_MISMATCH:${partition.id}`);
     }
     for (const meeting of result.value.meetings) {
@@ -499,7 +465,10 @@ export async function readMeetingsProjection(
   options: MeetingsProjectionReadOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
   // The meeting partitions read here are the published doors' partitions, installed in this module graph.
-  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
+  const requestedState = options.state ?? process.env.WTP_SOURCE_STATE;
+  const state = requestedState ? routineScopeState(requestedState) : undefined;
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors(state ? { state } : {});
+  const partitions = [...MEETING_PARTITION_CONTRACTS].filter(partition => !state || routineScopeState(partition.bodyId) === state);
   const now = options.now ?? new Date().toISOString();
   const readOptions = {
     ...(options.store ? { store: options.store } : {}),
@@ -507,21 +476,21 @@ export async function readMeetingsProjection(
     maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
     bypassCache: options.bypassCache,
   };
-  const historyContracts = MEETING_PARTITION_CONTRACTS.map((partition) => meetingHistoryContract(partition));
+  const historyContracts = partitions.map((partition) => meetingHistoryContract(partition));
   const batchResults = await readPromotedCivicDataBatch<MeetingsSnapshot>(
     MEETINGS_RECORD_CLASS,
-    [...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope), ...historyContracts.map((contract) => contract.scope)],
+    [...partitions.map((partition) => partition.scope), ...historyContracts.map((contract) => contract.scope)],
     readOptions,
   );
-  const partitionResults = batchResults.slice(0, MEETING_PARTITION_CONTRACTS.length);
-  const ownResults = MEETING_PARTITION_CONTRACTS.map((partition, index) =>
+  const partitionResults = batchResults.slice(0, partitions.length);
+  const ownResults = partitions.map((partition, index) =>
     validateMeetingPartitionProjection(partition, partitionResults[index]!)
   );
   // A history that is unreadable or fails its proof is left out and named on its partition's readback; the live rows
   // are never held back by it.
   const historyByPartition = new Map<string, { readonly value: MeetingsSnapshot; readonly versionId: string | null } | { readonly issue: string }>();
   historyContracts.forEach((contract, index) => {
-    const read = validateMeetingPartitionProjection(contract, batchResults[MEETING_PARTITION_CONTRACTS.length + index]!);
+    const read = validateMeetingPartitionProjection(contract, batchResults[partitions.length + index]!);
     if (read.kind === "PROMOTED") {
       historyByPartition.set(contract.historyOf!, { value: read.value, versionId: read.metadata.versionId });
     } else if (read.kind === "STORE_UNREACHABLE") {
@@ -530,7 +499,7 @@ export async function readMeetingsProjection(
   });
   // A retired route's held version is read only while its successor has no pointer of its own.
   const awaiting = HELD_MEETING_PARTITIONS.filter((held) =>
-    ownResults[MEETING_PARTITION_CONTRACTS.findIndex((partition) => partition.id === held.successorId)]?.kind === "NOT_RECORDED"
+    ownResults[partitions.findIndex((partition) => partition.id === held.successorId)]?.kind === "NOT_RECORDED"
   );
   const heldReads = await readPromotedCivicDataBatch<MeetingsSnapshot>(
     MEETINGS_RECORD_CLASS,
@@ -542,7 +511,7 @@ export async function readMeetingsProjection(
     { held, result: validateMeetingPartitionProjection(held, heldReads[index]!) },
   ]));
   type PromotedRead = Extract<CivicDataReadResult<MeetingsSnapshot>, { kind: "PROMOTED" }>;
-  const reads = MEETING_PARTITION_CONTRACTS.map((partition, index) => {
+  const reads = partitions.map((partition, index) => {
     const result = ownResults[index]!;
     const predecessor = heldResults.get(partition.id);
     const held = result.kind === "NOT_RECORDED" && predecessor?.result.kind === "PROMOTED"
@@ -570,9 +539,6 @@ export async function readMeetingsProjection(
     ),
   );
 
-  // A duplicate id across authority partitions is ambiguous evidence. Reject
-  // every partition claiming that id, not whichever happened to be iterated
-  // second; unrelated partitions remain eligible for composition.
   const meetingOwners = new Map<string, string[]>();
   const documentOwners = new Map<string, string[]>();
   for (const { partition, result } of rawPromoted) {
@@ -649,8 +615,6 @@ export async function readMeetingsProjection(
     for (const { partition } of reads) {
       if (promoted.some((row) => row.partition.id === partition.id)) continue;
       const readback = partitionReadbacks.find((row) => row.contractId === partition.id)!;
-      // A derived family never promoted is a state with no connected calendar yet, not a failed source.
-      if (partition.derivedFamily !== null && readback.kind === "NOT_RECORDED") continue;
       sources.push({
         source: partition.meetingSource,
         ok: false,
@@ -682,7 +646,7 @@ export async function readMeetingsProjection(
     const promotedAt = promoted.map(({ result }) => result.metadata.promotedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     // A held version is proved, but it is not its successor's own pointer.
     const heldCount = promoted.filter(({ held }) => held !== null).length;
-    const allPartitionsProofValid = promoted.length - heldCount === MEETING_PARTITION_CONTRACTS.length;
+    const allPartitionsProofValid = promoted.length - heldCount === partitions.length;
     const stale = promoted.some(({ result }) => result.metadata.stale === "STALE")
       ? "STALE" as const
       : !allPartitionsProofValid || promoted.some(({ result }) => result.metadata.stale === "UNKNOWN")
@@ -694,7 +658,7 @@ export async function readMeetingsProjection(
       counts: snapshotCounts(collapsed.rows, accounted.freshCollapsed +
         promoted.reduce((sum, { value }) => sum + (value.counts.duplicatesCollapsed ?? 0), 0)),
       sources,
-      meetings: await withMeetingFacts(collapsed.rows, factReader()),
+      meetings: await withMeetingFacts(collapsed.rows, factReader(), state),
       agendaDocuments: retainedDocuments,
     };
     validateSnapshot(value, {
@@ -717,7 +681,7 @@ export async function readMeetingsProjection(
         staleAt: null,
       },
       partitions: partitionReadbacks,
-      detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.` +
+      detail: `${promoted.length}/${partitions.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.` +
         (heldCount > 0 ? ` ${heldCount} composed from a retired route's held version until its successor's first promotion (heldFrom).` : ""),
     };
   }

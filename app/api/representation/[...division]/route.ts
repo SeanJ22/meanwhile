@@ -1,3 +1,4 @@
+import { ocdStateCode } from "@/lib/ocd/state-of";
 import { stageTimer } from "@/lib/api/server-timing";
 import {
   ensureReaderAuthorityEdge,
@@ -8,14 +9,6 @@ import {
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
-
-/**
- * GET /api/representation/ocd-division/country:us/state:<st>/sldl:<n>
- *
- * Who holds a division's seats, keyed by the division, with its `label`, `divisionType` and `tier` (`null`
- * where the registry does not hold it). The division is the path, so every cache keys on it; the answer is
- * public and CDN-held on the same terms as `/api/meetings`, and the refused shape stays `no-store`.
- */
 
 export const runtime = "nodejs";
 
@@ -50,16 +43,13 @@ export async function GET(
   // The reader authority edge, entered in this handler's own execution
   // before any edge-aware read below (see the header note).
   const manifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
-  if (manifest?.authorityArtifacts) {
+  if (manifest) {
     const edge = await timing.time("authority", () =>
-      ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES, [ocdStateCode(ocdId)].filter((state): state is string => state !== null)).catch(() => null),
     );
     if (edge) enterReaderAuthorityEdge(edge);
   }
 
-  // Both stores, the same two the shared resolver reads: legislative seats
-  // off the officeholder index, local governing bodies off the curated
-  // rosters. Asked by division key, so neither depends on where the reader is.
   const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
 
   // Division labels and roster gaps are separate from a sourced person's identity. A registry

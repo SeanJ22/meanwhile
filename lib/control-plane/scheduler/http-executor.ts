@@ -1,8 +1,5 @@
-/**
- * Deterministic executor: an HTTP GET against a held URL, recorded as an artifact. 2xx with bytes is INGESTED;
- * a zero-byte 2xx or a 5xx/transport failure is ABORTED; any other 4xx or a challenge is BLOCKED_CURRENTLY.
- * Nothing here writes WALKED_NO_YIELD.
- */
+import { fetchSource, runWithSourceFetch } from "../../sources/fetch-source.ts";
+
 
 import { createHash } from "node:crypto";
 
@@ -10,7 +7,7 @@ import { assertPublicUrl } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
 
 import type { RunWork, WorkOutcome } from "./dispatch.ts";
-import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
+import { websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
 
 /** How long one route may take before the attempt is abandoned. */
 export const DEFAULT_FETCH_TIMEOUT_MS = 30_000;
@@ -63,7 +60,7 @@ export const realFetch: FetchOne = async (url, timeoutMs) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, {
+    const response = await fetchSource(url, {
       signal: controller.signal,
       redirect: "follow",
       headers: {
@@ -149,8 +146,7 @@ export function httpExecutor(input: {
     }
 
     const websiteSize = input.websiteSize ?? websiteSizeForObligation(obligation.obligation, input.root);
-    if (input.spaceOut && websiteRequestLimit(websiteSize(url.toString())) !== null) await input.spaceOut(url.host);
-    const got = await fetchOne(url.toString(), timeoutMs);
+    const got = await runWithSourceFetch({ websiteSize }, () => fetchOne(url.toString(), timeoutMs));
 
     const providerFailure = httpProviderFailure(url.toString(), got);
     if (providerFailure !== null && got.status !== 429) return { ranAs: RAN_AS, kind: "ABORTED", cost: cost(got),

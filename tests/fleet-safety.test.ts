@@ -1,3 +1,6 @@
+import { fetchSource, runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -1075,19 +1078,21 @@ test('parent HTTP shares ten held small-publisher requests across text and byte 
   const websiteSize=websiteSizeFromHoldings(['AZ','az','nm'],root);
   const controller=fundedController({now:NIGHT,charges: [],websiteSize});
   let calls=0;
-  const fetcher:typeof fetch=async()=>{calls++;return new Response('complete');};
+  const vault=new MemoryEvidenceStore();
+  const store={pacing:memoryWebsitePacing(),withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(),read:async()=>null,record:async()=>{}};
+  const fetcher:typeof fetch=(input,init)=>runWithSourceFetch({vault,runtime:{store,transport:async()=>{calls++;return new Response('complete');}}},()=>fetchSource(input,init));
   const text=controller.guardedOpenOne('public-web','same-work',fetcher);
   const bytes=controller.guardedOpenBytes('public-web','same-work',fetcher);
   for(let i=0;i<5;i++)assert.equal((await bytes({url:small,headers:{},timeoutMs:1000})).status,200);
   const results=await Promise.all(Array.from({length:10},()=>text({url:small,method:'GET',headers:{},timeoutMs:1000})));
   assert.equal(results.filter(r=>r.status===200).length,5);
-  assert.equal(results.filter(r=>r.requestCount===0 && /small-publisher/.test(r.transportError??'')).length,5);
+  assert.equal(results.filter(r=>r.requestCount===0 && /Source website may be checked again/.test(r.transportError??'')).length,5);
   assert.equal(calls,10);
   assert.equal(controller.snapshot().providerCircuits.length,0,'a cap is not a provider failure');
   for(let i=0;i<20;i++)assert.equal((await text({url:census,method:'GET',headers:{},timeoutMs:1000})).status,200);
   assert.equal(calls,30);
   const other=await controller.guardedOpenOne('public-web','different-work',fetcher)({url:`${small}/other`,method:'GET',headers:{},timeoutMs:1000});
-  assert.match(other.transportError??'',/^WEBSITE_REQUEST_CAP: /,'the allowance is the website\'s, shared by every work item');
+  assert.match(other.transportError??'',/Source website may be checked again/,'the allowance is the website\'s, shared by every work item');
   assert.equal(calls,30);
 });
 

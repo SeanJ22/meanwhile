@@ -48,9 +48,13 @@ export const statementQuery = (run: (statements: readonly { readonly text: strin
   async (text, params = []) => (await run([{ text, params }]))[0] ?? [];
 
 /** Moves whenever a fact (on entities under `prefix`, when given) is written or leaves the live set. */
-export async function factsVersion(query: Query | null, prefix = ""): Promise<string> {
+export async function factsVersion(query: Query | null, prefix = "", state?: string | null): Promise<string> {
   if (query === null) return "facts:none";
-  const [row] = await query(`SELECT coalesce(max(id), 0) AS newest, count(*) FILTER (WHERE status = 'live') AS live FROM fact
-    WHERE $1 = '' OR starts_with(entity_id, $1)`, [prefix]);
-  return `facts:${row?.newest ?? 0}.${row?.live ?? 0}`;
+  state = typeof state === "string" ? state.replace(/^US-/i, "").toUpperCase() : state;
+  const scope = state === undefined ? "TRUE" : state === null || state === "US" ? "e.state IS NULL" : "e.state = $2::char(2)";
+  const [row] = await query(`SELECT coalesce(max(f.id), 0) AS newest, count(*) FILTER (WHERE f.status = 'live') AS live,
+      coalesce(max(extract(epoch FROM f.checked_at)), 0) AS checked
+    FROM entity e CROSS JOIN LATERAL (SELECT id, status, checked_at FROM fact WHERE entity_id = e.id OFFSET 0) f
+    WHERE ($1 = '' OR starts_with(e.id, $1)) AND ${scope}`, typeof state === "string" && state !== "US" ? [prefix, state] : [prefix]);
+  return `facts:${row?.newest ?? 0}.${row?.live ?? 0}.${row?.checked ?? 0}`;
 }

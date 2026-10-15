@@ -1,3 +1,4 @@
+import { fetchSource } from "../sources/fetch-source.ts";
 import { createHash } from "node:crypto";
 import { readZipEntries } from "../sources/archive.ts";
 
@@ -410,7 +411,7 @@ async function acquireWith(
 
 /** Production acquisition has no path or fixture override. */
 export async function acquireJurisdictionReferenceInputs(): Promise<JurisdictionReferenceAcquisitionResult> {
-  return acquireWith(globalThis.fetch, () => new Date().toISOString(), PRODUCTION_DENOMINATORS);
+  return acquireWith(fetchSource, () => new Date().toISOString(), PRODUCTION_DENOMINATORS);
 }
 
 /**

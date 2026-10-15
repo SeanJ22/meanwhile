@@ -167,6 +167,10 @@ test("migrationTagsIn reads tags off the changed files and ignores the journal",
   );
 });
 
+test("step migrations are checked before River numbers them", () => {
+  assert.deepEqual(migrationTagsIn(["lib/db/migrations/R4_source_fetch.sql"]), ["R4_source_fetch"]);
+});
+
 test("an EXPAND migration MAY precede its code", () => {
   // Applying an expand before the deploy that names its table is the correct ordering.
   const journal = journalOf("0020_dazzling_deathbird", "0021_mixed_red_ghost");

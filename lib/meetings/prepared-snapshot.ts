@@ -1,3 +1,4 @@
+import { routineScopeState } from "../civic-data/state-scope.ts";
 import { factReader, factsVersion } from "../facts/db.ts";
 import { createHash } from "node:crypto";
 
@@ -16,6 +17,7 @@ import {
   meetingPartitionId,
   meetingPartitionOfId,
   meetingHistoryContract,
+  type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import {
@@ -39,7 +41,8 @@ import type { PromotedPointerIdentity } from "../civic-data/types.ts";
 import { buildMeetingHistorySnapshot, mergeMeetingHistory } from "../civic-data/meeting-history.ts";
 import { meetingCarriesRecords } from "./carries-records.ts";
 
-export const MEETINGS_PREPARED_SCOPE = "composed-reader-snapshot";
+export const MEETINGS_PREPARED_SCOPE = "composed-reader-snapshot:US";
+export const preparedMeetingScope = (state = process.env.WTP_SOURCE_STATE ?? "US") => `composed-reader-snapshot:${routineScopeState(state)}`;
 
 /** The live meeting facts a composition read; any change to them recomposes it. */
 const MEETING_FACTS_COUPLING = "meeting-facts";
@@ -96,10 +99,16 @@ export async function preparePublishedMeetingSnapshot(
   now: string = new Date().toISOString(),
   options: {
     readonly aggregate?: () => Promise<MeetingsProjectionReadResult>;
+    readonly state?: string;
   } = {},
 ): Promise<PrepareMeetingSnapshotResult> {
-  const historyContracts = MEETING_PARTITION_CONTRACTS.map(meetingHistoryContract);
-  const scopes = [...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope), ...historyContracts.map(contract => contract.scope)];
+  const requestedState = options.state ?? process.env.WTP_SOURCE_STATE;
+  const state = requestedState ? routineScopeState(requestedState) : undefined;
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors(state ? { state } : {});
+  const partitions = [...MEETING_PARTITION_CONTRACTS].filter(partition => !state || routineScopeState(partition.bodyId) === state);
+  const preparedScope = preparedMeetingScope(state);
+  const historyContracts = partitions.map(meetingHistoryContract);
+  const scopes = [...partitions.map((partition) => partition.scope), ...historyContracts.map(contract => contract.scope)];
   const versionByScope = new Map<string, string>();
   const identityByScope = new Map<string, PromotedPointerIdentity>();
   try {
@@ -107,7 +116,7 @@ export async function preparePublishedMeetingSnapshot(
       versionByScope.set(promotion.scope, promotion.versionId);
       identityByScope.set(promotion.scope, promotion);
     }
-    const awaiting = HELD_MEETING_PARTITIONS.filter((held) => !versionByScope.has(held.successorScope));
+    const awaiting = HELD_MEETING_PARTITIONS.filter((held) => (!state || routineScopeState(held.bodyId) === state) && !versionByScope.has(held.successorScope));
     if (awaiting.length > 0) {
       for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, awaiting.map((held) => held.scope))) {
         versionByScope.set(promotion.scope, promotion.versionId);
@@ -119,7 +128,7 @@ export async function preparePublishedMeetingSnapshot(
   }
   // A successor with no pointer of its own couples to its retired predecessor's held version, so the successor's
   // first promotion changes the fingerprint and recomposes.
-  const currentCoupling: PreparedProjectionCoupling[] = MEETING_PARTITION_CONTRACTS.flatMap((partition) => {
+  const currentCoupling: PreparedProjectionCoupling[] = partitions.flatMap((partition) => {
     const versionId = versionByScope.get(partition.scope);
     if (typeof versionId === "string") return [{ contractId: partition.id, versionId }];
     const held = heldMeetingPartitionFor(partition.id);
@@ -130,10 +139,10 @@ export async function preparePublishedMeetingSnapshot(
     const versionId = versionByScope.get(contract.scope);
     if (versionId) currentCoupling.push({ contractId: contract.id, versionId });
   }
-  const facts = { contractId: MEETING_FACTS_COUPLING, versionId: await factsVersion(factReader(), "meeting:") };
+  const facts = { contractId: MEETING_FACTS_COUPLING, versionId: await factsVersion(factReader(), "meeting:", state) };
   const currentFingerprint = couplingFingerprint([...currentCoupling, facts]);
 
-  const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+  const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, preparedScope);
   if (prepared && couplingFingerprint(prepared.composedFrom) === currentFingerprint) {
     return {
       status: "CURRENT",
@@ -148,7 +157,7 @@ export async function preparePublishedMeetingSnapshot(
   try {
     aggregate = options.aggregate
       ? await options.aggregate()
-      : await readMeetingsProjection({ store, now, bypassCache: true });
+      : await readMeetingsProjection({ store, now, bypassCache: true, state });
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: prepared?.generatedAt ?? null };
   }
@@ -175,7 +184,7 @@ export async function preparePublishedMeetingSnapshot(
   const missingHistory = aggregate.partitions.filter(partition => partition.historyIssue);
   if (prepared && missingHistory.length > 0) {
     // Retain accepted historical facts during a storage outage, without reviving future meetings.
-    const prior = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+    const prior = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, preparedScope);
     if (prior) {
       const previous = prior.payload as MeetingsSnapshot;
       const documented = new Set(previous.agendaDocuments.map(document => document.meetingId));
@@ -186,7 +195,7 @@ export async function preparePublishedMeetingSnapshot(
       value = mergeMeetingHistory(value, buildMeetingHistorySnapshot({ history: null, moved: meetings,
         agendaDocuments: previous.agendaDocuments.filter(document => ids.has(document.meetingId)), generatedAt: previous.generatedAt }));
       for (const partition of missingHistory) {
-        const contract = MEETING_PARTITION_CONTRACTS.find(candidate => candidate.id === partition.contractId);
+        const contract = partitions.find(candidate => candidate.id === partition.contractId);
         const held = contract && prior.composedFrom.find(coupling => coupling.contractId === meetingHistoryContract(contract).id);
         if (held) composedFrom.push(held);
       }
@@ -200,7 +209,7 @@ export async function preparePublishedMeetingSnapshot(
   }
   const input: PreparedReaderProjectionInput = {
     recordClass: MEETINGS_RECORD_CLASS,
-    scope: MEETINGS_PREPARED_SCOPE,
+    scope: preparedScope,
     payload: value,
     composedFrom: [...composedFrom, facts],
     factSha256,
@@ -222,9 +231,9 @@ export async function preparePublishedMeetingSnapshot(
     : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
 }
 
-function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCoupling[]): MeetingPartitionReadback[] {
+function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCoupling[], partitions: readonly MeetingPartitionContract[]): MeetingPartitionReadback[] {
   const versionByContract = new Map(composedFrom.map((entry) => [entry.contractId, entry.versionId]));
-  return MEETING_PARTITION_CONTRACTS.map((partition) => {
+  return partitions.map((partition) => {
     const versionId = versionByContract.get(partition.id);
     const held = heldMeetingPartitionFor(partition.id);
     const heldVersionId = versionId === undefined && held ? versionByContract.get(held.id) : undefined;
@@ -273,10 +282,11 @@ let preparedRows = new WeakMap<object, PreparedReaderProjectionRow>();
 async function readPreparedRowOnceUnchanged(
   store: RoutineDataStore,
   scope: object,
+  preparedScope: string,
 ): Promise<PreparedReaderProjectionRow | null> {
   const held = preparedRows.get(scope);
-  if (held !== undefined) {
-    const coupling = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+  if (held !== undefined && held.scope === preparedScope) {
+    const coupling = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, preparedScope);
     if (
       coupling !== null &&
       coupling.sequence === held.sequence &&
@@ -286,7 +296,7 @@ async function readPreparedRowOnceUnchanged(
       return held;
     }
   }
-  const row = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+  const row = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, preparedScope);
   if (row === null) preparedRows.delete(scope);
   else preparedRows.set(scope, row);
   return row;
@@ -294,21 +304,16 @@ async function readPreparedRowOnceUnchanged(
 
 /** How long a process keeps the composition's places before it reads them again. */
 export const COMPOSED_PLACES_TTL_MS = 60_000;
-let composedPlaces: { readonly at: number; readonly places: ReadonlyMap<string, readonly string[]> } | null = null;
+let composedPlaces: { readonly at: number; readonly places: ReadonlyMap<string, readonly string[]>; readonly scope: string } | null = null;
 
-/**
- * The places each source serves in the composition the publisher last prepared, read from its own partition ids, in
- * its order: a failed source is attributed to every place it serves whatever doors this process has installed. A
- * route held for a retired one is not a source of the composition, and a body with no division has no place. Null
- * when the composition cannot be read.
- */
-export async function readComposedSourcePlaces(options: { readonly store?: RoutineDataStore; readonly clock?: () => number } = {}):
+export async function readComposedSourcePlaces(options: { readonly store?: RoutineDataStore; readonly clock?: () => number; readonly state?: string } = {}):
   Promise<ReadonlyMap<string, readonly string[]> | null> {
+  const preparedScope = preparedMeetingScope(options.state);
   const now = (options.clock ?? Date.now)();
-  if (options.store === undefined && composedPlaces !== null && now - composedPlaces.at < COMPOSED_PLACES_TTL_MS) return composedPlaces.places;
+  if (options.store === undefined && composedPlaces !== null && composedPlaces.scope === preparedScope && now - composedPlaces.at < COMPOSED_PLACES_TTL_MS) return composedPlaces.places;
   let coupling: Awaited<ReturnType<RoutineDataStore["readPreparedReaderProjectionCoupling"]>>;
   try {
-    coupling = await (options.store ?? new PostgresRoutineDataStore()).readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+    coupling = await (options.store ?? new PostgresRoutineDataStore()).readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, preparedScope);
   } catch {
     return null;
   }
@@ -323,7 +328,7 @@ export async function readComposedSourcePlaces(options: { readonly store?: Routi
     if (division.startsWith("ocd-division/")) list.push(division);
     places.set(partition.source, list);
   }
-  if (options.store === undefined) composedPlaces = { at: now, places };
+  if (options.store === undefined) composedPlaces = { at: now, places, scope: preparedScope };
   return places;
 }
 
@@ -335,7 +340,7 @@ export function clearPreparedMeetingsProjectionCache(): void {
 
 /** Within this window the stated "Last checked" can only lag a newer check, never claim one that did not happen. */
 export const PREPARED_CHECKS_TTL_MS = 60_000;
-let servedChecks = new WeakMap<object, { readonly sequence: number; readonly readAtMs: number; readonly couplings: readonly FreshCheckCoupling[] }>();
+let servedChecks = new WeakMap<object, { readonly sequence: number; readonly scope: string; readonly readAtMs: number; readonly couplings: readonly FreshCheckCoupling[] }>();
 
 async function servedPreparedChecks(
   store: RoutineDataStore,
@@ -347,14 +352,14 @@ async function servedPreparedChecks(
   const checkable = couplings.filter((coupling) => coupling.routes !== undefined);
   if (checkable.length === 0) return couplings;
   const held = servedChecks.get(scope);
-  if (held !== undefined && held.sequence === prepared.sequence && nowMs >= held.readAtMs && nowMs < held.readAtMs + PREPARED_CHECKS_TTL_MS) return held.couplings;
+  if (held !== undefined && held.sequence === prepared.sequence && held.scope === prepared.scope && nowMs >= held.readAtMs && nowMs < held.readAtMs + PREPARED_CHECKS_TTL_MS) return held.couplings;
   try {
     const identities = await store.readPromotionIdentities(
       MEETINGS_RECORD_CLASS,
       [...new Set(checkable.flatMap((coupling) => scopeOfContract(coupling.contractId) ?? []))],
     );
     const checked = withCurrentChecks(couplings, new Map(identities.map((identity) => [identity.scope, identity])));
-    servedChecks.set(scope, { sequence: prepared.sequence, readAtMs: nowMs, couplings: checked });
+    servedChecks.set(scope, { sequence: prepared.sequence, scope: prepared.scope, readAtMs: nowMs, couplings: checked });
     return checked;
   } catch {
     return couplings;
@@ -362,17 +367,20 @@ async function servedPreparedChecks(
 }
 
 export async function readPreparedMeetingsProjection(
-  options: { readonly store?: RoutineDataStore; readonly now?: string; readonly expectedSequence?: number } = {},
+  options: { readonly store?: RoutineDataStore; readonly now?: string; readonly expectedSequence?: number; readonly state?: string } = {},
 ): Promise<MeetingsProjectionReadResult> {
   // The meeting partitions read here are the published doors' partitions, installed in this module graph.
-  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
+  const requestedState = options.state ?? process.env.WTP_SOURCE_STATE;
+  const state = requestedState ? routineScopeState(requestedState) : undefined;
+  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors(state ? { state } : {});
+  const heldPartitions = [...MEETING_PARTITION_CONTRACTS].filter(partition => !state || routineScopeState(partition.bodyId) === state);
   let prepared: PreparedReaderProjectionRow | null;
   let store: RoutineDataStore | null = null;
   try {
     // Constructed inside the try: the Postgres store throws when DATABASE_URL is unset, which must fall through to
     // the composing reader rather than escape.
     store = options.store ?? new PostgresRoutineDataStore();
-    prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE);
+    prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE, preparedMeetingScope(state));
   } catch {
     prepared = null;
   }
@@ -382,9 +390,9 @@ export async function readPreparedMeetingsProjection(
   if (prepared === null || store === null) {
     return readMeetingsProjection(options);
   }
-  const partitions = partitionsFromCoupling(prepared.composedFrom);
+  const partitions = partitionsFromCoupling(prepared.composedFrom, heldPartitions);
   const ownComposed = new Set(prepared.composedFrom.map((entry) => entry.contractId));
-  const allComposed = MEETING_PARTITION_CONTRACTS.every((partition) => ownComposed.has(partition.id));
+  const allComposed = heldPartitions.every((partition) => ownComposed.has(partition.id));
   const nowMs = options.now !== undefined && Number.isFinite(Date.parse(options.now)) ? Date.parse(options.now) : Date.now();
   const checks = meetingFreshChecks(await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
   return {

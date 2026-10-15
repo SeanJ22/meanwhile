@@ -1,9 +1,9 @@
+import { fetchSource } from "../fetch-source.ts";
 import { mkdtemp,writeFile,rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { openZipFile } from "../archive.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { LEGISCAN_API,parseDatasetList,type Dataset } from "./bills.ts";
 
 export interface BulkRequestOptions {key?:string;signal:AbortSignal;fetchImpl?:typeof fetch;now?:()=>string;}
@@ -16,17 +16,9 @@ async function request(op:"getDatasetList"|"getDataset",params:Record<string,str
   const url=new URL(LEGISCAN_API); url.search=new URLSearchParams({op,...params}).toString();
   const requestedUrl=new URL(url); requestedUrl.searchParams.delete("access_key"); url.searchParams.set("key",key);
   let response:Response;
-  for(let attempt=0;;attempt++) {
-    try {response=await (options.fetchImpl??fetch)(url,{signal:options.signal,redirect:"error"});}
-    catch {throw Error(`LegiScan ${op} transport unavailable`);}
-    if((response.status===429||response.status>=500)&&attempt<3) {
-      const retry=response.headers.get("retry-after"), seconds=Number(retry);
-      const delay=retry?Number.isFinite(seconds)?seconds*1000:Math.max(0,Date.parse(retry)-Date.now()):1000*2**attempt;
-      await response.body?.cancel(); await sourceAcquisitionSleep(Number.isFinite(delay)?delay:1000*2**attempt,options.signal); continue;
-    }
-    if(!response.ok) {await response.body?.cancel(); throw Error(`LegiScan ${op} HTTP ${response.status}`);}
-    break;
-  }
+  try {response=await (options.fetchImpl??fetchSource)(url,{signal:options.signal,redirect:"error"});}
+  catch {throw Error(`LegiScan ${op} transport unavailable`);}
+  if(!response.ok) {await response.body?.cancel(); throw Error(`LegiScan ${op} HTTP ${response.status}`);}
   const body=await response.text(), parsed=JSON.parse(body) as {status?:string};
   if(parsed.status!=="OK") throw Error(`LegiScan ${op} returned an API error`);
   return {body,requestedUrl:requestedUrl.href,finalUrl:requestedUrl.href,httpStatus:response.status,retrievedAt:options.now?.()??new Date().toISOString(),rawHash:hash(body)};

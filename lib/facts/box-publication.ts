@@ -1,5 +1,6 @@
 import { finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { readBoxPublicationFindings } from "../control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { ScoutFinding, ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { datesInQuote, electionFieldId, publishElectionFields } from "../civic-data/election-field-publication.ts";
@@ -110,22 +111,29 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
 }
 
 /** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
-async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; readonly flagged: number }> {
-  const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE produced_by = 'box' AND status = 'live' AND field LIKE 'member:%'")).map(row => String(row.entity_id));
-  const members = await liveMembers(query, bodies);
-  let pulled = 0, flagged = 0;
-  for (const member of members.filter(row => row.producedBy === "box")) {
-    const seat = seatIn(member.words, member.bodyId);
-    if (!seat) {
-      await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
-      await query("INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1 ON CONFLICT (place_id) DO NOTHING", [member.bodyId]);
-      pulled++;
-    } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
-      flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
-        WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
+async function reviewBoxSeats(query: Query, state: string): Promise<{ readonly pulled: number; readonly flagged: number }> {
+  let after = "", pulled = 0, flagged = 0;
+  for (;;) {
+    const bodies = (await query(`SELECT DISTINCT f.entity_id FROM fact f JOIN entity e ON e.id = f.entity_id
+      WHERE f.produced_by = 'box' AND f.status = 'live' AND f.field LIKE 'member:%'
+        AND coalesce(e.state, 'US') = $1 AND f.entity_id > $2 ORDER BY f.entity_id LIMIT 100`, [state, after])).map(row => String(row.entity_id));
+    for (const body of bodies) {
+      const members = await liveMembers(query, [body]);
+      for (const member of members.filter(row => row.producedBy === "box")) {
+        const seat = seatIn(member.words, member.bodyId);
+        if (!seat) {
+          await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
+          await query("INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1 ON CONFLICT (place_id) DO NOTHING", [member.bodyId]);
+          pulled++;
+        } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
+          flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
+            WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
+        }
+      }
     }
+    if (bodies.length < 100) return { pulled, flagged };
+    after = bodies.at(-1)!;
   }
-  return { pulled, flagged };
 }
 
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
@@ -135,21 +143,18 @@ const DATED: readonly ElectionFieldKind[] = ["registration_deadline", "early_vot
 
 /** Box findings from the last month, each routed where its record publishes, checked on its own page; what has no route waits with its reason. */
 export async function publishBoxFindings(input: {
-  readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "scoutResults" | "artifacts">;
+  readonly repos: ControlPlaneRepositories; readonly state: string;
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly fetch: ProbeFetch;
   readonly store: RoutineDataStore; readonly clocks: Clocks; readonly now: string; readonly limit: number;
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now), since = now.getTime() - HUNTER_FINDING_DAYS * 86_400_000;
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query),
+  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.state),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
   const place = (row: BoxFinding) => report.byPlace[placeOf(row)] ??= { published: 0, refused: 0, waiting: 0 };
-  const [waiting, taken] = await Promise.all([repos.boxFindings.listWhere(["state"], "waiting"), repos.boxFindings.listWhere(["state"], "taken")]);
-  const rows = [...waiting, ...taken].map(row => row.value).filter(row =>
-    (row.state === "waiting" && row.waitingFor?.slots !== FINDING_SLOTS_VERSION || row.state === "taken" && row.claim !== null && row.claim.expiresAt <= input.now) &&
-    row.origins.some(origin => Date.parse(origin.recordedAt) >= since)).slice(0, input.limit);
+  const rows = await readBoxPublicationFindings(repos, input.state, FINDING_SLOTS_VERSION, input.now, new Date(since).toISOString(), input.limit);
   const results = new Map<string, Promise<ScoutResult | undefined>>();
   const resultOf = (origin: BoxOrigin & { resultKey: string }) => {
     if (!results.has(origin.resultId)) results.set(origin.resultId, repos.scoutResults.readWhere(origin.resultKey, ["attemptId"], origin.resultId)

@@ -130,9 +130,11 @@ export async function importCartonComments(input: {
 const CARTON_OFFICES = "carton:office-contacts";
 
 /** The bodies whose office address or phone readers saw before facts, until they have been carried onto facts once. */
-export async function cartonOffices(query: Query, registry: { readonly versionId: string; readonly payload: { readonly registry: { readonly bodies: readonly Body[] } } } | null):
+export async function cartonOffices(query: Query, readRegistry: () => Promise<{ readonly versionId: string; readonly payload: { readonly registry: { readonly bodies: readonly Body[] } } } | null>):
   Promise<{ readonly versionId: string; readonly bodies: readonly Body[] } | null> {
-  if (!registry || (await query("SELECT 1 FROM fact_store_load WHERE source = $1", [CARTON_OFFICES])).length) return null;
+  if ((await query("SELECT 1 FROM fact_store_load WHERE source = $1", [CARTON_OFFICES])).length) return null;
+  const registry = await readRegistry();
+  if (!registry) return null;
   return { versionId: registry.versionId, bodies: registry.payload.registry.bodies.filter(row => (row.officeAddress || row.officePhone) && row.provenance.sourceUrl) };
 }
 

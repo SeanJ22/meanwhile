@@ -17,6 +17,7 @@ import {
   runRoutinePassWithHotReadCatchUp,
 } from "../../lib/civic-data/hot-read-catch-up.ts";
 import { ROUTINE_READER_CHILD_CONCURRENCY, routineReaderRepairDomains } from "../../lib/civic-data/reader-repair-protocol.ts";
+import { meetingBatchGroups } from "../../lib/civic-data/meeting-batch.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_TASKS,
@@ -187,7 +188,17 @@ export async function replayPass(input: ReplayPassInput): Promise<ReplayPassResu
   const command = (task: RoutineSourceTask): BoundedChildCommand => ({
     id: task.id, failureDomain: task.acquisitionFailureDomain, executable: "replay", args: [],
   });
+  const batchGroups = meetingBatchGroups(input.launched.filter(task => task.recordClass === "MEETING"));
+  const batches = new Map(batchGroups.map((members,index) => [`replay:meeting-worker:${index}`,members]));
   const launch = async (child: BoundedChildCommand): Promise<BoundedChildResult> => {
+    const members = batches.get(child.id);
+    if (members) {
+      for (const task of members) {
+        await clock.sleepUntil(clock.now() + input.readMs(task));
+        settle(task);
+      }
+      return exited(child);
+    }
     const task = byId.get(child.id);
     await clock.sleepUntil(clock.now() + (task === undefined ? otherFamiliesMs : input.readMs(task)));
     return exited(child);
@@ -200,18 +211,21 @@ export async function replayPass(input: ReplayPassInput): Promise<ReplayPassResu
   const options = { cwd: "", env: process.env, sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS };
 
   await clock.sleepUntil(admittedAtMs + REPLAY_READS_START_MS);
-  const sourceTasks: (RoutineSourceTask | undefined)[] = [...(otherFamiliesMs > 0 ? [undefined] : []), ...input.launched];
-  const source = runBoundedChildPass([
+  const commands = [
     ...(otherFamiliesMs > 0 ? [{ id: OTHER_FAMILIES, failureDomain: OTHER_FAMILIES, executable: "replay", args: [] }] : []),
-    ...input.launched.map(command),
-  ], {
-    ...options,
-    concurrency: ROUTINE_CHILD_CONCURRENCY,
-    onSettled: (_result, index) => {
-      const task = sourceTasks[index];
-      if (task !== undefined) settle(task);
-    },
-  }, launch);
+    ...input.launched.filter(task => task.recordClass !== "MEETING").map(command),
+  ];
+  const source = Promise.all([
+    runBoundedChildPass([...batches.keys()].map(id => ({ id,executable: "replay",args: [] })),
+      { ...options,concurrency: ROUTINE_CHILD_CONCURRENCY },launch),
+    runBoundedChildPass(commands, {
+      ...options,concurrency: ROUTINE_CHILD_CONCURRENCY,
+      onSettled: (_result,index) => {
+        const task = byId.get(commands[index]!.id);
+        if (task !== undefined) settle(task);
+      },
+    },launch),
+  ]).then(results => results.flat());
 
   const clockReads = input.windowed.map((task) => ({ task, ok: true as const, clock: input.passClocks.get(task.id) }));
   const limits = {

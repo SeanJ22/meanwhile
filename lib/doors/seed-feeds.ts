@@ -1,15 +1,8 @@
-/**
- * The non-meeting feeds as registry records: the daily automatic refresh tasks
- * and every routine source contract each get a door with a kind, a key
- * reference where the feed needs one, what it holds, and how often it is
- * checked. Pure mapping.
- */
-
 import { AUTOMATIC_REFRESH_CONTRACT_IDS } from "../civic-data/automatic-refresh.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { sourceAuthority } from "../civic-data/source-authority.ts";
-import { feedDoorId, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { doorScopeState, feedDoorId, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 const MINUTE = 60_000;
 
@@ -118,12 +111,14 @@ export function feedDoorDrafts(): DoorDraft[] {
 
 export async function seedFeedDoors(input: {
   readonly repo: DoorRepository;
+  readonly state?: string;
   readonly deriveInputAt: string;
   readonly at: string;
 }): Promise<{ created: number; updated: number; unchanged: number; keptManualEdit: number; refused: readonly string[] }> {
   const counts = { created: 0, updated: 0, unchanged: 0, keptManualEdit: 0 };
   const refused: string[] = [];
   for (const draft of feedDoorDrafts()) {
+    if (input.state !== undefined && doorScopeState(draft) !== input.state) continue;
     try {
       const result = await upsertDerivedDoor(input.repo, draft, input.deriveInputAt, input.at);
       if (result === "kept-manual-edit") counts.keptManualEdit += 1;

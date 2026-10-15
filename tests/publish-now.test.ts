@@ -49,12 +49,12 @@ test("BX-03: all unacknowledged parser results stay owed across restart; an ackn
 });
 
 test("BX-12: changed doors persist until success and unrelated or shut doors are never offered", () => {
-  const door = { doorId: "door-a", status: "OPEN", meeting: { family: null }, lastSuccessAt: null,
-    validators: { changedAt: "2026-10-01T12:00:00.000Z" } } as DoorRecord;
-  const tasks = [{ id: door.doorId }, { id: "unrelated" }] as RoutineSourceTask[];
+  const door = { doorId: "door-a", kind: "ical", bodyIds: ["body-a"], status: "OPEN", meeting: { family: null }, lastSuccessAt: null,
+    validators: { changedAt: "2026-10-01T12:00:00.000Z" } } as unknown as DoorRecord;
+  const tasks = [{ id: "meetings:ical:body-a" }, { id: "unrelated" }] as RoutineSourceTask[];
   const pending = publishNowDoorTasks([door], tasks, NOW);
   assert.equal(pending.length, 1);
-  assert.equal(pending[0].id, door.doorId);
+  assert.equal(pending[0].id, "meetings:ical:body-a");
   assert.ok(pending[0].ownerInvocation?.publicationPending);
   assert.equal(publishNowDoorTasks([{ ...door, status: "SHUT" }], tasks, NOW).length, 0);
   assert.equal(publishNowDoorTasks([{ ...door, lastSuccessAt: NOW }], tasks, NOW).length, 0);
@@ -104,27 +104,32 @@ test("publication admission filters and projects work-item metadata in the datab
   const rows = Array.from({ length: AGGREGATE_LIST_READ_PAGE + 1 }, (_, index) => ({ id: `work-${String(index).padStart(3, "0")}`,
     contract_id: "registry-runtime-bindings", record_class: "OFFICIAL_ROSTER", publication_outcome: null }));
   const parameters: unknown[][] = [];
-  const items = await readWorkerPublicationItems(async (query, values) => {
+  const items: unknown[] = [];
+  for await (const page of readWorkerPublicationItems(async (query, values) => {
     assert.match(query, /WHERE value #>> '\{autonomousPlan,publication,contractId\}' = ANY\(\$1::text\[\]\)/);
     const select = query.slice(0, query.indexOf("FROM cp_work_items"));
     assert.doesNotMatch(select, /SELECT\s+\*|SELECT\s+id,\s*value\s*(?:,|FROM)|transitions|targetUrls|observationArtifactIds/i);
     assert.match(select, /sourceObservedAt/);
     assert.deepEqual(values[0], ["registry-runtime-bindings"]);
-    const after = values[1];
-    if (after !== undefined) assert.match(query, /AND id > \$2/);
+    assert.equal(values[1], "AZ");
+    const after = values[2];
+    assert.match(query, /AND id > \$3/);
     parameters.push([...values]);
     return rows.filter(row => after === undefined || row.id > String(after)).slice(0, AGGREGATE_LIST_READ_PAGE);
-  }, ["registry-runtime-bindings"]);
+  }, "US-AZ", ["registry-runtime-bindings"])) {
+    assert.ok(page.length <= AGGREGATE_LIST_READ_PAGE);
+    items.push(...page);
+  }
   assert.equal(items.length, rows.length);
   assert.equal(parameters.length, 2);
-  assert.equal(parameters[1][1], rows[AGGREGATE_LIST_READ_PAGE - 1].id);
+  assert.equal(parameters[1][2], rows[AGGREGATE_LIST_READ_PAGE - 1].id);
   assert.deepEqual(items[0], { id: rows[0].id, autonomousPlan: { publication: { contractId: "registry-runtime-bindings" }, contract: { recordClass: "OFFICIAL_ROSTER" } } });
 });
 
 test("BX-12: the executable selects only publication work and never holds the routine singleton", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
-  assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
+  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT \+ ROUTINE_STATES.indexOf\(STATE_SCOPE\) : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
+  assert.match(runner, /PUBLISH_NOW \? \[\]\s*: await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
   assert.match(runner, /const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)/);
 });
@@ -159,14 +164,14 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
-  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n$/);
-  const run = pilot.slice(pilot.indexOf("async function runPublishNow()"), pilot.indexOf("async function persistOuterRoutineChildFailure("));
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\.\.\.ROUTINE_STATES\.map\(state =>[\s\S]*run: \(\) => runRoutineState\(state\)[\s\S]*publishNowLane\(\(\) => runPublishState\(state\)\)/);
+  const run = pilot.slice(pilot.indexOf("async function runPublishNow(state: string)"), pilot.indexOf("async function persistOuterRoutineChildFailure("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
-  assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);
+  assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts", `--state=\$\{state\}`\]/);
   assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);
-  assert.match(run, /persistOuterRoutineChildFailure\(routineSupervisorCycleId\(hostname\(\), startedAt, "publish-now"\)/, "a crash still reaches Admin, under its own lane");
+  assert.match(run, /persistOuterRoutineChildFailure\(routineSupervisorCycleId\(`\$\{hostname\(\)\}\/\$\{state\}`, startedAt, "publish-now"\)/, "a crash still reaches Admin, under its own lane");
   const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(routine, /routineSupervisorCycleId\(hostname\(\), RUN_STARTED_AT, PUBLISH_NOW \? "publish-now" : "routine-civic-data"\)/);
+  assert.match(routine, /routineSupervisorCycleId\(`\$\{hostname\(\)\}\/\$\{STATE_SCOPE\}`, RUN_STARTED_AT, PUBLISH_NOW \? "publish-now" : "routine-civic-data"\)/);
 });
 
 test("the two lanes started in one millisecond never share an outcome's identity", () => {

@@ -1,3 +1,4 @@
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { LEGISTAR_DOCUMENT_HOSTS, LEGISTAR_ROUTES, findRoute, isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
@@ -7,12 +8,7 @@ import { join } from "node:path";
 import { agendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 
-/**
- * A host whose robots.txt disallows this client is still read for an agenda: robots.txt is
- * recorded and blocks nothing. The only host agenda retrieval refuses is a retired route's host
- * that no longer resolves. A Legistar sitting's agenda is read through the tenant portal's own link
- * first, and from the vendor's file when the portal falls short.
- */
+
 
 const AGENDA_HTML = "<html><body><h1>Agenda</h1><p>1. Call to order.</p><p>2. Adjourn.</p></body></html>";
 const DEAD_RETIRED_HOST_URL = "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370";
@@ -63,18 +59,16 @@ async function run(meetings: unknown[], respond: (url: string, init?: RequestIni
   const { retrieveAgendas } = await import("../scripts/ingest.ts");
   const requested: string[] = [];
   const logged: string[] = [];
-  const realFetch = globalThis.fetch;
   const realLog = console.log;
-  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+  const transport = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input instanceof Request ? input.url : input);
     requested.push(url);
     return respond(url, init);
   }) as typeof fetch;
   console.log = (...args: unknown[]) => { logged.push(args.map(String).join(" ")); };
   try {
-    await retrieveAgendas(meetings as never);
+    await withSourceTransport(transport, () => retrieveAgendas(meetings as never));
   } finally {
-    globalThis.fetch = realFetch;
     console.log = realLog;
   }
   return { requested, logged };
@@ -101,11 +95,7 @@ test("the ingest's agenda retrieval reads a robots-disallowed vendor host, and h
   assert.ok(logged.some((line) => line.includes("1 link(s) held as links only") && line.includes("retired route's")), logged.join("\n"));
 });
 
-/**
- * Every redirect hop is asked the same question. A hop into a
- * robots-disallowed host is followed like any other; a hop into a dead retired
- * route's host is held, and that host is never requested.
- */
+
 test("an agenda link that redirects into a dead retired host is held as a link; a redirect into a robots-disallowed host is followed", async () => {
   const vendor = "https://legistar.granicus.com/pima/meetings/2026/9/990003_A_Agenda.pdf";
   const { requested, logged } = await run(
@@ -132,11 +122,7 @@ test("an agenda link that redirects into a dead retired host is held as a link; 
   assert.ok(logged.some((line) => line.includes("1 redirect(s) into a refused host not followed") && /, 2 stored, .*, 0 failed, /.test(line)), logged.join("\n"));
 });
 
-/**
- * A vendor-host API agenda link is read through the portal's own link to the same agenda first: the
- * API's EventAgendaFile is on the vendor host, and the sitting's detail page (EventInSiteURL, held as
- * provenance.sourceUrl) links the agenda on the tenant portal. The network below is a stub.
- */
+
 const DETAIL_1828 = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1828&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
 const PORTAL_AGENDA_1828 = "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
 const detailExcerpt = readFileSync(join(import.meta.dirname, "fixtures", "legistar-insite-pima-meetingdetail-1828-excerpt.html"), "utf8");
@@ -201,7 +187,8 @@ test("when the portal page links no agenda, or cannot be read, the vendor's file
     return new Response("unexpected", { status: 404 });
   });
   for (const n of [990005, 990008, 990009]) {
-    assert.ok(requested.indexOf(detail(n)) >= 0 && requested.indexOf(detail(n)) < requested.indexOf(vendor(n)), `the portal page first, then the vendor file, for ${n}: ${requested.join(", ")}`);
+    if (n === 990009) assert.ok(!requested.includes(detail(n)), "the publisher remains on hold after its 503");
+    else assert.ok(requested.indexOf(detail(n)) >= 0 && requested.indexOf(detail(n)) < requested.indexOf(vendor(n)), `the portal page first, then the vendor file, for ${n}: ${requested.join(", ")}`);
     const held = agendaDocumentStore.latestFor(`legistar:pima:${n}`);
     assert.equal(held?.documentUrl, vendor(n), `the vendor's agenda is stored for ${n}`);
     assert.equal(held?.extraction, "pdf", `and read for ${n}`);

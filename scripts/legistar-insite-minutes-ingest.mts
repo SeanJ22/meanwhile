@@ -1,3 +1,4 @@
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 // @freshness-reads-here
 import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -202,7 +203,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   const writes = args.promote && !args.dryRun;
   const spacingMs = input.spacingMs ?? INSITE_SPACING_MS;
   // Late-bound, so every read goes through the acquisition trace installed for it.
-  const session = new InSiteSession({ fetchImpl: (url, init) => globalThis.fetch(url, init), spacingMs });
+  const session = new InSiteSession({ fetchImpl: (url, init) => fetchSource(url, init), spacingMs });
   const calendarUrl = `https://${tenant.host}/Calendar.aspx`;
   const refusedSittings: string[] = [];
   let promotedSittings = 0;
@@ -449,7 +450,7 @@ async function main(): Promise<void> {
     tenant = inSiteTenantsFromWiring([partition.wiring])[0];
   } else {
     // Mesa's own contract: its tenant is read off the published meeting doors.
-    const doors = await ensureMeetingDoors();
+    const doors = await ensureMeetingDoors({ bodyId: "ocd-division/country:us/state:az/place:mesa#governing" });
     if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
     tenant = findTenant(args.slug);
   }

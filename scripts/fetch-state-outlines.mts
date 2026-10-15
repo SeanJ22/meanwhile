@@ -1,14 +1,6 @@
-/**
- * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
- */
-/**
- * `pnpm states:fetch` — state outlines for the state-focus map, from Census
- * TIGERweb as GeoJSON.
- *
- * The outline only decides which pixels are muted: it answers no question and
- * joins to nothing. It is generalized (see MAX_ALLOWABLE_OFFSET); anything
- * that needs to ask this geometry something needs the unsimplified file.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+/** @freshness-reads-here */
+
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -22,10 +14,7 @@ const SERVICE =
 /** FIPS for the states the product covers. Adding a state adds a code here. */
 const STATE_FIPS = HELD_GEOMETRY_FIPS;
 
-/**
- * Degrees; about 50 metres, finer than the stroke at any zoom. Coarser
- * generalization (0.005, ~500 m) visibly cut river borders.
- */
+
 const MAX_ALLOWABLE_OFFSET = 0.0005;
 
 const url =
@@ -36,7 +25,7 @@ const url =
   `&maxAllowableOffset=${MAX_ALLOWABLE_OFFSET}&outSR=4326&f=geojson`;
 
 console.log(`fetching ${url}`);
-const response = await fetch(url, {
+const response = await fetchSource(url, {
   headers: { "User-Agent": "we-the-people civic map (state outlines)" },
 });
 if (!response.ok) {

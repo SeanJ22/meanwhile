@@ -1,4 +1,5 @@
-import { readDerivedMeetingWiring, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
+import { readDerivedMeetingWiringForState, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
+import { routineScopeState } from "../civic-data/state-scope.ts";
 import type { Persisted } from "../control-plane/repository/types.ts";
 import { ROUTE_HINTS } from "../hunt/meetings-route-hints.ts";
 import { readFileSync } from "node:fs";
@@ -37,13 +38,10 @@ export function readDoorImport(root = process.cwd()): { readonly generatedAt: st
 }
 
 /** Derived rows come from the promoted wiring, timed at its promotion; when it cannot be read the other doors still import. */
-export async function readDerivedForSeed(now: string): Promise<{ records: readonly DerivedWiringRecord[]; note: string; at: string }> {
+export async function readDerivedForSeed(now: string, state: string): Promise<{ records: readonly DerivedWiringRecord[]; note: string; at: string }> {
   try {
-    const read = await readDerivedMeetingWiring({ bypassCache: true, now });
-    if (read.kind === "PROMOTED") {
-      return { records: read.value.records, note: `${read.value.records.length} derived rows read from the promoted wiring.`, at: read.metadata.promotedAt ?? now };
-    }
-    return { records: [], note: `derived rows were not read (${read.kind}).`, at: now };
+    const read = await readDerivedMeetingWiringForState(state);
+    return { records: read.records, note: `${read.records.length} derived rows read for ${state}.`, at: read.promotedAt ?? now };
   } catch {
     return { records: [], note: "derived rows were not read: the promoted wiring could not be read here.", at: now };
   }
@@ -64,6 +62,7 @@ function readFromListing(repo: DoorRepository, rows: readonly Persisted<DoorReco
 
 export async function seedAllDoors(input: {
   readonly repo: DoorRepository;
+  readonly state: string;
   readonly imported: { readonly generatedAt: string; readonly rows: readonly BodySourceWiring[] };
   readonly derived: readonly DerivedWiringRecord[];
   /** When the derived rows were promoted. */
@@ -72,14 +71,14 @@ export async function seedAllDoors(input: {
   readonly now: string;
 }): Promise<SeedAllResult> {
   const { now } = input;
-  const rows = await input.repo.list();
+  const rows = await input.repo.listWhere(["scopeState"], input.state);
   const repo = readFromListing(input.repo, rows);
   // Feeds and route hints come with the code, as the import does: a hand edit made since is kept.
   const codeAt = input.imported.generatedAt;
-  const imported = await seedMeetingDoors({ repo, wiring: input.imported.rows, derived: [], deriveInputAt: codeAt, at: now });
-  const meetings = await seedMeetingDoors({ repo, wiring: [], derived: input.derived, deriveInputAt: input.derivedAt ?? now, at: now });
-  const feeds = await seedFeedDoors({ repo, deriveInputAt: codeAt, at: now });
-  const routeHints = await seedRouteHintDoors({ repo, hints: ROUTE_HINTS, deriveInputAt: codeAt, at: now });
+  const imported = await seedMeetingDoors({ repo, wiring: input.imported.rows.filter(row => routineScopeState(row.ocdId ?? row.bodyId) === input.state), derived: [], deriveInputAt: codeAt, at: now });
+  const meetings = await seedMeetingDoors({ repo, wiring: [], derived: input.derived.filter(record => routineScopeState(record.row.ocdId ?? record.row.bodyId) === input.state), deriveInputAt: input.derivedAt ?? now, at: now });
+  const feeds = await seedFeedDoors({ repo, state: input.state, deriveInputAt: codeAt, at: now });
+  const routeHints = await seedRouteHintDoors({ repo, hints: ROUTE_HINTS.filter(hint => routineScopeState(hint.jurisdictionId) === input.state), deriveInputAt: codeAt, at: now });
   const total = rows.length + imported.created + meetings.created + feeds.created + routeHints.created;
   return { imported, meetings, feeds, routeHints, derivedNote: input.derivedNote ?? "", total };
 }
@@ -91,6 +90,7 @@ export type DoorSync =
 /** One runner pass: bring every held door into the registry. Never throws. */
 export async function syncHeldDoors(
   repo: DoorRepository,
+  state: string,
   options: {
     readonly now?: string;
     readonly imported?: { readonly generatedAt: string; readonly rows: readonly BodySourceWiring[] };
@@ -98,8 +98,8 @@ export async function syncHeldDoors(
 ): Promise<DoorSync> {
   try {
     const now = options.now ?? new Date().toISOString();
-    const derived = await readDerivedForSeed(now);
-    return { synced: true, result: await seedAllDoors({ repo, imported: options.imported ?? readDoorImport(), derived: derived.records, derivedAt: derived.at,
+    const derived = await readDerivedForSeed(now, state);
+    return { synced: true, result: await seedAllDoors({ repo, state, imported: options.imported ?? readDoorImport(), derived: derived.records, derivedAt: derived.at,
       derivedNote: derived.note, now }) };
   } catch (error) {
     return { synced: false, reason: `the doors could not be brought up to date: ${error instanceof Error ? error.message : String(error)}` };

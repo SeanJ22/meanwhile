@@ -12,72 +12,37 @@ export interface SourceAcquisitionEvidence {
 
 type RunForSource = <T>(source: string, operation: () => Promise<T>) => Promise<T>;
 
-const sourceContext = new AsyncLocalStorage<string>();
-let activeEvidence: SourceAcquisitionEvidence[] | null = null;
-
-function urlOf(input: Parameters<typeof fetch>[0]): string {
-  if (typeof input === "string") return input;
-  if (input instanceof URL) return input.href;
-  return input.url;
-}
+const sourceContext = new AsyncLocalStorage<{ source: string; evidence: SourceAcquisitionEvidence[] }>();
 
 /** Record the exact acquired bytes while the calling child source is in scope. */
 export function recordAcquiredResponse(input: {
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly httpStatus: number;
-  readonly bytes: Uint8Array;
-}): void {
-  const source = sourceContext.getStore();
-  if (!source || activeEvidence === null) return;
+} & ({ readonly bytes: Uint8Array } | { readonly rawHash: string; readonly byteCount: number })): void {
+  const context = sourceContext.getStore();
+  if (!context) return;
   const evidence: SourceAcquisitionEvidence = {
-    source,
+    source: context.source,
     requestedUrl: input.requestedUrl,
     finalUrl: input.finalUrl,
     httpStatus: input.httpStatus,
-    rawHash: createHash("sha256").update(input.bytes).digest("hex"),
-    byteCount: input.bytes.byteLength,
+    rawHash: "bytes" in input ? createHash("sha256").update(input.bytes).digest("hex") : input.rawHash,
+    byteCount: "bytes" in input ? input.bytes.byteLength : input.byteCount,
   };
-  if (!activeEvidence.some((row) =>
+  if (!context.evidence.some((row) =>
     row.source === evidence.source &&
     row.requestedUrl === evidence.requestedUrl &&
     row.finalUrl === evidence.finalUrl &&
     row.rawHash === evidence.rawHash
-  )) activeEvidence.push(evidence);
+  )) context.evidence.push(evidence);
 }
 
-/**
- * Capture every successful fetch performed by a batch composite acquisition.
- * AsyncLocalStorage keeps concurrently fetched children attributed to the
- * child that initiated them. The global fetch replacement exists only for the
- * duration of this explicit batch call and is always restored.
- */
 export async function captureSourceAcquisitions<T>(
   operation: (runForSource: RunForSource) => Promise<T>,
 ): Promise<{ readonly value: T; readonly evidence: readonly SourceAcquisitionEvidence[] }> {
-  if (activeEvidence !== null) throw new Error("SOURCE_ACQUISITION_TRACE_ALREADY_ACTIVE");
-  const originalFetch = globalThis.fetch;
   const evidence: SourceAcquisitionEvidence[] = [];
-  activeEvidence = evidence;
-  globalThis.fetch = (async (input, init) => {
-    const response = await originalFetch(input, init);
-    if (sourceContext.getStore() && response.ok) {
-      const bytes = new Uint8Array(await response.clone().arrayBuffer());
-      recordAcquiredResponse({
-        requestedUrl: urlOf(input),
-        finalUrl: response.url || urlOf(input),
-        httpStatus: response.status,
-        bytes,
-      });
-    }
-    return response;
-  }) as typeof fetch;
-  const runForSource: RunForSource = (source, child) => sourceContext.run(source, child);
-  try {
-    const value = await operation(runForSource);
-    return { value, evidence: [...evidence] };
-  } finally {
-    globalThis.fetch = originalFetch;
-    activeEvidence = null;
-  }
+  const runForSource: RunForSource = (source, child) => sourceContext.run({ source, evidence }, child);
+  const value = await operation(runForSource);
+  return { value, evidence };
 }

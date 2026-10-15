@@ -13,7 +13,7 @@ import {
   sittingWindowDueAtMs,
   sittingWindowHot,
 } from "../lib/civic-data/contracts.ts";
-import { MEETING_PARTITION_CONTRACTS, derivedMeetingFamilyId, meetingPartitionId, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, meetingPartitionId, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
 import {
   SITTING_CONCLUSION_BOUND_MS,
   SITTING_WINDOW_ADMISSION_LEAD_MS,
@@ -32,11 +32,6 @@ import {
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
-
-/*
- * Meeting sources are checked twice daily, and hourly for any body with a meeting upcoming within seven days or
- * concluded within the past seven days. The window rolls automatically and changes no other data family's schedule.
- */
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -71,7 +66,7 @@ test("the policy is the owner's: seven days either side, hourly when hot, twice 
   assert.ok(MEETING_PARTITION_CONTRACTS.length > 0);
   for (const partition of MEETING_PARTITION_CONTRACTS) {
     assert.deepEqual(partition.schedule, MEETING_SITTING_WINDOW, `${partition.id} follows its own sittings`);
-    assert.deepEqual(sittingWindowSourceIds(partition.id), [partition.id]);
+    assert.deepEqual(sittingWindowSourceIds(partition.id), MEETING_PARTITION_CONTRACTS.filter(row => row.bodyId === partition.bodyId).map(row => row.id));
   }
   assert.deepEqual(sittingWindowSourceIds(OUTCOMES), [PIMA_LEGISTAR, PIMA_INSITE]);
   // Mesa's council decisions follow the council's one InSite partition.
@@ -121,9 +116,7 @@ test("a meeting partition is re-read hourly when hot and twice daily otherwise, 
   const at = "2026-09-24T09:00:00.000Z";
   const base = Date.parse(at);
   const clock = succeededAt(at);
-  // The next read is owed exactly an hour (hot) or twelve hours after the last.
-  // An hourly read is admitted 25 minutes before it is owed, so it lands inside
-  // the hour; a twice-daily read 2 hours before, so it fills free slots.
+
   assert.equal(LEAD, 25 * 60_000);
   assert.equal(BASE_LEAD, 2 * HOUR);
   assert.equal(routineTaskDeadlineMs(partition, clock, true), base + HOUR);
@@ -199,11 +192,6 @@ test("R20: a meeting partition never published is retried twice daily, not hourl
   // A never-run partition is read at once.
   assert.equal(routineTaskDue(partition, undefined, base, true), true);
   assert.equal(routineTaskDue(partition, {}, base, true), true);
-  // A derived family never published is owed twice daily, not on its six-hour retry.
-  const family = task(derivedMeetingFamilyId("US-AZ"));
-  assert.equal(family.retryMs, 6 * HOUR);
-  assert.equal(routineTaskDue(family, never, base + 6 * HOUR, true), false);
-  assert.equal(routineTaskDue(family, never, base + 12 * HOUR - BASE_LEAD, true), true);
   // Meeting outcomes carry no sitting list of their own, so they keep their retry.
   const outcomes = task(OUTCOMES);
   assert.ok(outcomes.retryMs < 12 * HOUR);
@@ -217,7 +205,7 @@ test("the window rolls: a sitting coming within seven days makes a twice-daily s
   const clock = succeededAt(at, [sitting]);
   const entersWindow = Date.parse(sitting) - 7 * DAY;
   const reads = (now: number) => [{ task: partition, ok: true, clock }].map((read) => ({ ...read, now }));
-  const hotAt = (now: number) => sittingWindowSignals(reads(now), now).get(partition.id);
+  const hotAt = (now: number) => sittingWindowSignals([...reads(now), { task: task(PIMA_INSITE), ok: true, clock }], now).get(partition.id);
   assert.equal(hotAt(entersWindow - 1), false);
   assert.equal(routineTaskDue(partition, clock, entersWindow - 1, hotAt(entersWindow - 1)), false);
   assert.equal(hotAt(entersWindow), true);
@@ -282,7 +270,8 @@ test("C6: a sitting concludes at its publisher-stated end; only a sitting with n
 });
 
 test("C6: the stated-ends read is built in Postgres, returns only stated pairs, and never selects a payload whole", () => {
-  const text = statedSittingEndsRead(drizzle.mock({ schema })).toSQL().sql;
+  const text = statedSittingEndsRead(drizzle.mock({ schema }), ["body:a"]).toSQL().sql;
+  assert.match(text, /"scope" in \(\$\d+\)/);
   assert.match(text, /jsonb_build_array\(m->'startsAt', m->'endsAt'\)/);
   assert.match(text, /jsonb_typeof\(m->'endsAt'\) = 'string'/);
   assert.doesNotMatch(text.slice(0, text.indexOf(" from \"civic_data_promotions\"")), /select (?:"civic_data_promotions"\.)?"payload"[,\s]/);
@@ -293,9 +282,9 @@ test("C6: the runner reads the stated ends once a pass and hands them to the sit
   const partition = task(PIMA_LEGISTAR);
   const start = new Date(now - 9 * DAY).toISOString();
   const read = { task: partition, ok: true, clock: succeededAt("2026-09-25T05:30:00.000Z", [start]) };
-  assert.equal(sittingWindowSignals([read], now).get(partition.id), false);
-  assert.equal(sittingWindowSignals([read], now, new Map([[partition.id, new Map([[start, now - 6 * DAY]])]])).get(partition.id), true);
+  assert.equal(sittingWindowSignals([read, { ...read, task: task(PIMA_INSITE) }], now).get(partition.id), false);
+  assert.equal(sittingWindowSignals([read, { ...read, task: task(PIMA_INSITE) }], now, new Map([[partition.id, new Map([[start, now - 6 * DAY]])]])).get(partition.id), true);
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.ok(runner.indexOf("statedSittingEndsRead(getDb())") < runner.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)"));
+  assert.ok(runner.indexOf("statedSittingEndsRead(getDb(),") < runner.indexOf("sittingWindowSignals(sittingClockReads, admissionNowMs, statedEndsByTask)"));
   assert.match(runner, /sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS/);
 });

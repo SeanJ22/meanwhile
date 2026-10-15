@@ -20,18 +20,19 @@ function reordering(repo: DoorRepository): DoorRepository {
       const row = await repo.read(id);
       return row === null ? null : { ...row, value: flip(row.value) as DoorRecord };
     },
-    list: async () => (await repo.list()).map((row) => ({ ...row, value: flip(row.value) as DoorRecord })),
+    listWhere: async (path: readonly string[], value: string) => (await repo.listWhere(path, value)).map((row) => ({ ...row, value: flip(row.value) as DoorRecord })),
+    list: async () => { throw new Error("state seeding must not list the country"); },
   });
 }
 
 test("every pass brings the held doors into an empty registry with no switch, and a second pass writes nothing", async () => {
   const repos = createMemoryRepositories();
-  const first = await syncHeldDoors(repos.doors, { now: AT });
+  const first = await syncHeldDoors(repos.doors, "US-AZ", { now: AT });
   assert.equal(first.synced, true);
   const held = (await listDoors(repos.doors)).doors.length;
-  assert.ok(held > 100, `held ${held}`);
+  assert.ok(held > 50, `held ${held}`);
   assert.ok(first.synced && first.result.total === held);
-  const second = await syncHeldDoors(reordering(repos.doors), { now: LATER });
+  const second = await syncHeldDoors(reordering(repos.doors), "US-AZ", { now: LATER });
   assert.ok(second.synced);
   const { imported, meetings, feeds, routeHints } = second.result;
   assert.deepEqual([imported.created + meetings.created + feeds.created + routeHints.created, imported.updated + meetings.updated + feeds.updated + routeHints.updated], [0, 0],
@@ -41,13 +42,13 @@ test("every pass brings the held doors into an empty registry with no switch, an
 
 test("a door that left the registry comes back on the next pass", async () => {
   const repos = createMemoryRepositories();
-  await syncHeldDoors(repos.doors, { now: AT });
+  await syncHeldDoors(repos.doors, "US-AZ", { now: AT });
   const before = (await listDoors(repos.doors)).doors;
   const gone = before.find((door) => door.kind === "route-hints")!;
   const rows = (await repos.doors.list()).filter((row) => row.id !== gone.doorId);
   const fresh = createMemoryRepositories();
   for (const row of rows) await fresh.doors.put(row.id, row.value, AT);
-  const out = await syncHeldDoors(fresh.doors, { now: LATER });
+  const out = await syncHeldDoors(fresh.doors, "US-AZ", { now: LATER });
   assert.ok(out.synced && out.result.routeHints.created === 1);
   assert.equal((await listDoors(fresh.doors)).doors.length, before.length);
 });
@@ -62,18 +63,19 @@ test("key order alone never counts as a change", () => {
 
 test("the one-time door import adds every hand-wired door once, and keeps a door edited in the registry since", async () => {
   const repos = createMemoryRepositories();
-  const file = readDoorImport();
+  const imported = readDoorImport();
+  const file = { ...imported, rows: imported.rows.filter(row => row.ocdId?.includes("/state:az")) };
   // An edit made after the rows were taken from code.
   const EDITED = new Date(Date.parse(file.generatedAt) + 60_000).toISOString();
-  assert.ok(file.rows.length > 100, `${file.rows.length} rows`);
-  const first = await seedAllDoors({ repo: repos.doors, imported: file, derived: [], now: AT });
+  assert.ok(file.rows.length > 0, `${file.rows.length} state rows`);
+  const first = await seedAllDoors({ repo: repos.doors, state: "US-AZ", imported: file, derived: [], now: AT });
   assert.deepEqual(first.imported.refused, []);
   assert.ok(first.imported.created >= file.rows.length, "every row becomes at least one door");
   assert.equal(first.imported.updated, 0);
   const door = (await listDoors(repos.doors)).doors.find((d) => d.meeting != null)!;
   const row = (await repos.doors.read(door.doorId))!;
   await repos.doors.compareAndSet(door.doorId, row.revision, applyManualEdit(door, { ...editableFieldsOf(door), notes: "checked by hand" }, EDITED), EDITED);
-  const second = await seedAllDoors({ repo: repos.doors, imported: file, derived: [], now: EDITED });
+  const second = await seedAllDoors({ repo: repos.doors, state: "US-AZ", imported: file, derived: [], now: EDITED });
   assert.equal(second.imported.created, 0);
   assert.equal(second.imported.updated, 0);
   assert.equal(second.imported.unchanged + second.imported.keptManualEdit, first.imported.created);

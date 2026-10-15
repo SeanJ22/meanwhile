@@ -1,0 +1,2124 @@
+{
+  "doors": [
+    {
+      "formatVersion": 1,
+      "doorId": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+      "kind": "ical",
+      "ocdId": "ocd-division/country:us/state:az/place:testville",
+      "bodyIds": [
+        "ocd-division/country:us/state:az/place:testville#body:housing-commission"
+      ],
+      "hosts": [
+        "www.testville.example.gov"
+      ],
+      "config": {
+        "bodyName": "Housing Commission",
+        "familyPartition": "meetings:derived:US-AZ",
+        "feedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+        "governmentId": "az:city:city-of-testville",
+        "route": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+        "slug": "derived-state-az-place-testville-body-housing-commission",
+        "titleMatch": "Housing Commission"
+      },
+      "holds": [
+        "meetings"
+      ],
+      "checkEveryMinutes": null,
+      "notes": "Derived meeting door for City of Testville, from the reviewed crosswalk row ocd-division/country:us/state:az/place:testville#body:housing-commission|ICAL (reviewed 2026-09-24T19:20:00.000Z).",
+      "meeting": {
+        "agendaSourceType": "ICAL",
+        "jurisdiction": "City of Testville",
+        "publishingOrg": "City of Testville",
+        "timeZone": "America/Phoenix",
+        "verifiedAt": "2026-09-24T19:10:00.000Z",
+        "family": "meetings:derived:US-AZ"
+      },
+      "status": "OPEN",
+      "readNow": false,
+      "lastSuccessAt": null,
+      "lastFailureAt": null,
+      "validators": null,
+      "shutSince": null,
+      "origin": "DERIVED",
+      "editedAt": null,
+      "updatedAt": "2026-09-24T20:30:00.000Z"
+    }
+  ],
+  "rows": [
+    {
+      "record": {
+        "candidate": {
+          "id": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+          "sourceId": "meetings-derived-routes",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ",
+          "sourceProjectionEvidence": {
+            "kind": "SOURCE_PROJECTION_CONTRACT",
+            "sourceId": "meetings-derived-routes",
+            "recordClass": "MEETING",
+            "scope": "source:derived:family:US-AZ"
+          },
+          "retrieval": {
+            "succeeded": true,
+            "requestedUrl": "derived:meetings-derived-routes:source:derived:family:US-AZ",
+            "finalUrl": null,
+            "httpStatus": null,
+            "retrievedAt": "2026-09-24T20:30:00.000Z",
+            "rawHash": "600c124cffdb1cd2cb95bc18ca6d7873d7dff74fad5df5ae9db1f5b08d1902f4",
+            "derived": {
+              "inputs": [
+                {
+                  "kind": "PROMOTED_VERSION",
+                  "recordClass": "CURATED_READER_RECORD",
+                  "scope": "US:meeting-source-wiring",
+                  "versionId": "cv-e3d8e2f8ebe41c8df075b3aca7ba986d",
+                  "readModelSha256": "796325f70f45607d09fbd3b6d9f72d631a087e5b5cf1f73689db7f34c65bb105",
+                  "promotedAt": "2026-09-24T20:00:00.000Z"
+                },
+                {
+                  "kind": "MEMBER_ACQUISITION",
+                  "memberKey": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+                  "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "httpStatus": 200,
+                  "rawHash": "ac7e981651da582e1bef123d87cdb0d5c45028b623aeb1c076afaeff801d6f3c",
+                  "retrievedAt": "2026-09-24T20:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "normalization": {
+            "succeeded": true,
+            "parserVersion": "meetings-composite/2",
+            "schemaVersion": "MeetingsSnapshot:1",
+            "normalizedHash": "7ce5dba55e0cf05d97948eca9b8ce783849cfa058c4b86f926d3c8dba5b1964b",
+            "normalizedPayloadHash": "7ce5dba55e0cf05d97948eca9b8ce783849cfa058c4b86f926d3c8dba5b1964b",
+            "inputRecords": 1,
+            "outputRecords": 1,
+            "droppedRecords": 0,
+            "missingRequiredFields": []
+          },
+          "identities": [
+            {
+              "subjectId": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "jurisdiction": "US-AZ",
+              "identifiers": {
+                "meeting_id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "body_id": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "source_route": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar"
+              },
+              "matchBasis": "OFFICIAL_ID",
+              "ambiguous": false
+            }
+          ],
+          "temporal": {
+            "version": "2026-09-24T20:30:00.000Z",
+            "expectedVersion": "2026-09-24T20:30:00.000Z",
+            "sourceThrough": "2026-09-24T20:30:00.000Z",
+            "staleAtRetrieval": false
+          },
+          "semantics": {
+            "factKind": "public-body meeting and agenda publication",
+            "violations": []
+          },
+          "horizon": {
+            "kind": "BOUNDED",
+            "query": "derived meeting family US-AZ: 1 reviewed member(s)",
+            "returnedRecords": 1,
+            "declaredTotal": 1,
+            "paginationComplete": true,
+            "claimsComplete": false
+          },
+          "absence": {
+            "claimsAbsence": false,
+            "basis": "NONE",
+            "exactSubject": null,
+            "exactHorizon": null
+          },
+          "dependentChecks": [
+            {
+              "consumer": "lib/meetings/snapshot.ts",
+              "passed": true,
+              "detail": "1 exact meeting rows."
+            },
+            {
+              "consumer": "agenda and Ask",
+              "passed": true,
+              "detail": "0 agenda versions reference a retained meeting."
+            },
+            {
+              "consumer": "derived family US-AZ",
+              "passed": true,
+              "detail": "1 member(s) read, 0 held on their last verified sittings."
+            }
+          ],
+          "normalizedPayload": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T20:30:00.000Z",
+            "counts": {
+              "fresh": 1,
+              "carried": 0,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 1,
+                "normalized": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                },
+                "acquisitions": [
+                  {
+                    "source": "ical",
+                    "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "httpStatus": 200,
+                    "rawHash": "ac7e981651da582e1bef123d87cdb0d5c45028b623aeb1c076afaeff801d6f3c",
+                    "byteCount": 269
+                  }
+                ]
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T20:30:00.000Z",
+                  "verifiedAt": null
+                }
+              }
+            ],
+            "agendaDocuments": [],
+            "derivedMembers": [
+              {
+                "id": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+                "source": "ical",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "status": "ACTIVE",
+                "outcome": "FRESH"
+              }
+            ]
+          },
+          "readModel": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T20:30:00.000Z",
+            "counts": {
+              "fresh": 1,
+              "carried": 0,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 1,
+                "normalized": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                },
+                "acquisitions": [
+                  {
+                    "source": "ical",
+                    "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "httpStatus": 200,
+                    "rawHash": "ac7e981651da582e1bef123d87cdb0d5c45028b623aeb1c076afaeff801d6f3c",
+                    "byteCount": 269
+                  }
+                ]
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T20:30:00.000Z",
+                  "verifiedAt": null
+                }
+              }
+            ],
+            "agendaDocuments": [],
+            "derivedMembers": [
+              {
+                "id": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+                "source": "ical",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "status": "ACTIVE",
+                "outcome": "FRESH"
+              }
+            ]
+          },
+          "removalEvidence": [],
+          "excludedFacts": [],
+          "changeSet": {
+            "outcome": "CHANGED",
+            "added": [
+              {
+                "key": "meeting:ical:derived-az-place-testville-body-housing-commission:h1",
+                "before": null,
+                "after": {
+                  "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                  "ocdId": "ocd-division/country:us/state:az/place:testville",
+                  "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                  "bodyName": "Housing Commission",
+                  "title": "Housing Commission",
+                  "startsAt": "2026-10-08T23:00:00.000Z",
+                  "startPrecision": "MINUTE",
+                  "timeZone": "America/Phoenix",
+                  "location": null,
+                  "venueGap": {
+                    "kind": "NOT_STATED_BY_PUBLISHER",
+                    "publishedText": null,
+                    "publisher": "City of Testville"
+                  },
+                  "agendaUrl": null,
+                  "jurisdiction": "City of Testville",
+                  "status": "SCHEDULED",
+                  "provenance": {
+                    "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "sourceOrg": "City of Testville",
+                    "collectedAt": "2026-09-24T20:30:00.000Z",
+                    "verifiedAt": null
+                  }
+                }
+              }
+            ],
+            "changed": [],
+            "removed": [],
+            "held": []
+          }
+        },
+        "state": "PROMOTED",
+        "acquisitionSucceeded": true,
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+          "sourceId": "meetings-derived-routes",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ",
+          "validatedAt": "2026-09-24T20:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host; derived from 2 named input(s); raw 600c124cffdb1cd2cb95bc18ca6d7873d7dff74fad5df5ae9db1f5b08d1902f4."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T20:30:00.000Z; source through 2026-09-24T20:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, derived family US-AZ, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        },
+        "promotedVersion": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+        "lastKnownGoodVersion": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+        "failureCode": null,
+        "failureDetail": null
+      },
+      "pointer": {
+        "key": "MEETING:source:derived:family:US-AZ",
+        "sourceId": "meetings-derived-routes",
+        "recordClass": "MEETING",
+        "scope": "source:derived:family:US-AZ",
+        "versionId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+        "lastKnownGoodVersionId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+        "promotedAt": "2026-09-24T20:30:00.000Z",
+        "payload": {
+          "formatVersion": 1,
+          "generatedAt": "2026-09-24T20:30:00.000Z",
+          "counts": {
+            "fresh": 1,
+            "carried": 0,
+            "total": 1,
+            "duplicatesCollapsed": 0
+          },
+          "sources": [
+            {
+              "source": "ical",
+              "ok": true,
+              "error": null,
+              "fetched": 1,
+              "normalized": 1,
+              "drops": {
+                "placeless": 0,
+                "unknownVenue": 0,
+                "unplaceableInTime": 0,
+                "notConfigured": 0
+              },
+              "acquisitions": [
+                {
+                  "source": "ical",
+                  "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "httpStatus": 200,
+                  "rawHash": "ac7e981651da582e1bef123d87cdb0d5c45028b623aeb1c076afaeff801d6f3c",
+                  "byteCount": 269
+                }
+              ]
+            }
+          ],
+          "meetings": [
+            {
+              "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "ocdId": "ocd-division/country:us/state:az/place:testville",
+              "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+              "bodyName": "Housing Commission",
+              "title": "Housing Commission",
+              "startsAt": "2026-10-08T23:00:00.000Z",
+              "startPrecision": "MINUTE",
+              "timeZone": "America/Phoenix",
+              "location": null,
+              "venueGap": {
+                "kind": "NOT_STATED_BY_PUBLISHER",
+                "publishedText": null,
+                "publisher": "City of Testville"
+              },
+              "agendaUrl": null,
+              "jurisdiction": "City of Testville",
+              "status": "SCHEDULED",
+              "provenance": {
+                "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                "sourceOrg": "City of Testville",
+                "collectedAt": "2026-09-24T20:30:00.000Z",
+                "verifiedAt": null
+              }
+            }
+          ],
+          "agendaDocuments": [],
+          "derivedMembers": [
+            {
+              "id": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+              "source": "ical",
+              "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+              "status": "ACTIVE",
+              "outcome": "FRESH"
+            }
+          ]
+        },
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+          "sourceId": "meetings-derived-routes",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ",
+          "validatedAt": "2026-09-24T20:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host; derived from 2 named input(s); raw 600c124cffdb1cd2cb95bc18ca6d7873d7dff74fad5df5ae9db1f5b08d1902f4."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T20:30:00.000Z; source through 2026-09-24T20:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, derived family US-AZ, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        }
+      },
+      "events": [
+        {
+          "candidateId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+          "sequence": 1,
+          "state": "FETCHED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Acquired raw 600c124cffdb1cd2cb95bc18ca6d7873d7dff74fad5df5ae9db1f5b08d1902f4."
+        },
+        {
+          "candidateId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+          "sequence": 2,
+          "state": "NORMALIZED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Normalized 1/1 records as 7ce5dba55e0cf05d97948eca9b8ce783849cfa058c4b86f926d3c8dba5b1964b."
+        },
+        {
+          "candidateId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+          "sequence": 3,
+          "state": "VALIDATED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Every applicable GOOD check passed."
+        },
+        {
+          "candidateId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+          "sequence": 4,
+          "state": "PROMOTED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Atomic pointer MEETING:source:derived:family:US-AZ moved from bootstrap/no-version to cv-7a4cbc63ff41f62bee4fbd32ddcad619."
+        }
+      ]
+    },
+    {
+      "record": {
+        "candidate": {
+          "id": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+          "sourceId": "meetings-history",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ:history",
+          "sourceProjectionEvidence": {
+            "kind": "SOURCE_PROJECTION_CONTRACT",
+            "sourceId": "meetings-history",
+            "recordClass": "MEETING",
+            "scope": "source:derived:family:US-AZ:history"
+          },
+          "retrieval": {
+            "succeeded": true,
+            "requestedUrl": "derived:meetings-history:source:derived:family:US-AZ:history",
+            "finalUrl": null,
+            "httpStatus": null,
+            "retrievedAt": "2026-09-24T20:30:00.000Z",
+            "rawHash": "4a14ded7feb7b27c3d3a337450ecc8ae5906c4e0d46899b5f28254a63b8deb13",
+            "derived": {
+              "inputs": [
+                {
+                  "kind": "PROMOTED_VERSION",
+                  "recordClass": "MEETING",
+                  "scope": "source:derived:family:US-AZ",
+                  "versionId": "cv-7a4cbc63ff41f62bee4fbd32ddcad619",
+                  "readModelSha256": "7ce5dba55e0cf05d97948eca9b8ce783849cfa058c4b86f926d3c8dba5b1964b",
+                  "promotedAt": "2026-09-24T20:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "normalization": {
+            "succeeded": true,
+            "parserVersion": "meetings-composite/2",
+            "schemaVersion": "MeetingsSnapshot:1",
+            "normalizedHash": "2b40eae659440c13024c4ccd370415553933c8e7691136d7ff835b1df6023a57",
+            "normalizedPayloadHash": "2b40eae659440c13024c4ccd370415553933c8e7691136d7ff835b1df6023a57",
+            "inputRecords": 1,
+            "outputRecords": 1,
+            "droppedRecords": 0,
+            "missingRequiredFields": []
+          },
+          "identities": [
+            {
+              "subjectId": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "jurisdiction": "US-AZ",
+              "identifiers": {
+                "meeting_id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "body_id": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "source_route": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar"
+              },
+              "matchBasis": "OFFICIAL_ID",
+              "ambiguous": false
+            }
+          ],
+          "temporal": {
+            "version": "2026-09-24T20:30:00.000Z",
+            "expectedVersion": "2026-09-24T20:30:00.000Z",
+            "sourceThrough": "2026-09-24T20:30:00.000Z",
+            "staleAtRetrieval": false
+          },
+          "semantics": {
+            "factKind": "public-body meeting and agenda publication",
+            "violations": []
+          },
+          "horizon": {
+            "kind": "OPEN_FACT_SET",
+            "query": "history of meetings:derived:US-AZ: 1 concluded sitting(s) kept",
+            "returnedRecords": 1,
+            "declaredTotal": null,
+            "paginationComplete": true,
+            "claimsComplete": false
+          },
+          "absence": {
+            "claimsAbsence": false,
+            "basis": "NONE",
+            "exactSubject": null,
+            "exactHorizon": null
+          },
+          "dependentChecks": [
+            {
+              "consumer": "lib/meetings/snapshot.ts",
+              "passed": true,
+              "detail": "1 exact kept sitting rows."
+            },
+            {
+              "consumer": "agenda and Ask",
+              "passed": true,
+              "detail": "0 agenda versions reference a kept sitting."
+            }
+          ],
+          "normalizedPayload": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T20:30:00.000Z",
+            "counts": {
+              "fresh": 0,
+              "carried": 1,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 0,
+                "normalized": 0,
+                "carriedForward": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                }
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T20:30:00.000Z",
+                  "verifiedAt": null
+                },
+                "carried": {
+                  "source": "ical",
+                  "lastFreshAt": "2026-09-24T20:30:00.000Z",
+                  "reason": "OUTSIDE_FETCH_WINDOW"
+                }
+              }
+            ],
+            "agendaDocuments": []
+          },
+          "readModel": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T20:30:00.000Z",
+            "counts": {
+              "fresh": 0,
+              "carried": 1,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 0,
+                "normalized": 0,
+                "carriedForward": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                }
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T20:30:00.000Z",
+                  "verifiedAt": null
+                },
+                "carried": {
+                  "source": "ical",
+                  "lastFreshAt": "2026-09-24T20:30:00.000Z",
+                  "reason": "OUTSIDE_FETCH_WINDOW"
+                }
+              }
+            ],
+            "agendaDocuments": []
+          },
+          "changeSet": {
+            "outcome": "CHANGED",
+            "added": [
+              {
+                "key": "meeting:ical:derived-az-place-testville-body-housing-commission:h1",
+                "before": null,
+                "after": {
+                  "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                  "ocdId": "ocd-division/country:us/state:az/place:testville",
+                  "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                  "bodyName": "Housing Commission",
+                  "title": "Housing Commission",
+                  "startsAt": "2026-10-08T23:00:00.000Z",
+                  "startPrecision": "MINUTE",
+                  "timeZone": "America/Phoenix",
+                  "location": null,
+                  "venueGap": {
+                    "kind": "NOT_STATED_BY_PUBLISHER",
+                    "publishedText": null,
+                    "publisher": "City of Testville"
+                  },
+                  "agendaUrl": null,
+                  "jurisdiction": "City of Testville",
+                  "status": "SCHEDULED",
+                  "provenance": {
+                    "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "sourceOrg": "City of Testville",
+                    "collectedAt": "2026-09-24T20:30:00.000Z",
+                    "verifiedAt": null
+                  },
+                  "carried": {
+                    "source": "ical",
+                    "lastFreshAt": "2026-09-24T20:30:00.000Z",
+                    "reason": "OUTSIDE_FETCH_WINDOW"
+                  }
+                }
+              }
+            ],
+            "changed": [],
+            "removed": [],
+            "held": []
+          }
+        },
+        "state": "PROMOTED",
+        "acquisitionSucceeded": true,
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+          "sourceId": "meetings-history",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ:history",
+          "validatedAt": "2026-09-24T20:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in; derived from 1 named input(s); raw 4a14ded7feb7b27c3d3a337450ecc8ae5906c4e0d46899b5f28254a63b8deb13."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T20:30:00.000Z; source through 2026-09-24T20:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        },
+        "promotedVersion": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+        "lastKnownGoodVersion": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+        "failureCode": null,
+        "failureDetail": null
+      },
+      "pointer": {
+        "key": "MEETING:source:derived:family:US-AZ:history",
+        "sourceId": "meetings-history",
+        "recordClass": "MEETING",
+        "scope": "source:derived:family:US-AZ:history",
+        "versionId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+        "lastKnownGoodVersionId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+        "promotedAt": "2026-09-24T20:30:00.000Z",
+        "payload": {
+          "formatVersion": 1,
+          "generatedAt": "2026-09-24T20:30:00.000Z",
+          "counts": {
+            "fresh": 0,
+            "carried": 1,
+            "total": 1,
+            "duplicatesCollapsed": 0
+          },
+          "sources": [
+            {
+              "source": "ical",
+              "ok": true,
+              "error": null,
+              "fetched": 0,
+              "normalized": 0,
+              "carriedForward": 1,
+              "drops": {
+                "placeless": 0,
+                "unknownVenue": 0,
+                "unplaceableInTime": 0,
+                "notConfigured": 0
+              }
+            }
+          ],
+          "meetings": [
+            {
+              "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "ocdId": "ocd-division/country:us/state:az/place:testville",
+              "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+              "bodyName": "Housing Commission",
+              "title": "Housing Commission",
+              "startsAt": "2026-10-08T23:00:00.000Z",
+              "startPrecision": "MINUTE",
+              "timeZone": "America/Phoenix",
+              "location": null,
+              "venueGap": {
+                "kind": "NOT_STATED_BY_PUBLISHER",
+                "publishedText": null,
+                "publisher": "City of Testville"
+              },
+              "agendaUrl": null,
+              "jurisdiction": "City of Testville",
+              "status": "SCHEDULED",
+              "provenance": {
+                "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                "sourceOrg": "City of Testville",
+                "collectedAt": "2026-09-24T20:30:00.000Z",
+                "verifiedAt": null
+              },
+              "carried": {
+                "source": "ical",
+                "lastFreshAt": "2026-09-24T20:30:00.000Z",
+                "reason": "OUTSIDE_FETCH_WINDOW"
+              }
+            }
+          ],
+          "agendaDocuments": []
+        },
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+          "sourceId": "meetings-history",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ:history",
+          "validatedAt": "2026-09-24T20:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in; derived from 1 named input(s); raw 4a14ded7feb7b27c3d3a337450ecc8ae5906c4e0d46899b5f28254a63b8deb13."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T20:30:00.000Z; source through 2026-09-24T20:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        }
+      },
+      "events": [
+        {
+          "candidateId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+          "sequence": 1,
+          "state": "FETCHED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Acquired raw 4a14ded7feb7b27c3d3a337450ecc8ae5906c4e0d46899b5f28254a63b8deb13."
+        },
+        {
+          "candidateId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+          "sequence": 2,
+          "state": "NORMALIZED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Normalized 1/1 records as 2b40eae659440c13024c4ccd370415553933c8e7691136d7ff835b1df6023a57."
+        },
+        {
+          "candidateId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+          "sequence": 3,
+          "state": "VALIDATED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Every applicable GOOD check passed."
+        },
+        {
+          "candidateId": "cv-7aa0395a624e0dc363be8c5e6a80d5b1",
+          "sequence": 4,
+          "state": "PROMOTED",
+          "at": "2026-09-24T20:30:00.000Z",
+          "detail": "Atomic pointer MEETING:source:derived:family:US-AZ:history moved from bootstrap/no-version to cv-7aa0395a624e0dc363be8c5e6a80d5b1."
+        }
+      ]
+    }
+  ],
+  "laterRows": [
+    {
+      "record": {
+        "state": "PROMOTED",
+        "acquisitionSucceeded": true,
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+          "sourceId": "meetings-derived-routes",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ",
+          "validatedAt": "2026-09-24T21:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host; derived from 2 named input(s); raw 66c0357796bff2da158828eb523bcbe0a4ee3d0cf99b7d4715a979bf46dd427b."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T21:30:00.000Z; source through 2026-09-24T21:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, derived family US-AZ, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        },
+        "promotedVersion": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+        "lastKnownGoodVersion": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+        "failureCode": null,
+        "failureDetail": null,
+        "candidate": {
+          "id": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+          "sourceId": "meetings-derived-routes",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ",
+          "sourceProjectionEvidence": {
+            "kind": "SOURCE_PROJECTION_CONTRACT",
+            "sourceId": "meetings-derived-routes",
+            "recordClass": "MEETING",
+            "scope": "source:derived:family:US-AZ"
+          },
+          "retrieval": {
+            "succeeded": true,
+            "requestedUrl": "derived:meetings-derived-routes:source:derived:family:US-AZ",
+            "finalUrl": null,
+            "httpStatus": null,
+            "retrievedAt": "2026-09-24T21:30:00.000Z",
+            "rawHash": "66c0357796bff2da158828eb523bcbe0a4ee3d0cf99b7d4715a979bf46dd427b",
+            "derived": {
+              "inputs": [
+                {
+                  "kind": "PROMOTED_VERSION",
+                  "recordClass": "CURATED_READER_RECORD",
+                  "scope": "US:meeting-source-wiring",
+                  "versionId": "cv-e3d8e2f8ebe41c8df075b3aca7ba986d",
+                  "readModelSha256": "796325f70f45607d09fbd3b6d9f72d631a087e5b5cf1f73689db7f34c65bb105",
+                  "promotedAt": "2026-09-24T20:00:00.000Z"
+                },
+                {
+                  "kind": "MEMBER_ACQUISITION",
+                  "memberKey": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+                  "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "httpStatus": 200,
+                  "rawHash": "e4b4321a7e468f62c0df2d00adf4769287f9b346a22f48b21bf7775b9351e6e4",
+                  "retrievedAt": "2026-09-24T21:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "normalization": {
+            "succeeded": true,
+            "parserVersion": "meetings-composite/2",
+            "schemaVersion": "MeetingsSnapshot:1",
+            "normalizedHash": "5c2ad9811ac6326ae90231db563e96744d4cc4755a4ca6985063e72f98aabc1a",
+            "normalizedPayloadHash": "5c2ad9811ac6326ae90231db563e96744d4cc4755a4ca6985063e72f98aabc1a",
+            "inputRecords": 1,
+            "outputRecords": 1,
+            "droppedRecords": 0,
+            "missingRequiredFields": []
+          },
+          "identities": [
+            {
+              "subjectId": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "jurisdiction": "US-AZ",
+              "identifiers": {
+                "meeting_id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "body_id": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "source_route": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar"
+              },
+              "matchBasis": "OFFICIAL_ID",
+              "ambiguous": false
+            }
+          ],
+          "temporal": {
+            "version": "2026-09-24T21:30:00.000Z",
+            "expectedVersion": "2026-09-24T21:30:00.000Z",
+            "sourceThrough": "2026-09-24T21:30:00.000Z",
+            "staleAtRetrieval": false
+          },
+          "semantics": {
+            "factKind": "public-body meeting and agenda publication",
+            "violations": []
+          },
+          "horizon": {
+            "kind": "BOUNDED",
+            "query": "derived meeting family US-AZ: 1 reviewed member(s)",
+            "returnedRecords": 1,
+            "declaredTotal": 1,
+            "paginationComplete": true,
+            "claimsComplete": false
+          },
+          "absence": {
+            "claimsAbsence": false,
+            "basis": "NONE",
+            "exactSubject": null,
+            "exactHorizon": null
+          },
+          "dependentChecks": [
+            {
+              "consumer": "lib/meetings/snapshot.ts",
+              "passed": true,
+              "detail": "1 exact meeting rows."
+            },
+            {
+              "consumer": "agenda and Ask",
+              "passed": true,
+              "detail": "0 agenda versions reference a retained meeting."
+            },
+            {
+              "consumer": "derived family US-AZ",
+              "passed": true,
+              "detail": "1 member(s) read, 0 held on their last verified sittings."
+            }
+          ],
+          "normalizedPayload": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T21:30:00.000Z",
+            "counts": {
+              "fresh": 1,
+              "carried": 0,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 1,
+                "normalized": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                },
+                "acquisitions": [
+                  {
+                    "source": "ical",
+                    "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "httpStatus": 200,
+                    "rawHash": "e4b4321a7e468f62c0df2d00adf4769287f9b346a22f48b21bf7775b9351e6e4",
+                    "byteCount": 284
+                  }
+                ]
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission amended agenda",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T21:30:00.000Z",
+                  "verifiedAt": null
+                }
+              }
+            ],
+            "agendaDocuments": [],
+            "derivedMembers": [
+              {
+                "id": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+                "source": "ical",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "status": "ACTIVE",
+                "outcome": "FRESH"
+              }
+            ]
+          },
+          "readModel": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T21:30:00.000Z",
+            "counts": {
+              "fresh": 1,
+              "carried": 0,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 1,
+                "normalized": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                },
+                "acquisitions": [
+                  {
+                    "source": "ical",
+                    "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "httpStatus": 200,
+                    "rawHash": "e4b4321a7e468f62c0df2d00adf4769287f9b346a22f48b21bf7775b9351e6e4",
+                    "byteCount": 284
+                  }
+                ]
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission amended agenda",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T21:30:00.000Z",
+                  "verifiedAt": null
+                }
+              }
+            ],
+            "agendaDocuments": [],
+            "derivedMembers": [
+              {
+                "id": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+                "source": "ical",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "status": "ACTIVE",
+                "outcome": "FRESH"
+              }
+            ]
+          },
+          "removalEvidence": [],
+          "excludedFacts": [],
+          "changeSet": {
+            "outcome": "CHANGED",
+            "added": [],
+            "changed": [
+              {
+                "key": "meeting:ical:derived-az-place-testville-body-housing-commission:h1",
+                "before": {
+                  "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                  "ocdId": "ocd-division/country:us/state:az/place:testville",
+                  "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                  "bodyName": "Housing Commission",
+                  "title": "Housing Commission",
+                  "startsAt": "2026-10-08T23:00:00.000Z",
+                  "startPrecision": "MINUTE",
+                  "timeZone": "America/Phoenix",
+                  "location": null,
+                  "venueGap": {
+                    "kind": "NOT_STATED_BY_PUBLISHER",
+                    "publishedText": null,
+                    "publisher": "City of Testville"
+                  },
+                  "agendaUrl": null,
+                  "jurisdiction": "City of Testville",
+                  "status": "SCHEDULED",
+                  "provenance": {
+                    "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "sourceOrg": "City of Testville",
+                    "collectedAt": "2026-09-24T20:30:00.000Z",
+                    "verifiedAt": null
+                  }
+                },
+                "after": {
+                  "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                  "ocdId": "ocd-division/country:us/state:az/place:testville",
+                  "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                  "bodyName": "Housing Commission",
+                  "title": "Housing Commission amended agenda",
+                  "startsAt": "2026-10-08T23:00:00.000Z",
+                  "startPrecision": "MINUTE",
+                  "timeZone": "America/Phoenix",
+                  "location": null,
+                  "venueGap": {
+                    "kind": "NOT_STATED_BY_PUBLISHER",
+                    "publishedText": null,
+                    "publisher": "City of Testville"
+                  },
+                  "agendaUrl": null,
+                  "jurisdiction": "City of Testville",
+                  "status": "SCHEDULED",
+                  "provenance": {
+                    "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "sourceOrg": "City of Testville",
+                    "collectedAt": "2026-09-24T21:30:00.000Z",
+                    "verifiedAt": null
+                  }
+                }
+              }
+            ],
+            "removed": [],
+            "held": []
+          }
+        }
+      },
+      "pointer": {
+        "key": "MEETING:source:derived:family:US-AZ",
+        "sourceId": "meetings-derived-routes",
+        "recordClass": "MEETING",
+        "scope": "source:derived:family:US-AZ",
+        "versionId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+        "lastKnownGoodVersionId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+        "promotedAt": "2026-09-24T21:30:00.000Z",
+        "payload": {
+          "formatVersion": 1,
+          "generatedAt": "2026-09-24T21:30:00.000Z",
+          "counts": {
+            "fresh": 1,
+            "carried": 0,
+            "total": 1,
+            "duplicatesCollapsed": 0
+          },
+          "sources": [
+            {
+              "source": "ical",
+              "ok": true,
+              "error": null,
+              "fetched": 1,
+              "normalized": 1,
+              "drops": {
+                "placeless": 0,
+                "unknownVenue": 0,
+                "unplaceableInTime": 0,
+                "notConfigured": 0
+              },
+              "acquisitions": [
+                {
+                  "source": "ical",
+                  "requestedUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "finalUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "httpStatus": 200,
+                  "rawHash": "e4b4321a7e468f62c0df2d00adf4769287f9b346a22f48b21bf7775b9351e6e4",
+                  "byteCount": 284
+                }
+              ]
+            }
+          ],
+          "meetings": [
+            {
+              "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "ocdId": "ocd-division/country:us/state:az/place:testville",
+              "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+              "bodyName": "Housing Commission",
+              "title": "Housing Commission amended agenda",
+              "startsAt": "2026-10-08T23:00:00.000Z",
+              "startPrecision": "MINUTE",
+              "timeZone": "America/Phoenix",
+              "location": null,
+              "venueGap": {
+                "kind": "NOT_STATED_BY_PUBLISHER",
+                "publishedText": null,
+                "publisher": "City of Testville"
+              },
+              "agendaUrl": null,
+              "jurisdiction": "City of Testville",
+              "status": "SCHEDULED",
+              "provenance": {
+                "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                "sourceOrg": "City of Testville",
+                "collectedAt": "2026-09-24T21:30:00.000Z",
+                "verifiedAt": null
+              }
+            }
+          ],
+          "agendaDocuments": [],
+          "derivedMembers": [
+            {
+              "id": "ical:ocd-division/country:us/state:az/place:testville#body:housing-commission:a09e062265f1cde4",
+              "source": "ical",
+              "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+              "status": "ACTIVE",
+              "outcome": "FRESH"
+            }
+          ]
+        },
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+          "sourceId": "meetings-derived-routes",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ",
+          "validatedAt": "2026-09-24T21:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host; derived from 2 named input(s); raw 66c0357796bff2da158828eb523bcbe0a4ee3d0cf99b7d4715a979bf46dd427b."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T21:30:00.000Z; source through 2026-09-24T21:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, derived family US-AZ, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        }
+      },
+      "events": [
+        {
+          "candidateId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+          "sequence": 1,
+          "state": "FETCHED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Acquired raw 66c0357796bff2da158828eb523bcbe0a4ee3d0cf99b7d4715a979bf46dd427b."
+        },
+        {
+          "candidateId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+          "sequence": 2,
+          "state": "NORMALIZED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Normalized 1/1 records as 5c2ad9811ac6326ae90231db563e96744d4cc4755a4ca6985063e72f98aabc1a."
+        },
+        {
+          "candidateId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+          "sequence": 3,
+          "state": "VALIDATED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Every applicable GOOD check passed."
+        },
+        {
+          "candidateId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+          "sequence": 4,
+          "state": "PROMOTED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Atomic pointer MEETING:source:derived:family:US-AZ moved from cv-7a4cbc63ff41f62bee4fbd32ddcad619 to cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2."
+        }
+      ]
+    },
+    {
+      "record": {
+        "state": "PROMOTED",
+        "acquisitionSucceeded": true,
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+          "sourceId": "meetings-history",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ:history",
+          "validatedAt": "2026-09-24T21:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in; derived from 1 named input(s); raw 1be77c4776dfddc2e815720fa0ce14266e938c65394ff5d5ac0daeab54c2ede3."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T21:30:00.000Z; source through 2026-09-24T21:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        },
+        "promotedVersion": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+        "lastKnownGoodVersion": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+        "failureCode": null,
+        "failureDetail": null,
+        "candidate": {
+          "id": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+          "sourceId": "meetings-history",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ:history",
+          "sourceProjectionEvidence": {
+            "kind": "SOURCE_PROJECTION_CONTRACT",
+            "sourceId": "meetings-history",
+            "recordClass": "MEETING",
+            "scope": "source:derived:family:US-AZ:history"
+          },
+          "retrieval": {
+            "succeeded": true,
+            "requestedUrl": "derived:meetings-history:source:derived:family:US-AZ:history",
+            "finalUrl": null,
+            "httpStatus": null,
+            "retrievedAt": "2026-09-24T21:30:00.000Z",
+            "rawHash": "1be77c4776dfddc2e815720fa0ce14266e938c65394ff5d5ac0daeab54c2ede3",
+            "derived": {
+              "inputs": [
+                {
+                  "kind": "PROMOTED_VERSION",
+                  "recordClass": "MEETING",
+                  "scope": "source:derived:family:US-AZ",
+                  "versionId": "cv-4cb4d0b1110e9c4b4a8e2ccb9e9d3ad2",
+                  "readModelSha256": "5c2ad9811ac6326ae90231db563e96744d4cc4755a4ca6985063e72f98aabc1a",
+                  "promotedAt": "2026-09-24T21:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "normalization": {
+            "succeeded": true,
+            "parserVersion": "meetings-composite/2",
+            "schemaVersion": "MeetingsSnapshot:1",
+            "normalizedHash": "d0ef3385d7044b645bd3fe73b69e2919b90f457c0952e58d61b9ca2823535a5b",
+            "normalizedPayloadHash": "d0ef3385d7044b645bd3fe73b69e2919b90f457c0952e58d61b9ca2823535a5b",
+            "inputRecords": 1,
+            "outputRecords": 1,
+            "droppedRecords": 0,
+            "missingRequiredFields": []
+          },
+          "identities": [
+            {
+              "subjectId": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "jurisdiction": "US-AZ",
+              "identifiers": {
+                "meeting_id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "body_id": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "source_route": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar"
+              },
+              "matchBasis": "OFFICIAL_ID",
+              "ambiguous": false
+            }
+          ],
+          "temporal": {
+            "version": "2026-09-24T21:30:00.000Z",
+            "expectedVersion": "2026-09-24T21:30:00.000Z",
+            "sourceThrough": "2026-09-24T21:30:00.000Z",
+            "staleAtRetrieval": false
+          },
+          "semantics": {
+            "factKind": "public-body meeting and agenda publication",
+            "violations": []
+          },
+          "horizon": {
+            "kind": "OPEN_FACT_SET",
+            "query": "history of meetings:derived:US-AZ: 1 concluded sitting(s) kept",
+            "returnedRecords": 1,
+            "declaredTotal": null,
+            "paginationComplete": true,
+            "claimsComplete": false
+          },
+          "absence": {
+            "claimsAbsence": false,
+            "basis": "NONE",
+            "exactSubject": null,
+            "exactHorizon": null
+          },
+          "dependentChecks": [
+            {
+              "consumer": "lib/meetings/snapshot.ts",
+              "passed": true,
+              "detail": "1 exact kept sitting rows."
+            },
+            {
+              "consumer": "agenda and Ask",
+              "passed": true,
+              "detail": "0 agenda versions reference a kept sitting."
+            }
+          ],
+          "normalizedPayload": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T21:30:00.000Z",
+            "counts": {
+              "fresh": 0,
+              "carried": 1,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 0,
+                "normalized": 0,
+                "carriedForward": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                }
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission amended agenda",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T21:30:00.000Z",
+                  "verifiedAt": null
+                },
+                "carried": {
+                  "source": "ical",
+                  "lastFreshAt": "2026-09-24T21:30:00.000Z",
+                  "reason": "OUTSIDE_FETCH_WINDOW"
+                }
+              }
+            ],
+            "agendaDocuments": []
+          },
+          "readModel": {
+            "formatVersion": 1,
+            "generatedAt": "2026-09-24T21:30:00.000Z",
+            "counts": {
+              "fresh": 0,
+              "carried": 1,
+              "total": 1,
+              "duplicatesCollapsed": 0
+            },
+            "sources": [
+              {
+                "source": "ical",
+                "ok": true,
+                "error": null,
+                "fetched": 0,
+                "normalized": 0,
+                "carriedForward": 1,
+                "drops": {
+                  "placeless": 0,
+                  "unknownVenue": 0,
+                  "unplaceableInTime": 0,
+                  "notConfigured": 0
+                }
+              }
+            ],
+            "meetings": [
+              {
+                "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                "ocdId": "ocd-division/country:us/state:az/place:testville",
+                "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                "bodyName": "Housing Commission",
+                "title": "Housing Commission amended agenda",
+                "startsAt": "2026-10-08T23:00:00.000Z",
+                "startPrecision": "MINUTE",
+                "timeZone": "America/Phoenix",
+                "location": null,
+                "venueGap": {
+                  "kind": "NOT_STATED_BY_PUBLISHER",
+                  "publishedText": null,
+                  "publisher": "City of Testville"
+                },
+                "agendaUrl": null,
+                "jurisdiction": "City of Testville",
+                "status": "SCHEDULED",
+                "provenance": {
+                  "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                  "sourceOrg": "City of Testville",
+                  "collectedAt": "2026-09-24T21:30:00.000Z",
+                  "verifiedAt": null
+                },
+                "carried": {
+                  "source": "ical",
+                  "lastFreshAt": "2026-09-24T21:30:00.000Z",
+                  "reason": "OUTSIDE_FETCH_WINDOW"
+                }
+              }
+            ],
+            "agendaDocuments": []
+          },
+          "changeSet": {
+            "outcome": "CHANGED",
+            "added": [],
+            "changed": [
+              {
+                "key": "meeting:ical:derived-az-place-testville-body-housing-commission:h1",
+                "before": {
+                  "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                  "ocdId": "ocd-division/country:us/state:az/place:testville",
+                  "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                  "bodyName": "Housing Commission",
+                  "title": "Housing Commission",
+                  "startsAt": "2026-10-08T23:00:00.000Z",
+                  "startPrecision": "MINUTE",
+                  "timeZone": "America/Phoenix",
+                  "location": null,
+                  "venueGap": {
+                    "kind": "NOT_STATED_BY_PUBLISHER",
+                    "publishedText": null,
+                    "publisher": "City of Testville"
+                  },
+                  "agendaUrl": null,
+                  "jurisdiction": "City of Testville",
+                  "status": "SCHEDULED",
+                  "provenance": {
+                    "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "sourceOrg": "City of Testville",
+                    "collectedAt": "2026-09-24T20:30:00.000Z",
+                    "verifiedAt": null
+                  },
+                  "carried": {
+                    "source": "ical",
+                    "lastFreshAt": "2026-09-24T20:30:00.000Z",
+                    "reason": "OUTSIDE_FETCH_WINDOW"
+                  }
+                },
+                "after": {
+                  "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+                  "ocdId": "ocd-division/country:us/state:az/place:testville",
+                  "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+                  "bodyName": "Housing Commission",
+                  "title": "Housing Commission amended agenda",
+                  "startsAt": "2026-10-08T23:00:00.000Z",
+                  "startPrecision": "MINUTE",
+                  "timeZone": "America/Phoenix",
+                  "location": null,
+                  "venueGap": {
+                    "kind": "NOT_STATED_BY_PUBLISHER",
+                    "publishedText": null,
+                    "publisher": "City of Testville"
+                  },
+                  "agendaUrl": null,
+                  "jurisdiction": "City of Testville",
+                  "status": "SCHEDULED",
+                  "provenance": {
+                    "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                    "sourceOrg": "City of Testville",
+                    "collectedAt": "2026-09-24T21:30:00.000Z",
+                    "verifiedAt": null
+                  },
+                  "carried": {
+                    "source": "ical",
+                    "lastFreshAt": "2026-09-24T21:30:00.000Z",
+                    "reason": "OUTSIDE_FETCH_WINDOW"
+                  }
+                }
+              }
+            ],
+            "removed": [],
+            "held": []
+          }
+        }
+      },
+      "pointer": {
+        "key": "MEETING:source:derived:family:US-AZ:history",
+        "sourceId": "meetings-history",
+        "recordClass": "MEETING",
+        "scope": "source:derived:family:US-AZ:history",
+        "versionId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+        "lastKnownGoodVersionId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+        "promotedAt": "2026-09-24T21:30:00.000Z",
+        "payload": {
+          "formatVersion": 1,
+          "generatedAt": "2026-09-24T21:30:00.000Z",
+          "counts": {
+            "fresh": 0,
+            "carried": 1,
+            "total": 1,
+            "duplicatesCollapsed": 0
+          },
+          "sources": [
+            {
+              "source": "ical",
+              "ok": true,
+              "error": null,
+              "fetched": 0,
+              "normalized": 0,
+              "carriedForward": 1,
+              "drops": {
+                "placeless": 0,
+                "unknownVenue": 0,
+                "unplaceableInTime": 0,
+                "notConfigured": 0
+              }
+            }
+          ],
+          "meetings": [
+            {
+              "id": "ical:derived-az-place-testville-body-housing-commission:h1",
+              "ocdId": "ocd-division/country:us/state:az/place:testville",
+              "bodyId": "ocd-division/country:us/state:az/place:testville#body:housing-commission",
+              "bodyName": "Housing Commission",
+              "title": "Housing Commission amended agenda",
+              "startsAt": "2026-10-08T23:00:00.000Z",
+              "startPrecision": "MINUTE",
+              "timeZone": "America/Phoenix",
+              "location": null,
+              "venueGap": {
+                "kind": "NOT_STATED_BY_PUBLISHER",
+                "publishedText": null,
+                "publisher": "City of Testville"
+              },
+              "agendaUrl": null,
+              "jurisdiction": "City of Testville",
+              "status": "SCHEDULED",
+              "provenance": {
+                "sourceUrl": "https://www.testville.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+                "sourceOrg": "City of Testville",
+                "collectedAt": "2026-09-24T21:30:00.000Z",
+                "verifiedAt": null
+              },
+              "carried": {
+                "source": "ical",
+                "lastFreshAt": "2026-09-24T21:30:00.000Z",
+                "reason": "OUTSIDE_FETCH_WINDOW"
+              }
+            }
+          ],
+          "agendaDocuments": []
+        },
+        "receipt": {
+          "contractVersion": 2,
+          "decision": "GOOD",
+          "candidateId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+          "sourceId": "meetings-history",
+          "recordClass": "MEETING",
+          "scope": "source:derived:family:US-AZ:history",
+          "validatedAt": "2026-09-24T21:30:00.000Z",
+          "checks": [
+            {
+              "check": "SOURCE_AUTHENTICITY",
+              "verdict": "PASS",
+              "code": "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID",
+              "detail": "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in; derived from 1 named input(s); raw 1be77c4776dfddc2e815720fa0ce14266e938c65394ff5d5ac0daeab54c2ede3."
+            },
+            {
+              "check": "SCHEMA_PARSE_VALIDITY",
+              "verdict": "PASS",
+              "code": "SCHEMA_AND_DISPOSITION_VALID",
+              "detail": "1/1 records normalized; 0 explicitly dropped."
+            },
+            {
+              "check": "IDENTITY_JURISDICTION_VALIDITY",
+              "verdict": "PASS",
+              "code": "IDENTITY_AND_JURISDICTION_EXACT",
+              "detail": "1 exact identity binding(s); no name-only inheritance."
+            },
+            {
+              "check": "TEMPORAL_VALIDITY",
+              "verdict": "PASS",
+              "code": "TEMPORAL_VERSION_VALID",
+              "detail": "2026-09-24T21:30:00.000Z; source through 2026-09-24T21:30:00.000Z."
+            },
+            {
+              "check": "SEMANTIC_VALIDITY",
+              "verdict": "PASS",
+              "code": "FACT_INTERPRETATION_VALID",
+              "detail": "public-body meeting and agenda publication."
+            },
+            {
+              "check": "COMPLETENESS_HORIZON_VALIDITY",
+              "verdict": "PASS",
+              "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+              "detail": "Valid individual facts may promote; broader completeness remains open."
+            },
+            {
+              "check": "ABSENCE_VALIDITY",
+              "verdict": "PASS",
+              "code": "NO_ABSENCE_CLAIM",
+              "detail": "The projection makes no absence claim."
+            },
+            {
+              "check": "DEPENDENT_READ_MODEL_VALIDITY",
+              "verdict": "PASS",
+              "code": "DEPENDENT_CONSUMERS_ACCEPT",
+              "detail": "lib/meetings/snapshot.ts, agenda and Ask, lib/meetings/snapshot.ts#readMeetingPartitionProjection (source-scoped pre-promotion)"
+            }
+          ],
+          "excludedFacts": []
+        }
+      },
+      "events": [
+        {
+          "candidateId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+          "sequence": 1,
+          "state": "FETCHED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Acquired raw 1be77c4776dfddc2e815720fa0ce14266e938c65394ff5d5ac0daeab54c2ede3."
+        },
+        {
+          "candidateId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+          "sequence": 2,
+          "state": "NORMALIZED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Normalized 1/1 records as d0ef3385d7044b645bd3fe73b69e2919b90f457c0952e58d61b9ca2823535a5b."
+        },
+        {
+          "candidateId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+          "sequence": 3,
+          "state": "VALIDATED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Every applicable GOOD check passed."
+        },
+        {
+          "candidateId": "cv-e84be9469fbbe0a33f39f21d92a3e970",
+          "sequence": 4,
+          "state": "PROMOTED",
+          "at": "2026-09-24T21:30:00.000Z",
+          "detail": "Atomic pointer MEETING:source:derived:family:US-AZ:history moved from cv-7aa0395a624e0dc363be8c5e6a80d5b1 to cv-e84be9469fbbe0a33f39f21d92a3e970."
+        }
+      ]
+    }
+  ]
+}

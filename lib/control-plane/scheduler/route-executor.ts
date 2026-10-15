@@ -1,9 +1,5 @@
-/**
- * The route-aware executor: opens what each `RouteDescriptor` says (GET, POST, or nothing), reusing
- * `http-executor.ts`'s disposition mapping. A response that misses the declared yield contract is ABORTED; a
- * zero row count is a failed extraction, never WALKED_NO_YIELD, except a search query's miss; a route with no client is written
- * REQUIRES_NEW_ADAPTER, which keeps the record owed. No credential value is read or recorded.
- */
+import { fetchSource, runWithSourceFetch } from "../../sources/fetch-source.ts";
+
 
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
@@ -19,7 +15,7 @@ import {
 } from "./http-executor.ts";
 import type { RouteDescriptor, YieldContract } from "./registry.ts";
 import { DEFAULT_USER_AGENT } from "./user-agent.ts";
-import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
+import { websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
 
 const RAN_AS = "DETERMINISTIC" as const;
 
@@ -40,7 +36,7 @@ export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, {
+    const response = await fetchSource(url, {
       method,
       signal: controller.signal,
       redirect: "follow",
@@ -286,14 +282,13 @@ export function routeExecutor(input: {
     };
 
     const websiteSize = input.websiteSize ?? websiteSizeForObligation(obligation.obligation, input.root);
-    if (input.spaceOut && websiteRequestLimit(websiteSize(url.toString())) !== null) await input.spaceOut(url.host);
-    const got = await openOne({
+    const got = await runWithSourceFetch({ websiteSize }, () => openOne({
       url: url.toString(),
       method: route.open.kind === "HTTP_POST" ? "POST" : "GET",
       headers,
       ...(route.open.kind === "HTTP_POST" ? { body: route.open.body } : {}),
       timeoutMs,
-    });
+    }));
 
     const providerFailure = httpProviderFailure(url.toString(), got);
     if (providerFailure !== null && got.status !== 429) {

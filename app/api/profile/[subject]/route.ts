@@ -6,13 +6,17 @@ import { readPrlForSubject } from "@/lib/sources/prl/person";
 import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 
+import { ocdStateCode } from "@/lib/ocd/state-of";
+import { officialStateVoteScopeForOfficeholderId } from "@/lib/state-rollcalls/authority";
+
 export const runtime = "nodejs";
 export async function GET(_request: Request, { params }: { params: Promise<{ subject: string }> }) {
   const subject = decodeURIComponent((await params).subject);
   if (!subject || subject.length > 128) return Response.json({ error: "subject required" }, { status: 400 });
   try {
     const manifest = await readReaderManifest().catch(() => null);
-    const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "federal-directory", "prl-archives"]) : null;
+    const state = ocdStateCode(subject) ?? officialStateVoteScopeForOfficeholderId(subject)?.slice(3);
+    const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "federal-directory", "prl-archives"], state ? [state] : []) : null;
     return await withReaderAuthorityEdge(edge, async () => {
       const [profile, archive] = await Promise.allSettled([
         /^congress:[A-Z]\d{6}$/.test(subject) ? refreshPrlFromPromoted().then(() => prlProfileForSubject(subject)) : Promise.resolve(null),

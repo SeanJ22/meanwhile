@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import nodeTest from "node:test";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
+const test = (name: string, operation: () => void | Promise<void>) => nodeTest(name, () => withSourceTransport(undefined, operation));
 
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
@@ -29,14 +31,15 @@ const quiet = () => ({ now: () => 1_000_000, pacing: memoryWebsitePacing() });
 
 test("dead means gone or not found; a slow or refusing publisher is later, never dead; Retry-After stops that host for the pass", async () => {
   const seen: string[] = [];
-  const fetchFn: SweepFetch = async (url) => {
+  const fetchFn: SweepFetch = async (input) => {
+    const url = String(input);
     seen.push(url);
-    if (url.includes("gone")) return { status: 404 };
-    if (url.includes("moved")) return { status: 200 };
-    if (url.includes("limited-a")) return { status: 429, retryAfter: "120" };
+    if (url.includes("gone")) return new Response(null, { status: 404 });
+    if (url.includes("moved")) return new Response(null, { status: 200 });
+    if (url.includes("limited-a")) return new Response(null, { status: 429, headers: { "retry-after": "120" } });
     if (url.includes("boom")) { const e = new Error("dns") as Error & { code: string }; e.code = "ENOTFOUND"; throw e; }
     if (url.includes("slow")) { const e = new Error("timeout") as Error & { code: string }; e.code = "ETIMEDOUT"; throw e; }
-    return { status: 200 };
+    return new Response(null, { status: 200 });
   };
   const links = ["https://a.example.gov/gone", "https://a.example.gov/moved", "https://b.example.gov/limited-a", "https://b.example.gov/limited-b",
     "https://c.example.gov/boom", "https://d.example.gov/slow"].map((url) => ({ url, surface: "other links" as const }));
@@ -53,7 +56,7 @@ test("dead means gone or not found; a slow or refusing publisher is later, never
 
 test("a small local government gets ten requests in a pass and the rest wait; a large publisher is read in full", async () => {
   let requests = 0;
-  const fetchFn: SweepFetch = async () => { requests += 1; return { status: 200 }; };
+  const fetchFn: SweepFetch = async () => { requests += 1; return new Response(null, { status: 200 }); };
   const links = Array.from({ length: 25 }, (_, i) => ({ url: `https://town.example.gov/p${i}`, surface: "other links" as const }))
     .concat(Array.from({ length: 25 }, (_, i) => ({ url: `https://state.example.gov/p${i}`, surface: "other links" as const })));
   const sizeFor = (url: string) => new URL(url).hostname === "town.example.gov" ? { kind: "local-government" as const, population: 800 } : { kind: "state" as const };
@@ -79,7 +82,8 @@ test("the sweep shares each website's hour and its holds with every other reader
     .concat([{ url: "https://busy.example.gov/a", surface: "other links" as const }]);
   const sizeFor = (url: string) => url.includes("town") ? { kind: "local-government" as const, population: 800 } : { kind: "state" as const };
   const seen: string[] = [];
-  const results = await sweepLinks(links, { now: () => 1_000_000, pacing, sizeFor, fetchFn: async (url) => { seen.push(url); return { status: 200 }; } });
+  const results = await sweepLinks(links, { now: () => 1_000_000, pacing, sizeFor, fetchFn: async (input) => {
+    const url = String(input); seen.push(url); return new Response(null, { status: 200 }); } });
   assert.equal(results.filter((r) => r.url.includes("town") && r.verdict === "OK").length, 4, "another reader's six requests leave four");
   assert.equal(results.find((r) => r.url.includes("busy"))!.verdict, "LATER");
   assert.equal(seen.some((u) => u.includes("busy")), false, "a website another reader was asked to leave alone is not asked");
@@ -87,7 +91,7 @@ test("the sweep shares each website's hour and its holds with every other reader
 
 test("a server that refuses HEAD gets one GET before the link is judged", async () => {
   const methods: string[] = [];
-  const fetchFn: SweepFetch = async (_url, method) => { methods.push(method); return { status: method === "HEAD" ? 405 : 200 }; };
+  const fetchFn: SweepFetch = async (_url, init) => { const method = init?.method ?? "GET"; methods.push(method); return new Response(null, { status: method === "HEAD" ? 405 : 200 }); };
   const [r] = await sweepLinks([{ url: "https://x.example.gov/a", surface: "other links" }], { ...quiet(), fetchFn });
   assert.equal(r!.verdict, "OK");
   assert.deepEqual(methods, ["HEAD", "GET"]);
@@ -95,7 +99,7 @@ test("a server that refuses HEAD gets one GET before the link is judged", async 
 
 test("the sweep is kept beside door health, one record per surface, zero where nothing was found", async () => {
   const repos = createMemoryRepositories();
-  const results = await sweepLinks(collectOutboundLinks([edge]), { ...quiet(), fetchFn: async (u) => ({ status: u.endsWith(".pdf") ? 404 : 200 }) });
+  const results = await sweepLinks(collectOutboundLinks([edge]), { ...quiet(), fetchFn: async (u) => new Response(null, { status: String(u).endsWith(".pdf") ? 404 : 200 }) });
   const summaries = await recordSweep(repos.doors, results, "2026-10-04T12:00:00.000Z");
   assert.equal(summaries.find((s) => s.surface === "agenda PDFs")!.dead, 1);
   const doors = (await listDoors(repos.doors)).doors.filter((d) => d.kind === "link-sweep");

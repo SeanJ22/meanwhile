@@ -5,7 +5,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { fixItems } from "../lib/control-plane/fix-list.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { applyManualEdit, checkDoorDraft, isDoorRecord } from "../lib/doors/registry.ts";
-import { evidenceFromCandidate, evidenceFromFamilyRead, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
+import { evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence } from "../lib/doors/shut.ts";
 
 const T = (h: number) => `2026-10-06T${String(10 + h).padStart(2, "0")}:00:00.000Z`;
@@ -40,14 +40,6 @@ describe("DB-32/34 connection: what a read tells its door", () => {
     assert.deepEqual(evidenceFromCandidate({ acquisitionSucceeded: false, failureCode: "SOURCE_RETRIEVAL_FAILED", failureDetail: "the request did not complete" }), { kind: "TRANSPORT_FAILURE" });
     assert.equal(evidenceFromCandidate({ acquisitionSucceeded: false, failureCode: "PUBLISHER_DOCUMENT_INVALID", failureDetail: null })?.kind, "PARSE_FAILURE");
     assert.equal(evidenceFromCandidate({ acquisitionSucceeded: true, failureCode: "ZERO_IS_NOT_ABSENCE", failureDetail: "no rows" }), null);
-  });
-
-  it("a family member: sittings read is good, a 404 is the door's, a clean empty read says nothing", () => {
-    const read = (over: object) => ({ ok: true, error: null, acquisitions: [], freshMeetings: [{}, {}], ...over });
-    assert.deepEqual(evidenceFromFamilyRead(read({})), { kind: "GOOD", rows: 2 });
-    assert.equal(evidenceFromFamilyRead(read({ freshMeetings: [] })), null);
-    assert.deepEqual(evidenceFromFamilyRead(read({ ok: false, error: "x", acquisitions: [{ httpStatus: 200 }, { httpStatus: 404 }] })), { kind: "HTTP", httpStatus: 404 });
-    assert.deepEqual(evidenceFromFamilyRead(read({ ok: false, error: "timed out" })), { kind: "TRANSPORT_FAILURE" });
   });
 
   it("a 404 shuts the door and opens one fix item; a promoted read reopens it and completes the item", async () => {

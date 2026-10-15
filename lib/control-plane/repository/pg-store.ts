@@ -1,4 +1,4 @@
-import type { BoxFinding } from "../box.ts";
+import { BOX_PUBLICATION_STATE_SQL, boxFindingState, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
@@ -569,11 +569,7 @@ export function pgAppendOnlyRepository<T>(
 
   return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
-      /*
-       * The position is allocated by the position-allocator table, never computed as MAX+1 (which races under
-       * READ COMMITTED). The idempotency probe runs first, so a retry keeps its position. Positions may have
-       * gaps under contention: position is an order key, never a count.
-       */
+
       const already = (await run(
         "append:probe",
         recordClass,
@@ -959,11 +955,7 @@ export async function pgEnsureOnlineIndex(
   }
 }
 
-/**
- * Keep ordinary bootstrap on bounded HTTP and record the version only after
- * every statement succeeds. Online index creation/recovery alone needs a pinned
- * autocommit connection and a session lock, never a transaction.
- */
+
 export async function bootstrap(
   sql: Sql,
   nowIso: string,
@@ -1009,11 +1001,7 @@ export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
   ];
 }
 
-/**
- * The field manual's rows in `cp_field_manual_entries`. On the runner a slice is the held copy filtered by
- * `entryInSlice`, so a process pays only for rows changed since the copy's clock; without a copy (a page host or
- * a hand-run script) the slice crosses the wire one page at a time.
- */
+
 export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
   const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
   const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1133,10 +1121,22 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
 /** The caller passes the connection string; `fromEnv` is the one place the variable is read. */
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
-/** Reconcile all subjects in one place against one indexed query, rather
- * than opening a serverless connection for every field's subject. The filter is
- * the exact expression of `cp_work_items_subject` (`#>> '{subject}'`): `->>`
- * does not match that index and scanned the whole table. */
+
+export async function readBoxPublicationFindings(repos: ControlPlaneRepositories, state: string, slots: string, now: string, since: string, limit: number): Promise<readonly BoxFinding[]> {
+  const sql = placeReadConnections.get(repos);
+  if (!Number.isSafeInteger(limit) || limit < 1) throw new Error("BOX_PUBLICATION_LIMIT_INVALID");
+  if (!sql) return (await repos.boxFindings.list()).map(row => row.value).filter(row => boxFindingState(row) === state &&
+    ((row.state === "waiting" && row.waitingFor?.slots !== slots) || (row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now)) &&
+    row.origins.some(origin => origin.recordedAt >= since)).slice(0, limit);
+  const run = boundedRunner(sql, "cp_box_findings", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("publicationPage", "PAGE", `SELECT value FROM cp_box_findings WHERE ${BOX_PUBLICATION_STATE_SQL} = $1
+    AND ((value->>'state' = 'waiting' AND coalesce(value #>> '{waitingFor,slots}', '') <> $2)
+      OR (value->>'state' = 'taken' AND value #>> '{claim,expiresAt}' <= $3))
+    AND EXISTS (SELECT 1 FROM jsonb_array_elements(value->'origins') origin WHERE origin->>'recordedAt' >= $4)
+    ORDER BY id LIMIT $5`, [state, slots, now, since, limit]) as Record<string, unknown>[];
+  return rows.map(row => parseValue<BoxFinding>(row.value, "publication finding"));
+}
+
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
   if (!subjects.length) return [];
   const ids = [...new Set(subjects)];
@@ -1182,10 +1182,7 @@ export async function createPgRepositories(
   options: {
     /** Pages never own the schema: skip the bootstrap, and a schema that is behind reads as STORE_UNREACHABLE. */
     readonly skipBootstrap?: boolean;
-    /**
-     * Override the per-class request bounds (request-bounds.ts). Tests shrink
-     * them; production uses the measured defaults. No call is ever unbounded.
-     */
+
     readonly requestBounds?: Partial<ControlPlaneRequestBounds>;
   } = {},
 ): Promise<ControlPlaneRepositories> {
@@ -1236,9 +1233,6 @@ export async function createPgRepositories(
   const sharedBudget = budgetRepositoryFrom(
     pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded), locks, "ATOMIC_COMPARE_AND_SET",
   );
-  // One process need not contend with its own read/modify/write requests on
-  // this large aggregate. Other processes still contend through the same CAS.
-  // This queues accounting writes only; workers and their leases run in parallel.
   let budgetWrite: Promise<unknown> = Promise.resolve();
   const budget: ControlPlaneRepositories["budget"] = { ...sharedBudget, mutate: (mutator, now) => {
     const write = budgetWrite.then(() => sharedBudget.mutate(mutator, now));

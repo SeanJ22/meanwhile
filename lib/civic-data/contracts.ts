@@ -56,11 +56,6 @@ export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   readerConsumers: ["/ballot", "body and office cards", "meeting cards", "Ask"],
 } as const;
 
-/**
- * Whether a body has a sitting within the window of `nowMs`, from its
- * partitions' sitting starts. `undefined` means it cannot be told: a sitting
- * list could not be read.
- */
 export function sittingWindowHot(
   schedule: SittingWindowSchedule,
   sittingLists: readonly (readonly string[] | undefined)[],
@@ -84,12 +79,6 @@ export function sittingWindowRereadMs(schedule: SittingWindowSchedule, hot: bool
   return hot === false ? schedule.baseEveryMs : schedule.hotEveryMs;
 }
 
-/**
- * The instant a succeeded sitting-window task falls due: one re-read interval
- * after its store-observed success, less one admission pass, so "hourly" is
- * at most an hour and never drifts later pass by pass. The runner admits on it
- * and Admin shows it, so the owner sees the instant the runner acts on.
- */
 export function sittingWindowDueAtMs(
   schedule: SittingWindowSchedule,
   succeededMs: number,
@@ -135,12 +124,7 @@ export interface RoutineSourceContract {
   readonly autoPromotable: boolean;
   /** Zero keeps finite standing work alive; its individual requests still have transport deadlines. */
   readonly childTimeoutMs?: number;
-  /**
-   * A fan-out contract owns a scope family: its clock marker at `scope`
-   * plus bounded member or session candidates under `<sourceId>:`. The
-   * runner still enumerates and clocks exactly this one contract; the family
-   * lives inside the acquisition child. Verification stays per-contract.
-   */
+
   readonly fanOut?: boolean;
   readonly classification: RoutineDataClassification;
   /** Bundled inputs are seed/test material only; never a store-error fallback. */
@@ -150,9 +134,8 @@ export interface RoutineSourceContract {
 const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_promotions" as const;
 const CHECKS = VALIDATION_CHECKS;
 const MEETING_CADENCE: RoutineCadencePolicy = {
-  description: "daily through the 2026 general election, then weekly",
-  defaultEveryMs: 7 * DAY,
-  phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: DAY, description: "daily through 2026-11-03" }],
+  description: "twice daily, hourly for bodies inside the sitting window",
+  defaultEveryMs: 12 * HOUR,
 };
 
 export const MEETING_PARTITION_POLICY = {
@@ -170,31 +153,6 @@ export const MEETING_PARTITION_POLICY = {
   readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
 } as const;
 
-export const DERIVED_MEETING_FAMILY_STATES: readonly DerivedMeetingFamilyState[] = REGISTRATION_TARGETS.map(
-  (target) => target.jurisdiction as DerivedMeetingFamilyState,
-);
-export type DerivedMeetingFamilyState = `US-${string}`;
-
-export const DERIVED_MEETING_FAMILY_POLICY = {
-  sourceId: "meetings-derived-routes",
-  recordClass: "MEETING",
-  parserNormalizerVersion: "meetings-composite/2",
-  cadence: MEETING_CADENCE,
-  schedule: MEETING_SITTING_WINDOW,
-  retry: { afterMs: 6 * HOUR, description: "six hours after a failed family attempt; a family with no member yet holds, and says so" },
-  authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meetings-derived-routes" },
-  validationContract: CHECKS,
-  canonicalProductionStore: STORE,
-  autoPromotable: true,
-  classification: "RUNTIME_CIVIC_DATA",
-  readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
-} as const;
-
-/**
- * The single membership and lifecycle registry for every routine supported
- * production source. The runner and Admin derive from this array; workflows do
- * not schedule these contracts and no second cadence table may repeat them.
- */
 export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   {
     id: "fec-funding",
@@ -532,25 +490,6 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "meeting-body-crosswalk-derived", consumers: ["derived meeting-source wiring", "Admin"] },
     lkgBehavior: "A version with a malformed row, a conflicting pair, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD rows live; an accepted row is never dropped, and an outage or an absent walk carries it exactly as it was.",
-    autoPromotable: true,
-    classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [],
-  },
-  {
-    id: "meeting-doors",
-    sourceId: "meeting-doors",
-    recordClass: "CURATED_READER_RECORD",
-    scope: "US:meeting-doors",
-    acquisitionFailureDomain: "derived:meeting-doors",
-    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/publish-meeting-doors.mts", "--promote"] },
-    parserNormalizerVersion: "meeting-doors/1",
-    cadence: { description: "at the start of every routine pass, before any meeting door is read", defaultEveryMs: ROUTINE_DATA_ADMISSION_MS },
-    retry: { afterMs: ROUTINE_DATA_ADMISSION_MS, description: "the next routine pass" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-doors" },
-    validationContract: CHECKS,
-    canonicalProductionStore: STORE,
-    readerProjection: { id: "meeting-doors", consumers: ["meeting partitions", "the Reader's covered bodies", "agenda reads", "Admin"] },
-    lkgBehavior: "A version with no door, a malformed door or an input the door cannot vouch for is refused and the prior GOOD doors stay in use; an unchanged registry re-confirms the version it already points at.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],

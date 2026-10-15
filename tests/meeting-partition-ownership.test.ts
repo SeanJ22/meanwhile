@@ -63,7 +63,7 @@ test("later Admin scopes reuse readings and load each newly reached state once",
   assert.equal(owner.ownerOf("az:a"), "UNKNOWN");
   await owner.readStates(["AZ", "az"]);
   await owner.readStates(["az", "oh"]);
-  assert.equal(wiringReads, 1);
+  assert.equal(wiringReads, 2);
   assert.deepEqual(states, ["az", "oh"]);
   assert.equal(owner.ownerOf("az:a"), "NONE");
   assert.equal(owner.ownerOf("oh:a"), "NONE");

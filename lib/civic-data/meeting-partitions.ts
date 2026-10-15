@@ -5,11 +5,8 @@ import {
   type BodySourceWiring,
 } from "../registry/source-wiring.ts";
 import {
-  DERIVED_MEETING_FAMILY_POLICY,
-  DERIVED_MEETING_FAMILY_STATES,
   MEETING_PARTITION_POLICY,
   ROUTINE_SOURCE_CONTRACTS,
-  type DerivedMeetingFamilyState,
   type RoutineSourceContract,
 } from "./contracts.ts";
 
@@ -27,18 +24,8 @@ export interface MeetingPartitionContract extends RoutineSourceContract {
   readonly bodyId: string;
   readonly ocdId: string | null;
   readonly wiring: BodySourceWiring | null;
-  readonly derivedFamily: DerivedMeetingFamilyState | null;
   readonly historyOf?: string;
-}
-
-export const DERIVED_FAMILY_SOURCE = "derived";
-
-export function derivedMeetingFamilyId(state: DerivedMeetingFamilyState): string {
-  return `meetings:${DERIVED_FAMILY_SOURCE}:${state}`;
-}
-
-export function derivedMeetingFamilyScope(state: DerivedMeetingFamilyState): string {
-  return `source:${DERIVED_FAMILY_SOURCE}:family:${state}`;
+  readonly suspended?: true;
 }
 
 export function meetingPartitionScope(sourceName: string, bodyId: string): string {
@@ -54,10 +41,6 @@ export function meetingPartitionOfId(id: string): { readonly source: string; rea
   const named = /^meetings:([^:]+):(.+)$/.exec(id);
   if (named === null) return null;
   const [, source, rest] = named as unknown as [string, string, string];
-  if (source === DERIVED_FAMILY_SOURCE) {
-    const state = rest as DerivedMeetingFamilyState;
-    return { source, bodyId: `derived-family:${state}`, scope: derivedMeetingFamilyScope(state) };
-  }
   let bodyId: string;
   try {
     bodyId = decodeURIComponent(rest);
@@ -156,12 +139,11 @@ export function meetingRoutePartition(
     bodyId,
     ocdId: door.ocdId,
     wiring: door.wiring,
-    derivedFamily: null,
   };
 }
 
 /** A door that could not be built into work is left out with its reason; the other doors are not held back by it. */
-function buildMeetingPartitions(wirings: readonly BodySourceWiring[], skipped: string[] = []): MeetingPartitionContract[] {
+export function buildMeetingPartitions(wirings: readonly BodySourceWiring[], skipped: string[] = []): MeetingPartitionContract[] {
   const doorPartitions = (wiring: BodySourceWiring): MeetingPartitionContract[] =>
     meetingSourceNamesForWiring(wiring).map((meetingSource) => meetingRoutePartition(meetingSource, wiring.bodyId, {
       wiring,
@@ -174,45 +156,16 @@ function buildMeetingPartitions(wirings: readonly BodySourceWiring[], skipped: s
   for (const wiring of wirings) {
     try {
       const built = doorPartitions(wiring);
-      const clash = built.find((partition) => ids.has(partition.id) || scopes.has(partition.scope));
-      if (clash) throw new Error(`MEETING_PARTITION_COLLISION:${clash.id}:${clash.scope}`);
       for (const partition of built) {
+        if (ids.has(partition.id)) continue;
+        if (scopes.has(partition.scope)) throw new Error(`MEETING_PARTITION_COLLISION:${partition.id}:${partition.scope}`);
         ids.add(partition.id);
         scopes.add(partition.scope);
+        partitions.push(partition);
       }
-      partitions.push(...built);
     } catch (error) {
       skipped.push(`${wiring.bodyId} (${wiring.agendaSourceType}): ${error instanceof Error ? error.message : String(error)}`);
     }
-  }
-  const { readerConsumers: familyConsumers, ...familyPolicy } = DERIVED_MEETING_FAMILY_POLICY;
-  for (const state of DERIVED_MEETING_FAMILY_STATES) {
-    const id = derivedMeetingFamilyId(state);
-    partitions.push({
-      ...familyPolicy,
-      id,
-      scope: derivedMeetingFamilyScope(state),
-      acquisitionAdapter: {
-        authorityMode: "DERIVED" as const,
-        command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${id}`],
-      },
-      readerProjection: { id: `meetings-partition:${DERIVED_FAMILY_SOURCE}:${state}`, consumers: familyConsumers },
-      lkgBehavior:
-        `Only the ${state} derived family may move this pointer. A failed or suspended member keeps its own last verified sittings; ` +
-        "an unreadable wiring store refuses the family's candidate and leaves its prior GOOD version live.",
-      bootstrapFixturePaths: [],
-      meetingSource: DERIVED_FAMILY_SOURCE,
-      acquisitionFailureDomain: `derived-family:${state}`,
-      bodyId: `derived-family:${state}`,
-      ocdId: null,
-      wiring: null,
-      derivedFamily: state,
-    });
-  }
-  for (const partition of partitions.filter((p) => p.derivedFamily !== null)) {
-    if (ids.has(partition.id) || scopes.has(partition.scope)) throw new Error(`MEETING_PARTITION_COLLISION:${partition.id}:${partition.scope}`);
-    ids.add(partition.id);
-    scopes.add(partition.scope);
   }
   return partitions;
 }
@@ -274,8 +227,14 @@ export function heldMeetingPartitionFor(successorId: string): HeldMeetingPartiti
 function buildSittingWindowSources(contracts: readonly MeetingPartitionContract[]): Map<string, readonly string[]> {
   const registered = new Set(contracts.map((partition) => partition.id));
   const sources = new Map<string, readonly string[]>();
+  const bodies = new Map<string, string[]>();
   for (const partition of contracts) {
-    if (partition.schedule?.kind === "SITTING_WINDOW") sources.set(partition.id, [partition.id]);
+    const ids = bodies.get(partition.bodyId) ?? [];
+    ids.push(partition.id);
+    bodies.set(partition.bodyId, ids);
+  }
+  for (const partition of contracts) {
+    if (partition.schedule?.kind === "SITTING_WINDOW") sources.set(partition.id, bodies.get(partition.bodyId)!);
   }
   for (const contract of ROUTINE_SOURCE_CONTRACTS) {
     if (contract.schedule?.kind !== "SITTING_WINDOW") continue;
@@ -307,10 +266,10 @@ export function onMeetingPartitionsRefreshed(listener: () => void): void {
 }
 
 /** All lists are built first and swapped in only if every check passes; otherwise the last good lists stay. */
-export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = activeWiring()): MeetingPartitionRefresh {
+export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = activeWiring(), suspended: ReadonlySet<string> = new Set()): MeetingPartitionRefresh {
   const skipped: string[] = [];
   try {
-    const contracts = buildMeetingPartitions(wirings, skipped);
+    const contracts = buildMeetingPartitions(wirings, skipped).map(partition => suspended.has(partition.id) ? { ...partition, suspended: true as const } : partition);
     const held = buildHeldMeetingPartitions(contracts);
     const sources = buildSittingWindowSources(contracts);
     MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...contracts);
@@ -392,7 +351,6 @@ export function meetingHistoryContract(partition: MeetingPartitionContract): Mee
       consumers: ["Ask", "/api/agenda"],
     },
     lkgBehavior: `Only ${partition.id} may move this pointer, and only by adding sittings that left its live partition. History is never removed or replaced by an older version.`,
-    derivedFamily: null,
     historyOf: partition.id,
   };
   historyContracts.set(partition, contract);

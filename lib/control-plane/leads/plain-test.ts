@@ -1,17 +1,5 @@
-/**
- * The runner's pass over open research-leads orders: each queued link is read
- * once by plain code (`researchFetch`: robots.txt read and recorded first,
- * never a block), through the runner's guarded fetch, so its requests count
- * in the same per-website pacing as every other reader: a known small
- * publisher's hourly allowance, and the hold after a 429, a 5xx or a
- * Retry-After. A link held back by pacing waits for its turn.
- *
- * A link that reads is saved as a lesson with the owner as its source, tied to
- * its place and platform, so the spread pass carries it to places with the
- * same kind of website. A link plain code is turned away from goes to paid
- * workers only when its place is inside a Send or a funded area; anywhere else
- * it fails with the reason.
- */
+import { fetchSource } from "../../sources/fetch-source.ts";
+
 
 import { newFieldManualEntry, writeFieldManual, type FieldManualEntry } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -69,7 +57,7 @@ export function insideSentPlace(place: string | null, sent: ReadonlySet<string>)
 const hostOf = (url: string): string => new URL(url).host.toLowerCase();
 
 /** The runner's guarded fetch as the research reader takes it: every request, robots.txt included, is paced with every other reader's. */
-export function guardedLeadGet(safety: Pick<FleetSafetyController, "guardedOpenBytes">, fetchImpl: typeof fetch = fetch): ResearchGet {
+export function guardedLeadGet(safety: Pick<FleetSafetyController, "guardedOpenBytes">, fetchImpl: typeof fetch = fetchSource): ResearchGet {
   const opened = safety.guardedOpenBytes("public-web", "research-leads", fetchImpl, { followRedirects: false });
   return async ({ url, headers, timeoutMs }) => {
     const got = await opened({ url, headers, timeoutMs });

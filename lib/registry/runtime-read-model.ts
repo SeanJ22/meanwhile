@@ -102,3 +102,14 @@ export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
 export function getRuntimeBodyRosters(): readonly BodyRoster[] {
   return getRegistryRuntimeReadModel().bodyRosters;
 }
+
+export async function installMeetingRegistryProjection(registry: import("./types.ts").Registry, versionId: string,
+  query: import("../facts/publish.ts").Query): Promise<void> {
+  cache = await withFactRegistry({ formatVersion: 1, registry, statewideExecutives: [],
+    officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] },
+    officialPhotos: { photos: [] }, rosterPhotos: {} }, query);
+  readState = { kind: "BOOTSTRAP", value: cache, detail: "Meeting dependencies from the promoted member index.",
+    metadata: { recordClass: "REGISTRY_RUNTIME_BINDING", scope: registry.bodies[0]?.id ?? REGISTRY_RUNTIME_SCOPE,
+      sourceId: REGISTRY_RUNTIME_SOURCE_ID, version: null, versionId, lastKnownGoodVersionId: versionId,
+      sourceThrough: null, retrievedAt: null, promotedAt: null, stale: "CURRENT", staleAt: null } };
+}

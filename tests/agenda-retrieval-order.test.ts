@@ -1,6 +1,7 @@
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { after, test } from "node:test";
+import { test } from "node:test";
 
 import {
   AgendaDocumentStore,
@@ -18,18 +19,8 @@ import {
   seedHeldAgendaDocuments,
 } from "../scripts/ingest.ts";
 
-/**
- * "Latest" means latest, and a link never read is read first:
- * - held rows are compared in read order, so re-reading the same words stores nothing new;
- * - a sitting holding versions only from an old link does not outrank one never read, and a notice
- *   page shared by several sittings is read once.
- * Held rows are recorded in tests/fixtures/diligent/susd-167-held-rows.json. No live call is made.
- */
 
-const realFetch = globalThis.fetch;
-after(() => {
-  globalThis.fetch = realFetch;
-});
+
 
 interface HeldRowsFixture {
   readonly shared: Omit<AgendaDocument, "id" | "retrievedAt" | "contentHash" | "text" | "collectedAt">;
@@ -229,7 +220,7 @@ test("one run reads every link once, new links first and the shared notice page 
   const meetings = tucsonUnified("run:", agendaDocumentStore);
   const requested: string[] = [];
   const pdf = readFileSync("tests/fixtures/tusd-govboard/board-actions-2026-09-22.pdf");
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
+  const transport = (async (input: RequestInfo | URL) => {
     const url = String(input instanceof Request ? input.url : input);
     requested.push(url);
     return url.endsWith(".pdf")
@@ -240,10 +231,7 @@ test("one run reads every link once, new links first and the shared notice page 
       });
   }) as typeof fetch;
 
-  // No per-run cap: every distinct link is read, each exactly once. The six
-  // Board Actions links never read go first, then the re-reads, and the notice
-  // page the eight sittings 495 and the unlinked seven share is read once, last.
-  await retrieveAgendas(meetings);
+  await withSourceTransport(transport, () => retrieveAgendas(meetings));
   assert.deepEqual(
     requested,
     [
@@ -261,11 +249,8 @@ test("one run reads every link once, new links first and the shared notice page 
     );
   }
 
-  // Every sitting now holds its own link: the second run re-reads every
-  // distinct link once, nearest today first, and the notice page once for all
-  // eight sittings that share it.
   requested.length = 0;
-  await retrieveAgendas(meetings);
+  await withSourceTransport(transport, () => retrieveAgendas(meetings));
   assert.equal(new Set(requested).size, requested.length, "one run read a link twice");
   assert.deepEqual(
     [...requested].sort(),

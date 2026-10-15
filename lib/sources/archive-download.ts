@@ -1,3 +1,4 @@
+import { fetchSource } from "./fetch-source.ts";
 import { createHash } from "node:crypto";
 import { createReadStream, createWriteStream } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -29,7 +30,7 @@ interface HeldSource {
   retrievedAt: string; etag: string | null; lastModified: string | null; chunks: string[];
 }
 
-export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl: typeof fetch = fetch,
+export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl: typeof fetch = fetchSource,
   archive?: ArchiveObjectStore, reuseIfSha256?: string): Promise<ArchiveSourceOpen> {
   const root = await mkdtemp(join(tmpdir(), "prl-source-"));
   const path = join(root, "source");
@@ -57,15 +58,15 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
       response = null;
     }
     const checkedAt = response ? new Date().toISOString() : held!.retrievedAt;
-    const lastCheckStatus = response?.status ?? 200;
+    const lastCheckStatus = Number(response?.headers.get("x-meanwhile-source-status") ?? response?.status ?? 200);
     if (response?.status === 206) throw new Error("PRL_SOURCE_TRUNCATED");
-    if (response?.status === 304 && held && held.sha256 === reuseIfSha256) {
+    if (lastCheckStatus === 304 && held && held.sha256 === reuseIfSha256) {
       return { textChunks: (async function* () {})(), sourceSha256: held.sha256, finalUrl: held.finalUrl,
-        member: dataset.file, publishedAt: held.lastModified ? new Date(held.lastModified).toISOString() : null, retrievedAt: held.retrievedAt, checkedAt, lastCheckStatus: response.status, byteLength: held.bytes, unchanged: true, dispose };
+        member: dataset.file, publishedAt: held.lastModified ? new Date(held.lastModified).toISOString() : null, retrievedAt: held.retrievedAt, checkedAt, lastCheckStatus, byteLength: held.bytes, unchanged: true, dispose };
     }
     const hash = createHash("sha256");
     let size = 0, source: HeldSource;
-    if ((!response || response.status === 304) && held && archive) {
+    if ((!response || lastCheckStatus === 304) && held && archive) {
       const sourceChunks = held.chunks;
       async function* restoredChunks() {
         for (const key of sourceChunks) {

@@ -1,17 +1,13 @@
-import { execFile } from "node:child_process";
+import { spawn } from "node:child_process";
 
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { VITAL_SIGNS_LINE_PREFIX } from "../db/transfer-by-caller.ts";
 
 /** Maximum quiet interval; each new source publication renews it. Never a child wall. */
 export const ROUTINE_CHILD_TIMEOUT_MS = 30 * 60_000;
-/** `execFile` applies this cap independently to stdout and stderr. */
+/** Each retained output stream has its own cap. */
 export const ROUTINE_CHILD_MAX_BUFFER_BYTES = 16 * 1024 * 1024;
-/**
- * Four children bound worst-case buffered stdio to 128 MiB plus their Node
- * heaps. This is deliberately conservative for the standing owner host while
- * still isolating independent source/body acquisitions in parallel.
- */
+/** Four processes bound retained stdio to 128 MiB plus their measured heaps. */
 export const ROUTINE_CHILD_CONCURRENCY = 4;
 /** Two reads in one failure domain start at least a minute apart, so a host's published Crawl-delay holds. */
 export const ROUTINE_SAME_DOMAIN_CHILD_GAP_MS = 60_000;
@@ -41,6 +37,7 @@ export type BoundedChildTermination =
 export interface BoundedChildCommand {
   readonly id: string;
   readonly onStarted?: (pid: number) => void;
+  readonly onStdoutLine?: (line: string) => Promise<void> | void;
   /**
    * Commands in one upstream/provider failure domain never run concurrently.
    * Omitting this field keeps the command independent by using its unique id.
@@ -96,60 +93,24 @@ function runOneBoundedChild(
   return new Promise((resolve) => {
     let idle: ReturnType<typeof setTimeout> | undefined;
     let paused = false;
+    let outputLimited = false;
+    let failure: Error | null = null;
     let lines = "";
+    let stdout = "";
+    let stderr = "";
+    let callbacks = Promise.resolve();
     const observed = new Set<string>();
+    const child = spawn(command.executable, [...command.args], {
+      cwd: options.cwd, env: command.env ?? options.env, windowsHide: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
     const renew = () => {
       clearTimeout(idle);
-      if (timeout > 0) idle = setTimeout(() => {
-        paused = true;
-        child.kill("SIGTERM");
-      }, timeout);
+      if (timeout > 0) idle = setTimeout(() => { paused = true; child.kill("SIGTERM"); }, timeout);
     };
-    const child = execFile(
-      command.executable,
-      [...command.args],
-      {
-        cwd: options.cwd,
-        env: command.env ?? options.env,
-        encoding: "utf8",
-        maxBuffer,
-        windowsHide: true,
-      },
-      (error, stdout, stderr) => {
-        clearTimeout(idle);
-        const code = error && "code" in error ? error.code : null;
-        const signal = error && "signal" in error && error.signal
-          ? error.signal as NodeJS.Signals
-          : null;
-        const killed = Boolean(error && "killed" in error && error.killed);
-        const outputLimited = code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER";
-        const timedOut = !outputLimited && (paused || killed);
-        const termination: BoundedChildTermination = outputLimited
-            ? "OUTPUT_LIMIT_EXCEEDED"
-            : timedOut
-              ? "TIMED_OUT"
-              : error === null || typeof code === "number"
-                ? "EXITED"
-                : "SPAWN_FAILED";
-        resolve({
-          id: command.id,
-          status: error === null ? 0 : typeof code === "number" ? code : null,
-          signal,
-          stdout,
-          stderr,
-          termination,
-          errorMessage: paused ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms. ${error?.message ?? ""}` : error?.message ?? null,
-        });
-      },
-    );
-    child.once("spawn", () => command.onStarted?.(child.pid!));
-    child.stdout?.on("data", chunk => {
-      lines += String(chunk);
-      const complete = lines.split(/\r?\n/);
-      lines = complete.pop() ?? "";
-      for (const line of complete) {
-        if (line.startsWith(VITAL_SIGNS_LINE_PREFIX)) { process.stdout.write(`${line}\n`); continue; }
-        if (!line.startsWith("RCD_PROGRESS=")) continue;
+    const consumeLine = (line: string) => {
+      if (line.startsWith(VITAL_SIGNS_LINE_PREFIX)) process.stdout.write(`${line}\n`);
+      if (line.startsWith("RCD_PROGRESS=")) {
         try {
           const progress = JSON.parse(line.slice("RCD_PROGRESS=".length)) as { key?: unknown; records?: unknown };
           if (typeof progress.key === "string" && progress.key && typeof progress.records === "number" &&
@@ -158,6 +119,41 @@ function runOneBoundedChild(
           }
         } catch {}
       }
+      if (command.onStdoutLine) callbacks = callbacks.then(() => command.onStdoutLine!(line)).catch(error => {
+        failure ??= error instanceof Error ? error : new Error(String(error)); child.kill("SIGTERM");
+      });
+    };
+    child.once("spawn", () => command.onStarted?.(child.pid!));
+    child.once("error", error => { failure = error; });
+    child.stdout.setEncoding("utf8");
+    child.stderr.setEncoding("utf8");
+    child.stdout.on("data", (chunk: string) => {
+      if (!command.onStdoutLine) stdout += chunk;
+      lines += chunk;
+      const complete = lines.split(/\r?\n/);
+      lines = complete.pop() ?? "";
+      for (const line of complete) consumeLine(line);
+      if (Buffer.byteLength(command.onStdoutLine ? lines : stdout) > maxBuffer) {
+        outputLimited = true; child.kill("SIGTERM");
+      }
+      if (command.onStdoutLine) {
+        child.stdout.pause();
+        void callbacks.finally(() => child.stdout.resume());
+      }
+    });
+    child.stderr.on("data", (chunk: string) => {
+      stderr += chunk;
+      if (Buffer.byteLength(stderr) > maxBuffer) { outputLimited = true; child.kill("SIGTERM"); }
+    });
+    child.once("close", (status, signal) => {
+      clearTimeout(idle);
+      if (lines) consumeLine(lines);
+      void callbacks.then(() => resolve({
+        id: command.id, status, signal, stdout, stderr,
+        termination: outputLimited ? "OUTPUT_LIMIT_EXCEEDED" : paused ? "TIMED_OUT" : failure ? "SPAWN_FAILED" : "EXITED",
+        errorMessage: outputLimited ? "Child output exceeded its retained stream limit" : paused
+          ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms.` : failure?.message ?? (status === 0 ? null : `Child exited ${status ?? signal}`),
+      }));
     });
     renew();
   });
@@ -212,11 +208,8 @@ export async function runBoundedChildPass(
     };
   };
 
-  // A central dispatcher is necessary here: workers that dequeue a second
-  // command for an already-active provider would otherwise block while free
-  // work from unrelated providers remained queued. Scan in registry order for
-  // the next runnable domain, fill every free global lane, and release that
-  // domain only after its result has been durably classified by `onSettled`.
+  // Pick a free domain so one blocked publisher cannot idle unrelated workers.
+  // Release its lane only after the result has been saved.
   const gapMs = options.sameDomainGapMs ?? 0;
   if (!Number.isSafeInteger(gapMs) || gapMs < 0) throw new Error(`BOUNDED_CHILD_DOMAIN_GAP_INVALID:${gapMs}`);
   const started = new Set<number>();

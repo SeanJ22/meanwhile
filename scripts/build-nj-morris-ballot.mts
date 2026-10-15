@@ -1,23 +1,4 @@
-/**
- * A county ballot generated from the clerk's own filing documents.
- *
- *   corepack pnpm nj:ballot             # acquire and validate without writing
- *   corepack pnpm nj:ballot -- --promote # atomically promote to the production data plane
- *
- * Parses the CURRENT documents discovered from the clerk's own page hrefs and
- * promotes the result through the canonical candidate/validation/pointer door.
- *
- * - **It never guesses a division.** A jurisdiction whose OCD id cannot be
- *   resolved from the committed TIGER layers produces NO contest and is named
- *   in the output: a contest on the wrong division is a false claim.
- * - **It never invents a field.** Party, slogan, term and seats come from the
- *   filing; incumbency and websites stay null. Filed email and address go to
- *   the contact store, never rendered as the candidate's own words.
- *
- * Every run states candidates read, contests built, jurisdictions mapped and
- * jurisdictions REFUSED by name. A zero-contest build exits non-zero.
- */
-
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
@@ -84,12 +65,7 @@ const norm = (s: string) =>
     .replace(/[^A-Z0-9]+/g, " ")
     .trim();
 
-/**
- * The municipality's own division. Where the county-subdivision row is
- * Census's FICTITIOUS filler (`FUNCSTAT F`), the real government is the
- * coextensive PLACE row, which is what `lib/registry/derive.ts` built the
- * registry body from. Joined by GEOID.
- */
+
 const placeByGeoidTail = new Map<string, Feature>();
 for (const f of layers.get("place") ?? []) {
   const g = String(f.properties.geoid ?? "");
@@ -109,12 +85,7 @@ function municipalDivision(jurisdiction: string): string | null {
   return String(sub.properties.ocdId);
 }
 
-/**
- * The school district serving a municipality, by name: the clerk heads a
- * school row with the MUNICIPALITY. Matched on the district layer's label with
- * the purpose words removed, and accepted ONLY when exactly one district
- * answers (two districts can differ by one word).
- */
+
 function schoolDivision(jurisdiction: string): { ocdId: string; label: string } | null {
   const all = [...(layers.get("unsd") ?? []), ...(layers.get("elsd") ?? []), ...(layers.get("scsd") ?? [])];
   const match = (want: string) => {
@@ -123,11 +94,7 @@ function schoolDivision(jurisdiction: string): { ocdId: string; label: string } 
     );
     return hits.length === 1 ? hits[0]! : null;
   };
-  /*
-   * A slashed name (`<A> Borough/Township`) is one filing jurisdiction for a
-   * district two municipalities run together; each is tried in the clerk's
-   * order, still accepted only on a UNIQUE match.
-   */
+
   const candidates =
     jurisdiction.includes("/")
       ? (() => {
@@ -181,19 +148,7 @@ const officeKey = (title: string) =>
     .replace(/\bMEMBER OF THE\b/, "")
     .trim();
 
-/*
- * The carry key must be the mint key (jurisdiction + office + DIVISION). A
- * regional board's seats are allocated per constituent municipality, so
- * several contests share one division and office title. Prior contests are
- * therefore BUCKETED by division-and-office:
- *
- * - exactly one prior contest in the bucket → carry it (including ids like
- *   `ballot-nj-morris:us-senate` that encode no jurisdiction);
- * - several → disambiguate on the jurisdiction the id itself encodes;
- * - several and none matches this jurisdiction → carry NOTHING and mint. A
- *   wrong carried id attaches a reaction to the wrong race; a fresh id is
- *   merely a gap.
- */
+
 const priorContestsByDivisionOffice = new Map<string, { id: string }[]>();
 for (const c of prior.contests ?? []) {
   const key = `${c.ocdId}|${officeKey(c.title)}`;
@@ -231,7 +186,7 @@ let idsMinted = 0;
 
 async function readPdf(url: string, signal: AbortSignal) {
   const res = await requestPublisher("Morris County Clerk filing PDF", () =>
-    fetch(url, { headers: { "user-agent": UA }, signal }));
+    fetchSource(url, { headers: { "user-agent": UA }, signal }));
   if (!res.ok) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_RESPONSE_REFUSED",
@@ -284,7 +239,7 @@ async function recordSourceFailureAndExit(failure: SourceAcquisitionFailure): Pr
 
 async function acquireFilingDocuments(signal: AbortSignal) {
   const clerkResponse = await requestPublisher("Morris County Clerk filing page", () =>
-    fetch(NJ_FILING_SOURCES.morrisClerkCandidates, {
+    fetchSource(NJ_FILING_SOURCES.morrisClerkCandidates, {
       headers: { "user-agent": UA },
       signal,
     }));
@@ -403,11 +358,7 @@ for (const c of filed) {
   let scopeNote: string | null = null;
 
   if (!ocdId && SCHOOL_OFFICE.test(office)) {
-    /*
-     * The document's own district cell is tried first: a township's "MEMBER OF
-     * THE REGIONAL BOARD OF EDUCATION" row is a regional board seat, not the
-     * township district's. The municipality is the fallback, not the source.
-     */
+
     const bareType = /^(?:Town|Township|Borough|City|Village|Regional|W\d+|At Large)$/i;
     const cell = c.district && !bareType.test(c.district) ? c.district : null;
     const hit = (cell ? schoolDivision(cell) : null) ?? schoolDivision(c.jurisdiction);
@@ -431,10 +382,7 @@ for (const c of filed) {
     continue;
   }
 
-    /*
-     * The contest KEY includes the resolved division, so a municipality's own
-     * board and a regional board can never collapse into one id.
-     */
+
   const mintedContestId = `ballot-nj-morris:${slug(c.jurisdiction)}-${slug(office)}-${slug(ocdId.split("/").pop() ?? "")}`;
   const carried = carriedContestId(ocdId, office, c.jurisdiction);
   const contestId = carried ?? mintedContestId;
@@ -444,10 +392,7 @@ for (const c of filed) {
     contests.set(contestId, {
       contestId,
       ocdId,
-      /*
-       * A carried contest keeps its TITLE: reviewed titles say which seats a
-       * contest is for, and `office-blurbs` resolves explainers off them.
-       */
+
       title:
         prior.contests.find((p) => p.id === contestId)?.title ??
         office
@@ -485,11 +430,7 @@ for (const c of filed) {
     },
   });
 
-  /*
-   * The filed email and street address are CONTACT, kept out of the ballot
-   * payload so a home address can never reach a page; the contact store has
-   * the rules for what may be shown.
-   */
+
   if (c.email || c.address) {
     contacts.push({
       candidacyId: carriedPerson ?? `${contestId}:${personSlug}`,
@@ -533,13 +474,7 @@ const absences = noElection
 /* What the clerk no longer lists                                             */
 /* -------------------------------------------------------------------------- */
 
-/*
- * A candidacy the previous ballot carried and the current documents do not is
- * written as a REMOVAL: its id, the document that listed it, the document that
- * does not, and the day it was first found absent (carried forward unchanged).
- * The same fact is written as an absence on the contest's division. It is not
- * rendered as a candidate: the clerk's current list is the ballot.
- */
+
 const currentIds = new Set(candidacies.map((c) => c.id as string));
 const docFor = (priorUrl: string | undefined) =>
   docs.find((d) => /school/i.test(d.url) === /school/i.test(priorUrl ?? "")) ?? docs[0]!;

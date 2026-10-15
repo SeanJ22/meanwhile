@@ -1,23 +1,5 @@
-/**
- * Census ACS 5-year total population (B01003), for every supported Census geography, from
- * `api.census.gov` (public domain). The API key is `CENSUS_API_KEY` in the environment and is never
- * printed. The national acquirer discovers the newest published five-year vintage. A place or county estimate is a different
- * geography and is never substituted for a ZCTA.
- *
- *   ZCTA    `get=NAME,B01003_001E,B01003_001M&for=zip code tabulation area:*`, one call
- *   STATE   `get=NAME,B01003_001E,B01003_001M&for=state:*` (50 states, DC, Puerto Rico), one call
- *
- * `B01003_001M` is the Bureau's own 90% margin of error, the only non-arbitrary way to say whether a small
- * ZCTA number may be read as a count. The API answers a margin it cannot compute with a negative jam
- * value; those are stored as an empty cell, never as a negative number or zero. A ZIP with no ZCTA is a
- * named gap downstream, never a zero.
- *
- * `fetch()` reads the API and `normalize()` turns rows into typed records, refusing a non-numeric or
- * negative estimate. `toCsv()` is a pure serializer for evidence and tests. Production promotes the
- * normalized candidate through the data plane; this module has no filesystem writer.
- *
- * @freshness-reads-here — `fetchedAt` is stamped by the call that reads the source, and never restamped.
- */
+import { fetchSource } from "../fetch-source.ts";
+
 import {
   readPublisherBody,
   requestPublisher,
@@ -110,7 +92,7 @@ export function describeUrl(scope: AcsScope): string {
 export async function fetch(
   scope: AcsScope,
   key: string | undefined,
-  fetcher: typeof globalThis.fetch = globalThis.fetch,
+  fetcher: typeof globalThis.fetch = fetchSource,
   signal?: AbortSignal,
   options: { readonly vintage?: number; readonly stateFips?: string; readonly publishedAt?: string | null; readonly publicationUrl?: string } = {},
 ): Promise<AcsFetch> {
@@ -160,17 +142,7 @@ export async function fetch(
 /** Census publishes 500 keyless queries/day; keyed bulk queries need no local-site pacing.
  * Only provider backpressure delays a request. Response text never enters errors. */
 export async function censusRequest(label: string, url: string, fetcher: typeof globalThis.fetch, signal?: AbortSignal): Promise<Response> {
-  for (let attempt = 0; ; attempt++) {
-    const response = await requestPublisher(label, () => fetcher(url, { redirect: "manual", headers: { accept: "application/json" }, signal }));
-    if ((response.status !== 429 && response.status < 500) || attempt === 3) return response;
-    const retry = response.headers.get("retry-after");
-    const seconds = retry && /^\d+(?:\.\d+)?$/.test(retry) ? Number(retry) * 1000 : null;
-    const date = retry ? Date.parse(retry) : NaN;
-    const delay = seconds ?? (Number.isFinite(date) ? Math.max(0, date - Date.now()) : 1000 * 2 ** attempt);
-    await response.body?.cancel();
-    const { setTimeout } = await import("node:timers/promises");
-    await setTimeout(delay, undefined, { signal });
-  }
+  return requestPublisher(label, () => fetcher(url, { redirect: "manual", headers: { accept: "application/json" }, signal }));
 }
 
 /**

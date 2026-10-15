@@ -1,16 +1,7 @@
-/**
- * A plain-code sweep of the outbound links in the published reader edge:
- * sources, official sites, join links and agenda PDFs. A known small publisher
- * gets at most its hourly request limit, counted with every other reader of
- * that website; others are read at full speed.
- * Retry-After is honored, and a 429 or 5xx means try later, never dead.
- * Results are kept beside door health as one record per surface.
- */
-
 import type { WebsiteSize } from "../control-plane/scheduler/host-supervision.ts";
-import { websiteRequestLimit } from "../control-plane/scheduler/host-supervision.ts";
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../sources/fetch-source.ts";
 import { upsertSystemDoor } from "./link-sweep-store.ts";
-import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
+import { type WebsitePacing } from "../control-plane/website-pacing.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { DoorRepository } from "./registry.ts";
 
@@ -71,31 +62,23 @@ export interface LinkResult extends OutboundLink {
   readonly detail: string;
 }
 
-export interface SweepFetchResult {
-  readonly status: number;
-  /** Seconds, or an HTTP date, as the server sent it. */
-  readonly retryAfter?: string | null;
-}
-
-/** One cheap look at a URL. May throw a network error carrying a `code` (ENOTFOUND, ECONNREFUSED, ETIMEDOUT...). */
-export type SweepFetch = (url: string, method: "HEAD" | "GET") => Promise<SweepFetchResult>;
-
+export type SweepFetch = typeof fetch;
 const DEAD_CODES = new Set(["ENOTFOUND", "EAI_AGAIN_PERMANENT", "ECONNREFUSED"]);
 
-async function look(url: string, fetchFn: SweepFetch): Promise<{ result: SweepFetchResult | null; code: string | null }> {
+async function look(url: string): Promise<{ result: Response | null; code: string | null }> {
   try {
-    let result = await fetchFn(url, "HEAD");
-    // Some servers refuse HEAD; one GET settles it.
-    if (result.status === 405 || result.status === 501 || result.status === 403) result = await fetchFn(url, "GET");
+    let result = await fetchSource(url, { method: "HEAD", signal: AbortSignal.timeout(15_000) });
+    if ([403, 405, 501].includes(result.status)) result = await fetchSource(url, { method: "GET", signal: AbortSignal.timeout(15_000) });
     return { result, code: null };
   } catch (error) {
+    if (error instanceof SourceFetchDeferred) return { result: null, code: error.why };
     const code = (error as { code?: unknown; cause?: { code?: unknown } }).code ?? (error as { cause?: { code?: unknown } }).cause?.code;
     return { result: null, code: typeof code === "string" ? code : "FAILED" };
   }
 }
 
 export interface SweepOptions {
-  readonly fetchFn: SweepFetch;
+  readonly fetchFn?: SweepFetch;
   readonly now: () => number;
   /** The one count and hold per website every reader shares. */
   readonly pacing: WebsitePacing;
@@ -122,15 +105,13 @@ export async function sweepLinks(links: readonly OutboundLink[], options: SweepO
     const start = hostLinks.length === 0 ? 0 : rotation % hostLinks.length;
     const ordered = [...hostLinks.slice(start), ...hostLinks.slice(0, start)];
     for (const link of ordered) {
-      const cap = websiteRequestLimit(options.sizeFor?.(link.url));
-      const admitted = await admitWebsiteRequest(options.pacing, link.url, cap, options.now());
-      if (!admitted.ok) {
-        results.push(admitted.why === "ASKED_TO_WAIT"
-          ? { ...link, verdict: "LATER", httpStatus: null, detail: "the publisher asked to be left alone for now" }
-          : { ...link, verdict: "WAITING", httpStatus: null, detail: `a small publisher is looked at ${cap} times an hour at most; this link is next in line` });
+      const { result, code } = await runWithSourceFetch({ pacing: options.pacing, websiteSize: options.sizeFor,
+        runtime: { transport: options.fetchFn, now: options.now } }, () => look(link.url));
+      if (code === "HOURLY_ALLOWANCE" || code === "ASKED_TO_WAIT") {
+        results.push({ ...link, verdict: code === "HOURLY_ALLOWANCE" ? "WAITING" : "LATER", httpStatus: null,
+          detail: code === "HOURLY_ALLOWANCE" ? "the publisher's hourly allowance is used; this link is next in line" : "the publisher asked to be left alone for now" });
         continue;
       }
-      const { result, code } = await look(link.url, options.fetchFn);
       if (result === null) {
         results.push(DEAD_CODES.has(code ?? "")
           ? { ...link, verdict: "DEAD", httpStatus: null, detail: `the address does not answer (${code})` }
@@ -141,7 +122,6 @@ export async function sweepLinks(links: readonly OutboundLink[], options: SweepO
       if (status >= 200 && status < 400) results.push({ ...link, verdict: "OK", httpStatus: status, detail: "answers" });
       else if (status === 404 || status === 410) results.push({ ...link, verdict: "DEAD", httpStatus: status, detail: status === 410 ? "the page is gone" : "the page was not found" });
       else {
-        await holdWebsiteAfter(options.pacing, link.url, status, result.retryAfter, options.now());
         results.push({ ...link, verdict: "LATER", httpStatus: status, detail: status === 429 ? "the publisher asked us to slow down" : `the publisher answered ${status}; try again later` });
       }
     }
@@ -171,12 +151,7 @@ export function summarizeSweep(results: readonly LinkResult[]): SurfaceSummary[]
   });
 }
 
-/**
- * Keep the sweep beside door health: one record per surface (door id
- * `links:<surface>`, kind `link-sweep`) holding the counts and the dead
- * addresses found, so Admin can show how many links are dead on each surface.
- * A system write; a surface with no links is recorded as zero, never skipped.
- */
+
 export async function recordSweep(repo: DoorRepository, results: readonly LinkResult[], at: string): Promise<readonly SurfaceSummary[]> {
   const summaries = summarizeSweep(results);
   for (const summary of summaries) {

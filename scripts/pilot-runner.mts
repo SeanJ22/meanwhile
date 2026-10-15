@@ -1,3 +1,4 @@
+import { ROUTINE_STATES } from "../lib/civic-data/state-scope.ts";
 import { CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -676,15 +677,27 @@ async function publishConsoleChildren(): Promise<boolean> {
 }
 
 /** The same standing clock runs the production data plane after each cycle. */
-async function runRoutineCivicData(): Promise<void> {
+const nextRoutineDueAt = new Map<string, number>();
+type SourceFamily = "meetings" | "other";
+const routineStatePools = { meetings: { active: 0, waiting: [] as (() => void)[] }, other: { active: 0, waiting: [] as (() => void)[] } };
+async function runRoutineState(state: string, family: SourceFamily): Promise<void> {
+  const pool = routineStatePools[family];
+  if (pool.active >= 2) await new Promise<void>(resolve => pool.waiting.push(resolve));
+  pool.active += 1;
+  try { if (!runtimeAdmissionsHeld) await runRoutineCivicData(state, family); }
+  finally { pool.active -= 1; pool.waiting.shift()?.(); }
+}
+async function runRoutineCivicData(state: string, family: SourceFamily): Promise<void> {
+  const laneKey = `${family}:${state}`;
+  nextRoutineDueAt.delete(laneKey);
   if (provider !== "postgres" || canary) {
     console.log("  routine civic data: skipped — only the standing production runner owns this data plane");
     return;
   }
   const startedAt = new Date().toISOString();
-  const cycleId = routineSupervisorCycleId(hostname(), startedAt);
+  const cycleId = routineSupervisorCycleId(`${hostname()}/${state}/${family}`, startedAt);
   const refreshRepos = await ownerRepositories();
-  const ownerRefresh = refreshRepos ? await reserveRoutineRefresh(refreshRepos, startedAt) : null;
+  const ownerRefresh = refreshRepos && family === "other" ? await reserveRoutineRefresh(refreshRepos, startedAt, state) : null;
   if (ownerRefresh) console.log(`  owner routine refresh ${ownerRefresh.requestId}: attempt ${ownerRefresh.ordinal + 1} of exact partition ${ownerRefresh.contractId}`);
   const childEnvironment = standingChildEnvironment(
     "ROUTINE_SUPERVISOR",
@@ -699,7 +712,7 @@ async function runRoutineCivicData(): Promise<void> {
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
-    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
+    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", `--state=${state}`, `--family=${family}`, ...(ownerRefresh?.args ?? [])],
     env: childEnvironment,
   }], {
     cwd: CODE_ROOT,
@@ -710,6 +723,9 @@ async function runRoutineCivicData(): Promise<void> {
     onStderr: (_id, output) => process.stderr.write(output),
   }).finally(() => clearInterval(beatTimer));
   if (!run) throw new Error("ROUTINE_CIVIC_DATA_CHILD_RESULT_MISSING");
+  const nextDueLine = run.stdout.split("\n").findLast(line => line.startsWith("RCD_NEXT_DUE="));
+  const nextDue = nextDueLine ? Date.parse(nextDueLine.slice("RCD_NEXT_DUE=".length)) : NaN;
+  if (Number.isFinite(nextDue)) nextRoutineDueAt.set(laneKey, Math.max(Date.now(), nextDue));
   if (ownerRefresh && refreshRepos) await finishRoutineRefresh(refreshRepos, ownerRefresh, new Date().toISOString(), run.status);
   const lines = `${run.stdout ?? ""}\n${run.stderr ?? ""}`.split("\n").filter((line) => /^(RCD_|RCD_RECEIPT=)/.test(line));
   const readerFailures = lines.filter((line) =>
@@ -746,13 +762,21 @@ async function runRoutineCivicData(): Promise<void> {
 }
 
 /** Each minute, saved parser results and changed doors publish without waiting for the routine pass (publish-now.ts). */
-async function runPublishNow(): Promise<void> {
+let activePublishStates = 0;
+const waitingPublishStates: (() => void)[] = [];
+async function runPublishState(state: string): Promise<void> {
+  if (activePublishStates >= 2) await new Promise<void>(resolve => waitingPublishStates.push(resolve));
+  activePublishStates += 1;
+  try { if (!runtimeAdmissionsHeld) await runPublishNow(state); }
+  finally { activePublishStates -= 1; waitingPublishStates.shift()?.(); }
+}
+async function runPublishNow(state: string): Promise<void> {
   if (provider !== "postgres" || canary) return;
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
     id: "publish-now",
     executable: process.execPath,
-    args: [...TS_CHILD, "scripts/publish-now-runner.mts"],
+    args: [...TS_CHILD, "scripts/publish-now-runner.mts", `--state=${state}`],
     env: standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }),
   }], {
     cwd: CODE_ROOT,
@@ -763,7 +787,7 @@ async function runPublishNow(): Promise<void> {
   });
   if (!run) throw new Error("PUBLISH_NOW_CHILD_RESULT_MISSING");
   if (run.status !== 0) {
-    await persistOuterRoutineChildFailure(routineSupervisorCycleId(hostname(), startedAt, "publish-now"), startedAt, run,
+    await persistOuterRoutineChildFailure(routineSupervisorCycleId(`${hostname()}/${state}`, startedAt, "publish-now"), startedAt, run,
       `${run.stdout ?? ""}\n${run.stderr ?? ""}`, "publish-now");
   }
 }
@@ -1133,7 +1157,8 @@ let controlReader: ReturnType<typeof runnerControlReader> | null = null;
 let intentReadFailed = false;
 let pauseBeatFailed = false;
 let runtimeAdmissionsHeld = false;
-let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
+let standingRuntimeTimer: ReturnType<typeof setTimeout> | null = null;
+let standingRuntimeClockStarted = false;
 let ownerControlTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyTimer: ReturnType<typeof setInterval> | null = null;
 let scheduledOrderTimer: ReturnType<typeof setInterval> | null = null;
@@ -1205,14 +1230,18 @@ async function runPlatformCensus(): Promise<void> {
 
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, run: runPlatformCensus },
-  { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
+  ...(["meetings", "other"] as const).flatMap(family => ROUTINE_STATES.map(state => ({
+    id: `routine-civic-data:${family}:${state}`, everyMs: ROUTINE_DATA_ADMISSION_MS,
+    nextDueAt: () => nextRoutineDueAt.get(`${family}:${state}`) ?? null, run: () => runRoutineState(state, family),
+  }))),
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
   { id: "hunter-lane", everyMs: 60_000, run: runHunterLane },
-  publishNowLane(runPublishNow),
+  ...ROUTINE_STATES.map(state => ({ ...publishNowLane(() => runPublishState(state)), id: `publish-now:${state}` })),
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     console.error(`  ${outcome.id}: standing operation failed — ${outcome.error}`);
   }
+  scheduleStandingRuntimeWake();
 });
 
 async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
@@ -1303,18 +1332,27 @@ function runStandingRuntimeTick(reason: string, force = false): void {
   }
 }
 
+function scheduleStandingRuntimeWake(): void {
+  if (standingRuntimeTimer !== null) clearTimeout(standingRuntimeTimer);
+  standingRuntimeTimer = null;
+  if (runtimeAdmissionsHeld) return;
+  const next = standingRuntimeScheduler.nextDueAt(Date.now());
+  if (next === null) return;
+  standingRuntimeTimer = setTimeout(() => {
+    standingRuntimeTimer = null;
+    runStandingRuntimeTick("earliest source clock");
+    scheduleStandingRuntimeWake();
+  }, Math.max(1, next - Date.now()));
+}
+
 function startStandingRuntimeClock(): void {
-  if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
+  if (runtimeAdmissionsHeld || standingRuntimeClockStarted) return;
+  standingRuntimeClockStarted = true;
   startScheduledOrderClock();
   // The auditors' passes (live audit, resident tasks, look check, speed, claim audit, loss study, break patterns).
   if (provider === "postgres" && !canary && !STAGING) auditPasses.start();
   runStandingRuntimeTick("independent standing clock startup", true);
-  standingRuntimeTimer = setInterval(
-    () => {
-      runStandingRuntimeTick("independent standing clock");
-    },
-    POLL_MS,
-  );
+  scheduleStandingRuntimeWake();
   // Source admissions keep their own clock. Admin hints are read independently.
   ownerControlTimer = setInterval(() => {
     if (researchCycleActive && !canary && activeControlRead === null) {
@@ -1332,9 +1370,10 @@ function startStandingRuntimeClock(): void {
 let standingDrainFailed = false;
 async function holdStandingRuntimeAtQuiescence(): Promise<void> {
   runtimeAdmissionsHeld = true;
+  standingRuntimeClockStarted = false;
   drainHunterLane();
   if (standingRuntimeTimer !== null) {
-    clearInterval(standingRuntimeTimer);
+    clearTimeout(standingRuntimeTimer);
     standingRuntimeTimer = null;
   }
   if (ownerControlTimer !== null) { clearInterval(ownerControlTimer); ownerControlTimer = null; }
@@ -2009,7 +2048,7 @@ while (cycle < CYCLES) {
 }
 }
 
-if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
+if (standingRuntimeTimer !== null) clearTimeout(standingRuntimeTimer);
 if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
 if (!standingDrainFailed) {
   try {

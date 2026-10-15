@@ -1,3 +1,4 @@
+import { fetchSource } from "../fetch-source.ts";
 import { createHash } from "node:crypto";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import jurisdictionLabels from "../../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
@@ -85,7 +86,7 @@ export async function savedRead(options: PeopleAcquisitionOptions, url: string, 
   const publicFetch:typeof fetch|undefined=requested.hostname==="query.wikidata.org"&&requested.pathname==="/sparql"?async(resource,init)=>{
     const endpoint=new URL(String(resource)),body=endpoint.searchParams.toString();endpoint.search="";
     const headers=new Headers(init?.headers);headers.set("content-type","application/x-www-form-urlencoded");headers.set("accept","application/sparql-results+json");
-    return (options.fetchImpl??fetch)(endpoint.href,{...init,method:"POST",headers,body});
+    return (options.fetchImpl??fetchSource)(endpoint.href,{...init,method:"POST",headers,body});
   }:options.fetchImpl;
   return (options.acquire ?? pacedPortraitAcquire)({ sourceId: options.sourceId, releaseId, url:requested.href, parserVersion: definition.parserVersion,
     signal: options.signal, maxBytes: 16 * 1024 * 1024, checkAfterMs: 86_400_000, now: options.now ?? (() => options.asOf),

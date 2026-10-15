@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 
+import { installFactReader } from "../lib/facts/db.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import {
@@ -15,10 +16,11 @@ import {
   promoteMeetingPartition,
   readPreviousMeetingPartition,
 } from "../scripts/ingest.ts";
-import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
-import { readValidatedResponse } from "../lib/sources/http.ts";
+import { captureSourceAcquisitions, recordAcquiredResponse } from "../lib/sources/acquisition-trace.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+
+installFactReader(null);
 
 const GENERATED_AT = "2026-09-20T12:00:00.000Z";
 
@@ -198,63 +200,25 @@ test("meetings promotion fails closed without per-child bytes or on an untrusted
   assert.notEqual(first.id, second.id);
 });
 
-test("meetings acquisition tracing hashes exact response bytes and retains the observed redirect", async () => {
-  const priorFetch = globalThis.fetch;
+test("concurrent acquisition traces keep exact bytes, streamed hashes, and redirects attached to their source", async () => {
   const requestedUrl = "https://calendar.google.com/calendar/ical/test/basic.ics";
   const finalUrl = "https://calendar.google.com/calendar/ical/test/final.ics";
-  const body = new Uint8Array([0x42, 0x45, 0x47, 0x49, 0x4e, 0x3a, 0x00, 0xff]);
-  globalThis.fetch = (async () => {
-    const response = new Response(body, { status: 200, headers: { "content-type": "text/calendar" } });
-    Object.defineProperty(response, "url", { value: finalUrl });
-    return response;
-  }) as typeof fetch;
-  try {
-    const captured = await captureSourceAcquisitions(async (runForSource) =>
-      runForSource("ical", async () => {
-        const response = await fetch(requestedUrl);
-        return response.arrayBuffer();
-      }),
-    );
-    assert.equal(captured.evidence.length, 1);
-    assert.deepEqual(captured.evidence[0], {
-      source: "ical",
-      requestedUrl,
-      finalUrl,
-      httpStatus: 200,
-      rawHash: createHash("sha256").update(body).digest("hex"),
-      byteCount: body.byteLength,
-    });
-  } finally {
-    globalThis.fetch = priorFetch;
-  }
-});
-
-test("validated curl-rung bytes retain curl's effective redirect URL", async () => {
-  const requestedUrl = "https://www.newbury.nh.gov/calendar/export.ics";
-  const finalUrl = "https://www.newbury.nh.gov/calendar/current/export.ics";
-  const bytes = new TextEncoder().encode("BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n");
-  const captured = await captureSourceAcquisitions(async (runForSource) =>
-    runForSource("ical", async () => readValidatedResponse(
-      requestedUrl,
-      4,
-      {
-        status: 200,
-        contentType: "text/calendar",
-        text: new TextDecoder().decode(bytes),
-        bytes,
-        finalUrl,
-      },
-      { label: "iCalendar", marker: "BEGIN:VCALENDAR" },
-    )),
-  );
-  assert.deepEqual(captured.evidence[0], {
-    source: "ical",
-    requestedUrl,
-    finalUrl,
-    httpStatus: 200,
-    rawHash: createHash("sha256").update(bytes).digest("hex"),
-    byteCount: bytes.byteLength,
-  });
+  const bytes = new Uint8Array([0x42, 0x45, 0x47, 0x49, 0x4e, 0x3a, 0x00, 0xff]);
+  const rawHash = createHash("sha256").update(bytes).digest("hex");
+  const captured = await captureSourceAcquisitions(async run => Promise.all([
+    run("ical", async () => {
+      await Promise.resolve();
+      recordAcquiredResponse({ requestedUrl, finalUrl, httpStatus: 200, bytes });
+      recordAcquiredResponse({ requestedUrl, finalUrl, httpStatus: 200, rawHash, byteCount: bytes.byteLength });
+    }),
+    run("civicplus", async () => {
+      recordAcquiredResponse({ requestedUrl, finalUrl, httpStatus: 200, rawHash, byteCount: bytes.byteLength });
+      await Promise.resolve();
+    }),
+  ]));
+  assert.deepEqual(captured.evidence.toSorted((a, b) => a.source.localeCompare(b.source)), ["civicplus", "ical"].map(source => ({
+    source, requestedUrl, finalUrl, httpStatus: 200, rawHash, byteCount: bytes.byteLength,
+  })));
 });
 
 test("the live Pima Legistar/InSite schedule bridge is an exact registered authority route", () => {

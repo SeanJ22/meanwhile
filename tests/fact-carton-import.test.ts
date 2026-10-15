@@ -146,7 +146,7 @@ test("office addresses and phones readers saw go live on the body's saved page; 
     held: { [agendaUrl]: page("Agenda Committee", "<p>City Clerk's Office, 255 W. Alameda St., Tucson, AZ 85701. Phone (520) 791-4213.</p>") },
     live: { [tcccUrl]: page("Tucson Convention Center Commission", "<p>Meetings are held downtown.</p>") },
   });
-  const carton = await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } });
+  const carton = await cartonOffices(s.facts.query, async () => ({ versionId: "rv-offices", payload: { registry: { bodies } } }));
   assert.deepEqual(carton?.bodies.map(body => body.id), [AGENDA, TCCC, ADJUSTMENT], "only bodies that showed an office are carried");
   const report = await importCartonOffices({ ...carton!, ...s.common });
   assert.deepEqual(report, { rosters: 2, live: 2, confirmed: 0, blanks: 2, unreadable: [{ url: "https://unreachable.example.gov/baj", reason: "FETCH_FAILED:connect ECONNREFUSED" }] });
@@ -160,13 +160,13 @@ test("office addresses and phones readers saw go live on the body's saved page; 
   assert.deepEqual(await s.facts.query("SELECT entity_id, field, stage, reason FROM blank ORDER BY entity_id"), [
     { entity_id: ADJUSTMENT, field: "office_phone", stage: "ACQUIRE", reason: "SOURCE_BLOCKED" },
     { entity_id: TCCC, field: "office_address", stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY" }]);
-  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } }), null, "the carton is carried onto facts once");
+  assert.equal(await cartonOffices(s.facts.query, async () => { throw new Error("completed imports must not reread the registry"); }), null, "the carton is carried onto facts once");
 });
 
 test("an office phone whose page cannot be read stays open as a SOURCE_BLOCKED blank after the carton is retired", async () => {
   const s = await setup({});
   await importCartonOffices({ bodies: [BLOCKED_OFFICE], versionId: "rv-offices", ...s.common });
-  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies: [BLOCKED_OFFICE] } } }), null);
+  assert.equal(await cartonOffices(s.facts.query, async () => ({ versionId: "rv-offices", payload: { registry: { bodies: [BLOCKED_OFFICE] } } })), null);
   assert.deepEqual(await s.facts.query("SELECT entity_id, field, stage, reason FROM blank"),
     [{ entity_id: ADJUSTMENT, field: "office_phone", stage: "ACQUIRE", reason: "SOURCE_BLOCKED" }], "the phone readers saw is owed, not silently dropped");
 });

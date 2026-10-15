@@ -1,3 +1,4 @@
+import { fetchSource } from "../sources/fetch-source.ts";
 /** Large Census archives stay compressed in the existing evidence vault and
  * are restored to disk a chunk at a time. A complete ZIP must validate before
  * the source index advances, so a broken update cannot replace held evidence. */
@@ -171,7 +172,7 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
       const headers = new Headers({ "user-agent": censusGeographyUserAgent() });
       if (held && prior?.etag) headers.set("if-none-match", prior.etag);
       else if (held && prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
-      const response = await requestPublisher("Census TIGER archive", () => (options.fetchImpl ?? fetch)(url, { headers, signal, redirect: "follow" }));
+      const response = await requestPublisher("Census TIGER archive", () => (options.fetchImpl ?? fetchSource)(url, { headers, signal, redirect: "follow" }));
       const finalUrl = response.url || url;
       let final: URL;
       try { final = publicUrl(finalUrl); }

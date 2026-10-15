@@ -1,14 +1,8 @@
-/**
- * Admin states the meeting cadence the runner keeps. A contract's `cadence` is how old a Reader may
- * see a record, not when the runner reads; the runner reads every meeting source on its
- * sitting-window `schedule`. Each instant is checked against the runner's own
- * `routineTaskDeadlineMs` / `routineTaskDue`, and a body without a sitting window keeps its cadence words.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { MEETING_PARTITION_POLICY, MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDeadlineMs, routineTaskDue, sittingWindowSignals, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
 import { statedSittingEndsByScope } from "../lib/civic-data/sitting-window-admission.ts";
 import { trustedLkgImportClock } from "../lib/civic-data/store.ts";
@@ -69,8 +63,9 @@ const clockFacts = (sittings: SittingFacts[], observedAt: string | null = LAST_G
 
 /** The runner's own deadline and due test for the same facts. */
 function runnerSays(clock: RoutineTaskClock, sittings: readonly SittingFacts[] | undefined) {
-  const ends = statedSittingEndsByScope(sittings ? [{ scope: TASK.id, pairs: sittings.map((s) => [s.startsAt, s.endsAt]) }] : []);
-  const hot = sittingWindowSignals([{ task: TASK, ok: true, clock }], NOW_MS, ends).get(TASK.id);
+  const bodyTasks = ROUTINE_SOURCE_TASKS.filter(task => sittingWindowSourceIds(TASK.id).includes(task.id));
+  const ends = statedSittingEndsByScope(sittings ? bodyTasks.map(task => ({ scope: task.id, pairs: sittings.map(s => [s.startsAt, s.endsAt]) })) : []);
+  const hot = sittingWindowSignals(bodyTasks.map(task => ({ task, ok: true, clock })), NOW_MS, ends).get(TASK.id);
   return {
     deadlineMs: routineTaskDeadlineMs(TASK, clock, hot),
     dueAt: (ms: number) => routineTaskDue(TASK, clock, ms, hot),
@@ -193,7 +188,7 @@ test("a body read through two sources names each source's clock when they differ
   const v = card(s, [CONTRACT, second]);
   assert.equal(
     row(v, "How often"),
-    "Legistar meeting portal: Hourly now — the Sep 22, 2026 sitting is within seven days behind; no sitting ahead is listed. Legistar InSite portal: Hourly now — the Sep 22, 2026 sitting is within seven days behind; the next one listed is Oct 13, 2026. The rule: twice a day, and within the hour while a sitting is within seven days ahead or behind.",
+    "Hourly now — the Sep 22, 2026 sitting is within seven days behind; the next one listed is Oct 13, 2026. The rule: twice a day, and within the hour while a sitting is within seven days ahead or behind.",
   );
   assert.equal(
     row(v, "Next look"),
@@ -205,7 +200,33 @@ test("a contract without a sitting window keeps its cadence words, unchanged", (
   const plain: WatchedContract = { ...CONTRACT, cadence: MEETING_PARTITION_POLICY.cadence };
   delete (plain as { schedule?: unknown }).schedule;
   const v = card(store(version({ clock: clockFacts(PIMA_SITTINGS) }), [attempt(LAST_GOOD)]), [plain]);
-  assert.equal(row(v, "How often"), "Daily through the 2026 general election, then weekly");
-  assert.equal(row(v, "Next look"), "Due Sep 26, 4:30 PM ET");
-  assert.equal(v.lanes.find((l) => l.name === "Acquisition")!.note, "Runs on the standing runner's clock (daily through the 2026 general election, then weekly); a failed read is retried one hour after a failed source/body attempt.");
+  assert.equal(row(v, "How often"), "Twice daily, hourly for bodies inside the sitting window");
+  assert.equal(row(v, "Next look"), "Due Sep 26, 4:30 AM ET");
+  assert.equal(v.lanes.find((l) => l.name === "Acquisition")!.note, "Runs on the standing runner's clock (twice daily, hourly for bodies inside the sitting window); a failed read is retried one hour after a failed source/body attempt.");
+});
+
+test("one source's upcoming sitting makes every source of that body hourly while their check dates remain separate", () => {
+  const second = watched(MEETING_PARTITION_CONTRACTS.find(c => c.meetingSource === "legistar-insite" && c.bodyId === PARTITION.bodyId)!);
+  const cold: SittingFacts[] = [{ startsAt: "2026-09-01T17:00:00-07:00", endsAt: null }];
+  const hot: SittingFacts[] = [{ startsAt: "2026-09-30T17:00:00-07:00", endsAt: null }];
+  const earlier = "2026-09-25T20:10:00.000Z";
+  const held: BodyStoreFacts = { ...store(null, []), versions: [version({ clock: clockFacts(cold) }),
+    version({ scope: second.scope, clock: clockFacts(hot, earlier) })],
+    attempts: [attempt(LAST_GOOD), { ...attempt(earlier), scope: second.scope }] };
+  const view = card(held, [CONTRACT, second]);
+  assert.match(row(view, "How often"), /^Hourly now — the next sitting, Sep 30, 2026, is within seven days\./);
+  const own = sittingClockOf(CONTRACT, held.versions[0]!, [attempt(LAST_GOOD)], NOW_MS, [cold, hot]);
+  const peer = sittingClockOf(second, held.versions[1]!, [{ ...attempt(earlier), scope: second.scope }], NOW_MS, [cold, hot]);
+  const tasks = [TASK, ROUTINE_SOURCE_TASKS.find(task => task.id === second.id)!];
+  const reads = tasks.map((task, index) => ({ task, ok: true, clock: {
+    lastAttemptedAt: index ? earlier : LAST_GOOD, lastSucceededObservedAt: index ? earlier : LAST_GOOD,
+    sittingStarts: (index ? hot : cold).map(row => row.startsAt),
+  } }));
+  const signals = sittingWindowSignals(reads, NOW_MS);
+  assert.equal(own.hot, true);
+  assert.equal(peer.hot, true);
+  for (const [index, clock] of [own, peer].entries()) {
+    assert.equal(clock.owed!.deadlineMs, routineTaskDeadlineMs(tasks[index]!, reads[index]!.clock, signals.get(tasks[index]!.id)));
+  }
+  assert.equal(own.owed!.deadlineMs - peer.owed!.deadlineMs, Date.parse(LAST_GOOD) - Date.parse(earlier));
 });

@@ -1,9 +1,4 @@
-/**
- * Every meeting body is read twice daily, and hourly while it has a sitting starting in the next seven days or one
- * concluded in the previous seven. The day bound for a sitting without a stated end is a scheduling bound only; it is
- * never stored or shown, and a stated end always replaces it.
- */
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { sittingWindowHot, sittingWindowRereadMs, type SittingWindowSchedule } from "./contracts.ts";
 import { civicDataPromotions } from "../db/schema.ts";
@@ -53,7 +48,7 @@ export function meetingPayloadStatedEnds(payload: unknown): Map<string, number> 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function statedSittingEndsRead(db: any) {
+export function statedSittingEndsRead(db: any, scopes: readonly string[]) {
   const payload = civicDataPromotions.payload;
   const pairs = sql<unknown>`(
     select coalesce(jsonb_agg(jsonb_build_array(m->'startsAt', m->'endsAt')), '[]'::jsonb)
@@ -63,7 +58,7 @@ export function statedSittingEndsRead(db: any) {
   return db
     .select({ scope: civicDataPromotions.scope, pairs })
     .from(civicDataPromotions)
-    .where(and(eq(civicDataPromotions.recordClass, "MEETING"), sql`${pairs} <> '[]'::jsonb`));
+    .where(and(eq(civicDataPromotions.recordClass, "MEETING"), inArray(civicDataPromotions.scope, [...scopes])));
 }
 
 export function statedSittingEndsByScope(rows: readonly { readonly scope: string; readonly pairs: unknown }[]): Map<string, Map<string, number>> {

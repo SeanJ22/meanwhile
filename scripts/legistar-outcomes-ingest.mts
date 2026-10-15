@@ -1,39 +1,4 @@
-/**
- * Pima Legistar outcome acquisition and canonical promotion on the standing
- * routine clock.
- *
- * `pima-legistar-outcomes` is a routine contract (ROUTINE_SOURCE_CONTRACTS in
- * lib/civic-data/contracts.ts). The standing routine runner invokes this
- * internal adapter as `--promote --slug pima` on the contract's cadence.
- * Owner-initiated work enters through the installed runtime dispatcher as a
- * routine-refresh request that the same standing parent executes. This scope
- * has no manual promotion door.
- *
- * Every changed sitting becomes its own candidate. A failed items/votes read
- * is therefore a durable refused attempt while the prior GOOD pointer stays
- * live; a later unaffected sitting may still promote. The run then prints
- * exactly one `RCD_RECEIPT`, naming the last candidate it wrote:
- *
- * - exit 0 only when that candidate is the GOOD promoted pointer: the last
- *   changed sitting, or the validated no-change receipt written when every
- *   sitting in the window is held and unchanged;
- * - exit 2 when the events read failed, returned zero sittings, or any walked
- *   sitting was refused. A refusal followed by a later promotion writes one
- *   refused run record against the moved pointer, so the receipt still says
- *   HELD and the retry clock, not the cadence, owns the next attempt.
- *
- * The default window is rolling and bounded: the last
- * OUTCOME_ROUTINE_WINDOW_DAYS days through today in the body's own zone,
- * because outcomes exist only for sittings already held. `refreshDecision`
- * skips every held sitting whose publisher `EventLastModifiedUtc` is unchanged,
- * so an unchanged day costs one events request.
- *
- * This command writes no tracked file and never invokes software CI or
- * release machinery.
- *
- * @freshness-reads-here — event and sitting timestamps are captured only
- * after their corresponding official Legistar read has returned.
- */
+// @freshness-reads-here
 import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -113,10 +78,6 @@ export function parsePimaOutcomeIngestArgs(argv: readonly string[]): PimaOutcome
 
 export type { OutcomeWindow };
 
-/**
- * The rolling routine window: today in the body's zone back
- * OUTCOME_ROUTINE_WINDOW_DAYS days. `--from`/`--to` remain explicit overrides.
- */
 export function pimaOutcomeWindow(
   args: Pick<PimaOutcomeIngestArgs, "from" | "to">,
   timeZone: string,
@@ -125,10 +86,6 @@ export function pimaOutcomeWindow(
   return rollingOutcomeWindow(args, timeZone, at, OUTCOME_ROUTINE_WINDOW_DAYS, "PIMA_OUTCOME_WINDOW_INVALID");
 }
 
-/**
- * Legistar's `...Utc` stamps carry no zone designator. Read them as the UTC
- * instant their field name states rather than in whatever zone the host runs.
- */
 export function legistarUtcInstant(value: string | null | undefined): string | null {
   const text = typeof value === "string" ? value.trim() : "";
   if (text === "") return null;
@@ -144,16 +101,6 @@ function newestSourceStamp(events: readonly LegistarEvent[]): string | null {
     .at(-1) ?? null;
 }
 
-/**
- * Every candidate this contract writes is the WHOLE held projection plus the
- * sittings this run changed, so its source-through may never precede the
- * pointer it extends. Sittings are walked newest-sitting-first, not
- * newest-modification-first: stamping each candidate with its own sitting's
- * modification time made the GOOD contract refuse every later, older-modified
- * sitting of the same run as a version regression. The observed stamp wins
- * only when it is later by both the instant order and the string order the
- * GOOD contract applies; otherwise the pointer's own value is kept.
- */
 export function outcomeSourceThrough(prior: string | null, observed: string): string {
   if (prior === null || prior === "") return observed;
   const priorAt = Date.parse(prior);
@@ -406,9 +353,7 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
     });
     log(`  no-change receipt: ${last.promoted ? "PROMOTED" : `HELD ${last.candidate.failureCode ?? last.candidate.state}`}`);
   } else if (refusedSittings.length > 0 && last.promoted) {
-    // A refused sitting's durable candidate was followed by a promotion, so it
-    // no longer describes the live pointer. Record the run's held disposition
-    // against the pointer as it now stands; the refused sittings stay due.
+
     const observedAt = now();
     last = await persist({
       snapshot,
@@ -451,7 +396,7 @@ async function main(): Promise<void> {
     client = legistarClientsFromWiring([partition.wiring])[0];
   } else {
     // Pima's own contract: its client is read off the published meeting doors.
-    const doors = await ensureMeetingDoors();
+    const doors = await ensureMeetingDoors({ bodyId: "ocd-division/country:us/state:az/county:pima#governing" });
     if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
     client = findClient(args.slug, "ocd-division/country:us/state:az/county:pima#governing");
   }

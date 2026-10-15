@@ -1,18 +1,5 @@
-/**
- * Starting a mission marks every open door inside the place `readNow`, so the
- * routine runner reads it at once instead of on its schedule.
- *
- * 1. `markDoorsReadNow`: at mission start, sets only `readNow` and `updatedAt`
- *    on matching OPEN doors; never touches `editedAt`.
- * 2. `readNowDueRequests`: each marked meeting door becomes an ordinary due
- *    request, spent by the partition's first attempt after the mark and
- *    expiring after the request lifetime.
- * 3. `settleReadNow`: clears a mark once the door has recorded an outcome
- *    since it, or it has expired.
- *
- * A door is inside the place when its division, or any body it feeds, is one
- * of the caller's divisions or a child of one.
- */
+import { meetingPartitionId } from "../civic-data/meeting-partitions.ts";
+
 import { ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";
 import { isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";
 
@@ -65,19 +52,11 @@ export async function markDoorsReadNow(
   return counts;
 }
 
-/**
- * The partition a meeting door is read through: a hand-wired door's id is its partition's id, and a derived member is
- * read by its family's partition (`meeting.family`). A door that is not a meeting door is read by no partition.
- */
 export function doorPartitionIds(door: DoorRecord): readonly string[] {
   if (door.meeting == null) return [];
-  return [door.meeting.family ?? door.doorId];
+  return door.bodyIds.map(bodyId => meetingPartitionId(door.kind, bodyId));
 }
 
-/**
- * The pass's due requests for doors marked `readNow`: due from the mark, expiring after the request lifetime. Only
- * partitions the pass knows (`known`) are named, so a mark on a door the code cannot yet read asks for nothing.
- */
 export function readNowDueRequests(
   doors: readonly DoorRecord[],
   known: ReadonlySet<string>,
@@ -105,15 +84,10 @@ export function readNowDueRequests(
   return requests;
 }
 
-/**
- * Clear the marks that are spent: the door has recorded an outcome since the mark (`recordDoorOutcome` writes
- * `lastSuccessAt` or `lastFailureAt` and leaves `updatedAt`, the mark's own time, alone), or the mark is older than the
- * request lifetime. Returns how many were cleared.
- */
-export async function settleReadNow(repo: DoorRepository, now: string): Promise<number> {
+export async function settleReadNow(repo: DoorRepository, now: string, state?: string): Promise<number> {
   let cleared = 0;
   const nowMs = Date.parse(now);
-  for (const door of (await listDoors(repo)).doors) {
+  for (const door of (await listDoors(repo, state)).doors) {
     if (!door.readNow) continue;
     const markedMs = Date.parse(door.updatedAt);
     const expired = !Number.isFinite(markedMs) || nowMs - markedMs >= ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS;

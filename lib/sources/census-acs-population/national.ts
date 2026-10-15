@@ -1,3 +1,4 @@
+import { fetchSource } from "../fetch-source.ts";
 /** @freshness-reads-here: dates belong to the catalog and table captures, never a replay clock. */
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { stateBase } from "../../ocd/divisions.ts";
@@ -30,7 +31,7 @@ export function latestAcsRelease(value: unknown): AcsRelease {
   return releases[0];
 }
 
-async function discoverAcsRelease(fetcher: typeof globalThis.fetch = globalThis.fetch, signal?: AbortSignal): Promise<AcsRelease> {
+async function discoverAcsRelease(fetcher: typeof globalThis.fetch = fetchSource, signal?: AbortSignal): Promise<AcsRelease> {
   const response = await censusRequest("Census ACS catalog", ACS_CATALOG, fetcher, signal);
   if (response.status !== 200) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `The Census catalog answered HTTP ${response.status}.`);
   const text = await readPublisherBody("Census ACS catalog", () => response.text());
@@ -85,7 +86,7 @@ export async function acquireNationalAcs(input: {
   readonly signal?: AbortSignal;
   readonly targets: (stateFips: string, rows: readonly AcsPopulationRow[]) => Promise<readonly AcsJoinTarget[]>;
 }): Promise<AcsNationalLoad> {
-  const fetcher = input.fetcher ?? globalThis.fetch;
+  const fetcher = input.fetcher ?? fetchSource;
   const release = await discoverAcsRelease(fetcher, input.signal);
   const read = (scope: AcsScope, stateFips?: string) => fetchTable(scope, input.key, fetcher, input.signal, { ...release, stateFips });
   const initial = await Promise.allSettled([read("zcta"), read("state"), read("nation")]);

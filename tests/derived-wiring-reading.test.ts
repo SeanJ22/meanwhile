@@ -149,15 +149,15 @@ test("C16: the derive reads venue resolutions before any adapter reading, with n
   assert.deepEqual(verification.selected, ["2026-10-01T18:00:00.000Z|Town Council"]);
 });
 
-test("C16: a store with no promoted venue resolutions refuses the whole reading by name, before any adapter runs", async () => {
+test("a body without a saved venue still reads its verified meeting calendar", async () => {
   const read = await asProduction(() => readHeldCalendars({
     options: { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW },
     now: NOW,
     adapterDigest: () => "ical@0123456789ab",
     readings: [reading()],
   }));
-  assert.equal(read.kind, "UNREADABLE");
-  if (read.kind === "UNREADABLE") assert.match(read.detail, /venue resolutions/);
+  assert.equal(read.kind, "READ");
+  if (read.kind === "READ") assert.equal(read.verifications.size, 1);
 });
 
 /** A reviewed iCal row whose walk confirmed its calendar, decided with the given reading (the derived-wiring fixture). */

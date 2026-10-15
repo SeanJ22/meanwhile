@@ -15,7 +15,8 @@ export interface StoredManifest {
 
 export interface ReaderArtifactStore {
   readonly kind: "netlify-blobs" | "local-file";
-  readManifest(): Promise<StoredManifest | null>;
+  readonly state?: string;
+  readManifest(state?: string): Promise<StoredManifest | null>;
   readArtifact(key: string): Promise<ReaderGeoArtifact | null>;
   /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
   putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
@@ -23,8 +24,33 @@ export interface ReaderArtifactStore {
   writeManifest(
     manifest: ReaderManifest,
     expectedEtag: string | null,
+    state?: string,
   ): Promise<{ modified: boolean; etag: string | null }>;
   readBytes(key: string): Promise<Uint8Array | null>;
+  readMeetingState(id: string): Promise<string | null>;
+  writeMeetingStates(ids: readonly string[], state: string): Promise<void>;
+}
+
+export function readerManifestKey(state?: string): string {
+  if (state === undefined) return READER_MANIFEST_KEY;
+  const selected = state.replace(/^US-/i, "").toUpperCase();
+  if (!/^[A-Z]{2}$/.test(selected)) throw new Error("READER_STATE_INVALID");
+  return `reader/states/${selected}/manifest.json`;
+}
+
+const meetingStateKey = (id: string): string => `reader/meeting-states/${createHash("sha256").update(id).digest("hex")}.json`;
+
+export function scopedReaderArtifactStore(base: ReaderArtifactStore, state: string): ReaderArtifactStore {
+  readerManifestKey(state);
+  const selected = state.replace(/^US-/i, "").toUpperCase();
+  return {
+    kind: base.kind, state: selected,
+    readManifest: (requested = selected) => base.readManifest(requested),
+    writeManifest: (manifest,etag) => base.writeManifest(manifest,etag,selected),
+    readArtifact: key => base.readArtifact(key), putImmutable: (bytes,suffix) => base.putImmutable(bytes,suffix),
+    readBytes: key => base.readBytes(key), readMeetingState: id => base.readMeetingState(id),
+    writeMeetingStates: (ids,scope) => base.writeMeetingStates(ids,scope),
+  };
 }
 
 function immutableKey(bytes: Uint8Array, suffix: "json" | "json.gz"): string {
@@ -57,11 +83,11 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
       : getStore(base);
   }
 
-  async readManifest(): Promise<StoredManifest | null> {
+  async readManifest(state?: string): Promise<StoredManifest | null> {
     // Eventual consistency is correct for the reader: the CDN layer, not this
     // read, is the reader's hot path, and a <=60s-stale pointer is honest.
     const store = await this.store("eventual");
-    const res = await store.getWithMetadata(READER_MANIFEST_KEY, { type: "json" });
+    const res = await store.getWithMetadata(readerManifestKey(state), { type: "json" });
     if (!res || res.data == null) return null;
     return { manifest: res.data as ReaderManifest, etag: res.etag ?? null };
   }
@@ -75,15 +101,29 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
   async writeManifest(
     manifest: ReaderManifest,
     expectedEtag: string | null,
+    state?: string,
   ): Promise<{ modified: boolean; etag: string | null }> {
     // Strong consistency so the read-before-write and the CAS see the truth.
     const store = await this.store("strong");
     const result = await store.setJSON(
-      READER_MANIFEST_KEY,
+      readerManifestKey(state),
       manifest,
       expectedEtag === null ? { onlyIfNew: true } : { onlyIfMatch: expectedEtag },
     );
     return { modified: result.modified, etag: result.etag ?? null };
+  }
+
+  async readMeetingState(id: string): Promise<string | null> {
+    const store = await this.store("eventual");
+    const row = await store.get(meetingStateKey(id), { type: "json" }) as { state?: string } | null;
+    return row?.state && /^[A-Z]{2}$/.test(row.state) ? row.state : null;
+  }
+
+  async writeMeetingStates(ids: readonly string[], state: string): Promise<void> {
+    readerManifestKey(state);
+    const store = await this.store("strong");
+    for (let offset = 0; offset < ids.length; offset += 16) await Promise.all(ids.slice(offset,offset+16)
+      .map(id => store.setJSON(meetingStateKey(id), { state: state.replace(/^US-/i, "").toUpperCase() })));
   }
 
   async readBytes(key: string): Promise<Uint8Array | null> {
@@ -122,8 +162,8 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     return createHash("sha256").update(readFileSync(path)).digest("hex").slice(0, 16);
   }
 
-  async readManifest(): Promise<StoredManifest | null> {
-    const path = this.path(READER_MANIFEST_KEY);
+  async readManifest(state?: string): Promise<StoredManifest | null> {
+    const path = this.path(readerManifestKey(state));
     try {
       const bytes = readFileSync(path);
       const manifest = JSON.parse(bytes.toString("utf8")) as ReaderManifest;
@@ -145,8 +185,9 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
   async writeManifest(
     manifest: ReaderManifest,
     expectedEtag: string | null,
+    state?: string,
   ): Promise<{ modified: boolean; etag: string | null }> {
-    const path = this.path(READER_MANIFEST_KEY);
+    const path = this.path(readerManifestKey(state));
     mkdirSync(dirname(path), { recursive: true });
     const lock = `${path}.lock`;
     let descriptor: number | undefined;
@@ -178,6 +219,23 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
       closeSync(descriptor);
       try { unlinkSync(temporary); } catch { /* The atomic rename consumed it. */ }
       unlinkSync(lock);
+    }
+  }
+
+  async readMeetingState(id: string): Promise<string | null> {
+    try {
+      const row = JSON.parse(readFileSync(this.path(meetingStateKey(id)),"utf8")) as { state?: string };
+      return row.state && /^[A-Z]{2}$/.test(row.state) ? row.state : null;
+    } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return null; throw error; }
+  }
+
+  async writeMeetingStates(ids: readonly string[], state: string): Promise<void> {
+    readerManifestKey(state);
+    for (const id of ids) {
+      const path = this.path(meetingStateKey(id)), temporary = `${path}.${randomUUID()}.tmp`;
+      mkdirSync(dirname(path), { recursive: true });
+      writeFileSync(temporary,JSON.stringify({ state: state.replace(/^US-/i, "").toUpperCase() }),{ flag: "wx" });
+      renameSync(temporary,path);
     }
   }
 

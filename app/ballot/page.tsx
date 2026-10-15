@@ -1,3 +1,5 @@
+import { zipDivisionEntry } from "../../lib/geo/zip-division-index.ts";
+import { ocdStateCode } from "../../lib/ocd/state-of.ts";
 import { stateOfficesForDivisions } from "../../lib/reference/state-offices.ts";
 import { StateOfficeContacts } from "../../components/state-office-contacts.tsx";
 import { Card } from "@/components/ui/card";
@@ -458,10 +460,13 @@ export const metadata: Metadata = {
   description: "The contests on your ballot, the candidates in them, and where to vote.",
 };
 
-async function readBallotReaderEdge(): Promise<ReaderAuthorityEdgeBundle | null> {
+async function readBallotReaderEdge(zip: string): Promise<ReaderAuthorityEdgeBundle | null> {
   const manifest = await readReaderManifest().catch(() => null);
-  if (!manifest?.authorityArtifacts) return null;
-  return ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(() => null);
+  if (!manifest) return null;
+  const references = await ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(() => null);
+  const divisions = await withReaderAuthorityEdge(references, () => zipDivisionEntry(zip));
+  const states = [...new Set((divisions?.ids ?? []).map(ocdStateCode).filter((state): state is string => state !== null))];
+  return ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES, states).catch(() => null);
 }
 
 export default async function BallotPage({
@@ -483,7 +488,7 @@ export default async function BallotPage({
   const ballotLoaderFailures: string[] = [];
 
   let askOcdIds: string[] = [];
-  const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve(null);
+  const readerEdgeRead = centroid && zip ? readBallotReaderEdge(zip) : Promise.resolve(null);
   if (centroid) prefetchReaderGeography();
   let certainty = await readerEdgeRead.then(edge => withReaderAuthorityEdge(edge, () => zipCertainty(zip)));
 

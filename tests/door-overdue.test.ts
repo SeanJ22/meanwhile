@@ -15,7 +15,7 @@ function door(partial: Partial<DoorRecord> & Pick<DoorRecord, "doorId">): DoorRe
     formatVersion: 1, kind: "legistar", ocdId: "ocd-division/country:us/state:az/county:pima", bodyIds: ["body-a"], hosts: ["x.example"],
     config: {}, holds: ["meetings"], checkEveryMinutes: null, notes: "", status: "OPEN", lastSuccessAt: minutesAgo(10), lastFailureAt: null,
     shutSince: null, readNow: false, origin: "DERIVED", editedAt: null, updatedAt: minutesAgo(5000), validators: null,
-    meeting: { agendaSourceType: "LEGISTAR", jurisdiction: "x", publishingOrg: "x", timeZone: "America/Phoenix", verifiedAt: "2026-10-01", family: null },
+    meeting: { agendaSourceType: "LEGISTAR", jurisdiction: "x", publishingOrg: "x", timeZone: "America/Phoenix", verifiedAt: "2026-10-01" },
     ...partial,
   };
 }

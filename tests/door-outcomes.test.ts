@@ -34,12 +34,7 @@ import { legistarClientsFromWiring } from "../lib/sources/legistar/client-regist
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import { wiringRowsFromDoors } from "../lib/doors/rows.ts";
 import { runPimaLegistarOutcomeIngest, parsePimaOutcomeIngestArgs } from "../scripts/legistar-outcomes-ingest.mts";
-import { withFetch } from "./helpers/with-fetch.ts";
-
-/**
- * A Legistar door that holds `outcomes` collects the body's decisions and roll calls in its own scope, for any
- * body on the platform, with no per-place contract and no code release.
- */
+import { withSourceTransport as withFetch } from "./helpers/source-fetch.ts";
 
 const AT = "2026-10-06T00:00:00.000Z";
 const B64 = "b".repeat(64);
@@ -60,7 +55,6 @@ function door(overrides: Partial<DoorDraft> & { readonly doorId: string }): Door
       publishingOrg: "Demo County Clerk",
       timeZone: "America/Phoenix",
       verifiedAt: "2026-10-01",
-      family: null,
     },
     status: "OPEN",
     readNow: false,

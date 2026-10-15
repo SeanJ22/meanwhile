@@ -141,7 +141,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   await indexDetectiveFindings(repos.boxFindings, { id: "dr-1", workItemId: "wi-hunt", endedAt: NOW, result: { role: "DETECTIVE", findings: [], artifactIds: [tccc],
     spans: [{ artifactId: tccc, contentHash: "h", start: 0, end: 9, quote: "Ned Beman", offsetUnit: "UTF16_CODE_UNITS" }], question: { subjectId: TCCC } } }, new Map(), NOW);
 
-  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), state: "AZ", now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
   assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 },
     publishedByRoute: { "office contacts": 1, rosters: 3 },
@@ -180,7 +180,7 @@ test("a packet hunter's findings publish for the subject each names, not the job
   await report(`${TUCSON}#inventory:body`, "OFF-04", "Jose Jimenez", "Jose Jimenez Vice Chairperson Mayor");
   await report(TCCC, "OFF-04", "Pat Nobody", "Pat Nobody Chairperson");
 
-  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), state: "AZ", now: NOW, limit: 100 };
   const first = await publishBoxFindings(input);
   assert.deepEqual(Object.keys(first.byPlace), [TUCSON], "every finding counts toward the packet's government");
   assert.deepEqual({ published: first.published, refused: first.refused, waitingByClass: first.waitingByClass, failuresByReason: first.failuresByReason },
@@ -227,7 +227,7 @@ test("each checklist id goes where its record publishes: body links, the agenda 
   await report(TCCC, "GOV-05", "Advisory", "May recommend to Mayor and Council");
 
   const store = new MemoryRoutineDataStore();
-  const first = await publishBoxFindings({ repos, facts, vault, fetch, store, clocks: factClocks(null), now: NOW, limit: 100 });
+  const first = await publishBoxFindings({ repos, facts, vault, fetch, store, clocks: factClocks(null), state: "AZ", now: NOW, limit: 100 });
   assert.deepEqual({ published: first.publishedByRoute, handed: first.handed, waiting: first.waitingByClass, failures: first.failuresByReason },
     { published: { "body links": 2, "meeting routes": 1, "official hosts": 1, sittings: 1, "ballot navigation": 1 }, handed: 1,
       waiting: { "ballot navigation": 1, governments: 1 }, failures: {} }, JSON.stringify(first));
@@ -268,7 +268,7 @@ test("the campaign-site check holds a hunter's lead to the freshness clock Admin
   await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-packet", obligationId: `hunt:packet:${TUCSON}`, missionPart: null,
     finding: { subjectId: "ballot-az-pima:governor:hobbs-katie", field: "CAN-04", value: CAMPAIGN, exactQuote: "Visit https://hobbs-for-governor.example.com/",
       sourceUrl: CAMPAIGN, artifactIds: [campaign], subjectHint: null, index: 0 } }, NOW);
-  await publishBoxFindings({ repos, facts, vault, fetch: async () => { throw new Error("held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  await publishBoxFindings({ repos, facts, vault, fetch: async () => { throw new Error("held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), state: "AZ", now: NOW, limit: 10 });
   await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(NOW), settings: { "facts.freshnessHours": { ...FRESHNESS_HOURS_DEFAULT, ballot: 1 } } }, NOW);
   const hobbs: CampaignSiteSubject = { candidacyId: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs", officeTitle: "Governor",
     ocdId: "ocd-division/country:us/state:az", stateCode: "AZ", cycle: 2026, readerKeys: [], filingDomains: [] };
@@ -303,7 +303,7 @@ test("a name joins a council only when its own words name the seat: staff and ba
   await report("Lane Santa Cruz", "Ward 1 Council Member Lane Santa Cruz");
   await report("Tim Thomure", "Office of the City Manager - Tim Thomure");
   await report("Tim Kinney", "Mr. Tim Kinney");
-  const input = { repos, facts, vault, fetch: async () => { throw new Error("held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
+  const input = { repos, facts, vault, fetch: async () => { throw new Error("held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), state: "AZ", now: NOW, limit: 100 };
   const first = await publishBoxFindings(input);
   assert.deepEqual({ seats: first.seats, published: first.published, failuresByReason: first.failuresByReason },
     { seats: { pulled: 1, flagged: 0 }, published: 3, failuresByReason: { SEAT_NOT_IN_QUOTE: 2 } }, JSON.stringify(first));

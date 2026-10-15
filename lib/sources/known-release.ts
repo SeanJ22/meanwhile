@@ -1,3 +1,5 @@
+import { fetchSource } from "./fetch-source.ts";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
@@ -76,6 +78,11 @@ export interface KnownReleaseOptions {
 }
 const hash = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");
 const pending = new WeakMap<EvidenceStore, Map<string, Promise<KnownRelease>>>();
+type KnownReleaseCache = Required<Pick<KnownReleaseOptions, "store" | "locks">> & Pick<KnownReleaseOptions, "now">;
+const releaseCaches = new AsyncLocalStorage<KnownReleaseCache>();
+export function runWithKnownReleaseCache<T>(cache: KnownReleaseCache, operation: () => T): T {
+  return releaseCaches.run(cache, operation);
+}
 let runtime: Promise<{ store: EvidenceStore; locks: LockManager; repos: ControlPlaneRepositories }> | undefined;
 function runtimeContext() {
   return runtime ??= (async () => {
@@ -88,6 +95,7 @@ function runtimeContext() {
 }
 /** Large file sources share the same vault and repository locks as byte releases. */
 export async function resolveKnownReleaseCache(options: Pick<KnownReleaseOptions, "store" | "locks"> = {}): Promise<{ store: EvidenceStore; locks: LockManager }> {
+  options = { ...releaseCaches.getStore(), ...options };
   const defaults = options.store && options.locks ? null : await runtimeContext();
   return { store: options.store ?? defaults!.store, locks: options.locks ?? defaults!.locks };
 }
@@ -171,6 +179,7 @@ export async function withKnownReleaseLock<T>(locks: LockManager, name: string, 
 }
 /** A parser revision replays held bytes first. The next scheduled check remains due. */
 export async function acquireKnownRelease(options: KnownReleaseOptions): Promise<KnownRelease> {
+  options = { ...releaseCaches.getStore(), ...options };
   publicUrl(options.url);
   if (!/^[a-z0-9][a-z0-9._-]*$/i.test(options.sourceId) || !options.releaseId || !options.parserVersion ||
       !Number.isSafeInteger(options.maxBytes) || options.maxBytes < 1 || !Number.isFinite(options.checkAfterMs) || options.checkAfterMs < 0) {
@@ -253,7 +262,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     else if (heldBytes && prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
     await checkKnownSourceRetry(store, options.sourceId, options.url, now);
     const response = await requestPublisher(options.sourceId, () =>
-      (options.fetchImpl ?? fetch)(options.url, { headers, signal: options.signal, redirect: "follow" }));
+      (options.fetchImpl ?? fetchSource)(options.url, { headers, signal: options.signal, redirect: "follow" }));
     const finalUrl = response.url || options.url;
     let final: URL;
     try { final = publicUrl(finalUrl); }
@@ -266,7 +275,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
       throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_REDIRECT_REFUSED");
     }
     const checkedAt = options.now?.() ?? new Date().toISOString();
-    if (response.status === 304) {
+    if (response.status === 304 || response.headers.get("x-meanwhile-source-status") === "304") {
       await response.body?.cancel().catch(() => {});
       if (!prior || !heldBytes) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_304_WITHOUT_BYTES");
       const confirmed = { ...prior, checkedAt, lastCheckStatus: 304, parsers: [...new Set([...prior.parsers, options.parserVersion])] };

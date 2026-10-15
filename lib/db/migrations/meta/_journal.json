@@ -253,6 +253,48 @@
       "when": 1790889600001,
       "tag": "0035_r1_fact_store",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1792022400001,
+      "tag": "R4_meeting_dependencies",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1792022400002,
+      "tag": "R4_meeting_partitions",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1792022400003,
+      "tag": "R4_source_copy_observations",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1792022400004,
+      "tag": "R4_source_copy_blob_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1792022400005,
+      "tag": "R4_retire_meeting_families",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1792022400006,
+      "tag": "R4_meeting_artifacts",
+      "breakpoints": true
     }
   ]
 }

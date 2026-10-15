@@ -1,46 +1,4 @@
-/**
- * `pnpm verify:extraction` — DOES THE PAGE STILL SAY WHAT WE EXTRACTED?
- * (2026-08-26, the descent session, Item 7b. **The first measurement of its
- * kind in this project's history.**)
- *
- * ## The defect no existing check can catch
- *
- * A silently failed extraction leaves a PLAUSIBLE VALUE behind. The Carruth
- * case is the shape: the district published the name six times on a page
- * fetched at HTTP 200, and the extractor read a news blurb instead. Every
- * instrument in this repo asks *did something come back* — and something did.
- *
- * RULING 100 named this one floor up: *a total that reconciles is not a total
- * that is correct.* This is that reasoning pointed at a ROSTER: a name in our
- * store, a page on the body's own site, and until today **nothing had ever
- * compared the two — 0 of 42.**
- *
- * ## What agreement means, and why it is deliberately generous
- *
- * A name AGREES when it appears in the page's rendered text. The comparison is
- * over normalised text with markup stripped, because a name split across
- * `<strong>Ravi</strong> Shah` is the same name to a reader and the failure this
- * hunts is a name that is not there AT ALL.
- *
- * **Generous on purpose.** A false disagreement sends a session to re-hunt a
- * roster that is fine; a false agreement is the defect surviving the check
- * written to find it. So a partial match — surname present, given name absent —
- * is reported as its OWN state rather than folded into either column. RULING
- * 100's second half: *we read four and the page never said how many there
- * should be* is a different claim from *we read four and the page says four*.
- *
- * ## Fail closed
- *
- * A page that cannot be read is `COULD_NOT_READ` and is counted SEPARATELY
- * (RULING 24, RULING 114). Folding it into agreement would report confidence
- * never measured; folding it into disagreement would raise a false alarm about
- * a roster nobody has any evidence against.
- *
- * Usage:
- *   pnpm verify:extraction
- *   pnpm verify:extraction --limit 12
- */
-
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -56,63 +14,11 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-const BROWSER_UA =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
-
 async function getPage(url: string): Promise<string | null> {
-  const rungs: Record<string, string>[] = [
-    { "user-agent": "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)", accept: "text/html,*/*" },
-    { "user-agent": BROWSER_UA, accept: "text/html,application/xhtml+xml,*/*;q=0.8", "accept-language": "en-US,en;q=0.9" },
-  ];
-  for (const headers of rungs) {
-    try {
-      const res = await fetch(url, { headers, redirect: "follow", signal: AbortSignal.timeout(25_000) });
-      if (res.ok) return await res.text();
-    } catch {
-      /* next rung */
-    }
-  }
   try {
-    const { execFile } = await import("node:child_process");
-    const { promisify } = await import("node:util");
-    const run = promisify(execFile);
-    /*
-     * **THE STATUS CODE IS ASKED FOR, BECAUSE A WALL IS NOT AN EMPTINESS.**
-     * (2026-08-29, found while regenerating this report.)
-     *
-     * This rung used to be `curl -sL ...` and `return stdout.length > 0`. curl
-     * prints the BODY of a refusal exactly as it prints the body of a page, so
-     * a 403 came back as 5,591 bytes of denial HTML and became "the page" —
-     * and every name on that roster was then reported DISAGREED, absent from a
-     * document nobody had ever been allowed to read.
-     *
-     * Newbury Selectboard is the case: `www.newbury.nh.gov` answers this
-     * script's own user-agent with a hard 403, and its three members were
-     * accused of not being on their own town's page. The report was not even
-     * reproducible run to run — the two earlier rungs sometimes get through, so
-     * the same three people flipped between AGREED and DISAGREED between
-     * consecutive runs of an instrument whose whole job is to be believed.
-     *
-     * `-w` appends the code on its own last line, so a refusal becomes
-     * COULD_NOT_READ and is counted in its own column (RULING 24, RULING 114).
-     * That is the constitution's own rule about the ladder, applied to the
-     * instrument that checks the ladder's output: a failed retrieval is
-     * reported as a failed retrieval, with the wall named.
-     */
-    const { stdout } = await run(
-      "curl",
-      ["-sL", "--max-time", "25", "-A", BROWSER_UA, "-w", "\n%{http_code}", url],
-      { timeout: 40_000, maxBuffer: 24 * 1024 * 1024 },
-    );
-    const split = stdout.lastIndexOf("\n");
-    if (split < 0) return null;
-    const status = Number(stdout.slice(split + 1).trim());
-    const body = stdout.slice(0, split);
-    if (!Number.isFinite(status) || status < 200 || status >= 300) return null;
-    return body.length > 0 ? body : null;
-  } catch {
-    return null;
-  }
+    const response = await fetchSource(url, { headers: { accept: "text/html" }, signal: AbortSignal.timeout(25_000) });
+    return response.ok ? response.text() : null;
+  } catch { return null; }
 }
 
 /** Rendered text, as close as a fetch gets to what a reader sees. */
@@ -129,37 +35,7 @@ export function renderedText(html: string): string {
     .toLowerCase();
 }
 
-/**
- * **THE TEXT A CLIENT-RENDERED PAGE SERVES BUT DOES NOT YET SHOW.**
- * (2026-08-29, NH216.)
- *
- * `renderedText` strips `<script>`, which is right for CODE and wrong for
- * DATA. A Nuxt, Next or React page ships its content as a JSON payload inside a
- * `<script>` tag and paints it in the browser — so on those sites the stripping
- * throws away the entire page and leaves the chrome.
- *
- * That is what happened to Vail Unified. This verifier reported five of six
- * governing-board members ABSENT from the district's own board page and opened
- * NH216 against the roster. The roster was correct. **The instrument had
- * asserted an absence without having looked where the names were** — a plain
- * `fetch` has them, in the Apptegy payload, in the served HTML, at HTTP 200.
- *
- * That is the gravest failure available to a checking instrument in this
- * repository. A false DISAGREED is an accusation against a government's own
- * publication, and the constitution's rule is absolute: absence is never
- * asserted. RULING 193 says an instrument may rest its verdict only on evidence
- * it actually checked.
- *
- * ## Why JSON STRING LITERALS and not the whole script body
- *
- * Because searching raw script source would trade a false ABSENT for a false
- * PRESENT, which is the worse direction — a minified bundle contains enough
- * identifier fragments to "find" almost any surname, and a false agreement is
- * the defect surviving the check written to find it.
- *
- * A person's name in a hydration payload is a JSON STRING VALUE. Pulling only
- * quoted string literals keeps the data and discards the code.
- */
+
 export function embeddedDataText(html: string): string {
   const scripts = html.match(/<script[\s\S]*?<\/script>/gi) ?? [];
   const strings: string[] = [];
@@ -178,28 +54,12 @@ export function embeddedDataText(html: string): string {
 
 export type NameVerdict =
   | "AGREED"
-  /**
-   * On the page the government served, inside its client-rendering payload
-   * rather than its static markup.
-   *
-   * **This is agreement, not a lesser form of it.** The district publishes the
-   * name; a reader opening that URL sees it. It is reported separately only
-   * because the DISTINCTION is a fact a session needs — it says the page is
-   * client-rendered, which is what a future extractor has to handle — and never
-   * because the name is in any doubt.
-   */
+
   | "AGREED_IN_EMBEDDED_DATA"
   | "PARTIAL"
   | "DISAGREED";
 
-/**
- * Is this extracted name on this page?
- *
- * Three states, never two. A surname present with the given name absent is a
- * real and different fact — it usually means the page changed the person's
- * preferred form rather than that we invented them — and reporting it as a
- * disagreement would send somebody hunting a roster that is broadly right.
- */
+
 export function judgeName(name: string, text: string, embedded = ""): NameVerdict {
   const clean = name
     .toLowerCase()
@@ -209,13 +69,7 @@ export function judgeName(name: string, text: string, embedded = ""): NameVerdic
     .trim();
   if (!clean) return "DISAGREED";
   if (text.includes(clean)) return "AGREED";
-  /*
-   * The static markup does not say it. Before this may become an accusation
-   * against the government's page, look in the payload the page ships to paint
-   * itself — see `embeddedDataText`. NH216 was opened because this step did not
-   * exist, and five correct names were reported absent from the page publishing
-   * them.
-   */
+
   if (embedded.includes(clean)) return "AGREED_IN_EMBEDDED_DATA";
 
   const parts = clean.split(" ").filter((p) => p.length > 1);
@@ -288,23 +142,7 @@ async function main(): Promise<void> {
       continue;
     }
 
-    /*
-     * A PDF IS NOT A DISAGREEMENT — it is a question this reader cannot ask.
-     * (Found 2026-08-26 on the first run, and corrected before the number was
-     * reported.)
-     *
-     * Merrimack County's Board of Commissioners roster is sourced from
-     * `Final Annual Report 2025.pdf`. This reader strips HTML tags; handed a
-     * PDF's bytes it produces noise, and all three commissioners came back
-     * **DISAGREED** — an accusation against a roster there is no evidence
-     * against, produced by an instrument being asked the wrong question.
-     *
-     * RULING 100's second state exactly: *we could not assert a count* is a
-     * distinct, named, reportable outcome and never a silent pass — and here
-     * never a silent FAILURE either, which is the same error pointed the other
-     * way. Rung 9 says PDFs ARE data and text-layer extraction is owed; that is
-     * real work and it is a tracker row, not something to fake here.
-     */
+
     if (/^%PDF-/.test(html.slice(0, 8)) || /\.pdf(\?|$)/i.test(url)) {
       results.push({
         body: roster.bodyName,
@@ -389,14 +227,7 @@ async function main(): Promise<void> {
     "",
     "## Every roster",
     "",
-    /*
-     * `In payload` is its own column rather than folded into `Agreed`, because
-     * a reader of this table needs to see WHICH rosters sit on client-rendered
-     * pages — that is the fact a future extractor has to handle. Folding it into
-     * `Agreed` would hide it; leaving it out entirely made Vail read `0 agreed`
-     * while five of its members were verified, which is how a corrected row
-     * still looked like a broken one.
-     */
+
     "| Body | Agreed | In payload | Partial | Disagreed | Names absent from the page | Source |",
     "|---|---|---|---|---|---|---|",
   ];
@@ -417,18 +248,7 @@ async function main(): Promise<void> {
   console.log("\nwrote docs/extraction-verification.md");
 }
 
-/*
- * GUARDED, BECAUSE A TEST IMPORTS THIS FILE. (2026-08-30.)
- *
- * `tests/verify-extraction-client-rendered.test.ts` imports `judgeName`,
- * `renderedText` and `embeddedDataText` from here, and an unguarded top-level
- * `main()` meant EVERY `pnpm test` fetched all 44 roster pages live and
- * rewrote `docs/extraction-verification.md` as a side effect — live calls in
- * tests, which `tests/fixtures/`'s own law forbids, and a measurement doc
- * whose date moved on every unrelated suite run. The same guard shape as
- * `scripts/production-integrity.mts`: run only when this file IS the entry
- * point, export quietly when it is merely imported.
- */
+
 if (
   import.meta.url === `file://${process.argv[1]?.replace(/\\/g, "/")}` ||
   process.argv[1]?.endsWith("verify-extraction.mts")

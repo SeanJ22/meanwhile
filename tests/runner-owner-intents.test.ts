@@ -256,8 +256,8 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.match(honor[0], /intentId: id,\s*honors: intent\.intentId/);
   assert.match(honor[0], /honoredBy: `pilot-runner@\$\{hostname\(\)\}#\$\{process\.pid\}`/, "honoredBy does not name pilot-runner@host#pid");
 
-  assert.match(src, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run: runRoutineCivicData[\s\S]*run: runIntakeRuntime/, "the two permanent runtime lanes are not independently scheduled");
-  assert.match(src, /function startStandingRuntimeClock\(\)[\s\S]*standingRuntimeTimer = setInterval\([\s\S]*runStandingRuntimeTick\("independent standing clock"\)/, "the runtime clock is not independently startable");
+  assert.match(src, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run: \(\) => runRoutineState\(state\)[\s\S]*run: runIntakeRuntime/, "the two permanent runtime lanes are not independently scheduled");
+  assert.match(src, /function scheduleStandingRuntimeWake\(\)[\s\S]*standingRuntimeTimer = setTimeout\([\s\S]*runStandingRuntimeTick\("earliest source clock"\)/, "the runtime clock is not independently startable");
   assert.ok(src.indexOf("startStandingRuntimeClock();") < src.indexOf("while (cycle < CYCLES)"), "the runtime clock starts after research");
   assert.match(src, /if \(runtimeAdmissionsHeld\) return;/, "a release hold cannot close runtime admission");
   assert.match(src, /await standingRuntimeScheduler\.waitForIdle\(\)/, "release handoff does not wait for independently running source lanes");
@@ -314,9 +314,9 @@ test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on
   let finishRead: (value: string) => void = () => { throw new Error("read not started"); };
   let reads = 0;
   const context = createContext({
-    runtimeAdmissionsHeld: false, standingRuntimeTimer: null, ownerControlTimer: null, researchCycleActive: false,
+    runtimeAdmissionsHeld: false, standingRuntimeClockStarted: false, standingRuntimeTimer: null, ownerControlTimer: null, researchCycleActive: false,
     canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000, CONTROL_WAKE_POLL_MS,
-    runStandingRuntimeTick: () => {}, startScheduledOrderClock: () => {}, console,
+    runStandingRuntimeTick: () => {}, scheduleStandingRuntimeWake: () => {}, startScheduledOrderClock: () => {}, console,
     provider: "postgres", STAGING: false, auditPasses: { start: () => {} },
     setInterval: (callback: () => void) => { tick = callback; return 1; },
     ownerSays: () => { reads++; return new Promise<string>(resolve => { finishRead = resolve; }); },

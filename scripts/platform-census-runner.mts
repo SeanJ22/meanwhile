@@ -1,3 +1,4 @@
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { neon } from "@neondatabase/serverless";
 import { join } from "node:path";
@@ -37,7 +38,7 @@ const runtime: DiscoveryRuntime = {
   open: input => {
     const read = async () => {
       const got = await fleet.guardedOpenBytes("discovery-web", "platform-census",
-        (target, init) => fetch(target, { ...init, signal: AbortSignal.timeout(input.timeoutMs), redirect: "manual" }),
+        (target, init) => fetchSource(target, { ...init, signal: AbortSignal.timeout(input.timeoutMs), redirect: "manual" }),
         { followRedirects: false })(input);
       return { status: got.status, body: new TextDecoder().decode(got.bytes), bytes: got.bytes.byteLength,
         contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };

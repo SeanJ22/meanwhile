@@ -18,9 +18,9 @@ export interface CommentAccessProjection {
 let held: { readonly records: readonly CommentAccess[]; readonly versionId: string } | null = null;
 
 /** Comment rules composed from live facts; the version moves whenever any fact does. */
-export async function readCommentAccessFacts(query: Query | null = factReader()): Promise<{ readonly value: CommentAccessProjection; readonly versionId: string }> {
-  const records = query ? await readFactCommentAccess(query) : [];
-  held = { records, versionId: await factsVersion(query) };
+export async function readCommentAccessFacts(query: Query | null = factReader(), state?: string | null): Promise<{ readonly value: CommentAccessProjection; readonly versionId: string }> {
+  const records = query ? await readFactCommentAccess(query, null, state) : [];
+  held = { records, versionId: await factsVersion(query, "", state) };
   return { value: { kind: "comment-access", records: records.map(record => ({ id: `comment-access:${record.bodyId}`, ...record })) }, versionId: held.versionId };
 }
 
@@ -34,12 +34,7 @@ export function currentCommentAccess(): readonly CommentAccess[] {
   return held.records;
 }
 
-/**
- * The comment-access record for a meeting, if one is curated.
- *
- * A canonical body identity or unique explicit published-name alias is
- * required. A division with one held policy can still contain other bodies.
- */
+/** A division can contain several bodies, so only a body identity or unique published name selects its rules. */
 export function commentAccessFor(
   ocdId: OcdId | null,
   bodyName?: string,
@@ -51,9 +46,7 @@ export function commentAccessFor(
     try {
       records = currentCommentAccess();
     } catch {
-      // A missing/unreachable comment-rule pointer withholds only this
-      // optional family. It must not make the independent meetings corpus or
-      // another source's Reader answer fail.
+      // Missing comment rules must not hide independently verified meetings.
       records = [];
     }
   }

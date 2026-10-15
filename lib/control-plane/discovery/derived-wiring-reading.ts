@@ -1,4 +1,6 @@
-import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
+import { readMeetingVenues } from "../../civic-data/meeting-dependencies.ts";
+import { readCuratedReaderProjection, installMeetingVenueProjection } from "../../civic-data/curated-reader-read-model.ts";
+import { scopedManualContractScope } from "../../civic-data/scoped-manual-contracts.ts";
 import type { AdapterVerification, DerivedInputRef } from "../../civic-data/derived-authority.ts";
 import { bodySourceWiringFor, DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringKind, type DerivedWiringRow } from "../../civic-data/derived-meeting-wiring.ts";
 import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
@@ -59,7 +61,15 @@ export async function readHeldCalendars(input: {
 }): Promise<HeldCalendarReadings> {
   if (input.readings.length === 0) return { kind: "READ", verifications: new Map() };
   try {
-    await refreshVenueResolutionsFromPromoted(input.options);
+    const scopes = [...new Set(input.readings.map(reading => bodySourceWiringFor(reading.row).ocdId).filter((id): id is string => id !== null))];
+    if (input.options.store) {
+      const reads = await Promise.all(scopes.map(ocdId => readCuratedReaderProjection("venue-resolutions", {
+        ...input.options, scope: scopedManualContractScope("venue-resolutions", ocdId),
+      })));
+      const unavailable = reads.find(read => read.kind === "STORE_UNREACHABLE");
+      if (unavailable?.kind === "STORE_UNREACHABLE") throw new Error(unavailable.detail);
+      installMeetingVenueProjection(reads.flatMap(read => read.kind === "PROMOTED" ? read.value.records : []), "scoped-held-venues");
+    } else await readMeetingVenues(scopes);
   } catch (error) {
     return { kind: "UNREADABLE", detail: `The venue resolutions every adapter reading resolves through could not be read: ${message(error)}` };
   }

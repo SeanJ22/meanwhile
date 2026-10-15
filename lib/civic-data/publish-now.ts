@@ -64,16 +64,18 @@ export function publishNowWorkerTasks(items: readonly WorkerPublicationItem[], r
   return workerPublicationTasks(items, results, now);
 }
 
-/** The publication outbox reads only its registered work and acknowledgement scalars, before transfer. */
-export async function readWorkerPublicationItems(
+export const WORKER_PUBLICATION_STATE_SQL = "upper(regexp_replace(coalesce(nullif(value #>> '{autonomousPlan,jurisdiction}', ''), value #>> '{autonomousPlan,contract,jurisdiction,state}', 'US'), '^US-', '', 'i'))";
+
+export async function* readWorkerPublicationItems(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
+  state: string,
   contractIds: readonly string[] = WORKER_PUBLICATION_TASK_IDS,
-): Promise<WorkerPublicationItem[]> {
+): AsyncGenerator<readonly WorkerPublicationItem[]> {
   const registered = new Set(WORKER_PUBLICATION_TASK_IDS);
   if (contractIds.some(id => !registered.has(id))) throw new Error("PUBLICATION_CONTRACT_SELECTION_INVALID");
-  if (contractIds.length === 0) return [];
-  const items: WorkerPublicationItem[] = [];
-  let afterId: string | null = null;
+  if (!/^(?:US|US-[A-Z]{2})$/.test(state)) throw new Error("PUBLICATION_STATE_SELECTION_INVALID");
+  if (contractIds.length === 0) return;
+  let afterId = "";
   for (;;) {
     const rows = await query(`SELECT id, value #>> '{subject}' AS subject,
       value #>> '{autonomousPlan,publication,contractId}' AS contract_id,
@@ -88,20 +90,21 @@ export async function readWorkerPublicationItems(
       )) ELSE NULL END AS publication_outcome
       FROM cp_work_items
       WHERE value #>> '{autonomousPlan,publication,contractId}' = ANY($1::text[])
-        ${afterId === null ? "" : "AND id > $2"}
-      ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, afterId === null ? [contractIds] : [contractIds, afterId]);
-    for (const row of rows) {
+        AND ${WORKER_PUBLICATION_STATE_SQL} = $2 AND id > $3
+      ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, [contractIds, state.replace(/^US-/, ""), afterId]);
+    const items: WorkerPublicationItem[] = rows.map(row => {
       if (typeof row.id !== "string" || typeof row.contract_id !== "string" || !contractIds.includes(row.contract_id) ||
           typeof row.record_class !== "string" || !row.record_class.trim()) throw new Error("PUBLICATION_WORK_ITEM_METADATA_INVALID");
-      items.push({ id: row.id, ...(typeof row.subject === "string" ? { subject: row.subject } : {}), autonomousPlan: {
+      return { id: row.id, ...(typeof row.subject === "string" ? { subject: row.subject } : {}), autonomousPlan: {
         publication: { contractId: row.contract_id as NonNullable<NonNullable<WorkerPublicationItem["autonomousPlan"]>["publication"]>["contractId"] },
         contract: { recordClass: row.record_class },
       }, ...(row.publication_outcome === null || row.publication_outcome === undefined ? {}
-        : { publicationOutcome: row.publication_outcome as WorkerPublicationItem["publicationOutcome"] }) });
-    }
-    if (rows.length < AGGREGATE_LIST_READ_PAGE) return items;
+        : { publicationOutcome: row.publication_outcome as WorkerPublicationItem["publicationOutcome"] }) };
+    });
+    if (items.length) yield items;
+    if (rows.length < AGGREGATE_LIST_READ_PAGE) return;
     const next = items.at(-1)!.id;
-    if (afterId !== null && next <= afterId) throw new Error("PUBLICATION_WORK_ITEM_PAGE_NOT_ADVANCING");
+    if (next <= afterId) throw new Error("PUBLICATION_WORK_ITEM_PAGE_NOT_ADVANCING");
     afterId = next;
   }
 }

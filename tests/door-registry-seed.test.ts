@@ -46,12 +46,11 @@ test("every hand-wired meeting door becomes a registry record under its partitio
   for (const door of doors) assert.ok(door.hosts.length > 0, `${door.doorId} names a host`);
 });
 
-test("a derived member is a door under its wiring row id, in its state's family", async () => {
+test("a derived member keeps its wiring row identity and names its own body", async () => {
   const draft = doorFromDerivedRecord(DERIVED);
   assert.equal(draft.doorId, DERIVED.id);
   assert.equal(draft.kind, "ical");
-  assert.equal(draft.config?.familyPartition, "meetings:derived:US-AZ");
-  assert.ok(MEETING_PARTITION_CONTRACTS.some((p) => p.id === draft.meeting?.family), "the family named is a partition that exists");
+  assert.deepEqual(draft.bodyIds, [DERIVED.row.bodyId]);
   const repos = createMemoryRepositories();
   const first = await seedMeetingDoors({ repo: repos.doors, wiring: [], derived: [DERIVED], deriveInputAt: AT, at: AT });
   assert.deepEqual(first.refused, []);

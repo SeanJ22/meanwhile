@@ -1,3 +1,4 @@
+import { fetchSource } from "../sources/fetch-source.ts";
 /** The same hunt packet sent to Exa's research agent; its findings go into the Box
  * beside our own hunter's, and Exa reports what each run cost. */
 import type { FetchLike } from "./search.ts";
@@ -76,7 +77,7 @@ export async function runExaAgent(input: {
   readonly clock?: () => number;
   readonly onPoll?: () => void;
 }): Promise<ExaAgentRun> {
-  const fetchImpl = input.fetchImpl ?? ((url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
+  const fetchImpl = input.fetchImpl ?? ((url, init) => fetchSource(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
   const sleep = input.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
   const clock = input.clock ?? Date.now;
   const headers = { "Content-Type": "application/json", Authorization: `Bearer ${input.key}` };

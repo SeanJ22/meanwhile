@@ -1,3 +1,4 @@
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../sources/fetch-source.ts";
 import { savedPageReader, realOpenBytes } from "../control-plane/scheduler/scout-tools.ts";
 import type { ArtifactProvenance, ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
@@ -10,7 +11,7 @@ import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { HeldSourcePage } from "../sources/plural/place.ts";
 import { readPlaceArtifacts } from "../control-plane/repository/pg-store.ts";
-import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
+import { type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 
 export class PlaceSourceDeferred extends Error {
   constructor(host: string) {
@@ -32,19 +33,17 @@ export async function placeSourceReader(input: {
   const captures = new Map<string, WorkerPublicationCapture>();
   const geographyCaptures: WorkerPublicationCapture[] = [];
   const cost = { requestCount: 0, bytesFetched: 0 };
-  const requests = new Map<string, number>();
   let deferred: PlaceSourceDeferred | null = null;
-  const takeRequest = (url: string) => {
-    const host = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
-    const limit = websiteRequestLimit(input.websiteSize?.(url));
-    const count = requests.get(host) ?? 0;
-    if (limit !== null && count >= limit) {
-      const stopped = new PlaceSourceDeferred(host);
-      deferred ??= stopped;
-      throw stopped;
-    }
-    requests.set(host, count + 1);
+  const acquire = async <T>(url: string, operation: () => Promise<T>): Promise<T> => {
     cost.requestCount++;
+    try { return await runWithSourceFetch({ websiteSize: input.websiteSize }, operation); }
+    catch (error) {
+      if (error instanceof SourceFetchDeferred) {
+        deferred ??= new PlaceSourceDeferred(new URL(url).hostname);
+        throw deferred;
+      }
+      throw error;
+    }
   };
   const durable = durableResearchTools(tools, { project, attemptId: context.attemptId,
     workItemId: context.workItemId, routeTaskId: context.routeTaskId });
@@ -109,18 +108,14 @@ export async function placeSourceReader(input: {
     return resolvedUrls.get(url)!;
   };
   const read = savedPageReader({ ...context, ...durable, vault,
-    // The size-qualified counter below owns this limit. Unknown, larger,
-    // state, federal and national sources have no website-walk count.
-    bound: { ...context.bound, maxRequestsPerHost: Number.MAX_SAFE_INTEGER },
+    websiteSize: input.websiteSize,
     openBytes: async request => {
-      takeRequest(request.url);
-      const response = await (tools.openBytes ?? realOpenBytes)(request);
+      const response = await acquire(request.url, () => (tools.openBytes ?? realOpenBytes)(request));
       cost.bytesFetched += response.bytes.byteLength;
       return response;
     },
     ...(tools.browse ? { browse: async (request: Parameters<NonNullable<ResearchRuntimeTools["browse"]>>[0]) => {
-      takeRequest(request.url);
-      const response = await tools.browse!(request);
+      const response = await acquire(request.url, () => tools.browse!(request));
       cost.bytesFetched += Buffer.byteLength(response.html);
       return response;
     } } : {}),
@@ -137,9 +132,7 @@ export async function placeSourceReader(input: {
     get deferred() { return deferred; },
     fetchGeography: (async (url, options) => {
       const address = url instanceof Request ? url.url : String(url);
-      takeRequest(address);
-      await tools.spaceOut(new URL(address).hostname);
-      return fetch(url, options);
+      return acquire(address, () => fetchSource(url, options));
     }) satisfies typeof fetch,
     geographyCaptures,
     readGeography: async (url: string) => {
@@ -150,18 +143,7 @@ export async function placeSourceReader(input: {
     },
     read: async (url: string): Promise<HeldSourcePage> => {
       await heldCapture(url);
-      let page: Awaited<ReturnType<typeof read>>;
-      try { page = await read(url); }
-      catch (error) {
-        // The shared toolkit can refuse before calling openBytes (including
-        // its robots request). Preserve that bound as a deferral, too.
-        if (error instanceof Error && error.message.includes("(the per-host bound)")) {
-          const stopped = new PlaceSourceDeferred(new URL(url).hostname);
-          deferred ??= stopped;
-          throw stopped;
-        }
-        throw error;
-      }
+      const page = await read(url);
       const capture = captures.get(page.artifactId);
       if (!capture) throw new Error("Saved source has no capture metadata");
       return { url: capture.evidence.canonicalUrl, baseUrl: page.url,

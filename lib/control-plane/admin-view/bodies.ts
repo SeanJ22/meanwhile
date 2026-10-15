@@ -1,5 +1,3 @@
-/** Nothing here is estimated: a count that cannot be taken is `null` with its reason. Meeting sources are described by their sitting-window `schedule`, not `cadence`. */
-
 import { displayNameOf } from "../display-name.ts";
 import type { SittingWindowSchedule } from "../../civic-data/contracts.ts";
 import {
@@ -78,12 +76,7 @@ export interface PublisherHorizon {
   readonly claimsComplete: boolean;
 }
 
-/**
- * The horizon from its query columns (`horizon_kind`, `horizon_returned`,
- * `horizon_declared`, `horizon_paginated`, `horizon_complete`). A kind this
- * page does not know reads as no horizon, never as bounded; a flag that is not
- * plainly true reads as false.
- */
+/** Unknown horizon kinds do not prove bounds; only literal true flags are accepted. */
 export function horizonFromColumns(r: Readonly<Record<string, unknown>>): PublisherHorizon | null {
   const kind = r.horizon_kind;
   if (kind !== "BOUNDED" && kind !== "OPEN_FACT_SET") return null;
@@ -362,6 +355,7 @@ export function sittingClockOf(
   version: VersionFacts | null,
   attempts: readonly AttemptFacts[],
   nowMs: number,
+  bodySittings?: readonly (readonly SittingFacts[] | undefined)[],
 ): SittingClock {
   const schedule = contract.schedule;
   const source = sourceWords(contract.meetingSource);
@@ -371,14 +365,13 @@ export function sittingClockOf(
     return { source, schedule, unread: true, published, unpublishedWaitMs, hot: undefined, holding: null, nextSitting: null, owed: null };
   }
   const clock = version?.clock ?? null;
-  const sittings = clock?.sittings ?? null;
-  const ends = sittings === null
-    ? new Map<string, number>()
-    : statedSittingEndsByScope([{ scope: contract.scope, pairs: sittings.map((s) => [s.startsAt, s.endsAt]) }]).get(contract.scope) ?? new Map<string, number>();
+  const sittingLists = bodySittings ?? [clock?.sittings];
+  const sittings = sittingLists.flatMap(rows => rows ?? []);
+  const ends = statedSittingEndsByScope([{ scope: contract.scope, pairs: sittings.map((s) => [s.startsAt, s.endsAt]) }]).get(contract.scope) ?? new Map<string, number>();
   const hotAt = (starts: readonly string[] | undefined) => sittingWindowHotByConclusion(schedule, [starts], nowMs, ends);
-  const hot = hotAt(sittings?.map((s) => s.startsAt));
+  const hot = sittingWindowHotByConclusion(schedule, sittingLists.map(rows => rows?.map(row => row.startsAt)), nowMs, ends);
 
-  const dated = (sittings ?? []).filter((s) => Number.isFinite(ms(s.startsAt))).sort((a, b) => ms(a.startsAt) - ms(b.startsAt));
+  const dated = sittings.filter((s) => Number.isFinite(ms(s.startsAt))).sort((a, b) => ms(a.startsAt) - ms(b.startsAt));
   const next = dated.find((s) => ms(s.startsAt) > nowMs) ?? null;
   const holdingAhead = dated.find((s) => ms(s.startsAt) > nowMs && hotAt([s.startsAt]) === true) ?? null;
   const holdingBehind = [...dated].reverse().find((s) => ms(s.startsAt) <= nowMs && hotAt([s.startsAt]) === true) ?? null;
@@ -462,10 +455,7 @@ const FAILED_STATES = new Set([
   "CANNOT_TELL",
 ]);
 
-/**
- * Our own code or configuration failed before the publisher answered: the ingest marks it with this detail prefix
- * (lib/sources/composite/failure-kind.ts) while state and code stay SOURCE_BLOCKED / SOURCE_RETRIEVAL_FAILED.
- */
+/** The candidate still says SOURCE_BLOCKED when our code failed before contacting the source. */
 const JOB_FAILURE_PREFIX = "JOB_FAILURE:";
 const JOB_FAILURE_SENTENCE_END = "this is not a publisher wall.";
 
@@ -672,9 +662,10 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   const name = bodyDisplayName(contract, version);
   const stateCode = stateCodeOf(g.bodyId, contract.ocdId);
   const sittingContracts = g.contracts.filter((c): c is WatchedContract & { readonly schedule: SittingWindowSchedule } => c.schedule?.kind === "SITTING_WINDOW");
+  const bodySittings = sittingContracts.map(c => l.versionByScope.get(c.scope)?.clock?.sittings);
   const clocks =
     sittingContracts.length === g.contracts.length
-      ? sittingContracts.map((c) => sittingClockOf(c, l.versionByScope.get(c.scope) ?? null, l.attemptsByScope.get(c.scope) ?? [], l.nowMs))
+      ? sittingContracts.map((c) => sittingClockOf(c, l.versionByScope.get(c.scope) ?? null, l.attemptsByScope.get(c.scope) ?? [], l.nowMs, bodySittings))
       : [];
 
   const lastFailed = last !== null && (!last.acquisitionSucceeded || FAILED_STATES.has(last.state));

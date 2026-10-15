@@ -1,24 +1,5 @@
-/**
- * The .gov registry snapshot. `cisagov/dotgov-data` publishes
- * `current-full.csv`: every .gov domain with its registrant's organization,
- * city, state and CISA's own `Domain type`. It is a link-ladder rung ("where
- * might this government publish"), and CISA's election-office type names the
- * rung for ballot and candidate-filing hunts.
- *
- * Domains are not a denominator: a government with no .gov domain is missing
- * entirely, one government can hold several domains, and a domain is not a
- * body. Never count governments from it.
- *
- * The current commit touching the CSV is resolved first and the payload is read
- * at that exact SHA. Floors well below the observed counts refuse a truncation
- * or an HTML error page. US Government work, public domain.
- *
- * Production cadence and owner-initiated promotion enter through the installed
- * runtime dispatcher; this file is the internal `dotgov` acquisition adapter.
- *
- * @freshness-reads-here — the read stamp is minted only after the pinned CSV
- * body has been read and its complete structural denominator has validated.
- */
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+/** @freshness-reads-here */
 
 import { stamp } from "./stamp.mts";
 import { DOTGOV_BOUNDARY, parseDotGovRegistry, type DotGovSnapshot } from "../lib/civic-data/dotgov.ts";
@@ -44,11 +25,7 @@ const COMMITS_URL = "https://api.github.com/repos/cisagov/dotgov-data/commits?pa
 
 const UA = "we-the-people/1.0 (civic data; contact seanj22@gmail.com)";
 
-/**
- * The floors, set well below what the registry actually held at this SHA and
- * far above zero. A normal week's churn does not trip them; a truncation
- * cannot pass them.
- */
+
 const MIN_DOMAINS = 15_000;
 const MIN_ELECTION_DOMAINS = 500;
 
@@ -61,7 +38,7 @@ export interface DotGovAcquisition {
 
 async function currentSourceSha(signal?: AbortSignal): Promise<string> {
   const response = await requestPublisher("CISA dotgov revision", () =>
-    fetch(COMMITS_URL, {
+    fetchSource(COMMITS_URL, {
       headers: { "user-agent": UA, accept: "application/vnd.github+json" },
       signal,
     }));
@@ -96,7 +73,7 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
   const sha = await currentSourceSha(signal);
   const csvUrl = `https://raw.githubusercontent.com/cisagov/dotgov-data/${sha}/current-full.csv`;
   const response = await requestPublisher("CISA dotgov registry", () =>
-    fetch(csvUrl, { headers: { "user-agent": UA }, signal }));
+    fetchSource(csvUrl, { headers: { "user-agent": UA }, signal }));
   if (!response.ok) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_RESPONSE_REFUSED",

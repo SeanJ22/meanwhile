@@ -20,7 +20,7 @@ import {
 
 import { stateOfOcdId, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
 
-import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore, scopedReaderArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 
 
 import { edgeValidationsRun } from "../lib/civic-data/validated-once.ts";
@@ -113,23 +113,34 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   const authority: PublishAuthority = {
     "registry-runtime": { value: registryTransferImport().projection.payload, versionId: `${tag}:registry` },
     "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
-    "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
-    "comment-access": { value: commentAccessProjection, versionId: `${tag}:comment-access` },
   };
   const store = new LocalFileArtifactStore(dir);
-  const result = await publishReaderEdgeArtifacts(snapshot, {
+  const result = await publishReaderEdgeArtifacts(null, {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
   }, {
     store,
     now: new Date().toISOString(),
-    extras: { commentAccess: COMMENT_ACCESS, everydayRouting: currentEverydayRoutingProjection() },
     authority,
-    ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
+    extras: { everydayRouting: currentEverydayRoutingProjection() },
     registrations: {},
   });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
+  for (const state of ["az","nj","nh"]) {
+    const meetings = snapshot.meetings.filter(meeting => (stateOfOcdId(meeting.ocdId) ?? "az") === state);
+    const ids = new Set(meetings.map(meeting => meeting.id));
+    const scoped = { ...snapshot,meetings,agendaDocuments: snapshot.agendaDocuments.filter(document => ids.has(document.meetingId)) };
+    const published = await publishReaderEdgeArtifacts(scoped,{ sourceThrough: snapshot.generatedAt,retrievedAt: snapshot.generatedAt,promotedThrough: snapshot.generatedAt },{
+      store: scopedReaderArtifactStore(store,state),extras: { commentAccess: COMMENT_ACCESS },
+      ...(state === "az" ? { authority: { "meeting-outcomes": { value: getOutcomeSnapshot(),versionId: `${tag}:outcomes` },
+        "comment-access": { value: commentAccessProjection,versionId: `${tag}:comment-access` } } } : {}),
+      ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).filter(([scope]) => scope === `US-${state.toUpperCase()}`)
+        .map(([scope,value]) => [scope,{ value,versionId: `${tag}:legislators:${scope}` }])) } : {}),registrations: {},
+    });
+    assert.equal(published.status,"PUBLISHED",JSON.stringify(published));
+  }
+
   return { dir, manifest: (await store.readManifest())!.manifest };
 }
 
@@ -164,7 +175,7 @@ test("the map's routes fetch only the authority families they read, never Ask's 
   assert.equal(bundle.meetingOutcomes, undefined, "the recorded outcomes are Ask's, not the map's");
   assert.equal(bundle.commentAccess, undefined, "the meetings route takes comment access from the manifest");
   assert.deepEqual(store.keys.filter((key) => [manifest.authorityArtifacts?.["meeting-outcomes"]?.key, manifest.authorityArtifacts?.["comment-access"]?.key].includes(key)), [], "fetched and parsed for nothing");
-  const everything = await ensureReaderAuthorityEdge(manifest, store);
+  const everything = await ensureReaderAuthorityEdge(manifest, store, undefined, ["az"]);
   assert.equal(everything.meetingOutcomes?.versionId, "c21-families:outcomes", "omitted, every family is fetched, as Ask needs");
   assert.equal(everything.commentAccess?.versionId, "c21-families:comment-access");
 });
@@ -293,23 +304,14 @@ test("/api/representation reads the registry from the edge it entered, and the C
   assert.equal(body.ocdId, division.join("/"));
 });
 
-test("a warm call resolves one place per published state from the edge, and refuses what the edge does not carry", async () => {
-  const withoutLegislators = await publishEdge("c21-warm-partial");
-  process.env.WTP_READER_EDGE_DIR = withoutLegislators.dir;
-  const states = [...new Set(withoutLegislators.manifest.scopes.map((scope) =>
-    stateOfOcdId(scope.ocdId) ?? (/^[a-z]{2}$/.test(scope.scope) && scope.scope !== "us" ? scope.scope : null),
-  ).filter((state): state is string => state !== null))];
-  assert.ok(states.length >= 3, `the fixture publishes meetings for several states: ${states.join(", ")}`);
-  const partial = await primeReaderEdge();
-  assert.equal(partial.manifest, true);
-  assert.equal(partial.meetings, true);
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-warm-partial:registry", "the warm call read the registry from the database");
-  assert.equal(partial.places, 0, "a place whose legislators are not on the edge must not count as warmed");
-  assert.equal(partial.placesRefused, states.length, "every state-legislative read was refused instead of sent to the database");
-
-  const whole = await publishEdge("c21-warm-whole", { legislators: true });
-  process.env.WTP_READER_EDGE_DIR = whole.dir;
-  const primed = await primeReaderEdge();
-  assert.deepEqual({ places: primed.places, placesRefused: primed.placesRefused }, { places: states.length, placesRefused: 0 });
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-warm-whole:registry");
+test("a warm call primes national reference artifacts without scanning state meetings",async () => {
+  for (const legislators of [false,true]) {
+    const { dir,manifest } = await publishEdge(`scoped-warm-${legislators}`,{ legislators });
+    process.env.WTP_READER_EDGE_DIR = dir;
+    assert.deepEqual(manifest.scopes,[]);
+    const primed = await primeReaderEdge();
+    assert.equal(primed.manifest,true);
+    assert.equal(primed.meetings,false);
+    assert.deepEqual({ places: primed.places,placesRefused: primed.placesRefused },{ places: 0,placesRefused: 0 });
+  }
 });

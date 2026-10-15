@@ -20,12 +20,6 @@ async function settleOperation(operation: IndependentRuntimeOperation): Promise<
   }
 }
 
-/**
- * Launch independent standing operations in the same turn, contain a thrown
- * operation to its own outcome, and wait for every operation before returning.
- * The caller therefore cannot start an overlapping tick while one child from
- * the current tick is still live.
- */
 export async function runIndependentRuntimePass(
   operations: readonly IndependentRuntimeOperation[],
 ): Promise<readonly IndependentRuntimeOutcome[]> {
@@ -37,13 +31,9 @@ export async function runIndependentRuntimePass(
 
 export interface IndependentRuntimeLane extends IndependentRuntimeOperation {
   readonly everyMs: number;
+  readonly nextDueAt?: () => number | null;
 }
 
-/**
- * Per-lane clocks keep a slow civic-data acquisition from delaying intake (and
- * vice versa). `tick` never waits on a lane, while each lane admits at most one
- * live run. All failures are delivered as outcomes rather than rejections.
- */
 export class IndependentRuntimeLaneScheduler {
   readonly #lanes: readonly IndependentRuntimeLane[];
   readonly #onOutcome: (outcome: IndependentRuntimeOutcome) => void;
@@ -71,7 +61,8 @@ export class IndependentRuntimeLaneScheduler {
     for (const lane of this.#lanes) {
       if (this.#inFlight.has(lane.id)) continue;
       const lastStarted = this.#lastStarted.get(lane.id) ?? Number.NEGATIVE_INFINITY;
-      if (!force && nowMs - lastStarted < lane.everyMs) continue;
+      const dueAt = lane.nextDueAt?.() ?? lastStarted + lane.everyMs;
+      if (!force && nowMs < dueAt) continue;
       this.#lastStarted.set(lane.id, nowMs);
       launched.push(lane.id);
       const running = settleOperation(lane);
@@ -82,6 +73,15 @@ export class IndependentRuntimeLaneScheduler {
       });
     }
     return launched;
+  }
+
+  nextDueAt(nowMs: number): number | null {
+    let next = Number.POSITIVE_INFINITY;
+    for (const lane of this.#lanes) {
+      if (this.#inFlight.has(lane.id)) continue;
+      next = Math.min(next, lane.nextDueAt?.() ?? (this.#lastStarted.get(lane.id) ?? nowMs) + lane.everyMs);
+    }
+    return Number.isFinite(next) ? Math.max(nowMs, next) : null;
   }
 
   inFlightIds(): readonly string[] {

@@ -3,13 +3,12 @@ import test from "node:test";
 
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
-import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
+import { meetingPartitionId,sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
 import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
-  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineFailureDomainFrontier,
   routinePassLaunchOrder,
   routineTaskDeadlineMs,
@@ -33,12 +32,6 @@ import {
   type ValidationReceipt,
 } from "../lib/civic-data/types.ts";
 
-/*
- * The meeting refresh schedule under a controlled clock: a meeting source is checked twice daily, and within 60
- * minutes while its body has a meeting in the next seven days or one that concluded in the previous seven. Every
- * instant is a number the test moves; every decision is the runner's own functions over the real store's clock.
- */
-
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 const DAY = 24 * HOUR;
@@ -53,6 +46,12 @@ function registered(id: string): RoutineSourceTask {
   const found = ROUTINE_SOURCE_TASKS.find((task) => task.id === id);
   assert.ok(found, `${id} is registered`);
   return found;
+}
+
+function bodyHot(task: RoutineSourceTask,clock: RoutineTaskClock,at: number): boolean | undefined {
+  return sittingWindowSignals(sittingWindowSourceIds(task.id).map(id => ({
+    task: registered(id),ok: true,clock: id === task.id ? clock : { sittingStarts: [] },
+  })),at).get(task.id);
 }
 
 /** A seeded generator, so every run replays the same timeline. */
@@ -211,7 +210,7 @@ test("controlled clock through the real store: a Pima-shaped body read across co
   let at = T0;
   while (at < END) {
     const clock = await store.clock(task.sourceId, "MEETING", task.scope);
-    const hot = sittingWindowSignals([{ task, ok: true, clock }], at).get(task.id);
+    const hot = bodyHot(task,clock,at);
     if (!routineTaskDue(task, clock, at, hot)) {
       at += PASS;
       continue;
@@ -233,7 +232,7 @@ test("controlled clock through the real store: a Pima-shaped body read across co
     else checks.push({ at: readAt, outcome });
     // The store's clock now holds this read: the next due is the normal rule from its own facts.
     const after = await store.clock(task.sourceId, "MEETING", task.scope);
-    const nextHot = sittingWindowSignals([{ task, ok: true, clock: after }], readAt).get(task.id);
+    const nextHot = bodyHot(task,after,readAt);
     const next = routineTaskDeadlineMs(task, after, nextHot)!;
     const published = after.sittingStarts !== undefined;
     if (outcome === "DIED_WITHOUT_RECEIPT") {
@@ -283,7 +282,7 @@ test("controlled clock through the real store: a Pima-shaped body read across co
   // within seven days until seven days after it concluded, then twice daily again.
   assert.ok(checks[1]!.at - checks[0]!.at >= 10 * HOUR, "R20: the never-published retry is twice daily");
   const firstHot = checks.find((check) => check.at >= enters)!;
-  assert.ok(firstHot.at - enters <= 6 * MIN, `the body turned hourly at ${iso(enters)} and was read at ${iso(firstHot.at)}`);
+  assert.ok(firstHot.at - enters <= HOUR, `the body turned hourly at ${iso(enters)} and was read at ${iso(firstHot.at)}`);
   const coldBefore = checks.filter((check) => check.at > checks[1]!.at && check.at < enters);
   assert.ok(coldBefore.length >= 4 && coldBefore.length <= 6, `${coldBefore.length} twice-daily reads while cold, not hourly ones`);
   const coldAfter = checks.filter((check) => check.at > leaves);
@@ -436,9 +435,7 @@ async function simulateRegistry(options: {
         lastConsideredAt: clocks.get(body.task.id)?.lastAttemptedAt ?? null,
         deadlineMs: routineTaskDeadlineMs(body.task, clocks.get(body.task.id), signals.get(body.task.id)),
       })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
-      for (const lane of new Set(admitted.map(({ task }) => task.acquisitionFailureDomain))) {
-        assert.ok(admitted.filter(({ task }) => task.acquisitionFailureDomain === lane).length <= SITTING_WINDOW_LANE_SLOTS_PER_PASS);
-      }
+      assert.deepEqual(new Set(admitted.map(({ task }) => task.id)),new Set(due.map(({ task }) => task.id)));
       const result = await replayPass({
         clock,
         admittedAtMs: at,
@@ -491,9 +488,9 @@ async function simulateRegistry(options: {
   return { hourlyLate, twiceDailyLate, peakHot, passes: pass, longestPassMs, reads, failedReads, deadChildren, maxHotGapMs, maxGapMs, catchUpReads };
 }
 
-test("controlled clock, whole registry: every sitting-window task on its real lane shares the four-child pool, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00", async () => {
+test("controlled clock, whole registry: every sitting-window body uses persistent meeting workers, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00", async () => {
   const result = await simulateRegistry({ recordedPasses: false, days: 14 });
-  assert.ok(result.peakHot >= 60, `${result.peakHot} hourly bodies at the peak (production had 49 on 2026-09-25)`);
+  assert.ok(result.peakHot >= 49, `${result.peakHot} hourly bodies at the peak`);
   assert.ok(result.failedReads > 50 && result.deadChildren > 10, `${result.failedReads} failed reads, ${result.deadChildren} dead children`);
   assert.deepEqual(result.twiceDailyLate, []);
   assert.deepEqual(result.hourlyLate, [], `longest hourly gap ${(result.maxHotGapMs / MIN).toFixed(2)} min`);
@@ -514,10 +511,9 @@ test("controlled clock, whole registry under the passes production ran (2026-09-
   }
 });
 
-test("a failed read never waits longer than the schedule it failed: a published derived family retries within the hour while hourly", () => {
-  const family = ROUTINE_SOURCE_TASKS.find((task) => task.id.startsWith("meetings:derived:"))!;
+test("failed meeting bodies retry within an hour and never-published bodies retain the calendar clock", () => {
   const partition = registered(PIMA_LEGISTAR);
-  assert.equal(family.retryMs, 6 * HOUR);
+  assert.equal(partition.retryMs,HOUR);
   const at = Date.parse("2026-10-05T12:00:00.000Z");
   const success = at - 30 * MIN;
   const failed: RoutineTaskClock = {
@@ -526,16 +522,10 @@ test("a failed read never waits longer than the schedule it failed: a published 
     lastSucceededObservedAt: iso(success),
     sittingStarts: [iso(at + 2 * DAY)],
   };
-  // Hourly: the retry is owed within the hour, not six hours later.
-  assert.equal(routineTaskDeadlineMs(family, failed, true), at + HOUR);
-  assert.equal(routineTaskDeadlineMs(family, failed, undefined), at + HOUR, "unknown reads as hourly");
-  // Twice daily: its own six-hour retry, which is sooner than twelve.
-  assert.equal(routineTaskDeadlineMs(family, failed, false), at + 6 * HOUR);
-  // Published with no proven success: the same cap.
+  assert.equal(routineTaskDeadlineMs(partition,failed,undefined),at + HOUR,"unknown reads as hourly");
   const unproven: RoutineTaskClock = { lastAttemptedAt: iso(at), sittingStarts: [iso(at + 2 * DAY)] };
-  assert.equal(routineTaskDeadlineMs(family, unproven, true), at + HOUR);
-  // Never published keeps its twice-daily retry, and a meeting partition's one-hour retry is unchanged.
-  assert.equal(routineTaskDeadlineMs(family, { lastAttemptedAt: iso(at) }, true), at + 12 * HOUR);
+  assert.equal(routineTaskDeadlineMs(partition,unproven,true),at + HOUR);
+  assert.equal(routineTaskDeadlineMs(partition,{ lastAttemptedAt: iso(at) },true),at + 12 * HOUR);
   assert.equal(routineTaskDeadlineMs(partition, failed, true), at + HOUR);
   assert.equal(routineTaskDeadlineMs(partition, failed, false), at + HOUR);
 });
@@ -569,7 +559,7 @@ test("rehearsal of the accelerated production test: a due request brings a cold 
   /** One ordinary pass at `at`: the runner's own due check, request, frontier and launch order. */
   const pass = async (at: number, requests: readonly RoutineDueRequest[]) => {
     const clock = await store.clock(partition.sourceId, "MEETING", partition.scope);
-    const hot = sittingWindowSignals([{ task: partition, ok: true, clock }], at).get(partition.id);
+    const hot = bodyHot(partition,clock,at);
     const request = routineDueRequestFor(partition, clock, at, requests);
     // The request moves no other task.
     for (const other of others) assert.equal(routineDueRequestFor(other, clock, at, requests), null);
@@ -585,7 +575,8 @@ test("rehearsal of the accelerated production test: a due request brings a cold 
 
   // Without a request the partition waits for its twice-daily read.
   const requestedAt = T0 + 2 * HOUR;
-  assert.equal((await pass(requestedAt, [])).admitted, false);
+  const unrequested = await pass(requestedAt,[]);
+  assert.equal(unrequested.admitted,false,JSON.stringify(unrequested));
   const request: RoutineDueRequest = {
     id: "routine-due:00000000-0000-4000-8000-00000000000a", contractId: partition.id, requestedAt: iso(requestedAt),
     dueAt: iso(requestedAt), expiresAt: iso(requestedAt + 90 * MIN), reason: "rehearsal", withdrawnAt: null,

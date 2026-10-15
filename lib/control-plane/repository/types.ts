@@ -238,10 +238,7 @@ export interface AggregateRepository<T> {
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
   /** `listWhere`, each value narrowed to the projection by the store before it leaves. */
   listWhereNarrowed(path: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
-  /**
-   * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
-   * names at its current revision; `through` is the store's clock when the read began.
-   */
+
   listChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>>;
 }
 
@@ -260,10 +257,7 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
-  /**
-   * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
-   * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.
-   */
+
   retireInstructions?(): Promise<void>;
 }
 
@@ -371,7 +365,7 @@ export function projectAggregate(value: unknown, projection: RecordProjection): 
 export function jsonTextAtPath(record: unknown, path: readonly string[]): string | null {
   let cursor: unknown = record;
   for (const segment of path) {
-    if (cursor === null || typeof cursor !== "object" || Array.isArray(cursor)) return null;
+    if (cursor === null || typeof cursor !== "object") return null;
     cursor = (cursor as Record<string, unknown>)[segment];
   }
   if (cursor === null || cursor === undefined || typeof cursor === "object") return null;
@@ -418,9 +412,7 @@ export interface ArtifactRecord {
   /** True when the capture was interrupted: kept and labelled, never treated as complete. */
   readonly partial: boolean;
   readonly recordedAt: string;
-  /** A separately acquired candidate publication must retain the exact link
-   * on an approved campaign page that authorized walking this URL. Offsets
-   * address the captured UTF-16 HTML string, never a later reconstruction. */
+
   readonly publicationLink?: {
     readonly candidacyId: string;
     readonly approvalRecordId: string;

@@ -1,6 +1,5 @@
-import { derivedMeetingFamilyId, meetingAcquisitionFailureDomain, meetingPartitionId } from "../civic-data/meeting-partitions.ts";
+import { meetingAcquisitionFailureDomain, meetingPartitionId } from "../civic-data/meeting-partitions.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
-import type { DerivedMeetingFamilyState } from "../civic-data/contracts.ts";
 import { meetingSourceNamesForWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 import { normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
 
@@ -45,7 +44,6 @@ export function doorsFromWiringRow(row: BodySourceWiring): DoorDraft[] {
         ...(row.noticeUrl ? { noticeUrl: row.noticeUrl } : {}),
         ...(row.publishesHistory === false ? { publishesHistory: false as const, historyGapReason: row.historyGapReason ?? "reason not recorded" } : {}),
         verifiedAt: row.verifiedAt,
-        family: null,
       },
       status: "OPEN" as const,
       readNow: false,
@@ -62,7 +60,7 @@ export function doorFromDerivedRecord(record: DerivedWiringRecord): DoorDraft {
     ocdId: row.ocdId,
     bodyIds: [row.bodyId],
     hosts: hostsOfConfig(row.config, [row.route, `https://${row.officialHost}/`]),
-    config: { ...row.config, governmentId: row.jurisdictionId, route: row.route, familyPartition: derivedMeetingFamilyId(row.state as DerivedMeetingFamilyState) },
+    config: { ...row.config, governmentId: row.jurisdictionId, route: row.route },
     holds: ["meetings"],
     checkEveryMinutes: null,
     notes: `Derived meeting door for ${row.publishingOrg}, from the reviewed crosswalk row ${row.crosswalkRowId} (reviewed ${row.reviewedAt}).`,
@@ -72,7 +70,6 @@ export function doorFromDerivedRecord(record: DerivedWiringRecord): DoorDraft {
       publishingOrg: row.publishingOrg,
       timeZone: row.timeZone,
       verifiedAt: row.verifiedAt,
-      family: derivedMeetingFamilyId(row.state as DerivedMeetingFamilyState),
     },
     status: record.status === "SUSPENDED" ? "SUSPENDED" : "OPEN",
     readNow: false,

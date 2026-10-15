@@ -1,3 +1,4 @@
+import { fetchSource } from "../fetch-source.ts";
 import { setTimeout as delay } from "node:timers/promises";
 import { acquireKnownRelease,knownReleaseSourceCheck, type KnownReleaseOptions } from "../known-release.ts";
 import { requestPublisher } from "../../civic-data/source-acquisition-error.ts";
@@ -5,7 +6,7 @@ import { SOCRATA_CATALOG, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS } from "./model.ts"
 import { object } from "./normalize.ts";
 
 /** National providers have no local-government pacing cap. Retry-After is authoritative. */
-export async function openDataFetch(url: string | URL | Request, init?: RequestInit, fetchImpl: typeof fetch = fetch): Promise<Response> {
+export async function openDataFetch(url: string | URL | Request, init?: RequestInit, fetchImpl: typeof fetch = fetchSource): Promise<Response> {
   for (let attempt = 0; ; attempt++) {
     const response = await requestPublisher("SRC-SO", () => fetchImpl(url, init));
     if (attempt >= 3 || response.status !== 429 && response.status < 500) return response;

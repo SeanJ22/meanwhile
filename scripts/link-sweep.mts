@@ -1,17 +1,8 @@
-/**
- * Sweep the outbound links in the published reader edge and record how many are dead on each surface.
- *
- * Dry run by default: it reads the edge, looks at the links within the request rules, and prints the counts.
- * `--apply` writes the counts beside door health. Plain code: no AI, no model cost. `--limit=<n>` looks at only
- * the first n hosts' links (a trial); `--rotation=<n>` picks which links a small publisher gets this pass.
- */
-
 import { openControlPlane } from "../lib/control-plane/admin-data.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { resolveReaderArtifactStore } from "../lib/meetings/edge-store.ts";
-import { collectOutboundLinks, readEdgeForSweep, recordSweep, sweepLinks, type SweepFetch } from "../lib/doors/link-sweep.ts";
+import { collectOutboundLinks, readEdgeForSweep, recordSweep, sweepLinks } from "../lib/doors/link-sweep.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { sourceUserAgent } from "../lib/sources/http.ts";
 
 const FLAGS = new Map<string, string>(
   process.argv.slice(2).filter((a) => a.startsWith("--")).map((a) => {
@@ -42,12 +33,7 @@ if (!opened.ok) {
 }
 
 const states = [...new Set(links.flatMap((l) => /(?:^|\.)([a-z]{2})\.gov$/i.exec(new URL(l.url).hostname)?.[1]?.toLowerCase() ?? []))];
-const fetchFn: SweepFetch = async (url, method) => {
-  const response = await fetch(url, { method, redirect: "follow", signal: AbortSignal.timeout(15_000), headers: { "user-agent": sourceUserAgent() } });
-  return { status: response.status, retryAfter: response.headers.get("retry-after") };
-};
 const results = await sweepLinks(links, {
-  fetchFn,
   now: () => Date.now(),
   pacing: opened.repos.websitePacing,
   sizeFor: websiteSizeFromHoldings(states),

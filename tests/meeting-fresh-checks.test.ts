@@ -24,7 +24,7 @@ import {
   type PublishReaderExtras,
   type PublishRegistrations,
 } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore, scopedReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import {
   applyMeetingFreshChecks,
   confirmationCheckedAt,
@@ -35,6 +35,7 @@ import {
 import { freshnessDisclosure, lastReadByDivision, staleDivisionRead } from "../lib/meetings/freshness.ts";
 import {
   clearPreparedMeetingsProjectionCache,
+  MEETINGS_PREPARED_SCOPE,
   preparePublishedMeetingSnapshot,
   readComposedSourcePlaces,
   readPreparedMeetingsProjection,
@@ -49,11 +50,6 @@ import {
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-/*
- * A fresh check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead of a new version. Readers
- * see the time of the last successful fresh check, new version or receipt; a failed request or a stale cache never
- * counts; receipts fire no failed-refresh disclosure; changed information publishes as before.
- */
 
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 const HOUR = 3_600_000;
@@ -242,6 +238,19 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   clearPreparedMeetingsProjectionCache();
   const store = new MemoryRoutineDataStore();
   const edge = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "meeting-fresh-checks-")));
+  const azEdge = scopedReaderArtifactStore(edge, "AZ");
+  async function publishStates(snapshot: MeetingsSnapshot, metadata: Parameters<typeof publishReaderEdgeArtifacts>[1], options: Parameters<typeof publishReaderEdgeArtifacts>[2]) {
+    for (const [state, partition] of [["AZ", PIMA], ["NH", NEWBURY]] as const) {
+      const meetings = snapshot.meetings.filter(meeting => meeting.bodyId === partition.bodyId);
+      const carried = meetings.filter(meeting => meeting.carried).length;
+      const result = await publishReaderEdgeArtifacts({ ...snapshot, meetings,
+        sources: snapshot.sources.filter(source => source.source === partition.meetingSource),
+        counts: { total: meetings.length, fresh: meetings.length - carried, carried } }, metadata,
+      { ...options, store: scopedReaderArtifactStore(edge, state) });
+      assert.equal(result.status, "PUBLISHED");
+    }
+    return { status: "PUBLISHED" };
+  }
   await readPartition(store, PIMA, T1, ["a", "b"]);
   await readPartition(store, NEWBURY, T1, ["x"]);
 
@@ -253,12 +262,12 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   const served = await readPreparedMeetingsProjection({ store, now: at(T1, 60_000) });
   assert.equal(served.kind, "PROMOTED");
   if (served.kind !== "PROMOTED") return;
-  const full = await publishReaderEdgeArtifacts(served.value, { sourceThrough: null, retrievedAt: served.metadata.retrievedAt, promotedThrough: null }, {
+  const full = await publishStates(served.value, { sourceThrough: null, retrievedAt: served.metadata.retrievedAt, promotedThrough: null }, {
     store: edge, now: at(T1, 60_000), extras: EXTRAS, authority: VALUES, registrations: REGISTRATIONS,
     checks: { composition: first.composition, freshChecks: first.freshChecks },
   });
   assert.equal(full.status, "PUBLISHED");
-  const manifestBefore = (await edge.readManifest())!.manifest;
+  const manifestBefore = (await azEdge.readManifest())!.manifest;
 
   // Pima re-checked with nothing new.
   await readPartition(store, PIMA, T2, ["a", "b"]);
@@ -288,23 +297,23 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   // Everything carried but the checks, so the manifest alone republishes.
   const republished = await publishReaderEdgeChecks(
     { generatedAt: quiet.servedGeneratedAt!, retrievedAt: quiet.checkedAt, checks: { composition: quiet.composition, freshChecks: quiet.freshChecks } },
-    { store: edge },
+    { store: azEdge },
   );
   assert.equal(republished.status, "PUBLISHED");
-  const manifestAfter = (await edge.readManifest())!.manifest;
+  const manifestAfter = (await azEdge.readManifest())!.manifest;
   assert.equal(manifestAfter.generatedAt, checkedAt);
   assert.deepEqual(manifestAfter.scopes, manifestBefore.scopes, "the same immutable artifacts: none rewritten");
   assert.equal(manifestAfter.sequence, manifestBefore.sequence + 1);
   assert.deepEqual(manifestAfter.sources, manifestBefore.sources);
 
   // The reader, from the edge: Last checked, the re-read listings, and no false disclosure.
-  const fromEdge = await readReaderEdgeMeetings({ store: edge, fallback: async () => { throw new Error("the edge answers"); } });
+  const fromEdge = await readReaderEdgeMeetings({ store: edge, states: ["az", "nh"], fallback: async () => { throw new Error("the edge answers"); } });
   assert.equal(fromEdge.kind, "PROMOTED");
   if (fromEdge.kind !== "PROMOTED") return;
   assert.equal(fromEdge.value.generatedAt, checkedAt);
   assert.deepEqual(collectedOf(fromEdge.value, PIMA), [checkedAt]);
   assert.deepEqual(collectedOf(fromEdge.value, NEWBURY), [T1]);
-  assert.deepEqual(footer(fromEdge.value).failed, footer(served.value).failed, "a receipt fires no failed-refresh disclosure");
+  assert.deepEqual(footer(fromEdge.value).failed, footer(served.value).failed.filter(source => source === PIMA.meetingSource || source === NEWBURY.meetingSource), "a receipt fires no failed-refresh disclosure");
   // The reader, from the prepared fallback: the same answer from the pointer identities alone.
   // A serving process re-reads the checks at most once a minute; this read is a later one.
   const fallback = await readPreparedMeetingsProjection({ store, now: at(T2, 2 * 60_000) });
@@ -330,20 +339,20 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(changed.servedGeneratedAt, T4);
   assert.equal((await publishReaderEdgeChecks(
     { generatedAt: changed.servedGeneratedAt!, retrievedAt: null, checks: { composition: changed.composition, freshChecks: changed.freshChecks } },
-    { store: edge },
+    { store: azEdge },
   )).status, "NOT_COMPOSABLE", "the checks-only publish refuses another composition");
   const readBack = await readPreparedMeetingsProjection({ store, now: at(T4, 2 * 60_000) });
   assert.equal(readBack.kind, "PROMOTED");
   if (readBack.kind !== "PROMOTED") return;
-  const published = await publishReaderEdgeArtifacts(readBack.value, { sourceThrough: null, retrievedAt: readBack.metadata.retrievedAt, promotedThrough: null }, {
+  const published = await publishStates(readBack.value, { sourceThrough: null, retrievedAt: readBack.metadata.retrievedAt, promotedThrough: null }, {
     store: edge, now: at(T4, 60_000), extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED,
     checks: { composition: changed.composition, freshChecks: changed.freshChecks },
   });
   assert.equal(published.status, "PUBLISHED");
-  const manifestChanged: ReaderManifest = (await edge.readManifest())!.manifest;
+  const manifestChanged: ReaderManifest = (await azEdge.readManifest())!.manifest;
   assert.equal(manifestChanged.composition, changed.composition);
   assert.equal(manifestChanged.generatedAt, T4);
-  const reread = await readReaderEdgeMeetings({ store: edge, fallback: async () => { throw new Error("the edge answers"); } });
+  const reread = await readReaderEdgeMeetings({ store: edge, states: ["az", "nh"], fallback: async () => { throw new Error("the edge answers"); } });
   assert.equal(reread.kind, "PROMOTED");
   if (reread.kind !== "PROMOTED") return;
   assert.equal(reread.value.meetings.filter((m) => m.bodyId === NEWBURY.bodyId).length, 2, "the new sitting reaches readers");
@@ -389,7 +398,7 @@ test("a failed source is attributed to the places its composed partitions serve:
   const wilmot = "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town";
   const store = new MemoryRoutineDataStore();
   await store.writePreparedReaderProjection({
-    recordClass: "MEETING", scope: "composed-reader-snapshot", payload: {}, factSha256: "0".repeat(64),
+    recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE, payload: {}, factSha256: "0".repeat(64),
     generatedAt: T1, composedAt: T1, sourceThrough: null, retrievedAt: null, promotedThrough: null,
     composedFrom: [
       { contractId: PIMA.id, versionId: "v-pima" },
@@ -406,4 +415,20 @@ test("a failed source is attributed to the places its composed partitions serve:
   assert.deepEqual(places.get("pima-edu"), [], "a body with no division names no place");
   assert.equal((places.get(retired.meetingSource) ?? []).includes(retired.bodyId.split("#")[0]!), false, "a retired route's held partition serves no place");
   assert.equal(await readComposedSourcePlaces({ store: new MemoryRoutineDataStore() }), null, "no composition, no attribution");
+});
+
+
+test("prepared meeting copies normalize state names and keep another state's bodies out", async () => {
+  clearPreparedMeetingsProjectionCache();
+  const store = new MemoryRoutineDataStore();
+  await readPartition(store, PIMA, T1, ["az-only"]);
+  await readPartition(store, NEWBURY, T1, ["nh-only"]);
+  assert.equal((await preparePublishedMeetingSnapshot(store, T2, { state: "az" })).status, "PUBLISHED");
+  const read = await readPreparedMeetingsProjection({ store, now: T2, state: "US-AZ" });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") return;
+  assert.deepEqual(read.value.meetings.map(meeting => meeting.bodyId), [PIMA.bodyId]);
+  assert.ok(read.partitions.every(partition => !partition.bodyId.includes("state:nh")));
+  assert.ok(await store.readPreparedReaderProjection("MEETING", "composed-reader-snapshot:US-AZ"));
+  assert.equal(await store.readPreparedReaderProjection("MEETING", "composed-reader-snapshot:US-NH"), null);
 });

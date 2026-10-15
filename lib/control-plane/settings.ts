@@ -1,8 +1,3 @@
-/**
- * Typed settings on `AdminConfig.settings`, changed through one gateway action with every change logged for
- * undo. Each lane registers its keys with `registerSetting`; the runner reads them from the config it re-reads
- * every pass. A change names its maker only when factory code made it. Pure.
- */
 import type { AdminConfig } from "./gateway/admin-config.ts";
 
 export type SettingValue = null | boolean | number | string | readonly SettingValue[] | { readonly [key: string]: SettingValue };
@@ -53,7 +48,11 @@ export function registerSetting<T extends SettingValue>(definition: SettingDefin
   }
   const held = definitions.get(definition.key);
   if (held === definition) return;
-  if (held) throw new Error(`Setting already registered: ${definition.key}`);
+  if (held) {
+    const metadata = (item: SettingDefinition) => JSON.stringify({ ...item, validate: item.validate.toString() });
+    if (metadata(held) === metadata(definition as unknown as SettingDefinition)) return;
+    throw new Error(`Setting already registered: ${definition.key}`);
+  }
   definitions.set(definition.key, definition as unknown as SettingDefinition);
 }
 
@@ -67,10 +66,6 @@ registerSetting({
     && value.every((id) => typeof id === "string" && /^[A-Z]{2,4}-[A-Za-z0-9]{1,6}$/.test(id)),
 });
 
-/**
- * Controls that existed before the settings map keep their own field and action,
- * and log into the same history so the Settings view shows their changes and undo.
- */
 export const SPEND_CEILING_LOG_KEY = "fleet.spendCeilingUsd";
 export const ALERTS_ON_SETTING = "alerts.on";
 export const BRIEF_TIME_SETTING = "brief.time";

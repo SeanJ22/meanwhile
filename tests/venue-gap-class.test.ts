@@ -1,9 +1,10 @@
+import { scopedManualContractScope } from "../lib/civic-data/scoped-manual-contracts.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readCuratedReaderProjection, installMeetingVenueProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import {
   manualProjectionCandidate,
   type ManualProjectionPackage,
@@ -106,16 +107,20 @@ async function promoteVenueTable(rows: readonly VenueEntry[]): Promise<readonly 
       records: rows.map((row) => ({ id: venueResolutionRecordId(row), ...row })),
     },
   };
-  const outcome = await processRegisteredManualCandidate(
-    store,
-    "venue-resolutions",
-    manualProjectionCandidate(pkg),
-    AT,
-  );
-  assert.equal(outcome.candidate.state, "PROMOTED", "the venue table promoted");
-  const read = await readCuratedReaderProjection("venue-resolutions", { store, bypassCache: true, now: AT });
-  assert.equal(read.kind, "PROMOTED", "the canonical read answered");
-  return read.kind === "PROMOTED" ? read.value.records.map((record) => record.id) : [];
+  const saved: import("../lib/civic-data/manual-projections.ts").CuratedReaderProjection["records"][number][] = [];
+  for (const bodyOcdId of new Set(rows.map(row => row.bodyOcdId ?? `tenant:${row.tenant}`))) {
+    const own = rows.filter(row => (row.bodyOcdId ?? `tenant:${row.tenant}`) === bodyOcdId);
+    const urls = new Set(own.flatMap(row => [row.addressSourceUrl,row.coordinateSourceUrl]));
+    const scoped = { ...pkg, sourceReceipt: { ...pkg.sourceReceipt, sources: pkg.sourceReceipt.sources.filter(source => urls.has(source.requestedUrl)) },
+      payload: { kind: "venue-resolutions" as const, records: own.map(row => ({ id: venueResolutionRecordId(row), ...row })) } };
+    const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", manualProjectionCandidate(scoped), AT);
+    assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "the venue table promoted");
+    const read = await readCuratedReaderProjection("venue-resolutions", { scope: scopedManualContractScope("venue-resolutions", bodyOcdId!), store, bypassCache: true, now: AT });
+    assert.equal(read.kind, "PROMOTED", "the canonical read answered");
+    if (read.kind === "PROMOTED") saved.push(...read.value.records);
+  }
+  installMeetingVenueProjection(saved, "fixture-scoped-venues");
+  return saved.map(row => row.id);
 }
 
 /** Production's table: every reviewed row, and so not the three Legistar rooms. */
@@ -133,32 +138,22 @@ async function pimaLegistarPartition(): Promise<{
   report: NonNullable<ReturnType<typeof buildCompositeSource>["lastReport"]>["children"][number];
   requested: string[];
 }> {
-  const composite = buildCompositeSource({
-    sourceNames: ["legistar"],
-    meetingPartitions: [{ sourceName: "legistar", bodyId: PIMA_BODY }],
-  });
   const requested: string[] = [];
-  const prior = globalThis.fetch;
-  globalThis.fetch = (async (input: string | URL | Request) => {
+  const fetchImpl: typeof fetch = async input => {
     const url = input instanceof Request ? input.url : String(input);
     requested.push(url);
-    const body = /\/v1\/pima\/events\?/.test(url)
-      ? EVENTS
-      : /\/v1\/pima\/events\/\d+\/eventitems/.test(url)
-        ? []
-        : null;
+    const body = /\/v1\/pima\/events\?/.test(url) ? EVENTS
+      : /\/v1\/pima\/events\/\d+\/eventitems/.test(url) ? [] : null;
     if (body === null) throw new Error(`no recorded response for ${url}`);
     return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
-  }) as typeof fetch;
-  try {
-    const raw = await composite.fetch(RUNNER_QUERY);
-    const meetings = composite.normalize(raw, LEGISTAR_NOW);
-    const report = composite.lastReport?.children.find((child) => child.source === "legistar");
-    assert.ok(report, "the partition reported");
-    return { meetings, report, requested };
-  } finally {
-    globalThis.fetch = prior;
-  }
+  };
+  const composite = buildCompositeSource({ sourceNames: ["legistar"],
+    meetingPartitions: [{ sourceName: "legistar", bodyId: PIMA_BODY }], fetchImpl });
+  const raw = await composite.fetch(RUNNER_QUERY);
+  const meetings = composite.normalize(raw, LEGISTAR_NOW);
+  const report = composite.lastReport?.children.find(child => child.source === "legistar");
+  assert.ok(report, "the partition reported");
+  return { meetings, report, requested };
 }
 
 function win(range: InSiteRange, html: string, pages: LegistarInSiteRaw["windows"][number]["pages"] = []) {
@@ -216,7 +211,7 @@ function assertNamedGaps(meetings: Meeting[], publisher: string): Meeting[] {
 test("production's table: the three Legistar rooms cannot pass the door, and an empty scope is a list, never a throw", async () => {
   // The door refuses a package that holds an unreviewed row, whole — which is
   // why production's table was promoted without the three rooms.
-  await assert.rejects(promoteVenueTable(VENUE_CACHE), /the venue table promoted/);
+  await assert.rejects(promoteVenueTable(VENUE_CACHE), /SEMANTIC_INVALID|the venue table promoted/);
   assert.deepEqual(
     LEGISTAR_ROOMS.map((room) => room.verifiedAt),
     [null, null, null],

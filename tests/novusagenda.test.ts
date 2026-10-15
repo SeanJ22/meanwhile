@@ -9,7 +9,8 @@ import { meetingEndpointCandidates, verifyEndpointBody } from "../lib/hunt/meeti
 import { wiringShapeFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { buildCompositeSource } from "../lib/sources/composite/wiring.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
-import { buildDerivedFamily } from "../lib/civic-data/derived-meeting-family.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installReviewedMeetingDoors, publishReviewedMeetingBody } from "./helpers/meeting-body-publication.ts";
 import { derivedAdapterConfig, type DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { meetingAcquisitionFailureDomain } from "../lib/civic-data/meeting-partitions.ts";
 import { walkMeetingsDiscoveryNeed } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
@@ -98,12 +99,11 @@ test("composite acquisition covers the range and both pages before reading agend
     timeZone: row.timeZone, config: derivedAdapterConfig({ kind: "NOVUSAGENDA", route: row.config.portalUrl, officialHost: new URL(row.config.portalUrl).hostname,
       bodyId: row.bodyId, bodyName: "City Council", filter: { bodyMatch: row.config.bodyMatch } }), crosswalkRowId: "fixture-crosswalk", reviewedAt: collectedAt, verifiedAt: collectedAt };
   const member = { id: `${row.bodyId}:novusagenda`, status: "ACTIVE" as const, row: derived };
-  const family = buildDerivedFamily({ wiringInput: { kind: "PROMOTED_VERSION", recordClass: "SOURCE_WIRING", scope: "US:meeting-source-wiring:v1",
-    versionId: "fixture-wiring", readModelSha256: "b".repeat(64), promotedAt: collectedAt }, members: [member],
-    reads: [{ member, acquisitions: source.lastReport!.children[0].acquisitions!, ok: true, error: null, freshMeetings: result, freshAgendaDocuments: [], retrievedAt: collectedAt }],
-    previous: null, generatedAt: collectedAt, reconcile: read => ({ meetings: read.freshMeetings, agendaDocuments: [], removalEvidence: [] }) });
-  assert.equal(family.snapshot.meetings.length, 11);
-  assert.equal(family.snapshot.derivedMembers?.[0].outcome, "FRESH");
+  installReviewedMeetingDoors([member], collectedAt);
+  const published = await publishReviewedMeetingBody({ store: new MemoryRoutineDataStore(), member, meetings: result,
+    acquisitions: source.lastReport!.children[0].acquisitions!, now: collectedAt });
+  assert.equal(published.outcome.candidate.state, "PROMOTED", published.outcome.candidate.failureDetail ?? "");
+  assert.equal(published.snapshot.meetings.length, 11);
   assert.equal(meetingAcquisitionFailureDomain("novusagenda", row), "meeting-upstream:coalinga.novusagenda.com");
 });
 

@@ -1,3 +1,4 @@
+import { fetchSource } from "../lib/sources/fetch-source.ts";
 /** Rebuild ZIP orientation from national sources. `pnpm zcta:fetch [--from DIRECTORY]` uses saved downloads. */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -32,7 +33,7 @@ async function main() {
   if (!from) {
     for (const [name, url] of Object.entries(SOURCES)) {
       console.log(`Reading ${url}`);
-      const response = await fetch(url);
+      const response = await fetchSource(url);
       if (!response.ok) throw new Error(`${url}: HTTP ${response.status}; committed tables remain intact`);
       await writeFile(join(cache, name), Buffer.from(await response.arrayBuffer()));
     }

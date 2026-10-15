@@ -12,12 +12,12 @@ const snap = (...meetings: ReturnType<typeof row>[]) => ({ meetings } as unknown
 
 describe("DB-28: every live fact knows its door", () => {
   it("stamps a hand-wired partition's rows with its id and keeps a door a row already names", () => {
-    const out = stampMeetingDoor({ id: "meetings:legistar:b", derivedFamily: null }, snap(row("1"), row("2", "other")));
+    const out = stampMeetingDoor({ id: "meetings:legistar:b" }, snap(row("1"), row("2", "other")));
     assert.deepEqual(out.meetings.map((m) => m.provenance.doorId), ["meetings:legistar:b", "other"]);
   });
-  it("leaves a derived family's rows alone", () => {
-    const value = snap(row("1"));
-    assert.equal(stampMeetingDoor({ id: "meetings:family", derivedFamily: {} }, value), value);
+  it("keeps existing door attribution when every row already has its own door", () => {
+    const value = snap(row("1", "reviewed-calendar"));
+    assert.equal(stampMeetingDoor({ id: "meetings:ical:b" }, value), value);
   });
   it("names a published page's door with the id its door record gets", async () => {
     const repos = createMemoryRepositories();

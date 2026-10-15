@@ -1,24 +1,3 @@
-/**
- * `pnpm db:apply` — apply the committed Drizzle migrations over the HTTP
- * driver (`drizzle-kit migrate`'s websocket driver does not connect through the
- * Neon pooler here).
- *
- * Each pending migration's statements and its journal row are applied in one
- * Postgres transaction: `hash` is sha256 of the file's raw bytes and
- * `created_at` is the journal's own `when`, so a later `drizzle-kit migrate`
- * sees the work as done. A failed statement rolls the whole migration back.
- *
- * `--target=production` resolves `WTP_PRODUCTION_DATABASE_URL_WRITE` through
- * `lib/db/write-handle.ts`, which refuses read-only credentials. Anything else
- * targets `DATABASE_URL` and refuses unless `WTP_DB_ROLE=local`, the same
- * reading `lib/db/write-guard.ts` applies at runtime.
- *
- * It prints the role and host, the pending list, each statement's result and
- * the journal count after. `--dry` prints the plan and touches nothing. A
- * migration that applies zero statements is reported as zero, never success.
- *
- * Run: `pnpm db:apply [--target=production] [--dry]`
- */
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -202,12 +181,6 @@ export async function applyMigrations(args: string[], options: { beforeContract?
   }
   const appliedWhen = new Set(applied.map((r) => Number(r.created_at)));
 
-  /*
-   * `--upto=<tag>` — stop after that migration, inclusive, so the two halves of
-   * a NOT NULL-without-default change can land on either side of a deploy
-   * without hand-editing the journal. An unknown tag REFUSES rather than
-   * applying everything.
-   */
   const uptoIndex = UPTO ? journal.entries.findIndex((e) => e.tag === UPTO) : -1;
   const boundedPending = (UPTO ? journal.entries.slice(0, uptoIndex + 1) : journal.entries)
     .filter(entry => !appliedWhen.has(entry.when));
@@ -227,9 +200,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
       `${applied.length} already applied here · ${pending.length} pending`,
   );
   for (const e of pending) console.log(`  pending: ${e.tag}`);
-  // Deliberately NOT process.exit() below: the Neon HTTP driver still holds a
-  // libuv handle, and exiting through it aborts with a failure exit code
-  // (3221226505 on Windows). Letting the event loop drain gives the true code.
+
   const nothingPending = pending.length === 0;
   if (INSPECT_ONLY && !nothingPending) {
     throw new Error("db:apply: REFUSED — pending expand migrations require WTP_PRODUCTION_DATABASE_URL_WRITE; inspection writes=0");
@@ -262,6 +233,20 @@ export async function applyMigrations(args: string[], options: { beforeContract?
             `migration that succeeded — refusing to journal it.`,
         );
         process.exit(1);
+      }
+
+      if (entry.tag === "R4_meeting_partitions" || entry.tag === "R4_retire_meeting_families") {
+        const { transferMeetingFamilies } = await import("../lib/db/r4-meeting-partitions.ts");
+        console.log(`  Preserved ${await transferMeetingFamilies(sql)} body meeting projections`);
+      }
+
+      if (entry.tag === "R4_meeting_artifacts") {
+        const { transferMeetingArtifacts } = await import("../lib/db/r4-meeting-artifacts.ts");
+        console.log(await transferMeetingArtifacts());
+      }
+      if (entry.tag === "R4_retire_meeting_families") {
+        const { retireMeetingArtifacts } = await import("../lib/db/r4-meeting-artifacts.ts");
+        console.log(await retireMeetingArtifacts());
       }
 
       let appliedHere = false;

@@ -20,7 +20,6 @@ import {
   readRoutineTaskClocks,
   routineFailureDomainCount,
   routineFrontierPassBound,
-  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineSupervisorCycleId,
   routineUnreceiptedSupervisorAttemptHistory,
   routineTaskDue,
@@ -317,9 +316,7 @@ test("the standing parent durably accounts for a routine child killed outside so
 
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /persistOuterRoutineChildFailure\(cycleId, startedAt, run/);
-  // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
-  // records carrying that exact digestId (a targeted content query, not a scan
-  // of the whole log) and then confirms the supervisor kind.
+
   assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
@@ -373,8 +370,8 @@ test("installed doors' partitions are standing tasks once: the runner never adds
   assert.ok(ids.filter((id) => id.startsWith("meetings:")).length > 50, "the fixture doors are installed");
   assert.equal(new Set(ids).size, ids.length);
   const runner = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
-  const standing = runner.slice(runner.indexOf("const STANDING_SOURCE_TASKS"), runner.indexOf("], process.argv.slice(2));"));
-  assert.match(standing, /\.\.\.ROUTINE_SOURCE_TASKS\.filter\(\(task\) => task\.id !== MEETING_DOORS_CONTRACT_ID\)/);
+  const standing = runner.slice(runner.indexOf("const standingTasks"), runner.indexOf("const TASK_SELECTION"));
+  assert.match(standing, /\.\.\.ROUTINE_SOURCE_TASKS,/);
   assert.doesNotMatch(standing, /MEETING_PARTITION_CONTRACTS/, "a second copy of the partitions makes every pass refuse its duplicate tasks");
 });
 
@@ -399,7 +396,6 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
     "meeting-body-crosswalk-derived",
-    "meeting-doors",
     "meeting-source-wiring",
     "candidate-campaign-sites-derived",
     "legiscan-bulk",
@@ -463,6 +459,8 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "legiscan-bills",
     "plural-openstates",
     "meetings-history",
+    "meetings-derived-routes",
+    "meeting-doors",
     "door-outcomes",
   ];
   const expectedAuthorities = new Set([
@@ -1042,8 +1040,10 @@ test("national and publication source commands retain the progress-renewed timeo
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane);
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "routineTaskDueAtMs", "sittingSignals", "routineScopeState", `
+    const observedChangeRates = new Map(), hotReadClocks = new Map(), supervisorAttempts = new Map(), honouredDueRequests = new Map();
+    const FORCE = false, admissionNowMs = Date.now(), RUN_STARTED_AT = new Date().toISOString(), routineAdmissionClock = value => value;
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, () => Date.now() + 3600000, new Map(), () => "US");
   const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id === "people-portraits-federal")!;
   assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
     "standing portrait work overrides the parent's quiet interval so every due person finishes");
@@ -1201,12 +1201,12 @@ test("a killed Reader child is an exact delivery repair fault and cannot mutate 
   assert.deepEqual(await store.events(candidateId), before.events);
 });
 
-test("the pilot outer bound contains the frontier (one a pass, two on a meeting lane), not a failed provider tail", () => {
+test("the pilot outer bound includes all due meeting members", () => {
   const passBound = routineFrontierPassBound();
   const admittedCommands = passBound.commandCount;
   const largestDomain = passBound.largestFailureDomainSize;
-  assert.equal(largestDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
-  assert.ok(admittedCommands > routineFailureDomainCount(), "meeting lanes take a second read a pass");
+  assert.ok(largestDomain > 3);
+  assert.ok(admittedCommands > routineFailureDomainCount(), "meeting lanes include every body");
   const readerDomains = routineReaderRepairDomains();
   const bounds = {
     neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
@@ -1263,7 +1263,7 @@ test("the pilot outer bound contains the frontier (one a pass, two on a meeting 
   assert.match(runner, /routineFailureDomainFrontier\(/);
   assert.match(runner, /latestUnreceiptedSupervisorAttempts\(/);
   assert.match(runner, /failureDomain:\s*pending\.task\.acquisitionFailureDomain/);
-  assert.match(runner, /const sourceConcurrency = Math\.max\(1, pendingRuns\.length\)/);
+  assert.match(runner, /const sourceConcurrency = ROUTINE_CHILD_CONCURRENCY/);
   assert.match(runner, /concurrency:\s*sourceConcurrency/);
   assert.match(runner, /onSettled:\s*async \(run, index\) => settlePendingRun/);
   assert.match(runner, /discardOutputAfterSettlement:\s*true/);
@@ -1271,7 +1271,7 @@ test("the pilot outer bound contains the frontier (one a pass, two on a meeting 
   assert.doesNotMatch(runner, /spawnSync/);
   assert.match(pilot, /runRuntimeChildren\(/);
   assert.match(pilot, /ROUTINE_DATA_ADMISSION_MS,[\s\S]*from "\.\.\/lib\/civic-data\/runner\.ts"/);
-  assert.match(pilot, /id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS/);
+  assert.match(pilot, /id: `routine-civic-data:\$\{family\}:\$\{state\}`, everyMs: ROUTINE_DATA_ADMISSION_MS/);
   assert.doesNotMatch(pilot, /ROUTINE_DATA_TIMEOUT_MS|ROUTINE_PASS_BOUND/);
 });
 
@@ -1392,11 +1392,11 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
+  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null && STATE_SCOPE === "US" && FAMILY === "all" \? null : selectedTasks, \{ state: STATE_SCOPE \}\)/,
     "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope");
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
-  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\)\)/,
-    "publish-now checks all promoted families independently of selected source work");
+  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), standingTasks, \{ state: STATE_SCOPE \}\)/,
+    "publish-now checks promoted families in the selected state");
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
@@ -1428,21 +1428,21 @@ test("the pilot surfaces Reader failures without converting them into source or 
 
 test("the pilot awaits independently bounded routine and intake children without overlapping ticks", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(pilot, /async function runRoutineCivicData\(\): Promise<void>/);
+  assert.match(pilot, /async function runRoutineCivicData\(state: string\): Promise<void>/);
   assert.match(pilot, /async function runIntakeRuntime\(\): Promise<void>/);
   assert.match(pilot, /runRuntimeChildren\(\[\{\s*id:\s*"routine-civic-data"/);
   assert.match(pilot, /runRuntimeChildren\(\[\{\s*id:\s*"intake-runtime"/);
   assert.doesNotMatch(pilot, /ROUTINE_DATA_TIMEOUT_MS|PUBLISH_TIMEOUT_MS/);
-  assert.match(pilot, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run:\s*runRoutineCivicData[\s\S]*run:\s*runIntakeRuntime/);
-  assert.match(pilot, /standingRuntimeTimer = setInterval\([\s\S]*runStandingRuntimeTick\("independent standing clock"\)/);
+  assert.match(pilot, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run:\s*\(\) => runRoutineState\(state\)[\s\S]*run:\s*runIntakeRuntime/);
+  assert.match(pilot, /standingRuntimeTimer = setTimeout\([\s\S]*runStandingRuntimeTick\("earliest source clock"\)/);
   assert.match(pilot, /async function runOneCycle\(owner: \{ readonly ownerIntentsUnreadable: boolean \}\): Promise</);
   assert.match(pilot, /const result = await runOneCycle\(owner\)/);
   assert.doesNotMatch(pilot, /spawnSync/);
   assert.ok(
-    pilot.indexOf("standingRuntimeTimer = setInterval(") < pilot.indexOf("const result = await runOneCycle(owner)"),
+    pilot.indexOf("standingRuntimeTimer = setTimeout(") < pilot.indexOf("const result = await runOneCycle(owner)"),
     "the independent clock starts before research can remain pending",
   );
-  assert.match(pilot, /clearInterval\(standingRuntimeTimer\)/);
+  assert.match(pilot, /clearTimeout\(standingRuntimeTimer\)/);
   assert.match(pilot, /await standingRuntimeScheduler\.waitForIdle\(\)/);
 });
 
@@ -1475,8 +1475,8 @@ test("the routine runner derives its clock from durable candidate history", () =
   const clockReads = source.indexOf("const clockReads = FORCE");
   // Sitting windows are decided once, at the frozen instant, from the same reads
   // and the publisher-stated ends read in the same pass.
-  const statedEnds = source.indexOf("statedSittingEndsRead(getDb())");
-  const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)");
+  const statedEnds = source.indexOf("statedSittingEndsRead(getDb(),");
+  const sittingSignals = source.indexOf("sittingWindowSignals(sittingClockReads, admissionNowMs, statedEndsByTask)");
   const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs)");
   assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < statedEnds && statedEnds < sittingSignals && sittingSignals < dueDecision);
   assert.match(source, /STATED_ENDS_READ_FAILED/, "an unreadable end set is reported, and the day bound stands");
@@ -2111,18 +2111,12 @@ test("two successful publications settle independently after the canonical point
     /does not match the registered task identity/);
 });
 
-test("the supervisor proves the registry once for two or more meeting children and hands only them the attestation", () => {
+test("meeting supervisors batch state members and never load the national registry", () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const admitted = source.indexOf("attempted = pendingRuns.length;");
-  const proof = source.indexOf("await readRegistryRuntimeProjection({ store })");
-  const attest = source.indexOf("attestPromotedVersion(\"REGISTRY_RUNTIME_BINDING\", REGISTRY_RUNTIME_SCOPE, store)");
-  const launch = source.indexOf("const sourcePass = runMeetingDiscoveryChain(");
-  assert.ok(admitted > 0 && admitted < proof && proof < attest && attest < launch, "proved after admission, before any child starts");
-  assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
-  assert.match(source, /const sourcePass = runMeetingDiscoveryChain\(pendingRuns, runs => runBoundedChildPass\(\s*runs\.map\(sourceChildCommand\),/, "every ordered discovery subpass builds children through the attestation-aware command factory");
-  assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);
-  assert.match(source, /onSettled: async \(run, index\) => settlePendingRun\(runs\[index\]!/, "settlement must match the command's subpass rather than the complete pending list");
-  assert.match(source, /catch \(error\) \{\s*console\.log\(`RCD_PASS registry not attested; each meeting child proves it/);
+  assert.doesNotMatch(source, /readRegistryRuntimeProjection|meetingChildAttestations/);
+  assert.match(source, /const sourcePass = runMeetingDiscoveryChain\(pendingRuns, runSourceTasks\)/);
+  assert.match(source, /runMeetingBatchPass\(meetings\.map/);
+  assert.match(source, /onSettled: async \(member, result\) => settlePendingRun\(meetingById\.get\(member\.id\)!/);
 });
 
 test("C6: two reads of one host in one pass start at least the gap apart; other hosts do not wait, and the outer bound counts the gap", async () => {

@@ -110,8 +110,9 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   dirs.push(dir);
   const snapshot = multiStateSnapshot();
   assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
+  const registry = registryTransferImport().projection.payload;
   const authority: PublishAuthority = {
-    "registry-runtime": { value: registryTransferImport().projection.payload, versionId: `${tag}:registry` },
+    "registry-runtime": { value: registry, versionId: `${tag}:registry` },
     "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
   };
@@ -124,7 +125,8 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     store,
     now: new Date().toISOString(),
     extras: { everydayRouting: currentEverydayRoutingProjection() },
-    stateFacts: { AZ: { value: { bodies: {}, rosters: [], dispositions: [], comments: COMMENT_ACCESS }, versionId: `${tag}:facts:AZ` } },
+    stateFacts: { AZ: { value: { bodies: {}, rosters: registry.bodyRosters ?? [], dispositions: registry.rosterReaderDispositions ?? [], comments: COMMENT_ACCESS },
+      versionId: `${tag}:facts:AZ` } },
     authority,
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},
@@ -284,7 +286,7 @@ test("/api/representation reads the registry from the edge it entered, and the C
     { params: Promise.resolve({ division }) },
   );
   assert.equal(response.status, 200);
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-representation:registry", "the registry was read from the database, not the edge");
+  assert.match(registryRuntimeReadState().metadata.versionId ?? "", /^c21-representation:registry\+/, "the registry was read from the database, not the edge");
   assert.equal(response.headers.get("netlify-cdn-cache-control"), "public, durable, s-maxage=300, stale-while-revalidate=3600");
   assert.equal(response.headers.get("netlify-cache-tag"), READER_MANIFEST_CACHE_TAG);
   assert.equal(response.headers.get("cache-control"), "public, max-age=0, must-revalidate");
@@ -303,7 +305,7 @@ test("a warm call resolves one place per published state from the edge, and refu
   const partial = await primeReaderEdge();
   assert.equal(partial.manifest, true);
   assert.equal(partial.meetings, true);
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-warm-partial:registry", "the warm call read the registry from the database");
+  assert.match(registryRuntimeReadState().metadata.versionId ?? "", /^c21-warm-partial:registry\+/, "the warm call read the registry from the database");
   assert.equal(partial.places, 0, "a place whose legislators are not on the edge must not count as warmed");
   assert.equal(partial.placesRefused, states.length, "every state-legislative read was refused instead of sent to the database");
 
@@ -311,5 +313,5 @@ test("a warm call resolves one place per published state from the edge, and refu
   process.env.WTP_READER_EDGE_DIR = whole.dir;
   const primed = await primeReaderEdge();
   assert.deepEqual({ places: primed.places, placesRefused: primed.placesRefused }, { places: states.length, placesRefused: 0 });
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-warm-whole:registry");
+  assert.match(registryRuntimeReadState().metadata.versionId ?? "", /^c21-warm-whole:registry\+/);
 });

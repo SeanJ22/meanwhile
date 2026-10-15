@@ -115,8 +115,11 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
 
 /** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
 async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; readonly flagged: number }> {
-  const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE produced_by = 'box' AND status = 'live' AND field LIKE 'member:%'")).map(row => String(row.entity_id));
-  const members = await liveMembers(query, bodies);
+  const [cursor] = await query("SELECT (SELECT fact_id FROM fact_cursor WHERE name = 'box-seats') AS since, (SELECT max(id) FROM fact) AS newest");
+  const since = Number(cursor?.since ?? 0), newest = Number(cursor?.newest ?? 0);
+  // Only bodies whose members changed since the last pass; the pass starts where this one read up to.
+  const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE id > $1 AND id <= $2 AND field LIKE 'member:%'", [since, newest])).map(row => String(row.entity_id));
+  const members = bodies.length ? await liveMembers(query, bodies) : [];
   let pulled = 0, flagged = 0;
   for (const member of members.filter(row => row.producedBy === "box")) {
     const seat = seatIn(member.words, member.bodyId);
@@ -128,6 +131,7 @@ async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; 
         WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
     }
   }
+  await query("INSERT INTO fact_cursor (name, fact_id) VALUES ('box-seats', $1) ON CONFLICT (name) DO UPDATE SET fact_id = EXCLUDED.fact_id", [newest]);
   return { pulled, flagged };
 }
 

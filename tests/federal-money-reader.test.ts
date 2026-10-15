@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -9,39 +10,44 @@ import { FederalMoneySection } from "../components/funding/federal-money-section
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { joinFederalMoneyFacts } from "../lib/federal-money/join.ts";
 import { federalMoneyCounts } from "../lib/federal-money/candidate.ts";
-import { federalMoneyProjectionIssue, readFederalMoneyForPlace, readFederalMoneyProjection } from "../lib/federal-money/reader.ts";
+import { federalMoneyProjectionIssue, readFederalMoneyForPlace, readFederalMoneyPartition } from "../lib/federal-money/reader.ts";
 import { federalMoneyRows, federalMoneySources } from "../lib/federal-money/view.ts";
 import { composeFederalMoneyAnswer, federalMoneyEvidence, federalMoneyPlaceQuestion, federalMoneyPlaceDivisions } from "../lib/ask/federal-money.ts";
 import { lexicalReading } from "../lib/ask/lexical-reading.ts";
 import { gateRecordsToSubject } from "../lib/ask/relevance.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
-import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { absentFederalMoneyStateEntries } from "../lib/federal-money/edge.ts";
+import { publishFederalMoneyPartition, publishFederalMoneyProgress } from "../lib/federal-money/edge-publication.ts";
 import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { GET } from "../app/api/federal-money/route.ts";
-import { promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
-import type { FederalMoneyProjection } from "../lib/federal-money/model.ts";
+import { federalMoneyLookupKeys, type FederalMoneyProjection } from "../lib/federal-money/model.ts";
 import type { FederalMoneyFact } from "../lib/federal-money/model.ts";
 
 const NOW = "2026-10-12T23:01:00.000Z";
 const COUNTY = "ocd-division/country:us/state:ar/county:ouachita";
 const BODY = `${COUNTY}#governing`;
+const BODY_BYTES = readFileSync(new URL("./fixtures/federal-money/openfema-live.json", import.meta.url), "utf8");
 const CAPTURE = { url: "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$top=1",
-  body: readFileSync(new URL("./fixtures/federal-money/openfema-live.json", import.meta.url), "utf8"), retrievedAt: NOW, publicationDate: null };
-const records = joinFederalMoneyFacts(parseFederalMoney("openfema", CAPTURE, "AR"), {
+  rawHash: createHash("sha256").update(BODY_BYTES).digest("hex"), vaultKey: "fixture", byteLength: Buffer.byteLength(BODY_BYTES), format: "json" as const,
+  retrievedAt: NOW, publicationDate: null };
+const records = joinFederalMoneyFacts(parseFederalMoney("openfema", CAPTURE, "AR", BODY_BYTES), {
   divisions: [{ ocdId: COUNTY, geoid: "05103", divisionType: "county" }], governments: [], bodies: [],
 });
-const value: FederalMoneyProjection = { formatVersion: 1, source: "openfema", state: "AR", records, counts: federalMoneyCounts(records) };
-const fema = provenEdgeEntry({ recordClass: "FEDERAL_MONEY", scope: "openfema:AR", sourceId: "openfema", versionId: "fema:reader-test", value, retrievedAt: NOW });
-function bundle(): ReaderAuthorityEdgeBundle {
-  return { edgeOnly: true, federalMoney: { states: new Set(["ar"]), load: async () => absentFederalMoneyStateEntries("AR").map(entry => entry.scope === "openfema:AR" ? fema : entry) } };
+const value: FederalMoneyProjection = { formatVersion: 2, source: "openfema", state: "AR", partition: { year: "2026", place: COUNTY, shard: "" }, records, lookupKeys: federalMoneyLookupKeys(records), counts: federalMoneyCounts(records) };
+async function publish(store: LocalFileArtifactStore) {
+  await publishFederalMoneyPartition({ store, projection: value, previous: null, versionId: "fema:reader-test", checkedAt: NOW });
+  await publishFederalMoneyProgress({ store, state: "AR", source: "openfema", checkedAt: NOW, complete: true, reason: null });
 }
 
-test("real OpenFEMA declaration reaches the county card and Ask with the same date and official source", async () => {
-  await withReaderAuthorityEdge(bundle(), async () => {
-    const read = await readFederalMoneyForPlace({ divisionId: COUNTY, bodyId: BODY }, { now: NOW });
+test("real OpenFEMA declaration reaches the county card and Ask with the same date and official source", async t => {
+  const directory = mkdtempSync(join(tmpdir(), "federal-money-card-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const artifactStore = new LocalFileArtifactStore(directory);
+  await publish(artifactStore);
+  {
+    const read = await readFederalMoneyForPlace({ divisionId: COUNTY, bodyId: BODY }, { artifactStore });
     const held = read.sources.find(source => source.source === "openfema")!;
     assert.equal(held.status, "HELD");
     assert.equal(held.records.length, 1);
@@ -52,10 +58,9 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     const markup = renderToStaticMarkup(createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read }));
     assert.match(markup, /BUNKER FIRE/);
     assert.match(markup, /Public assistance: Yes/i);
-    assert.match(markup, /published.*2026-09-15/i);
-    assert.match(markup, /Sources/);
-    assert.match(markup, /working on getting this info/i, "three unrecorded sources retain their coverage gap");
-    const evidence = await federalMoneyEvidence([{ divisionId: COUNTY, bodyId: BODY }], BODY, { now: NOW });
+    assert.match(markup, /Period: 2026-09-15/);
+    assert.equal(read.sources.filter(source => source.status === "NOT_HELD").length, 3);
+    const evidence = await federalMoneyEvidence([{ divisionId: COUNTY, bodyId: BODY }], BODY, { artifactStore });
     const subject = { kind: "BODY" as const, id: BODY, name: "Ouachita County" };
     assert.equal(evidence.records.length, 1);
     assert.equal(evidence.records[0].official, true);
@@ -68,14 +73,14 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     assert.match(composed.answer, /BUNKER FIRE/);
     assert.deepEqual(composed.citedUrls, [CAPTURE.url]);
     assert.equal(validateAnswer(composed.answer, composed.citedUrls, { question, subject, records: relevant, gaps: evidence.gaps, denominators: evidence.denominators, intent: "CIVICS", temporal: { kind: "NONE" }, today: NOW.slice(0, 10) }).kind, "PASSED");
-  });
+  }
 });
 
 test("source identity tampering fails the typed reader; unmatched rows remain recorded and counted", async () => {
-  const unjoined = { ...value, records: parseFederalMoney("openfema", CAPTURE, "AR"), counts: { loaded: 1, joined: 0, unjoined: 1 } };
+  const unjoined = { ...value, records: parseFederalMoney("openfema", CAPTURE, "AR", BODY_BYTES), counts: { loaded: 1, joined: 0, unjoined: 1 } };
   assert.equal(federalMoneyProjectionIssue(unjoined, "openfema", "AR"), null);
   assert.ok(federalMoneyProjectionIssue({ ...unjoined, counts: { loaded: 1, joined: 1, unjoined: 0 } }, "openfema", "AR"));
-  await assert.rejects(readFederalMoneyProjection("openfema", "AR", { edge: provenEdgeEntry({ recordClass: "FEDERAL_MONEY", scope: "openfema:AR", sourceId: "openfema", versionId: "tampered-state", value: { ...value, state: "AZ" } }) }), /source, state or format/);
+  await assert.rejects(readFederalMoneyPartition("openfema", "openfema:AR:2026:county:root", { edge: provenEdgeEntry({ recordClass: "FEDERAL_MONEY", scope: "openfema:AR:2026:county:root", sourceId: "openfema", versionId: "tampered-state", value: { ...value, state: "AZ" } }) }), /source, state or format/);
   assert.equal(federalMoneyRows(records, { divisionId: "ocd-division/country:us/state:ar/county:pulaski" }).length, 0);
   assert.equal(federalMoneyRows(records, { divisionId: "ocd-division/country:us/state:ar/cd:4" }).length, 0);
   assert.equal(federalMoneyRows(records, { divisionId: `${COUNTY}/place:camden` }).length, 1, "a source-identified county ancestor can carry its county declaration to a nested place");
@@ -86,9 +91,8 @@ test("federal money readers never open a database when the edge is unavailable",
   const old = process.env.DATABASE_URL;
   process.env.DATABASE_URL = "postgresql://do-not-open.invalid/federal-money-test";
   try {
-    const read = await readFederalMoneyProjection("openfema", "AR", { now: NOW });
-    assert.equal(read.kind, "STORE_UNREACHABLE");
-    if (read.kind === "STORE_UNREACHABLE") assert.equal(read.code, "READ_NOT_INITIALIZED");
+    const read = await readFederalMoneyForPlace({ divisionId: COUNTY }, { artifactStore: null });
+    assert.ok(read.sources.every(source => source.status === "UNAVAILABLE"));
   } finally { if (old === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = old; }
 });
 
@@ -121,14 +125,15 @@ test("named and referential federal questions read directly, and a reader's coun
   assert.deepEqual(federalMoneyPlaceDivisions("What disaster declarations cover my county?", [COUNTY, "ocd-division/country:us/state:ar/place:camden"]), [COUNTY]);
 });
 
-test("the public federal-money route serves the real state artifact on its first request without database access", async () => {
+test("the public federal-money route serves the real place artifact on its first request without database access", async () => {
   const directory = mkdtempSync(join(tmpdir(), "federal-money-reader-api-"));
   const previous = process.env.WTP_READER_EDGE_DIR;
   const previousDb = process.env.DATABASE_URL;
   try {
-    const entries = absentFederalMoneyStateEntries("AR").map(entry => entry.scope === "openfema:AR" ? fema : entry);
+    const store = new LocalFileArtifactStore(directory);
+    await publish(store);
     const published = await publishReaderEdgeArtifacts(null, { sourceThrough: NOW, retrievedAt: NOW, promotedThrough: NOW }, {
-      store: new LocalFileArtifactStore(directory), federalMoney: { ar: promotedFamily(entries, "reader-api:ar") }, now: NOW,
+      store, now: NOW,
       authority: { "registry-runtime": { value: registryTransferImport().projection.payload, versionId: "reader-api:registry" }, "federal-directory": { value: syntheticFederalDirectory(), versionId: "reader-api:federal-directory" } },
     });
     assert.equal(published.status, "PUBLISHED");

@@ -156,6 +156,7 @@ export async function verifySourceScopedCandidateProjection(
   candidate: RoutineCandidate,
   observedAt: string,
   predecessor: CandidateVersionRecord | null = null,
+  proofStore?: RoutineDataStore,
 ): Promise<RoutineReaderVerification> {
   if (!candidate.retrieval.succeeded || !candidate.normalization.succeeded) {
     return pass(
@@ -224,7 +225,7 @@ export async function verifySourceScopedCandidateProjection(
     const source = FEDERAL_MONEY_SOURCES.find((source) => source === contract.sourceId);
     const verifierId = "lib/federal-money/verify.ts#federalMoneySavedSourceIssue";
     if (!source) return fail(verifierId, "The federal source is not registered.");
-    const sourceIssue = federalMoneySavedSourceIssue(candidate, source, predecessor?.candidate ?? null);
+    const sourceIssue = await federalMoneySavedSourceIssue(candidate, source, predecessor?.candidate ?? null, proofStore);
     if (sourceIssue) return fail(verifierId, sourceIssue);
   }
 

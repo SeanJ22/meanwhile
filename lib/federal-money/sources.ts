@@ -19,3 +19,7 @@ export const FEDERAL_MONEY_CONFIG: Readonly<Record<FederalMoneySource, {
     everyMs: 20 * 60_000, clock: "every twenty minutes, matching OpenFEMA's R/PT20M dataset refresh",
     clockSource: "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2", keyEnv: null },
 };
+
+export function federalMoneySourceStates(source: FederalMoneySource): readonly string[] {
+  return source === "federal-audit-clearinghouse" ? [...FEDERAL_MONEY_STATES, "ZZ"] : FEDERAL_MONEY_STATES;
+}

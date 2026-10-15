@@ -536,7 +536,7 @@ async function answerWithSettings(request: Request) {
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
-  if (edgeManifest && (edgeManifest.authorityArtifacts || edgeManifest.federalMoney)) {
+  if (edgeManifest?.authorityArtifacts) {
     authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
       ballotOnlyHint ? ["ballot-contests", "ballot-az", "ballot-nh"]
         : leanAsk ? READER_MAP_AUTHORITY_FAMILIES

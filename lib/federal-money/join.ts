@@ -2,65 +2,89 @@ import type { FederalMoneyFact } from "./model.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { Division, Body } from "../registry/types.ts";
 
+export interface FederalMoneyHeldRecipient {
+  readonly uei: string | null;
+  readonly identifiers: Readonly<Record<string, string>>;
+  readonly bodyIds: readonly string[];
+}
+export interface FederalMoneyHeldAudit extends FederalMoneyHeldRecipient {
+  readonly reportId: string;
+  readonly divisionIds: readonly string[];
+}
 export interface FederalMoneyJoinInput {
   readonly divisions: readonly Pick<Division, "ocdId" | "geoid" | "divisionType">[];
-  readonly governments: readonly RegistrationGovernmentListing[];
+  readonly governments: readonly Pick<RegistrationGovernmentListing, "id" | "nativeIds" | "associations" | "bodyIds">[];
   readonly bodies: readonly Pick<Body, "id" | "ocdId" | "censusId">[];
-  /** Previously held SAM rows provide UEI crosswalks established by native ids. */
-  readonly entities?: readonly FederalMoneyFact[];
+  readonly entities?: readonly FederalMoneyHeldRecipient[];
+  readonly auditReports?: readonly FederalMoneyHeldAudit[];
 }
-const aliases: Readonly<Record<string, string>> = { uei: "uei", entity_uei: "uei", nces_id: "nces_leaid", leaid: "nces_leaid", census_pid6: "census_pid6", census_id: "census_pid6", ocd_id: "ocd_id" };
-const unique = (values: readonly string[]) => [...new Set(values)].sort();
-function idsMatch(native: Readonly<Record<string, string>>, ids: Readonly<Record<string, string>>) {
-  return Object.entries(ids).some(([key, value]) => {
-    const canonical = aliases[key] ?? key;
-    // Location codes and a registration's legal name cannot establish recipient identity.
-    return ["uei", "nces_leaid", "census_pid6", "ocd_id"].includes(canonical) && value !== "" &&
-      Object.entries(native).some(([held, v]) => (aliases[held] ?? held) === canonical && v === value);
+const aliases: Readonly<Record<string, string>> = { entity_uei: "uei", nces_id: "nces_leaid", leaid: "nces_leaid", census_id: "census_pid6" };
+const recipientNamespaces = new Set(["uei", "nces_leaid", "census_pid6", "ocd_id"]);
+const unique = (values: Iterable<string>) => [...new Set(values)].sort();
+export function federalMoneyRecipientIds(ids: Readonly<Record<string, string>>): { namespace: string; value: string }[] {
+  return Object.entries(ids).flatMap(([name, value]) => {
+    const namespace = aliases[name] ?? name;
+    return value && recipientNamespaces.has(namespace) ? [{ namespace, value }] : [];
   });
+}
+const key = (namespace: string, value: string) => JSON.stringify([namespace, value]);
+function append<T>(index: Map<string, Set<T>>, name: string, value: T) {
+  const values = index.get(name) ?? new Set<T>();
+  values.add(value); index.set(name, values);
 }
 function divisionType(type: string) {
   return type === "school_district" ? "school" : /congress|^cd$/.test(type) ? "congressional" : type;
 }
 
-/** Native source ids alone link recipients. Geographic reach never assigns a
- * county's audit or a private company's award to the county government. */
 export function joinFederalMoneyFacts(facts: readonly FederalMoneyFact[], input: FederalMoneyJoinInput): FederalMoneyFact[] {
-  const reportUeis = new Map<string, Set<string>>();
-  for (const fact of facts) if (fact.source === "federal-audit-clearinghouse" && fact.identifiers.reportId && fact.uei && fact.details.table === "general") {
-    const set = reportUeis.get(fact.identifiers.reportId) ?? new Set<string>();
-    set.add(fact.uei); reportUeis.set(fact.identifiers.reportId, set);
+  const nativeGovernments = new Map<string, Set<string>>();
+  const governmentBodies = new Map<string, Set<string>>();
+  const bodiesByNative = new Map<string, Set<string>>();
+  const bodiesById = new Map(input.bodies.map(body => [body.id, body]));
+  const governmentsById = new Map(input.governments.map(government => [government.id, government]));
+  for (const body of input.bodies) {
+    if (body.censusId) append(bodiesByNative, key("census_pid6", body.censusId), body.id);
+    if (body.ocdId) append(bodiesByNative, key("ocd_id", body.ocdId), body.id);
   }
-  const governments = input.governments.map(government => ({ ...government, bodyIds: unique([...government.bodyIds,
-    ...input.bodies.filter(body => Boolean(body.censusId) && body.censusId === government.nativeIds.census_pid6).map(body => body.id)]) }));
+  for (const government of input.governments) {
+    for (const native of federalMoneyRecipientIds(government.nativeIds)) append(nativeGovernments, key(native.namespace, native.value), government.id);
+    for (const body of [government.id, ...government.bodyIds, ...(bodiesByNative.get(key("census_pid6", government.nativeIds.census_pid6)) ?? [])]) append(governmentBodies, body, government.id);
+  }
+  const matchGovernments = (identifiers: Readonly<Record<string, string>>, bodyIds: readonly string[] = []) => {
+    const matches = new Set<string>();
+    for (const native of federalMoneyRecipientIds(identifiers)) for (const id of nativeGovernments.get(key(native.namespace, native.value)) ?? []) matches.add(id);
+    for (const bodyId of bodyIds) for (const id of governmentBodies.get(bodyId) ?? []) matches.add(id);
+    return matches;
+  };
   const ueiGovernments = new Map<string, Set<string>>();
-  for (const government of governments) {
-    const uei = government.nativeIds.uei;
-    if (uei) ueiGovernments.set(uei, new Set([...(ueiGovernments.get(uei) ?? []), government.id]));
-  }
   for (const entity of [...(input.entities ?? []), ...facts.filter(row => row.kind === "ENTITY")]) {
-    if (!entity.uei) continue;
-    const matches = governments.filter(government => idsMatch(government.nativeIds, entity.identifiers) ||
-      entity.bodyIds.some(id => government.bodyIds.includes(id)));
-    ueiGovernments.set(entity.uei, new Set([...(ueiGovernments.get(entity.uei) ?? []), ...matches.map(row => row.id)]));
+    if (entity.uei) for (const id of matchGovernments(entity.identifiers, entity.bodyIds)) append(ueiGovernments, entity.uei, id);
   }
+  const reports = new Map<string, FederalMoneyHeldAudit[]>();
+  for (const report of [...(input.auditReports ?? []), ...facts.flatMap(fact => fact.source === "federal-audit-clearinghouse" && fact.identifiers.reportId && fact.details.table === "general"
+    ? [{ reportId: fact.identifiers.reportId, uei: fact.uei, identifiers: fact.identifiers, bodyIds: fact.bodyIds, divisionIds: fact.divisionIds }] : [])]) {
+    const held = reports.get(report.reportId) ?? [];
+    held.push(report); reports.set(report.reportId, held);
+  }
+  const geography = new Map<string, Set<string>>();
+  for (const division of input.divisions) if (division.geoid) append(geography, key(divisionType(division.divisionType), division.geoid), division.ocdId);
   return facts.map(fact => {
-    const reportIds = fact.source === "federal-audit-clearinghouse" ? reportUeis.get(fact.identifiers.reportId) : undefined;
-    const recipientUei = fact.uei ?? (reportIds?.size === 1 ? [...reportIds][0] : null);
-    const recipientMatches = governments.filter(government => idsMatch(government.nativeIds, {
-      ...fact.identifiers, ...(recipientUei ? { uei: recipientUei } : {}),
-    }) || Boolean(recipientUei && ueiGovernments.get(recipientUei)?.has(government.id)));
-    const ambiguous = recipientMatches.length > 1;
-    const recipient = ambiguous ? [] : recipientMatches;
-    const directOcd = fact.identifiers.ocd_id;
-    const exactBodies = input.bodies.filter(body => directOcd && body.ocdId === directOcd ||
-      fact.identifiers.census_pid6 && body.censusId === fact.identifiers.census_pid6);
-    const bodyIds = ambiguous ? [] : unique([...recipient.flatMap(row => [row.id, ...row.bodyIds]), ...exactBodies.map(row => row.id)]);
-    const recipientDivisions = unique([...recipient.flatMap(row => row.associations.map(link => link.divisionId)),
-      ...input.bodies.filter(body => bodyIds.includes(body.id)).flatMap(body => body.ocdId ? [body.ocdId] : [])]);
+    const auditReports = fact.source === "federal-audit-clearinghouse" ? reports.get(fact.identifiers.reportId) ?? [] : [];
+    const reportUeis = unique(auditReports.flatMap(report => report.uei ? [report.uei] : []));
+    const recipientUei = fact.uei ?? (reportUeis.length === 1 ? reportUeis[0] : null);
+    const recipientMatches = matchGovernments({ ...fact.identifiers, ...(recipientUei ? { uei: recipientUei } : {}) });
+    if (recipientUei) for (const id of ueiGovernments.get(recipientUei) ?? []) recipientMatches.add(id);
+    for (const report of auditReports) for (const id of matchGovernments(report.identifiers, report.bodyIds)) recipientMatches.add(id);
+    const ambiguous = recipientMatches.size > 1 || !fact.uei && reportUeis.length > 1;
+    const recipients = ambiguous ? [] : [...recipientMatches].flatMap(id => governmentsById.get(id) ? [governmentsById.get(id)!] : []);
+    const exactBodies = federalMoneyRecipientIds(fact.identifiers).flatMap(native => [...(bodiesByNative.get(key(native.namespace, native.value)) ?? [])]);
+    const bodyIds = ambiguous ? [] : unique([...recipients.flatMap(row => [row.id, ...row.bodyIds,
+      ...(bodiesByNative.get(key("census_pid6", row.nativeIds.census_pid6)) ?? [])]), ...exactBodies, ...auditReports.flatMap(report => report.bodyIds)]);
+    const recipientDivisions = unique([...recipients.flatMap(row => row.associations.map(link => link.divisionId)),
+      ...bodyIds.flatMap(id => bodiesById.get(id)?.ocdId ? [bodiesById.get(id)!.ocdId!] : []),
+      ...(!ambiguous ? auditReports.flatMap(report => report.divisionIds) : [])]);
     const geographicDivisions = ["GRANT", "CONTRACT", "LOAN", "DISASTER"].includes(fact.kind)
-      ? input.divisions.filter(division => fact.geography.some(geo => geo.geoid === division.geoid && geo.type === divisionType(division.divisionType))).map(division => division.ocdId)
-      : [];
+      ? fact.geography.flatMap(geo => [...(geography.get(key(geo.type, geo.geoid)) ?? [])]) : [];
     const divisionIds = unique([...recipientDivisions, ...geographicDivisions]);
     const joined = bodyIds.length > 0 || divisionIds.length > 0;
     return { ...fact, bodyIds, divisionIds, joinStatus: joined ? "JOINED" : "UNJOINED",

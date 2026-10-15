@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "../lib/db/schema.ts";
@@ -9,19 +8,15 @@ import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runne
 import { federalMoneyContinuationPending, MemoryRoutineDataStore, routineClockPointerRead } from "../lib/civic-data/store.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { federalMoneyCandidate, type FederalMoneyNationalProjection } from "../lib/federal-money/candidate.ts";
-import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 
 const AT = "2026-10-12T23:01:00.000Z";
 const FAILED_AT = "2026-10-12T23:06:00.000Z";
 const COMPLETE_AT = "2026-10-13T00:06:00.000Z";
 const counts = { loaded: 1, joined: 0, unjoined: 1 };
-const capture = { url: "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$top=1",
-  body: readFileSync(new URL("./fixtures/federal-money/openfema-live.json", import.meta.url), "utf8"),
-  retrievedAt: AT, publicationDate: null };
 const task = routineTaskFromContract(requiredRoutineContract("openfema"));
 
 function marker(complete: boolean): FederalMoneyNationalProjection {
-  return { formatVersion: 1, source: "openfema", state: "US", counts, states: [{ state: "AR",
+  return { formatVersion: 2, source: "openfema", state: "US", counts, states: [{ state: "AR",
     status: complete ? "COMPLETE" : "BACKFILL", counts,
     cursor: complete ? null : { source: "openfema", phase: "declarations", offset: 1 },
     lastCompleteAt: complete ? COMPLETE_AT : null, reason: null }] };
@@ -46,9 +41,8 @@ test("verified partial national acquisition resumes on the next admission while 
 test("the persisted pending marker survives a real failed attempt, whose retry clock postpones admission", async t => {
   t.mock.method(Date, "now", () => Date.parse(COMPLETE_AT));
   const store = new MemoryRoutineDataStore();
-  const facts = parseFederalMoney("openfema", capture, "AR");
   const pending = federalMoneyCandidate({ projection: marker(false),
-    page: { facts, captures: [capture], complete: false, declaredTotal: null }, now: AT });
+    page: { facts: [], captures: [], complete: false, declaredTotal: null }, now: AT });
   const first = await processRegisteredRoutineCandidate(store, "openfema", pending, AT);
   assert.equal(first.promoted?.versionId, pending.id, first.candidate.failureDetail ?? "");
   const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
@@ -62,9 +56,8 @@ test("the persisted pending marker survives a real failed attempt, whose retry c
   assert.equal(failed.lastAttemptedAt, FAILED_AT);
   assert.equal(routineTaskDue(task, failed, Date.parse(FAILED_AT) + task.retryMs - 1), false);
   assert.equal(routineTaskDue(task, failed, Date.parse(FAILED_AT) + task.retryMs), true);
-  const completeCapture = { ...capture, retrievedAt: COMPLETE_AT };
   const complete = federalMoneyCandidate({ projection: marker(true),
-    page: { facts: parseFederalMoney("openfema", completeCapture, "AR"), captures: [completeCapture], complete: true, declaredTotal: null }, now: COMPLETE_AT });
+    page: { facts: [], captures: [], complete: true, declaredTotal: null }, now: COMPLETE_AT });
   const final = await processRegisteredRoutineCandidate(store, "openfema", complete, COMPLETE_AT);
   assert.equal(final.promoted?.versionId, complete.id, final.candidate.failureDetail ?? "");
   const settled = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);

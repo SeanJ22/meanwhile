@@ -225,6 +225,7 @@ export async function processRegisteredFanOutCandidate(
     boundedCandidate,
     sourceProjectionObservedAt(store, now),
     federalPrior ? await store.readCandidate(federalPrior.versionId) : null,
+    store,
   );
   return appendTypedReaderProjectionReadback(
     store,

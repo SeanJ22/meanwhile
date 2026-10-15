@@ -66,7 +66,6 @@ export function federalMoneyText(fact: FederalMoneyFact, relationship: FederalMo
   if (fact.period) parts.push(`Period: ${/^\d{4}-\d{2}-\d{2}T/.test(fact.period) ? fact.period.slice(0, 10) : fact.period}`);
   if (fact.uei) parts.push(`UEI: ${fact.uei}`);
   for (const detail of federalMoneyDetails(fact)) parts.push(`${detail.label}: ${detail.value}`);
-  parts.push(`Published by ${fact.provenance.sourceOrg}${fact.provenance.publicationDate ? ` on ${fact.provenance.publicationDate.slice(0, 10)}` : "; publication date not provided"}`);
   return `${parts.join("; ")}.`;
 }
 

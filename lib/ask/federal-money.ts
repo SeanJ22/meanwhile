@@ -1,7 +1,6 @@
-import { readFederalMoneyForPlace } from "../federal-money/reader.ts";
+import { readFederalMoneyForPlace, type FederalMoneyReadOptions } from "../federal-money/reader.ts";
 import { federalMoneyDetails, federalMoneyRows, FEDERAL_MONEY_SOURCE_LABELS, type FederalMoneyTarget } from "../federal-money/view.ts";
 import type { FederalMoneyFact } from "../federal-money/model.ts";
-import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 import { overLengthBudget } from "./length-contract.ts";
 
@@ -22,7 +21,7 @@ export function federalMoneyPlaceDivisions(question: string, divisionIds: readon
 
 /** Source-native awards, recipient audits, registrations and county disasters
  * enter the same evidence pack, even when the question is not about a budget. */
-export async function federalMoneyEvidence(targets: readonly FederalMoneyTarget[], subjectId?: string, options: PromotedCivicDataReadOptions = {}) {
+export async function federalMoneyEvidence(targets: readonly FederalMoneyTarget[], subjectId?: string, options: FederalMoneyReadOptions = {}) {
   const unique = [...new Map(targets.map(target => [`${target.divisionId}|${target.bodyId ?? ""}`, target])).values()];
   const results = await Promise.allSettled(unique.map(target => readFederalMoneyForPlace(target, options)));
   const records = new Map<string, EvidenceRecord>();
@@ -36,8 +35,10 @@ export async function federalMoneyEvidence(targets: readonly FederalMoneyTarget[
       const key = `federalMoney:${source.source}`;
       const rows = federalMoneyRows(source.records, target);
       denominators[`${key}:recordsReturned`] = (denominators[`${key}:recordsReturned`] ?? 0) + rows.length;
+      denominators[`${key}:moreRecords`] = (denominators[`${key}:moreRecords`] ?? 0) + (source.moreRecords ? 1 : 0);
       denominators[`${key}:unavailableReads`] = (denominators[`${key}:unavailableReads`] ?? 0) + (source.status === "UNAVAILABLE" ? 1 : 0);
-      if (!rows.length) gaps.push({ whose: "OURS", statement: `We're working on getting this info from ${FEDERAL_MONEY_SOURCE_LABELS[source.source]} for this place.` });
+      if (source.moreRecords) gaps.push({ whose: "OURS", statement: `More held records from ${FEDERAL_MONEY_SOURCE_LABELS[source.source]} are available on this government or district card.` });
+      if (!rows.length && !source.moreRecords) gaps.push({ whose: "OURS", statement: `We're working on getting this info from ${FEDERAL_MONEY_SOURCE_LABELS[source.source]} for this place.` });
       else if (source.coverageComplete === false) gaps.push({ whose: "OURS", statement: `We're working on getting more records from ${FEDERAL_MONEY_SOURCE_LABELS[source.source]} for this place.` });
       for (const row of rows) {
         const fact = row.fact;

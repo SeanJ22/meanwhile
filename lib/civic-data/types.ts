@@ -315,7 +315,15 @@ export type RoutineRemovalEvidence =
   | RosterDepartureRemovalEvidence
   | AuditPullRemovalEvidence
   | MovedToHistoryRemovalEvidence
-  | MovedToFactStoreRemovalEvidence;
+  | MovedToFactStoreRemovalEvidence
+  | FederalRepartitionRemovalEvidence;
+
+export interface FederalRepartitionRemovalEvidence {
+  readonly key: string;
+  readonly code: "FEDERAL_RECORD_REPARTITIONED";
+  readonly targetScope: string;
+  readonly targetVersionId: string;
+}
 
 /** A roster row removed from the registry partition: its members publish as facts. */
 export interface MovedToFactStoreRemovalEvidence {

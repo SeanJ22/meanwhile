@@ -1,9 +1,7 @@
-/** Source-native federal records. Geography describes where money reaches;
- * recipient links describe who received it. Those claims stay separate. */
 export const FEDERAL_MONEY_SOURCES = ["usaspending", "federal-audit-clearinghouse", "sam-gov-entities", "openfema"] as const;
 export type FederalMoneySource = typeof FEDERAL_MONEY_SOURCES[number];
 export const FEDERAL_MONEY_RECORD_CLASS = "FEDERAL_MONEY" as const;
-export const FEDERAL_MONEY_PARSER = "federal-money/1";
+export const FEDERAL_MONEY_PARSER = "federal-money/2";
 export function federalMoneyScope(source: FederalMoneySource, state: string) { return `${source}:${state.toUpperCase()}`; }
 
 export interface FederalMoneyFact {
@@ -29,7 +27,11 @@ export interface FederalMoneyFact {
 }
 export interface FederalMoneyCapture {
   readonly url: string;
-  readonly body: string;
+  readonly rawHash: string;
+  readonly vaultKey: string;
+  readonly byteLength: number;
+  readonly format: "csv" | "json";
+  readonly archiveId?: string;
   readonly retrievedAt: string;
   readonly publicationDate: string | null;
 }
@@ -38,7 +40,6 @@ export interface FederalMoneyPage {
   readonly captures: readonly FederalMoneyCapture[];
   readonly complete: boolean;
   readonly declaredTotal: number | null;
-  /** A provider-native continuation; partial pages are published and merged by id. */
   readonly continuation?: FederalMoneyCursor | null;
 }
 export interface FederalMoneyCursor {
@@ -55,19 +56,69 @@ export interface FederalMoneyCursor {
   readonly since?: string;
   readonly registered?: boolean;
   readonly year?: number;
+  readonly bulkId?: string;
+  readonly chunkIndex?: number;
+}
+export interface FederalMoneyPartition {
+  readonly year: string;
+  readonly place: string;
+  readonly shard: string;
+}
+export interface FederalMoneyCounts {
+  readonly loaded: number;
+  readonly joined: number;
+  readonly unjoined: number;
 }
 export interface FederalMoneyProjection {
-  readonly formatVersion: 1;
+  readonly formatVersion: 2;
   readonly source: FederalMoneySource;
   readonly state: string;
+  readonly partition: FederalMoneyPartition;
   readonly records: readonly FederalMoneyFact[];
-  readonly counts: { readonly loaded: number; readonly joined: number; readonly unjoined: number };
-  readonly checkpoint?: {
+  readonly lookupKeys: readonly string[];
+  readonly counts: FederalMoneyCounts;
+  readonly children?: readonly string[];
+  readonly subtreeCounts?: FederalMoneyCounts;
+  readonly childCounts?: Readonly<Record<string, FederalMoneyCounts>>;
+}
+export interface FederalMoneyCheckpoint {
+  readonly formatVersion: 2;
+  readonly source: FederalMoneySource;
+  readonly state: string;
+  readonly counts: FederalMoneyCounts;
+  readonly checkpoint: {
     readonly cursor: FederalMoneyCursor | null;
     readonly complete: boolean;
     readonly lastCompleteAt: string | null;
-    /** Inclusive update watermark: refresh from the previous pass's start,
-     * so writes arriving during a paged pass are reread on the next one. */
-    readonly refreshStartedAt?: string | null;
+    readonly refreshStartedAt: string | null;
+    readonly pending?: {
+      readonly page: Omit<FederalMoneyPage, "facts">;
+      readonly baselines: Readonly<Record<string, FederalMoneyCounts>>;
+      readonly priorLocations: readonly { readonly id: string; readonly partition: FederalMoneyPartition }[];
+    };
   };
+}
+export const FEDERAL_MONEY_PARTITION_ROWS = 500;
+export const FEDERAL_MONEY_PARTITION_BYTES = 4 * 1024 * 1024;
+export function federalMoneyPartitionWithinBounds(records: readonly unknown[]): boolean {
+  return records.length <= FEDERAL_MONEY_PARTITION_ROWS && (records.length <= 1 || Buffer.byteLength(JSON.stringify(records)) <= FEDERAL_MONEY_PARTITION_BYTES);
+}
+export function federalMoneyPartitionScope(source: FederalMoneySource, state: string, partition: FederalMoneyPartition) {
+  return `${federalMoneyScope(source, state)}:${partition.year}:${encodeURIComponent(partition.place)}:${partition.shard || "root"}`;
+}
+
+export function federalMoneyLookupKeys(records: readonly FederalMoneyFact[]): string[] {
+  return [...new Set(records.flatMap(row => [`id:${row.id}`, ...(row.source === "sam-gov-entities" && row.kind === "ENTITY" && row.uei ? [`uei:${row.uei}`] : []),
+    ...(row.identifiers.reportId && row.details.table === "general" ? [`report:${row.identifiers.reportId}`] : [])]))].sort();
+}
+
+export function federalMoneyPartitionOf(fact: FederalMoneyFact): FederalMoneyPartition {
+  if (fact.kind === "ENTITY") {
+    const district = fact.details.congressionalDistrict;
+    return { year: "registration", place: typeof district === "string" && district.trim() ? `registration-address-district:${district}` : "registration-unlocated", shard: "" };
+  }
+  const year = /^\d{4}/.exec(fact.period ?? "")?.[0] ?? "undated";
+  const geo = fact.geography.find(row => row.type === "county") ?? fact.geography[0];
+  const place = geo ? `${geo.type}:${geo.geoid}` : (fact.uei ? `uei:${fact.uei}` : "unjoined");
+  return { year, place, shard: "" };
 }

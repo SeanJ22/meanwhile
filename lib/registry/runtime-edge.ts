@@ -9,7 +9,6 @@ import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
-import { absentFederalMoneyStateEntries } from "../federal-money/edge.ts";
 
 /**
  * Request-scoped "reader authority" edge bundle: the large families the coverage
@@ -63,12 +62,6 @@ export interface RegistrationsEdge {
   readonly load: (state: string) => Promise<{ readonly value: RegistrationReadModel; readonly versionId: string } | null>;
 }
 
-/** Federal source pointers stay in state artifacts until a request actually needs that state. */
-export interface FederalMoneyEdge {
-  readonly states: ReadonlySet<string>;
-  readonly load: (state: string) => Promise<readonly PromotedEdgeEntry[] | null>;
-}
-
 export interface ReaderAuthorityEdgeBundle {
   readonly censusDistricts?: { readonly value: CensusDistrictEdge; readonly versionId: string };
   readonly registryRuntime?: RegistryRuntimeEdgeValue;
@@ -78,7 +71,6 @@ export interface ReaderAuthorityEdgeBundle {
   readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
-  readonly federalMoney?: FederalMoneyEdge;
   /**
    * The proven pointers the edge carries whole, keyed by pointer (`RECORD_CLASS:scope`). Each is read
    * through its own typed Reader (`readPromotedEdgeFirst`), so every validation applied to a database read
@@ -137,8 +129,7 @@ export async function settleEdgeFirst<T>(
 
 /** The edge's copy of one pointer for this request, or null when it carries none. */
 export function currentPromotedEdge(recordClass: RoutineRecordClass, scope: string): EdgeServedValue<PromotedEdgeEntry> | null {
-  const bundle = edgeStore.getStore();
-  const entry = bundle ? federalMoneyPointers.get(bundle)?.get(`${recordClass}:${scope}`) ?? bundle.promoted?.get(`${recordClass}:${scope}`) : null;
+  const entry = edgeStore.getStore()?.promoted?.get(`${recordClass}:${scope}`);
   if (!entry) return null;
   return { value: entry, versionId: entry.kind === "PROMOTED" ? entry.projection.versionId : "NOT_RECORDED" };
 }
@@ -165,37 +156,6 @@ export async function readPromotedEdgeFirst<R>(
 }
 
 const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();
-const federalMoneyLoads = new WeakMap<ReaderAuthorityEdgeBundle, Map<string, Promise<boolean>>>();
-const federalMoneyPointers = new WeakMap<ReaderAuthorityEdgeBundle, Map<string, PromotedEdgeEntry>>();
-
-/** Hydrate one state's proven pointers into this request, without a database fallback. */
-export async function ensureFederalMoneyStateEdge(state: string): Promise<boolean> {
-  const bundle = edgeStore.getStore();
-  if (!bundle) return false;
-  const normalized = state.toLowerCase();
-  let loads = federalMoneyLoads.get(bundle);
-  if (!loads) { loads = new Map(); federalMoneyLoads.set(bundle, loads); }
-  const held = loads.get(normalized);
-  if (held) return held;
-  const loading = (async () => {
-    const served = bundle.federalMoney;
-    const recorded = served?.states.has(normalized) ?? false;
-    const entries = served && recorded
-      ? await served.load(normalized)
-      : absentFederalMoneyStateEntries(normalized);
-    if (entries === null) return false;
-    let promoted = federalMoneyPointers.get(bundle);
-    if (!promoted) { promoted = new Map(); federalMoneyPointers.set(bundle, promoted); }
-    for (const entry of entries) {
-      const pointer = entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`;
-      if (!recorded && bundle.promoted?.has(pointer)) continue;
-      promoted.set(pointer, entry);
-    }
-    return true;
-  })();
-  loads.set(normalized, loading);
-  return loading;
-}
 
 /**
  * Bind the bundle to the current request's async context. Uses `enterWith` so

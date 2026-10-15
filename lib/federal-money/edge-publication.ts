@@ -1,66 +1,73 @@
-import { FEDERAL_MONEY_RECORD_CLASS, FEDERAL_MONEY_SOURCES, federalMoneyScope } from "./model.ts";
-import { FEDERAL_MONEY_STATES } from "./sources.ts";
-import { FEDERAL_MONEY_EDGE_SCOPES } from "./edge.ts";
-import { readFederalMoneyProjection } from "./reader.ts";
-import { promotedEdgeEntryOf, readPromotedCivicData, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
-import { promotedFamilyVersion, promotedPointerVersion } from "../civic-data/promoted-edge-publication.ts";
-import type { RoutineDataStore } from "../civic-data/store.ts";
-import type { PromotedFamilyArtifactValue, ReaderManifest } from "../meetings/edge-artifacts.ts";
-import type { PublishAuthorityCarried, PublishAuthorityValue, PublishFederalMoney } from "../meetings/edge-serving.ts";
+import { gzipSync } from "node:zlib";
+import { sha256OfJson } from "../meetings/edge-artifacts.ts";
+import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { federalMoneyPartitionScope, type FederalMoneyProjection, type FederalMoneySource } from "./model.ts";
+import { federalMoneyProjectionIssue } from "./reader.ts";
+import { FEDERAL_MONEY_PAGE_SIZE, federalMoneyFactPlaces, federalMoneyPlaceKey, federalMoneyStatusKey,
+  type FederalMoneyPlaceIndex, type FederalMoneyPlacePage, type FederalMoneyPlaceSegment, type FederalMoneyStateStatus } from "./edge.ts";
 
-/** Read changed state pointers once on the runner; every other state keeps its accepted artifact. */
-export async function readFederalMoneyEdgePublication(input: {
-  readonly store: RoutineDataStore;
-  readonly servedManifest: Pick<ReaderManifest, "federalMoney"> | null;
-  readonly now: string;
-  readonly readServedState: (state: string) => Promise<PromotedFamilyArtifactValue | null>;
-}): Promise<{ readonly states: PublishFederalMoney; readonly skipped: readonly string[] }> {
-  const states: Record<string, PublishAuthorityValue | PublishAuthorityCarried> = Object.fromEntries(
-    Object.entries(input.servedManifest?.federalMoney ?? {}).map(([state, ref]) => [state, { versionId: ref.version, carried: true }]));
-  const skipped: string[] = [];
-  const identities = new Map((await input.store.readPromotionIdentities(FEDERAL_MONEY_RECORD_CLASS, FEDERAL_MONEY_EDGE_SCOPES))
-    .map(pointer => [pointer.scope, pointer]));
-  for (const state of FEDERAL_MONEY_STATES) {
-    const lower = state.toLowerCase();
-    const scopes = FEDERAL_MONEY_SOURCES.map(source => federalMoneyScope(source, state));
-    const served = input.servedManifest?.federalMoney?.[lower];
-    if (!served && !scopes.some(scope => identities.has(scope))) continue;
-    const currentVersion = promotedFamilyVersion(scopes.map(scope =>
-      promotedPointerVersion(FEDERAL_MONEY_RECORD_CLASS, scope, identities.get(scope) ?? null)));
-    if (served?.version === currentVersion) continue;
-    try {
-      const entries: PromotedEdgeEntry[] = [];
-      const versions: string[] = [];
-      let prior: PromotedFamilyArtifactValue | null | undefined;
-      for (const source of FEDERAL_MONEY_SOURCES) {
-        const scope = federalMoneyScope(source, state);
-        let entry: PromotedEdgeEntry;
-        try {
-          if (!identities.has(scope)) entry = { kind: "NOT_RECORDED", recordClass: FEDERAL_MONEY_RECORD_CLASS, scope };
-          else {
-            const read = await readPromotedCivicData(FEDERAL_MONEY_RECORD_CLASS, scope, { store: input.store, now: input.now });
-            const proven = promotedEdgeEntryOf(read, FEDERAL_MONEY_RECORD_CLASS, scope, input.store);
-            if (proven === null || proven.kind !== "PROMOTED") throw new Error(`${source}:${state} read ${read.kind}`);
-            const accepted = await readFederalMoneyProjection(source, state, { edge: proven, now: input.now });
-            if (accepted.kind !== "PROMOTED" || accepted.metadata.versionId !== proven.projection.versionId)
-              throw new Error(`${source}:${state} typed reader answered ${accepted.kind}`);
-            entry = proven;
-          }
-        } catch (error) {
-          if (prior === undefined) prior = await input.readServedState(lower);
-          const held = prior?.entries.find(candidate => candidate.kind === "PROMOTED"
-            ? candidate.projection.recordClass === FEDERAL_MONEY_RECORD_CLASS && candidate.projection.scope === scope
-            : candidate.recordClass === FEDERAL_MONEY_RECORD_CLASS && candidate.scope === scope);
-          if (!held) throw error;
-          skipped.push(`${source}:${state} ${error instanceof Error ? error.message : String(error)}; retaining the accepted prior version`);
-          entry = held;
+export async function publishFederalMoneyPartition(input: {
+  readonly store: ReaderArtifactStore;
+  readonly projection: FederalMoneyProjection;
+  readonly previous: FederalMoneyProjection | null;
+  readonly versionId: string;
+  readonly checkedAt: string;
+}): Promise<{ places: number; bytesWritten: number }> {
+  const { projection, store } = input;
+  const issue = federalMoneyProjectionIssue(projection, projection.source, projection.state);
+  if (issue) throw new Error(issue);
+  const segmentId = federalMoneyPartitionScope(projection.source, projection.state, projection.partition);
+  const places = new Set([...projection.records, ...(input.previous?.records ?? [])].flatMap(federalMoneyFactPlaces));
+  let bytesWritten = 0;
+  for (const place of places) {
+    const records = projection.records.filter(fact => federalMoneyFactPlaces(fact).includes(place))
+      .sort((a, b) => (b.provenance.publicationDate ?? "").localeCompare(a.provenance.publicationDate ?? "") || a.id.localeCompare(b.id));
+    const contentHash = sha256OfJson(records);
+    const key = federalMoneyPlaceKey(projection.state, place);
+    let prepared: FederalMoneyPlaceSegment | null = null;
+    for (let attempt = 0; ; attempt += 1) {
+      const held = await store.readJsonPointer<FederalMoneyPlaceIndex>(key);
+      if (held && (held.value.formatVersion !== 2 || held.value.state !== projection.state || held.value.place !== place)) throw new Error("Federal place index identity does not match its key.");
+      if (held?.value.segments[segmentId]?.versionId === input.versionId || held?.value.segments[segmentId]?.contentHash === contentHash) break;
+      if (!held && records.length === 0) break;
+      if (prepared === null && records.length) {
+        const pages = [];
+        for (let offset = 0; offset < records.length; offset += FEDERAL_MONEY_PAGE_SIZE) {
+          const page: FederalMoneyPlacePage = { formatVersion: 2, state: projection.state, place, source: projection.source, versionId: input.versionId, records: records.slice(offset, offset + FEDERAL_MONEY_PAGE_SIZE) };
+          const bytes = gzipSync(Buffer.from(JSON.stringify(page)));
+          pages.push({ key: await store.putImmutable(bytes, "json.gz"), hash: sha256OfJson(page), count: page.records.length });
+          bytesWritten += bytes.byteLength;
         }
-        entries.push(entry);
-        versions.push(promotedPointerVersion(FEDERAL_MONEY_RECORD_CLASS, scope, entry.kind === "PROMOTED" ? entry.projection : null));
+        prepared = { year: projection.partition.year, source: projection.source, versionId: input.versionId, contentHash, checkedAt: input.checkedAt, latestPublication: records[0]?.provenance.publicationDate ?? null, pages };
       }
-      states[lower] = { value: { kind: "PROMOTED_POINTERS", entries } satisfies PromotedFamilyArtifactValue,
-        versionId: promotedFamilyVersion(versions) };
-    } catch (error) { skipped.push(`federal-money/${lower} ${error instanceof Error ? error.message : String(error)}`); }
+      const segments = { ...held?.value.segments };
+      if (prepared) segments[segmentId] = prepared;
+      else delete segments[segmentId];
+      const value: FederalMoneyPlaceIndex = { formatVersion: 2, state: projection.state, place, segments };
+      const written = await store.writeJsonPointer(key, value, held?.etag ?? null);
+      if (written.modified) { bytesWritten += Buffer.byteLength(JSON.stringify(value)); break; }
+      if (attempt >= 7) throw new Error("Federal place publication raced with another writer.");
+    }
   }
-  return { states, skipped };
+  return { places: places.size, bytesWritten };
+}
+
+export async function publishFederalMoneyProgress(input: {
+  readonly store: ReaderArtifactStore;
+  readonly state: string;
+  readonly source: FederalMoneySource;
+  readonly checkedAt: string;
+  readonly complete: boolean;
+  readonly reason: string | null;
+}): Promise<void> {
+  const key = federalMoneyStatusKey(input.state);
+  for (let attempt = 0; ; attempt += 1) {
+    const held = await input.store.readJsonPointer<FederalMoneyStateStatus>(key);
+    if (held && (held.value.formatVersion !== 2 || held.value.state !== input.state)) throw new Error("Federal source status identity does not match its key.");
+    const value: FederalMoneyStateStatus = { formatVersion: 2, state: input.state,
+      sources: { ...held?.value.sources, [input.source]: { checkedAt: input.checkedAt, complete: input.complete, reason: input.reason } } };
+    if (held && sha256OfJson(held.value) === sha256OfJson(value)) return;
+    if ((await input.store.writeJsonPointer(key, value, held?.etag ?? null)).modified) return;
+    if (attempt >= 7) throw new Error("Federal source status publication raced with another writer.");
+  }
 }

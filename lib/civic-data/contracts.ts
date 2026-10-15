@@ -601,7 +601,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/federal-money-refresh.mts", "--promote", `--source=${source}`], requestedUrl: FEDERAL_MONEY_CONFIG[source].route },
     parserNormalizerVersion: FEDERAL_MONEY_PARSER,
     cadence: { description: FEDERAL_MONEY_CONFIG[source].clock, defaultEveryMs: FEDERAL_MONEY_CONFIG[source].everyMs },
-    retry: { afterMs: HOUR, description: "one hour after an outage or an unfinished national backfill; provider Retry-After is honored" },
+    retry: { afterMs: HOUR, description: "one hour after an outage; successful unfinished backfills continue on the next pass; provider Retry-After is honored" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: source }, validationContract: CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: { id: `${source}-federal-money`, consumers: ["government cards", "district cards", "/api/federal-money", "Ask", "Admin"] },

@@ -1,27 +1,39 @@
 # Federal money sources
 
-SRC-MN registers one national routine contract for each source. The standing runner admits them independently of Sends or paid acquisition. It publishes each state's acquired pages immediately, retains unmatched native rows, and saves a continuation in that state's existing civic-data pointer. The runner's existing minute sweep copies new state pointers to readers while source children are still working. A national marker reports loaded, joined and unjoined rows per state without carrying the country's records. Pending backfill resumes at the next admission; an actual later failure uses the source retry clock.
+Four national routine contracts run independently: daily USAspending, Federal Audit Clearinghouse and SAM.gov checks, and OpenFEMA every twenty minutes. Provider limits and Retry-After govern requests. Publication never needs a software release.
 
-| Source | Acquisition | Refresh |
-| --- | --- | --- |
-| USAspending | Source-discovered earliest transaction date, then annual state transaction extracts for grants, contracts and loans; recipient and performance queries are deduplicated by transaction ID | Nightly provider refresh; daily check |
-| Federal Audit Clearinghouse | Paged general reports, findings, findings text, corrective action plans and additional UEIs joined by report ID; historical 1998–2015 official archives | Daily accepted/revised submissions and findings |
-| SAM.gov | Public state extracts for registered and unregistered entities; bulk avoids the entity search result-window ceiling | Daily live entity updates |
-| OpenFEMA | Paged DisasterDeclarationsSummaries for every state and territory | Every twenty minutes, matching the official catalog's `R/PT20M` |
+Bulk files stream into the evidence vault in content-addressed chunks. CSV and JSON rows are sorted on disk by native state, year, place and record hash before bounded ingestion. Interrupted downloads and extraction resume from temporary disk checkpoints. The vault holds completed chunk references, so losing scratch space does not strand a saved source cursor. Each historical FAC national year downloads once and splits into state files; records with no usable state remain in the reported ZZ inventory.
 
-Provider documentation and exact fixture provenance are in [the fixture metadata](../tests/fixtures/federal-money/provenance.json). Requests honor Retry-After on rate limits and failures. DATA_GOV_API_KEY reads FAC, and SAM_GOV_API_KEY reads SAM. Neither secret enters saved response URLs, facts or reader output.
+USAspending uses its custom bulk transaction endpoint, with annual initial extracts beginning October 2000 and subsequent checks filtered by last modification date. Each completed pass retains its start time so updates arriving during ingestion remain eligible for the next pass.
 
-Recipient bindings use held UEIs, Census government IDs, NCES IDs or OCD IDs. FAC child records inherit their recipient *binding* through the source's report ID without changing their original source UEI field. Geographic reach uses exact Census GEOIDs/FIPS and stays separate from recipient identity. A registration address does not establish a government's territory. An unmatched row stays held with its reason. Source failures preserve the previous good facts and record the actual reason on that state's source door.
+A stored fact partition contains at most 500 records and four MiB, except a single larger source fact. State/year/county or native division partitions split by record hash when full. SAM registrations group by their native address district, or an unlocated bucket, without asserting that the entity governs that place. Each page updates only affected partitions and verifies their incoming captures and exact predecessors. A source correction or split removes a record only after its destination has published. State checkpoints contain counts, continuation and pending-page references, never the state's facts. Pending-page baselines make replay safe after a crash between database and reader publication.
 
-Incremental checks overlap the preceding pass's start time, so source updates arriving during pagination or historical backfill remain eligible for the next check. A bounded work slice retains each unvisited state's durable counts and cursor.
+Candidates retain capture references, not source bodies. The existing evidence vault holds the bytes. An index over compact native lookup keys finds UEIs, audit report IDs and corrected record locations without scanning the national fact inventory. No new database columns are introduced; the index migration uses the existing classified civic-data payload column.
 
-An initial empty or pending page saves its acquisition checkpoint as metadata while keeping the fact count at zero. The validator receives the actual metadata member, and no absence is asserted. Optional cursor fields are normalized to their durable JSON shape before hashing.
+Identity lookup returns only the current page's native matches. Recipient identity remains separate from geographic reach. Unmatched rows stay held with their reasons. Source outages preserve accepted facts; an unchanged check succeeds.
 
-The reader publishes proven source pointers in separate state artifacts. Government and district cards collect their source contributions into the card's single bottom Sources list. Ask receives the same source facts and has deterministic sourced answers for federal money, audit, registration and disaster questions. Missing sources and unfinished backfills remain visible.
+Each place has its own reader index and immutable pages of at most 100 facts. Only changed place segments publish. Government and district cards collect attribution in one bottom Sources list, and Ask reads the same place pages and historical-year selection. Missing sources and partial coverage stay visible.
 
-No database columns or migrations are introduced. The existing civic-data candidate, promotion, confirmation and operational door JSON columns retain their classifications in `lib/db/identity-domains.ts`.
+Fixture provenance is in `tests/fixtures/federal-money/provenance.json` and `source-probe-2026-10-15.json` in the same directory. Generated scale inputs are marked synthetic and never seed production. `scripts/federal-money-scale.mts` exercises streaming acquisition, partition publication and place reads, and reports measured resources separately from unmeasured production traffic.
 
-Workspace validation uses an exact live OpenFEMA response, official USAspending/SAM response examples, and FAC's published rollup output. FAC general/findings API samples remain unavailable; their transport and relational tests are explicitly synthetic. Documentation examples never seed current production facts. All four direct source transports, production loading and Git remote access remain unverified from this workspace. Automatic approval review rejected the direct source/Git network access check.
+Local scale measurements use a four-core host with concurrent work. Counts describe benchmark inputs; production inventory is checked under DONE. Database traffic means decoded SQL request and response JSON through the production PostgreSQL adapter. It does not measure heap, index, TOAST, WAL, compressed network traffic or production daily changes. Fixture preparation runs separately from the measured worker.
+
+| Completed stage | Input | Elapsed | Peak worker memory | Database traffic |
+| --- | --- | ---: | ---: | --- |
+| FAC historical acquisition | All 18 official 1998–2015 archives; 950,035 selected rows across 57 state buckets | 813.47 s across measured cold phases | 501,121,024 bytes, observed process tree | Zero; acquisition and vault only |
+| USAspending national acquisition | 8,038,344 generated transactions across 56 jurisdictions and all 112,034 held governments | 1,184.62 s | 373,796,864 bytes | Zero; acquisition and vault only |
+| SAM extract acquisition | 1,000,000 generated entities; 1,353,888,929 expanded bytes | 513.22 s | 357,138,432 bytes | Zero; acquisition and vault only |
+| Per-place artifact publication | 2,000,000 generated county facts; 4,000 partitions and 20,000 pages | 236.90 s | 558,215,168 bytes | Zero; artifact stage only |
+
+The FAC archives contain 10,613,289 native CSV rows in 1,902,780,166 expanded bytes. A separate strict UTF-8 and ZIP checksum pass reconciled every selected row. Raw archives total 432,697,811 bytes. Acquisition wrote 922,185,471 vault bytes and read 490,054,536 bytes. The process-tree monitor started with year 2000; the process maximum covers all years. Unknown-state records remain in ZZ: 798 rows.
+
+The generated national USAspending input matches the live 2025 transaction count. Its 64,115,267 ZIP bytes expand to 1,364,272,836 CSV bytes, delivered as 16,107 bounded pages; the largest capture is 96,531 bytes. A separate two-million-row input exercised 4,403,778,095 expanded bytes, beyond V8's single-string limit, in 308.98 seconds at a 581,750,784-byte worker peak. Both measurements cover streaming acquisition only.
+
+At two million county facts, the place index is 4,847,006 bytes and retained artifacts total 163,938,640 bytes. Cold reader/API/Ask-evidence checks took 1.175/1.198/1.591 seconds. The first page reads 4,855,020 artifact bytes and returns 100 facts. Publication read 9,690,105,489 logical artifact bytes and wrote 9,854,044,129 bytes; local compare-and-swap added 19,385,058,113 disk-read bytes. Index replacement costs grow with that place's page inventory.
+
+The worker reservation is 768 MiB. On an 8 GiB runner, after the 0.75 GiB margin, nine reserved workers fit alone or five alongside the existing 2,928 MiB research-parent reservation. Actual admission also accounts for observed process growth.
+
+Live USAspending, FAC and OpenFEMA probes succeeded. SAM's entity APIs returned HTTP 503 upstream connection timeouts from this workspace; its documented million-row extract limit was exercised with generated input. Full historical USAspending database ingestion and a million-entity SAM database load remain unmeasured. The post-release checks below own production traffic and live-site verification.
 
 The live-site and production checks under DONE run after River releases, by Sean's oversight session.
 

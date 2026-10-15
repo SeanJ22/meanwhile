@@ -1,37 +1,88 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { sha256 } from "../civic-data/candidate-builders.ts";
+import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { RoutineCandidate } from "../civic-data/types.ts";
-import type { FederalMoneyCapture, FederalMoneyFact, FederalMoneyProjection, FederalMoneySource } from "./model.ts";
+import { federalMoneyPartitionWithinBounds, type FederalMoneyCapture, type FederalMoneyFact, type FederalMoneyProjection, type FederalMoneySource } from "./model.ts";
+import type { FederalMoneyEvidence } from "./candidate.ts";
 import { parseFederalMoney } from "./parse.ts";
-import { FEDERAL_MONEY_CONFIG } from "./sources.ts";
+import { readFederalMoneyCapture } from "./vault.ts";
+
+const verificationCaptures = new AsyncLocalStorage<Map<string, Promise<FederalMoneyFact[]>>>();
+export function withFederalMoneyVerificationCache<T>(work: () => Promise<T>): Promise<T> {
+  const cache = new Map<string, Promise<FederalMoneyFact[]>>();
+  return verificationCaptures.run(cache, async () => {
+    try { return await work(); }
+    finally { cache.clear(); }
+  });
+}
+function verifiedCapture(source: FederalMoneySource, state: string, capture: FederalMoneyCapture): Promise<FederalMoneyFact[]> {
+  const cache = verificationCaptures.getStore();
+  const key = JSON.stringify([source, state, capture]);
+  const held = cache?.get(key);
+  if (held) return held;
+  const parsed = readFederalMoneyCapture(capture).then(body => parseFederalMoney(source, capture, state, body));
+  if (cache) {
+    if (cache.size >= 2) cache.delete(cache.keys().next().value!);
+    cache.set(key, parsed);
+  }
+  return parsed;
+}
 
 const nativeFact = (fact: FederalMoneyFact) => {
   const { bodyIds: _bodies, divisionIds: _divisions, joinStatus: _status, joinReason: _reason, ...native } = fact;
   return native;
 };
-/** Reparse saved provider bytes; a source label alone never verifies a fact. */
-export function federalMoneySavedSourceIssue(candidate: RoutineCandidate, source: FederalMoneySource, predecessor: RoutineCandidate | null = null): string | null {
+export async function federalMoneySavedSourceIssue(candidate: RoutineCandidate, source: FederalMoneySource, predecessor: RoutineCandidate | null = null, store?: RoutineDataStore): Promise<string | null> {
   const projection = candidate.readModel as FederalMoneyProjection;
-  if (projection.state === "US") return null;
-  const payload = candidate.normalizedPayload as { captures?: FederalMoneyCapture[]; incomingIds?: string[]; readModelHash?: string; predecessorVersionId?: string | null };
+  const payload = candidate.normalizedPayload as FederalMoneyEvidence;
+  if (payload?.readModelHash !== sha256(canonicalCivicDataJson(projection))) return "The saved-source envelope does not bind the federal projection.";
+  if (!("partition" in projection)) return null;
+  if (!federalMoneyPartitionWithinBounds(projection.records)) return "Federal partition exceeds its bounded row or byte inventory.";
   if (!Array.isArray(payload?.captures) || !Array.isArray(payload.incomingIds)) return "The federal source captures are missing.";
-  if (payload.readModelHash !== sha256(canonicalCivicDataJson(projection))) return "The saved-source envelope does not bind the federal projection.";
-  if (payload.captures.some(capture => typeof capture.body !== "string" || typeof capture.url !== "string" ||
-    !Number.isFinite(Date.parse(capture.retrievedAt)) || !new URL(capture.url).hostname.endsWith(".gov"))) return "A federal capture is not a saved official source response.";
-  const read = payload.captures.flatMap(capture => parseFederalMoney(source, capture, projection.state));
-  if (canonicalCivicDataJson(read.map(row => row.id)) !== canonicalCivicDataJson(payload.incomingIds)) return "The saved-source rows do not equal the incoming federal row inventory.";
+  const incoming = new Set(payload.incomingIds);
   const published = new Map(projection.records.map(row => [row.id, row]));
-  for (const fact of read) {
-    const held = published.get(fact.id);
-    if (!held || canonicalCivicDataJson(nativeFact(held)) !== canonicalCivicDataJson(nativeFact(fact))) return "A federal fact differs from its saved official source row.";
+  if (incoming.size !== payload.incomingIds.length || [...incoming].some(id => !published.has(id))) return "The incoming federal row inventory is invalid.";
+  const verified = new Set<string>();
+  for (const capture of payload.captures) {
+    try {
+      const url = new URL(capture.url);
+      if (url.protocol !== "https:" || !url.hostname.endsWith(".gov") || !Number.isFinite(Date.parse(capture.retrievedAt))) return "A federal capture is not a saved official source response.";
+      if (!projection.records.some(row => incoming.has(row.id) && row.provenance.rawHash === capture.rawHash)) continue;
+      const read = await verifiedCapture(source, projection.state, capture);
+      for (const fact of read) {
+        const held = published.get(fact.id);
+        if (!held || !incoming.has(fact.id) || held.provenance.rawHash !== capture.rawHash) continue;
+        if (canonicalCivicDataJson(nativeFact(held)) !== canonicalCivicDataJson(nativeFact(fact))) return "A federal fact differs from its saved official source row.";
+        verified.add(fact.id);
+      }
+    } catch (error) { return error instanceof Error ? error.message : "The federal evidence vault could not be read."; }
   }
-  const incoming = new Set(read.map(row => row.id));
+  if (verified.size !== incoming.size) return "An incoming federal fact has no matching saved official source row.";
   const retained = projection.records.filter(row => !incoming.has(row.id));
   if (retained.length) {
     if (!predecessor || predecessor.id !== payload.predecessorVersionId || predecessor.sourceId !== source || predecessor.scope !== candidate.scope) return "Retained federal facts have no exact predecessor evidence.";
     const previous = new Map((predecessor.readModel as FederalMoneyProjection).records.map(row => [row.id, row]));
     if (retained.some(fact => !previous.has(fact.id) || canonicalCivicDataJson(nativeFact(previous.get(fact.id)!)) !== canonicalCivicDataJson(nativeFact(fact)))) return "A retained federal fact differs from its verified predecessor.";
   }
-  if (!candidate.retrieval.requestedUrl.startsWith(FEDERAL_MONEY_CONFIG[source].route) && payload.captures.length === 0) return "The federal snapshot has no source route.";
+  if (predecessor) {
+    const removed = (predecessor.readModel as FederalMoneyProjection).records.filter(row => !published.has(row.id));
+    const relocations = candidate.removalEvidence ?? [];
+    if (relocations.length !== removed.length) return "Federal partition removal has no exact destination evidence.";
+    const grouped = new Map<string, typeof removed>();
+    for (const fact of removed) {
+      const proof = relocations.find(row => row.key === `federal-money:${fact.id}`);
+      if (!store || !proof || proof.code !== "FEDERAL_RECORD_REPARTITIONED" || proof.targetScope === candidate.scope) return "Federal partition removal has no verified destination.";
+      const rows = grouped.get(proof.targetScope) ?? []; rows.push(fact); grouped.set(proof.targetScope, rows);
+    }
+    for (const [scope, rows] of grouped) {
+      const target = await store!.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", scope);
+      if (!target || target.sourceId !== source || target.payload.state !== projection.state) return "Federal repartition destination is not held for this source and state.";
+      for (const row of rows) {
+        const proof = relocations.find(item => item.key === `federal-money:${row.id}`)!;
+        if (proof.code !== "FEDERAL_RECORD_REPARTITIONED" || target.versionId !== proof.targetVersionId || !target.payload.records.some(held => held.id === row.id && held.sourceId === row.sourceId)) return "A moved federal record is missing from its verified destination.";
+      }
+    }
+  }
   return null;
 }

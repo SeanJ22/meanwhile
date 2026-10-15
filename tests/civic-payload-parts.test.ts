@@ -88,3 +88,14 @@ test("a load assembles parts as they arrive, writing caches nothing, and recent 
   assert.equal(memory.reads.flat().length, firstReads, "parts just read are served from the bounded cache");
   assert.ok(memory.reads.every(batch => batch.length <= 8));
 });
+
+test("partitioning keeps the caller's rows rather than copying the record, and still drops undefined fields exactly as JSON does", () => {
+  const rows = Array.from({ length: 400 }, (_, index) => row("az", index));
+  const { parts } = partitionCivicPayload({ id: "c", retrieval: { at: "2026-10-01", skipped: undefined }, readModel: { rows } }, inline);
+  const held = parts.flatMap(part => Array.isArray(part.payload) ? part.payload : []);
+  assert.equal(held.length, rows.length);
+  assert.ok(held.every((value, index) => value === rows[index]), "each stored row is the caller's own object");
+  const loose = { id: "d", readModel: { rows: rows.map(value => ({ ...value, note: undefined })) } };
+  const copied = partitionCivicPayload(loose, inline).parts.flatMap(part => Array.isArray(part.payload) ? part.payload : []);
+  assert.ok(copied.every(value => !("note" in (value as object))), "a row carrying undefined is written without it");
+});

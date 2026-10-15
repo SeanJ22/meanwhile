@@ -11,7 +11,7 @@ import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { federalDirectoryCandidate, type FederalDirectoryAcquisition, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { readOpenStatesPeopleProjection } from "../lib/state-rollcalls/legislators.ts";
-import { pluralVotesCandidate, pluralVotesContract, readPluralVotesProjection, type PluralBillEvidence, type PluralVotesProjection } from "../lib/sources/plural/votes.ts";
+import { holdPluralVoteEvidence, pluralVotesCandidate, pluralVotesContract, readPluralVotesProjection, type PluralBillEvidence, type PluralVotesProjection } from "../lib/sources/plural/votes.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
@@ -57,7 +57,8 @@ async function convertEmbeddedCaptures(input: { store: RoutineDataStore; vault: 
     const held = await pointed(store, await readPluralVotesProjection(state, { store, now: now(), bypassCache: true }));
     const payload = held?.normalizedPayload as { acquisitions?: PluralBillEvidence[]; held?: { key: string; detail: string }[] } | undefined;
     if (!held || !embedded(payload?.acquisitions)) continue;
-    const candidate = await pluralVotesCandidate({ projection: held.readModel as PluralVotesProjection, acquired: payload.acquisitions, held: payload.held ?? [], checkedAt: now(), vault });
+    const candidate = pluralVotesCandidate({ projection: held.readModel as PluralVotesProjection, acquired: await Promise.all(payload.acquisitions.map(row => holdPluralVoteEvidence(vault, row))),
+      held: payload.held ?? [], checkedAt: now() });
     converted.push(outcomeOf(held.scope, held.id, await processRegisteredRoutineCandidate(store, pluralVotesContract(state), candidate, now(), held.id, { confirmUnchanged: false })));
   }
   const directory = await pointed(store, await readFederalDirectoryProjection({ store, now: now(), bypassCache: true }));

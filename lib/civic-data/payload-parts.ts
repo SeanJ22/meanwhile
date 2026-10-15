@@ -27,6 +27,24 @@ function territory(value: unknown): string {
   return "shared";
 }
 
+/** JSON.stringify's UTF-8 length for a string, counted without building the escaped copy. */
+function stringBytes(text: string): number {
+  let size = 2;
+  for (let index = 0; index < text.length; index++) {
+    const code = text.charCodeAt(index);
+    if (code === 0x22 || code === 0x5c || code === 0x08 || code === 0x09 || code === 0x0a || code === 0x0c || code === 0x0d) size += 2;
+    else if (code < 0x20) size += 6;
+    else if (code < 0x80) size += 1;
+    else if (code < 0x800) size += 2;
+    else if (code >= 0xd800 && code <= 0xdbff && index + 1 < text.length && (text.charCodeAt(index + 1) & 0xfc00) === 0xdc00) { size += 4; index++; }
+    else size += code >= 0xd800 && code <= 0xdfff ? 6 : 3;
+  }
+  return size;
+}
+
+const REF_BYTES = bytes({ [REF]: "0".repeat(64) });
+type Encoded = { readonly out: unknown; readonly size: number };
+
 /** Storage encoding only. Readers reconstruct the exact JSON they already verify. */
 export function partitionCivicPayload(input: unknown, inlineFields?: readonly string[]): { readonly value: unknown; readonly parts: readonly Part[] } {
   const parts = new Map<string, Part>();
@@ -35,39 +53,67 @@ export function partitionCivicPayload(input: unknown, inlineFields?: readonly st
     parts.set(hash, { hash, payload });
     return { [REF]: hash };
   };
-  const encode = (value: unknown): unknown => {
-    if (value === null || typeof value !== "object" && typeof value !== "string" || bytes(value) <= INLINE_BYTES) return value;
+  const putString = (value: string): Ref => {
+    const chunks: string[] = [];
+    for (let index = 0; index < value.length; index += INLINE_BYTES / 4) chunks.push(value.slice(index, index + INLINE_BYTES / 4));
+    return put({ kind: "string", chunks: chunks.map(chunk => put(chunk)) });
+  };
+  // One pass, bottom up: each value's JSON size is summed from its children, and a value already in JSON form is kept, not copied.
+  const encode = (raw: unknown, inArray: boolean): Encoded | null => {
+    const value = raw !== null && typeof (raw as { toJSON?: unknown } | undefined)?.toJSON === "function" ? (raw as { toJSON(): unknown }).toJSON() : raw;
+    if (value === undefined || typeof value === "function" || typeof value === "symbol") return inArray ? { out: null, size: 4 } : null;
+    if (value === null || typeof value === "number" && !Number.isFinite(value)) return { out: null, size: 4 };
+    if (typeof value === "number" || typeof value === "boolean") return { out: value, size: String(value).length };
     if (typeof value === "string") {
-      const chunks: string[] = [];
-      for (let index = 0; index < value.length; index += INLINE_BYTES / 4) chunks.push(value.slice(index, index + INLINE_BYTES / 4));
-      return put({ kind: "string", chunks: chunks.map(chunk => put(chunk)) });
+      const size = stringBytes(value);
+      return { out: size <= INLINE_BYTES ? value : putString(value), size };
     }
     if (Array.isArray(value)) {
-      const groups = new Map<string, { rows: unknown[]; size: number; index: number }>();
-      const all: unknown[][] = [];
-      const order: number[] = [];
-      for (const row of value) {
-        const key = territory(row);
-        const encoded = encode(row);
-        const size = bytes(encoded);
-        let group = groups.get(key);
-        if (!group || group.size + size > PART_BYTES) {
-          group = { rows: [], size: 0, index: all.length };
-          groups.set(key, group); all.push(group.rows);
+      let size = 2, small: Encoded[] | null = [];
+      const groups = new Map<string, { rows: unknown[]; size: number; index: number }>(), all: unknown[][] = [], order: number[] = [];
+      const group = (row: unknown, encoded: Encoded) => {
+        const key = territory(row), rowSize = ref(encoded.out) ? REF_BYTES : encoded.size;
+        let held = groups.get(key);
+        if (!held || held.size + rowSize > PART_BYTES) {
+          held = { rows: [], size: 0, index: all.length };
+          groups.set(key, held); all.push(held.rows);
         }
-        group.rows.push(encoded); group.size += size; order.push(group.index);
+        held.rows.push(encoded.out); held.size += rowSize; order.push(held.index);
+      };
+      for (let index = 0; index < value.length; index++) {
+        const encoded = encode(value[index], true)!;
+        size += encoded.size + (index ? 1 : 0);
+        if (small) {
+          small.push(encoded);
+          if (size > INLINE_BYTES) { small.forEach((row, at) => group(value[at], row)); small = null; }
+        } else group(value[index], encoded);
       }
-            // Ordering stays outside state partitions, so adding one state never rewrites another state's rows.
-      return put({ kind: "array", groups: all.map(rows => put(rows)), order: encode(JSON.stringify(order)) });
+      if (small) return { out: small.every((row, at) => row.out === value[at]) ? value : small.map(row => row.out), size };
+      // Ordering stays outside state partitions, so adding one state never rewrites another state's rows.
+      return { out: put({ kind: "array", groups: all.map(rows => put(rows)), order: encode(JSON.stringify(order), false)!.out }), size };
     }
-    const encoded = Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([key, child]) => [key, encode(child)]));
-    return put({ kind: "object", value: encoded });
+    const keys = Object.keys(value as Record<string, unknown>), children: [string, Encoded][] = [];
+    let size = 2, same = true;
+    for (const key of keys) {
+      const encoded = encode((value as Record<string, unknown>)[key], false);
+      if (!encoded) { same = false; continue; }
+      size += (children.length ? 1 : 0) + stringBytes(key) + 1 + encoded.size;
+      same &&= encoded.out === (value as Record<string, unknown>)[key];
+      children.push([key, encoded]);
+    }
+    if (size <= INLINE_BYTES && same) return { out: value, size };
+    const entries = Object.fromEntries(children.map(([key, encoded]) => [key, encoded.out]));
+    return { out: size <= INLINE_BYTES ? entries : put({ kind: "object", value: entries }), size };
   };
+  const list = Array.isArray(input);
+  const value = inlineFields ? Object.fromEntries(Object.entries(input as object).flatMap(([key, child]) => {
+    if (!inlineFields.includes(key)) {
+      const encoded = encode(child, list);
+      return encoded ? [[key, encoded.out]] : [];
+    }
     // Omits optional undefined properties exactly as the jsonb driver does, so hashes stay unchanged.
-  const durable = JSON.parse(JSON.stringify(input));
-  const value = inlineFields ? Object.fromEntries(Object.entries(durable).map(([key, child]) => [key,
-    inlineFields.includes(key) ? child : encode(child),
-  ])) : encode(durable);
+    return child === undefined ? list ? [[key, null]] : [] : [[key, JSON.parse(JSON.stringify(child))]];
+  })) : encode(input, false)?.out;
   return { value, parts: [...parts.values()] };
 }
 

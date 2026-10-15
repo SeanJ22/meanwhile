@@ -48,7 +48,11 @@ export interface PluralVoteFact {
 export interface PluralVotesProjection { formatVersion: 1; state: string; rollCalls: PluralVoteFact[] }
 export interface PluralBillEvidence { requestedUrl: string; finalUrl: string; body: string; retrievedAt: string; sha256: string; sourceCheck?: SourceCheckEvidence; vaultKey?: string }
 /** Held evidence keeps a raw-capture reference; a bulk archive (empty body) keeps its release vault key. */
-type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
+export type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
+
+export async function holdPluralVoteEvidence(vault: EvidenceStore, { body, ...row }: PluralBillEvidence): Promise<PluralVoteAcquisition> {
+  return body ? { ...row, raw: await holdRawCapture(vault, PLURAL_VOTES_SOURCE, body, "application/json") } : row;
+}
 
 /** A malformed vote is isolated. Complete neighboring votes still publish independently. */
 export function parsePluralBill(state: string, evidence: PluralBillEvidence): { votes: PluralVoteFact[]; held: { key: string; detail: string }[] } {
@@ -121,7 +125,9 @@ export function mergePluralVotes(state: string, prior: PluralVotesProjection | n
       votes.set(vote.id, { ...vote, positions: [...positions.values()] });
     }
   }
-  return { formatVersion: 1, state: pluralVoteState(state).toUpperCase(), rollCalls: [...votes.values()].sort((left, right) => left.id.localeCompare(right.id)) };
+  // Date first: a new vote lands at the end, so the stored parts before it keep their hashes.
+  return { formatVersion: 1, state: pluralVoteState(state).toUpperCase(),
+    rollCalls: [...votes.values()].sort((left, right) => left.date.localeCompare(right.date) || left.id.localeCompare(right.id)) };
 }
 
 export function pluralVotesProjectionIssue(value: PluralVotesProjection): string | null {
@@ -140,14 +146,12 @@ export function pluralVotesProjectionIssue(value: PluralVotesProjection): string
   return null;
 }
 
-export async function pluralVotesCandidate(input: { projection: PluralVotesProjection; acquired: readonly PluralBillEvidence[]; held: readonly { key: string; detail: string }[];
-  checkedAt: string; vault: EvidenceStore }): Promise<RoutineCandidate> {
+export function pluralVotesCandidate(input: { projection: PluralVotesProjection; acquired: readonly PluralVoteAcquisition[]; held: readonly { key: string; detail: string }[];
+  checkedAt: string }): RoutineCandidate {
   const { projection } = input, issue = pluralVotesProjectionIssue(projection);
   const sourceThrough = input.acquired.map(row => row.retrievedAt).sort().at(-1) ?? input.checkedAt;
   const evidence = [...input.acquired].sort((left, right) => left.retrievedAt.localeCompare(right.retrievedAt)).at(-1);
-  const acquisitions = await Promise.all(input.acquired.map(async ({ body, ...row }): Promise<PluralVoteAcquisition> =>
-    body ? { ...row, raw: await holdRawCapture(input.vault, PLURAL_VOTES_SOURCE, body, "application/json") } : row));
-  const payload = { acquisitions, held: input.held };
+  const payload = { acquisitions: input.acquired, held: input.held };
   return { id: `cv-${hash(`${PLURAL_VOTES_SOURCE}:${hash(projection)}:${input.checkedAt}`).slice(0, 32)}`,
     sourceId: PLURAL_VOTES_SOURCE, recordClass: "STATE_ROLL_CALL", scope: pluralVotesScope(projection.state),
     sourceProjectionEvidence: sourceProjectionEvidence(PLURAL_VOTES_SOURCE, "STATE_ROLL_CALL", pluralVotesScope(projection.state)),

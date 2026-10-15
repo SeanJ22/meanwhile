@@ -16,27 +16,6 @@ import {
 import { runInSourceAcquisitionDomain } from "../acquisition-deadline.ts";
 import { fetchFailureKind, type FetchFailureKind } from "./failure-kind.ts";
 
-/**
- * The composite meeting source: fans one query out across child adapters and merges what comes back.
- * - One source failing never blanks the map: a child that throws or times out is reported as a failure
- *   for that source; the others still return.
- * - Per-source accounting: fetched, normalized and dropped counts with the drop reasons split
- *   (`placeless` ≠ `unknownVenue`), via the `ReportingMeetingSource` contract every child implements.
- * - Namespaced ids: every child's `Meeting.id` must begin with its own source name, or the child is
- *   excluded and reported as a failure.
- * - Acquisition is not authority: each source/body result is persisted and promoted through its own
- *   meeting-partition contract; the composite never becomes a Reader fallback.
- * - Children come from registry data: see `wiring.ts` and `lib/registry/source-wiring.ts`.
- */
-
-/**
- * Why a child contributed nothing.
- * - `WALL`: the retrieval did not land (a refusal, a timeout, a challenge page, an unreachable host).
- *   Never terminal: the source's last known version stays live through its partition pointer.
- * - `JOB`: the run itself is broken (ids outside the child's namespace, or `normalize` threw). The
- *   affected partition records a failed attempt and keeps LKG.
- * There is no blocked kind: a wall is recorded on the rung it stopped at, and the next rung is attempted.
- */
 export type ChildFailureKind = "WALL" | "JOB";
 
 export interface ChildRunReport {
@@ -44,51 +23,24 @@ export interface ChildRunReport {
   ok: boolean;
   /** Why the child contributed nothing, when it didn't. */
   error: string | null;
-  /**
-   * Present exactly when `ok` is false. Both kinds are persisted against only
-   * the affected source/body partition; the distinction controls diagnosis,
-   * not an aggregate process verdict. See `ChildFailureKind`.
-   */
+
   failure?: ChildFailureKind;
-  /**
-   * The furthest ladder rung a walled retrieval reached, in the one canonical ladder numbering. Absent when
-   * the client cannot say.
-   */
+
   walledAtRung?: number;
-  /**
-   * Which ladder this number is in. `CANONICAL` is what every value this code writes means.
-   * `PRE_F22_LADDER_UNKNOWN` marks an older value recorded when two numbered ladders existed; such a value
-   * keeps its number and is never reinterpreted.
-   */
+
   rungProvenance?: "CANONICAL" | "PRE_F22_LADDER_UNKNOWN";
   fetched: number;
   normalized: number;
   drops: NormalizeDropCounts;
-  /**
-   * Divisions this child could not reach while otherwise succeeding — the
-   * PARTIAL refusal (g3). Absent or empty means "nothing narrower than the
-   * `ok` flag to say".
-   */
+
   unreachableOcdIds?: string[];
-  /**
-   * Partial by scope: what about a division was refused (e.g. the upcoming feed answered and the past feed
-   * did not). Completeness is never inferred from `ok: true`.
-   */
+
   partialScopes?: PartialScopeFailure[];
-  /**
-   * Duplicates split by who decided they were duplicates: the feed's own repeated identifier, or this
-   * code's judgement about two records that carried none.
-   */
+
   duplicateIdentity?: DuplicateIdentityCounts;
-  /**
-   * What the child did with recurring series, forwarded verbatim so each body's partition carries its own
-   * publisher exclusions and refusals to expand.
-   */
+
   recurrence?: RecurrenceReport;
-  /**
-   * The child's own `publishedLookbackDays`, forwarded verbatim so carry-forward judges a carried row
-   * against the window that child actually produces.
-   */
+
   publishedLookbackDays?: number | null;
   /** Exact successful HTTP bodies and observed final redirect URLs for this child. */
   acquisitions?: readonly SourceAcquisitionEvidence[];
@@ -98,10 +50,7 @@ export interface CompositeReport {
   at: string;
   fromCache: boolean;
   children: ChildRunReport[];
-  /**
-   * How many rows the cross-source merge collapsed as the same sitting
-   * published twice. Stated, never silent — see `collapseDuplicateSittings`.
-   */
+
   duplicateSittingsCollapsed: number;
 }
 
@@ -145,22 +94,6 @@ export interface CompositeOptions {
   captureAcquisitionEvidence?: boolean;
 }
 
-/**
- * One sitting, one row, however many sources carry it, so a body can be wired on a second route (e.g. a
- * town feed alongside an agenda portal) without rendering its sittings twice.
- *
- * The key is `ocdId | bodyName | startsAt` (a null `ocdId` keys on `jurisdiction`). Two bodies at once,
- * one body twice in a day, and two sources disagreeing about the time all stay separate rows. It
- * collapses across sources only: two rows from the same source are that source's own catalogue.
- *
- * The winner is the row that tells the reader more:
- *   1. it carries an `agendaUrl`;
- *   2. it carries `actingBodies`;
- *   3. it carries a `location` rather than only an `online` block;
- *   4. it is not a carried-forward row;
- *   5. otherwise the first seen (source-registration order, stable across runs).
- * The count is reported as `duplicateSittingsCollapsed`.
- */
 export function collapseDuplicateSittings(rows: Meeting[],
   /** Optional field reconciliation inside the existing exact-sitting collapse.
    * null keeps both rows when their body/source identities cannot safely join. */
@@ -168,15 +101,7 @@ export function collapseDuplicateSittings(rows: Meeting[],
 ): {
   rows: Meeting[];
   collapsed: number;
-  /**
-   * The rows that lost, kept rather than counted away.
-   *
-   * The snapshot writer has to know WHICH rows went, not just how many: it
-   * runs this a second time after carry-forward and has to reconcile fresh
-   * against carried afterwards. A count is not enough to do that with, and
-   * deriving it by subtraction is the shape `SnapshotCounts` warns about in
-   * its own doc block.
-   */
+
   dropped: Meeting[];
 } {
   const informativeness = (m: Meeting): number =>
@@ -234,10 +159,6 @@ export function collapseDuplicateSittings(rows: Meeting[],
   return { rows: kept, collapsed, dropped };
 }
 
-/**
- * A rejected child's message, with the transport's own code when the message alone hides it (Node's
- * fetch puts `ENOTFOUND` on `cause.code` behind a bare `TypeError: fetch failed`).
- */
 export function childFailureMessage(reason: unknown): string {
   const message = String((reason as { message?: unknown } | null | undefined)?.message ?? reason);
   const code = (reason as { cause?: { code?: unknown } } | null | undefined)?.cause?.code;
@@ -269,9 +190,6 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
   }
 
   private cacheKey(query: MeetingQuery): string {
-    // One decimal of latitude is ~11 km — coarse enough that the map's
-    // repeated queries around one zip share an entry, fine enough that two
-    // different zips do not pretend to be one place.
     return [
       query.lat.toFixed(1),
       query.lng.toFixed(1),
@@ -331,9 +249,6 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           tagged.push({ source: child.name, raw });
         }
       } else {
-        // The failure is the report's job: the other children's rows are already in `tagged`. The furthest
-        // ladder rung is recorded when the shared client knows it; a whole-child deadline knows none and stays
-        // undefined.
         const rung = (result.reason as { rung?: number } | undefined)?.rung;
         fetchReports.set(child.name, {
           ok: false,
@@ -359,6 +274,10 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
     reports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number; failureKind?: FetchFailureKind; acquisitions?: readonly SourceAcquisitionEvidence[] }>;
     fromCache: boolean;
   } | null = null;
+
+  fetchedSourceReport(sourceName: string) {
+    return this.pendingFetch?.reports.get(sourceName) ?? null;
+  }
 
   normalize(raw: TaggedRaw[], now: Date = new Date()): Meeting[] {
     const byChild = new Map<string, unknown[]>();
@@ -414,9 +333,6 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           now,
         );
 
-        // Per-source namespacing is the contract; a violator's rows would
-        // collide with another source's silently, which is worse than losing
-        // the child for a run and saying so.
         const offender = meetings.find(
           (m) => !m.id.startsWith(`${child.name}:`),
         );
@@ -435,14 +351,6 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           continue;
         }
 
-        // A zero-row extraction is a failed extraction, never an empty document. Documents in hand and zero rows
-        // out of them is our extraction failing (or a non-calendar page served), so it is never written into
-        // the data as an absence. A body that genuinely goes quiet is marked red too; carried rows age out of
-        // the serving window on their own. A source reporting drops as well is left alone: it already says why.
-        // The drop predicate is the shared one in `normalize-account.ts`.
-        // A refused row is not a document in hand. An adapter may keep a row whose retrieval the publisher
-        // refused (`{ refused: true }`) so carry-forward keeps that body's sittings. When every row a child
-        // fetched was refused, the child fails with the refusal's own kind and words.
         const refusedRows = (byChild.get(child.name) ?? []).filter(isRefusedRow);
         if (meetings.length === 0 && refusedRows.length > 0 && refusedRows.length >= fetched.fetched) {
           const reasons = [...new Set(refusedRows.map((row) => row.refusedReason).filter((reason): reason is string => Boolean(reason)))];
@@ -483,9 +391,6 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
               `fetched ${fetched.fetched} document(s) and extracted 0 meeting(s), ` +
               "with no drop recorded to account for one — a zero-row extraction " +
               "is a failed extraction, never an empty calendar",
-            // Our parser, on bytes we already hold. No rung of the ladder is
-            // owed; if the bytes were a challenge page, that is an egress wall
-            // and the fetch layer is where it must be named.
             failure: "JOB",
             fetched: fetched.fetched,
             normalized: 0,
@@ -507,18 +412,12 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           ...(unreachableOcdIds && unreachableOcdIds.length > 0
             ? { unreachableOcdIds }
             : {}),
-          // A-004 · a source can succeed at one scope and fail at another, and
-          // `ok: true` may not stand in for both. Forwarded verbatim so
-          // carry-forward can preserve the failed scope and no other.
           ...(partialScopes && partialScopes.length > 0 ? { partialScopes } : {}),
           ...(duplicateIdentity ? { duplicateIdentity } : {}),
           ...(recurrence ? { recurrence } : {}),
           ...declaredWindow,
         });
       } catch (error) {
-        // The fetch landed and the TRANSFORM threw. The bytes are in hand, so
-        // no rung of the ladder is owed and no wall fell — this is our parser
-        // on the vendor's real payload, and it goes red.
         children.push({
           source: child.name,
           ok: false,

@@ -13,6 +13,7 @@ import { makeNovusAgendaSource } from "../../sources/novusagenda/index.ts";
 import { makeBoardDocsSource } from "../../sources/boarddocs/index.ts";
 import { makePrimeGovSource } from "../../sources/primegov/index.ts";
 import { makeCivicPlusSource } from "../../sources/civicplus/index.ts";
+import { makeMunicodeSource, parseMunicodeMeetings } from "../../sources/municode/index.ts";
 import { makeEscribeSource } from "../../sources/escribe/index.ts";
 import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
 import { makeIqm2Source } from "../../sources/iqm2/index.ts";
@@ -98,11 +99,13 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
     } else if (row.kind === "SWAGIT") {
       meetings = makeSwagitSource([wiring]).normalizeWithDrops([{ wiring, pages: [{ url: row.route, text }], collectedAt: reading.evidence.retrievedAt }], new Date(now)).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "PRIMEGOV"].includes(row.kind)) {
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "MUNICODE", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "PRIMEGOV"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
-      if (row.kind === "GRANICUS") {
+      if (row.kind === "MUNICODE") {
+        meetings = makeMunicodeSource([wiring]).normalizeWithDrops([{ wiring, meetings: parseMunicodeMeetings(text, row.route), outOfWindow: 0, notConfigured: 0, collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "GRANICUS") {
         meetings = makeGranicusSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "ESCRIBE") {
         meetings = makeEscribeSource([wiring]).normalizeWithDrops([{ wiring, text, collectedAt }], new Date(now)).meetings;

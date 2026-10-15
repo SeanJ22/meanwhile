@@ -1,7 +1,8 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { NextResponse } from "next/server";
 import { readerOpenData } from "@/lib/sources/open-data/reader";
 import { jurisdictionFromOcdId } from "@/lib/coverage/states";
-export async function GET(request:Request) {
+export const GET = readerRoute("/api/open-data", async function GET(request:Request) {
   const params=new URL(request.url).searchParams, division=params.get("division"),zip=params.get("zip"),bodyId=params.get("body");
   const offsetText=params.get("offset")??"0",offset=/^\d+$/.test(offsetText)?Number(offsetText):NaN;
   if(!division && !zip || division && !jurisdictionFromOcdId(division) || zip && !/^\d{5}$/.test(zip))return NextResponse.json({error:"A US division or ZIP is required."},{status:400});
@@ -13,4 +14,4 @@ export async function GET(request:Request) {
       {REGISTRY_ID:row.nativeIds.registry_id,FAC_NAME:row.title}}));
     return NextResponse.json({...read,records,total:read.records.length,nextOffset:offset+records.length<read.records.length?offset+records.length:null},{headers:{"Cache-Control":"no-store"}});
   } catch {return NextResponse.json({records:[],unavailable:["open-data"],notHeld:[]},{status:503});}
-}
+}, ["other-reader-data"]);

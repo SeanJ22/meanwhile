@@ -1,6 +1,8 @@
+import { readerQuery } from "./promoted-reader-query.ts";
+import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
-import { currentPromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { currentPromotedEdge, currentReaderAuthorityEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
   CandidateVersionRecord,
@@ -198,10 +200,7 @@ function attestationOf(
   };
 }
 
-/**
- * The pointer row plus the attestation of the candidate the runner proved it against. The read is rebuilt from both
- * exactly as `promotedResult` builds it from the database; a copy that does not match is PROMOTION_PROOF_INVALID.
- */
+
 export type PromotedEdgeEntry<T = unknown> =
   | {
       readonly kind: "PROMOTED";
@@ -318,10 +317,7 @@ interface CachedPromotion {
 
 const cache = new Map<string, CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
 
-/**
- * Keyed by the immutable versionId: a version proven once stays proven for this instance. Entered only after a full
- * GOOD proof; the pointer is always re-read, and `bypassCache` skips the memo.
- */
+
 const provenByVersion = new Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>();
 
 /** Per store and scope, the version last proved, so an unmoved pointer is served without refetching. `bypassCache` never consults it. */
@@ -438,10 +434,20 @@ export async function readPromotedCivicData<T>(
   const now = options.now ?? new Date().toISOString();
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
-  if (!injected && !options.bypassCache) {
-    const edge = currentPromotedEdge(recordClass, scope);
+  if (!injected && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
+    const { loadCurrentPromotedEdge } = await import("../registry/runtime-edge.ts");
+    const edge = currentPromotedEdge(recordClass, scope) ?? await loadCurrentPromotedEdge(recordClass, scope).then(value =>
+      value ? { value, versionId: value.kind === "PROMOTED" ? value.projection.versionId : "NOT_RECORDED" } : null);
     if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);
     refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
+    const selection = currentReaderSelection();
+    if (selection && process.env.DATABASE_URL) {
+      try {
+        return readPromotedFromEdge<T>(recordClass, scope, await readReaderProjection(recordClass, scope, selection), now, options.maxAgeMs);
+      } catch (error) {
+        return storeReadFailedResult<T>(recordClass, scope, null, error);
+      }
+    }
   }
   if (!injected && !process.env.DATABASE_URL) {
     return {
@@ -582,7 +588,8 @@ export async function readPromotedCivicDataBatch<T>(
   if (options.edge !== undefined) throw new Error("A batch civic-data read takes no reader edge entry.");
   if (scopes.length === 0) return [];
   const injected = options.store !== undefined;
-  if (!injected && !options.bypassCache) {
+  if (!injected) {
+    if (currentReaderSelection()) return Promise.all(scopes.map(scope => readPromotedCivicData<T>(recordClass, scope, options)));
     const edgeScopes = new Set(scopes.filter((scope) => currentPromotedEdge(recordClass, scope) !== null));
     if (edgeScopes.size > 0) {
       const remaining = scopes.filter((scope) => !edgeScopes.has(scope));
@@ -1238,4 +1245,46 @@ export function clearPromotedReadModelCache(): void {
   provenByVersion.clear();
   provenPointers = new WeakMap();
   inflight = new WeakMap();
+}
+
+const readerProjectionReads = new WeakMap<ReaderSelection, Map<string, Promise<PromotedEdgeEntry>>>();
+
+async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
+  let held = readerProjectionReads.get(selection);
+  if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
+  const pointer = `${recordClass}:${scope}`;
+  const key = pointer + JSON.stringify([...selection.keys].sort());
+  const prior = held.get(pointer) ?? held.get(key);
+  if (prior) return prior;
+  const read = loadReaderProjection(recordClass, scope, selection);
+  held.set(key, read);
+  try {
+    const value = await read;
+    if (value.kind === "NOT_RECORDED") held.set(pointer, read);
+    return value;
+  } catch (error) { held.delete(key); throw error; }
+}
+
+// On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
+async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
+  const query = readerQuery(1800);
+  if (!query) throw new Error("READER_STORE_UNCONFIGURED");
+  const window = selection.governmentWindow;
+  const payload = window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
+  const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
+    p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
+    ${payload} payload,
+    c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
+    JOIN civic_data_candidates c ON c.id=p.current_version_id
+    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys], ...(window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+  const row = rows[0];
+  if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
+  const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;
+  return { kind: "PROMOTED", projection: { key: row.key as string, sourceId: row.source_id as string, recordClass, scope,
+    versionId: row.current_version_id as string, lastKnownGoodVersionId: row.last_known_good_version_id as string,
+    promotedAt: new Date(row.promoted_at as string).toISOString(), payload: row.payload,
+    receipt: row.validation_receipt as Extract<PromotedEdgeEntry, {kind:"PROMOTED"}>["projection"]["receipt"] },
+    attested: { recordClass, scope, versionId: row.current_version_id as string, payloadSha256: promotedPayloadSha256(row.payload),
+      retrievedAt: new Date(row.retrieved_at as string).toISOString(), staleAtRetrieval: temporal?.staleAtRetrieval === true,
+      version: temporal?.version ?? null, sourceThrough: temporal?.sourceThrough ?? null } };
 }

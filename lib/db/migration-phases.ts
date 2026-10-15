@@ -1,13 +1,3 @@
-/**
- * Which side of its deploy a migration belongs on.
- *   - expand: purely additive; apply BEFORE the code that uses it ships.
- *   - contract: narrows what the database accepts (dropped column or default,
- *     new constraint, NOT NULL with no fill); apply only AFTER the code that
- *     no longer needs the old shape is serving.
- * The phase is derived from the SQL and checked against MIGRATION_PHASES. A
- * migration with no entry there is a failure, never a default.
- */
-
 /** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
@@ -379,6 +369,7 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0035_r1_fact_store": { phase: "expand", why: "Creates the fact store tables. Nothing reads or writes them before the build that ships with it." },
   "R1_fact_scale": { phase: "expand", why: "Adds the fact watermark, the pass cursors and the trigger that queues changed places; existing writers keep working." },
+  "0036_ne01": { phase: "expand", why: "Adds defaulted read counters and reader selection functions; existing readers and writers keep working." },
   "0033_feedback_context": {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",

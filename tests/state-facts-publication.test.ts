@@ -8,7 +8,8 @@ import type { AuthorityArtifactRef } from "../lib/meetings/edge-artifacts.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factsVersion } from "../lib/facts/db.ts";
 import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
-import type { StateFacts } from "../lib/facts/registry-overlay.ts";
+import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
+import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 import { publishBodyFacts, publishRosterFacts } from "../lib/facts/roster-facts.ts";
 import { planStateFacts, type StateFactsIndex, type StateFactsStore } from "../lib/facts/state-facts-publication.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -39,11 +40,13 @@ test("a fact going live moves only its state's version and queues the places of 
   const refs: Record<string, AuthorityArtifactRef> = {};
   const store: StateFactsStore = {
     readIndex: async (_state, ref) => blobs.get(ref.key) as StateFactsIndex ?? null,
-    readBucket: async (_state, _bucket, ref) => blobs.get(ref.key) as StateFacts ?? null,
-    writeBucket: async (state, bucket, versionId, value) => { const key = `${state}/${bucket}/${blobs.size}`; blobs.set(key, value); return { key, version: versionId, sha: "" }; },
+    readBucket: async (_state, _bucket, ref) => blobs.get(ref.key) as RecordIndex ?? null,
+    writeRecord: async value => { const key = `record/${blobs.size}`; blobs.set(key, value); return { key, sha: "" }; },
+    writeBucket: async (state, bucket, versionId, index) => { const key = `${state}/${bucket}/${blobs.size}`; blobs.set(key, index); return { key, version: versionId, sha: "" }; },
   };
-  const served = (state: string) => (blobs.get(refs[state]!.key) as StateFactsIndex).buckets.map(ref => blobs.get(ref!.key) as StateFacts)
-    .reduce((all, bucket) => ({ bodies: { ...all.bodies, ...bucket.bodies }, rosters: [...all.rosters, ...bucket.rosters], dispositions: [], comments: [] }));
+  const served = (state: string) => (blobs.get(refs[state]!.key) as StateFactsIndex).buckets
+    .flatMap(ref => (blobs.get(ref!.key) as RecordIndex).records.map(record => blobs.get(record.key) as BodyFacts));
+  const body = (state: string, id: string) => served(state).find(row => row.id === id);
   const publish = async () => {
     const plan = await planStateFacts(db.query, refs, store);
     for (const [state, entry] of Object.entries(plan.entries)) if ("value" in entry) {
@@ -56,7 +59,7 @@ test("a fact going live moves only its state's version and queues the places of 
   };
   const first = await publish();
   assert.deepEqual([first.rebuilt, first.patched], [["AZ"], []], "a state with no served copy is read whole, once");
-  assert.equal(served("AZ").rosters.find(roster => roster.bodyId === TCCC)!.members.length, 4);
+  assert.equal(body("AZ", TCCC)!.roster!.members.length, 4);
   assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), [], "the queued places are cleared once published");
 
   const unchanged = await publish();
@@ -75,6 +78,6 @@ test("a fact going live moves only its state's version and queues the places of 
     (SELECT count(*) FROM entity WHERE kind = 'body' AND state = 'AZ') AS state`, [TUCSON]) as [{ place: number; state: number }];
   assert.equal(patched.bodiesRead, Number(place), "Tucson's bodies were read again");
   assert.ok(Number(place) < Number(state), `and not Arizona's ${state}`);
-  assert.equal(served("AZ").bodies[council]?.meetingCadence, "the first Tuesday");
-  assert.equal(served("AZ").rosters.find(roster => roster.bodyId === TCCC)!.members.length, 4, "the rest of the state is carried from the served copy");
+  assert.equal(body("AZ", council)?.fields.meetingCadence, "the first Tuesday");
+  assert.equal(body("AZ", TCCC)!.roster!.members.length, 4, "the rest of the state is carried from the served copy");
 });

@@ -2,7 +2,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import { factReader } from "../facts/db.ts";
 import { withStateFacts } from "../facts/registry-overlay.ts";
 import { planStateFacts, type StateFactsPlan } from "../facts/state-facts-publication.ts";
-import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection } from "../meetings/prepared-snapshot.ts";
+import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection, readComposedSourcePlaces } from "../meetings/prepared-snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
   purgeReaderCacheTags,
@@ -12,7 +12,7 @@ import {
   readServedFactBucket,
   readServedStateFactsIndex,
   writeFactBucket,
-  readAuthorityArtifactValue,
+  writeFactRecord,
   type PublishAuthority,
   type PublishAuthorityCarried,
   type PublishAuthorityValue,
@@ -34,7 +34,6 @@ import { FEDERAL_PORTRAITS_SCOPE, readFederalDirectoryProjection } from "../offi
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { STATE_PEOPLE_JURISDICTIONS, statePeopleSourcePointers } from "../officials/people-identity.ts";
 import { federalDirectoryVersion, statePeopleVersion } from "../officials/people-version.ts";
-import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
 import { combinedOutcomeVersionId, combineOutcomeProjections, doorOutcomeParts, doorOutcomesUnreadable, outcomePointers, readDoorOutcomeProjections } from "../outcomes/store.ts";
 import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
@@ -84,6 +83,12 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   };
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
   const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
+  if (selected === null || selected.some(pointer => ["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"].includes(pointer.recordClass))) {
+    (pointerFamilies as Record<string, unknown>)["state-votes"] = [];
+  }
+  if (selected === null || selected.some(pointer => ["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "BALLOT_FILING", "STATE_LEGISLATOR"].includes(pointer.recordClass))) {
+    (pointerFamilies as Record<string, unknown>)["other-reader-data"] = [];
+  }
 
     // The served manifest is read first; the prepared row is read only when the publish could change something.
     // A failure leaves the previous manifest serving.
@@ -195,7 +200,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         if (facts) stateFacts = await planStateFacts(facts, servedManifest?.stateFacts, {
           readIndex: (state, ref) => readServedStateFactsIndex(state, ref, artifactStore),
           readBucket: (state, bucket, ref) => readServedFactBucket(state, bucket, ref, artifactStore),
-          writeBucket: (state, bucket, versionId, value) => writeFactBucket(artifactStore, state, bucket, versionId, value, observedAt),
+          writeRecord: value => writeFactRecord(artifactStore, value),
+          writeBucket: (state, bucket, versionId, index) => writeFactBucket(artifactStore, state, bucket, versionId, index, observedAt),
         });
       } catch (error) {
         failed = true;
@@ -231,22 +237,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       const stateLegislators: Record<string, PublishAuthorityValue | PublishAuthorityCarried> = Object.fromEntries(
         Object.entries(servedManifest?.stateLegislators ?? {}).map(([jurisdiction, ref]) => [jurisdiction, { versionId: ref.version, carried: true }]));
-      const formerRoster = servedManifest?.authorityArtifacts?.["state-legislators"];
-      if (formerRoster && servedManifest?.stateLegislators === undefined) {
-        // Convert the previously accepted bundle once before dropping its old reference. A failed source
-        // can then retain its own original value/date while other jurisdictions move to composed people.
-        const held = await readAuthorityArtifactValue("state-legislators", formerRoster, artifactStore) as Record<string, OfficialStateLegislatorReadModel> | null;
-        if (!held) throw new Error("The previously accepted state roster could not be split into jurisdiction artifacts");
-        const versions = new Map(formerRoster.version.split("|").map(entry => {
-          const separator = entry.indexOf("=");
-          return [entry.slice(0, separator), entry.slice(separator + 1)] as const;
-        }));
-        for (const [jurisdiction, value] of Object.entries(held)) {
-          const versionId = versions.get(jurisdiction);
-          if (!versionId || value.jurisdiction !== jurisdiction) throw new Error(`State roster migration lacks its accepted version: ${jurisdiction}`);
-          stateLegislators[jurisdiction] = { versionId, value };
-        }
-      }
       if (refreshes("state-legislators")) for (const jurisdiction of STATE_PEOPLE_JURISDICTIONS) {
         if (!statePeopleSourcePointers(jurisdiction).some(pointer => owns(pointer.recordClass, pointer.scope))) continue;
         try {
@@ -255,7 +245,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
             store.readPromotionIdentities(recordClass,sourcePointers.filter(pointer=>pointer.recordClass === recordClass).map(pointer=>pointer.scope))))).flat();
           if (pointers.length === 0) continue;
           const versionId = statePeopleVersion(jurisdiction, pointers.map(pointer => ({ scope: pointer.scope, versionId: pointer.versionId })));
-          if (servedManifest?.stateLegislators?.[jurisdiction]?.version === versionId) continue;
+          if (servedManifest?.stateLegislators?.[jurisdiction]?.layout === "records" && servedManifest.stateLegislators[jurisdiction].version === versionId) continue;
           const read = await readStatePeopleProjection(jurisdiction, { store, now: observedAt, bypassCache: true });
           if (read.kind === "PROMOTED" && read.metadata.versionId) {
             if (read.metadata.versionId !== versionId) throw new Error(`state people ${jurisdiction} did not read every accepted source version`);
@@ -377,6 +367,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
         { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, meetingBodies, meetingRegistryVersion,
+          meetingPlaces: preparesMeetings || !servedManifest?.meetingPlaces ? Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) : servedManifest.meetingPlaces,
           ...(stateFacts ? { stateFacts: stateFacts.entries } : {}), ...(checks ? { checks } : {}) });
       if (stateFacts && (edge.status === "PUBLISHED" || edge.status === "CURRENT")) {
         await stateFacts.settle();

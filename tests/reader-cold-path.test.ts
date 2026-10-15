@@ -16,6 +16,7 @@ import {
   READER_MANIFEST_MEMO_MS,
   READER_MAP_AUTHORITY_FAMILIES,
   writeFactBucket,
+  writeFactRecord,
   type PublishAuthority,
 } from "../lib/meetings/edge-serving.ts";
 
@@ -47,6 +48,8 @@ import { installRegistryAuthority, registryTransferImport, syntheticFederalDirec
 import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
+import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
+import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 
@@ -106,6 +109,19 @@ function multiStateSnapshot() {
   return recordedMeetingsSnapshot([...recorded, elsewhere("nj", "morris", 40.7968, -74.4815), elsewhere("nh", "merrimack", 43.2081, -71.5376)]);
 }
 
+/** The fixture's rosters and comment rules as one record per body, as the publisher writes them. */
+async function factRecords(store: LocalFileArtifactStore, registry: ReturnType<typeof registryTransferImport>["projection"]["payload"]): Promise<RecordIndex> {
+  const ids = [...new Set([...(registry.bodyRosters ?? []).map(roster => roster.bodyId), ...COMMENT_ACCESS.map(row => row.bodyId)])].sort();
+  const records = await Promise.all(ids.map(async (id, n) => {
+    const roster = registry.bodyRosters?.find(row => row.bodyId === id) ?? null;
+    const memberIds = new Set(roster?.members.map(member => member.id));
+    const body: BodyFacts = { id, division: id.split("#")[0]!, fields: {}, roster, comment: COMMENT_ACCESS.find(row => row.bodyId === id) ?? null,
+      dispositions: (registry.rosterReaderDispositions ?? []).filter(row => memberIds.has(row.sourceId)) };
+    return { path: ["bodies", n], ...await writeFactRecord(store, body), tags: [id, body.division, ...memberIds] };
+  }));
+  return { kind: "READER_RECORDS", base: { bodies: [] }, records };
+}
+
 async function publishEdge(tag: string, options: { readonly legislators?: boolean } = {}): Promise<{ dir: string; manifest: ReaderManifest }> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-c21-edge-"));
   dirs.push(dir);
@@ -126,8 +142,7 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     store,
     now: new Date().toISOString(),
     extras: { everydayRouting: currentEverydayRoutingProjection() },
-    stateFacts: { AZ: { versionId: `${tag}:facts:AZ`, value: { buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`,
-      { bodies: {}, rosters: registry.bodyRosters ?? [], dispositions: registry.rosterReaderDispositions ?? [], comments: COMMENT_ACCESS }, new Date().toISOString())] } } },
+    stateFacts: { AZ: { versionId: `${tag}:facts:AZ`, value: { buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`, await factRecords(store, registry), new Date().toISOString())] } } },
     authority,
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},
@@ -165,7 +180,8 @@ test("the map's routes fetch only the authority families they read, never Ask's 
   assert.match(bundle.registryRuntime?.versionId ?? "", /^c21-families:registry\+[0-9a-f]{16}$/, "the partition's version and its states' facts");
   assert.equal(bundle.federalDirectory?.versionId, "c21-families:federal");
   assert.equal(bundle.meetingOutcomes, undefined, "the recorded outcomes are Ask's, not the map's");
-  assert.deepEqual(bundle.commentAccess?.value, commentAccessProjection, "the meetings route takes comment access from the states' facts");
+  const byId = (records: readonly { readonly id: string }[] = []) => [...records].sort((a, b) => a.id.localeCompare(b.id));
+  assert.deepEqual(byId(bundle.commentAccess?.value.records), byId(commentAccessProjection.records), "the meetings route takes comment access from the states' facts");
   assert.deepEqual(store.keys.filter((key) => key === manifest.authorityArtifacts?.["meeting-outcomes"]?.key), [], "fetched and parsed for nothing");
   const everything = await ensureReaderAuthorityEdge(manifest, store);
   assert.equal(everything.meetingOutcomes?.versionId, "c21-families:outcomes", "omitted, every family is fetched, as Ask needs");

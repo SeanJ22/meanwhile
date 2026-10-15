@@ -127,16 +127,17 @@ export async function GET(request: Request) {
   // Any family the manifest omits (rollout) falls through to the DB reader.
   //
   // Only the families this route reads (`READER_MAP_AUTHORITY_FAMILIES`:
-  // not Ask's recorded outcomes, not the comment-access artifact the manifest
-  // already embeds). The edge is entered HERE, in this handler's own execution:
+  // not Ask's recorded outcomes); comment rules come with the states' facts.
+  // The edge is entered HERE, in this handler's own execution:
   // it is AsyncLocalStorage.enterWith, which never reaches reads
   // chained on a helper that entered it.
+  let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
   if (edgeManifest?.authorityArtifacts) {
     const entering = timing.time("authority", () =>
       ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
     );
     prefetchReaderEdgeStates(edgeManifest, await statesHinted);
-    const authorityEdge = await entering;
+    authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   } else if (edgeManifest) {
     prefetchReaderEdgeStates(edgeManifest, await statesHinted);
@@ -146,10 +147,10 @@ export async function GET(request: Request) {
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
-    if (edgeManifest?.commentAccess !== undefined) {
-      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
+    if (authorityEdge?.commentAccess) {
+      commentAccess = authorityEdge.commentAccess.value.records;
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (sequence ${edgeManifest!.sequence}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();

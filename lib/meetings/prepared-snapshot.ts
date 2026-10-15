@@ -130,7 +130,7 @@ export async function preparePublishedMeetingSnapshot(
     const versionId = versionByScope.get(contract.scope);
     if (versionId) currentCoupling.push({ contractId: contract.id, versionId });
   }
-  const facts = { contractId: MEETING_FACTS_COUPLING, versionId: await factsVersion(factReader(), "meeting:") };
+  const facts = { contractId: MEETING_FACTS_COUPLING, versionId: await factsVersion(factReader(), "meeting") };
   const currentFingerprint = couplingFingerprint([...currentCoupling, facts]);
 
   const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);

@@ -126,16 +126,13 @@ export interface ReaderManifest {
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
   /**
-   * The other ready-to-display reader families the /api/meetings response
-   * carries, embedded so the reader serves them from the edge instead of waking
-   * the database per visit. Typed loosely here to keep this module free of the
-   * comment-access / routing type graph; the reader casts them. Absent → the
-   * reader falls back to reading that family from the DB.
+   * The everyday-routing family the /api/meetings response carries, embedded so
+   * the reader serves it from the edge instead of waking the database per visit.
+   * Typed loosely to keep this module free of the routing type graph.
    */
-  readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
   /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
+  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
   /**
    * Families too large to embed in the manifest, which is read every request.
    * The manifest points at one gzip-compressed immutable artifact per family;
@@ -150,6 +147,8 @@ export interface ReaderManifest {
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   /** Legislative people loaded separately for each requested jurisdiction. */
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+  /** Each state's live facts (body fields, members, comment rules), one artifact per state, each republished only when its facts move. */
+  readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
   /**
    * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
    * nothing new. The reader restamps that route's fresh rows with it, never
@@ -226,7 +225,6 @@ export type AuthorityFamily =
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
-  | "comment-access"
   | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
@@ -236,7 +234,6 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "campaign-sites",
   "state-legislators",
   "meeting-outcomes",
-  "comment-access",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 

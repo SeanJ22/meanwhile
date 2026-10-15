@@ -47,10 +47,15 @@ export function installFactReader(query: Query | null | undefined): void {
 export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>
   async (text, params = []) => (await run([{ text, params }]))[0] ?? [];
 
-/** Moves whenever a fact (on entities under `prefix`, when given) is written or leaves the live set. */
-export async function factsVersion(query: Query | null, prefix = ""): Promise<string> {
+/** A scope's version (a state's code, `meeting` or `comment`), moved by the database whenever a fact there enters or leaves the live set. */
+export async function factsVersion(query: Query | null, scope: string): Promise<string> {
   if (query === null) return "facts:none";
-  const [row] = await query(`SELECT coalesce(max(id), 0) AS newest, count(*) FILTER (WHERE status = 'live') AS live FROM fact
-    WHERE $1 = '' OR starts_with(entity_id, $1)`, [prefix]);
-  return `facts:${row?.newest ?? 0}.${row?.live ?? 0}`;
+  const [row] = await query("SELECT version FROM fact_watermark WHERE scope = $1", [scope]);
+  return `facts:${scope}:${row?.version ?? 0}`;
+}
+
+/** Every state's version, read in one indexed pass over the few watermark rows. */
+export async function stateFactVersions(query: Query): Promise<ReadonlyMap<string, string>> {
+  const rows = await query("SELECT scope, version FROM fact_watermark WHERE scope ~ '^[A-Z]{2}$'");
+  return new Map(rows.map(row => [String(row.scope), `facts:${String(row.scope)}:${String(row.version)}`]));
 }

@@ -122,7 +122,6 @@ async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; 
     const seat = seatIn(member.words, member.bodyId);
     if (!seat) {
       await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
-      await query("INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1 ON CONFLICT (place_id) DO NOTHING", [member.bodyId]);
       pulled++;
     } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
       flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'

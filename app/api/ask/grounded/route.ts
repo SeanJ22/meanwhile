@@ -527,7 +527,7 @@ async function answerWithSettings(request: Request) {
   // fetched is never an unhandled rejection; the settle below still records it.
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
+  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && edgeManifest?.stateFacts === undefined
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.

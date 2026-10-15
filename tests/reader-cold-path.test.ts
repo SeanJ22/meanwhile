@@ -114,7 +114,6 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     "registry-runtime": { value: registryTransferImport().projection.payload, versionId: `${tag}:registry` },
     "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
-    "comment-access": { value: commentAccessProjection, versionId: `${tag}:comment-access` },
   };
   const store = new LocalFileArtifactStore(dir);
   const result = await publishReaderEdgeArtifacts(snapshot, {
@@ -124,7 +123,8 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   }, {
     store,
     now: new Date().toISOString(),
-    extras: { commentAccess: COMMENT_ACCESS, everydayRouting: currentEverydayRoutingProjection() },
+    extras: { everydayRouting: currentEverydayRoutingProjection() },
+    stateFacts: { AZ: { value: { bodies: {}, rosters: [], dispositions: [], comments: COMMENT_ACCESS }, versionId: `${tag}:facts:AZ` } },
     authority,
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},
@@ -155,18 +155,18 @@ async function recordingBytes<T>(run: () => Promise<T>): Promise<{ value: T; key
   }
 }
 
-test("the map's routes fetch only the authority families they read, never Ask's outcomes or the comment-access artifact", async () => {
+test("the map's routes fetch only the authority families they read, never Ask's outcomes; comment rules come with the states' facts", async () => {
   const { dir, manifest } = await publishEdge("c21-families");
   const store = new RecordingStore(dir);
   const bundle = await ensureReaderAuthorityEdge(manifest, store, READER_MAP_AUTHORITY_FAMILIES);
-  assert.equal(bundle.registryRuntime?.versionId, "c21-families:registry");
+  assert.match(bundle.registryRuntime?.versionId ?? "", /^c21-families:registry\+[0-9a-f]{16}$/, "the partition's version and its states' facts");
   assert.equal(bundle.federalDirectory?.versionId, "c21-families:federal");
   assert.equal(bundle.meetingOutcomes, undefined, "the recorded outcomes are Ask's, not the map's");
-  assert.equal(bundle.commentAccess, undefined, "the meetings route takes comment access from the manifest");
-  assert.deepEqual(store.keys.filter((key) => [manifest.authorityArtifacts?.["meeting-outcomes"]?.key, manifest.authorityArtifacts?.["comment-access"]?.key].includes(key)), [], "fetched and parsed for nothing");
+  assert.deepEqual(bundle.commentAccess?.value, commentAccessProjection, "the meetings route takes comment access from the states' facts");
+  assert.deepEqual(store.keys.filter((key) => key === manifest.authorityArtifacts?.["meeting-outcomes"]?.key), [], "fetched and parsed for nothing");
   const everything = await ensureReaderAuthorityEdge(manifest, store);
   assert.equal(everything.meetingOutcomes?.versionId, "c21-families:outcomes", "omitted, every family is fetched, as Ask needs");
-  assert.equal(everything.commentAccess?.versionId, "c21-families:comment-access");
+  assert.equal(everything.commentAccess?.versionId, bundle.commentAccess?.versionId);
 });
 
 test("concurrent reads on one instance share one fetch and one parse of an authority family", async () => {
@@ -242,8 +242,8 @@ test("a whole /api/meetings answer from the edge is held by the CDN, keyed on ev
   for (const stage of ["manifest", "authority", "divisions", "widen", "meetings", "search", "coverage", "total"]) {
     assert.match(timing, new RegExp(`(?:^|, )${stage};dur=\\d+`), `${stage} is not timed: ${timing}`);
   }
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-route:registry", "the registry was not read from the edge the route entered");
-  assert.deepEqual(keys.filter((key) => [manifest.authorityArtifacts?.["meeting-outcomes"]?.key, manifest.authorityArtifacts?.["comment-access"]?.key].includes(key)), [], "the route fetched families it never reads");
+  assert.match(registryRuntimeReadState().metadata.versionId ?? "", /^c21-route:registry\+/, "the registry was not read from the edge the route entered");
+  assert.deepEqual(keys.filter((key) => key === manifest.authorityArtifacts?.["meeting-outcomes"]?.key), [], "the route fetched families it never reads");
   const body = await response.json();
   assert.ok(Array.isArray(body.governingOcdIds) && body.governingOcdIds.length > 0);
   assert.ok(body.coverage && body.coverage.bodies.length > 0);

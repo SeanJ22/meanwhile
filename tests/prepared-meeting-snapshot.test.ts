@@ -39,6 +39,8 @@ function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
     transition: notImplemented,
     promote: notImplemented,
     appendEvidence: notImplemented,
+    recordRecheck: notImplemented,
+    latestCandidate: async () => null,
     events: async () => [],
     clock: async () => ({}),
     readCandidate: async () => null,
@@ -151,7 +153,8 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     payload: {},
     receipt: {} as never,
   }));
-  const composedFrom = contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` }));
+  const composedFrom = [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
+    { contractId: "meeting-facts", versionId: "facts:none" }];
   // The idempotent pass decides from identities and the serving copy's coupling alone: no partition or composed
   // payload is read to learn that nothing changed.
   const store = fakeStore({
@@ -304,7 +307,8 @@ test("prepare composes through the pass's shared composition, and only when the 
     recordClass: "MEETING",
     scope: MEETINGS_PREPARED_SCOPE,
     sequence: 1,
-    composedFrom: contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
+    composedFrom: [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
+      { contractId: "meeting-facts", versionId: "facts:none" }],
     generatedAt: snapshot.generatedAt,
   };
   const current = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:10:00.000Z", { aggregate });

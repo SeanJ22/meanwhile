@@ -1,6 +1,7 @@
 import type { ElectionFieldInput } from "./election-fields.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories, RecordProjection } from "../control-plane/repository/types.ts";
+import { runPool } from "../control-plane/scheduler/shadow-loop.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
@@ -13,8 +14,37 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { US_STATES } from "../control-plane/readiness/catalog.ts";
 import { inventoryRecordEvidence, RecordEvidenceRefusal } from "../control-plane/workers/record-evidence.ts";
 import { electionFieldState } from "./election-fields.ts";
+import type { RoutineRecordClass } from "./types.ts";
+import { requiredManualProductionContract } from "./manual-contracts.ts";
+import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
+import type { HeldBallotInputs, WorkerPublicationItem } from "./worker-publication-tasks.ts";
 
 export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
+
+const SUBJECT_PAGE = 500;
+
+/** When each input of the held ballot routes last changed: one grouped read of the places' newest saved pages, one of the national office list. */
+export async function readHeldBallotInputs(
+  query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
+  promotedAt: (recordClass: RoutineRecordClass, scope: string) => Promise<string | null>,
+  items: readonly WorkerPublicationItem[],
+): Promise<HeldBallotInputs> {
+  const iso = (value: unknown) => value === null || value === undefined ? null : new Date(value as string).toISOString();
+  const subjects = [...new Set(items.flatMap(item => item.autonomousPlan?.publication?.contractId === "ballot-navigation" && item.subject ? [item.subject] : []))];
+  const pagesAt = new Map<string, string>();
+  for (let at = 0; at < subjects.length; at += SUBJECT_PAGE) {
+    for (const row of await query(`SELECT w.value #>> '{subject}' AS subject, max(a.recorded_at) AS at
+      FROM cp_work_items w JOIN cp_log_artifacts a ON a.log_key = w.id
+      WHERE w.value #>> '{subject}' = ANY($1::text[]) GROUP BY 1`, [subjects.slice(at, at + SUBJECT_PAGE)])) {
+      const newest = iso(row.at);
+      if (typeof row.subject === "string" && newest) pagesAt.set(row.subject, newest);
+    }
+  }
+  const [national] = await query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]);
+  const routes = requiredManualProductionContract("ballot-navigation");
+  const [registryAt, routesAt] = await Promise.all([promotedAt("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE), promotedAt(routes.recordClass, routes.scope)]);
+  return { pagesAt, nationalAt: iso(national?.at), registryAt, routesAt };
+}
 
 export function heldNationalElectionOfficeFields(capture: WorkerPublicationCapture): readonly ElectionFieldInput[] {
   if (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL || !captureIntact(capture)) return [];
@@ -93,6 +123,13 @@ export function heldElectionOfficeFields(input: { readonly divisionId: string; r
   }));
 }
 
+/* A held route's own fields (its body and place) and a sibling's place; never acquisition history. */
+const HELD_ROUTE_FIELDS: RecordProjection = { autonomousPlan: ["contract", "publication"] };
+const SIBLING_FIELDS: RecordProjection = { autonomousPlan: ["contract"] };
+type HeldRoute = { readonly id: string; readonly autonomousPlan?: Partial<Pick<NonNullable<WorkItem["autonomousPlan"]>, "contract" | "publication">> };
+/* Places read at once: each is a few database and saved-page reads, none sent to a government's website. */
+const PLACES_AT_ONCE = 8;
+
 export async function publishHeldElectionOffices(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
   readonly workItemIds: readonly string[]; readonly now: string;
@@ -100,14 +137,12 @@ export async function publishHeldElectionOffices(input: {
   readonly limit?: number;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   const registry = await readRegistryRuntimePrior(input.store, input.now);
-  const owed = (await Promise.all(input.workItemIds.map(id => input.repos.workItems.read(id))))
-    .map(row => row?.value).filter((item): item is WorkItem => Boolean(item?.autonomousPlan?.publication));
-  const siblings = new Map<string, Promise<readonly WorkItem[]>>();
-  const subjectWork = (subjectId: string) => {
-    if (!siblings.has(subjectId)) siblings.set(subjectId, input.repos.workItems.listWhere(["subject"], subjectId).then(rows => rows.map(row => row.value)));
-    return siblings.get(subjectId)!;
-  };
-  const fields: ElectionFieldInput[] = [], fieldsByItem = new Map<string, number>(), read = new Map<string, Promise<readonly ElectionFieldInput[]>>();
+  const owed = (await Promise.all(input.workItemIds.map(id => input.repos.workItems.readNarrowed(id, HELD_ROUTE_FIELDS))))
+    .flatMap(row => row === null ? [] : [{ ...(row.value as HeldRoute), id: row.id }]).filter(item => Boolean(item.autonomousPlan?.publication));
+  const placeWork = async (subjectId: string): Promise<readonly string[]> =>
+    (await input.repos.workItems.listWhereNarrowed(["subject"], subjectId, SIBLING_FIELDS))
+      .filter(row => (row.value as HeldRoute).autonomousPlan?.contract?.subjectId === subjectId).map(row => row.id);
+  const fields: ElectionFieldInput[] = [], fieldsByItem = new Map<string, number>();
   let nationalFields: readonly ElectionFieldInput[] = [], nationalFailure: string | null = null;
   try {
     const nationalArtifacts = owed.length && input.repos.artifactsByCanonicalUrl
@@ -121,31 +156,40 @@ export async function publishHeldElectionOffices(input: {
   } catch (error) {
     nationalFailure = `NATIONAL_ELECTION_OFFICE_SOURCE_UNAVAILABLE:${sanitizedErrorDiagnostic(error)}`;
   }
+  const places = new Map<string, { readonly subjectId: string; readonly ocdId: string; readonly label: string }>(), placeOf = new Map<string, string>();
   for (const item of owed) {
     const plan = item.autonomousPlan!;
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
     const divisionId = body?.ocdId ?? null;
     const division = divisionId ? registry!.payload.registry.divisions.find(row => row.ocdId === divisionId) : undefined;
-    if (!division) { fieldsByItem.set(item.id, -1); continue; }
+    if (!division || !plan.contract) { fieldsByItem.set(item.id, -1); continue; }
     const key = `${plan.contract.subjectId}\n${division.ocdId}`;
-    if (!read.has(key)) read.set(key, (async () => {
-      const place = (await subjectWork(plan.contract.subjectId)).filter(other => other.autonomousPlan?.contract.subjectId === plan.contract.subjectId);
-      const artifacts = (await Promise.all(place.map(other => input.repos.artifacts.read(other.id)))).flat();
-      const candidates = heldPageCopies(artifacts, input.limit ?? 60);
-      const found: ElectionFieldInput[] = [];
-      // The newest usable copy of each page speaks for it; a later "Access Denied" capture never shadows a good one.
-      const readUrls = new Set<string>();
-      for (const artifact of candidates) {
-        if (readUrls.has(artifact.canonicalUrl)) continue;
-        const capture = await input.readHeld(artifact);
-        if (!capture || !captureIntact(capture) ||
-          (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL && !pageWords(capture.evidence.text).includes(division.label.toLowerCase()))) continue;
-        readUrls.add(artifact.canonicalUrl);
-        found.push(...heldElectionOfficeFields({ divisionId: division.ocdId, capture }));
-      }
-      return found;
-    })());
-    const found = [...await read.get(key)!, ...nationalFields.filter(field => electionFieldState(field.divisionId) === electionFieldState(division.ocdId))];
+    places.set(key, { subjectId: plan.contract.subjectId, ocdId: division.ocdId, label: division.label });
+    placeOf.set(item.id, key);
+  }
+  const read = new Map<string, readonly ElectionFieldInput[]>();
+  await runPool([...places], PLACES_AT_ONCE, async ([key, place]) => {
+    const ids = await placeWork(place.subjectId);
+    const artifacts = input.repos.artifacts.readKeys ? [...(await input.repos.artifacts.readKeys(ids)).values()].flat()
+      : (await Promise.all(ids.map(id => input.repos.artifacts.read(id)))).flat();
+    const found: ElectionFieldInput[] = [];
+    // The newest usable copy of each page speaks for it; a later "Access Denied" capture never shadows a good one.
+    const readUrls = new Set<string>();
+    for (const artifact of heldPageCopies(artifacts, input.limit ?? 60)) {
+      if (readUrls.has(artifact.canonicalUrl)) continue;
+      const capture = await input.readHeld(artifact);
+      if (!capture || !captureIntact(capture) ||
+        (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL && !pageWords(capture.evidence.text).includes(place.label.toLowerCase()))) continue;
+      readUrls.add(artifact.canonicalUrl);
+      found.push(...heldElectionOfficeFields({ divisionId: place.ocdId, capture }));
+    }
+    read.set(key, found);
+  });
+  for (const item of owed) {
+    const key = placeOf.get(item.id);
+    if (key === undefined) continue;
+    const ocdId = places.get(key)!.ocdId;
+    const found = [...read.get(key)!, ...nationalFields.filter(field => electionFieldState(field.divisionId) === electionFieldState(ocdId))];
     fieldsByItem.set(item.id, found.length);
     for (const field of found) if (!fields.includes(field)) fields.push(field);
   }
@@ -170,9 +214,11 @@ export async function publishHeldElectionOffices(input: {
         code: failure ? failure.split(":")[0] : count < 0 ? "CANONICAL_BODY_MISSING" : "ELECTION_OFFICE_NOT_ON_SAVED_PAGES",
         detail: `${failure ?? (count < 0 ? "The work item's body has no registry division yet" : "No saved official page for this government names an election office with its phone line that passes §3")}. Saved pages are re-read hourly; no approval is required.`,
         recovery: "WORKER", candidateId: published?.candidateId ?? null, versionId: published?.promotedVersionId ?? null };
-    const latest = await input.repos.workItems.mustRead(item.id);
-    await input.repos.workItems.compareAndSet(item.id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: item.id, outcome });
   }
+  await runPool(report, PLACES_AT_ONCE, async ({ workItemId, outcome }) => {
+    const latest = await input.repos.workItems.mustRead(workItemId);
+    await input.repos.workItems.compareAndSet(workItemId, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+  });
   return report;
 }

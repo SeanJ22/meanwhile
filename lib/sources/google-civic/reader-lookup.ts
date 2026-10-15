@@ -7,7 +7,7 @@ import type { VotingJurisdiction, VotingSite } from "../../ballot/voting-sites.t
 const words = (value: unknown): string => typeof value === "string" ? value : "";
 
 /** Adapt the shared source parser's safe projection; no second Google response parser. */
-export function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace): VotingJurisdiction[] {
+function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace): VotingJurisdiction[] {
   if (!lookup.state || !place.states.includes(lookup.state)) return [];
   const sites: VotingSite[] = lookup.rows.flatMap(row => {
     const kind = row.kind === "POLLING_LOCATION" ? "ELECTION_DAY" : row.kind === "EARLY_VOTE_SITE" ? "EARLY_VOTING" : row.kind === "DROP_OFF_LOCATION" ? "DROP_BOX" : null;

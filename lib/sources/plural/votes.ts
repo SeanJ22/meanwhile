@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate, type SourceCheckEvidence } from "../../civic-data/types.ts";
 import { canonicalCivicDataJson } from "../../civic-data/changes.ts";
+import { holdRawCapture, type RawCaptureRef } from "../../civic-data/raw-capture-vault.ts";
+import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
 import { PLURAL_STATES } from "./targets.ts";
 
@@ -45,6 +47,8 @@ export interface PluralVoteFact {
 }
 export interface PluralVotesProjection { formatVersion: 1; state: string; rollCalls: PluralVoteFact[] }
 export interface PluralBillEvidence { requestedUrl: string; finalUrl: string; body: string; retrievedAt: string; sha256: string; sourceCheck?: SourceCheckEvidence; vaultKey?: string }
+/** Held evidence keeps a raw-capture reference; a bulk archive (empty body) keeps its release vault key. */
+type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
 
 /** A malformed vote is isolated. Complete neighboring votes still publish independently. */
 export function parsePluralBill(state: string, evidence: PluralBillEvidence): { votes: PluralVoteFact[]; held: { key: string; detail: string }[] } {
@@ -136,11 +140,14 @@ export function pluralVotesProjectionIssue(value: PluralVotesProjection): string
   return null;
 }
 
-export function pluralVotesCandidate(input: { projection: PluralVotesProjection; acquired: readonly PluralBillEvidence[]; held: readonly { key: string; detail: string }[]; checkedAt: string }): RoutineCandidate {
+export async function pluralVotesCandidate(input: { projection: PluralVotesProjection; acquired: readonly PluralBillEvidence[]; held: readonly { key: string; detail: string }[];
+  checkedAt: string; vault: EvidenceStore }): Promise<RoutineCandidate> {
   const { projection } = input, issue = pluralVotesProjectionIssue(projection);
   const sourceThrough = input.acquired.map(row => row.retrievedAt).sort().at(-1) ?? input.checkedAt;
   const evidence = [...input.acquired].sort((left, right) => left.retrievedAt.localeCompare(right.retrievedAt)).at(-1);
-  const payload = { acquisitions: input.acquired, held: input.held };
+  const acquisitions = await Promise.all(input.acquired.map(async ({ body, ...row }): Promise<PluralVoteAcquisition> =>
+    body ? { ...row, raw: await holdRawCapture(input.vault, PLURAL_VOTES_SOURCE, body, "application/json") } : row));
+  const payload = { acquisitions, held: input.held };
   return { id: `cv-${hash(`${PLURAL_VOTES_SOURCE}:${hash(projection)}:${input.checkedAt}`).slice(0, 32)}`,
     sourceId: PLURAL_VOTES_SOURCE, recordClass: "STATE_ROLL_CALL", scope: pluralVotesScope(projection.state),
     sourceProjectionEvidence: sourceProjectionEvidence(PLURAL_VOTES_SOURCE, "STATE_ROLL_CALL", pluralVotesScope(projection.state)),

@@ -21,9 +21,6 @@ import { PublicStatementsProfile } from "@/components/officials/public-statement
 import { OfficialActions } from "@/components/officials/official-actions";
 import { FederalMemberRecords } from "@/components/officials/federal-records";
 import { FederalCommentRules } from "@/components/officials/federal-comment-rules";
-import {
-  type PositionsEmptyStateInput,
-} from "@/lib/questionnaire/positions-state";
 
 export function CandidateBattlecard({
   name,
@@ -40,31 +37,28 @@ export function CandidateBattlecard({
   tier = null,
 }: {
   name: string;
-  
+
   contactHolder?: SeatHolder | null;
   contact?: React.ReactNode;
-  
+
   tier?: Tier | null;
-  
+
   partyLabel?: string | null;
-  
+
   photoUrl?: string | null;
-  
+
   incumbency?: Incumbency;
-  
+
   incumbencyGap?: IncumbencyGap | null;
-  
+
   speakContext?: { lat?: number | null; lng?: number | null } | null;
-  
+
   partyLine?: React.ReactNode;
-  
+
   subjectId: string;
-  
+
   sections?: Partial<Record<BattlecardSectionId, React.ReactNode>>;
-  
-  holdsOrHeldTheOffice?: boolean;
-  
-  questionnaire?: PositionsEmptyStateInput;
+
 }) {
   const [open, setOpen] = useState(false);
 
@@ -79,7 +73,7 @@ export function CandidateBattlecard({
 
   return (
     <>
-      
+
       <button
         type="button"
         data-battlecard-pill
@@ -115,7 +109,7 @@ export function CandidateBattlecard({
                 <IdentityPortrait name={name} photoUrl={photoUrl} />
 
                 <div className="min-w-0 flex-1">
-                  
+
                   <p
                     className="popup-type"
                     style={{ color: tier ? `var(--accent-${tier})` : "var(--text-dim)" }}
@@ -144,12 +138,12 @@ export function CandidateBattlecard({
 
             )}
             contact={contact ?? (contactHolder ? <div data-ballot-contact-row><ContactPills holder={contactHolder} scope="primary" /><OfficialTermNote holder={contactHolder} /></div> : <CardGapContribution id={`contact:${subjectId}`} label="contact details" subject={{ type: "CANDIDATE", id: subjectId }} />)}
-            sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection subjectId={subjectId} subjectName={name} contentOnly /></> }}
+            sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection subjectId={contactHolder?.id ?? subjectId} subjectName={name} contentOnly /></> }}
             afterSections={<>
               <FederalMemberRecords key={contactHolder?.id ?? subjectId} memberId={contactHolder?.id ?? subjectId} />
               {(contactHolder?.id ?? subjectId).startsWith("congress:") && <FederalCommentRules />}
               <PublicStatementsProfile subjectId={contactHolder?.id ?? subjectId} />
-              <OfficialActions subjectId={subjectId} />
+              <OfficialActions subjectId={contactHolder?.id ?? subjectId} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>
             </>}
           />

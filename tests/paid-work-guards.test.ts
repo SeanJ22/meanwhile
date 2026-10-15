@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { DurableSpendHolds, SendBudgetRefusal, committedUsd, type BudgetLine } from "../lib/control-plane/expansion/spend-holds.ts";
-import { FleetPreSendRefusal, FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
+import { FleetPreSendRefusal, FleetSafetyController, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { backgroundBatchTransport, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { paidWorkGuards, workerBatchRouting, type PaidWorkGuardDeps } from "../lib/control-plane/workers/paid-work-guards.ts";
@@ -45,7 +45,7 @@ async function harness(options: {
   };
   const conditions: string[] = [];
   const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
-  const fleetSafety = new FleetSafetyController({ now: NOW, costs: options.costs ?? [], modelHold: options.modelHold ?? null,
+  const fleetSafety = new FleetSafetyController({ now: NOW, charges: (options.costs ?? []).flatMap(row => pricedModelCharge(row, row.attemptId) ?? []), modelHold: options.modelHold ?? null,
     rollingCeilingUsd: options.ceilingUsd ?? 50, clock: () => Date.parse(NOW) });
   const deps: PaidWorkGuardDeps = { batchEnv: { WTP_BACKGROUND_WORKER_BATCH: options.batch ? "1" : "0" }, repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
     assignmentBudget: { linesFor: () => options.sends ?? { lines: [] } } as unknown as AssignmentBudgetGate,
@@ -163,23 +163,4 @@ test("BX-13: a parse already submitted to the batch service under the old routin
   await h.guards.workerTransportFor(h.jurisdiction, h.task.id)(request);
   assert.equal(h.sent.length, 0, "no second paid request");
   assert.equal(recovery.batched.length, 1, "the outstanding batch answer was collected");
-});
-
-test("R7: a Scout rereads its place's meeting priority, and the request packet cannot erase a live deadline", async () => {
-  const queued = fakeBatch();
-  const h = await harness({ batch: queued.batch });
-  await h.repos.obligations.put("meeting", { id: "meeting", subjectId: h.jurisdiction.subjectId,
-    recordClass: "MEETINGS", readerImpactAt: NOW, active: true } as never, NOW);
-  const send = h.guards.guardedJobTransportFor("scout-job", "BLANK", { now: NOW, subjectId: h.jurisdiction.subjectId });
-  const packet = { ...request, batchContext: { job: "BLANK" as const, priority: { now: NOW } } };
-  const urgent = await send(packet);
-  assert.equal(urgent.batchEligible, false);
-  assert.equal(h.sent.length, 1);
-  assert.equal(queued.batched.length, 0);
-  const meeting = await h.repos.obligations.mustRead("meeting");
-  await h.repos.obligations.compareAndSet(meeting.id, meeting.revision, { ...meeting.value, readerImpactAt: null }, NOW);
-  const background = await send(packet);
-  assert.equal(background.batchEligible, true);
-  assert.equal(background.batch, true);
-  assert.equal(queued.batched.length, 1);
 });

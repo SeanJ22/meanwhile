@@ -9,7 +9,7 @@ import type { VotingSourceDoor, VotingSourceRuntime, VotingDoorShape } from "./v
 
 const DIRECTORY = /(?:county|town|local|municipal).{0,35}(?:director|office|clerk|contact|official)|(?:director|contact).{0,35}(?:county|town|local|election)/i;
 const IDENTITY = /(?:date\s*of\s*birth|birth\s*date|\bSSN\b|social security)/i;
-export function votingDoorShape(url: string, label = ""): VotingDoorShape {
+function votingDoorShape(url: string, label = ""): VotingDoorShape {
   const clue = `${url} ${label}`;
   if (IDENTITY.test(label)) return "identity-locked-lookup";
   if (/(?:FeatureServer|MapServer)\/\d+/i.test(clue)) return "map-service";
@@ -20,7 +20,7 @@ export function votingDoorShape(url: string, label = ""): VotingDoorShape {
   if (/\.json(?:[?#]|$)|\/api\//i.test(url)) return "json";
   return "list-page";
 }
-export function votingDoorCoverage(label: string): SiteKind[] {
+function votingDoorCoverage(label: string): SiteKind[] {
   const kinds: SiteKind[] = [];
   if (/poll|precinct|election.?day/i.test(label)) kinds.push("ELECTION_DAY");
   if (/vote.?cent[er]{2}/i.test(label)) kinds.push("VOTE_CENTER");
@@ -41,7 +41,7 @@ export interface ClassifiedVotingSource {
   capture: { url: string; contentType: string; bytes: Uint8Array } | null;
   linkingCaptures: { url: string; contentType: string; bytes: Uint8Array }[];
 }
-export interface VotingDiscoveryResult {
+interface VotingDiscoveryResult {
   doors: VotingSourceDoor[];
   evidence: ClassifiedVotingSource[];
   sources: ClassifiedVotingSource[];

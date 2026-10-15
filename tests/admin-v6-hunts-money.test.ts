@@ -262,6 +262,36 @@ test("account readings keep their provider periods; missing readings are unknown
   assert.equal(m.asOf, "2026-09-28T19:00:00.000Z", "asOf is the oldest source reading behind the figures");
 });
 
+test("provider bills by day: all five billed providers, a missing key named, a failed read shows no numbers", () => {
+  const days = (rows: [string, number | null, ProviderReading["units"]?][]) => rows.map(([day, usd, usage = []]) => ({ day, usd, usage }));
+  const readings = [
+    reading("anthropic-api", { days: days([["2026-09-27", 3], ["2026-09-28", 1.25]]) }),
+    reading("neon", { reportedUsd: null, days: days([["2026-09-28", null, [{ label: "Compute", value: 2.5, unit: "CU-hours" }, { label: "Data transfer", value: 1.5e9, unit: "bytes" }]]]) }),
+    reading("exa", { status: "ESTIMATED", reportedUsd: null, error: "MISSING_EXA_SERVICE_API_KEY" }),
+    reading("github", { status: "ERROR", error: "REPORT_HTTP_404", days: days([["2026-09-27", 9]]) }),
+    reading("brave", { status: "ESTIMATED", reportedUsd: null }),
+    reading("netlify", { status: "ESTIMATED", reportedUsd: null, days: days([["2026-09-27", null, [{ label: "Deploy credits (estimate)", value: 30, unit: "credits" }]]]) }),
+  ];
+  const { byDay } = envelope(money({ kind: "native" }, { providerBilling: { ...billing, readings } })).data;
+  assert.deepEqual(byDay.providers.map(p => p.provider), ["Anthropic (API)", "Neon", "Exa", "GitHub", "Netlify"]);
+  assert.deepEqual(byDay.providers.map(p => p.note), [null, null, "Exa: billing key not set (EXA_SERVICE_API_KEY)",
+    "GitHub: the last read failed because the provider found no bill this key can read", null]);
+  assert.deepEqual(byDay.days, [
+    { day: "2026-09-28", cells: [{ usd: 1.25, usage: null }, { usd: null, usage: "2.5 compute hours · 1.50 GB sent" }, null, null, null] },
+    { day: "2026-09-27", cells: [{ usd: 3, usage: null }, null, null, null, { usd: null, usage: "30 credits, estimated" }] },
+  ], "the failed GitHub read keeps none of its earlier numbers on screen");
+  assert.deepEqual(byDay.technical, ["GitHub: REPORT_HTTP_404"]);
+  const unset = envelope(money({ kind: "native" }, { providerBilling: { ...billing, readings: [reading("neon", { status: "MISSING_ACCESS", error: "MISSING_NEON_BILLING_API_KEY" }),
+    reading("netlify", { status: "MISSING_ACCESS", error: "MISSING_NETLIFY_SITE_ID" })] } })).data.byDay;
+  assert.deepEqual(unset.providers.map(p => p.note), ["Anthropic (API): not read yet", "Neon: billing key not set (NEON_BILLING_API_KEY)", "Exa: not read yet", "GitHub: not read yet",
+    "Netlify: setting not set (NETLIFY_SITE_ID)"]);
+  assert.deepEqual(unset.days, []);
+  const old = envelope(money({ kind: "native" }, { readAt: "2026-09-29T20:00:00.000Z", providerBilling: { ...billing, readings: [readings[0]] } })).data.byDay;
+  assert.match(old.providers[0].note ?? "", /^Anthropic \(API\): last read /, "an old reading keeps its numbers and says when it was read");
+  assert.equal(old.days.length, 2);
+  assert.deepEqual(envelope(money({ kind: "month", month: "2026-08" }, { providerBilling: { ...billing, readings } })).data.byDay.days, []);
+});
+
 test("money period: a month shows only readings inside it; whole-hunt and last-24h refuse with DEP-PERIOD", () => {
   const sept = envelope(money({ kind: "month", month: "2026-09" }, { providerBilling: billing }));
   assert.equal(sept.data.accountMonth, "Whole account · September 2026 to date");

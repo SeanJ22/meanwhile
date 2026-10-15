@@ -10,10 +10,13 @@ import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/reg
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
-import { curatedReaderReadState } from "../lib/civic-data/curated-reader-read-model.ts";
-import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
-import { currentCommentAccess } from "../lib/registry/comment-access.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { publishCommentFacts } from "../lib/facts/comment-facts.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+import { currentCommentAccess, type CommentAccessProjection } from "../lib/registry/comment-access.ts";
 import { settleCommentAccessRead } from "../lib/registry/server.ts";
+import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
@@ -43,10 +46,10 @@ await installPimaOutcomes({ ...recordedOutcomes, sittings: [...recordedOutcomes.
 await refreshOutcomeSnapshotFromPromoted();
 const outcomesValue = outcomeProjectionReadState();
 assert.ok(outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED", "the outcome fixture is readable");
-// Comment access in the projection shape the runner publishes.
-const commentAccessProjection: CuratedReaderProjection = {
+// Comment rules in the projection shape the edge publishes.
+const commentAccessProjection: CommentAccessProjection = {
   kind: "comment-access",
-  records: currentCommentAccess().map((value) => ({ id: `comment-access:${value.bodyId}`, ...value }) as unknown as CuratedReaderProjection["records"][number]),
+  records: COMMENT_ACCESS.map((value) => ({ id: `comment-access:${value.bodyId}`, ...value })),
 };
 
 interface EdgeVersions {
@@ -136,17 +139,34 @@ test("a manifest without the outcomes family reads them from the database, and t
   assert.ok(["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind), "the database fallback read the outcomes");
 });
 
-test("comment access is primed from the edge the caller entered, and read from the database without one", async () => {
+test("comment rules are primed from the edge the caller entered, and read from live facts without one", async () => {
   await (async () => {
     enterReaderAuthorityEdge({ commentAccess: { value: commentAccessProjection, versionId: "edge-test:comment-access:2" } });
     await settleCommentAccessRead();
-    assert.equal(curatedReaderReadState("comment-access").metadata?.versionId, "edge-test:comment-access:2", "comment access was read from the database, not the edge");
+    assert.deepEqual(currentCommentAccess(), COMMENT_ACCESS, "comment rules were not read from the edge");
   })();
-  await (async () => {
-    enterReaderAuthorityEdge({});
-    // No edge value: the authoritative database read is asked (this test process has no store configured).
-    await assert.rejects(settleCommentAccessRead(), /not configured/);
-  })();
+  const db = await factDb();
+  const now = new Date();
+  const page = "Edge Test Commission, Tucson, Arizona. Public comment: speakers sign up at the clerk's table before the meeting begins.";
+  await publishCommentFacts(db, {
+    body: { id: "ocd-division/country:us/state:az/place:tucson#edge-test-commission", name: "Edge Test Commission", state: "AZ", parentId: "ocd-division/country:us/state:az/place:tucson" },
+    capture: { evidence: { artifactId: "edge-test-comment", contentHash: `sha256-${"c".repeat(64)}`, text: page, acquiredByAttemptId: "attempt",
+      canonicalUrl: "https://www.tucsonaz.gov/edge-test-commission", retrievedAt: now.toISOString(), sourceId: "www.tucsonaz.gov", methodRouteId: "held" },
+    observedAt: now.toISOString(), httpStatus: 200, transport: "REACHABLE", partial: false },
+    reading: { fields: { commentPeriod: "YES", signup: "speakers sign up at the clerk's table before the meeting begins" } },
+    producedBy: "reader-edge-context-test",
+  }, factClocks(null), now);
+  installFactReader(db.query);
+  try {
+    await (async () => {
+      enterReaderAuthorityEdge({});
+      await settleCommentAccessRead();
+      assert.deepEqual(currentCommentAccess().map((rule) => [rule.bodyId, rule.commentPeriod, rule.signup]),
+        [["ocd-division/country:us/state:az/place:tucson#edge-test-commission", "YES", "speakers sign up at the clerk's table before the meeting begins"]]);
+    })();
+  } finally {
+    installFactReader(undefined);
+  }
 });
 
 test("Campaign money reads the registry from the edge it entered, and names every read's time", async () => {

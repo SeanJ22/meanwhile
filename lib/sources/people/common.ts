@@ -28,8 +28,6 @@ export interface PeopleAcquisitionOptions extends Pick<KnownReleaseOptions, "sto
   readonly env?: Readonly<Record<string, string | undefined>>;
   /** Test injection keeps the same saved-source contract. */
   readonly acquire?: typeof acquireKnownRelease;
-  /** Publish an accepted source delta before the rest of this source's standing read finishes. */
-  readonly onPerson?: (release: PeopleSourceRelease) => Promise<void>;
   readonly linkingPages?: readonly import("../../civic-data/source-authority.ts").OfficialLinkingPage[];
 }
 export interface PeopleSourceRelease {
@@ -79,7 +77,7 @@ export function appendRoster(target:OfficeholderSet,next:OfficeholderSet):void {
 export function acquisition(release: KnownRelease): StatePeopleAcquisition {
   return { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus,
     body: new TextDecoder("utf-8", { fatal: true }).decode(release.bytes), retrievedAt: release.retrievedAt, rawHash: release.sha256,
-    sourceCheck: knownReleaseSourceCheck(release), ...(release.vaultKey ? { vaultKey: release.vaultKey } : {}) };
+    sourceCheck: knownReleaseSourceCheck(release) };
 }
 export async function savedRead(options: PeopleAcquisitionOptions, url: string, releaseId: string, validate?: KnownReleaseOptions["validate"], api?: { name: SourceApiTool; path: string; params?: Record<string, string>; provider?: string }): Promise<KnownRelease> {
   const definition = PEOPLE_SOURCE_DEFINITIONS.find(source => source.id === options.sourceId)!;

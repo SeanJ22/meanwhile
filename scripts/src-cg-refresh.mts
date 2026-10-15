@@ -1,6 +1,7 @@
 import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { isFederalSource } from "../lib/sources/congress/targets.ts";
 import { refreshFederalSource } from "../lib/sources/congress/refresh.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
@@ -13,7 +14,7 @@ if (isDirectModuleExecution(import.meta.url)) {
   prepareProductionCivicDataWrite();
   const connection = controlPlaneUrlFromEnv();
   const repos = connection ? await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true }) : null;
-  const result = await refreshFederalSource({ source, store: new PostgresRoutineDataStore(),
+  const result = await refreshFederalSource({ source, store: new PostgresRoutineDataStore(), vault: rawCaptureVault(),
     doorOutcome: repos ? (ok, at, reason) => recordDoorOutcome(repos.doors, feedDoorId(source), ok ? "SUCCESS" : "FAILURE", at, false, reason) : undefined });
   process.exitCode = result.ok ? 0 : 2;
 }

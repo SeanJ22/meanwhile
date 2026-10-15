@@ -8,7 +8,7 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
  * division is context only; `bodyName` on a meeting is not the body's name.
  *
  * Names fall back in order: the registry's sourced name, the curated roster's
- * (`BODY_ROSTERS` in lib/registry/body-rosters.ts), the division's label, then
+ * (`currentBodyRosters()`), the division's label, then
  * an un-slugging of the id's body half. Nothing here mints an identity.
  *
  * A view of `lib/registry/registry.json`, cached on the file's mtime and never

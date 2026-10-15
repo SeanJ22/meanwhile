@@ -120,7 +120,7 @@ export function classifyKeyLabel(label: string): {
 const SAYS: Readonly<Record<KeyExpectation, string>> = {
   PUBLIC_PRODUCTION:
     "Requests from the public production Reader origins, plus any bounded production probe named " +
-    "in docs/maptiler-keys.md. This is public-origin traffic — it is not a count of people, and " +
+    "in the source registry's MapTiler row. This is public-origin traffic — it is not a count of people, and " +
     "an outside crawler that runs the site is part of it.",
   OWNER_MANUAL_STAGING: "Requests from the staging Reader, which the owner reviews by hand.",
   BOUNDED_SMOKE:

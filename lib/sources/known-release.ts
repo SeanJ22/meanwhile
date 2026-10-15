@@ -7,7 +7,6 @@ import type { ControlPlaneRepositories, LockManager } from "../control-plane/rep
 import { RepositoryLockHeld } from "../control-plane/repository/types.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories, readPlaceArtifacts } from "../control-plane/repository/pg-store.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
-import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
 import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
@@ -83,7 +82,8 @@ function runtimeContext() {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("KNOWN_SOURCE_CONTROL_PLANE_UNAVAILABLE");
     const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
-    return { store: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), locks: repos.locks, repos };
+    // Static segments keep the server trace inside the vault.
+    return { store: new DurableEvidenceStore(join(process.cwd(), "data", "control-plane", "vault")), locks: repos.locks, repos };
   })().catch(error => { runtime = undefined; throw error; });
 }
 /** Large file sources share the same vault and repository locks as byte releases. */

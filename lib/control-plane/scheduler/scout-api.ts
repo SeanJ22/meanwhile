@@ -1,4 +1,4 @@
-/** Credentialed, read-only government APIs shared by Scouts and Detectives.
+/** Credentialed, read-only government APIs shared by hunters and detectives.
  * Credentials stay in transport, never in source locators or model output. */
 import { readCompleteResponse } from "../../sources/source-bytes.ts";
 import { assertPublicUrl } from '../../hunt/egress.ts';
@@ -29,7 +29,7 @@ const descriptions: Record<SourceApiTool, string> = {
 };
 export const SOURCE_API_SPECS: readonly ScoutToolSpec[] = SOURCE_API_TOOLS.map(name => ({ name,
   description: descriptions[name] + ' Returns captured data and its credential-free source link. Reuse held data first. Keys are supplied by the runtime; never pass a key.',
-  input_schema: { type: 'object', properties: { path: {type:'string'}, provider: {type:'string'}, tenant: {type:'string'}, domain: {type:'string'}, dataset: {type:'string'}, params: {type:'object', additionalProperties:{type:'string'}}, rung: {type:'string'}, why: {type:'string'} }, required:['rung','why'] },
+  input_schema: { type: 'object', properties: { path: {type:'string'}, provider: {type:'string'}, tenant: {type:'string'}, domain: {type:'string'}, dataset: {type:'string'}, params: {type:'object', additionalProperties:{type:'string'}} } },
 }));
 const config: Partial<Record<SourceApiTool, { base: string; key: string; param?: string; header?: string; prefix?: string; path: string }>> = {
   congress_api: {base:'https://api.congress.gov/v3/', key:'CONGRESS_API_KEY', param:'api_key', path:'member'},

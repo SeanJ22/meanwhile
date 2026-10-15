@@ -821,7 +821,7 @@ Good live example: pending River capture and visual review.
 
 ### ADM-16: Decisions
 
-Recording an answer moves the card out of 'waiting on you' at once into a decided list carrying a three-step receipt — recorded, closed in the tracker (as docs/tracker-resolved.csv#<row>), work opened (DEC rows by id and title) — each read live from the decision log; the sync runs unattended on the standing runner after every cycle, before it republishes the console.
+Recording an answer moves the card out of 'waiting on you' at once into a decided list carrying a three-step receipt — recorded, closed, work opened (DEC rows by id and title) — each read live from the decision log; the sync runs unattended on the standing runner after every cycle, before it republishes the console.
 
 Sweep disposition: FIXED_VERIFIED.
 Bad/example candidates: 2026-09-04_22-17-14.PNG (source inventory; capture path not found in checked-in feedback).

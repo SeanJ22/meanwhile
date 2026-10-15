@@ -2,6 +2,7 @@ import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { childCrash } from "../lib/ops/fatal-line.ts";
 import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 
@@ -25,7 +26,11 @@ import {
   routineTaskDue,
   routineTaskFromContract,
   routineTaskSelection,
-  routinePreSpawnMemoryDeferral,
+  routinePreSpawnDeferral,
+  routineSerialLane,
+  routineFailureDomainFrontier,
+  routineAdmissionClock,
+  ROUTINE_SERIAL_LANE_LAUNCH_MS,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
@@ -50,53 +55,160 @@ import {
   routineSupervisorCycleIsolationIssue,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-history.ts";
+import { projectRecord } from "../lib/control-plane/repository/types.ts";
 
-test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure", async t => {
+test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure or a rewritten progress row", async t => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const progressStart = source.indexOf("let sourceProgressRepos");
+  const progressEnd = source.indexOf("\n}\n", progressStart) + 3;
   const start = source.indexOf("async function settlePendingRunResult(");
   const end = source.indexOf("\n// Reader delivery", start);
+  const repos = createMemoryRepositories();
   const failures: unknown[] = [];
   const lines: string[] = [];
-  const progress: string[] = [];
   const context = {
-    laneLastEndedMs: new Map(), unsettledSourceRuns: new Set(["deferred"]),
+    laneLastEndedMs: new Map(), unsettledSourceRuns: new Set<string>(),
     startedSourceChildren: new Set(), attempted: 1,
     supervisorFailures: failures,
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
     safeFailure: (message: string) => message,
     boundedExecutionFailure: () => ({ taskId: "deferred", code: "CHILD_SPAWN_FAILED", detail: "WORKER_MEMORY_DEADLINE: work remains owed" }),
-    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnMemoryDeferral,
-    recordHuntSourceProgress: async (_task: unknown, stage: string) => { progress.push(stage); },
+    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnDeferral,
+    controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
+    RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
+    RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
-  const settle = runInNewContext(transpileModule(source.slice(start, end), {
+  const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + source.slice(start, end), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
-  }).outputText + "\nsettlePendingRunResult;", context) as (pending: unknown, run: unknown) => Promise<void>;
+  }).outputText + "\n({ recordHuntSourceProgress, settle: settlePendingRunResult });", context) as {
+    recordHuntSourceProgress: (task: unknown, stage: string, detail: string) => Promise<void>;
+    settle: (pending: unknown, run: unknown) => Promise<void>;
+  };
   for (const kind of ["SINGLE", "MEETING_PARTITION"]) {
-    context.attempted = 1; progress.length = 0; lines.length = 0;
-    await settle({ id: "deferred", kind, task: { id: "deferred", acquisitionFailureDomain: "held-source" } }, {
-      id: "deferred", termination: "SPAWN_FAILED", status: null, signal: null,
+    const id = `worker-publication:ballot-navigation:${kind}`;
+    const task = { id, sourceId: "source", scope: "US", acquisitionFailureDomain: id, contract: {},
+      ownerInvocation: { publicationPending: true, requestedAt: context.RUN_STARTED_AT, instructions: ["section3-publication"] } };
+    context.attempted = 1; lines.length = 0; context.unsettledSourceRuns.add(id);
+    await recordHuntSourceProgress(task, "QUEUED", "Admitted to the existing source worker pool.");
+    await settle({ id, kind, task }, {
+      id, termination: "SPAWN_FAILED", status: null, signal: null,
       stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: memory wait deferred; work remains owed",
     });
+    const progress = (await repos.ownerDigests.read(HUNT_SOURCE_PROGRESS_LOG_KEY))
+      .filter(row => row.huntSourceProgress?.taskId === id).map(row => row.huntSourceProgress?.stage);
     t.diagnostic(JSON.stringify({ supervisorFailures: failures.length, progress, lines, attempted: context.attempted }));
     assert.equal(failures.length, 0);
     assert.deepEqual(progress, ["QUEUED"]);
     assert.equal(context.attempted, 0);
     assert.equal(lines.some(line => line.includes("RECEIPT_COUNT_INVALID")), false);
+    assert.ok(lines.some(line => line.startsWith(`RCD_DEFER ${id}: WORKER_MEMORY_DEADLINE`)));
   }
 });
 
-test("only an unstarted empty-output memory deadline is an unsent deferral", () => {
+test("only an unstarted empty-output memory deadline or spent pass budget is an unsent deferral", () => {
   const run = { id: "held", termination: "SPAWN_FAILED" as const, status: null, signal: null,
     stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: work remains owed" };
-  assert.equal(routinePreSpawnMemoryDeferral(run, false), run.errorMessage);
-  assert.equal(routinePreSpawnMemoryDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
+  assert.equal(routinePreSpawnDeferral(run, false), run.errorMessage);
+  const budget = { ...run, errorMessage: "PASS_TIME_BUDGET: this pass's time is spent" };
+  assert.equal(routinePreSpawnDeferral(budget, false), budget.errorMessage, "a pass out of time leaves the rest owed for the next pass");
+  assert.equal(routinePreSpawnDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
   for (const changed of [
     { ...run, termination: "EXITED" as const }, { ...run, termination: "TIMED_OUT" as const },
     { ...run, stdout: "RCD_RECEIPT={}" }, { ...run, stderr: "child emitted output" },
     { ...run, status: 0 }, { ...run, signal: "SIGTERM" as const },
     { ...run, errorMessage: "HTTP status 429" }, { ...run, errorMessage: "child mentioned WORKER_MEMORY_DEADLINE: later" },
-  ]) assert.equal(routinePreSpawnMemoryDeferral(changed, false), null);
+  ]) assert.equal(routinePreSpawnDeferral(changed, false), null);
+});
+
+const HEAP_OOM_STDERR = [
+  "<--- Last few GCs --->", "[4123:0x6a1c000]  1201833 ms: Mark-Compact 3401.2 (3445.9) -> 3398.7 (3446.1) MB",
+  "FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory",
+  "----- Native stack trace -----", " 1: 0xb8a3c1 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]",
+].join("\n");
+
+test("a source child killed by a heap abort is a crash; timeouts, receipts and ordinary exits are not", () => {
+  const run = { id: "people-wikidata-people-ca", termination: "SPAWN_FAILED" as const, status: null, signal: "SIGABRT" as const,
+    stdout: "", stderr: HEAP_OOM_STDERR, errorMessage: "Command failed" };
+  assert.equal(childCrash(run), "SIGABRT — FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory");
+  assert.match(childCrash({ ...run, termination: "EXITED", status: 134, signal: null })!, /^exit 134 — FATAL ERROR: Reached heap limit/);
+  assert.match(childCrash({ ...run, stderr: "" })!, /^SIGABRT — no fatal line$/);
+  for (const notCrash of [
+    { ...run, termination: "TIMED_OUT" as const, signal: "SIGTERM" as const },
+    { ...run, termination: "OUTPUT_LIMIT_EXCEEDED" as const },
+    { ...run, stdout: "RCD_RECEIPT={}" },
+    { ...run, termination: "EXITED" as const, status: 2, signal: null, stderr: "Error: HTTP status 503" },
+    { ...run, termination: "EXITED" as const, status: 0, signal: null, stderr: "" },
+  ]) assert.equal(childCrash(notCrash), null);
+});
+
+test("a crashed source child is logged by name, leaves its work owed and does not fail the pass", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const progressStart = source.indexOf("let sourceProgressRepos");
+  const progressEnd = source.indexOf("\n}\n", progressStart) + 3;
+  const start = source.indexOf("async function settlePendingRunResult(");
+  const end = source.indexOf("\n// Reader delivery", start);
+  const repos = createMemoryRepositories();
+  const failures: unknown[] = [];
+  const lines: string[] = [];
+  const doorOutcomes: unknown[][] = [];
+  const crashedTasks: { taskId: string; detail: string }[] = [];
+  const id = "people-wikidata-people-ca";
+  const context = {
+    laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]), attempted: 1,
+    supervisorFailures: failures, crashedTasks,
+    console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
+    safeFailure: (message: string) => message, routinePreSpawnDeferral, childCrash,
+    recordTaskDoorOutcome: async (...args: unknown[]) => { doorOutcomes.push(args); },
+    controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
+    RUN_STARTED_AT: "2026-10-14T13:00:00.000Z", SUPERVISOR_CYCLE_ID: "routine-civic-data-supervisor:host:2026-10-14T13:00:00.000Z",
+    RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
+  };
+  const { settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + source.slice(start, end), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\n({ settle: settlePendingRunResult });", context) as { settle: (pending: unknown, run: unknown) => Promise<void> };
+  const task = { id, sourceId: "wikidata-people", scope: "US-CA", acquisitionFailureDomain: "routine-source:wikidata-people:ca", contract: {},
+    ownerInvocation: { requestedAt: context.RUN_STARTED_AT, instructions: ["send-ca"] } };
+  await settle({ id, kind: "SINGLE", task, command: ["scripts/national-people-refresh.mts", "--promote", "--state=ca", "--source=wikidata-people"] },
+    { id, termination: "SPAWN_FAILED", status: null, signal: "SIGABRT", stdout: "", stderr: HEAP_OOM_STDERR, errorMessage: "Command failed" });
+  assert.equal(failures.length, 0, "no supervisor failure, so the pass exits 0");
+  assert.match(source, /if \(supervisorFailures\.length > 0\) process\.exitCode = 2;/);
+  assert.equal(context.attempted, 1, "the crash is this task's attempt");
+  assert.deepEqual(lines, [`RCD_CHILD_CRASHED ${id} (national-people-refresh.mts): SIGABRT — FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory`]);
+  assert.deepEqual(JSON.parse(JSON.stringify(crashedTasks)), [{ taskId: id,
+    detail: "(national-people-refresh.mts): SIGABRT — FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory" }]);
+  assert.deepEqual(doorOutcomes, [[id, "FAILURE"]]);
+  const progress = (await repos.ownerDigests.read(HUNT_SOURCE_PROGRESS_LOG_KEY)).map(row => row.huntSourceProgress);
+  assert.equal(progress.length, 1);
+  assert.equal(progress[0]!.stage, "FAILED");
+  assert.match(progress[0]!.detail, /crashed \(SIGABRT — FATAL ERROR: Reached heap limit/);
+});
+
+test("a crashed task is a successful cycle's recorded attempt, and its next offer waits its retry clock", () => {
+  const task = ROUTINE_SOURCE_TASKS.find(({ id }) => id === "people-wikidata-people-ca")!;
+  const finishedAt = "2026-10-14T13:38:00.000Z";
+  const outcome = routineCivicDataSupervisorOutcome({
+    cycleId: `routine-civic-data-supervisor:host:2026-10-14T13:00:00.000Z`, startedAt: "2026-10-14T13:00:00.000Z", finishedAt,
+    testedSha: "a".repeat(40), host: "host", provider: "postgres", durable: true,
+    attemptedTasks: 1, verifiedSourceSuccesses: 0, verifiedSourceFailures: 0, failures: [], taskReceipts: [],
+    crashedTasks: [{ taskId: task.id, detail: "(national-people-refresh.mts): SIGABRT — FATAL ERROR: Reached heap limit" }],
+  });
+  assert.equal(outcome.state, "SUCCEEDED");
+  assert.throws(() => routineCivicDataSupervisorOutcome({ ...outcome, failures: [], taskReceipts: [], attemptedTasks: 2 }),
+    /ROUTINE_SUPERVISOR_SUCCESS_RECEIPT_INCOMPLETE/, "an attempt with neither a receipt nor a recorded crash is still refused");
+  const stored = projectRecord({ digestId: "d1", runtimeOutcome: outcome }, ROUTINE_SUPERVISOR_HISTORY_FIELDS);
+  const history = routineUnreceiptedSupervisorAttemptHistory([stored], new Set([task.id]));
+  assert.deepEqual(history.issues, []);
+  assert.equal(history.attempts.get(task.id), finishedAt);
+  const lastSuccess = { lastAttemptedAt: "2026-10-13T09:00:00.000Z", lastSucceededAt: "2026-10-13T09:00:00.000Z",
+    lastSucceededObservedAt: "2026-10-13T09:00:00.000Z" };
+  const at = (iso: string) => Date.parse(iso);
+  const clock = (iso: string) => routineAdmissionClock(lastSuccess, history.attempts.get(task.id), at(iso));
+  assert.equal(routineTaskDue(task, lastSuccess, at("2026-10-14T13:43:00.000Z")), true, "without the record the next pass would run it again");
+  assert.equal(routineTaskDue(task, clock("2026-10-14T13:43:00.000Z"), at("2026-10-14T13:43:00.000Z")), false);
+  assert.equal(routineTaskDue(task, clock("2026-10-14T14:38:00.000Z"), at("2026-10-14T14:38:00.000Z")), true, "offered again after its hour");
 });
 
 test("source refreshes are admitted daily without a Send and retry failed sources hourly", () => {
@@ -163,14 +275,14 @@ test("ordinary registered doors reject authority-transfer markers without changi
     await assert.rejects(processRegisteredRoutineCandidate(store, "fec-funding", {...good, bootstrapImport: marker} as unknown as RoutineCandidate, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
     assert.deepEqual(await store.readPromotion(good.recordClass, good.scope), before);
   }
-  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "comment-access")!;
+  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "ballot-navigation")!;
   const manualStore = new MemoryRoutineDataStore();
   const marked = {
     ...good, sourceId: manual.sourceId, recordClass: manual.recordClass, scope: manual.scope,
     normalization: {...good.normalization, parserVersion: manual.parserNormalizerVersion},
     bootstrapImport: {kind: "RETIRED_TRANSFER", contractId: manual.id},
   } as unknown as RoutineCandidate;
-  await assert.rejects(processRegisteredManualCandidate(manualStore, "comment-access", marked, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
+  await assert.rejects(processRegisteredManualCandidate(manualStore, "ballot-navigation", marked, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
   assert.equal(await manualStore.readPromotion(manual.recordClass, manual.scope), null);
 });
 
@@ -208,7 +320,7 @@ test("the standing parent durably accounts for a routine child killed outside so
   // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
   // records carrying that exact digestId (a targeted content query, not a scan
   // of the whole log) and then confirms the supervisor kind.
-  assert.match(pilot, /readWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId\)/);
+  assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
 
@@ -930,8 +1042,8 @@ test("national and publication source commands retain the progress-renewed timeo
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null);
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", `
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane);
   const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id === "people-portraits-federal")!;
   assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
     "standing portrait work overrides the parent's quiet interval so every due person finishes");
@@ -1235,7 +1347,7 @@ test("--only selection refuses typos and empty tokens before store access", () =
   ]);
   assert.equal(publication.ok, true, "targeted publication must stay selectable beside automatic refresh tasks");
   if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime-bindings"]);
-  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(\);/,
+  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(store, supervisorFailures\);/,
     "a selected publication door must read its owed work; readHuntSourceTasks skips selected source-only passes itself");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");
@@ -2040,6 +2152,48 @@ test("C6: two reads of one host in one pass start at least the gap apart; other 
   const chain = routineRunnerBoundedWorkMs(6, 3, bounds);
   const noGapChain = routineChildPassWorstCaseMs(6, ROUTINE_CHILD_TIMEOUT_MS + 1_000, ROUTINE_CHILD_CONCURRENCY, 3);
   assert.equal(chain, noGapChain + 2 * ROUTINE_SAME_DOMAIN_CHILD_GAP_MS + 1 * 1_000 + 1 * 1_000, "two gaps in a chain of three, plus the clock and coordination requests");
+});
+
+test("national people children share one serial lane: one at a time, back to back, while every source and state keeps its own turn", async () => {
+  const people = ROUTINE_SOURCE_TASKS.filter(task => task.command[0] === "scripts/national-people-refresh.mts");
+  assert.ok(people.length > 100);
+  assert.deepEqual([...new Set(people.map(task => routineSerialLane(task.command)))], ["serial:scripts/national-people-refresh.mts"]);
+  assert.equal(new Set(people.map(task => task.acquisitionFailureDomain)).size, people.length);
+  assert.equal(routineFailureDomainFrontier(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
+    "admission still offers every due source and state each pass");
+  const others = ROUTINE_SOURCE_TASKS.filter(task => task.command[0] !== "scripts/national-people-refresh.mts");
+  assert.ok(others.every(task => routineSerialLane(task.command) === undefined));
+
+  const [first, second] = [people.find(task => task.id.endsWith("-ca"))!, people.find(task => task.id.endsWith("-ny"))!];
+  const tasks = [first, second, people.find(task => task.id.endsWith("-tx"))!, others[0]!];
+  let peopleActive = 0, peopleMost = 0;
+  const events: { id: string; phase: "start" | "end"; at: number }[] = [];
+  const began = Date.now();
+  await runBoundedChildPass(tasks.map(task => ({ id: task.id, failureDomain: task.acquisitionFailureDomain,
+    serialLane: routineSerialLane(task.command), executable: "ignored", args: [] })), {
+    cwd: process.cwd(), env: process.env, sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS, concurrency: tasks.length,
+  }, async command => {
+    const lane = command.serialLane !== undefined;
+    if (lane) peopleMost = Math.max(peopleMost, ++peopleActive);
+    events.push({ id: command.id, phase: "start", at: Date.now() });
+    await new Promise(resolve => setTimeout(resolve, 30));
+    events.push({ id: command.id, phase: "end", at: Date.now() });
+    if (lane) peopleActive--;
+    return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+  });
+  const at = (id: string, phase: "start" | "end") => events.find(event => event.id === id && event.phase === phase)!.at;
+  assert.equal(peopleMost, 1, "one national people child at a time");
+  assert.ok(at(others[0]!.id, "start") < at(first.id, "end"), "other sources run beside the people lane");
+  assert.ok(Date.now() - began < ROUTINE_SAME_DOMAIN_CHILD_GAP_MS / 10, "the lane is not paced by the same-host gap");
+  assert.ok(at(second.id, "start") >= at(first.id, "end"));
+
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.match(runner, /serialLane: routineSerialLane\(pending\.command\)/);
+  assert.match(runner, /command\.serialLane !== undefined && Date\.now\(\) >= Date\.parse\(RUN_STARTED_AT\) \+ ROUTINE_SERIAL_LANE_LAUNCH_MS[\s\S]{0,40}throw new Error\(`PASS_TIME_BUDGET: /);
+  assert.ok(routinePreSpawnDeferral({ id: first.id, termination: "SPAWN_FAILED", status: null, signal: null, stdout: "", stderr: "",
+    errorMessage: "PASS_TIME_BUDGET: serial:scripts/national-people-refresh.mts has had this pass's turn; the next pass continues it" }, false),
+    "a lane past its turn leaves the rest owed for the next pass");
+  assert.equal(ROUTINE_SERIAL_LANE_LAUNCH_MS, 30 * 60_000);
 });
 
 test("scoped source passes repair only matching reader pointers, including narrow meeting domains", () => {

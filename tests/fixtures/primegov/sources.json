@@ -1,0 +1,71 @@
+[
+  {
+    "file": "okc-ok-upcoming.json",
+    "tenant": "okc",
+    "state": "OK",
+    "sourceUrl": "https://okc.primegov.com/api/v2/PublicPortal/ListUpcomingMeetings",
+    "retrievedAt": "2026-10-13T19:23:34.078Z",
+    "routeScript": "https://okc.primegov.com/Scripts/Custom/Public/_Upcoming.js?v3"
+  },
+  {
+    "file": "okc-ok-archived.json",
+    "tenant": "okc",
+    "state": "OK",
+    "sourceUrl": "https://okc.primegov.com/api/v2/PublicPortal/ListArchivedMeetings?year=2026",
+    "retrievedAt": "2026-10-13T19:24:11.586Z",
+    "routeScript": "https://okc.primegov.com/Scripts/Custom/Public/_ArchivedAccordion.js"
+  },
+  {
+    "file": "sanantonio-tx-upcoming.json",
+    "tenant": "sanantonio",
+    "state": "TX",
+    "sourceUrl": "https://sanantonio.primegov.com/api/v2/PublicPortal/ListUpcomingMeetings",
+    "retrievedAt": "2026-10-13T19:23:34.060Z",
+    "routeScript": "https://okc.primegov.com/Scripts/Custom/Public/_Upcoming.js?v3"
+  },
+  {
+    "file": "sanantonio-tx-archived.json",
+    "tenant": "sanantonio",
+    "state": "TX",
+    "sourceUrl": "https://sanantonio.primegov.com/api/v2/PublicPortal/ListArchivedMeetings?year=2026",
+    "retrievedAt": "2026-10-13T19:24:11.498Z",
+    "routeScript": "https://okc.primegov.com/Scripts/Custom/Public/_ArchivedAccordion.js"
+  },
+  {
+    "file": "lasvegas-nv-upcoming.json",
+    "tenant": "lasvegas",
+    "state": "NV",
+    "sourceUrl": "https://lasvegas.primegov.com/api/v2/PublicPortal/ListUpcomingMeetings",
+    "retrievedAt": "2026-10-13T19:23:34.122Z",
+    "routeScript": "https://okc.primegov.com/Scripts/Custom/Public/_Upcoming.js?v3"
+  },
+  {
+    "file": "lasvegas-nv-archived.json",
+    "tenant": "lasvegas",
+    "state": "NV",
+    "sourceUrl": "https://lasvegas.primegov.com/api/v2/PublicPortal/ListArchivedMeetings?year=2026",
+    "retrievedAt": "2026-10-13T19:24:11.606Z",
+    "routeScript": "https://okc.primegov.com/Scripts/Custom/Public/_ArchivedAccordion.js"
+  },
+  {
+    "file": "okc-ok-committees.json",
+    "tenant": "okc",
+    "state": "OK",
+    "sourceUrl": "https://okc.primegov.com/api/committee/GetCommitteeesListByShowInPublicPortal",
+    "retrievedAt": "2026-10-13T19:24:10.955Z"
+  },
+  {
+    "file": "sanantonio-tx-committees.json",
+    "tenant": "sanantonio",
+    "state": "TX",
+    "sourceUrl": "https://sanantonio.primegov.com/api/committee/GetCommitteeesListByShowInPublicPortal",
+    "retrievedAt": "2026-10-13T19:24:10.725Z"
+  },
+  {
+    "file": "lasvegas-nv-committees.json",
+    "tenant": "lasvegas",
+    "state": "NV",
+    "sourceUrl": "https://lasvegas.primegov.com/api/committee/GetCommitteeesListByShowInPublicPortal",
+    "retrievedAt": "2026-10-13T19:24:10.934Z"
+  }
+]

@@ -23,12 +23,15 @@ export interface WebsitePacing {
   hold(site: string, until: number, nowMs: number): Promise<void>;
   /** The sites held at `nowMs`, with when each may be asked again. */
   heldUntil(nowMs: number): Promise<ReadonlyMap<string, number>>;
+  /** Reserve the next send for `key`, sends `intervalMs` apart for every reader: when this one may go. */
+  reserve(key: string, intervalMs: number, nowMs: number): Promise<number>;
 }
 
 /** Pacing held in this process: tests, the file store, and a reader with no shared store. */
 export function memoryWebsitePacing(): WebsitePacing {
   const requests = new Map<string, number[]>();
   const holds = new Map<string, number>();
+  const paced = new Map<string, number>();
   return {
     async take(site, limit, nowMs) {
       const recent = (requests.get(site) ?? []).filter((at) => nowMs - at < WEBSITE_WINDOW_MS);
@@ -45,6 +48,11 @@ export function memoryWebsitePacing(): WebsitePacing {
     async heldUntil(nowMs) {
       return new Map([...holds].filter(([, until]) => until > nowMs));
     },
+    async reserve(key, intervalMs, nowMs) {
+      const at = Math.max(nowMs, paced.get(key) ?? 0);
+      paced.set(key, at + intervalMs);
+      return at;
+    },
   };
 }
 
@@ -56,6 +64,7 @@ export const WEBSITE_PACING_DDL: readonly string[] = [
   updated_at timestamptz NOT NULL
 );`,
   "CREATE INDEX IF NOT EXISTS cp_website_pacing_held ON cp_website_pacing (hold_until) WHERE hold_until IS NOT NULL;",
+  "ALTER TABLE cp_website_pacing ADD COLUMN IF NOT EXISTS paced_until timestamptz;",
 ];
 
 /** Under the row lock the upsert takes, so two readers in two processes can never both take the last request. */
@@ -68,6 +77,10 @@ RETURNING site`;
 const WEBSITE_OLDEST_SQL = `SELECT min(t) AS oldest FROM cp_website_pacing p, unnest(p.requests) t WHERE p.site = $1 AND t > $2::timestamptz`;
 const WEBSITE_HOLD_SQL = `INSERT INTO cp_website_pacing AS p (site, hold_until, updated_at) VALUES ($1, $2::timestamptz, $3::timestamptz)
 ON CONFLICT (site) DO UPDATE SET hold_until = GREATEST(COALESCE(p.hold_until, $2::timestamptz), $2::timestamptz), updated_at = $3::timestamptz`;
+/** The row's next free send, moved one interval on: two readers in two processes never get the same send. */
+const WEBSITE_RESERVE_SQL = `INSERT INTO cp_website_pacing AS p (site, paced_until, updated_at) VALUES ($1, $2::timestamptz + $3::double precision * interval '1 millisecond', $2::timestamptz)
+ON CONFLICT (site) DO UPDATE SET paced_until = GREATEST(COALESCE(p.paced_until, $2::timestamptz), $2::timestamptz) + $3::double precision * interval '1 millisecond', updated_at = $2::timestamptz
+RETURNING paced_until`;
 const WEBSITE_HELD_SQL = "SELECT site, hold_until FROM cp_website_pacing WHERE hold_until > $1::timestamptz";
 
 type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
@@ -121,6 +134,9 @@ export function createWebsitePacing(query: Query): WebsitePacing {
     },
     async heldUntil(nowMs) {
       return new Map((await query(WEBSITE_HELD_SQL, [iso(nowMs)])).map((row) => [String(row.site), ms(row.hold_until)] as const));
+    },
+    async reserve(key, intervalMs, nowMs) {
+      return ms((await query(WEBSITE_RESERVE_SQL, [key, iso(nowMs), intervalMs]))[0]?.paced_until) - intervalMs;
     },
   };
 }

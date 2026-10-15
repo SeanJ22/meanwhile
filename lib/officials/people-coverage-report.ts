@@ -11,13 +11,13 @@ import type { Officeholder, OfficeholderSet } from "./types.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 
-export const personHasPublishedPhoto = (person:Officeholder) => Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id,person.photo));
+const personHasPublishedPhoto = (person:Officeholder) => Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id,person.photo));
 const isLegislator = (person:Officeholder) => person.level === "STATE" && ["state_senator","state_lower_house"].includes(officeIdentity(person.officeTitle) ?? "");
 function statewidePeople(roster:OfficeholderSet):Officeholder[] {
   const rootIds=new Set(roster.divisions.filter(row=>/^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(row.ocdId)).map(row=>row.officeholderId));
   return roster.officeholders.filter(person=>rootIds.has(person.id)&&person.level==="STATE"&&!isLegislator(person));
 }
-export function summarizePeopleRoster(roster:OfficeholderSet) {
+function summarizePeopleRoster(roster:OfficeholderSet) {
   const statewide=statewidePeople(roster);
   const count=(people:readonly Officeholder[])=>({people:people.length,photos:people.filter(personHasPublishedPhoto).length});
   return {statewideOffices:statewide.map(person=>({personId:person.personId??person.id,name:person.name,office:person.officeTitle,selectionMethod:person.selectionMethod??"UNKNOWN",

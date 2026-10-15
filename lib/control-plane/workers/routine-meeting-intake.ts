@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { RetainedSourceResponse, RetainedMeetingCandidate } from "../../civic-data/meeting-research-evidence.ts";
+import type { RetainedSourceResponse, RetainedMeetingCandidate } from "../../civic-data/retained-meeting-bytes.ts";
 import { getDb } from "../../db/index.ts";
 import { civicDataCandidates } from "../../db/schema.ts";
 import { and, desc, eq, sql } from "drizzle-orm";

@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 import { identityChipsFor } from "../lib/officials/identity-chips.ts";
 import { roleSelectionFor, standingChipMayAttach } from "../lib/officials/elected-role.ts";
 import { topOfficesFor } from "../lib/officials/top-offices.ts";

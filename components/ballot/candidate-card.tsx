@@ -5,59 +5,66 @@ import { personInitials } from "@/lib/officials/person-name";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
-const initials = personInitials;
+import type { SeatHolder } from "@/lib/officials/lookup";
+import type { Provenance } from "@/lib/sources/types";
 
-/**
- * The candidate card. A missing photo renders initials; a missing bio renders
- * nothing; nothing here ranks, scores or recommends. Order is as filed.
- */
+export function CandidatePortraitSources({ card }: { card: CandidateCardData | null }) {
+  if (!card?.photoUrl || !card.photoSource) return null;
+  const sources = card.photoVerification?.sources.map(source => ({ what: "Candidate portrait",
+    provenance: { sourceUrl: source.url, sourceOrg: card.photoSource!, collectedAt: source.retrievedAt, verifiedAt: null } }))
+    ?? [{ what: "Candidate portrait", provenance: { sourceUrl: card.photoUrl, sourceOrg: card.photoSource, collectedAt: "", verifiedAt: null } }];
+  return <CardSourcesContribution id={`candidate-portrait:${card.photoUrl}`} sources={sources} />;
+}
+
 export function CandidateCard({
   name,
   partyLine,
   card,
+  holder = null,
   links,
   filedSiteUrl,
+  filingProvenance,
   nameSlot,
   battlecardSlot,
   derivedBlurb,
 }: {
-  /** The campaign's own one-line self-description, rendered only where no curated bio exists. */
+
   derivedBlurb?: {
     text: string;
     sourceUrl: string;
     sourceLabel: string;
   } | null;
   name: string;
-  /**
-   * The name as the door to the battlecard. A ReactNode because a function
-   * cannot cross the server/client boundary. Absent where we hold no record.
-   */
+
   nameSlot?: React.ReactNode;
-  /** The battlecard pill, beneath the links row. People only: measures never render through this card. */
+
   battlecardSlot?: React.ReactNode;
-  /** Party label (and slogan where filed), already formatted by the caller. */
+
   partyLine: React.ReactNode;
   card: CandidateCardData | null;
+  holder?: SeatHolder | null;
   links: CandidateLinks | null;
-  /** The URL stated in the filing; rendered only when no hunted link exists. */
+
   filedSiteUrl?: string | null;
+  filingProvenance?: Provenance;
 }) {
+  const photoUrl = card?.photoUrl ?? holder?.photoUrl ?? null;
   const hasLinks = Boolean(links?.official || links?.campaign || filedSiteUrl);
   return (
-    /* Fixed-size tile with its own ground so every row has the same silhouette. */
+
     <VisibleCard className="candidate-row" cardId={`CANDIDATE:${name}`} cardKind="CANDIDATE">
-      <span className="candidate-avatar" aria-hidden={card?.photoUrl ? undefined : true}>
-        {card?.photoUrl ? (
-          // External campaign-site photo; next/image would need every host allowlisted.
+      {filingProvenance && <CardSourcesContribution id="candidate-filing" sources={[{ what: "Candidate name and party as filed", provenance: filingProvenance }]} />}
+      <span className="candidate-avatar" aria-hidden={photoUrl ? undefined : true}>
+        {photoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={card.photoUrl}
-            alt={card.photoSource ? `${name} — ${card.photoSource}` : name}
-            title={card.photoSource ?? undefined}
+            src={photoUrl}
+            alt={name}
+
             loading="lazy"
           />
         ) : (
-          <span className="candidate-initials">{initials(name)}</span>
+          <span className="candidate-initials">{personInitials(name)}</span>
         )}
       </span>
 
@@ -73,6 +80,10 @@ export function CandidateCard({
           </span>
         </div>
 
+        <CandidatePortraitSources card={card} />
+        {photoUrl && holder && !card?.photoUrl && (holder.fieldSources?.photoUrl ?? holder.provenance) &&
+          <CardSourcesContribution id={`candidate-portrait:${holder.id}`} sources={[{ what: "Official portrait",
+            provenance: (holder.fieldSources?.photoUrl ?? holder.provenance)! }]} />}
         {card?.bio && (
           <> <p className="mt-1 t-body leading-relaxed text-paper-dim">
             &ldquo;{card.bio}&rdquo;{" "}
@@ -82,7 +93,6 @@ export function CandidateCard({
         )}
 
         {!card?.bio && derivedBlurb && (
-          // The campaign's own words, quoted, with the page and read date.
           <> <p className="mt-1 t-body leading-relaxed text-paper-dim">
             &ldquo;{derivedBlurb.text}&rdquo;{" "}
 
@@ -102,7 +112,7 @@ export function CandidateCard({
                 {links.official.label ?? "official site"}
               </a>
             )}
-            {/* Campaign site and email render inside the battlecard. */}
+
             {!links?.official && !links?.campaign && filedSiteUrl && (
               <a
                 href={filedSiteUrl}
@@ -110,7 +120,7 @@ export function CandidateCard({
                 rel="noreferrer"
                 className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
-                site (as filed)
+                {hostOf(filedSiteUrl)} (as filed)
               </a>
             )}
             {card?.phone && (
@@ -124,7 +134,6 @@ export function CandidateCard({
           </p>
         )}
 
-        {/* An office line, not the candidate's own, is labelled. */}
         {card?.phone && card?.phoneLabel && (
           <p className="mt-1 t-detail text-muted">{card.phoneLabel}</p>
         )}

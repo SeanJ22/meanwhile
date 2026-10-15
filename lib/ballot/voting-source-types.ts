@@ -2,6 +2,7 @@ import type { SiteKind, VotingOfficeContact, VotingRule, VotingSite, VotingSourc
 
 export type VotingDoorShape = "file" | "list-page" | "address-lookup" | "identity-locked-lookup" | "county-directory" | "vendor-platform" | "map-service" | "json";
 export type VotingPlatform = "voterfocus" | "voterview" | "where-to-vote" | "civix" | "power-bi";
+export const isVotingSiteKind = (kind: VotingSourceDoor["covers"][number]): kind is SiteKind => kind !== "CANDIDATE_LIST" && kind !== "BALLOT_MEASURES";
 export type VotingColumn = "id" | "name" | "address" | "room" | "kind" | "days" | "hours" | "precinct" | "town" | "countyName" | "countyFips" | "countySubdivisionGeoid" | "ward" | "districtOcdIds" | "tribalNation" | "reservation" | "aiannhGeoid" | "locationNotes" | "accessibilityNotes" | "rules" | "phone" | "email" | "officeName" | "officeAddress" | "lastUpdated" | "election" | "lat" | "lng";
 export interface VotingDoorScope {
   state: string;
@@ -49,7 +50,7 @@ export interface VotingSourceDoor {
   publisher: string;
   url: string;
   shape: VotingDoorShape;
-  covers: SiteKind[];
+  covers: (SiteKind | "CANDIDATE_LIST" | "BALLOT_MEASURES")[];
   scope: VotingDoorScope;
   electionDate: string;
   electionPageUrl: string;
@@ -84,7 +85,7 @@ export interface VotingSourceBlank {
   reason: "access" | "unpublished" | "extraction" | "earlier-election" | "missing-sites" | "geocode";
 }
 export interface VotingSourceAttempt { url: string; route: "direct" | "browser-ua"; outcome: string; }
-export interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
+interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
 export interface VotingSourceRead {
   doorId: string;
   contacts?: VotingSourceContact[];

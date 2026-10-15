@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { granicusBodyLabel, parseGranicusPublisher } from "../../sources/granicus/index.ts";
 import { parseDiligentMeetings } from "../../sources/diligent/index.ts";
 
 import type { DerivedInputRef } from "../../civic-data/derived-authority.ts";
@@ -29,7 +30,10 @@ import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
 import { parseMunicodeMeetings } from "../../sources/municode/index.ts";
 import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
+import { parseSwagitMeetings, swagitMatchesBody } from "../../sources/swagit/index.ts";
+import { parsePrimeGovCommittees, parsePrimeGovMeetings } from "../../sources/primegov/index.ts";
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
+import { parseNovusMeetings } from "../../sources/novusagenda/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
@@ -70,7 +74,8 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", "municode-meetings": "MUNICODE", escribe: "ESCRIBE",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", "municode-meetings": "MUNICODE", granicus: "GRANICUS", swagit: "SWAGIT", primegov: "PRIMEGOV", escribe: "ESCRIBE",
+  novusagenda: "NOVUSAGENDA",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -227,6 +232,11 @@ export function printedNames(title: string, jurisdictionId: string): readonly Pr
   });
 }
 
+function namesAnotherGovernment(words: readonly string[], kind: GovernmentKind): boolean {
+  const localBoard = words.some(word => /^(?:board|commission|committee|subcommittee)$/.test(word));
+  return SEPARATE_GOVERNMENT_WORDS.some(word => words.includes(word) && !OWN_CLASS_WORD[kind].includes(word) && (word !== "authority" || !localBoard));
+}
+
 /** How two printed names are compared: case, and the government's own class word in front, aside. */
 function canonical(name: string, jurisdictionId: string): string {
   const own = new Set([...OWN_CLASS_WORD[governmentKind(jurisdictionId)], ...ownNameWords(jurisdictionId)]);
@@ -254,7 +264,7 @@ export function categoryBodyOf(category: string, jurisdictionId: string): Catego
   if (listed !== undefined) return { role: "GOVERNING", name: listed };
   const words = key.split(" ");
   if (Object.values(GOVERNING_NAMES).flat().some((n) => canonical(n, jurisdictionId) === key) ||
-    SEPARATE_GOVERNMENT_WORDS.some((w) => words.includes(w) && !OWN_CLASS_WORD[kind].includes(w))) {
+    namesAnotherGovernment(words, kind)) {
     return { unmatched: `"${shown}" reads as another government's body` };
   }
   return { role: "SUB_BODY", name: shown };
@@ -445,25 +455,57 @@ type Selected = Selection | { readonly held: AutoCrosswalkHoldReason; readonly d
 const titleHas = (title: string, terms: readonly string[]): boolean => terms.some((t) => low(title).includes(low(t)));
 
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string, route: string): Selected {
-  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "ESCRIBE"].includes(kind)) {
+  if (kind === "PRIMEGOV") {
+    const selected = events.filter(event => event.categories.some(name => canonical(name, jurisdictionId) === proposal.key));
+    const ids = [...new Set(selected.map(event => event.scopeId))];
+    if (ids.length !== 1 || !ids[0] || events.some(event => event.scopeId === ids[0] && !selected.includes(event))) {
+      return { held: "AMBIGUOUS_TITLE", detail: "PrimeGov has no unique published committee for this body" };
+    }
+    return { filter: { committeeId: ids[0] }, selected };
+  }
+  if (kind === "SWAGIT") {
+    const bodyMatch = events.map(event => event.context).find(context => {
+      const names = printedNames(context, jurisdictionId).filter(name => tokenize(name.text).length >= 2);
+      return names.length === 1 && canonical(names[0].text, jurisdictionId) === proposal.key;
+    }) ?? proposal.spellings[0];
+    const selected = events.filter(event => swagitMatchesBody({ title: event.title, category: event.context }, bodyMatch, proposal.spellings[0]));
+    if (!selected.length) return { held: "SELECTS_NOTHING", detail: "no Swagit row names the reviewed body" };
+    const other = selected.find(event => printedNames(event.title, jurisdictionId).some(name => tokenize(name.text).length >= 2 && canonical(name.text, jurisdictionId) !== proposal.key));
+    if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
+    return { filter: { bodyMatch }, selected };
+  }
+  if (["BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA"].includes(kind)) {
     const namesIn = (event: CalendarEvent) => [...printedNames(event.title, jurisdictionId), ...printedNames(event.context, jurisdictionId)]
       .filter(name => tokenize(name.text).length >= 2);
     const matches = (event: CalendarEvent) => namesIn(event).some(name => canonical(name.text, jurisdictionId) === proposal.key) ||
       event.categories.some(name => canonical(name, jurisdictionId) === proposal.key);
-    const selected = events.filter(matches);
+    const selected = events.filter(event => matches(event) && (kind !== "GRANICUS" || namesIn(event).every(name => canonical(name.text, jurisdictionId) === proposal.key)));
     if (selected.length === 0) return { held: "SELECTS_NOTHING", detail: `no ${kind} event names the reviewed body` };
     const other = selected.find(event => namesIn(event).some(name => canonical(name.text, jurisdictionId) !== proposal.key));
     if (other) return { held: "AMBIGUOUS_TITLE", detail: `"${other.title}" also names another body` };
+    if (kind === "GRANICUS") return { filter: { bodyMatch: [...new Set(selected.map(event => granicusBodyLabel(event.title)))].join("|") }, selected };
     if (kind === "BOARDBOOK") {
       if (selected.length !== events.length) return { held: "AMBIGUOUS_TITLE", detail: "the BoardBook organization feed also carries another body's events; a whole-organization reader cannot select this body alone" };
       return { filter: {}, selected };
     }
+    if (kind === "NOVUSAGENDA") {
+      const labels = [...new Set(selected.flatMap(event => event.categories))];
+      if (!labels.length || labels.some(label => label.includes("|")) || events.some(event => event.categories.some(label => labels.includes(label)) && !selected.includes(event))) {
+        return { held: "AMBIGUOUS_TITLE", detail: "the NovusAgenda body labels also select another body" };
+      }
+      return { filter: { bodyMatch: labels.join("|") }, selected };
+    }
     if (kind === "CIVICCLERK" || kind === "IQM2") {
       const labels = [...new Set(selected.flatMap(event => event.categories))];
       if (labels.length !== 1 || !labels[0]) return { held: "AMBIGUOUS_TITLE", detail: `${kind} has no one exact published body label` };
-      const actual = events.filter(event => event.categories.includes(labels[0]!));
+      const bodyCategory = canonical(labels[0]!, jurisdictionId) === proposal.key;
+      const titleMatch = kind === "CIVICCLERK" && !bodyCategory ? proposal.spellings[0] : undefined;
+      const actual = events.filter(event => event.categories.includes(labels[0]!) &&
+        (!titleMatch || ` ${tokenize(event.title).join(" ")} `.includes(` ${tokenize(titleMatch).join(" ")} `)));
       if (actual.some(event => !selected.includes(event))) return { held: "AMBIGUOUS_TITLE", detail: `the ${kind} body label also selects another body` };
-      return { filter: kind === "IQM2" ? { boardMatch: labels[0]! } : { bodyMatch: labels[0]!, portalBase: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}` }, selected };
+      const categoryIds = [...new Set(selected.map(event => event.scopeId))];
+      if (kind === "CIVICCLERK" && (categoryIds.length !== 1 || !categoryIds[0])) return { held: "AMBIGUOUS_TITLE", detail: "CivicClerk has no exact native category identity" };
+      return { filter: kind === "IQM2" ? { boardMatch: labels[0]! } : { categoryId: categoryIds[0]!, bodyMatch: labels[0]!, ...(titleMatch ? { titleMatch } : {}), portalBase: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}` }, selected };
     }
     if (kind === "ESCRIBE") {
       const labels = [...new Set(selected.flatMap(event => event.categories))];
@@ -471,10 +513,10 @@ function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly Cal
       return { filter: { meetingTypes: labels.join("|") }, selected };
     }
     const ids = [...new Set(selected.map(event => event.scopeId).filter((id): id is string => typeof id === "string"))];
-    if (ids.length !== 1 || events.some(event => event.scopeId === ids[0] && !selected.includes(event))) {
+    if (ids.length === 0 || (kind !== "CIVICPLUS" && ids.length !== 1) || events.some(event => ids.includes(event.scopeId ?? "") && !selected.includes(event))) {
       return { held: "AMBIGUOUS_TITLE", detail: `${kind} has no unique category or committee for this body` };
     }
-    return { filter: kind === "CIVICPLUS" ? { agendaCenterCategoryId: ids[0]! } : { committeeId: ids[0]! }, selected };
+    return { filter: kind === "CIVICPLUS" ? { agendaCenterCategoryId: ids.sort((a, b) => Number(a) - Number(b)).join(",") } : { committeeId: ids[0]! }, selected };
   }
   if (kind === "LEGISTAR") {
     const selected = events.filter(e => proposal.spellings.some(s => wordAt(e.title, s) >= 0));
@@ -660,7 +702,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "MUNICODE", "ESCRIBE"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "MUNICODE", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -706,6 +748,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const rows = parseDiligentMeetings(calendar.text);
       if (!rows?.length) { hold(route, "CALENDAR_UNREADABLE", "the held public Diligent response has no dated meetings"); continue; }
       events = rows.map(m => ({ title: flat(m.Name ?? ""), context: "", categories: [flat(m.MeetingTypeName ?? "")], identity: `${m.Id}|${m.MeetingDateTime}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Portal/MeetingInformation.aspx?Id=${m.Id}` }));
+    } else if (kind === "GRANICUS") {
+      let rows: ReturnType<typeof parseGranicusPublisher> = [];
+      try { rows = parseGranicusPublisher(calendar.text, route); } catch { /* An invalid public list names no meeting. */ }
+      events = rows.map(row => ({ title: flat(granicusBodyLabel(row.title)), context: "", categories: [flat(granicusBodyLabel(row.title))],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.agendaUrl ?? row.videoUrl ?? route }));
     } else if (kind === "BOARDBOOK") {
       events = parseOrganizationPage(calendar.text).rows.map(row => ({ title: flat(row.title), context: "", categories: [],
         identity: `${row.meetingId ?? ""}|${row.y}-${row.mo}-${row.d}|${row.h}:${row.mi}`, tzid: stateZone, utc: false, floating: true, url: route }));
@@ -714,15 +761,36 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       try { const body = JSON.parse(calendar.text); rows = Array.isArray(body.value) ? body.value : []; } catch { /* An unreadable response names no event. */ }
       events = rows.filter(row => Number.isInteger(row.id) && !row.isDeleted && row.isPublished !== false && (row.startDateTime || row.eventDate)).map(row => {
         const body = flat(row.eventCategoryName || row.categoryName || row.eventName || "");
-        return { title: flat(row.eventName || body), context: body, categories: [body], identity: `${row.id}|${row.startDateTime ?? row.eventDate}`,
+        return { title: flat(row.eventName || body), context: body, categories: [body], scopeId: row.categoryId === undefined ? undefined : String(row.categoryId), identity: `${row.id}|${row.startDateTime ?? row.eventDate}`,
           tzid: stateZone, utc: false, floating: true, url: `https://${new URL(route).hostname.replace(/\.api\.civicclerk\.com$/, ".portal.civicclerk.com")}/event/${row.id}` };
       });
+    } else if (kind === "NOVUSAGENDA") {
+      let rows: ReturnType<typeof parseNovusMeetings> = [];
+      try { rows = parseNovusMeetings(calendar.text, route); } catch { /* Unreadable public lists name no meetings. */ }
+      events = rows.map(row => ({ title: flat(row.body), context: "", categories: [flat(row.body)],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: false, url: row.agendaUrl ?? route }));
     } else if (kind === "IQM2") {
       events = parseCalendarRows(calendar.text).filter(row => row.board && row.when).map(row => ({ title: flat(row.board), context: "", categories: [flat(row.board)],
         identity: `${row.detailId}|${row.when}`, tzid: stateZone, utc: false, floating: true, url: `${new URL(route).origin}/Citizens/Detail_Meeting.aspx?ID=${row.detailId}` }));
     } else if (kind === "CIVICPLUS") {
-      events = parseAgendaCenterCategories(calendar.text).flatMap(category => parseAgendaCenter(calendar.text, category.id).map(row => ({ title: flat(category.name), context: "", categories: [flat(category.name)],
-        scopeId: category.id, identity: `${category.id}|${row.date}`, tzid: stateZone, utc: false, floating: false, url: row.agendaHref ? new URL(row.agendaHref, route).toString() : route })));
+      events = parseAgendaCenterCategories(calendar.text).flatMap(category => parseAgendaCenter(calendar.text, category.id).map(row => ({ title: flat(category.name), context: flat(row.title), categories: [flat(category.name)],
+        scopeId: category.id, identity: `${category.id}|${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.agendaHref ? new URL(row.agendaHref, route).toString() : route })));
+    } else if (kind === "PRIMEGOV") {
+      let rows: ReturnType<typeof parsePrimeGovMeetings> = [];
+      try { rows = parsePrimeGovMeetings(calendar.text); } catch { /* Changed lists cannot establish bodies. */ }
+      const selector = find.via?.artifactId ? input.held(find.via.artifactId) : null;
+      let committees: ReturnType<typeof parsePrimeGovCommittees> = [];
+      try { if (selector) committees = parsePrimeGovCommittees(selector.text); } catch { /* Unreadable selectors cannot name bodies. */ }
+      events = rows.flatMap(row => {
+        const committee = committees.find(committee => committee.id === row.committeeId);
+        return committee ? [{ title: flat(committee.name), context: "", categories: [flat(committee.name)], scopeId: String(row.committeeId),
+          identity: `${row.committeeId}|${row.id}|${row.dateTime}`, tzid: stateZone, utc: false, floating: /T\d{2}:\d{2}/.test(row.dateTime), url: route }] : [];
+      });
+    } else if (kind === "SWAGIT") {
+      let rows: ReturnType<typeof parseSwagitMeetings> = [];
+      try { rows = parseSwagitMeetings(calendar.text, route); } catch { rows = []; }
+      events = rows.filter(row => row.date).map(row => ({ title: flat(row.title), context: flat(row.category), categories: [],
+        identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.url }));
     } else if (kind === "MUNICODE") {
       let rows: ReturnType<typeof parseMunicodeMeetings> = [];
       try { rows = parseMunicodeMeetings(calendar.text, route); } catch { /* A changed table names no meetings. */ }
@@ -781,19 +849,20 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
       continue;
     }
-    if (kind === "CIVICCLERK" && /eventCategoryId eq \d+/.test(new URL(route).searchParams.get("$filter") ?? "")) {
-      const categoryId = /^eventCategoryId eq (\d+)$/.exec(new URL(route).searchParams.get("$filter") ?? "")?.[1];
+    if (kind === "CIVICCLERK" && /^categoryId eq \d+$/.test(new URL(route).searchParams.get("$filter") ?? "")) {
+      const categoryId = /^categoryId eq (\d+)$/.exec(new URL(route).searchParams.get("$filter") ?? "")?.[1];
       const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
       if (categoryId && via) {
-        let categories: { id: number; name?: string; categoryName?: string }[] = [];
+        let categories: { id: number; categoryDesc: string }[] = [];
         try { categories = JSON.parse(via.text).value; } catch { categories = []; }
         const category = Array.isArray(categories) ? categories.find(category => String(category.id) === categoryId) : null;
-        const name = category?.categoryName ?? category?.name;
-        if (name && categories.filter(category => (category.categoryName ?? category.name) === name).length === 1 && events.every(event => event.categories.includes(name))) {
-          addListedBody(name, { bodyMatch: name, portalBase: `https://${new URL(route).hostname.replace(".api.", ".portal.")}` }, via, find.via!.page, events.length);
+        const name = category?.categoryDesc;
+        if (name && !("unmatched" in categoryBodyOf(name, jurisdictionId)) &&
+          categories.filter(category => category.categoryDesc === name).length === 1 && events.every(event => event.scopeId === categoryId && event.categories.includes(name))) {
+          addListedBody(name, { categoryId, bodyMatch: name, portalBase: `https://${new URL(route).hostname.replace(".api.", ".portal.")}` }, via, find.via!.page, events.length);
+          continue;
         }
       }
-      continue;
     }
     if (kind === "BOARDDOCS") {
       const committeeId = new URL(route).searchParams.get("current_committee_id");
@@ -897,7 +966,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const shown = spellings[0] ?? entry.category ?? key;
       if (tokenize(shown).length < 2 || BODY_NOUNS.has(key)) continue;
       const words = key.split(" ");
-      if (everyGoverningKey.has(key) || SEPARATE_GOVERNMENT_WORDS.some((w) => words.includes(w) && !OWN_CLASS_WORD[kindOfGovernment].includes(w))) {
+      if (everyGoverningKey.has(key) || namesAnotherGovernment(words, kindOfGovernment)) {
         hold(route, "SEPARATE_GOVERNMENT_NAME", `"${shown}" reads as another government's body, not a sub-body of ${registered.publishingOrg}`, shown);
         continue;
       }
@@ -919,8 +988,8 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         continue;
       }
       /* A category feed's naming page is the index that files the feed under the body's name, and no other. */
-      if (kind === "CIVICCLERK" && attempt.found.some(other => other.url !== route && other.vendor === "civicclerk-api" &&
-        /eventCategoryId eq \d+/.test(new URL(other.url).searchParams.get("$filter") ?? "") && other.evidence.endsWith(`: ${selection.filter.bodyMatch}`))) continue;
+      if (kind === "CIVICCLERK" && !selection.filter.titleMatch && attempt.found.some(other => other.url !== route && other.vendor === "civicclerk-api" &&
+        /^categoryId eq \d+$/.test(new URL(other.url).searchParams.get("$filter") ?? "") && other.evidence.endsWith(`: ${selection.filter.bodyMatch}`))) continue;
       if (kind === "LEGISTAR" && attempt.found.some(other => other.url !== route && other.vendor === "legistar-api" &&
         /^EventBodyId eq (\d+)(?: and|$)/.exec(new URL(other.url).searchParams.get("$filter") ?? "")?.[1] === selection.filter.eventBodyId)) continue;
       const names = proposal.category !== null ? [proposal.category, ...proposal.spellings] : proposal.spellings;
@@ -931,9 +1000,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         hold(route, "NAME_NOT_PRINTED_ON_OWN_PAGE", `no page of ${routeHost} the walk saved prints "${shown}"${eventPage ? `; the event page ${eventPage} may` : ""}`, shown);
         continue;
       }
-      // The jurisdiction already owns the prefix. Keep the body's exact
-      // printed suffix so "County Board of Adjustment" and "Board of
-      // Adjustment" in that county do not create two identities.
+      // Keep the printed suffix so a jurisdiction prefix does not create a second identity for the same body.
       const nameAt = proposal.role === "SUB_BODY" ? wordAt(printed.bodyName, proposal.key) : -1;
       const bodyName = nameAt < 0 ? printed.bodyName : printed.bodyName.slice(nameAt);
       const bodyId = proposal.role === "SUB_BODY" ? subBodyId(registered.ocdId, bodyName) : proposal.bodyId;

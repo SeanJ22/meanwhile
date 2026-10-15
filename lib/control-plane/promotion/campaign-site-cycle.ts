@@ -1,16 +1,12 @@
-/** Held campaign-site leads stop being read at the round's dispatch cutoff (`deadlineMs`); HTTP requests retain transport timeouts. */
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
-import { readHeldBytes, type VaultIndex } from "../evidence/read-only-vault.ts";
+import { readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../evidence/read-only-vault.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import type { StagingManifest } from "../scheduler/promotion-tail.ts";
 import {
   candidateEnrichmentUniversesFromHoldings,
   type CandidateEnrichmentAuthorityHoldings,
 } from "../scheduler/providers/candidate-enrichment.ts";
 import {
   MARGINALIA_ROUTE_ID,
+  normalizeMarginaliaSearch,
   projectCampaignSiteChains,
   type CampaignSiteChainReport,
   type CampaignSiteSubject,
@@ -151,44 +147,46 @@ export function campaignSiteCycleLine(report: CampaignSiteCycleReport): string {
     (codes === "" ? "" : ` · refused/deferred by code: ${codes}`);
 }
 
-/** The artifact ids one staged answer cites: the gap's `artifact(s):` line, or the promotion-ready snapshot's own list. */
-function stagedArtifactIds(root: string, entry: StagingManifest["entries"][number]): string[] {
-  const line = entry.unresolved.find((l) => l.startsWith("artifact(s): "));
-  if (line !== undefined) return line.slice("artifact(s): ".length).split(", ").filter((id) => id !== "" && id !== "none recorded");
-  if (entry.snapshotPath === null) return [];
-  try {
-    const snapshot = JSON.parse(readFileSync(join(root, entry.snapshotPath), "utf8")) as { sourceArtifactIds?: unknown };
-    return Array.isArray(snapshot.sourceArtifactIds) ? snapshot.sourceArtifactIds.filter((id): id is string => typeof id === "string") : [];
-  } catch {
-    return [];
-  }
+/** The named rows that exist, by id, in one batched read where the store offers one. */
+export async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>;
+  read(id: string): Promise<{ id: string; value: T } | null> }, ids: readonly string[]): Promise<Map<string, T>> {
+  const unique = [...new Set(ids)];
+  if (unique.length === 0) return new Map();
+  const rows = repo.readMany ? await repo.readMany(unique)
+    : (await Promise.all(unique.map(id => repo.read(id)))).filter((row): row is { id: string; value: T } => row !== null);
+  return new Map(rows.map(row => [row.id, row.value]));
 }
 
-/** Every held Marginalia answer by candidacy, read back from the vault and checked against its sidecar. An unproducible answer is counted, never guessed. */
-export async function heldMarginaliaFromManifest(
-  root: string,
-  manifest: StagingManifest | null,
+/**
+ * The newest vaulted Marginalia answer for each candidacy, whose work item names it. An answer that cannot be read
+ * back or is not the documented search answer is counted, never guessed.
+ */
+export async function heldMarginaliaAnswers(
+  repos: Pick<ControlPlaneRepositories, "workItems">,
   vault: VaultIndex,
   now: string,
-): Promise<{ readonly responses: HeldMarginaliaResponse[]; readonly entries: number; readonly unreadable: number }> {
-  const responses: HeldMarginaliaResponse[] = [];
-  let entries = 0;
+): Promise<{ readonly responses: HeldMarginaliaResponse[]; readonly answers: number; readonly unreadable: number }> {
+  const held = [...vault.byId.values()].filter((artifact) => artifact.methodRouteId === MARGINALIA_ROUTE_ID);
+  const work = await readByIds(repos.workItems, held.flatMap((artifact) => artifact.workItemId ?? []));
+  const newest = new Map<string, HeldVaultArtifact & { readonly attemptId: string }>();
   let unreadable = 0;
-  for (const entry of manifest?.entries ?? []) {
-    if (entry.routeId !== MARGINALIA_ROUTE_ID || entry.disposition !== "INGESTED") continue;
-    entries += 1;
-    for (const id of stagedArtifactIds(root, entry)) {
-      const artifact = vault.byId.get(id);
-      if (artifact === undefined || artifact.attemptId === null) { unreadable += 1; continue; }
-      try {
-        const body = new TextDecoder().decode(await readHeldBytes(artifact));
-        responses.push({ subjectId: entry.subjectId, artifactId: artifact.id, attemptId: artifact.attemptId, retrievedAt: artifact.retrievedAt ?? now, body });
-      } catch {
-        unreadable += 1;
-      }
+  for (const artifact of held) {
+    const subjectId = artifact.workItemId === null ? undefined : work.get(artifact.workItemId)?.subject;
+    if (subjectId === undefined || artifact.attemptId === null) { unreadable += 1; continue; }
+    const prior = newest.get(subjectId);
+    if (prior === undefined || (artifact.retrievedAt ?? "") > (prior.retrievedAt ?? "")) newest.set(subjectId, { ...artifact, attemptId: artifact.attemptId });
+  }
+  const responses: HeldMarginaliaResponse[] = [];
+  for (const [subjectId, artifact] of newest) {
+    try {
+      const body = new TextDecoder().decode(await readHeldBytes(artifact));
+      normalizeMarginaliaSearch(body);
+      responses.push({ subjectId, artifactId: artifact.id, attemptId: artifact.attemptId, retrievedAt: artifact.retrievedAt ?? now, body });
+    } catch {
+      unreadable += 1;
     }
   }
-  return { responses, entries, unreadable };
+  return { responses, answers: held.length, unreadable };
 }
 
 /** The canonical candidacies a site may verify for, from the preloaded promoted pointers; filed domains only, never addresses. */
@@ -201,11 +199,11 @@ export function campaignSiteSubjectsFromHoldings(
   const contacts = (holdings.nj?.contacts as { contacts?: unknown } | undefined)?.contacts;
   const filings: FilingChannels[] = (Array.isArray(contacts) ? contacts : contacts !== null && typeof contacts === "object" ? Object.values(contacts) : [])
     .filter((row): row is FilingChannels => row !== null && typeof row === "object" && typeof (row as { candidacyId?: unknown }).candidacyId === "string");
-  for (const ballot of [holdings.az?.ballot, holdings.nh?.ballot, (holdings.nj?.ballot as { candidacies?: unknown } | undefined)]) {
+  for (const ballot of [...Object.values(holdings.general?.ballots ?? {}), holdings.az?.ballot, holdings.nh?.ballot, holdings.nj?.ballot]) {
     const candidacies = (ballot as { candidacies?: unknown } | undefined)?.candidacies;
     if (!Array.isArray(candidacies)) continue;
-    for (const c of candidacies as { id?: unknown; websiteUrl?: unknown }[]) {
-      if (typeof c.id === "string" && typeof c.websiteUrl === "string") filings.push({ candidacyId: c.id, websiteUrl: c.websiteUrl });
+    for (const c of candidacies as { id?: unknown; websiteUrl?: unknown; provenance?: { sourceUrl?: string | null } }[]) {
+      if (typeof c.id === "string" && typeof c.websiteUrl === "string") filings.push({ candidacyId: c.id, websiteUrl: c.websiteUrl, sourceUrl: c.provenance?.sourceUrl });
     }
   }
   const subjects = campaignSiteSubjects({ universes: Object.values(universes), lineups, filings });

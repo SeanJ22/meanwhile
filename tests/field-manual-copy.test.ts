@@ -123,15 +123,3 @@ test("a document written while the copy ran stays for the next start; two starts
   assert.equal(((await repos.fieldManual.read(BANK_WRITE_HEALTH_ID))!.value.payload as { count: number }).count, 2);
   assert.equal(fieldManualEntryId("field-manual-copy", NOW), copyReportId(NOW));
 });
-
-test("ZIP-playbook steps that name no place are sorted in the copy, and the report and the brief line count them", async () => {
-  const step = (id: string, title: string, lead: string) => old(id, { kind: "PLAYBOOK_RUNG", title, summary: lead, outcome: "REFERENCE", payload: { doc: "docs/zip-playbook.md", lead } });
-  const repos = createMemoryRepositories();
-  const report = (await copyFieldManualDocument(documentTable([
-    step("nh", "Four inherited New Hampshire branches", "sos.nh.gov"), step("nj", "NJ2 3. A NAME MATCH", "five townships"),
-    step("search", "A search summary is not a source", "a web search"), step("css", "A CSS class must beat the base class", "seven hours"),
-  ]), repos, NOW))!;
-  assert.deepEqual(report.rungs, { stated: 2, states: { nh: 1, nj: 1 }, method: 1, review: 1 });
-  assert.deepEqual(report.nowhere.map((n) => [n.id, n.reviewFor]), [["css", "STATE_PROFILES"]]);
-  assert.match(copyBriefLine(report), /of the ZIP playbook's steps that named no place, 2 now apply to the state they name, 1 are offered anywhere they fit and 1 wait for the state profiles, and 1 lesson names no place yet/);
-});

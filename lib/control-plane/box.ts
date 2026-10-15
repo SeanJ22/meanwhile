@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { contentHash } from "./ids.ts";
-import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type ArtifactRecord } from "./repository/types.ts";
+import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type AppendOnlyRepository, type ArtifactRecord } from "./repository/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
 
@@ -46,6 +46,8 @@ export interface BoxFinding {
   /** Durable extraction; built is not a claim of reader delivery. */
   readonly buildResultId?: string;
   readonly refusal: string | null;
+  /** Why a waiting finding has no slot yet, under the slot map it was read with; a newer map looks at it again. */
+  readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string };
 }
 
 /** Missing old evidence is retained by origin; it must not collapse into one empty finding. */
@@ -106,6 +108,18 @@ export type BoxOutcome = { readonly state: "built"; readonly publicationId: stri
   { readonly state: "built"; readonly buildResultId: string } |
   { readonly state: "refused"; readonly reason: string } | { readonly state: "failed"; readonly reason: string };
 
+/** A finding with nowhere to go yet stays in the Box, saying what it waits for. */
+export async function holdBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, waitingFor: NonNullable<BoxFinding["waitingFor"]>, now: string): Promise<void> {
+  for (;;) {
+    const held = await repo.mustRead(id), value = held.value;
+    const lapsed = value.state === "taken" && value.claim !== null && instant(value.claim.expiresAt) <= instant(now);
+    if (value.state !== "waiting" && !lapsed) return;
+    const attempts = lapsed ? [...value.attempts, { ...value.claim!, outcome: "expired" as const, endedAt: now, detail: "Builder lease expired; finding remains available." }] : value.attempts;
+    try { await repo.compareAndSet(id, held.revision, { ...value, state: "waiting", claim: null, attempts, waitingFor }, now); return; }
+    catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
+  }
+}
+
 /** Record the durable extraction or publication before finishing its fenced claim. */
 export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, token: string, outcome: BoxOutcome, now: string): Promise<boolean> {
   instant(now);
@@ -122,6 +136,17 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
     try { await repo.compareAndSet(id, held.revision, next, now); return true; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
+}
+
+/** A finding's field, value and origin: a mid-hunt drop carries them; a Scout finding is read from its saved result. */
+export async function findingFact(results: Pick<AppendOnlyRepository<ScoutResult>, "readWhere">, row: BoxFinding):
+  Promise<{ readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean } | null> {
+  const origin = row.origins.find(o => o.reported) ?? row.origins.find(o => o.kind === "SCOUT" && o.resultKey);
+  if (!origin) return null;
+  if (origin.reported) return { origin, field: origin.reported.field, value: origin.reported.value };
+  const result = (await results.readWhere(origin.resultKey!, ["attemptId"], origin.resultId)).find(row => row.attemptId === origin.resultId);
+  const finding = result?.findings[origin.findingIndex];
+  return finding?.field && finding.value !== undefined && finding.value !== null ? { origin, field: finding.field, value: finding.value } : null;
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
@@ -173,14 +198,26 @@ export async function indexDetectiveFindings(repo: AggregateRepository<BoxFindin
   return indexed;
 }
 
-/** Startup replays are harmless: each old origin is indexed once, including a crash after the source append. */
+/** Indexes only the Scout and Detective results the Box does not already hold; one read of the Box per call. */
 export async function backfillBox(repo: AggregateRepository<BoxFinding>, input: {
   readonly scouts: readonly BoxScoutResult[];
   readonly detectives: readonly BoxDetectiveRecord[];
   readonly artifacts: ReadonlyMap<string, Pick<ArtifactRecord, "canonicalUrl">>;
-}, now: string): Promise<void> {
-  for (const result of input.scouts) await indexScoutFindings(repo, result, now);
-  for (const result of input.detectives) await indexDetectiveFindings(repo, result, input.artifacts, now);
+}, now: string): Promise<number> {
+  const held = new Map<string, number>();
+  for (const row of await repo.list()) for (const origin of row.value.origins) {
+    if (origin.collection === "reported") continue;
+    const key = `${origin.kind}:${origin.resultId}`;
+    held.set(key, (held.get(key) ?? 0) + 1);
+  }
+  let indexed = 0;
+  for (const result of input.scouts) {
+    if ((held.get(`SCOUT:${result.attemptId}`) ?? 0) < result.findings.length) indexed += (await indexScoutFindings(repo, result, now)).length;
+  }
+  for (const result of input.detectives) {
+    if ((held.get(`DETECTIVE:${result.id}`) ?? 0) < result.result.spans.length + result.result.findings.length) indexed += (await indexDetectiveFindings(repo, result, input.artifacts, now)).length;
+  }
+  return indexed;
 }
 
 /** Count once per linked work item, never once per result. Admin joins the canonical Send mapping. */
@@ -198,9 +235,4 @@ export async function boxCounts(repo: AggregateRepository<BoxFinding>): Promise<
   const counts = { waiting: 0, taken: 0, built: 0, refused: 0 };
   for (const row of await repo.list()) counts[row.value.state]++;
   return counts;
-}
-
-/** Off unless `WTP_BOX_ENABLED=1`. */
-export function boxIndexEnabled(environment: Readonly<NodeJS.ProcessEnv> = process.env): boolean {
-  return environment.WTP_BOX_ENABLED === "1";
 }

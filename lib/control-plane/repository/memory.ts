@@ -15,6 +15,7 @@ import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -153,6 +154,8 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     /* `list()` filtered, so the two can never disagree on rows or order. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
+    listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
+      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
     listChangedSince: async (since: string | null, held?: HeldSlots) => {
       const through = changeIso(changeClock.now());
@@ -263,6 +266,11 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
         .flatMap(([, entries]) => entries.map((entry) => jsonCopy(entry.record))),
 
+    readAllNarrowed: async (projection) =>
+      [...partitions.entries()]
+        .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+        .flatMap(([, entries]) => entries.map((entry) => projectRecord(jsonCopy(entry.record), projection))),
+
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
 
     readChangedSince: async (since: string | null, held?: HeldSlots) => {
@@ -358,6 +366,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),
     ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
+    spendWindow: memoryAggregateRepository<SpendWindow>("SpendWindow"),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),

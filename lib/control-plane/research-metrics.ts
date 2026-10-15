@@ -1,7 +1,7 @@
 /** The research lane's numbers: capacity, queue order, funnel, model share, cache hit rate and cost per useful outcome, each with its denominator. */
 
 import { MODELS, canonicalModelId, modelTierFor } from "../models.ts";
-import { cacheMeteringOf, costPortionsByModel, type CostEntry } from "./cost.ts";
+import { cacheMeteringOf, costPortionsByModel, type MeteredCharge } from "./cost.ts";
 import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
@@ -21,7 +21,7 @@ export interface ScoutCapacity {
 
 /** The mean is over measured Scout entries in the window; an unmeasured Attempt is counted beside it, never as zero. */
 export function scoutCapacity(input: {
-  readonly costs: readonly CostEntry[];
+  readonly costs: readonly MeteredCharge[];
   readonly nowIso: string;
   readonly windowHours: number;
   readonly ceilingUsd: number;
@@ -187,7 +187,7 @@ export type PipelineStageReader = () => Promise<readonly { readonly stage: strin
 /** The default reader: the pipeline records nothing yet, and says so. */
 export const NO_PIPELINE_RECORDED: PipelineStageReader = async () => [];
 
-export const PIPELINE_STAGES = ["CONFIRMED", "VERIFIED", "AUDITED", "APPROVED"] as const;
+export const PIPELINE_STAGES = ["VERIFIED", "APPROVED"] as const;
 
 export interface GraduationFunnel {
   readonly stages: readonly FunnelStage[];
@@ -258,7 +258,7 @@ export function modelShareTrend(input: {
  * Roles that also run plain code require recorded model evidence. */
 const LEGACY_MODEL_CACHE_ROLES = new Set(["SCOUT", "ADVERSARIAL_AUDITOR", "ASK"]);
 
-function recordedCacheSaving(entry: CostEntry): number | null {
+function recordedCacheSaving(entry: MeteredCharge): number | null {
   const aggregate = cacheMeteringOf(entry.cost);
   if (aggregate.status !== "MEASURED") return null;
   const portions = costPortionsByModel(entry, "");
@@ -321,7 +321,7 @@ export interface CacheHitRate {
 
 /** Computed from the cost ledger. */
 export function cacheHitRateByRole(input: {
-  readonly costs: readonly CostEntry[];
+  readonly costs: readonly MeteredCharge[];
   readonly results: readonly ScoutResult[];
   /** Rows recorded at or after this instant. Omit for every row. */
   readonly sinceIso?: string;
@@ -422,7 +422,6 @@ export interface CostPerOutcome {
 export function costPerUsefulOutcome(input: {
   readonly results: readonly ScoutResult[];
   readonly candidateCounts: { readonly validated: number; readonly admitted: number } | null;
-  readonly confirmed: number | null;
 }): CostPerOutcome[] {
   const measured = input.results.filter((r) => r.usd !== null);
   const spend = measured.reduce((n, r) => n + (r.usd ?? 0), 0);
@@ -438,7 +437,6 @@ export function costPerUsefulOutcome(input: {
   return [
     per("ROUTE_CANDIDATE", accepted.filter((r) => r.outcome === "ROUTE_CANDIDATE").length),
     per("EVIDENCE_FOUND", accepted.filter((r) => r.outcome === "EVIDENCE_FOUND").length),
-    per("CONFIRMED", input.confirmed),
     per("GRADUATED_ROUTE", input.candidateCounts === null ? null : input.candidateCounts.admitted),
   ];
 }

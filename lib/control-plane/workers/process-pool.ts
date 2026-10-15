@@ -42,18 +42,17 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos; bro
   } };
 }
 import type { DeclaredExecutor, DispatchResult } from "../scheduler/dispatch.ts";
-import type { ModelRequest, ModelTransport, ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
+import type { ModelRequest, ModelTransport } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
+import type { SearchBudget } from "../../hunt/search.ts";
 import type { AutonomousJurisdiction } from "../expansion/spend-holds.ts";
 import type { runNationalPlaceTask } from "../../hunt/place-source-task.ts";
 import type { NationalPlacePublicationInput } from "../../hunt/place-source.ts";
-import type { MissionBlank } from "./mission-brief.ts";
 
 export type NationalPlaceReport = Awaited<ReturnType<typeof runNationalPlaceTask>>[number];
 type NationalPublication = Omit<NationalPlacePublicationInput, "store">;
 type ElectionPublisher = NonNullable<Parameters<typeof runNationalPlaceTask>[0]["publishElection"]>;
 type ScoutDispatch = Parameters<NonNullable<DeclaredExecutor["dispatch"]>>[0];
-type ScoutContext = ReturnType<ScoutExecutorDeps["contextFor"]>;
 type ScoutProcessDispatch = Omit<ScoutDispatch, "clock" | "maturity"> & {
   readonly liveClock: boolean;
   readonly maturity: "GRADUATED" | "UNGRADUATED";
@@ -67,18 +66,14 @@ export interface LeaseWorkerConfig {
   readonly modelEnabled: boolean;
   readonly searchEnabled: boolean;
   readonly ceilingUsd: number;
+  /** Admin's requests in flight at once to one website; absent, the default. */
+  readonly hostConcurrency?: number;
   readonly fundedSubjects: readonly string[];
+  /** How long the pool lets this worker process live; set by the pool, not the caller. */
+  readonly wallMs?: number;
   /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
   readonly nationalZips?: readonly string[];
   readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
-  readonly scoutDispatch?: {
-    readonly input: ScoutProcessDispatch;
-    readonly context?: Omit<ScoutContext, "tools">;
-    readonly contextError?: string;
-    readonly toolNames: readonly string[];
-    readonly toolTimeoutMs?: number;
-    readonly options: Pick<ScoutExecutorDeps, "model" | "bound" | "minRungs" | "role">;
-  };
 }
 
 /** A read or process failure leaves the existing task owed; it is never a claimed success. */
@@ -166,21 +161,15 @@ export async function runLeaseWorkerProcesses(input: {
   readonly capacity: () => number;
   readonly transportFor: (jurisdiction: AutonomousJurisdiction, taskId: string) => ModelTransport;
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
-  readonly reserveEscalation?: ScoutExecutorDeps["reserveEscalation"];
+  /** The paid-search budget the Exa agent lane takes a slot from in this process. */
+  readonly searchBudget?: SearchBudget;
   readonly onStarted?: (pid: number) => void;
   /** A worker process ended: how, in a few words (its exit, or why it was ended). */
   readonly onExited?: (pid: number, why: string) => void;
   /** Read current place priority before the next existing lease is claimed. */
   readonly orderPending?: (ids: readonly string[]) => Promise<readonly string[]>;
-  /** The mission's open blanks related to one government, held in this process. Absent: none. */
-  readonly missionBlanksFor?: (subjectId: string) => readonly MissionBlank[];
   readonly onDispatched?: (result: DispatchResult) => void | Promise<void>;
   readonly route?: { readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown> };
-  readonly scout?: {
-    readonly onStart?: ScoutExecutorDeps["onStart"];
-    readonly onResult?: ScoutExecutorDeps["onResult"];
-    readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown>;
-  };
   readonly national?: {
     readonly publish: (input: NationalPublication) => Promise<unknown>;
     readonly publishElection: ElectionPublisher;
@@ -279,15 +268,15 @@ export async function runLeaseWorkerProcesses(input: {
          results it sent, decides what it finished. Without the callback the send error ended it and dropped those results. */
       if (child.connected) { child.send(payload, () => {}); moved(); }
     };
-    const reservations = new Map<string, Awaited<ReturnType<NonNullable<ScoutExecutorDeps["reserveEscalation"]>>>>();
     const offset = (launched - 1) % ids.length;
-    child.once("spawn", () => { release?.observe?.(child.pid!); input.onStarted?.(child.pid!); child.send({ ...input.config,
+    child.once("spawn", () => { release?.observe?.(child.pid!); input.onStarted?.(child.pid!); child.send({ ...input.config, wallMs: timeoutMs,
       taskIds: [...ids.slice(offset), ...ids.slice(0, offset)] }); moved(); });
     child.on("error", error => { clearTimeout(killTimer); clearTimeout(quietTimer); terminate(error); if (!child.pid) reject(error); });
     child.on("message", async (raw: unknown) => {
       const message = raw as { kind: string; id: string; taskId: string; jurisdiction: AutonomousJurisdiction; body: unknown };
       if (standing !== null && terminating) return;
       moved();
+      if (message.kind === "progress") return;
       if (message.kind === "task-start") {
         current = String(message.body);
         if (standing !== null) inFlight.set(current, child.pid ?? 0);
@@ -306,14 +295,6 @@ export async function runLeaseWorkerProcesses(input: {
         if (!retired) for (const id of message.body as string[]) if (!inFlight.has(id)) pending.delete(id);
         return;
       }
-      if (message.kind === "draw" || message.kind === "release") {
-        const reservation = reservations.get(message.id);
-        if (reservation?.admit) {
-          if (message.kind === "draw") reservation.draw(message.body as number);
-          else { reservation.release(); reservations.delete(message.id); }
-        }
-        return;
-      }
       if (message.id) asked.set(message.id, { kind: message.kind, taskId: message.taskId, at: Date.now() });
       try {
         let body: unknown;
@@ -321,23 +302,11 @@ export async function runLeaseWorkerProcesses(input: {
           const requested = (message.body as readonly string[]).filter(id => pending.has(id) && !inFlight.has(id));
           if (standing?.retireAfterMs !== undefined && Date.now() - startedAt >= standing.retireAfterMs) { retired = true; body = []; }
           else body = input.orderPending ? await input.orderPending(requested) : requested;
-        } else if (message.kind === "mission-blanks") {
-          body = input.missionBlanksFor?.(String(message.body)) ?? [];
         } else if (message.kind === "route-tool") {
           if (!input.route) throw new Error("ROUTE_PROCESS_BROKER_UNAVAILABLE");
           const request = message.body as { name: string; args: readonly unknown[] };
           body = await input.route.tool(request.name, request.args);
-        } else if (message.kind === "scout-tool") {
-          if (!input.scout) throw new Error("SCOUT_PROCESS_BROKER_UNAVAILABLE");
-          const request = message.body as { name: string; args: readonly unknown[] };
-          body = await input.scout.tool(request.name, request.args);
-        } else if (message.kind === "scout-start") {
-          await input.scout?.onStart?.(message.body as Parameters<NonNullable<ScoutExecutorDeps["onStart"]>>[0]);
-          body = null;
-        } else if (message.kind === "scout-result") {
-          const request = message.body as { result: Parameters<NonNullable<ScoutExecutorDeps["onResult"]>>[0]; artifacts: Parameters<NonNullable<ScoutExecutorDeps["onResult"]>>[1] };
-          body = await input.scout?.onResult?.(request.result, request.artifacts);
-        } else if (message.kind === "scout-dispatch-result" || message.kind === "route-dispatch-result") {
+        } else if (message.kind === "route-dispatch-result") {
           const result = message.body as DispatchResult;
           results.push(result);
           for (const id of ids) pending.delete(id);
@@ -400,12 +369,9 @@ export async function runLeaseWorkerProcesses(input: {
           const search = input.searchFor?.(message.jurisdiction.subjectId);
           if (!search) throw new Error("PAID_SEARCH_DISABLED");
           body = await search(message.body as Parameters<NonNullable<ScoutToolContext["search"]>>[0]);
-        } else if (message.kind === "escalation") {
-          const reserve = input.reserveEscalation;
-          if (!reserve) throw new Error("SCOUT_ESCALATION_RESERVATION_UNAVAILABLE");
-          const reserved = await reserve(message.body as Parameters<typeof reserve>[0]);
-          if (reserved.admit) reservations.set(message.id, reserved);
-          body = reserved.admit ? { admit: true, reservedUsd: reserved.reservedUsd, reservationId: message.id } : reserved;
+        } else if (message.kind === "search-take" || message.kind === "search-done") {
+          if (!input.searchBudget) throw new Error("PAID_SEARCH_DISABLED");
+          body = message.kind === "search-take" ? await input.searchBudget.take(String(message.body)) : await input.searchBudget.done(String(message.body));
         } else throw new Error("WORKER_IPC_OPERATION_UNKNOWN");
         reply({ id: message.id, body });
       } catch (error) {
@@ -432,7 +398,6 @@ export async function runLeaseWorkerProcesses(input: {
       if (child.pid) input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
       const finish = () => {
         if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
-        for (const reserved of reservations.values()) if (reserved.admit) reserved.release();
         if (terminationError) reject(terminationError);
         else if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
       };
@@ -479,8 +444,7 @@ export async function runLeaseWorkerProcesses(input: {
   for (const { ids, error } of failures) {
     for (const id of ids) {
       if (!pending.delete(id)) continue;
-      const obligationId = input.config.scoutDispatch?.input.obligation.obligation.id ??
-        input.config.routeDispatch?.input.obligation.obligation.id ?? id;
+      const obligationId = input.config.routeDispatch?.input.obligation.obligation.id ?? id;
       const result = workerDispatchFailure(id, error, obligationId, error instanceof WorkerAdmissionRefusal);
       results.push(result);
       await input.onDispatched?.(result);

@@ -395,8 +395,8 @@ export function buildWindowDigest(run: WindowRunRecord): string {
   out.push("");
   out.push(`- ${p.items} pipeline item(s); ${p.refused} of ${p.items} carry at least one refused offer (a refused offer never closes an item)`);
   out.push(
-    `- by furthest stage: SCOUTED ${p.byStage.SCOUTED}, CONFIRMED ${p.byStage.CONFIRMED}, VERIFIED ${p.byStage.VERIFIED}, ` +
-      `AUDITED ${p.byStage.AUDITED}, APPROVED_FOR_PROMOTION ${p.byStage.APPROVED_FOR_PROMOTION} — each of ${p.items}`,
+    `- by furthest stage: SCOUTED ${p.byStage.SCOUTED}, VERIFIED ${p.byStage.VERIFIED}, ` +
+      `APPROVED_FOR_PROMOTION ${p.byStage.APPROVED_FOR_PROMOTION} — each of ${p.items}`,
   );
   out.push(`- **promoted: ${run.promoted}** (shadow)`);
   for (const t of p.byRecordClass) {
@@ -411,7 +411,7 @@ export function buildWindowDigest(run: WindowRunRecord): string {
   out.push("## CONTROL SCORES");
   out.push("");
   if (run.controls === null) {
-    out.push("- NOT MEASURED: this window's batch carried no injected controls, so recall, the false-absence rate and the false-presence rate cannot be stated. An unmeasured score refuses AUDITED for every item.");
+    out.push("- NOT MEASURED: this window's batch carried no injected controls, so recall, the false-absence rate and the false-presence rate cannot be stated.");
   } else {
     const c = run.controls;
     out.push(`- recall ${c.recalled} of ${c.knownPresentCount}; false absences ${c.falseAbsences} of ${c.knownPresentCount}; false presences ${c.falsePresences} of ${c.knownAbsenceCount}; unobserved ${c.unobserved}`);

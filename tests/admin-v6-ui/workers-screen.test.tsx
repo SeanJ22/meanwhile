@@ -1,9 +1,3 @@
-/**
- * Workers and Now screens show the real `admin-v6/workers@1` reading.
- *
- * The section bodies below are production-shaped readings for three scopes, served to `LiveSync`
- * by a fake fetch.
- */
 import assert from "node:assert/strict";
 import { mock, test } from "node:test";
 import { createElement as h } from "react";
@@ -26,8 +20,7 @@ import { readV6WorkersSources, v6WorkersSection } from "../../lib/control-plane/
 import { createMemoryRepositories } from "../../lib/control-plane/repository/memory.ts";
 import { liveCycleHeartbeat } from "../../lib/control-plane/runner-standing.ts";
 import { runDbApply } from "../../scripts/db-apply.mts";
-
-/* -------------------------------------------------- the saved readback */
+import { CandidateCard } from "../../components/ballot/candidate-card.tsx";
 
 const READ_AT = "2026-09-28T22:12:27.388Z";
 const Z85635 = "geo:az.zcta.85635";
@@ -79,8 +72,6 @@ function section(scope: string, tries = 9, withJobs: { count: number; system: nu
     missingParts: MISSING(scope) };
 }
 
-/* ------------------------------------------------------------- the page */
-
 const SCOPES: readonly (readonly [string, MwScope, string])[] = [
   ["us", { kind: "all" }, "United States"],
   ["st:az", { kind: "state", state: "az" }, "Arizona"],
@@ -129,7 +120,35 @@ async function livePage(scopeKey: string) {
   return { b, sync };
 }
 
-/* ---------------------------------------------------------------- tests */
+test("Workers displays the runner's merged states and every skipped state's reason beside the ballot publication control", async () => {
+  const sync = new LiveSync({ scope: "us", schedule: () => () => {}, fetch: async () => ({ status: 200, json: async () => ({
+    contract: "admin-v6/publication@1", scope: "us", revision: "fixture-ballots", asOf: READ_AT, missingParts: [],
+    data: { total: 1, counts: [], latestAttemptFailing: 0, notVisible: [], notVisibleHidden: 0,
+      ballotPublication: { kind: "BALLOT_PUBLICATION", inputHash: "a".repeat(64), at: READ_AT, status: "PUBLISHED", versionId: "fixture",
+        merged: ["ak.json", "tx.json"], skipped: [{ file: "ca.json", reason: "The source receipt is missing." },
+          { file: "nd.json", reason: "The source records a blocked response." }],
+        heldContests: [{ state: "TX", contestId: "fixture-governor", title: "Governor", reason: "The official candidate list hasn't been fully checked." },
+          { state: "TX", contestId: "fixture-house", title: "State Representative, District 7", reason: "The complete candidate list lacks matching official source evidence." },
+          { state: "AK", contestId: "fixture-ak", title: "U.S. Representative", reason: "The official candidate list hasn't been fully checked." }], reason: null } },
+  }) }) });
+  const p = pulse(null);
+  sync.onPulse({ ...p, v6: { ...p.v6, sections: { publication: { contract: "admin-v6/publication@1", href: "/api/admin/v6/publication", revision: "fixture-ballots" } } } });
+  await settle(sync);
+  const html = page(sync, { kind: "all" }, "us", "workers");
+  assert.match(text(html), /Merged: AK, TX/);
+  assert.match(text(html), /Skipped CA: The source receipt is missing\./);
+  assert.match(text(html), /Skipped ND: The source records a blocked response\./);
+  assert.match(text(html), /Publish ballots/);
+  assert.match(text(html), /Held contests in TX \(2\).*Governor: The official candidate list hasn't been fully checked\..*State Representative, District 7: The complete candidate list lacks matching official source evidence\./);
+  assert.match(text(html), /Held contests in AK \(1\).*U\.S\. Representative: The official candidate list hasn't been fully checked\./);
+});
+
+test("a candidate website's displayed host is lowercase while its filed link is preserved", () => {
+  const url = "https://ALICE.Example.org/Campaign";
+  const html = renderToStaticMarkup(h(CandidateCard, { name: "Fixture Alice", partyLine: "", card: null, links: null, filedSiteUrl: url }));
+  assert.match(html, /href="https:\/\/ALICE.Example.org\/Campaign"/);
+  assert.match(text(html), /alice.example.org \(as filed\)/);
+});
 
 test("parent cycle metadata reaches the existing Workers round through bounded reads and live sync", async () => {
   mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });

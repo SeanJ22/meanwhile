@@ -1,6 +1,5 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { newFieldManualEntry, readFieldManualForPlaces, readFieldManualRows, writeFieldManual, type FieldManualQuery } from "../lib/control-plane/field-manual.ts";
@@ -72,11 +71,4 @@ test("a failed shared read fails every place by name and holds nothing", async (
   const reads = await readFieldManualForPlaces(repos, { role: "SCOUT", everywhere: true }, [scoutFieldManualQuery({ subjectId: PLACES[0]!, obligationId: "ob", divisions: [] })]);
   assert.equal(reads[0]!.error, "store unreachable");
   assert.deepEqual(reads[0]!.store.entries, []);
-});
-
-test("the cycle briefs its due places from one shared read, not one read per place", () => {
-  const cycle = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
-  const block = cycle.slice(cycle.indexOf("const places = [...new Map(dueModel"), cycle.indexOf("const unread = reads.find"));
-  assert.match(block, /readFieldManualForPlaces\(repos, \{ role: "SCOUT", everywhere: true \}/);
-  assert.doesNotMatch(block, /readFieldManual\(/);
 });

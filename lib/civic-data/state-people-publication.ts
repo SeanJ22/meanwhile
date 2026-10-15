@@ -7,14 +7,37 @@ import { processRegisteredRoutineCandidate } from "./promotion.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { readManualProjectionPrior } from "./manual-projections.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
+import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-capture-vault.ts";
 
+/** One page as read, its text in memory for parsing and verification. */
 export interface StatePeopleAcquisition {
   readonly requestedUrl:string; readonly finalUrl:string; readonly httpStatus:number; readonly body:string; readonly retrievedAt:string;
   readonly rawHash?:string;
-  readonly artifactId?:string;
-  readonly vaultKey?:string;
   readonly sourceCheck?: NonNullable<import("./types.ts").RetrievalEvidence["sourceCheck"]>;
   readonly extractedFrom?: {readonly requestedUrl:string;readonly finalUrl:string;readonly sha256:string;readonly member:string};
+}
+/** What a candidate keeps of a page: its metadata and where its exact text lives in the vault. */
+export type StatePeopleCapture = Omit<StatePeopleAcquisition,"body"> & { readonly capture: RawCaptureRef };
+
+export async function holdPeopleCaptures(vault:EvidenceStore,sourceId:string,pages:readonly StatePeopleAcquisition[]):Promise<StatePeopleCapture[]> {
+  const held:StatePeopleCapture[]=[];
+  for (const {body,...page} of pages) held.push({...page,capture:await holdRawCapture(vault,sourceId,body,/^\s*[{[]/.test(body) ? "application/json" : "text/html")});
+  return held;
+}
+export const capturedText = (vault:EvidenceStore,row:StatePeopleCapture):Promise<string> => readRawCaptureText(vault,row.capture);
+/** A held candidate's captures, newest per page. */
+export function priorPeopleCaptures(payload:unknown):StatePeopleCapture[] {
+  const captures=(payload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [];
+  const newest=new Map<string,StatePeopleCapture>();
+  for (const row of captures) {
+    const key=`${row.finalUrl}|${row.extractedFrom?.member ?? ""}`, seen=newest.get(key);
+    if (!seen || seen.retrievedAt < row.retrievedAt) newest.set(key,row);
+  }
+  return [...newest.values()];
 }
 const hash = (value:unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 interface StatePeopleEvidence {
@@ -22,24 +45,24 @@ interface StatePeopleEvidence {
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
 }
 
-export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];releaseId:string;now:string} & StatePeopleEvidence): RoutineCandidate {
+export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];releaseId:string;now:string} & StatePeopleEvidence): RoutineCandidate {
   const jurisdiction = `US-${input.state.toUpperCase()}` as const;
   const scope = `${jurisdiction}:openstates-people:v1`, sourceId = "plural-openstates";
-  const acquiredAt = input.acquisitions.map(row=>row.retrievedAt).sort().at(-1) ?? input.now;
-  const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt))[0];
+  const acquiredAt = input.captures.map(row=>row.retrievedAt).sort().at(-1) ?? input.now;
+  const sourceCheck = input.captures.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt))[0];
   const readModel: OfficialStateLegislatorReadModel = JSON.parse(JSON.stringify({formatVersion:1,sourceId,jurisdiction,term:input.releaseId,generatedAt:acquiredAt,roster:input.roster}));
   const excludedFacts = [...(input.excludedFacts ?? []),...(input.gaps ?? []).map(gap=>({
     key:`${gap.sourceUrl}:native-record:${hash(gap.detail).slice(0,16)}`,code:gap.detail.split(":")[0],detail:gap.detail,record:{sourceUrl:gap.sourceUrl},
   }))];
-  const normalizedPayload = {releaseId:input.releaseId,acquisitions:input.acquisitions.map(({body,sourceCheck:_sourceCheck,...row})=>({...row,textHash:hash(body)})),excludedFacts};
-  // Keep the exact saved bytes in the durable candidate so parser changes can replay them.
-  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,acquisitions:input.acquisitions,
+  const normalizedPayload = {releaseId:input.releaseId,captures:input.captures.map(({sourceCheck:_sourceCheck,...row})=>row),excludedFacts};
+  // The exact saved bytes stay in the vault, so parser changes can replay them.
+  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,
     endedMemberships:input.roster.endedMemberships ?? [],gaps:input.gaps ?? [],excludedFacts}));
   const rawHash = hash(normalizedPayload), normalizedHash = hash(readModel);
   const people = input.roster.officeholders;
   return {id:`cv-${hash(`${sourceId}|${scope}|${rawHash}|${normalizedHash}|${hash(sourceCheck ?? null)}`).slice(0,32)}`,sourceId,recordClass:"STATE_LEGISLATOR",scope,
-    retrieval:{succeeded:input.acquisitions.length>0 && input.acquisitions.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.body.length>0),
-      requestedUrl:input.acquisitions[0]?.requestedUrl ?? "",finalUrl:input.acquisitions[0]?.finalUrl ?? null,httpStatus:input.acquisitions[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash,...(sourceCheck ? {sourceCheck} : {})},
+    retrieval:{succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),
+      requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash,...(sourceCheck ? {sourceCheck} : {})},
     normalization:{succeeded:true,parserVersion:PLURAL_PARSER_VERSION,schemaVersion:"state-people/3",normalizedHash,normalizedPayloadHash:hash(payload),
       inputRecords:people.length,outputRecords:people.length,droppedRecords:0,missingRequiredFields:people.some(row=>!row.id || !row.name || !row.officeTitle || !row.provenance?.sourceUrl)?["person/office/source"]:[]},
     identities:people.map(row=>({subjectId:row.id,jurisdiction,identifiers:{person_id:row.personId ?? row.id},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,office:row.officeTitle,chamber:row.chamber})),
@@ -52,7 +75,7 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
     excludedFacts,normalizedPayload:payload,readModel};
 }
 
-export async function publishStatePeople(input: {store:RoutineDataStore;state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];sourceId?:string;releaseId:string;now:string;confirmUnchanged?:boolean} & StatePeopleEvidence) {
+export async function publishStatePeople(input: {store:RoutineDataStore;vault:EvidenceStore;state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];sourceId?:string;releaseId:string;now:string;confirmUnchanged?:boolean} & StatePeopleEvidence) {
   const jurisdiction = `US-${input.state.toUpperCase()}` as const;
   const prior = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
   if (prior.kind === "STORE_UNREACHABLE") throw new Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
@@ -85,21 +108,29 @@ export async function publishStatePeople(input: {store:RoutineDataStore;state:st
     ...(person.memberships ?? []).map(row=>row.sourceUrl),...(person.offices ?? []).map(row=>row.sourceUrl),
     ...Object.values(person.fieldSources ?? {}).map(row=>row.sourceUrl)]),
     ...(roster.endedMemberships ?? []).map(row=>row.sourceUrl)]);
-  const captureUrl = (row:StatePeopleAcquisition) => {
+  const captureUrl = (row:StatePeopleCapture) => {
     const revision=/^https:\/\/codeload\.github\.com\/openstates\/people\/zip\/([a-f0-9]{40})$/.exec(row.requestedUrl)?.[1];
     return revision && row.extractedFrom ? `https://raw.githubusercontent.com/openstates/people/${revision}/${row.extractedFrom.member}` : row.finalUrl;
   };
-  const captured=new Set(input.acquisitions.map(captureUrl));
-  const priorAcquisitions=(priorCandidate?.candidate.normalizedPayload as {acquisitions?:StatePeopleAcquisition[]}|undefined)?.acquisitions ?? [];
-  const acquisitions=[...input.acquisitions,...priorAcquisitions.filter(row=>{
+  const read=await holdPeopleCaptures(input.vault,input.sourceId ?? "plural-openstates",input.acquisitions);
+  const captured=new Set(read.map(captureUrl));
+  const priorCaptures=priorPeopleCaptures(priorCandidate?.candidate.normalizedPayload);
+  const captures=[...read,...priorCaptures.filter(row=>{
     const url=captureUrl(row);
     if (!referenced.has(url) || captured.has(url)) return false;
     captured.add(url); return true;
   })];
   const carriedPortraitFacts = priorCandidate?.candidate.excludedFacts?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
-  const candidate = statePeopleCandidate({...input,roster,acquisitions,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
+  const candidate = statePeopleCandidate({...input,roster,captures,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
-    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged});
+    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault});
+  if (outcome.promoted) {
+    const ballotPrior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
+    const ballots = Object.values((ballotPrior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})
+      .filter(ballot => ballot.election.state === input.state.toUpperCase());
+    if (ballots.length && ballotPrior) await publishOfficialBallotCandidacies({ store: input.store, now: input.now, ballots,
+      sourceReceipt: ballotPrior.sourceReceipt, statePeople: new Map([[jurisdiction, roster]]) });
+  }
   return {candidate,outcome};
 }
 

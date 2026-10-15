@@ -7,9 +7,8 @@ import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
 import { execFile } from 'node:child_process';
 import type { ScoutResult } from '../scheduler/scout-result.ts';
 import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
-import { installedAdapters,installedAdapterGuides } from '../scheduler/scout-adapters.ts';
-import {hasUntriedAdapter} from './detective.ts';
-import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
+import { installedAdapters,installedAdapterGuides,installedAdapterVersion } from '../scheduler/scout-adapters.ts';
+import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
 import { MODELS, MODEL_TIERS } from '../../models.ts';
 import { recordCost } from '../repository/coordinator.ts';
 import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
@@ -146,6 +145,32 @@ const ENGINEER_BOOKKEEPING:FieldManualQuery={role:'ENGINEER',everywhere:true,
 export function engineerJob(result:Pick<ScoutResult,"subjectId"|"recordClass">,platform:string):FieldManualQuery {
   const place=result.subjectId.split('#')[0]!;
   return {role:'ENGINEER',platform,recordClass:result.recordClass,subjectId:result.subjectId,...(place.startsWith('ocd-division/')?{ocdIds:[place]}:{})};
+}
+
+const ARCHIVE_HOST = /^(?:web\.archive\.org|(?:www\.)?archive\.(?:today|is|ph|vn|fo|li|md))$/i;
+
+/** True when an installed adapter the result named, or one the Engineer built for its attempt or source, was never run on it. */
+function hasUntriedAdapter(latest:ScoutResult,installed:readonly string[],knowledge:readonly FieldManualEntry[]) {
+  const description = [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase();
+  const sourceOrigin=(value:unknown)=>{
+    if(typeof value!=='string')return null;
+    try {const url=new URL(value);return ['https:','http:'].includes(url.protocol) && !ARCHIVE_HOST.test(url.hostname)?url.origin:null;}catch{return null;}
+  };
+  const origins=new Set([...(latest.candidates??[]).map(c=>c.url),...(latest.rungs??[]).filter(r=>r.tool!=='search').map(r=>r.target)].map(sourceOrigin).filter(Boolean));
+  const learned=new Set(knowledge.flatMap(entry=>{
+    const payload=entry.payload as {sourceAttemptId?:string;files?:unknown;sourceUrls?:unknown}|null;
+    if(!['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER'].includes(entry.kind) || !Array.isArray(payload?.files))return [];
+    const sameAttempt=Boolean(latest.attemptId && payload.sourceAttemptId===latest.attemptId);
+    const sameSourceClass=entry.recordClasses.includes(latest.recordClass?.toLowerCase()) && Array.isArray(payload.sourceUrls) &&
+      payload.sourceUrls.some(value=>{const origin=sourceOrigin(value);return origin!==null && origins.has(origin);});
+    if(!sameAttempt && !sameSourceClass)return [];
+    return payload.files.flatMap(path=>{
+      const name=typeof path==='string'?/^lib\/sources\/platform-adapters\/([a-z0-9-]+)\.(?:ts|mjs)$/.exec(path)?.[1]:undefined;
+      return name?[name]:[];
+    });
+  }));
+  return installed.some(name=>(learned.has(name) || description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description))) &&
+    !(latest.rungs??[]).some(r=>r.tool==='run_adapter' && r.observed.includes(name+'@'+installedAdapterVersion(name))));
 }
 
 /** Consume needs-an-adapter work from the existing Scout results, saving the published route in the bank. */

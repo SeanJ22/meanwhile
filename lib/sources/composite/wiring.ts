@@ -7,8 +7,11 @@ import {
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
 import { makeMunicodeSource } from "../municode/index.ts";
+import { makeGranicusSource } from "../granicus/index.ts";
+import { makeNovusAgendaSource } from "../novusagenda/index.ts";
 import { makeEscribeSource } from "../escribe/index.ts";
 import { makeBoardDocsSource } from "../boarddocs/index.ts";
+import { makePrimeGovSource } from "../primegov/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeClerksBoardsSource } from "../clerksboards/index.ts";
 import { makeCivicClerkSource } from "../civicclerk/index.ts";
@@ -21,6 +24,7 @@ import { makeSchedulePageSource } from "../schedulepage/index.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../official-page-events/index.ts";
 import { makeDocumentListingSource } from "../document-listing/index.ts";
 import { makeSuiteOneSource } from "../suiteone/index.ts";
+import { makeSwagitSource } from "../swagit/index.ts";
 import {
   makeLegistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -42,11 +46,9 @@ function legistarReporting(rows: BodySourceWiring[], fetchImpl?: typeof fetch): 
   const clients = legistarClientsFromWiring(rows);
   return {
   ...makeLegistarSource(clients, fetchImpl),
-  /* @accounting-delegated-to lib/sources/legistar/index.ts` */
+  /** @accounting-delegated-to lib/sources/legistar/index.ts */
   normalizeWithDrops(raw, now) {
-    // Returned as the adapter branded it. A second branding here would judge the same pass twice and could
-    // disagree with the first (it would not pass the adapter's `countedButProduced` for kept placeless
-    // meetings); the drop shapes already agree, so nothing needs translating.
+    // Preserve the adapter's accounting, including kept placeless meetings, instead of counting the pass twice.
     return legistarNormalizeWithDrops(raw, now ?? new Date(), clients);
   },
   };
@@ -58,6 +60,7 @@ export const CAPABILITIES: Array<{
   types: AgendaSourceType[];
   make: ChildFactory;
 }> = [
+  { name: "granicus", types: ["GRANICUS"], make: (rows, fetchImpl) => makeGranicusSource(rows, fetchImpl) as ReportingMeetingSource<unknown> },
   {
     name: "legistar",
     types: ["LEGISTAR"],
@@ -92,8 +95,8 @@ export const CAPABILITIES: Array<{
   {
     name: "civicclerk",
     types: ["CIVICCLERK"],
-    make: (rows) =>
-      makeCivicClerkSource(rows) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) =>
+      makeCivicClerkSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "municode", types: ["MUNICODE"],
@@ -106,6 +109,18 @@ export const CAPABILITIES: Array<{
   {
     name: "boarddocs", types: ["BOARDDOCS"],
     make: (rows, fetchImpl) => makeBoardDocsSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "primegov", types: ["PRIMEGOV"],
+    make: (rows, fetchImpl) => makePrimeGovSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "novusagenda", types: ["NOVUSAGENDA"],
+    make: (rows, fetchImpl) => makeNovusAgendaSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "swagit", types: ["SWAGIT"],
+    make: (rows, fetchImpl) => makeSwagitSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "clerksboards",

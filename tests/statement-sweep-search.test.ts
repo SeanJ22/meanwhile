@@ -5,12 +5,12 @@ import {
   DEFAULT_SWEEP_SCHEDULE, SWEEP_QUERY_KINDS, searchCoversTopic, searchSweepPeople, sweepDueAt, sweepIntervalDays,
   sweepIsDue, validSweepSchedule, daysToElection,
 } from "../lib/corpus/statement-sweep-search.ts";
-import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
+import type { HuntSearch } from "../lib/hunt/search.ts";
 
 const topics = [{ id: "water", label: "water" }, { id: "jobs", label: "jobs" }];
-const ok: ScoutSearch = async () => ({
-  hits: [{ url: "https://guide.example/county", title: "County voter guide", provider: "brave" }],
-  requestCount: 1, bytesFetched: 0, providersUsed: ["brave"], errors: [],
+const ok: HuntSearch = async () => ({
+  provider: "brave", hits: [{ url: "https://guide.example/county", title: "County voter guide", provider: "brave" }],
+  charges: [{ provider: "brave", host: "api.search.brave.com", usd: 0.005, bytes: 0, deep: false }], errors: [],
 });
 
 test("every person gets the same queries on every topic", async () => {
@@ -24,7 +24,7 @@ test("every person gets the same queries on every topic", async () => {
 });
 
 test("a refused query is named and leaves the topic open", async () => {
-  const refuse: ScoutSearch = async () => ({ hits: [], requestCount: 0, bytesFetched: 0, providersUsed: [], errors: ["budget spent"] });
+  const refuse: HuntSearch = async () => ({ provider: null, hits: [], charges: [], errors: ["budget spent"] });
   const [r] = await searchSweepPeople([{ subjectId: "a", name: "Ana Reyes" }], refuse, topics);
   assert.equal(r.complete, false);
   assert.equal(searchCoversTopic(r, "water"), false);

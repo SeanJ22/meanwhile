@@ -13,8 +13,7 @@
  * is an ingest-volume one: every agenda PDF for every body it watches. Git
  * keeps every version of every one of them forever, so the size is not the
  * current number — it is that number times every re-fetch, and it cannot be
- * undone afterwards. `docs/tracker.csv` is already 985 KB and `docs/state.md`
- * is 758 KB, and those are TEXT.
+ * undone afterwards.
  *
  * ## What content-addressed means here, and what it protects
  *

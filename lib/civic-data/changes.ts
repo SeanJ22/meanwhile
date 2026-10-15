@@ -368,7 +368,6 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return Object.values(object(root.ballots) ?? {}).flatMap(value => {
         const ballot = object(value) ?? {};
         const lineup = object(ballot.generalLineup);
-        const analyses = object(ballot.measureAnalyses);
         const reconciliation = object(ballot.lineupReconciliation);
         return [
           ...keyed("contest", array(ballot.contests), ["id"]),
@@ -382,7 +381,6 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
             return { key: `absence:${identity || `row-${index}`}`, record };
           }),
           ...keyed("certified-lineup", array(lineup?.contests), ["contestId"]),
-          ...keyed("measure-analysis", array(analyses?.analyses), ["contestId"]),
           ...keyed("filing-candidacy", array(ballot.filingCandidacies), ["id"]),
           ...keyed("lineup-reconciliation", array(reconciliation?.rows), ["cardKey", "canonicalCandidacyId"]),
           ...keyed("removal", array(ballot.removals), ["id"]),

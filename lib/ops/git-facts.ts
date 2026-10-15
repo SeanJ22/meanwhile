@@ -18,11 +18,8 @@ function fileSignature(paths: readonly string[]): string | null {
   } catch { return null; }
 }
 
-function headDependencies(cwd: string, gitDirectory: string): string[] {
+function headDependencies(cwd: string, gitDirectory: string, commonDirectory: string): string[] {
   const commonFile = join(gitDirectory, "commondir");
-  let commonDirectory = gitDirectory;
-  try { commonDirectory = resolve(gitDirectory, readFileSync(commonFile, "utf8").trim()); }
-  catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
   const paths = [commonFile, join(commonDirectory, "packed-refs"), join(commonDirectory, "config"),
     join(gitDirectory, "config.worktree"), join(commonDirectory, "reftable", "tables.list"), join(gitDirectory, "reftable", "tables.list")];
   let ref = join(gitDirectory, "HEAD");
@@ -49,8 +46,8 @@ export function headSha(cwd: string = process.cwd()): string | null {
       fileSignature(cachedHead.paths) === cachedHead.signature) return cachedHead.sha;
   cachedHead = null;
   try {
-    const [gitDirectory] = execFileSync("git", ["rev-parse", "--absolute-git-dir"], { cwd, encoding: "utf8" }).trim().split("\n");
-    const paths = headDependencies(cwd, gitDirectory);
+    const [gitDirectory, commonDirectory] = execFileSync("git", ["rev-parse", "--absolute-git-dir", "--path-format=absolute", "--git-common-dir"], { cwd, encoding: "utf8" }).trim().split("\n");
+    const paths = headDependencies(cwd, gitDirectory, commonDirectory);
     const signature = fileSignature(paths);
     const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd, encoding: "utf8" }).trim();
     if (signature !== null && signature === fileSignature(paths)) cachedHead = { cwd, environment, paths, signature, sha };

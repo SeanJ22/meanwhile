@@ -1257,7 +1257,6 @@ async function answerWithSettings(request: Request) {
         absences: ballot.absences,
         positions: ballot.positions,
         measureSummary: ballot.measureSummary,
-        measureAnalysis: ballot.measureAnalysis,
         measureProvisions: ballot.measureProvisions,
         nominees: ballot.nominees,
       });
@@ -1277,11 +1276,6 @@ async function answerWithSettings(request: Request) {
         });
         denominators.partyConflictRecordsHeld = 2;
       }
-      if (ballotRecord.kind === "MEASURE" && ballot.analysisLoaderFailed) {
-        denominators.measureAnalysisLoaderFailures = 1;
-        gaps.push({ whose: "OURS", statement: "We couldn't load the official explanation of this ballot measure. Please try again in a moment." });
-      }
-
       if (retrieved.records.length === 0) {
         gaps.push({
           whose: "OURS",

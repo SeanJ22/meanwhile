@@ -5,7 +5,6 @@ import { divisionIdsForZipArea } from "../ballot/zip-divisions.ts";
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
-import { type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { readStanceTopics } from "../stances/read.ts";
 import type { StanceTopic } from "../stances/topics.ts";
@@ -81,8 +80,6 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
 
 export interface BallotForDivisions {
   loaderFailures: string[];
-  analysisLoaderFailed: boolean;
-  measureAnalysis: (contestId: string) => MeasureAnalysis | null;
   set: BallotSet | null;
   contests: Contest[];
   absences: BallotAbsence[];
@@ -104,8 +101,6 @@ export interface BallotForDivisions {
 
 const EMPTY: BallotForDivisions = {
   loaderFailures: [],
-  analysisLoaderFailed: false,
-  measureAnalysis: () => null,
   set: null,
   contests: [],
   absences: [],
@@ -129,13 +124,10 @@ export async function loadBallotForDivisions(
       const candidate = source.normalize(await source.fetch());
       const hit = { contests: candidate.contests, absences: candidate.absences };
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
-      const analyses = candidate.measureAnalyses;
       const lineup = candidate.generalLineup ?? null;
       const measureRecords = measureRecordsForBallot(candidate);
       return {
         loaderFailures,
-        analysisLoaderFailed: false,
-        measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,
         set: candidate,
         contests: hit.contests,
         absences: hit.absences,

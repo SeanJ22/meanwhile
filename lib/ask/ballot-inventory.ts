@@ -11,7 +11,6 @@ import { bindNamedEntity, COMMON_QUESTION_NOUNS } from "../routing/named-entity.
 import { formatDateLong } from "../text/format-date.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
-import type { MeasureAnalysis } from "../ballot/analyses.ts";
 import { readerContestScope } from "../ballot/reader-scope.ts";
 import type { CandidatePublicationDate, CandidateSourceClass } from "../candidates/corpus.ts";
 
@@ -219,7 +218,6 @@ export function ballotSubject(record: BallotSubjectRecord): EvidenceSubject {
 }
 
 export interface BallotRetrievalDeps {
-  measureAnalysis?: (contestId: string) => MeasureAnalysis | null;
   set: BallotSet;
   contests: readonly Contest[];
   absences: readonly BallotAbsence[];
@@ -312,10 +310,6 @@ export function ballotRecordsFor(
     const measures = deps.set.measures.filter((m) => m.contestId === record.contestId);
     denominators.measureRecordsForThisQuestion = measures.length;
     for (const measure of measures) records.push(...measureRecords(measure));
-    const analysis = deps.measureAnalysis?.(record.contestId);
-    if (analysis?.text && analysis.extraction !== "failed") records.push({ kind: "MEASURE_ANALYSIS", id: `${analysis.contestId}#analysis`, text: analysis.text, sourceUrl: analysis.analysisUrl, sourceOrg: analysis.sourceOrg, retrievedAt: analysis.retrievedAt });
-    denominators.readableMeasureAnalyses = analysis?.text && analysis.extraction !== "failed" ? 1 : 0;
-
     const summary = deps.measureSummary?.(record.contestId) ?? null;
     if (summary) {
       records.push({

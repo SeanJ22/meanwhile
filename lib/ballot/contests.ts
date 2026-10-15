@@ -29,7 +29,6 @@ export function ballotForDivisions(set: BallotSet, divisions: readonly string[])
     ...(set.measureRecords ? { measureRecords: set.measureRecords.filter(row => contests.has(row.contestId)) } : {}),
     ...(set.removals ? { removals: set.removals.filter(row => contests.has(row.contestId)) } : {}),
     ...(set.generalLineup ? { generalLineup: { ...set.generalLineup, contests: set.generalLineup.contests.filter(row => contests.has(row.contestId)) } } : {}),
-    ...(set.measureAnalyses ? { measureAnalyses: { ...set.measureAnalyses, analyses: set.measureAnalyses.analyses.filter(row => contests.has(row.contestId)) } } : {}),
     ...(set.lineupReconciliation ? { lineupReconciliation: { ...set.lineupReconciliation, rows: set.lineupReconciliation.rows.filter(row => contests.has(row.contestId)) } } : {}),
   };
 }

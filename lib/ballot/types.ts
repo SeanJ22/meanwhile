@@ -1,5 +1,4 @@
 import type { GeneralLineup } from "./general-lineup.ts";
-import type { AnalysesFile } from "./analyses.ts";
 import type { CandidateContact } from "./candidate-contacts.ts";
 import type { AzCandidateIdentity, AzContestIdentity, LineupReconciliation } from "../identity/types.ts";
 import type { MeasureRecord } from "./measure-records.ts";
@@ -129,7 +128,6 @@ export interface BallotSet {
   sourceCorpus?: BallotSourceCorpusReference;
   sourceAuthorities?: readonly MeasureSourceReference[];
   generalLineup?: GeneralLineup;
-  measureAnalyses?: AnalysesFile;
   filingCandidacies?: Candidacy[];
   lineupReconciliation?: LineupReconciliation;
   contacts?: readonly CandidateContact[];

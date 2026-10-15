@@ -83,12 +83,12 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
       const candidacyField = `${prefix}.candidacies`.replaceAll("'", "''");
       const inContest = `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='${contestField}' AND (${division.replaceAll("x->", "b.x->")}))`;
       add("contests", division);
-      for (const field of ["candidacies", "filingCandidacies", "measures", "measureRecords", "removals", "generalLineup.contests", "measureAnalyses.analyses", "lineupReconciliation.rows"]) add(field, inContest);
+      for (const field of ["candidacies", "filingCandidacies", "measures", "measureRecords", "removals", "generalLineup.contests", "lineupReconciliation.rows"]) add(field, inContest);
       add("contacts", `x->>'candidacyId' IN (SELECT c.x->>'id' FROM records c WHERE c.scope=records.scope AND c.field='${candidacyField}' AND (c.x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='${contestField}' AND (${division.replaceAll("x->", "b.x->")}))))`);
       for (const field of ["absences", "heldContests"]) add(field, division);
       for (const field of ["coverageNotes", "scopedCoverageNotes", "lineupReconciliation.sources"]) add(field, "TRUE");
       for (const field of ["election", "generalLineup.curatedAt", "generalLineup.canvass", "generalLineup.note",
-        "measureAnalyses.generatedAt", "measureAnalyses.counts", "lineupReconciliation.formatVersion", "lineupReconciliation.state",
+        "lineupReconciliation.formatVersion", "lineupReconciliation.state",
         "lineupReconciliation.cycle", "lineupReconciliation.generatedAt", "lineupReconciliation.generatedBy",
         "lineupReconciliation.proof", "lineupReconciliation.agencyNextFilingDue"]) add(field, "TRUE", true);
     }

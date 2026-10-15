@@ -80,10 +80,9 @@ test("candidate websites and measure links are values on the cited official reco
   ballotOf(state).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
   assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("unreceipted.example.gov")));
   ballot.candidacies[0].provenance.sourceUrl = ballot.contests[0].provenance.sourceUrl;
-  ballot.measureAnalyses = { generatedAt: now, counts: { measures: 1, fetched: 1, extracted: 1, failed: 0 }, analyses: [{
-    contestId: "fixture-measure", measureTitle: "Fixture measure", analysisUrl: "https://analysis.example.gov/measure.pdf",
-    sourceOrg: "Election authority", retrievedAt: now, contentHash: "c".repeat(64), text: "Official analysis.",
-    extraction: "pdf", extractionNote: null }] };
+  ballot.measures[0].voterGuide = { sourceUrl: "https://analysis.example.gov/measure.pdf", sourceHash: "c".repeat(64),
+    publisher: "Election authority", retrievedAt: now, summary: "Official analysis.",
+    vault: { key: `project/freshness/source/analysis.example.gov/2026/10/15/ms-01/sha256-${"c".repeat(64)}.txt`, byteLength: 18, contentType: "text/plain" } };
   assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("analysis.example.gov")));
 });
 

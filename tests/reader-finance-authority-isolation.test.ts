@@ -6,7 +6,6 @@ import { refreshStateMoneyProjectionFromPromoted, stateMoneyReadState } from "..
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import { lineupForContest } from "../lib/ballot/general-lineup.ts";
-import { analysisForContest } from "../lib/ballot/analyses.ts";
 import { lineupBridgeCovers, lineupRowForCard, reconciledCandidacyIdForCard, resetAzIdentityCache } from "../lib/identity/az-2026.ts";
 import { installBallots, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
 import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
@@ -66,7 +65,7 @@ test("Ask retains exact state finance records when only the unrelated FEC reader
   }
 });
 
-test("lineup and measure lookups answer null when the ballot projection is unreadable", async () => {
+test("lineup lookups answer null when the ballot projection is unreadable", async () => {
   const env = process.env as Record<string, string | undefined>;
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
@@ -74,10 +73,8 @@ test("lineup and measure lookups answer null when the ballot projection is unrea
     assert.equal((await readGenericBallotProjection("AZ", { store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
     for (const id of ["ballot-nh-merrimack:governor", "ballot-nj-morris:county-commissioner"]) {
       assert.equal(lineupForContest("AZ", id), null, `${id}: the AZ canvass has no authority over this contest`);
-      assert.equal(analysisForContest("AZ", id), null, `${id}: AZ measure analyses have no authority over this contest`);
     }
     assert.equal(lineupForContest("AZ", "ballot-az-pima:governor"), null);
-    assert.equal(analysisForContest("AZ", "ballot-az-pima:prop-139"), null);
   } finally {
     if (previous === undefined) delete env.NODE_ENV;
     else env.NODE_ENV = previous;

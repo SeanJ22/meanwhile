@@ -11,9 +11,9 @@ import type { BallotSet } from "../lib/ballot/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 const baseline = {
-  az: "f78aa7a6260e4b5c34be091aef15f6943cff7ac2a50a847a19edc6e61329e904",
-  nh: "d7b42860429c6f8036422de3bd454af6caf368d06e97b2602d43cb3687e01019",
-  nj: "e057d3890a9156816d39b7d3145db49b5c122cc73701f37a24722e4fb217468f",
+  az: "723514489a4af9f353b5fc10a7f4cd46fbd66d5a97bfab9e86194d43c9d8e233",
+  nh: "c2e544912272c10f2cbc6558b19e0d0df06ffa23d97c3312c266956e7a325423",
+  nj: "811444b772e6238eb429555c71f3657a7d9aee84a21795a4db67876167d054c0",
 };
 const directory = "data/ballot/2026-general";
 const stateFile = async (state: string): Promise<BallotStateFile> =>
@@ -48,16 +48,16 @@ for (const state of ["az", "nh", "nj"] as const) {
       for (const field of Object.keys(expected) as (keyof BallotSet)[]) {
         assert.deepEqual(actual[field], expected[field], `${state} retains ${field}`);
       }
-      assert.deepEqual(actual.heldContests ?? [], []);
+      assert.deepEqual(actual.heldContests ?? [], expected.heldContests ?? []);
     }
     for (const source of assembled.package.sourceReceipt.sources) {
       assert.ok(file.sourceReceipt.sources.some(row => canonicalCivicDataJson(row) === canonicalCivicDataJson(source)),
         `full source receipt retained: ${source.requestedUrl}`);
     }
-    const records = Object.fromEntries((["contests", "candidacies", "measures", "absences", "removals"] as const).map(key => [key,
+    const records = Object.fromEntries((["contests", "candidacies", "removals"] as const).map(key => [key,
       (key === "candidacies" ? [...ballot.candidacies, ...ballot.filingCandidacies ?? []] : ballot[key] ?? [])
         .filter(row => state === "nj" || !("id" in row) || row.id.startsWith(state === "az" ? "ballot-az-pima:" : "ballot-nh-merrimack:"))
-        .filter(row => state !== "nh" || key !== "absences" || !("ocdId" in row) || !row.ocdId.includes("school_district:"))
+        .filter(row => key !== "contests" || !("type" in row) || row.type !== "MEASURE")
         .map(row => {
           const copy = { ...row } as Record<string, unknown>;
           delete copy.candidateListComplete;
@@ -82,8 +82,23 @@ for (const state of ["az", "nh", "nj"] as const) {
     assert.equal(completeOfficialBallotContests(payload, assembled.package.sourceReceipt).length,
       ballot.contests.filter(contest => contest.type === "CANDIDACY").length);
     if (state === "az") {
-      assert.equal(ballot.measureRecords?.length, 15);
-      assert.equal(ballot.measureAnalyses?.analyses.length, 11);
+      assert.deepEqual(ballot.contests.filter(row => row.type === "MEASURE").map(row => row.id).sort(),
+        [141, 142, 144, 316, 317, 318, 319, 320].map(number => `ballot-az-pima:prop-${number}`));
+      assert.equal(ballot.measureRecords?.length, 8);
+      assert.ok(ballot.measures.every(row => row.officialText && row.voterGuide));
+      assert.deepEqual(ballot.heldContests?.map(row => row.id).sort(), [143, 145, 212].map(number => `ballot-az-pima:prop-${number}`));
+      const localDirectory = "data/ballot/measures/2026-general/AZ";
+      const locals = await Promise.all((await readdir(localDirectory)).map(async name => {
+        const held = JSON.parse(await readFile(`${localDirectory}/${name}`, "utf8"));
+        assert.equal(name, `${encodeURIComponent(held.payload.ocdId)}.json`);
+        assert.equal(held.contractId, "ballot-measures");
+        const local = Object.values(held.payload.ballots)[0] as BallotSet;
+        assert.ok(local.contests.every(row => row.ocdId === held.payload.ocdId));
+        assert.ok(local.measures.every(row => row.officialText && row.voterGuide));
+        assert.equal(local.measureRecords?.length, 1);
+        return local.contests[0].id;
+      }));
+      assert.deepEqual(locals.sort(), [423, 425, 428, 429].map(number => `ballot-az-pima:prop-${number}`));
       assert.equal("identityRegistry" in ballot, false);
       assert.equal("candidateFilings" in ballot, false);
       const candidates = [...ballot.candidacies, ...ballot.filingCandidacies ?? []];

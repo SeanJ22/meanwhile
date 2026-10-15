@@ -12975,7 +12975,7 @@
       ],
       "scopedCoverageNotes": [
         {
-          "text": "Proposition 427, a $250,000,000 bond for Pima County Joint Technical Education District No. 11, is on the ballot of every voter in that district — which includes all of ZIP 85641 — and is not shown as a contest because no division in this registry matches the district's territory. Measured 2026-08-27 against the county's own JTED layer: the district covers about 73% of Pima County AND contains sampled points in Pinal County, so attaching it to the county would both show it to voters who do not vote on it and hide it from voters who do. Its estimated average tax rate is $0.14 per $100 of net assessed limited property value. The official ballot question and voter guide are now published by the Pima County School Superintendent at https://content.civicplus.com/api/assets/az-pimacounty/979f9364-b465-4e5f-bce5-40a9f4e7d40c. We are still verifying the district boundary before showing this contest for an address.",
+          "text": "Proposition 427 asks voters in Pima County Joint Technical Education District No. 11 to approve up to $250,000,000 in bonds. The official resolution, ballot question, voter guide, fiscal analysis and published arguments are held. The district extends beyond Pima County, and its voter boundary still needs verification before this contest can be shown for an address. Official voter guide: https://content.civicplus.com/api/assets/az-pimacounty/82649a1d-06e3-4652-9d2c-96a395c009ce/",
           "scope": {
             "kind": "ZIPS",
             "ids": [
@@ -18287,13 +18287,13 @@
         "format": "ballot-source-corpus@1",
         "state": "AZ",
         "electionId": "az-2026-11-03",
-        "sourceHash": "34018516f8b26a414f4034aa325c518f863e1b2ae90989ac1b4188c6b541945f",
-        "documentCount": 28,
-        "reviewedAt": "2026-10-15T21:32:59.518Z",
+        "sourceHash": "773f8838c519094561d458561fe408fba6cafea9ebbce3063728c9e9079d472c",
+        "documentCount": 31,
+        "reviewedAt": "2026-10-15T21:44:16.494039+00:00",
         "reviewedBy": "Codex MS-01",
         "vault": {
-          "key": "project/freshness/source/ballot-corpus-az/2026/10/15/ms-01/sha256-34018516f8b26a414f4034aa325c518f863e1b2ae90989ac1b4188c6b541945f.ndjson",
-          "byteLength": 30923,
+          "key": "project/freshness/source/ballot-corpus-az/2026/10/15/ms-01/sha256-773f8838c519094561d458561fe408fba6cafea9ebbce3063728c9e9079d472c.ndjson",
+          "byteLength": 34440,
           "contentType": "application/x-ndjson"
         }
       }
@@ -18387,7 +18387,7 @@
         "httpStatus": 200,
         "rawHash": "95744f08583dd328b917de532d0f06fda1dda6d87fb0e0c7c94cd4c6c4083ece",
         "retrievedAt": "2026-10-15T21:15:09.004414+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18397,7 +18397,7 @@
         "httpStatus": 200,
         "rawHash": "94f10a133b59944377eb9249279fce1f12cb1e9000b43147e76d918406a5eba0",
         "retrievedAt": "2026-10-15T21:15:08.904416+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18407,7 +18407,7 @@
         "httpStatus": 200,
         "rawHash": "b3634d11e574f94f4b9e328256ae13b1dc16f380e61fbc3f68e6a2d4416f9a6b",
         "retrievedAt": "2026-10-15T21:15:09.380415+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18417,7 +18417,7 @@
         "httpStatus": 200,
         "rawHash": "96ff70bd8149c70bd9f19a597a1228a6c2534a18017a39896325c1daf5d76f83",
         "retrievedAt": "2026-10-15T21:15:09.439590+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18427,7 +18427,7 @@
         "httpStatus": 200,
         "rawHash": "85258ee837ec351219ae4d62aabc4db44340a494438d8152a8b1e0b752b859ba",
         "retrievedAt": "2026-10-15T21:15:09.334859+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18437,7 +18437,7 @@
         "httpStatus": 200,
         "rawHash": "ecc9bcc2e8acd5694c99ed201c7944d87ede4fb384e254092c127a4abd9720bc",
         "retrievedAt": "2026-10-15T21:15:08.935668+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18447,7 +18447,7 @@
         "httpStatus": 200,
         "rawHash": "cd7facb265792e5531933ae42a7a77a4b1e4540150131bc608f5fc70a0bd54cf",
         "retrievedAt": "2026-10-15T21:15:09.305598+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18457,7 +18457,7 @@
         "httpStatus": 200,
         "rawHash": "864b04959043986d9f49195e546b4880aecf90c802d450479f0f52297b242349",
         "retrievedAt": "2026-10-15T21:15:09.404501+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18467,7 +18467,7 @@
         "httpStatus": 200,
         "rawHash": "f524dcdd65afcca1e13ec07d1cb6c9fcac060b8e687da6081af828945bb67a33",
         "retrievedAt": "2026-10-15T21:15:09.480126+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
@@ -18477,7 +18477,7 @@
         "httpStatus": 200,
         "rawHash": "4dc68fefd81e1e185c5ffb93a819da239123b41bc4f7b790d88e8026d0673334",
         "retrievedAt": "2026-10-15T21:15:08.846867+00:00",
-        "publisher": "Arizona Legislature",
+        "publisher": "www.azleg.gov",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },

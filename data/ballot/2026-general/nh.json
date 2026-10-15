@@ -1847,10 +1847,10 @@
         "finalUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
         "httpStatus": 200,
         "rawHash": "ab325c554105ae420bf2faf20669981ad9fe69f7ca5701cd80ccd9eef0dc9520",
-        "retrievedAt": "2026-10-15T21:12:29.649638+00:00",
+        "retrievedAt": "2026-10-15T18:19:03.940004+00:00",
         "publisher": "New London Town Clerk",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot linked by New London at https://newlondon.nh.gov/voting. New London and Newbury share eleven state, congressional and Merrimack County contests held here, including House Merrimack District 7 with State Senate District 7 verified separately against Boscawen’s official ballot; the printed candidate inventory was checked in full."
       },
       {
         "requestedUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",

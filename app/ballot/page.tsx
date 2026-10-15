@@ -27,7 +27,6 @@ import {
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS, unestablishedDistrictOfficesForFamilies } from "@/lib/ballot/zip-divisions";
 import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
-import { analysisForContest } from "@/lib/ballot/analyses";
 import { orderMeasures } from "@/lib/ballot/measure-order";
 import { summaryForContest } from "@/lib/ballot/measure-summary";
 import {
@@ -1561,7 +1560,6 @@ export default async function BallotPage({
           </h2>
           <div className="ballot-card-grid">
           {group.list.map((contest) => {
-            const analysis = analysisForContest(set!.election.state, contest.id);
             const summary = summaryForContest(contest.id, measureRecords);
 
             const measure = measureFor(contest.id);
@@ -1689,25 +1687,6 @@ export default async function BallotPage({
                   </details>
                 )}
 
-                {analysis?.text ? (
-                  <details className="mt-2.5">
-                    <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
-                      Official analysis — {analysis.sourceOrg}
-                    </summary>
-                    <p className="t-record mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded-md border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
-                      {analysis.text}
-                    </p>
-                  </details>
-                ) : (
-                  analysis?.extractionNote && (
-                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                      We retrieved this measure&apos;s official analysis but
-                      couldn&apos;t extract its text — read it at the link
-                      below.
-                    </p>
-                  )
-                )}
-
                 {readerScopeNotes.get(contest.id) &&
                   (scopeNotes.isShared(contest.id) ? (
                     <p className="mt-2 font-mono text-[0.6875rem] text-muted">
@@ -1732,7 +1711,7 @@ export default async function BallotPage({
                   options={pickOptionsFor(set, contest)}
                 />
 
-                <CardSourcesContribution id={`measure-analysis:${contest.id}`} sources={[{ what: analysis ? "Official analysis" : "Official measure filing", provenance: { sourceUrl: analysis?.analysisUrl ?? contest.provenance.sourceUrl ?? "", sourceOrg: analysis?.sourceOrg ?? contest.provenance.sourceOrg, collectedAt: analysis?.retrievedAt ?? contest.provenance.collectedAt, verifiedAt: null } }]} />
+                <CardSourcesContribution id={`measure-filing:${contest.id}`} sources={[{ what: "Official measure filing", provenance: contest.provenance }]} />
               </div>
               </Card>
             );

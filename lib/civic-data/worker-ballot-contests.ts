@@ -1,4 +1,5 @@
 import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "../ballot/state-scopes.ts";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { createHash } from "node:crypto";
@@ -174,7 +175,7 @@ function citedBallotSources(payload: GenericBallotProjection | PlaceMeasureProje
     if (Array.isArray(value)) { for (const row of value) pending.push(row); continue; }
     if (!value || typeof value !== "object") continue;
     const row = value as Record<string, unknown>;
-    for (const key of ["sourceUrl", "candidacySourceUrl", "citesUrl", "analysisUrl"]) cite(row[key], row);
+    for (const key of ["sourceUrl", "candidacySourceUrl", "citesUrl"]) cite(row[key], row);
     if (Array.isArray(row.sourceUrls)) for (const url of row.sourceUrls) cite(url, row);
     const sourceRows = [...Array.isArray(row.sources) ? row.sources : [], row.canvass, row.retrieval];
     for (const source of sourceRows) if (source && typeof source === "object") {
@@ -213,7 +214,15 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     if (fresh.kind === "ballot-measures") requirePublication(value.kind === "ballot-measures" && value.ocdId === fresh.ocdId && !placeMeasureProblems(value).length, "BALLOT_PLACE_SCOPE_MISMATCH");
     else for (const ballot of Object.values(value.ballots)) requirePublication(ballot.election.state === partition!.state, "BALLOT_STATE_SCOPE_MISMATCH");
   }
-  const ballots = { ...previous?.ballots };
+  const jurisdiction = partition && US_JURISDICTIONS.find(row => row.usps === partition.state);
+  const measureDivision = fresh.kind === "ballot-measures" ? fresh.ocdId
+    : `ocd-division/country:us/${jurisdiction!.prefix}:${jurisdiction!.slug}`;
+  const ballots = Object.fromEntries(Object.entries(previous?.ballots ?? {}).map(([key, ballot]) => {
+    const contests = ballot.contests.filter(row => row.type !== "MEASURE" || row.ocdId === measureDivision);
+    const ids = new Set(contests.filter(row => row.type === "MEASURE").map(row => row.id));
+    return [key, { ...ballot, contests, measures: ballot.measures.filter(row => ids.has(row.contestId)),
+      ...(ballot.measureRecords ? { measureRecords: ballot.measureRecords.filter(row => ids.has(row.contestId)) } : {}) }];
+  }));
   const complete = new Set(completeOfficialBallotContests({ ...fresh, kind: "ballot-contests" }, input.sourceReceipt).map(row => row.contest.id));
   for (const freshBallot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(freshBallot), before = ballots[key];
@@ -249,8 +258,8 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     const contests = new Map(before.contests.filter(row => !incomingHolds.has(row.id)).map(row => [row.id, row]));
     for (const row of ballot.contests) contests.set(row.id, { ...contests.get(row.id), ...row });
     const incomingMeasures = new Set(ballot.measures.map(row => row.contestId));
-    const keepsMeasure = (contestId: string, sourceUrl: string | null) => !incomingContests.has(contestId) ||
-      !incomingMeasures.has(contestId) && incomingContests.get(contestId)?.measureTextUrl === sourceUrl;
+    const keepsMeasure = (contestId: string, sourceUrl: string | null) => contests.get(contestId)?.type === "MEASURE" &&
+      (!incomingContests.has(contestId) || !incomingMeasures.has(contestId) && incomingContests.get(contestId)?.measureTextUrl === sourceUrl);
     const measures = new Map<string, Measure>(before.measures.filter(row =>
       keepsMeasure(row.contestId, row.officialText?.sourceUrl ?? row.provenance.sourceUrl)).map(row => [row.contestId, row]));
     for (const next of ballot.measures) {
@@ -260,14 +269,14 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
       const voterGuide = next.voterGuide ?? old?.voterGuide;
       measures.set(next.contestId, { ...next, ...(officialText ? { officialText } : {}), ...(voterGuide ? { voterGuide } : {}) });
     }
-    const measureRecords = new Map((before.measureRecords ?? []).filter(row =>
-      keepsMeasure(row.contestId, row.sourceUrl) || measures.get(row.contestId)?.officialText?.sourceHash === row.sourceHash &&
-        measures.get(row.contestId)?.officialText?.sourceUrl === row.sourceUrl).map(row => [row.contestId, row]));
+    const measureRecords = new Map((before.measureRecords ?? []).filter(row => contests.get(row.contestId)?.type === "MEASURE" &&
+      (keepsMeasure(row.contestId, row.sourceUrl) || measures.get(row.contestId)?.officialText?.sourceHash === row.sourceHash &&
+        measures.get(row.contestId)?.officialText?.sourceUrl === row.sourceUrl)).map(row => [row.contestId, row]));
     for (const row of ballot.measureRecords ?? []) {
       const source = measures.get(row.contestId)?.officialText;
       if (!source || source.sourceHash === row.sourceHash && source.sourceUrl === row.sourceUrl) measureRecords.set(row.contestId, row);
     }
-    const merged: BallotSet = { ...before, ...ballot, ...mergeBallotSourceReferences(ballot, before),
+    const merged: BallotSet = { ...ballot, ...mergeBallotSourceReferences(ballot, before),
       election: { ...ballot.election, date: ballot.election.date || before.election.date },
       contests: [...contests.values()], candidacies: [...candidacies.values()], measures: [...measures.values()],
       ...(before.heldContests !== undefined || ballot.heldContests !== undefined ? { heldContests: [...held.values()] } : {}),
@@ -279,7 +288,6 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
       ...(before.contacts || ballot.contacts ? { contacts: mergeHeldRows(before.contacts, ballot.contacts, row => row.candidacyId)
         .filter(row => candidacies.has(row.candidacyId)) } : {}),
       ...(before.generalLineup || ballot.generalLineup ? { generalLineup: mergeSupplement(before.generalLineup, ballot.generalLineup, { contests: "contestId" }) } : {}),
-      ...(before.measureAnalyses || ballot.measureAnalyses ? { measureAnalyses: mergeSupplement(before.measureAnalyses, ballot.measureAnalyses, { analyses: "contestId" }) } : {}),
       ...(before.lineupReconciliation || ballot.lineupReconciliation ? { lineupReconciliation: mergeSupplement(before.lineupReconciliation, ballot.lineupReconciliation, { rows: "cardKey" }) } : {}),
       ...(before.filingCandidacies || ballot.filingCandidacies ? { filingCandidacies: mergeHeldRows(before.filingCandidacies, ballot.filingCandidacies, row => row.id)
         .filter(row => !candidacies.has(row.id)) } : {}),

@@ -31,16 +31,12 @@ export function genericBallotProblems(value: GenericBallotProjection, expectedSt
     const candidateContests = new Set(ballot.candidacies.map(row => row.contestId));
     const measures = Array.isArray(ballot.measures) ? ballot.measures : [];
     const measureContestIds = new Set(measures.map(row => row.contestId));
-    const analyses = Array.isArray(ballot.measureAnalyses?.analyses) ? ballot.measureAnalyses.analyses : [];
-    const analysisByContest = new Map(analyses.map(row => [row.contestId, row]));
     const unique = (rows: readonly unknown[], field: string) => rows.every(row => row && typeof row === "object" &&
       typeof (row as Record<string, unknown>)[field] === "string" && (row as Record<string, unknown>)[field]) &&
       new Set(rows.map(row => (row as Record<string, unknown>)[field])).size === rows.length;
     if (ballot.contacts !== undefined && (!Array.isArray(ballot.contacts) || !unique(ballot.contacts, "candidacyId") ||
         ballot.contacts.some(row => !candidateIds.has(row.candidacyId) || !row.sourceUrl || !row.collectedAt)))
       problems.push("A candidate contact lacks its current candidacy or source.");
-    if (ballot.measureAnalyses !== undefined && (!Array.isArray(ballot.measureAnalyses?.analyses) ||
-        !unique(ballot.measureAnalyses.analyses, "contestId"))) problems.push("Measure analyses repeat or lack their contest identity.");
     if (ballot.generalLineup !== undefined && (!Array.isArray(ballot.generalLineup?.contests) ||
         !unique(ballot.generalLineup.contests, "contestId") || !ballot.generalLineup.canvass?.url)) problems.push("A nominee lineup lacks its contest identity or canvass.");
     if (ballot.lineupReconciliation !== undefined && (!Array.isArray(ballot.lineupReconciliation?.rows) ||
@@ -71,7 +67,7 @@ export function genericBallotProblems(value: GenericBallotProjection, expectedSt
     if (ballot.measureRecords !== undefined && (!Array.isArray(ballot.measureRecords) ||
         new Set(ballot.measureRecords.map(row => row.contestId)).size !== ballot.measureRecords.length ||
         ballot.measureRecords.some(row => measureRecordIssue(row) || contestById.get(row.contestId)?.type !== "MEASURE" ||
-          !measureContestIds.has(row.contestId) && (analysisByContest.get(row.contestId)?.analysisUrl !== row.sourceUrl || analysisByContest.get(row.contestId)?.contentHash !== row.sourceHash)))) problems.push("A measure record lacks its stable source-bound identity.");
+          !measureContestIds.has(row.contestId)))) problems.push("A measure record lacks its stable source-bound identity.");
     if ((ballot.sourceAuthorities ?? []).some(source => !measureSourceReferenceValid(source))) {
       problems.push("A ballot source document lacks its saved vault identity.");
     }

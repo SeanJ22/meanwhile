@@ -463,7 +463,6 @@ export function syntheticAzBallot(contests: readonly SyntheticContest[] = [{
       note: "synthetic test lineup",
       contests: lineupContests,
     },
-    measureAnalyses: { generatedAt: "2026-09-25", counts: { measures: 0, fetched: 0, extracted: 0, failed: 0 }, analyses: [] },
     filingCandidacies: [],
     lineupReconciliation: {
       formatVersion: 1, state: "AZ", cycle: 2026, generatedAt: "2026-09-25", generatedBy: "tests/helpers/promoted-fixtures.ts", sources,

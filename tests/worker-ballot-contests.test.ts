@@ -7,7 +7,7 @@ import { readerBallotSourceForTargetId, genericSourcesForDivisions } from "../li
 import { ballotQuestionShape, composeOfficeField } from "../lib/ask/ballot-summary.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import { parseCivicRecords } from "../lib/control-plane/workers/parser.ts";
 import type { GeneralizedCivicExtractionContract, WorkerEvidence, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
@@ -193,13 +193,13 @@ test("partial national updates retain every state attachment and remove contacts
     const contest = ballot.contests.find(row => row.type === "CANDIDACY")!;
     const candidacies = ballot.candidacies.filter(row => row.contestId === contest.id);
     const update = { ...ballot, contests: [contest], candidacies, measures: [], absences: [],
-      measureRecords: undefined, generalLineup: undefined, measureAnalyses: undefined, filingCandidacies: undefined,
+      measureRecords: undefined, generalLineup: undefined, filingCandidacies: undefined,
       lineupReconciliation: undefined, contacts: undefined, removals: undefined };
     const input = { contractId: stateBallotContractId("ballot-contests", state), version: "partial", sourceThrough: now,
       sourceReceipt: held.sourceReceipt, payload: { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(ballot)]: update } } };
     const merged = mergeBallotContests(input, { versionId: "held", payload: prior, sourceReceipt: held.sourceReceipt });
     const result = (merged.payload as GenericBallotProjection).ballots[ballotElectionKey(ballot)];
-    for (const key of ["absences", "removals", "measureRecords", "generalLineup", "measureAnalyses", "filingCandidacies", "lineupReconciliation", "contacts"] as const) {
+    for (const key of ["absences", "removals", "measureRecords", "generalLineup", "filingCandidacies", "lineupReconciliation", "contacts"] as const) {
       assert.deepEqual(result[key], ballot[key], `${state}:${key}`);
     }
     assert.ok(merged.sourceReceipt.sources.length <= held.sourceReceipt.sources.length);
@@ -217,6 +217,56 @@ test("partial national updates retain every state attachment and remove contacts
   assert.deepEqual(manualProjectionCandidate(merged).semantics.violations, []);
 });
 
+
+test("a state successor removes moved local measures without changing their separate place records", () => {
+  const held = JSON.parse(readFileSync("data/ballot/2026-general/az.json", "utf8"));
+  const state = Object.values(held.ballots)[0] as import("../lib/ballot/types.ts").BallotSet;
+  const directory = "data/ballot/measures/2026-general/AZ";
+  const places = readdirSync(directory).map(name => JSON.parse(readFileSync(`${directory}/${name}`, "utf8")));
+  const locals = places.flatMap(place => Object.values(place.payload.ballots)) as import("../lib/ballot/types.ts").BallotSet[];
+  const before = { ...state, contests: [...state.contests, ...locals.flatMap(ballot => ballot.contests)],
+    measures: [...state.measures, ...locals.flatMap(ballot => ballot.measures)],
+    measureRecords: [...state.measureRecords ?? [], ...locals.flatMap(ballot => ballot.measureRecords ?? [])] };
+  const prior = { versionId: "prior-state", sourceReceipt: held.sourceReceipt,
+    payload: { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(before)]: before } } };
+  const input = { contractId: stateBallotContractId("ballot-contests", "AZ"), version: "separate-places", sourceThrough: now,
+    sourceReceipt: held.sourceReceipt, payload: { kind: "ballot-contests" as const, ballots: held.ballots } };
+  const merged = mergeBallotContests(input, prior);
+  const after = (merged.payload as GenericBallotProjection).ballots[ballotElectionKey(state)];
+  assert.deepEqual(after.contests, state.contests);
+  assert.deepEqual(after.candidacies, state.candidacies);
+  assert.deepEqual(after.measures, state.measures);
+  assert.deepEqual(after.measureRecords, state.measureRecords);
+  assert.deepEqual(manualProjectionCandidate(merged).semantics.violations, []);
+  for (const place of places) {
+    const snapshot = structuredClone(place.payload);
+    const kept = mergeBallotContests(place, { versionId: "prior-place", payload: place.payload, sourceReceipt: place.sourceReceipt });
+    assert.deepEqual(kept.payload, snapshot);
+    assert.deepEqual(place.payload, snapshot);
+    assert.deepEqual(manualProjectionCandidate(kept).semantics.violations, []);
+  }
+});
+
+test("holding a previously published measure removes its text and parts while preserving other measures", () => {
+  const held = JSON.parse(readFileSync("data/ballot/2026-general/az.json", "utf8"));
+  const before = Object.values(held.ballots)[0] as import("../lib/ballot/types.ts").BallotSet;
+  const contest = before.contests.find(row => row.type === "MEASURE")!;
+  const { id, electionId, ocdId, title, provenance } = contest;
+  const ballot = { ...before, contests: before.contests.filter(row => row.id !== id),
+    measures: before.measures.filter(row => row.contestId !== id),
+    measureRecords: before.measureRecords!.filter(row => row.contestId !== id),
+    heldContests: [...before.heldContests ?? [], { id, electionId, ocdId, title, provenance, reason: "The final official list does not include this proposal." }] };
+  const input = { contractId: stateBallotContractId("ballot-contests", "AZ"), version: "final-list", sourceThrough: now,
+    sourceReceipt: held.sourceReceipt, payload: { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(ballot)]: ballot } } };
+  const merged = mergeBallotContests(input, { versionId: "earlier", sourceReceipt: held.sourceReceipt,
+    payload: { kind: "ballot-contests", ballots: held.ballots } });
+  const after = (merged.payload as GenericBallotProjection).ballots[ballotElectionKey(ballot)];
+  assert.deepEqual(after.contests, ballot.contests);
+  assert.deepEqual(after.measures, ballot.measures);
+  assert.deepEqual(after.measureRecords, ballot.measureRecords);
+  assert.deepEqual(after.heldContests, ballot.heldContests);
+  assert.deepEqual(manualProjectionCandidate(merged).semantics.violations, []);
+});
 
 test("an older worker capture cannot replace a newer complete candidate list", () => {
   const prior = workerBallotContestsPackage(fixture()).package;

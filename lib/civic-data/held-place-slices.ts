@@ -86,7 +86,6 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
         'coverageNotes', COALESCE(ballot->'coverageNotes','[]'::jsonb),
         'scopedCoverageNotes', COALESCE(ballot->'scopedCoverageNotes','[]'::jsonb),
         'generalLineup', (COALESCE(ballot->'generalLineup','{}'::jsonb)-'contests') || jsonb_build_object('contests', ${array("ballot->'generalLineup'->'contests'", inContest)}),
-        'measureAnalyses', (COALESCE(ballot->'measureAnalyses','{}'::jsonb)-'analyses') || jsonb_build_object('analyses', ${array("ballot->'measureAnalyses'->'analyses'", inContest)}),
         'lineupReconciliation', (COALESCE(ballot->'lineupReconciliation','{}'::jsonb)-'rows') || jsonb_build_object('rows', ${array("ballot->'lineupReconciliation'->'rows'", inContest)}))), '{}'::jsonb)
       FROM jsonb_each(CASE WHEN jsonb_typeof(payload->'ballots')='object' AND NOT (payload->'ballots') ? '$civicPayloadPart'
         THEN payload->'ballots' ELSE '{}'::jsonb END) b(ballot_key,ballot)

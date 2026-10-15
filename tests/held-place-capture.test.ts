@@ -214,7 +214,6 @@ for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} sta
     contacts: contests.slice(0, 3).map(contest => ({ candidacyId: `${contest.id}:candidate`, sourceUrl: provenance.sourceUrl, collectedAt: provenance.collectedAt })),
     absences: [{ ocdId: county, statement: "No other published question", provenance }, { ocdId: neighbour, statement: "OTHER_DISTRICT", provenance }],
     heldContests: [{ id: "az-held", ocdId: county, title: "Named incomplete list", provenance }],
-    measureAnalyses: { generatedAt: provenance.collectedAt, counts: { measures: 2 }, analyses: contests.slice(3).map(contest => ({ contestId: contest.id, text: details(contest.title) })) },
     lineupReconciliation: { formatVersion: 1, state: "AZ", cycle: 2026, generatedAt: provenance.collectedAt,
       sources: [{ name: "Official list", url: provenance.sourceUrl }], rows: contests.slice(0, 3).map(contest => ({ contestId: contest.id, cardKey: `${contest.id}|Candidate`, sourceUrl: provenance.sourceUrl })) },
     generalLineup: { curatedAt: provenance.collectedAt, canvass: { url: provenance.sourceUrl }, note: "Certified list", contests: contests.slice(0, 3).map(contest => ({ contestId: contest.id,
@@ -252,7 +251,6 @@ for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} sta
   assert.deepEqual(sort(selected.generalLineup.contests), sort(ballot.generalLineup.contests.filter(row => chosen.has(row.contestId))));
   assert.deepEqual(selected.generalLineup.canvass, ballot.generalLineup.canvass);
   assert.equal(selected.generalLineup.note, ballot.generalLineup.note);
-  assert.deepEqual(sort(selected.measureAnalyses.analyses), sort(ballot.measureAnalyses.analyses.filter(row => chosen.has(row.contestId))));
   assert.deepEqual(sort(selected.lineupReconciliation.rows), sort(ballot.lineupReconciliation.rows.filter(row => chosen.has(row.contestId))));
   assert.deepEqual(selected.lineupReconciliation.sources, ballot.lineupReconciliation.sources);
   assert.deepEqual([...selected.contacts].sort((a, b) => a.candidacyId.localeCompare(b.candidacyId)),

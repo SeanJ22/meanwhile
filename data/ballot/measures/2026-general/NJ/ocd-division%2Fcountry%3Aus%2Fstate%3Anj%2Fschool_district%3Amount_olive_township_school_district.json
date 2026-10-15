@@ -180,6 +180,17 @@
               "contentType": "text/html"
             }
           }
+        ],
+        "scopedCoverageNotes": [
+          {
+            "text": "Still gathering: the school board’s separate resolution authorizing the bond referendum.",
+            "scope": {
+              "kind": "DIVISIONS",
+              "ids": [
+                "ocd-division/country:us/state:nj/school_district:mount_olive_township_school_district"
+              ]
+            }
+          }
         ]
       }
     }

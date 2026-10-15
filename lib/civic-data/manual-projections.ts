@@ -182,7 +182,7 @@ export function ballotProvenanceUrls(value: unknown): Set<string> {
     if (Array.isArray(item)) { for (const row of item) pending.push(row); continue; }
     const row = object(item);
     if (!row) continue;
-    for (const key of ["sourceUrl", "candidacySourceUrl", "citesUrl", "analysisUrl"]) add(row[key]);
+    for (const key of ["sourceUrl", "candidacySourceUrl", "citesUrl"]) add(row[key]);
     for (const source of rows(row, "sources")) add(source.url);
     add(object(row.canvass)?.url); add(object(row.retrieval)?.url);
     if (Array.isArray(row.sourceUrls)) for (const url of row.sourceUrls) add(url);

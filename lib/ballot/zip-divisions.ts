@@ -43,12 +43,10 @@ export async function divisionIdsForZipArea(
   return [...out];
 }
 
-/** Each missing state/family leaves its independently established contests
- * readable and gets its own office-specific district note. */
-export function unestablishedDistrictOffices(set: Pick<BallotSet, "contests">, electionIds: readonly string[]): string[] {
+export function unestablishedDistrictOffices(set: Pick<BallotSet, "contests" | "heldContests">, electionIds: readonly string[]): string[] {
   const established = new Set(electionIds.map(districtFamilyKey).filter(key => key !== null));
   const offices = new Set<string>();
-  for (const contest of set.contests) {
+  for (const contest of [...set.contests, ...set.heldContests ?? []]) {
     const key = districtFamilyKey(contest.ocdId);
     if (key && !established.has(key)) offices.add(OFFICES[key.split("/")[1] as DistrictFamily]);
   }

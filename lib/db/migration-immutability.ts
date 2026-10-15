@@ -1,3 +1,15 @@
+/**
+ * An established migration is immutable; a correction is a new migration.
+ * "Applied" is decided by the journal's `when` timestamp, never the SQL, so a
+ * rewritten applied file still reports in sync everywhere. This git-only guard
+ * asks four questions against the merge base:
+ *   1. Was any NNNN_*.sql modified, deleted or renamed rather than added?
+ *   2. Was any established meta/NNNN_snapshot.json rewritten?
+ *   3. Is the journal append-only (same index, `when` and `tag`)?
+ *   4. Do the journal and the .sql files on disk correspond exactly?
+ * `changes === null` means unreadable, never a pass. Pure; no I/O.
+ */
+
 import type { JournalEntry } from "./schema-state.ts";
 
 
@@ -52,7 +64,10 @@ export function parseNameStatus(raw: string): ChangedEntry[] {
   return entries;
 }
 
-
+/**
+ * Parses `git status --porcelain` so an uncommitted rewrite is also caught. The
+ * rightmost non-space status letter describes the file on disk; `??` is an addition.
+ */
 export function parsePorcelain(raw: string): ChangedEntry[] {
   const entries: ChangedEntry[] = [];
   for (const line of raw.split("\n")) {
@@ -89,11 +104,19 @@ export const MIGRATION_SNAPSHOT_PATH = /^lib\/db\/migrations\/meta\/([0-9]{4})_s
 /** The journal itself. Appending to it is the ONLY sanctioned edit. */
 export const JOURNAL_PATH = "lib/db/migrations/meta/_journal.json";
 
-
+/**
+ * A migration that reached main and was never applied anywhere, retracted by name. This is a reviewed list in code,
+ * not a switch: it excuses exactly one `.sql` deletion and one journal entry (idx, tag AND `when` must all match) per row,
+ * and nothing else — a modified or renamed file, or any other tag, is still refused. Each row states why it was never applied.
+ * If a database ever reports applying one, `checksumViolations` refuses it as `retracted-migration-applied`. The
+ * applied row is the retracted migration only when its `when` AND the sha256 of the retracted file both match, because
+ * River numbers the next migration into a freed slot and may hand it the same `when`.
+ */
 export interface RetractedMigration {
   readonly idx: number;
   readonly tag: string;
   readonly when: number;
+  /** sha256 of the retracted file's raw bytes, as `scripts/apply-migrations.mts` would have recorded it. */
   readonly sha256: string;
   readonly retractedOn: string;
   readonly why: string;
@@ -101,15 +124,15 @@ export interface RetractedMigration {
 
 export const RETRACTED_MIGRATIONS: readonly RetractedMigration[] = [
   {
-    idx: 35, tag: "0035_pb01_retire_playbooks", when: 1790889600001, retractedOn: "2026-10-13",
-    sha256: "3c4435d5ea036b578fd8bafbdb8c6331c70a9f87ccdea373ebf71adc09cfd8ad",
+    idx: 35, tag: "0035_pb01_retire_playbooks", when: 1790889600001,
+    sha256: "3c4435d5ea036b578fd8bafbdb8c6331c70a9f87ccdea373ebf71adc09cfd8ad", retractedOn: "2026-10-13",
     why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0035 alters " +
       "cp_field_manual_entries, a control-plane table the reader database does not have, so the production build failed before applying it. " +
       "The retirement now runs through the control-plane repository (lib/control-plane/playbook-seed.ts).",
   },
   {
-    idx: 36, tag: "0036_pb01_role_playbooks", when: 1790889600002, retractedOn: "2026-10-13",
-    sha256: "32d72554c769aa3f6711b5071b53a7486ecfea86900b5b25dc37424fb7e63ea3",
+    idx: 36, tag: "0036_pb01_role_playbooks", when: 1790889600002,
+    sha256: "32d72554c769aa3f6711b5071b53a7486ecfea86900b5b25dc37424fb7e63ea3", retractedOn: "2026-10-13",
     why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0036 inserts into cp_field_manual_entries, which the reader " +
       "database does not have. The same rows are now seeded through the control-plane repository (lib/control-plane/playbook-seed.ts).",
   },
@@ -145,7 +168,10 @@ export interface ImmutabilityViolation {
 }
 
 export interface MigrationImmutabilityInput {
-
+  /**
+   * The changes between the merge base and HEAD. `null` means they could not
+   * be computed — NOT that nothing changed, and never a pass.
+   */
   readonly changes: readonly ChangedEntry[] | null;
   /** What was compared against, printed verbatim so a verdict can be checked. */
   readonly baseDescription: string;
@@ -410,7 +436,10 @@ export function appliedHashesFrom(read: unknown): AppliedHash[] | null {
   return out;
 }
 
-
+/**
+ * Committed SQL whose sha256 disagrees with what the database recorded applying.
+ * A migration not yet applied has no recorded hash and is not a violation here.
+ */
 export function checksumViolations(
   journal: readonly JournalEntry[],
   appliedHashes: readonly AppliedHash[],
@@ -419,12 +448,7 @@ export function checksumViolations(
   const byWhen = new Map(appliedHashes.map((a) => [Number(a.when), a.hash]));
   const violations: ImmutabilityViolation[] = [];
   for (const retracted of RETRACTED_MIGRATIONS) {
-    const applied = appliedHashes.filter(row => Number(row.when) === Number(retracted.when));
-    if (applied.length === 0) continue;
-    const replacement = journal.find(entry => Number(entry.when) === Number(retracted.when) && entry.tag !== retracted.tag);
-    const current = replacement ? sha256Of(replacement.tag) : null;
-    // A retired timestamp can belong to a later migration; its committed SQL must identify the applied row.
-    if (current !== null && current !== retracted.sha256 && applied.every(row => row.hash === current)) continue;
+    if (byWhen.get(Number(retracted.when)) !== retracted.sha256) continue;
     violations.push({
       rule: "retracted-migration-applied",
       path: `lib/db/migrations/${retracted.tag}.sql`,

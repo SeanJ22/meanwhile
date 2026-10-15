@@ -38,11 +38,11 @@ export const POST = readerRoute("/api/ballot/scope", async function POST(request
     try {
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);
-      if (hit.contests.length > 0 || hit.absences.length > 0) {
+      if (hit.contests.length > 0 || hit.absences.length > 0 || hit.heldContests?.length) {
         return Response.json(
           {
             ok: true,
-            contestIds: hit.contests.map((c) => c.id),
+            contestIds: [...hit.contests, ...hit.heldContests ?? []].map((c) => c.id),
           },
           { headers: NO_STORE },
         );

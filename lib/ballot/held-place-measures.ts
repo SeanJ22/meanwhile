@@ -69,7 +69,8 @@ export async function publishHeldPlaceMeasures(input: {
         versionId = outcome.promoted.versionId;
         records = Object.values(payload.ballots).reduce((count, ballot) => count + ballot.measures.length, 0);
       }
-      const edge = await publishPlaceReaderEdgeOutcome(input.store, input.now(), [{ recordClass: "BALLOT_CANDIDACY", scope }],
+      const edge = await publishPlaceReaderEdgeOutcome(input.store, input.now(), [{ recordClass: "BALLOT_CANDIDACY", scope,
+        currentIdentity: current && pointer ? pointer : undefined }],
         { artifactStore: input.artifactStore });
       if (!edge.ok) throw new Error(edge.detail ?? "Held measures have not reached their place reader.");
       if (current) result.reused++;

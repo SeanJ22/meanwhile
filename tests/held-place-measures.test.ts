@@ -11,6 +11,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { manualProjectionCandidate, readManualProjectionPrior, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { mergeBallotContests } from "../lib/civic-data/worker-ballot-contests.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { promotedPointerVersion } from "../lib/civic-data/reader-edge-outcome.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { readerPlaceManifestKey } from "../lib/meetings/place-edge.ts";
@@ -60,11 +61,30 @@ test("held place files publish verified vault references and skip current files 
   assert.ok(await artifactStore.readManifest(readerPlaceManifestKey("ballot-measures", division)));
   assert.equal(await store.readPromotionIdentity("BALLOT_CANDIDACY", "US:state-election-ballots:OH"), null);
   const stream = vault.stream.bind(vault), candidate = store.readCandidate.bind(store), read = store.readPromotion.bind(store);
+  const identity = store.readPromotionIdentity.bind(store);
+  let identityReads = 0;
+  store.readPromotionIdentity = async (...args) => { identityReads++; return identity(...args); };
   vault.stream = async () => { throw new Error("current files must not read source bytes"); };
   store.readCandidate = async () => { throw new Error("current files must not read candidate payloads"); };
   store.readPromotion = async () => { throw new Error("current files must not read promoted payloads"); };
   assert.deepEqual(await publishHeldPlaceMeasures(input), { state: "OH", published: 0, reused: 1, held: 0 }, lines.join("\n"));
-  vault.stream = stream; store.readCandidate = candidate; store.readPromotion = read;
+  assert.equal(identityReads, 1, "a current file and edge share the exact pointer identity read");
+  store.readCandidate = candidate; store.readPromotion = read;
+  const manifestKey = readerPlaceManifestKey("ballot-measures", division), scope = placeMeasureScope(division);
+  const expectedVersion = promotedPointerVersion("BALLOT_CANDIDACY", scope, (await identity("BALLOT_CANDIDACY", scope))!);
+  await rm(join(root, "edge", manifestKey));
+  identityReads = 0;
+  assert.deepEqual(await publishHeldPlaceMeasures(input), { state: "OH", published: 0, reused: 1, held: 0 }, lines.join("\n"));
+  assert.equal(identityReads, 2, "a missing edge rereads the latest authority before rebuilding");
+  const restored = (await artifactStore.readManifest(manifestKey))!;
+  assert.equal(restored.manifest.place!.artifact.version, expectedVersion);
+  await artifactStore.writeManifest({ ...restored.manifest, place: { ...restored.manifest.place!,
+    artifact: { ...restored.manifest.place!.artifact, version: "stale-version" } } }, restored.etag, manifestKey);
+  identityReads = 0;
+  assert.deepEqual(await publishHeldPlaceMeasures(input), { state: "OH", published: 0, reused: 1, held: 0 }, lines.join("\n"));
+  assert.equal(identityReads, 2, "a stale edge rereads the latest authority before rebuilding");
+  assert.equal((await artifactStore.readManifest(manifestKey))!.manifest.place!.artifact.version, expectedVersion);
+  vault.stream = stream; store.readPromotionIdentity = identity;
 
   const prior = await readManualProjectionPrior("ballot-measures", store, now, placeMeasureScope(division));
   const worker = await sourcePackage(vault, division, "13");
@@ -75,6 +95,9 @@ test("held place files publish verified vault references and skip current files 
   const merged = await readPlaceMeasureProjection(division, { store, now, bypassCache: true });
   assert.equal(merged.kind, "PROMOTED");
   if (merged.kind === "PROMOTED") assert.equal(merged.value.ballots[key].measures.length, 2, "a moved worker pointer invalidates the file cache and its facts survive the merge");
+  assert.equal((await artifactStore.readManifest(manifestKey))!.manifest.place!.artifact.version,
+    promotedPointerVersion("BALLOT_CANDIDACY", scope, (await identity("BALLOT_CANDIDACY", scope))!),
+    "a changed publication reaches the edge through its latest authority identity");
   const cached = JSON.parse(await readFile(join(root, ".runtime/held-place-measures/2026-general/OH", `${encodeURIComponent(division)}.json`), "utf8"));
   assert.deepEqual(Object.keys(cached).sort(), ["inputHash", "versionId"]);
 

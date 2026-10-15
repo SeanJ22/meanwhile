@@ -1,0 +1,187 @@
+{
+  "contractId": "ballot-measures",
+  "version": "2026-general:3fd102b7fa473da65e147d9bbb30c2d853f95ba84d5f2f6a76c43bdf31d8cf1a:ec17788154f4a95a626aa7bb8064986a99a38f8a3bc20d132f10184361c6d20f",
+  "sourceThrough": "2026-10-15T21:36:42.570025+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-15T21:36:42.570025+00:00",
+    "reviewedBy": "Codex MS-01",
+    "sources": [
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "finalUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "retrievedAt": "2026-10-15T21:17:41.211421+00:00",
+        "httpStatus": 200,
+        "rawHash": "d91d49ddf7f0ecd937da5774b2646148675f05f20fceb3d83492301013f428bb",
+        "publisher": "Morris County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 general-election sample-ballot index links each held Morris County municipal ballot, including the local public question. Election date and municipality were checked on the PDF image."
+      },
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+        "finalUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+        "retrievedAt": "2026-10-15T21:21:16.755930+00:00",
+        "httpStatus": 200,
+        "rawHash": "8cc684d8a51ed087af67c2b478c1db288d7a6fcd8fae711a1bb4fca4287264c8",
+        "publisher": "Morris County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Full official November 3, 2026 sample-ballot PDF held. Public question, all operative clauses and fiscal text visually checked against its PDF image; ballot choices are YES and NO."
+      },
+      {
+        "requestedUrl": "https://www.motsd.org/referendum",
+        "finalUrl": "https://www.motsd.org/referendum",
+        "retrievedAt": "2026-10-15T21:29:08.608057+00:00",
+        "httpStatus": 200,
+        "rawHash": "6ad0113764344fe99881cc8fdce3eb6e8d39c050c21e289a7b064eeedbf15a92",
+        "publisher": "Mount Olive Township School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete official current referendum page held, with project scope, financial plan, capital reserves, temporary-note interest estimates, state aid risk, and verbatim certified bond proposal. The 40% statutory aid rate and currently funded 34% rate are both preserved with the district explanation. No separately labeled arguments for/against or passage threshold appear. The separate August 18 resolution was not obtained: linked BoardDocs public landing/list GET and POST requests returned HTTP 403. The held legal source is the complete ballot proposal, not that unheld board resolution."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-measures",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:mount_olive_township_school_district",
+    "ballots": {
+      "NJ:nj-2026-11-03": {
+        "election": {
+          "id": "nj-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 General Election",
+          "state": "NJ"
+        },
+        "contests": [
+          {
+            "id": "ballot-nj-morris:mount-olive:school-bond",
+            "type": "MEASURE",
+            "ocdId": "ocd-division/country:us/state:nj/school_district:mount_olive_township_school_district",
+            "title": "Mount Olive Township School District: Mountain View Roof Bond Proposal",
+            "voteFor": 1,
+            "scopeNote": "Voters of Mount Olive Township School District.",
+            "termYears": null,
+            "electionId": "nj-2026-11-03",
+            "provenance": {
+              "sourceOrg": "Morris County Clerk",
+              "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+              "collectedAt": "2026-10-15T21:21:16.755930+00:00",
+              "verifiedAt": "2026-10-15T21:36:42.570025+00:00"
+            },
+            "measureTextUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+            "divisionVintage": "TIGER_GENZ2025"
+          }
+        ],
+        "candidacies": [],
+        "measures": [
+          {
+            "id": "ballot-nj-morris:mount-olive:school-bond:question",
+            "contestId": "ballot-nj-morris:mount-olive:school-bond",
+            "officialNumber": "Bond Proposal Question",
+            "questionText": "The Board of Education of the Township of Mount Olive in the County of Morris, New Jersey (the \"Board\") is authorized to (a) undertake the replacement of the roof at Mountain View Elementary School, including any related work and costs; (b) appropriate $2,317,496 for such improvements; and (c) issue bonds in an amount not to exceed $2,317,496. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,317,496. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. Do you approve this Bond Proposal Question?",
+            "officialStatement": null,
+            "provenance": {
+              "sourceOrg": "Morris County Clerk",
+              "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+              "collectedAt": "2026-10-15T21:21:16.755930+00:00",
+              "verifiedAt": "2026-10-15T21:36:42.570025+00:00"
+            },
+            "officialText": {
+              "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+              "sourceHash": "3fd102b7fa473da65e147d9bbb30c2d853f95ba84d5f2f6a76c43bdf31d8cf1a",
+              "retrievedAt": "2026-10-15T21:21:16.755930+00:00",
+              "publisher": "Morris County Clerk",
+              "vault": {
+                "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-nj-local-e7bf98f712f9db35/sha256-3fd102b7fa473da65e147d9bbb30c2d853f95ba84d5f2f6a76c43bdf31d8cf1a.txt",
+                "byteLength": 905,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+                  "retrievedAt": "2026-10-15T21:21:16.755930+00:00",
+                  "publisher": "Morris County Clerk",
+                  "sourceHash": "8cc684d8a51ed087af67c2b478c1db288d7a6fcd8fae711a1bb4fca4287264c8",
+                  "vault": {
+                    "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-bl30-e7bf98f712f9db35/sha256-8cc684d8a51ed087af67c2b478c1db288d7a6fcd8fae711a1bb4fca4287264c8.pdf",
+                    "byteLength": 749469,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "voterGuide": {
+              "sourceUrl": "https://www.motsd.org/referendum",
+              "sourceHash": "ec17788154f4a95a626aa7bb8064986a99a38f8a3bc20d132f10184361c6d20f",
+              "retrievedAt": "2026-10-15T21:29:08.608057+00:00",
+              "publisher": "Mount Olive Township School District",
+              "vault": {
+                "key": "project/freshness/source/www.motsd.org/2026/10/15/ms-01-nj-local-a2f1800d0e7a17ca/sha256-ec17788154f4a95a626aa7bb8064986a99a38f8a3bc20d132f10184361c6d20f.txt",
+                "byteLength": 18215,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.motsd.org/referendum",
+                  "sourceHash": "6ad0113764344fe99881cc8fdce3eb6e8d39c050c21e289a7b064eeedbf15a92",
+                  "retrievedAt": "2026-10-15T21:29:08.608057+00:00",
+                  "publisher": "Mount Olive Township School District",
+                  "vault": {
+                    "key": "project/freshness/source/www.motsd.org/2026/10/15/ms-01-nj-local-a2f1800d0e7a17ca/sha256-6ad0113764344fe99881cc8fdce3eb6e8d39c050c21e289a7b064eeedbf15a92.html",
+                    "byteLength": 86787,
+                    "contentType": "text/html"
+                  }
+                }
+              ],
+              "summary": "The Mount Olive Township School District is requesting funding for the final phase of the Mountain View roof project, following the completion of Phases 1 and 2. The project would replace deteriorated, leaking roofing sections that are out of warranty while allowing the District to take advantage of available state aid covering approximately 34% of the project, optimize the use of its capital reserve funds, and complete the project with zero additional tax impact to taxpayers via a referendum vote on Tuesday, November 3, 2026.",
+              "fiscalImpact": "Project Cost and Funding\n\nWhat is the total estimated cost of the project?\n\nThe total project cost is $2,317,496, or approximately $2.3 million.\n\nWhat is included in the approximately $2.3 million project cost?\n\nThe current project budget includes approximately $1.90 million for roof replacement, $227,000 for professional and other project-related costs, and $190,000 for contingency. These components total approximately $2.3 million.\n\nHow much State funding is available for the project?\n\nThe New Jersey Department of Education has approved approximately $787,949 in projected State Debt Service Aid, representing approximately 34% of the eligible project cost.\n\nHow much would the district fund locally if the referendum is approved?\n\nThe district’s local project share would be approximately $1,529,547, with approximately $787,949 projected to be supported through State Debt Service Aid.\n\nWhere will the district’s local share come from?\n\nThe local share is already available in the district’s capital reserve account. Capital reserve is a restricted district fund established for qualifying capital and facilities projects. It is not the same as the district’s general operating budget.\n\nWhy Is a Referendum Necessary?\n\nIf the district already has money available, why is a referendum necessary?\n\nThe referendum is not being held because the district needs to raise additional local tax revenue for its local share. For this project, voter authorization through the referendum and debt-service process is the mechanism that provides access to approximately $788,000 in projected State Debt Service Aid. If the district funds the entire project directly as a locally supported capital project, that State Debt Service Aid would not be available through this process.\n\nWhy can’t the district simply use capital reserve and avoid a referendum?\n\nThe district can fund the project locally. However, doing so would mean that the district would be responsible for the full approximately $2.3 million project cost rather than receiving approximately $788,000 in projected State support through the Debt Service Aid process.\n\nIs the State’s approximately $788,000 contribution a loan?\n\nNo. State Debt Service Aid is State financial support for eligible school facilities project costs. The projected State contribution is not repaid by the district.\n\nWill this referendum cause an additional increase in local property taxes?\n\nNo. Under the district’s current financial plan, no increase in the local tax levy is planned to fund the Mountain View roof project. The district already has capital reserve funds available for its anticipated local share, and the current plan also anticipates addressing the temporary financing cost without an additional local tax levy attributable to this project.\n\nTemporary Borrowing and Interest\n\nIf the district has the money, why does it have to borrow temporarily?\n\nThe temporary borrowing is not necessary because the district lacks funds. It is part of the financing structure used to access State Debt Service Aid. Under the current plan, the district would issue a temporary note before the end of 2026 and keep it outstanding beyond the close of the fiscal year so that the associated debt service qualifies for State aid.\n\nHow long is the temporary borrowing expected to remain outstanding?\n\nThe current planning assumption is approximately seven months, from approximately December 2026 through July 2027. The actual timing will depend on when the notes are issued and retired.\n\nWill the district pay interest on the temporary note?\n\nYes. Temporary borrowing carries interest. Based on the current planning assumption of an approximately 3.5% interest rate, gross interest is estimated at approximately $47,000. Of that amount, approximately $16,000 is projected to be supported through State Debt Service Aid, leaving an estimated net local interest cost of approximately $31,000—or roughly $30,000. The actual interest rate and final cost will not be known until the notes are sold and will depend on market conditions and the length of time the note remains outstanding.\n\nDoes the State also contribute toward the interest cost?\n\nYes. Under the current financing assumptions, State Debt Service Aid is expected to apply to eligible interest as well as principal. The current model estimates that approximately $16,000 of the projected interest would be State-supported, leaving an estimated local interest cost of approximately $31,000, or roughly $30,000. These figures are estimates and will change if market interest rates or the borrowing period differ from current assumptions.\n\nWhy incur a local interest cost to use the referendum process?\n\nThe temporary borrowing is the mechanism that provides access to approximately $788,000 in projected State Debt Service Aid. Based on current estimates, the district’s net local interest cost associated with that financing would be roughly $30,000. The actual amount will be determined when the temporary notes are sold.",
+              "argumentsFor": [],
+              "argumentsAgainst": []
+            }
+          }
+        ],
+        "absences": [],
+        "measureRecords": [
+          {
+            "contestId": "ballot-nj-morris:mount-olive:school-bond",
+            "whatItDoes": "The Board of Education of the Township of Mount Olive in the County of Morris, New Jersey (the \"Board\") is authorized to (a) undertake the replacement of the roof at Mountain View Elementary School, including any related work and costs; (b) appropriate $2,317,496 for such improvements; and (c) issue bonds in an amount not to exceed $2,317,496.",
+            "yesMeans": null,
+            "noMeans": null,
+            "parts": [
+              {
+                "id": "ballot-nj-morris:mount-olive:school-bond#provision-1",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "The Board of Education of the Township of Mount Olive in the County of Morris, New Jersey (the \"Board\") is authorized to (a) undertake the replacement of the roof at Mountain View Elementary School, including any related work and costs; (b) appropriate $2,317,496 for such improvements; and (c) issue bonds in an amount not to exceed $2,317,496."
+              },
+              {
+                "id": "ballot-nj-morris:mount-olive:school-bond#provision-2",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,317,496. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects."
+              }
+            ],
+            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+            "sourceHash": "3fd102b7fa473da65e147d9bbb30c2d853f95ba84d5f2f6a76c43bdf31d8cf1a",
+            "sourceHashKind": "HELD_TEXT",
+            "writtenAt": "2026-10-15T21:36:42.570025+00:00",
+            "citation": "measure-source"
+          }
+        ],
+        "sourceAuthorities": [
+          {
+            "sourceUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+            "sourceHash": "b494b91bf51a537b3a34d194ae882ebe71f5a37e3e3c5d0c2fe3d99fc38d396c",
+            "retrievedAt": "2026-10-15T21:17:41.211421+00:00",
+            "publisher": "Morris County Clerk",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-bl30-3d51e43b669bc9d1/sha256-b494b91bf51a537b3a34d194ae882ebe71f5a37e3e3c5d0c2fe3d99fc38d396c.html",
+              "byteLength": 362779,
+              "contentType": "text/html"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { contentHash } from "../lib/control-plane/ids.ts";
@@ -8,7 +9,7 @@ import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
-const at = "2026-10-15T04:00:00Z", key = "CO:2026-general";
+const at = "2026-10-15T04:00:00Z", key = "CO:2026-general", contractId = stateBallotContractId("ballot-contests", "CO");
 const wording = "Shall the library levy be adopted? A YES vote adopts the levy. A NO vote keeps the existing levy.";
 
 class CountedVault extends MemoryEvidenceStore {
@@ -52,7 +53,7 @@ async function fixture() {
       officialStatement: null, officialText, provenance }], measureRecords: [{ contestId: "measure:81", whatItDoes: wording,
       yesMeans: "A YES vote adopts the levy.", noMeans: "A NO vote keeps the existing levy.", parts: [],
       sourceUrl: officialText.sourceUrl, sourceHash: officialText.sourceHash, writtenAt: at }] };
-  const input: ManualProjectionPackage = { contractId: "ballot-contests", version: "first", sourceThrough: at,
+  const input: ManualProjectionPackage = { contractId, version: "first", sourceThrough: at,
     sourceReceipt: { contractVersion: 1, reviewedAt: at, reviewedBy: "Source reviewer", sources: [reviewed(officialText)] },
     payload: { kind: "ballot-contests", ballots: { [key]: ballot } } };
   return { vault, officialText, ballot, input };
@@ -60,17 +61,17 @@ async function fixture() {
 
 test("the registered ballot door verifies vault sources, skips unchanged evidence and publishes new corpus pointers", async () => {
   const { vault, ballot, input, officialText } = await fixture(), store = new MemoryRoutineDataStore();
-  const first = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(input), at, null, { vault });
+  const first = await processRegisteredManualCandidate(store, contractId, manualProjectionCandidate(input), at, null, { vault });
   assert.ok(first.promoted, JSON.stringify(first.candidate));
   assert.equal(vault.streams.length, 2);
   vault.streams.length = 0;
-  const unchanged = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate({ ...input, version: "rechecked" }),
+  const unchanged = await processRegisteredManualCandidate(store, contractId, manualProjectionCandidate({ ...input, version: "rechecked" }),
     at, first.promoted.versionId, { vault });
   assert.ok(unchanged.confirmed, JSON.stringify(unchanged.candidate));
   assert.equal(vault.streams.length, 0);
   const added = await source(vault, "sample-style-2"), sourceCorpus = await corpus(vault, [officialText, added]);
   const updated = { ...input, version: "new-corpus", payload: { kind: "ballot-contests" as const, ballots: { [key]: { ...ballot, sourceCorpus } } } };
-  const next = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(updated), at, first.promoted.versionId, { vault });
+  const next = await processRegisteredManualCandidate(store, contractId, manualProjectionCandidate(updated), at, first.promoted.versionId, { vault });
   assert.ok(next.promoted, JSON.stringify(next.candidate));
   assert.equal(next.confirmed, undefined);
   assert.notEqual(next.promoted.versionId, first.promoted.versionId);
@@ -79,18 +80,18 @@ test("the registered ballot door verifies vault sources, skips unchanged evidenc
 
 test("missing corpus bytes or invented source excerpts preserve the published ballot and record the failure", async () => {
   const { vault, ballot, input } = await fixture(), store = new MemoryRoutineDataStore();
-  const first = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(input), at, null, { vault });
+  const first = await processRegisteredManualCandidate(store, contractId, manualProjectionCandidate(input), at, null, { vault });
   assert.ok(first.promoted);
   const forged = { ...input, version: "forged-excerpt", payload: { kind: "ballot-contests" as const, ballots: { [key]: {
     ...ballot, measureRecords: [{ ...ballot.measureRecords![0], whatItDoes: "The levy saves every resident $500." }] } } } };
-  const refused = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(forged), at, first.promoted.versionId, { vault });
+  const refused = await processRegisteredManualCandidate(store, contractId, manualProjectionCandidate(forged), at, first.promoted.versionId, { vault });
   assert.equal(refused.promoted, null);
   assert.match(refused.candidate.failureDetail ?? "", /absent from its official source/);
   assert.equal((await store.readPromotion("BALLOT_CANDIDACY", first.promoted.scope))?.versionId, first.promoted.versionId);
   const missingStore = new MemoryRoutineDataStore();
   const missingVault = new MemoryEvidenceStore();
   await source(missingVault, "measure-81");
-  const missing = await processRegisteredManualCandidate(missingStore, "ballot-contests", manualProjectionCandidate(input), at, null, { vault: missingVault });
+  const missing = await processRegisteredManualCandidate(missingStore, contractId, manualProjectionCandidate(input), at, null, { vault: missingVault });
   assert.equal(missing.promoted, null);
   assert.match(missing.candidate.failureDetail ?? "", /Ballot corpus is missing/);
   assert.equal(await missingStore.readPromotion("BALLOT_CANDIDACY", first.promoted.scope), null);

@@ -89,6 +89,17 @@
             "collectedAt": "2026-09-02"
           },
           "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "ocdId": "ocd-division/country:us/state:nj",
+          "statement": "The Morris County Clerk’s complete official November 3, 2026 general-election sample ballots contain no statewide public question. All 46 published ballot styles were checked; Boonton Township’s and Mount Olive’s school bonds and Pequannock’s open-space referendum are local questions.",
+          "provenance": {
+            "sourceUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+            "sourceOrg": "Morris County Clerk",
+            "collectedAt": "2026-10-15T21:17:41.211421+00:00",
+            "verifiedAt": "2026-10-15T21:28:48.240Z"
+          },
+          "divisionVintage": "TIGER_GENZ2025"
         }
       ],
       "contests": [
@@ -8236,13 +8247,27 @@
           "sourceOrg": "Morris County Clerk",
           "collectedAt": "2026-10-15"
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "NJ",
+        "electionId": "nj-2026-11-03",
+        "sourceHash": "733d97b16a1d79ac4167c9212d8eba52f63b26ce180bc8ca96b68e6c6285595e",
+        "documentCount": 48,
+        "reviewedAt": "2026-10-15T21:28:48.240Z",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-nj/2026/10/15/ms-01/sha256-733d97b16a1d79ac4167c9212d8eba52f63b26ce180bc8ca96b68e6c6285595e.ndjson",
+          "byteLength": 60085,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-15T03:53:29.864Z",
-    "reviewedBy": "BL-30 official source review",
+    "reviewedAt": "2026-10-15T21:28:48.240Z",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates",
@@ -8293,6 +8318,16 @@
         "publisher": "Morris County Clerk",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "The clerk redirects this historical filing URL to its current general-candidate PDF. The retained removal history comes from promoted version cv-297b58fba837b11107e63179047a6b90; these response bytes verify the current list, not the earlier document. The complete general and school candidate inventories were parsed and checked against every held contest: all 275 candidates across 99 contests agree, including each source office, jurisdiction and term grouping. No candidate was added or omitted."
+      },
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "finalUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "httpStatus": 200,
+        "rawHash": "d91d49ddf7f0ecd937da5774b2646148675f05f20fceb3d83492301013f428bb",
+        "retrievedAt": "2026-10-15T21:17:41.211421+00:00",
+        "publisher": "Morris County Clerk",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official 2026 general-election publication from the election authority. Complete county sample-ballot pages checked against their published ballot questions."
       }
     ]
   }

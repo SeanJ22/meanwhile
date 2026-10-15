@@ -39,8 +39,8 @@ export function hunterLaneArmingPath(root: string, env: Readonly<Record<string, 
   return named ? named : join(root, ".runtime", "hunter-lane", "arming.json");
 }
 
-interface SerializedScope extends Omit<BudgetScope, "members"> {
-  readonly members: readonly string[];
+interface ArmingScope extends Omit<BudgetScope, "members"> {
+  readonly members: Iterable<string>;
 }
 
 /** What the round read that the lane cannot read cheaply. Written once per round. */
@@ -52,16 +52,16 @@ export interface HunterLaneArming {
     /** Every budgeted Send the round armed, SCOPE and DISPATCH. */
     readonly specs: readonly AssignmentBudgetSpec[];
     /** Each Send's spend at `readAt`; null when a charge on it reported no dollar figure. Absent: the ledger was unreadable. */
-    readonly historical: readonly { readonly key: string; readonly usd: number | null }[] | null;
+    readonly historical: Iterable<readonly [string, AssignmentSpend]> | null;
     /** Every Send key the round saw on any obligation, budgeted or not; a mark outside it is newer than the reading. */
-    readonly knownKeys: readonly string[];
+    readonly knownKeys: Iterable<string>;
     /** Sends the round reached an obligation under whose mark it had not seen written (the fail-closed rule). */
-    readonly reached: readonly (readonly [string, readonly string[]])[];
+    readonly reached: Iterable<readonly [string, readonly string[]]>;
   };
   /** The area budgets, or null when no expansion scope is selected. */
-  readonly areas: { readonly scopes: readonly SerializedScope[]; readonly malformedScopes: number } | null;
+  readonly areas: { readonly scopes: readonly ArmingScope[]; readonly malformedScopes: number } | null;
   /** Subjects covered by a funded hunt's lifetime allowance. */
-  readonly lifetimeHuntSubjects: readonly string[];
+  readonly lifetimeHuntSubjects: Iterable<string>;
   /** The provider circuits the round ended with; the lane starts from them. */
   readonly circuits: readonly ProviderCircuit[];
   readonly worstCaseUsd: number;
@@ -71,10 +71,10 @@ export interface HunterLaneArming {
 export function laneArmingOf(input: {
   readonly readAt: string;
   readonly specs: readonly AssignmentBudgetSpec[];
-  readonly historical: ReadonlyMap<string, AssignmentSpend> | null;
+  readonly historical: Iterable<readonly [string, AssignmentSpend]> | null;
   readonly knownKeys: Iterable<string>;
-  readonly reached: ReadonlyMap<string, readonly string[]>;
-  readonly areas: { readonly scopes: readonly BudgetScope[]; readonly malformedScopes: number } | null;
+  readonly reached: Iterable<readonly [string, readonly string[]]>;
+  readonly areas: { readonly scopes: readonly ArmingScope[]; readonly malformedScopes: number } | null;
   readonly lifetimeHuntSubjects: Iterable<string>;
   readonly circuits: readonly ProviderCircuit[];
   readonly worstCaseUsd: number;
@@ -84,15 +84,12 @@ export function laneArmingOf(input: {
     readAt: input.readAt,
     sends: {
       specs: input.specs,
-      historical: input.historical === null ? null : [...input.historical].map(([key, spend]) => ({ key, usd: spend.usd })),
-      knownKeys: [...new Set(input.knownKeys)].sort(),
-      reached: [...input.reached].filter(([, keys]) => keys.length > 0),
+      historical: input.historical,
+      knownKeys: input.knownKeys,
+      reached: input.reached,
     },
-    areas: input.areas === null ? null : {
-      malformedScopes: input.areas.malformedScopes,
-      scopes: input.areas.scopes.map(scope => ({ ...scope, members: [...scope.members] })),
-    },
-    lifetimeHuntSubjects: [...new Set(input.lifetimeHuntSubjects)],
+    areas: input.areas,
+    lifetimeHuntSubjects: input.lifetimeHuntSubjects,
     circuits: input.circuits,
     worstCaseUsd: input.worstCaseUsd,
   };

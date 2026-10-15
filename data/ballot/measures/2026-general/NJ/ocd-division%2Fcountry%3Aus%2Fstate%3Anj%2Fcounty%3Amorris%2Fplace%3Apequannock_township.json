@@ -1,0 +1,240 @@
+{
+  "contractId": "ballot-measures",
+  "version": "2026-general:1867cedf4f421057089675065cd513873b1ab96b1e40f63b4adbd783629a5a75:eb6f31f3661075fb477c98320e59c2bdf2fdbdc7406e90be9461131847812e8d",
+  "sourceThrough": "2026-10-15T21:36:42.570025+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-15T21:36:42.570025+00:00",
+    "reviewedBy": "Codex MS-01",
+    "sources": [
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "finalUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "retrievedAt": "2026-10-15T21:17:41.211421+00:00",
+        "httpStatus": 200,
+        "rawHash": "d91d49ddf7f0ecd937da5774b2646148675f05f20fceb3d83492301013f428bb",
+        "publisher": "Morris County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 general-election sample-ballot index links each held Morris County municipal ballot, including the local public question. Election date and municipality were checked on the PDF image."
+      },
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+        "finalUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+        "retrievedAt": "2026-10-15T21:21:17.190343+00:00",
+        "httpStatus": 200,
+        "rawHash": "63a21dc1514e553418223122aa9ecae56a3ddb1a357274e81ccbf2d83edbf679",
+        "publisher": "Morris County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Full official November 3, 2026 sample-ballot PDF held. Public question, all operative clauses and fiscal text visually checked against its PDF image; ballot choices are YES and NO."
+      },
+      {
+        "requestedUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+        "finalUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+        "retrievedAt": "2026-10-15T21:30:25.213970+00:00",
+        "httpStatus": 200,
+        "rawHash": "d530d1a1802bacd15189497d1aee5706f81f5ee70abb33bb29038ac5cb349e27",
+        "publisher": "Pequannock Township",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete two-page ordinance 2026-02, adopted April 28, 2026, held from the township official code publisher. All five sections, public question, and interpretive statement retained; question and interpretive statement matched to the County Clerk ballot. No separate arguments for/against or passage threshold is published in these sources."
+      },
+      {
+        "requestedUrl": "https://ecode360.com/PE0939/laws",
+        "finalUrl": "https://ecode360.com/PE0939/laws",
+        "retrievedAt": "2026-10-15T21:30:09.564875+00:00",
+        "httpStatus": 200,
+        "rawHash": "2fc06b742afbacd3e8141d4975fdb7126c150362f827ddc4a2439acc36bb6bcd",
+        "publisher": "Pequannock Township",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official township code new-laws ledger identifies ordinance 2026-02 as adopted April 28, 2026 and directly links the held full adopted ordinance PDF."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-measures",
+    "ocdId": "ocd-division/country:us/state:nj/county:morris/place:pequannock_township",
+    "ballots": {
+      "NJ:nj-2026-11-03": {
+        "election": {
+          "id": "nj-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 General Election",
+          "state": "NJ"
+        },
+        "contests": [
+          {
+            "id": "ballot-nj-morris:pequannock:open-space-trust-fund",
+            "type": "MEASURE",
+            "ocdId": "ocd-division/country:us/state:nj/county:morris/place:pequannock_township",
+            "title": "Pequannock Township: Open Space Trust Fund Referendum",
+            "voteFor": 1,
+            "scopeNote": "Voters of Pequannock Township.",
+            "termYears": null,
+            "electionId": "nj-2026-11-03",
+            "provenance": {
+              "sourceOrg": "Morris County Clerk",
+              "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+              "collectedAt": "2026-10-15T21:21:17.190343+00:00",
+              "verifiedAt": "2026-10-15T21:36:42.570025+00:00"
+            },
+            "measureTextUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+            "divisionVintage": "TIGER_GENZ2025"
+          }
+        ],
+        "candidacies": [],
+        "measures": [
+          {
+            "id": "ballot-nj-morris:pequannock:open-space-trust-fund:question",
+            "contestId": "ballot-nj-morris:pequannock:open-space-trust-fund",
+            "officialNumber": "Open Space Trust Fund Referendum",
+            "questionText": "Shall the Pequannock Township Council adopt an Ordinance revising the permitted uses of the Open Space, Recreation, Farmland and Historic Preservation Trust Fund, currently codified as Section 5-112 of the Pequannock Township Code, to allow the Open Space, Recreation, Farmland and Historic Preservation Trust Fund to broaden the purposes for which it may be used to include all purposes authorized by N.J.S.A. 40:12-15.7 specifically including the purpose of stewardship of permanently preserved land acquired for recreation and conservation purposes that are designed to restore or enhance its utilization for those purposes, and allow the use of previously collected funds for these purposes.",
+            "officialStatement": "This proposal will give Pequannock Township greater flexibility in its use of the funds in its Open Space, Recreation, Farmland and Historic Preservation Trust Fund. A “Yes” vote will mean the voters want to maximize the purposes for which the fund can be used to include natural resource management, habitat restoration and wildlife stewardship as eligible activities on permanently preserved land acquired for recreation and conservation purposes in addition to other purposes within the limits allowed by state law.\n\nTHIS IS NOT A REQUEST TO RAISE ADDITIONAL TAXES.",
+            "provenance": {
+              "sourceOrg": "Morris County Clerk",
+              "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+              "collectedAt": "2026-10-15T21:21:17.190343+00:00",
+              "verifiedAt": "2026-10-15T21:36:42.570025+00:00"
+            },
+            "officialText": {
+              "sourceUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+              "sourceHash": "1867cedf4f421057089675065cd513873b1ab96b1e40f63b4adbd783629a5a75",
+              "retrievedAt": "2026-10-15T21:30:25.213970+00:00",
+              "publisher": "Pequannock Township",
+              "vault": {
+                "key": "project/freshness/source/ecode360.com/2026/10/15/ms-01-nj-local-7ab3f4071f3fcf73/sha256-1867cedf4f421057089675065cd513873b1ab96b1e40f63b4adbd783629a5a75.txt",
+                "byteLength": 3994,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+                  "sourceHash": "d530d1a1802bacd15189497d1aee5706f81f5ee70abb33bb29038ac5cb349e27",
+                  "retrievedAt": "2026-10-15T21:30:25.213970+00:00",
+                  "publisher": "Pequannock Township",
+                  "vault": {
+                    "key": "project/freshness/source/ecode360.com/2026/10/15/ms-01-nj-local-7ab3f4071f3fcf73/sha256-d530d1a1802bacd15189497d1aee5706f81f5ee70abb33bb29038ac5cb349e27.pdf",
+                    "byteLength": 288004,
+                    "contentType": "application/pdf"
+                  }
+                },
+                {
+                  "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+                  "retrievedAt": "2026-10-15T21:21:17.190343+00:00",
+                  "publisher": "Morris County Clerk",
+                  "sourceHash": "63a21dc1514e553418223122aa9ecae56a3ddb1a357274e81ccbf2d83edbf679",
+                  "vault": {
+                    "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-bl30-ba477ff4b6fe93e9/sha256-63a21dc1514e553418223122aa9ecae56a3ddb1a357274e81ccbf2d83edbf679.pdf",
+                    "byteLength": 856465,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "voterGuide": {
+              "sourceUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+              "sourceHash": "eb6f31f3661075fb477c98320e59c2bdf2fdbdc7406e90be9461131847812e8d",
+              "retrievedAt": "2026-10-15T21:30:25.213970+00:00",
+              "publisher": "Pequannock Township",
+              "vault": {
+                "key": "project/freshness/source/ecode360.com/2026/10/15/ms-01-nj-local-7ab3f4071f3fcf73/sha256-eb6f31f3661075fb477c98320e59c2bdf2fdbdc7406e90be9461131847812e8d.txt",
+                "byteLength": 596,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+                  "sourceHash": "d530d1a1802bacd15189497d1aee5706f81f5ee70abb33bb29038ac5cb349e27",
+                  "retrievedAt": "2026-10-15T21:30:25.213970+00:00",
+                  "publisher": "Pequannock Township",
+                  "vault": {
+                    "key": "project/freshness/source/ecode360.com/2026/10/15/ms-01-nj-local-7ab3f4071f3fcf73/sha256-d530d1a1802bacd15189497d1aee5706f81f5ee70abb33bb29038ac5cb349e27.pdf",
+                    "byteLength": 288004,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ],
+              "summary": "This proposal will give Pequannock Township greater flexibility in its use of the funds in its Open Space, Recreation, Farmland and Historic Preservation Trust Fund. A “Yes” vote will mean the voters want to maximize the purposes for which the fund can be used to include natural resource management, habitat restoration and wildlife stewardship as eligible activities on permanently preserved land acquired for recreation and conservation purposes in addition to other purposes within the limits allowed by state law.",
+              "fiscalImpact": "THIS IS NOT A REQUEST TO RAISE ADDITIONAL TAXES.",
+              "argumentsFor": [],
+              "argumentsAgainst": []
+            }
+          }
+        ],
+        "absences": [],
+        "measureRecords": [
+          {
+            "contestId": "ballot-nj-morris:pequannock:open-space-trust-fund",
+            "whatItDoes": "Shall the Pequannock Township Council adopt an Ordinance revising the permitted uses of the Open Space, Recreation, Farmland and Historic Preservation Trust Fund, currently codified as Section 5-112 of the Pequannock Township Code, to allow the Open Space, Recreation, Farmland and Historic Preservation Trust Fund to broaden the purposes for which it may be used to include all purposes authorized by N.J.S.A. 40:12-15.7 specifically including the purpose of stewardship of permanently preserved land acquired for recreation and conservation purposes that are designed to restore or enhance its utilization for those purposes, and allow the use of previously collected funds for these purposes.",
+            "yesMeans": "A “Yes” vote will mean the voters want to maximize the purposes for which the fund can be used to include natural resource management, habitat restoration and wildlife stewardship as eligible activities on permanently preserved land acquired for recreation and conservation purposes in addition to other purposes within the limits allowed by state law.",
+            "noMeans": null,
+            "parts": [
+              {
+                "id": "ballot-nj-morris:pequannock:open-space-trust-fund#provision-1",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Open Space Trust Fund Referendum",
+                "what": "Shall the Pequannock Township Council adopt an Ordinance revising the permitted uses of the Open Space, Recreation, Farmland and Historic Preservation Trust Fund, currently codified as Section 5-112 of the Pequannock Township Code, to allow the Open Space, Recreation, Farmland and Historic Preservation Trust Fund to broaden the purposes for which it may be used to include all purposes authorized by N.J.S.A. 40:12-15.7 specifically including the purpose of stewardship of permanently preserved land acquired for recreation and conservation purposes that are designed to restore or enhance its utilization for those purposes, and allow the use of previously collected funds for these purposes."
+              },
+              {
+                "id": "ballot-nj-morris:pequannock:open-space-trust-fund#provision-2",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Open Space Trust Fund Referendum",
+                "what": "Section 2. The Morris County Clerk is hereby requested to print the Referendum and Interpretive Statement on the Official Ballot for the next Election held in November 2026."
+              },
+              {
+                "id": "ballot-nj-morris:pequannock:open-space-trust-fund#provision-3",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Open Space Trust Fund Referendum",
+                "what": "Section 3. If any section or provision of this Ordinance shall be held invalid in any Court of competent jurisdiction, the same shall not affect the other sections or provisions of this Ordinance, except so far as the section or provision so declared invalid shall be inseparable from the remainder or any portion thereof."
+              },
+              {
+                "id": "ballot-nj-morris:pequannock:open-space-trust-fund#provision-4",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Open Space Trust Fund Referendum",
+                "what": "Section 4. All Ordinances or parts of Ordinances which are inconsistent herewith are hereby repealed to the extent of such inconsistency."
+              },
+              {
+                "id": "ballot-nj-morris:pequannock:open-space-trust-fund#provision-5",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Open Space Trust Fund Referendum",
+                "what": "Section 5. This Ordinance shall take effect immediately after final passage and publication in the manner provided by law."
+              }
+            ],
+            "sourceUrl": "https://ecode360.com/PE0939/laws/LF2757553.pdf",
+            "sourceHash": "1867cedf4f421057089675065cd513873b1ab96b1e40f63b4adbd783629a5a75",
+            "sourceHashKind": "HELD_TEXT",
+            "writtenAt": "2026-10-15T21:36:42.570025+00:00",
+            "citation": "measure-source"
+          }
+        ],
+        "sourceAuthorities": [
+          {
+            "sourceUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+            "sourceHash": "b494b91bf51a537b3a34d194ae882ebe71f5a37e3e3c5d0c2fe3d99fc38d396c",
+            "retrievedAt": "2026-10-15T21:17:41.211421+00:00",
+            "publisher": "Morris County Clerk",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-bl30-3d51e43b669bc9d1/sha256-b494b91bf51a537b3a34d194ae882ebe71f5a37e3e3c5d0c2fe3d99fc38d396c.html",
+              "byteLength": 362779,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://ecode360.com/PE0939/laws",
+            "sourceHash": "2fc06b742afbacd3e8141d4975fdb7126c150362f827ddc4a2439acc36bb6bcd",
+            "retrievedAt": "2026-10-15T21:30:09.564875+00:00",
+            "publisher": "Pequannock Township",
+            "vault": {
+              "key": "project/freshness/source/ecode360.com/2026/10/15/ms-01-nj-local-eee3aa78b8b199ca/sha256-2fc06b742afbacd3e8141d4975fdb7126c150362f827ddc4a2439acc36bb6bcd.html",
+              "byteLength": 62505,
+              "contentType": "text/html"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

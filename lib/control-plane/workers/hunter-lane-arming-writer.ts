@@ -24,9 +24,9 @@ export function writeLaneArming(path: string, arming: HunterLaneArming): void {
     const spec = db.prepare("INSERT INTO sends(key,known,spec) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET known=1,spec=excluded.spec");
     for (const row of arming.sends.specs) spec.run(row.key, JSON.stringify(row));
     const history = db.prepare("INSERT INTO sends(key,usd) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET usd=excluded.usd");
-    for (const row of arming.sends.historical ?? []) history.run(row.key, row.usd);
+    for (const [key, spend] of arming.sends.historical ?? []) history.run(key, spend.usd);
     const reached = db.prepare("INSERT INTO reached VALUES (?,?)");
-    for (const [obligation, keys] of arming.sends.reached) reached.run(obligation, JSON.stringify(keys));
+    for (const [obligation, keys] of arming.sends.reached) if (keys.length) reached.run(obligation, JSON.stringify(keys));
     const scope = db.prepare("INSERT INTO scopes VALUES (?,?)"), member = db.prepare("INSERT OR IGNORE INTO members VALUES (?,?)");
     const unresolved = db.prepare("INSERT OR IGNORE INTO unresolved VALUES (?,?)");
     for (const { members, ...row } of arming.areas?.scopes ?? []) {

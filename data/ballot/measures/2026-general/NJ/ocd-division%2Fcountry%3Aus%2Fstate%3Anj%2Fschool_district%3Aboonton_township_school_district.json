@@ -1,0 +1,348 @@
+{
+  "contractId": "ballot-measures",
+  "version": "2026-general:b5c156e3912581219b7e6b4b958c4c088e6c9385c593fadb25c13b1f60a3ff0f:446931adfb899b7cd681d1c074ee13e92b4002e736eae41cbc846cee60a4689b",
+  "sourceThrough": "2026-10-15T21:36:42.570025+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-15T21:36:42.570025+00:00",
+    "reviewedBy": "Codex MS-01",
+    "sources": [
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "finalUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+        "retrievedAt": "2026-10-15T21:17:41.211421+00:00",
+        "httpStatus": 200,
+        "rawHash": "d91d49ddf7f0ecd937da5774b2646148675f05f20fceb3d83492301013f428bb",
+        "publisher": "Morris County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 general-election sample-ballot index links each held Morris County municipal ballot, including the local public question. Election date and municipality were checked on the PDF image."
+      },
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+        "finalUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+        "retrievedAt": "2026-10-15T21:21:13.933123+00:00",
+        "httpStatus": 200,
+        "rawHash": "ca7a54c6d9235ffcbb342ed662aab14a1059ab7580594fe2cd12de7a308b1871",
+        "publisher": "Morris County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Full official November 3, 2026 sample-ballot PDF held. Public question, all operative clauses and fiscal text visually checked against its PDF image; ballot choices are YES and NO."
+      },
+      {
+        "requestedUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5213/Rvs/1206a801-99f1-424a-9872-280076dd980d/July-29%2C-2026-Special-Meeting-Minutes.pdf?disposition=inline",
+        "finalUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5213/Rvs/1206a801-99f1-424a-9872-280076dd980d/July-29%2C-2026-Special-Meeting-Minutes.pdf?disposition=inline",
+        "retrievedAt": "2026-10-15T21:32:32.532137+00:00",
+        "httpStatus": 200,
+        "rawHash": "7fe048a7fc7d49a6a7bf6d52c5854f820682d6f532fead562e1f2d757eccaab5",
+        "publisher": "Boonton Township School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete adopted July 29, 2026 special meeting minutes held. All nine sections of the bond resolution transcribed; minutes record an 8–0 approval. Ballot proposal and amounts matched independently to the County Clerk sample ballot."
+      },
+      {
+        "requestedUrl": "https://www.btrvs.org/documents/board-of-ed/board-meeting-minutes/1.-current-school-year-boe-minutes/22102603",
+        "finalUrl": "https://www.btrvs.org/documents/board-of-ed/board-meeting-minutes/1.-current-school-year-boe-minutes/22102603",
+        "retrievedAt": "2026-10-15T21:32:15.571483+00:00",
+        "httpStatus": 200,
+        "rawHash": "d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec",
+        "publisher": "Boonton Township School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official Board of Education current-year minutes index directly links the captured adopted July 29, 2026 special meeting minutes PDF."
+      },
+      {
+        "requestedUrl": "https://vote.btrvs.org",
+        "finalUrl": "https://vote.btrvs.org",
+        "retrievedAt": "2026-10-15T21:29:08.461733+00:00",
+        "httpStatus": 200,
+        "rawHash": "86a8a114af41d60e5bc24862abd475eb79591a13445f9845257164cbdb85c088",
+        "publisher": "Boonton Township School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete official district referendum guide page held with its project explanation and fiscal information. All published page text retained in the combined voter-guide entry. No separately labeled arguments for/against or passage threshold were found in these guide pages."
+      },
+      {
+        "requestedUrl": "https://vote.btrvs.org/faqs",
+        "finalUrl": "https://vote.btrvs.org/faqs",
+        "retrievedAt": "2026-10-15T21:29:48.162573+00:00",
+        "httpStatus": 200,
+        "rawHash": "9b11d829efd2c05cc42c38e7f8ea8bddf4ae918029748c3601fdc10227330a25",
+        "publisher": "Boonton Township School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete official district referendum guide page held with its project explanation and fiscal information. All published page text retained in the combined voter-guide entry. No separately labeled arguments for/against or passage threshold were found in these guide pages."
+      },
+      {
+        "requestedUrl": "https://vote.btrvs.org/funding-facts",
+        "finalUrl": "https://vote.btrvs.org/funding-facts",
+        "retrievedAt": "2026-10-15T21:29:48.099903+00:00",
+        "httpStatus": 200,
+        "rawHash": "b288082a8190d7f7ec9889a89715548b8f00b821da71f79e93af9043f7040ef9",
+        "publisher": "Boonton Township School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete official district referendum guide page held with its project explanation and fiscal information. All published page text retained in the combined voter-guide entry. No separately labeled arguments for/against or passage threshold were found in these guide pages."
+      },
+      {
+        "requestedUrl": "https://vote.btrvs.org/proposed-projects",
+        "finalUrl": "https://vote.btrvs.org/proposed-projects",
+        "retrievedAt": "2026-10-15T21:29:48.312156+00:00",
+        "httpStatus": 200,
+        "rawHash": "b83cdb7bf52a159a4461ff9411384aa122ec3738bb5437c6dd63eba5298712e7",
+        "publisher": "Boonton Township School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete official district referendum guide page held with its project explanation and fiscal information. All published page text retained in the combined voter-guide entry. No separately labeled arguments for/against or passage threshold were found in these guide pages."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-measures",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:boonton_township_school_district",
+    "ballots": {
+      "NJ:nj-2026-11-03": {
+        "election": {
+          "id": "nj-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 General Election",
+          "state": "NJ"
+        },
+        "contests": [
+          {
+            "id": "ballot-nj-morris:boonton-township:school-bond",
+            "type": "MEASURE",
+            "ocdId": "ocd-division/country:us/state:nj/school_district:boonton_township_school_district",
+            "title": "Boonton Township School District: Rockaway Valley School Bond Proposal",
+            "voteFor": 1,
+            "scopeNote": "Voters of Boonton Township School District.",
+            "termYears": null,
+            "electionId": "nj-2026-11-03",
+            "provenance": {
+              "sourceOrg": "Morris County Clerk",
+              "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+              "collectedAt": "2026-10-15T21:21:13.933123+00:00",
+              "verifiedAt": "2026-10-15T21:36:42.570025+00:00"
+            },
+            "measureTextUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5213/Rvs/1206a801-99f1-424a-9872-280076dd980d/July-29%2C-2026-Special-Meeting-Minutes.pdf?disposition=inline",
+            "divisionVintage": "TIGER_GENZ2025"
+          }
+        ],
+        "candidacies": [],
+        "measures": [
+          {
+            "id": "ballot-nj-morris:boonton-township:school-bond:question",
+            "contestId": "ballot-nj-morris:boonton-township:school-bond",
+            "officialNumber": "Bond Proposal Question",
+            "questionText": "The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) (not less than a majority of the full membership of the Board concurring) as follows: 1. The following bond proposal (the \"Proposal\"), shall be submitted to the legal voters of the School District at the annual School District election (the \"Election\") to be held on Tuesday, November 3, 2026 for the purposes hereinafter provided. The polls shall remain open until 8:00 p.m. and as much longer as may be necessary to permit all the legal voters then present to vote and cast their ballot. The form of the Proposal will read substantially as follows except as otherwise may be set forth herein: BOND PROPOSAL QUESTION The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and upgrades at Rockaway Valley School, including but not limited to the construction of an addition and corridor expansion and renovations, reconfiguration and renovations of various existing classrooms, renovation and expansion of the science lab, renovations and ADA improvements to the art room and to the school nurse’s facilities, upgrades and improvements to the HVAC system, replacement of the existing security system and fire alarm system, various electrical upgrades, replacement of windows in the Lower Gym, replacement of various portions of roofing, abatement of hazardous materials and related renovations, and lighting upgrades and new ceilings, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $28,458,812 for such improvements; and (c) issue bonds in an amount not to exceed $28,458,812, and such bonds may only be utilized to fund the projects described in this Bond Proposal Question. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $21,185,538. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?",
+            "officialStatement": null,
+            "provenance": {
+              "sourceOrg": "Morris County Clerk",
+              "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+              "collectedAt": "2026-10-15T21:21:13.933123+00:00",
+              "verifiedAt": "2026-10-15T21:36:42.570025+00:00"
+            },
+            "officialText": {
+              "sourceUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5213/Rvs/1206a801-99f1-424a-9872-280076dd980d/July-29%2C-2026-Special-Meeting-Minutes.pdf?disposition=inline",
+              "sourceHash": "b5c156e3912581219b7e6b4b958c4c088e6c9385c593fadb25c13b1f60a3ff0f",
+              "retrievedAt": "2026-10-15T21:32:32.532137+00:00",
+              "publisher": "Boonton Township School District",
+              "vault": {
+                "key": "project/freshness/source/files-backend.assets.thrillshare.com/2026/10/15/ms-01-nj-local-3b2a0c9663355afe/sha256-b5c156e3912581219b7e6b4b958c4c088e6c9385c593fadb25c13b1f60a3ff0f.txt",
+                "byteLength": 7262,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5213/Rvs/1206a801-99f1-424a-9872-280076dd980d/July-29%2C-2026-Special-Meeting-Minutes.pdf?disposition=inline",
+                  "sourceHash": "7fe048a7fc7d49a6a7bf6d52c5854f820682d6f532fead562e1f2d757eccaab5",
+                  "retrievedAt": "2026-10-15T21:32:32.532137+00:00",
+                  "publisher": "Boonton Township School District",
+                  "vault": {
+                    "key": "project/freshness/source/files-backend.assets.thrillshare.com/2026/10/15/ms-01-nj-local-3b2a0c9663355afe/sha256-7fe048a7fc7d49a6a7bf6d52c5854f820682d6f532fead562e1f2d757eccaab5.pdf",
+                    "byteLength": 150202,
+                    "contentType": "application/pdf"
+                  }
+                },
+                {
+                  "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+                  "retrievedAt": "2026-10-15T21:21:13.933123+00:00",
+                  "publisher": "Morris County Clerk",
+                  "sourceHash": "ca7a54c6d9235ffcbb342ed662aab14a1059ab7580594fe2cd12de7a308b1871",
+                  "vault": {
+                    "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-bl30-e1bfcb1fef6f5f23/sha256-ca7a54c6d9235ffcbb342ed662aab14a1059ab7580594fe2cd12de7a308b1871.pdf",
+                    "byteLength": 902914,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "voterGuide": {
+              "sourceUrl": "https://vote.btrvs.org",
+              "sourceHash": "446931adfb899b7cd681d1c074ee13e92b4002e736eae41cbc846cee60a4689b",
+              "retrievedAt": "2026-10-15T21:29:08.461733+00:00",
+              "publisher": "Boonton Township School District",
+              "vault": {
+                "key": "project/freshness/source/vote.btrvs.org/2026/10/15/ms-01-nj-local-4c84815a8d3c22ea/sha256-446931adfb899b7cd681d1c074ee13e92b4002e736eae41cbc846cee60a4689b.txt",
+                "byteLength": 30413,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://vote.btrvs.org",
+                  "sourceHash": "86a8a114af41d60e5bc24862abd475eb79591a13445f9845257164cbdb85c088",
+                  "retrievedAt": "2026-10-15T21:29:08.461733+00:00",
+                  "publisher": "Boonton Township School District",
+                  "vault": {
+                    "key": "project/freshness/source/vote.btrvs.org/2026/10/15/ms-01-nj-local-4c84815a8d3c22ea/sha256-86a8a114af41d60e5bc24862abd475eb79591a13445f9845257164cbdb85c088.html",
+                    "byteLength": 285581,
+                    "contentType": "text/html"
+                  }
+                },
+                {
+                  "sourceUrl": "https://vote.btrvs.org/faqs",
+                  "sourceHash": "9b11d829efd2c05cc42c38e7f8ea8bddf4ae918029748c3601fdc10227330a25",
+                  "retrievedAt": "2026-10-15T21:29:48.162573+00:00",
+                  "publisher": "Boonton Township School District",
+                  "vault": {
+                    "key": "project/freshness/source/vote.btrvs.org/2026/10/15/ms-01-nj-local-758883d746336cdb/sha256-9b11d829efd2c05cc42c38e7f8ea8bddf4ae918029748c3601fdc10227330a25.html",
+                    "byteLength": 295276,
+                    "contentType": "text/html"
+                  }
+                },
+                {
+                  "sourceUrl": "https://vote.btrvs.org/funding-facts",
+                  "sourceHash": "b288082a8190d7f7ec9889a89715548b8f00b821da71f79e93af9043f7040ef9",
+                  "retrievedAt": "2026-10-15T21:29:48.099903+00:00",
+                  "publisher": "Boonton Township School District",
+                  "vault": {
+                    "key": "project/freshness/source/vote.btrvs.org/2026/10/15/ms-01-nj-local-2ab76108f894f31a/sha256-b288082a8190d7f7ec9889a89715548b8f00b821da71f79e93af9043f7040ef9.html",
+                    "byteLength": 193159,
+                    "contentType": "text/html"
+                  }
+                },
+                {
+                  "sourceUrl": "https://vote.btrvs.org/proposed-projects",
+                  "sourceHash": "b83cdb7bf52a159a4461ff9411384aa122ec3738bb5437c6dd63eba5298712e7",
+                  "retrievedAt": "2026-10-15T21:29:48.312156+00:00",
+                  "publisher": "Boonton Township School District",
+                  "vault": {
+                    "key": "project/freshness/source/vote.btrvs.org/2026/10/15/ms-01-nj-local-5bb892dbd633b5dd/sha256-b83cdb7bf52a159a4461ff9411384aa122ec3738bb5437c6dd63eba5298712e7.html",
+                    "byteLength": 192995,
+                    "contentType": "text/html"
+                  }
+                }
+              ],
+              "summary": "On Tuesday, Nov. 3, Boonton Township voters will be asked to consider a $28.5 million bond referendum that would fund improvements to Rockaway Valley School. If approved, the proposal would update aging infrastructure, renovate and create educational spaces, and unlock approximately $7.2 million in state aid – reducing the overall cost of the project.",
+              "fiscalImpact": "PROJECT COSTS\n\nSTATE AID\n\nLOCAL SHARE\n\n$28.5 M\n\n$7.2 M\n\n$21.3 M\n\nWITH BOND FUNDING, BOONTON TWP. SCHOOL DISTRICT CAN\n\nCapture $7.2 million in state aid to offset the local tax impact\n\nSpread debt payments over 20 years, similar to how a homeowner finances major improvements\n\nEnsure our school buildings are well-maintained and support all learners for years to come\n\nMAXIMIZING $7.2 MILLION IN STATE AID\n\nIf voters approve the referendum, the State of New Jersey will contribute approximately $7.2 million toward the total project cost of $28.5 million, helping offset local costs by approximately 25%.\n\nThis is funding that Boonton Township residents already contribute through state taxes. The only way to bring these dollars back to Boonton Township School District is through voter approval of a bond referendum.\n\nESTIMATED\nTAX IMPACT\n\n$28.5 million in school improvements\n\nIf approved, the estimated tax impact for the average Boonton Township home assessed at $533,155 would be approximately $80 per month.\n\nThe bonds would be repaid over a 20-year period, allowing the district to make critical improvements today while spreading the cost over time. The cost is shared among all taxable properties (including future property owners not just current ones) throughout Boonton Township.",
+              "argumentsFor": [],
+              "argumentsAgainst": []
+            }
+          }
+        ],
+        "absences": [],
+        "measureRecords": [
+          {
+            "contestId": "ballot-nj-morris:boonton-township:school-bond",
+            "whatItDoes": "The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) (not less than a majority of the full membership of the Board concurring) as follows: 1. The following bond proposal (the \"Proposal\"), shall be submitted to the legal voters of the School District at the annual School District election (the \"Election\") to be held on Tuesday, November 3, 2026 for the purposes hereinafter provided. The polls shall remain open until 8:00 p.m. and as much longer as may be necessary to permit all the legal voters then present to vote and cast their ballot. The form of the Proposal will read substantially as follows except as otherwise may be set forth herein: BOND PROPOSAL QUESTION The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and upgrades at Rockaway Valley School, including but not limited to the construction of an addition and corridor expansion and renovations, reconfiguration and renovations of various existing classrooms, renovation and expansion of the science lab, renovations and ADA improvements to the art room and to the school nurse’s facilities, upgrades and improvements to the HVAC system, replacement of the existing security system and fire alarm system, various electrical upgrades, replacement of windows in the Lower Gym, replacement of various portions of roofing, abatement of hazardous materials and related renovations, and lighting upgrades and new ceilings, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $28,458,812 for such improvements; and (c) issue bonds in an amount not to exceed $28,458,812, and such bonds may only be utilized to fund the projects described in this Bond Proposal Question.",
+            "yesMeans": null,
+            "noMeans": null,
+            "parts": [
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-1",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) (not less than a majority of the full membership of the Board concurring) as follows: 1. The following bond proposal (the \"Proposal\"), shall be submitted to the legal voters of the School District at the annual School District election (the \"Election\") to be held on Tuesday, November 3, 2026 for the purposes hereinafter provided. The polls shall remain open until 8:00 p.m. and as much longer as may be necessary to permit all the legal voters then present to vote and cast their ballot. The form of the Proposal will read substantially as follows except as otherwise may be set forth herein: BOND PROPOSAL QUESTION The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and upgrades at Rockaway Valley School, including but not limited to the construction of an addition and corridor expansion and renovations, reconfiguration and renovations of various existing classrooms, renovation and expansion of the science lab, renovations and ADA improvements to the art room and to the school nurse’s facilities, upgrades and improvements to the HVAC system, replacement of the existing security system and fire alarm system, various electrical upgrades, replacement of windows in the Lower Gym, replacement of various portions of roofing, abatement of hazardous materials and related renovations, and lighting upgrades and new ceilings, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $28,458,812 for such improvements; and (c) issue bonds in an amount not to exceed $28,458,812, and such bonds may only be utilized to fund the projects described in this Bond Proposal Question."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-2",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $21,185,538. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-3",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "2. The Board hereby approves and adopts the Proposal set forth above and, subject to the approval of the legal voters of the School District, hereby determines to carry out the same as described therein (the “Project”). The Board authorizes the Business Administrator/Board Secretary, consistent with any advice received from bond counsel, to revise the proposal, if necessary, prior to the Election to conform to any applicable legal requirements."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-4",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "3. The Board hereby acknowledges and confirms that, in accordance with the requirements of N.J.S.A. 18A:24-16 and N.J.S.A. 18A:24-17, a Supplemental Debt Statement has been prepared as of the date of this resolution by the Chief Financial Officer of the Township of Boonton, giving effect to the proposed total authorization of School Bonds of the School District in the maximum amount provided for in the Proposal, and that such respective Supplemental Debt Statement has been filed in the office of each respective Township Clerk, in the office of the Business Administrator/Board Secretary prior to the adoption of this resolution, and will be filed in the office of the Director of the Division of Local Government Services, State of New Jersey, Department of Community Affairs prior to the date of the Election."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-5",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "4. The Business Administrator/Board Secretary is hereby authorized and directed, in conjunction with Bond Counsel, to deliver a certified copy of this resolution and such other information as shall be necessary to the County Clerk as required by N.J.S.A. 19:60-2, to request the County Clerk to submit the Proposal to the voters at the Election and to seek the assistance of the county officials and the municipal clerk in conducting the Election."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-6",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "5. The Board hereby: (i) accepts the determination of Preliminary Eligible Costs as set forth in the letter from the New Jersey Department of Education and not to appeal such determinations made therein; (ii) determines to construct the Project itself; (iii) agrees to locally fund any excess costs, if any; and (iv) delegates the supervision of the Project to the Business Administrator/Board Secretary."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-7",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "6. Parette Somjen Architects, the School District’s appointed architect for the Project (the “Project Architect”), has heretofore been authorized and delegated the responsibility to prepare the plans and specifications for the Project in consultation with and under the supervision of the Business Administrator/Board Secretary, who has been delegated the responsibility to work with the Project Architect for this purposes on behalf of the Board, in accordance with the requirements of N.J.S.A. 18A:18A-16, and such authorizations and delegations are hereof reconfirmed."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-8",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "7. The School Administration and such other officers, professionals and agents of the Board as are necessary, including Wilentz, Goldman & Spitzer, P.A., Bond Counsel, and the Project Architect, are each hereby authorized and directed to perform such acts, execute such documents and do such things as are necessary and proper for the submission of the Proposal to the voters of the School District at the Election."
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-9",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "8. This Board hereby makes the following covenants and declarations with respect to obligations determined to be issued by the Business Administrator/Board Secretary through a public offering of private placement or through a conduit borrower on a tax exempt basis. The Board hereby covenants that it will comply with any conditions subsequent imposed by the Internal Revenue Code of 1986, as amended (the “Code”), in order to preserve the exemption from taxation of interest on its bonds or notes if issued as tax exempt, including, if necessary, the requirement to rebate all net investment earnings on the gross proceeds above the yield on its bonds or notes. The Business Administrator/Board Secretary is hereby authorized to act on behalf of the Board to deem the obligations authorized herein as bank qualified for the purposes of Section 265 of the Code, when appropriate. The Board hereby declares its intent to issue bonds or notes in the amount set forth in the Proposal approved by the voters as set forth in Section 1 and to use the proceeds to pay or to reimburse expenditures for the costs of the Projects authorized herein. This resolution is a declaration of intent within the meaning and for the purposes of Treasury Regulations 1.150-2 or any successor provisions of federal income tax law,"
+              },
+              {
+                "id": "ballot-nj-morris:boonton-township:school-bond#provision-10",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Bond Proposal Question",
+                "what": "9. This resolution shall take effect immediately."
+              }
+            ],
+            "sourceUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5213/Rvs/1206a801-99f1-424a-9872-280076dd980d/July-29%2C-2026-Special-Meeting-Minutes.pdf?disposition=inline",
+            "sourceHash": "b5c156e3912581219b7e6b4b958c4c088e6c9385c593fadb25c13b1f60a3ff0f",
+            "sourceHashKind": "HELD_TEXT",
+            "writtenAt": "2026-10-15T21:36:42.570025+00:00",
+            "citation": "measure-source"
+          }
+        ],
+        "sourceAuthorities": [
+          {
+            "sourceUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+            "sourceHash": "b494b91bf51a537b3a34d194ae882ebe71f5a37e3e3c5d0c2fe3d99fc38d396c",
+            "retrievedAt": "2026-10-15T21:17:41.211421+00:00",
+            "publisher": "Morris County Clerk",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-bl30-3d51e43b669bc9d1/sha256-b494b91bf51a537b3a34d194ae882ebe71f5a37e3e3c5d0c2fe3d99fc38d396c.html",
+              "byteLength": 362779,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://www.btrvs.org/documents/board-of-ed/board-meeting-minutes/1.-current-school-year-boe-minutes/22102603",
+            "sourceHash": "d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec",
+            "retrievedAt": "2026-10-15T21:32:15.571483+00:00",
+            "publisher": "Boonton Township School District",
+            "vault": {
+              "key": "project/freshness/source/www.btrvs.org/2026/10/15/ms-01-nj-local-d7da0cc543fbbf0b/sha256-d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec.html",
+              "byteLength": 1310315,
+              "contentType": "text/html"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

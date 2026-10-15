@@ -377,7 +377,8 @@
             "verifiedAt": "2026-09-07",
             "collectedAt": "2026-09-07"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "measureTextUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html"
         }
       ],
       "election": {
@@ -391,13 +392,64 @@
           "id": "ballot-nh-merrimack:cacr-13:question",
           "contestId": "ballot-nh-merrimack:cacr-13",
           "provenance": {
-            "sourceOrg": "New Hampshire General Court, CACR 13 version adopted by both bodies",
-            "sourceUrl": "https://www.gc.nh.gov/lsr_search/billText.aspx?id=1803&type=4",
-            "verifiedAt": "2026-09-07",
-            "collectedAt": "2026-09-07"
+            "sourceUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-10-15T21:12:29.390172+00:00",
+            "verifiedAt": "2026-10-15T21:12:29.390172+00:00"
           },
           "questionText": "Are you in favor of eliminating the office of register of probate by amending articles 71 and 81 of the second part of the constitution to read as follows: [Art.] 71. [County Treasurers, County Attorneys, Sheriffs, and Registers of Deeds Elected.] The county treasurers, county attorneys, sheriffs and registers of deeds, shall be elected by the inhabitants of the several towns, in the several counties in the State, according to the method now practiced, and the laws of the state, provided nevertheless the legislature shall have authority to alter the manner of certifying the votes, and the mode of electing those officers; but not so as to deprive the people of the right they now have of electing them. [Art.] 81. [Judges Not to Act as Counsel.] No judge shall be of counsel, act as advocate, or receive any fees as advocate or counsel, in any probate business which is pending, or may be brought into any court of probate in the county of which he or she is judge.",
-          "officialStatement": "AT THE PRESENT TIME, the constitution references registers of probate while the office's duties were redistributed to circuit court clerks in 2011. IF THE AMENDMENT IS ADOPTED, the constitution will eliminate the position of register of probate."
+          "officialStatement": "AT THE PRESENT TIME, the constitution references registers of probate while the office's duties were redistributed to circuit court clerks in 2011. IF THE AMENDMENT IS ADOPTED, the constitution will eliminate the position of register of probate.",
+          "officialNumber": "CACR 13",
+          "officialText": {
+            "sourceUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+            "retrievedAt": "2026-10-15T21:12:29.390172+00:00",
+            "publisher": "New Hampshire General Court",
+            "originals": [
+              {
+                "sourceUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+                "retrievedAt": "2026-10-15T21:12:29.390172+00:00",
+                "publisher": "New Hampshire General Court",
+                "sourceHash": "0e4acd0eaa223f967d36c2592db52e6431f8829b57071a92d948d7219739f5c6",
+                "vault": {
+                  "key": "project/freshness/source/www.gc.nh.gov/2026/10/15/ms-01-bl30-831aee691b77d233/sha256-0e4acd0eaa223f967d36c2592db52e6431f8829b57071a92d948d7219739f5c6.html",
+                  "byteLength": 16438,
+                  "contentType": "text/html"
+                }
+              }
+            ],
+            "sourceHash": "aaa7783adcd755f7bd0252de5856d9aadf850709a4726cb3b10f32c3b4d7edac",
+            "vault": {
+              "key": "project/freshness/source/www.gc.nh.gov/2026/10/15/ms-01-bl30-831aee691b77d233/sha256-aaa7783adcd755f7bd0252de5856d9aadf850709a4726cb3b10f32c3b4d7edac.txt",
+              "byteLength": 5164,
+              "contentType": "text/plain"
+            }
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+            "retrievedAt": "2026-10-15T21:12:29.390172+00:00",
+            "publisher": "New Hampshire General Court",
+            "originals": [
+              {
+                "sourceUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+                "retrievedAt": "2026-10-15T21:12:29.390172+00:00",
+                "publisher": "New Hampshire General Court",
+                "sourceHash": "0e4acd0eaa223f967d36c2592db52e6431f8829b57071a92d948d7219739f5c6",
+                "vault": {
+                  "key": "project/freshness/source/www.gc.nh.gov/2026/10/15/ms-01-bl30-831aee691b77d233/sha256-0e4acd0eaa223f967d36c2592db52e6431f8829b57071a92d948d7219739f5c6.html",
+                  "byteLength": 16438,
+                  "contentType": "text/html"
+                }
+              }
+            ],
+            "sourceHash": "aaa7783adcd755f7bd0252de5856d9aadf850709a4726cb3b10f32c3b4d7edac",
+            "vault": {
+              "key": "project/freshness/source/www.gc.nh.gov/2026/10/15/ms-01-bl30-831aee691b77d233/sha256-aaa7783adcd755f7bd0252de5856d9aadf850709a4726cb3b10f32c3b4d7edac.txt",
+              "byteLength": 5164,
+              "contentType": "text/plain"
+            },
+            "summary": "AT THE PRESENT TIME, the constitution references registers of probate while the office's duties were redistributed to circuit court clerks in 2011. IF THE AMENDMENT IS ADOPTED, the constitution will eliminate the position of register of probate.",
+            "passageThreshold": "That if the proposed amendment is approved by 2/3 of those voting on the amendment, it becomes effective when the governor proclaims its adoption."
+          }
         }
       ],
       "candidacies": [
@@ -1063,7 +1115,28 @@
         "Executive Council and county commissioner district boundary lines aren't on our map yet. Those contests are listed here because the Secretary of State's own district assignments place Newbury in Executive Council District 2 and the county's Second Commissioner District — the town assignment is sourced even though the lines can't be drawn.",
         "Candidate lists come from the Secretary of State's July 16, 2026 primary filings. The September 8 primary results and nomination-paper candidates have not yet been reconciled into this ballot."
       ],
-      "measureRecords": [],
+      "measureRecords": [
+        {
+          "contestId": "ballot-nh-merrimack:cacr-13",
+          "whatItDoes": "This constitutional amendment concurrent resolution amends the constitution to delete the position of register of probate and all references to the position of register of probate.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ballot-nh-merrimack:cacr-13#official-proposal",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Official proposal",
+              "what": "This constitutional amendment concurrent resolution amends the constitution to delete the position of register of probate and all references to the position of register of probate."
+            }
+          ],
+          "sourceUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+          "sourceHash": "aaa7783adcd755f7bd0252de5856d9aadf850709a4726cb3b10f32c3b4d7edac",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T21:32:59.518Z",
+          "citation": "measure-source"
+        }
+      ],
       "filingCandidacies": [
         {
           "id": "ballot-nh-merrimack:governor:fife-shaun",
@@ -1690,7 +1763,21 @@
             }
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "NH",
+        "electionId": "nh-2026-11-03",
+        "sourceHash": "7019b3c813df1bad545f439ba9192a3e433b2fffb30be0e6e354eb55dda4d76a",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T21:32:59.518Z",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-nh/2026/10/15/ms-01/sha256-7019b3c813df1bad545f439ba9192a3e433b2fffb30be0e6e354eb55dda4d76a.ndjson",
+          "byteLength": 3378,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {
@@ -1760,10 +1847,10 @@
         "finalUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
         "httpStatus": 200,
         "rawHash": "ab325c554105ae420bf2faf20669981ad9fe69f7ca5701cd80ccd9eef0dc9520",
-        "retrievedAt": "2026-10-15T18:19:03.940004+00:00",
+        "retrievedAt": "2026-10-15T21:12:29.649638+00:00",
         "publisher": "New London Town Clerk",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot linked by New London at https://newlondon.nh.gov/voting. New London and Newbury share eleven state, congressional and Merrimack County contests held here, including House Merrimack District 7 with State Senate District 7 verified separately against Boscawen’s official ballot; the printed candidate inventory was checked in full."
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       },
       {
         "requestedUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
@@ -1774,10 +1861,20 @@
         "publisher": "Boscawen Town Clerk",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 general-election sample ballot linked by Boscawen at https://www.boscawennh.gov/m/newsflash/Home/Detail/132. The complete printed State Senate District 7 candidate inventory was checked against the held primary filing records."
+      },
+      {
+        "requestedUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+        "finalUrl": "https://www.gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?sy=2026&id=1803&txtFormat=html",
+        "httpStatus": 200,
+        "rawHash": "0e4acd0eaa223f967d36c2592db52e6431f8829b57071a92d948d7219739f5c6",
+        "retrievedAt": "2026-10-15T21:12:29.390172+00:00",
+        "publisher": "New Hampshire General Court",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official 2026 measure text, ballot wording, voter-guide entry or passage rule, acquired and checked against the issuing legislature or election authority."
       }
     ],
-    "reviewedAt": "2026-10-15T18:23:18.445324+00:00",
-    "reviewedBy": "codex-pdc-cutover",
+    "reviewedAt": "2026-10-15T21:32:59.518Z",
+    "reviewedBy": "Codex MS-01",
     "contractVersion": 1
   }
 }

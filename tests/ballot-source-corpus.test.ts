@@ -118,7 +118,7 @@ test("state packages cite one corpus and preserve every direct official source",
   for (const name of await readdir(directory)) {
     if (!name.endsWith(".json")) continue;
     const data = JSON.parse(await readFile(new URL(name, directory), "utf8")) as GenericBallotProjection & { sourceReceipt: ManualSourceSetReceipt };
-    assert.deepEqual(genericBallotProblems(data), [], name);
+    assert.deepEqual(genericBallotProblems({ ...data, kind: "ballot-contests" }, name.slice(0, -5).toUpperCase()), [], name);
     const sources = new Set(data.sourceReceipt.sources.flatMap(manualSourceUrls));
     for (const url of ballotProvenanceUrls(data.ballots)) assert.ok(sources.has(url), `${name}: ${url}`);
     for (const ballot of Object.values(data.ballots)) {

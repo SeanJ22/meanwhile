@@ -38,6 +38,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "assemble-ballot-package.mts": STATE_BALLOT_PEAK_MIB["ballot-contests"]!,
   "fetch-voting-sites.mts": STATE_BALLOT_PEAK_MIB["voting-sites"]!,
   "translate-national-measures.mts": 1258,
+  "publish-held-measures.mts": 384,
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
@@ -196,7 +197,7 @@ function routineMinimumPeakBytes(entry: string): number {
   const family = /^(?:worker-publication:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
   if (family) return STATE_BALLOT_PEAK_MIB[family]! * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
-  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "translate-national-measures.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "translate-national-measures.mts", "publish-held-measures.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

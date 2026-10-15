@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -23,6 +23,7 @@ import {
   type ArmedHunterLane,
 } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming-writer.ts";
+import { openArmingDatabase } from "../lib/control-plane/workers/hunter-lane-arming-index.ts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS } from "../lib/models.ts";
@@ -126,6 +127,51 @@ test("CH-24 lane: open with room, a request is held on its Send from the task's 
   const [hold] = Object.values(holds);
   assert.deepEqual(hold?.keys, [`send:${SEND}`], "held on the Send the obligation's own record names");
   assert.ok((hold?.settled?.usd ?? 0) > 0);
+});
+
+test("the writer consumes each reading iterable once and retains budget and membership semantics", () => {
+  const dir = mkdtempSync(join(tmpdir(), "hunter-lane-iterables-")), path = hunterLaneArmingPath(dir, {});
+  let writing = false;
+  const deferred = <T>(rows: Iterable<T>): Iterable<T> => {
+    let consumed = false;
+    return { *[Symbol.iterator]() {
+      assert.ok(writing, "building the reading must not consume its rows");
+      assert.equal(consumed, false, "the writer must consume each input only once");
+      consumed = true;
+      yield* rows;
+    } };
+  };
+  const arming = laneArmingOf({ readAt: NOW, specs: reading().sends.specs,
+    historical: deferred([
+      [SEND, { usd: 1.25, measured: 1, unmeasured: 0, bySubject: 0 }],
+      ["unmeasured", { usd: null, measured: 0, unmeasured: 1, bySubject: 0 }],
+    ] as const),
+    knownKeys: deferred([SEND, SEND, "unmeasured"]),
+    reached: deferred(new Map([["empty", []], ["pending", [SEND]]])),
+    areas: { malformedScopes: 0, scopes: [{ key: "county", label: "County", budgetUsd: 5, resolved: true,
+      members: deferred([jurisdiction.subjectId, jurisdiction.subjectId]), states: ["NH"], historicalUsd: 1.25, lifetime: true }] },
+    lifetimeHuntSubjects: deferred([jurisdiction.subjectId, jurisdiction.subjectId]), circuits: [], worstCaseUsd: 1 });
+  try {
+    writing = true;
+    writeLaneArming(path, arming);
+    const saved = readLaneArming(path, NOW);
+    assert.ok("arming" in saved);
+    assert.equal(saved.arming.costsReadable, true);
+    assert.equal(saved.arming.assignment(SEND).usd, 1.25);
+    assert.deepEqual(saved.arming.assignment("unmeasured"), { known: true, spec: null, usd: null });
+    assert.deepEqual(saved.arming.reached("pending"), [SEND]);
+    assert.equal(saved.arming.lifetimeSubject(jurisdiction.subjectId), true);
+    assert.equal(saved.arming.areas?.hasSelectedHunts, true);
+    assert.deepEqual(saved.arming.scopesFor(jurisdiction.subjectId).map(scope => scope.key), ["county"]);
+    const db = openArmingDatabase(join(dir, ".runtime", "hunter-lane", saved.arming.indexFile), true);
+    try {
+      for (const table of ["reached", "members", "lifetime"]) assert.equal(db.prepare(`SELECT COUNT(*) AS count FROM ${table}`).get()?.count, 1);
+    } finally { db.close(); }
+    writeLaneArming(path, reading({ historicalUsd: null }));
+    const unreadable = readLaneArming(path, NOW);
+    assert.ok("arming" in unreadable);
+    assert.equal(unreadable.arming.costsReadable, false);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test("CH-24 lane: every owner control holds paid work by name, and nothing is sent", async () => {

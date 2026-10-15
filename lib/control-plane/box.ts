@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { contentHash } from "./ids.ts";
-import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type ArtifactRecord } from "./repository/types.ts";
+import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type AppendOnlyRepository, type ArtifactRecord } from "./repository/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
 
@@ -136,6 +136,17 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
     try { await repo.compareAndSet(id, held.revision, next, now); return true; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
+}
+
+/** A finding's field, value and origin: a mid-hunt drop carries them; a Scout finding is read from its saved result. */
+export async function findingFact(results: Pick<AppendOnlyRepository<ScoutResult>, "readWhere">, row: BoxFinding):
+  Promise<{ readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean } | null> {
+  const origin = row.origins.find(o => o.reported) ?? row.origins.find(o => o.kind === "SCOUT" && o.resultKey);
+  if (!origin) return null;
+  if (origin.reported) return { origin, field: origin.reported.field, value: origin.reported.value };
+  const result = (await results.readWhere(origin.resultKey!, ["attemptId"], origin.resultId)).find(row => row.attemptId === origin.resultId);
+  const finding = result?.findings[origin.findingIndex];
+  return finding?.field && finding.value !== undefined && finding.value !== null ? { origin, field: finding.field, value: finding.value } : null;
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */

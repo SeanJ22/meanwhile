@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -34,6 +35,8 @@ for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL",
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-25T15:00:00.000Z";
+const PIMA_CAPTURE = [{ url: "https://www.pima.gov/3199/Pima-Votes", contentType: "text/html", vaultKey: "test/pima-votes",
+  rawHash: createHash("sha256").update("official voting sites").digest("hex"), byteLength: 21 }];
 const AZ_URL = "https://seethemoney.az.gov/Reporting/GetNEWTableData/";
 const AZ = STATE_CAMPAIGN_FINANCE_SOURCES.AZ;
 const NH = STATE_CAMPAIGN_FINANCE_SOURCES.NH;
@@ -152,7 +155,7 @@ test("published voting sites serve the same jurisdictions and sites from the req
   const store = new MemoryRoutineDataStore();
   const current = structuredClone(VOTING_SITES);
   const candidate = votingSitesCandidate({
-    current, prior: null, failures: [], rawBodies: ["official voting sites"],
+    current, prior: null, failures: [], acquisition: PIMA_CAPTURE,
     successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes",
     finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0,
   });
@@ -304,7 +307,7 @@ test("published, fetched and entered: a reader request reads the family from the
 test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
   const store = new MemoryRoutineDataStore();
   const current = structuredClone(VOTING_SITES);
-  const candidate = votingSitesCandidate({ current, prior: null, failures: [], rawBodies: ["official voting sites"],
+  const candidate = votingSitesCandidate({ current, prior: null, failures: [], acquisition: PIMA_CAPTURE,
     successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
   assert.ok((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).promoted);
   let payloadReads = 0;

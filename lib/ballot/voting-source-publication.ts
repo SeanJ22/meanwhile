@@ -2,6 +2,9 @@ import { createHash } from "node:crypto";
 import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
 import { listDoors, upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { holdRawCapture } from "../civic-data/raw-capture-vault.ts";
+import { VOTING_SITES_CONTRACT, type VotingRawCapture } from "./voting-sites-data-plane.ts";
 import type { VotingJurisdiction, VotingSitesFile, VotingSource } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
 
@@ -80,9 +83,12 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
   };
 }
 
-/** Source bytes, including binary originals, remain in the normal candidate evidence. */
-export function votingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">): string[] {
-  return read.rawBodies.map(body => `${body.url}\nContent-Type: ${body.contentType}\nContent-Transfer-Encoding: base64\nsha256 ${createHash("sha256").update(body.bytes).digest("hex")}\n\n${Buffer.from(body.bytes).toString("base64")}`);
+/** Source bytes, including binary originals, go to the raw-capture vault; the candidate keeps their refs. */
+export async function holdVotingRawEvidence(vault: EvidenceStore, read: Pick<VotingSourceRead, "rawBodies">): Promise<VotingRawCapture[]> {
+  const held: VotingRawCapture[] = [];
+  for (const body of read.rawBodies) held.push({ url: body.url, contentType: body.contentType,
+    ...await holdRawCapture(vault, VOTING_SITES_CONTRACT.sourceId, body.bytes, body.contentType) });
+  return held;
 }
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {

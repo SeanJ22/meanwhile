@@ -42,7 +42,7 @@ import {
 } from "@/lib/ballot/candidate-sites";
 import type { OfficeBlurb } from "@/lib/officials/office-blurbs";
 import { readCuratedContestOfficeBlurbs } from "@/lib/officials/curated-definition-reader";
-import { surnameDisplayCase } from "@/lib/ballot/name-case";
+import { ballotCandidateDisplayName } from "@/lib/ballot/name-case";
 import {
   cardForCandidacy,
   cardForNominee,
@@ -135,7 +135,6 @@ import {
 } from "@/lib/ballot/dated-events";
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
-  BallotAbsence,
   BallotSet,
   Candidacy,
   Contest,
@@ -210,7 +209,7 @@ function pickOptionsFor(
   }
   return candidatesOf(set, contest).map((cand) => ({
     id: cand.id,
-    label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
+    label: ballotCandidateDisplayName(cand),
     reactionTargetId: cand.id,
   }));
 }
@@ -478,10 +477,7 @@ export default readerRoute("/ballot", async function BallotPage({
   const resolution = zip ? resolveZip(zip) : null;
   const centroid = resolution?.ok ? resolution.centroid : null;
   let set: BallotSet | null = null;
-  let matched: {
-    contests: Contest[];
-    absences: BallotAbsence[];
-  } | null = null;
+  let matched: ReturnType<typeof contestsForDivisions> | null = null;
   let coverageNotes: string[] = [];
   let attempted = false;
   let divisionHoldingUnavailable = false;
@@ -514,7 +510,7 @@ export default readerRoute("/ballot", async function BallotPage({
         const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
         const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection, POINT_GEOMETRY_PLANS);
         const hit = contestsForDivisions(candidate, electionIds);
-        if (hit.contests.length > 0 || hit.absences.length > 0) {
+        if (hit.contests.length > 0 || hit.absences.length > 0 || hit.heldContests?.length) {
           set = candidate;
           matched = hit;
           askOcdIds = electionIds;
@@ -613,7 +609,7 @@ export default readerRoute("/ballot", async function BallotPage({
     const lineup = lineupForContest(contest.id);
     const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
       display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
-      key: c.id, display: `${c.givenName} ${surnameDisplayCase(c.familyName)}`, targetKey: c.id,
+      key: c.id, display: ballotCandidateDisplayName(c), targetKey: c.id,
     }));
     const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest(contest) },
       incumbentHolderFor).catch(() => null);
@@ -1317,7 +1313,7 @@ export default readerRoute("/ballot", async function BallotPage({
                         data-candidate-target={cand.id}
                       >
                         <CandidateCard
-                          name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                          name={ballotCandidateDisplayName(cand)}
                           partyLine={
                             <>
 
@@ -1342,10 +1338,11 @@ export default readerRoute("/ballot", async function BallotPage({
                           links={availableLinksForCandidacy(cand.id)}
                           derivedBlurb={availableDerivedBlurbFor(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
+                          filingProvenance={cand.provenance}
                           nameSlot={
                             <IncumbentName
                               holder={resolvedHolder(contest.id, cand.id)}
-                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              name={ballotCandidateDisplayName(cand)}
                               context={
                                 centroid && zip
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }
@@ -1356,7 +1353,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
                           battlecardSlot={
                             <BallotBattlecard
-                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              name={ballotCandidateDisplayName(cand)}
                               partyLine={readerPartyLabel(cand.partyLabel)}
                               partyLabel={readerPartyLabel(cand.partyLabel)}
                               card={availableCardForCandidacy(cand.id)}
@@ -1647,6 +1644,18 @@ export default readerRoute("/ballot", async function BallotPage({
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
           <p className="mt-2 t-body text-muted">We do not have county, city or school-board races for this ballot yet.</p>
+        </section>
+      )}
+
+      {matched && Boolean(matched.heldContests?.length) && (
+        <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl" data-ballot-held-contests>
+          <h2 className="t-structure text-paper-dim">Contests we don&apos;t hold yet</h2>
+          <p className="mt-2 t-body text-muted">We&apos;re working on getting complete candidate lists for these contests.</p>
+          <ul className="mt-2 space-y-2 t-body text-paper-dim">
+            {matched.heldContests?.map(contest => <li key={contest.id} data-contest-id={contest.id}>
+              <strong>{contest.title}</strong>: {contest.reason}
+            </li>)}
+          </ul>
         </section>
       )}
 

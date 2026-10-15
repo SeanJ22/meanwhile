@@ -44,7 +44,7 @@ function cacheRecoveryFixture() {
       currentUntil: "2026-09-06T18:00:00.000Z" })) };
   let networkCalls = 0;
   const toolkit: ScoutToolkit = { call: async () => { networkCalls++; throw new Error("FIXTURE_NETWORK_MUST_NOT_RUN"); },
-    specs: [], vaultedArtifactIds: new Set(), toolCalls: 0, requestCount: 0, bytesFetched: 0 };
+    specs: [], vaultedArtifactIds: new Set(), reported: [], toolCalls: 0, requestCount: 0, bytesFetched: 0 };
   const readVault = async (id: string) => {
     const held = evidence.get(id);
     if (!held) throw new Error("FIXTURE_ARTIFACT_MISSING");
@@ -96,17 +96,16 @@ test("recovery never relaxes provenance, freshness, partial-capture or permissio
   assert.equal(noNetwork.verdict, "BLOCKED");
   assert.equal(noNetwork.blockers[0].code, "CAPABILITY_DENIED");
   assert.equal(f.networkCalls(), 0);
-  /* A recorded robots.txt verdict is not a boundary: a CANNOT_TELL route walks the network, robots.txt first, and only the page's own access control (here a 403) walls it. */
+  /* A recorded robots.txt verdict is not a boundary: a CANNOT_TELL route walks the network, and only the page's own access control (here a 403) walls it. */
   const calls: string[] = [];
   const walled: ScoutToolkit = { ...f.runtime.toolkit, call: async (name) => {
     calls.push(name);
-    const robots = name === "read_permission";
-    return { ok: robots, forModel: "fixture", artifacts: [], provenance: [], requestCount: 1, bytesFetched: 0,
-      rung: { rung: "linked-documents-or-bulk-download", tool: name, target: RECORD_URL, artifactIds: [], ok: robots, permission: "CANNOT_TELL",
-        observed: robots ? "robots.txt HTTP 403; permission CANNOT_TELL" : "HTTP 403 (wall)", transport: "CHALLENGED", httpStatus: 403 } };
+    return { ok: false, forModel: "fixture", artifacts: [], provenance: [], requestCount: 1, bytesFetched: 0,
+      step: { tool: name, target: RECORD_URL, artifactIds: [], ok: false, permission: "CANNOT_TELL",
+        observed: "HTTP 403 (wall)", transport: "CHALLENGED", httpStatus: 403 } };
   } };
   const permissionUnknown = await runAcquirer({ ...f.input, held: [], route: { ...f.input.route, permission: "CANNOT_TELL" } }, { ...f.runtime, toolkit: walled });
-  assert.deepEqual(calls, ["read_permission", "fetch_public"], "robots.txt is read and recorded, then the page is requested once");
+  assert.deepEqual(calls, ["fetch_public"], "the page is requested once, its robots.txt verdict recorded with it");
   assert.equal(permissionUnknown.verdict, "BLOCKED");
   assert.equal(permissionUnknown.blockers[0].code, "PUBLISHER_AUTHENTICATION", "the page's own 403 is the wall, not the robots verdict");
   assert.ok(!permissionUnknown.blockers.some(b => b.code === "PERMISSION_UNKNOWN" || b.code === "PERMISSION_DENIED"));

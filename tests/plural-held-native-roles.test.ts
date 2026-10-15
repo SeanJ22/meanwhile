@@ -4,7 +4,8 @@ import { parse, stringify } from "yaml";
 import held from "./fixtures/plural/held-native-edge-cases.json" with {type:"json"};
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { officeIdentity } from "../lib/officials/office-identity.ts";
-import { statePeopleCandidate } from "../lib/civic-data/state-people-publication.ts";
+import { holdPeopleCaptures, statePeopleCandidate, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 
 const NOW="2026-10-10T02:00:00.000Z";
 const sourceUrl=(row:typeof held[number])=>`https://raw.githubusercontent.com/openstates/people/${row.source_url.split("/").at(-1)}/${row.member}`;
@@ -60,16 +61,17 @@ test("held chief election officers keep their literal native office and exact st
   }
 });
 
-test("a structured collective council record with its official council contact source is excluded durably",()=>{
+test("a structured collective council record with its official council contact source is excluded durably",async ()=>{
   const row=held.find(row=>row.member.includes("Janesville-City-Council-"))!;
   const {gaps,roster}=replay(row);
   assert.equal(roster.officeholders.length,0);
   assert.equal(gaps.length,1);assert.match(gaps[0],/^PLURAL_PERSON_IS_GOVERNING_BODY:person=ocd-person\//);
-  const candidate=statePeopleCandidate({state:"wi",roster,acquisitions:[{requestedUrl:sourceUrl(row),finalUrl:sourceUrl(row),
-    httpStatus:200,body:row.body,retrievedAt:row.retrieved_at}],releaseId:row.source_url.split("/").at(-1)!,now:NOW,
+  const captures=await holdPeopleCaptures(new MemoryEvidenceStore(),"plural-openstates",[{requestedUrl:sourceUrl(row),finalUrl:sourceUrl(row),
+    httpStatus:200,body:row.body,retrievedAt:row.retrieved_at}]);
+  const candidate=statePeopleCandidate({state:"wi",roster,captures,releaseId:row.source_url.split("/").at(-1)!,now:NOW,
     gaps:gaps.map(detail=>({sourceUrl:sourceUrl(row),detail}))});
   assert.ok(candidate.excludedFacts?.some(fact=>fact.code==="PLURAL_PERSON_IS_GOVERNING_BODY"));
-  assert.ok((candidate.normalizedPayload as {acquisitions:{body:string}[]}).acquisitions.some(capture=>capture.body===row.body));
+  assert.ok((candidate.normalizedPayload as {captures:StatePeopleCapture[]}).captures.some(capture=>capture.capture.rawHash===captures[0]!.capture.rawHash));
   const native=parse(row.body);
   assert.equal(replay(row,stringify({...native,name:"Jane Council",given_name:"Jane",family_name:"Council"})).roster.officeholders.length,1,
     "a surname and council URL alone do not reject a real person");

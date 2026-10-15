@@ -5,11 +5,14 @@ import { readFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { build } from "esbuild";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { normalizeFederalCapture } from "../lib/sources/congress/normalize.ts";
 import { publishFederalPartition } from "../lib/sources/congress/publication.ts";
 import { readFederalMember, readFederalRules } from "../lib/sources/congress/reader.ts";
 import { launchGuarded } from "../scripts/browser.mts";
 import type { FederalCapture } from "../lib/sources/congress/types.ts";
+
+const vault = new MemoryEvidenceStore();
 
 test("source fixtures reach the hydrated member card with bills, text, comment deadlines and one bottom Sources list", async () => {
   const now = "2026-10-12T18:00:00Z", store = new MemoryRoutineDataStore();
@@ -17,10 +20,10 @@ test("source fixtures reach the hydrated member card with bills, text, comment d
     source: "congress-api", kind: kind as FederalCapture["kind"], body: readFileSync(new URL(`./fixtures/src-cg/${file}`, import.meta.url), "utf8"),
     url: `https://api.congress.gov/v3/bill/117/hr/21/${kind}`, retrievedAt: now, context: { billId: "117:hr:21" },
   }));
-  await publishFederalPartition({ source: "congress-api", partition: "congress:C001078", captures, records: captures.flatMap(normalizeFederalCapture), store, now });
+  await publishFederalPartition({ vault, source: "congress-api", partition: "congress:C001078", captures, records: captures.flatMap(normalizeFederalCapture), store, now });
   const rule: FederalCapture = { source: "regulations-gov", kind: "rules", url: "https://api.regulations.gov/v4/documents", retrievedAt: now,
     body: JSON.stringify({ data: [{ id: "FIXTURE-2026-0001", attributes: { title: "Controlled comment-period transport case", postedDate: "2026-10-10", commentEndDate: "2026-10-14T23:59:59Z" } }] }) };
-  await publishFederalPartition({ source: "regulations-gov", partition: "rules", captures: [rule], records: normalizeFederalCapture(rule), store, now });
+  await publishFederalPartition({ vault, source: "regulations-gov", partition: "rules", captures: [rule], records: normalizeFederalCapture(rule), store, now });
   const member = await readFederalMember("congress:C001078", { store, now }), rules = await readFederalRules({ store, now });
   const output = await build({ stdin: { contents: `
     import React from "react";import {createRoot} from "react-dom/client";

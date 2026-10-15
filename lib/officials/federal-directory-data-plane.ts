@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { canonicalCivicDataJson, civicRecordsFor } from "../civic-data/changes.ts";
 import { authorityFor } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
+import { holdRawCapture, type RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { OfficeholderSet } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
 
@@ -16,9 +18,11 @@ export interface FederalDirectoryAcquisition {
   readonly httpStatus: number;
   readonly body: string;
   readonly retrievedAt?: string;
-  readonly vaultKey?:string;
   readonly sourceCheck?: NonNullable<import("../civic-data/types.ts").RetrievalEvidence["sourceCheck"]>;
 }
+
+/** An acquisition as the candidate holds it: the bytes stay in the raw-capture vault. */
+export type FederalDirectoryCapture = Omit<FederalDirectoryAcquisition, "body"> & { readonly raw: RawCaptureRef };
 
 export interface FederalDirectoryReadModel {
   readonly partyLabels?: Readonly<Record<string, string | null>>;
@@ -33,13 +37,13 @@ function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
-function rawSetHash(acquisitions: readonly FederalDirectoryAcquisition[]): string {
-  return sha256(canonicalCivicDataJson(acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body }) => ({
+function rawSetHash(captures: readonly FederalDirectoryCapture[]): string {
+  return sha256(canonicalCivicDataJson(captures.map(({ requestedUrl, finalUrl, httpStatus, raw }) => ({
     requestedUrl,
     finalUrl,
     httpStatus,
-    rawHash: sha256(body),
-    byteCount: Buffer.byteLength(body),
+    rawHash: raw.rawHash,
+    byteCount: raw.byteLength,
   })).sort((left, right) => left.finalUrl.localeCompare(right.finalUrl))));
 }
 
@@ -65,8 +69,22 @@ export function federalDirectoryProjectionIssues(value: FederalDirectoryReadMode
   return issues;
 }
 
-export function federalDirectoryCandidate(input: {
+export async function federalDirectoryCandidate(input: {
   readonly acquisitions: readonly FederalDirectoryAcquisition[];
+  readonly vault: EvidenceStore;
+  readonly retrievedAt: string;
+  readonly projection: FederalDirectoryReadModel;
+  readonly excludedFacts?: RoutineCandidate["excludedFacts"];
+}): Promise<RoutineCandidate> {
+  const captures = await Promise.all(input.acquisitions.map(async ({ body, ...row }): Promise<FederalDirectoryCapture> => {
+    const raw = await holdRawCapture(input.vault, FEDERAL_DIRECTORY_SOURCE_ID, body, "text/plain");
+    return { ...row, raw };
+  }));
+  return heldDirectoryCandidate({ ...input, acquisitions: captures });
+}
+
+function heldDirectoryCandidate(input: {
+  readonly acquisitions: readonly FederalDirectoryCapture[];
   readonly retrievedAt: string;
   readonly projection: FederalDirectoryReadModel;
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
@@ -76,7 +94,7 @@ export function federalDirectoryCandidate(input: {
     const authority = authorityFor(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", acquisition.finalUrl);
     if (!authority.ok) issues.push(`${authority.code}:${acquisition.finalUrl}`);
     if (acquisition.httpStatus < 200 || acquisition.httpStatus >= 300) issues.push(`HTTP_${acquisition.httpStatus}:${acquisition.finalUrl}`);
-    if (!acquisition.body.length) issues.push(`EMPTY_BODY:${acquisition.finalUrl}`);
+    if (!acquisition.raw.byteLength) issues.push(`EMPTY_BODY:${acquisition.finalUrl}`);
     if (!acquisition.finalUrl.includes(`/${input.projection.sourceSha}/`)) issues.push(`ACQUISITION_NOT_PINNED_TO_SOURCE_SHA:${acquisition.finalUrl}`);
   }
   const acquiredFiles = input.acquisitions.map((row) => {
@@ -90,7 +108,7 @@ export function federalDirectoryCandidate(input: {
   const normalizedPayload = {
     sourceSha: input.projection.sourceSha,
     ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
-    acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body, retrievedAt, vaultKey, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, body, rawHash: sha256(body), byteCount: Buffer.byteLength(body), ...(retrievedAt ? {retrievedAt} : {}),...(vaultKey ? {vaultKey} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
+    acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, raw, retrievedAt, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, raw, ...(retrievedAt ? {retrievedAt} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
   };
   const normalizedHash = sha256(canonicalCivicDataJson(input.projection));
   const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
@@ -173,7 +191,7 @@ export function failedFederalDirectoryCandidate(attemptedAt: string, detail: str
       byMember: {},
     },
   };
-  const candidate = federalDirectoryCandidate({ acquisitions: [], retrievedAt: attemptedAt, projection });
+  const candidate = heldDirectoryCandidate({ acquisitions: [], retrievedAt: attemptedAt, projection });
   return {
     ...candidate,
     retrieval: { ...candidate.retrieval, succeeded: false, failureDetail: detail },

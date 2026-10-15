@@ -140,7 +140,8 @@ export async function readAuthorityRecords(index: RecordIndex, store: ReaderArti
   const compact = (row: unknown, field = ""): unknown => {
     if (Array.isArray(row)) return field === "containers" ? row : row.filter(child => child !== undefined).map(child => compact(child));
     if (row && typeof row === "object") return Object.fromEntries(Object.entries(row)
-      .filter(([, child]) => !selection || field !== "ballots" || (child as { contests?: unknown[] })?.contests?.length)
+      .filter(([, child]) => !selection || field !== "ballots" ||
+        (child as { contests?: unknown[] })?.contests?.length || (child as { heldContests?: unknown[] })?.heldContests?.length)
       .map(([key, child]) => [key, compact(child, key)]));
     return row;
   };

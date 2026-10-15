@@ -35,6 +35,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   NOVUSAGENDA: ["novusagenda"],
   SWAGIT: ["swagit"],
   ESCRIBE: ["escribe"],
+  PRIMEGOV: ["primegov"],
   CIVICCLERK: ["civicclerk-api"],
   IQM2: ["iqm2"],
   REVIZE: ["revize"],
@@ -61,6 +62,9 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
   if (find.vendor === "granicus" && /\.granicus\.com$/i.test(url.hostname) && /^\/ViewPublisher\.php$/i.test(url.pathname) && /^\d+$/.test(url.searchParams.get("view_id") ?? "")) return { kind: "GRANICUS", endpoint: { publisherUrl: url.toString() } };
   if (find.vendor === "escribe" && /^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(url.hostname)) return { kind: "ESCRIBE", endpoint: { portalUrl: url.origin } };
   if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
+  if (find.vendor === "primegov" && /^[a-z0-9-]+\.primegov\.com$/i.test(url.hostname)) {
+    return { kind: "PRIMEGOV", endpoint: { portalUrl: url.origin } };
+  }
   if (find.vendor === "legistar-api" && url.hostname === "webapi.legistar.com") {
     const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(url.pathname)?.[1];
     if (slug) return { kind: "LEGISTAR", endpoint: { slug } };

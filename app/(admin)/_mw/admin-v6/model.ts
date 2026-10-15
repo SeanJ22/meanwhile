@@ -556,6 +556,7 @@ export interface ReachedView {
 
 export interface SpendView {
   readonly modelSpend?: import("../../../../lib/control-plane/admin-view/model-spend.ts").ModelSpendView | null;
+  readonly huntCost?: import("../../../../lib/hunt/cost-per-fact.ts").HuntCostView | null;
   readonly windowDays: number;
   readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
   readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];

@@ -1,4 +1,5 @@
 import "../../ask/model.ts";
+import "../../hunt/settings.ts";
 import "../../facts/clocks.ts";
 import "../scheduler/provider-limits.ts";
 /** The machine key travels as the control's target and is never rendered. */

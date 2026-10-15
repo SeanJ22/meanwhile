@@ -15,10 +15,7 @@ export function readerRoute<A extends unknown[], R>(path: string, read: (...args
     });
   });
 }
-
-
-
-export async function selectionForReader(args: readonly unknown[]): Promise<ReaderSelection | undefined> {
+async function selectionForReader(args: readonly unknown[]): Promise<ReaderSelection | undefined> {
   const keys = new Set<string>();
   let lat: number | undefined, lng: number | undefined, zip: string | undefined;
   let governmentWindow: readonly [number, number] | undefined;

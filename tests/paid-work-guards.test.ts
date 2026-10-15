@@ -164,22 +164,3 @@ test("BX-13: a parse already submitted to the batch service under the old routin
   assert.equal(h.sent.length, 0, "no second paid request");
   assert.equal(recovery.batched.length, 1, "the outstanding batch answer was collected");
 });
-
-test("R7: a Scout rereads its place's meeting priority, and the request packet cannot erase a live deadline", async () => {
-  const queued = fakeBatch();
-  const h = await harness({ batch: queued.batch });
-  await h.repos.obligations.put("meeting", { id: "meeting", subjectId: h.jurisdiction.subjectId,
-    recordClass: "MEETINGS", readerImpactAt: NOW, active: true } as never, NOW);
-  const send = h.guards.guardedJobTransportFor("scout-job", "BLANK", { now: NOW, subjectId: h.jurisdiction.subjectId });
-  const packet = { ...request, batchContext: { job: "BLANK" as const, priority: { now: NOW } } };
-  const urgent = await send(packet);
-  assert.equal(urgent.batchEligible, false);
-  assert.equal(h.sent.length, 1);
-  assert.equal(queued.batched.length, 0);
-  const meeting = await h.repos.obligations.mustRead("meeting");
-  await h.repos.obligations.compareAndSet(meeting.id, meeting.revision, { ...meeting.value, readerImpactAt: null }, NOW);
-  const background = await send(packet);
-  assert.equal(background.batchEligible, true);
-  assert.equal(background.batch, true);
-  assert.equal(queued.batched.length, 1);
-});

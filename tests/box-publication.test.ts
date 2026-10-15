@@ -18,6 +18,7 @@ import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
 import { slotFor } from "../lib/facts/finding-slots.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import type { RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
+import { publishRosterFacts } from "../lib/facts/roster-facts.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -142,7 +143,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 1,
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 },
     publishedByRoute: { "office contacts": 1, rosters: 3 },
     waitingByClass: { directory: 1, rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 2 });
@@ -277,4 +278,37 @@ test("the campaign-site check holds a hunter's lead to the freshness clock Admin
       sha256: "0".repeat(64), retrievedAt: "2026-09-01T15:00:00.000Z", permissions: [], redirects: [] }) });
   const lead = (await repos.boxFindings.list())[0]!.value;
   assert.deepEqual([lead.state, lead.refusal], ["refused", "COPY_OUTSIDE_FRESHNESS_WINDOW"], "a week-old page is past Admin's one-hour clock");
+});
+
+test("a name joins a council only when its own words name the seat: staff and bare names wait, two holders of one ward go to Sean, an older seat with no title comes down", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const COUNCIL = "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager";
+  const html = "<html><head><title>Mayor and Council | City of Tucson</title></head><body><h1>Mayor and Council</h1><p>Ward 5 Council Member Selina Barajas</p>" +
+    "<p>Ward 5 Council Member Richard Fimbres</p><p>Ward 1 Council Member Lane Santa Cruz</p><p>Office of the City Manager - Tim Thomure</p><p>Mr. Tim Kinney</p><p>Steve Kozachik</p></body></html>";
+  const page = await hold(COUNCIL, html, "2026-09-01T15:00:00.000Z");
+  const [row] = await facts.query("SELECT id, name, state, parent_id FROM entity WHERE id = $1", [`${TUCSON}#governing`]);
+  const body = { id: String(row!.id), name: String(row!.name), state: row!.state as string | null, parentId: row!.parent_id as string | null };
+  const capture = { evidence: { artifactId: page, contentHash: `sha256-${"c".repeat(64)}`, text: html, acquiredByAttemptId: "at-hunt", canonicalUrl: COUNCIL,
+    retrievedAt: "2026-09-01T15:00:00.000Z", sourceId: "www.tucsonaz.gov", methodRouteId: "held" }, observedAt: "2026-09-01T15:00:00.000Z", httpStatus: 200,
+  transport: "REACHABLE" as const, partial: false };
+  const quote = { quote: "Steve Kozachik", sourceUrl: COUNCIL, sourceOrg: "", collectedAt: "2026-09-01T15:00:00.000Z", verifiedAt: null };
+  await publishRosterFacts(facts, { body, capture, members: [{ recordId: "earlier", fields: { name: "Steve Kozachik" }, fieldSources: { name: quote } }],
+    complete: false, producedBy: "box" }, factClocks(null), new Date(NOW));
+
+  let index = 0;
+  const report = (value: string, sentence: string) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-packet", obligationId: `hunt:packet:${TUCSON}`,
+    missionPart: null, finding: { subjectId: TUCSON, field: "OFF-04", value, exactQuote: sentence, sourceUrl: COUNCIL, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  await report("Selina Barajas", "Ward 5 Council Member Selina Barajas");
+  await report("Richard Fimbres", "Ward 5 Council Member Richard Fimbres");
+  await report("Lane Santa Cruz", "Ward 1 Council Member Lane Santa Cruz");
+  await report("Tim Thomure", "Office of the City Manager - Tim Thomure");
+  await report("Tim Kinney", "Mr. Tim Kinney");
+  const input = { repos, facts, vault, fetch: async () => { throw new Error("held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
+  const first = await publishBoxFindings(input);
+  assert.deepEqual({ seats: first.seats, published: first.published, failuresByReason: first.failuresByReason },
+    { seats: { pulled: 1, flagged: 0 }, published: 3, failuresByReason: { SEAT_NOT_IN_QUOTE: 2 } }, JSON.stringify(first));
+  const members = (await readFactRosters(facts.query, [body.id])).rosters[0]!.members.map(member => member.name).sort();
+  assert.deepEqual(members, ["Lane Santa Cruz", "Richard Fimbres", "Selina Barajas"]);
+  assert.deepEqual((await publishBoxFindings(input)).seats, { pulled: 0, flagged: 2 }, "both members named for Ward 5 go to Sean");
+  assert.deepEqual((await publishBoxFindings(input)).seats, { pulled: 0, flagged: 0 }, "an open flag is raised once");
 });

@@ -3,18 +3,18 @@
 lane: overlay-seats
 owner: overlay-seats
 writer: the overlay-seats lane
-check: fold-conflict
+check: at-scale
 ready: no step ids unknown
 river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
-at: 2026-10-15T23:04:49Z
+at: 2026-10-15T23:21:37Z
 state: returned
-fix_subject: fix:86367b99
-fix: River · stream/overlay-seats — fold-conflict failed for overlay-seats: SL-02 (fdf55ff36) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: lib/meetings/edge-serving.ts, lib/registry/runtime-edge.ts, lib/registry/server.ts. Merge origin/river into stream/overlay-seats, settle those f
+fix_subject: fix:4d8821aa
+fix: River · stream/overlay-seats — at-scale failed for overlay-seats: SL-02 (fdf55ff36): AT SCALE peak comes from the national publisher: 'Peak publisher 730.195 MiB, coordinator 307 MiB' hold the whole national representation run; a job's peak must come from one place or one district file. Name the stage tha
 
 ## Failure
 
 ```
-SL-02 (fdf55ff36) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: lib/meetings/edge-serving.ts, lib/registry/runtime-edge.ts, lib/registry/server.ts. Merge origin/river into stream/overlay-seats, settle those files so both sides' behavior is kept (NE-01's reader-edge reads and request accounting, municode's bounded portal reads), run the focused tests, push a new READY with AT SCALE numbers in the message.
+SL-02 (fdf55ff36): AT SCALE peak comes from the national publisher: 'Peak publisher 730.195 MiB, coordinator 307 MiB' hold the whole national representation run; a job's peak must come from one place or one district file. Name the stage that holds the national set (the publisher's accumulation before promotion) and publish per state or per district with the peak at the largest single one. Also conflicts with river 3282584e2 in lib/meetings/edge-serving.ts, lib/registry/runtime-edge.ts, lib/registry/server.ts, tests/could-govern-pill.test.ts, tests/plural.test.ts.
 ```
 
 ## Repair

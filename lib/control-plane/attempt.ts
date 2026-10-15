@@ -1,22 +1,7 @@
-/**
- * Attempts and leases. A crashed or interrupted Attempt is ABORTED and may
- * preserve artifacts, but it cannot leave behind YIELDED, ZERO, BLOCKED or
- * NOT_APPLICABLE as if the route finished. Whether an execution reached a
- * completion boundary is decided here, from outside the worker (a lease that
- * stopped being renewed), never from the worker's own account.
- *
- * Time is always a parameter; nothing here reads a clock.
- */
-
 import { attemptId, leaseId } from "./ids.ts";
 import type { CapabilityGrant } from "./capability.ts";
 
 /** ------------------------------------------------------------- attempts */
-
-/**
- * How an Attempt ended: execution state, never a `RouteDisposition`. `ABORTED`
- * is about our worker; `WALKED_NO_YIELD` is about a government.
- */
 export const ATTEMPT_OUTCOMES = [
   /** Reached a defined completion boundary. The ONLY outcome that may carry a disposition. */
   "COMPLETED",
@@ -72,14 +57,6 @@ export interface WorkerRef {
   /** Process/instance handle, unique per invocation. */
   readonly instance: string;
 }
-
-/**
- * Measured, never estimated; an unmeasurable field is null. `inputTokens` is
- * the whole prompt (uncached + cache reads + cache writes); the fields below
- * split it as the provider bills it, and `usd` is priced from them
- * (`priceMeteredUsage`). Older rows carry none of the six cache fields: absent
- * means UNMEASURED (`cacheMeteringOf`), never zero.
- */
 export interface AttemptCost {
   readonly listPriceUsd?: number | null;
   readonly modelRequestCount?: number | null;
@@ -121,6 +98,7 @@ export const ZERO_COST: AttemptCost = {
 };
 
 export interface Attempt {
+  readonly translation?: import("../translate/standing.ts").TranslationAttempt;
   /** Unattended provider work survives process/lease loss; no prompts are stored here. */
   readonly providerBatches?: readonly AttemptProviderBatch[];
   /** Granted before a fleet worker executes, including failed and denied runs. */
@@ -153,12 +131,6 @@ export interface AttemptProviderBatch {
 }
 
 /** ---------------------------------------------------------------- leases */
-
-/**
- * A time-bounded claim on a RouteTask, so a second worker loses cleanly
- * instead of duplicating a side effect. Expiry is evaluated against a
- * caller-supplied `now`.
- */
 export interface ExecutionLease {
   readonly id: string;
   readonly routeTaskId: string;

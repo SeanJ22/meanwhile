@@ -7529,19 +7529,187 @@
             "verifiedAt": "2026-10-14T05:03:55Z",
             "doorId": "fec-ks-chief",
             "quote": "Shall the following be adopted?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
+            "sourceHash": "4afcd618bd2b8335636b50b845f9af6e46e5a1259fbc939b5cca63f00bb89566",
+            "retrievedAt": "2026-10-14T23:52:27.257689+00:00",
+            "publisher": "Kansas Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.ks.gov/2026/10/14/ms-01-32eb10fb71a38a98/sha256-4afcd618bd2b8335636b50b845f9af6e46e5a1259fbc939b5cca63f00bb89566.txt",
+              "byteLength": 1624,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
+                "sourceHash": "80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f",
+                "retrievedAt": "2026-10-14T23:52:27.257689+00:00",
+                "publisher": "Kansas Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.ks.gov/2026/10/14/ms-01-32eb10fb71a38a98/sha256-80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f.pdf",
+                  "byteLength": 76430,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
+            "sourceHash": "7b36649aed0ccc544f2e63f10601dff036eb9b8a5aa2be8ef327f9765880dddb",
+            "retrievedAt": "2026-10-14T23:52:27.257689+00:00",
+            "publisher": "Kansas Secretary of State",
+            "summary": "This amendment would clarify that only a person who is a citizen of the United States is eligible to vote in this state.",
+            "passageThreshold": "If a majority of the electors voting on any such amendment shall vote for the amendment, the same shall become a part of the constitution.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://ksrevisor.gov/kanconst/093_014_0001.html",
+              "sourceHash": "9cea59c81b88e441f124abf56573fdcb3b4bf281b37727dd2d0145ac135aacdc",
+              "retrievedAt": "2026-10-14T23:59:43.432221+00:00",
+              "publisher": "Kansas Office of Revisor of Statutes",
+              "vault": {
+                "key": "project/freshness/source/ksrevisor.gov/2026/10/14/ms-01-d7e9588b19664952/sha256-9cea59c81b88e441f124abf56573fdcb3b4bf281b37727dd2d0145ac135aacdc.txt",
+                "byteLength": 5622,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://ksrevisor.gov/kanconst/093_014_0001.html",
+                  "sourceHash": "6cd8ceeab8ee67e638034f2c0edc14a63c8b149663ec5cca8414184825d8a5bc",
+                  "retrievedAt": "2026-10-14T23:59:43.432221+00:00",
+                  "publisher": "Kansas Secretary of State and Office of Revisor of Statutes",
+                  "vault": {
+                    "key": "project/freshness/source/ksrevisor.gov/2026/10/14/ms-01-d7e9588b19664952/sha256-6cd8ceeab8ee67e638034f2c0edc14a63c8b149663ec5cca8414184825d8a5bc.html",
+                    "byteLength": 17542,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.ks.gov/2026/10/14/ms-01-32eb10fb71a38a98/sha256-7b36649aed0ccc544f2e63f10601dff036eb9b8a5aa2be8ef327f9765880dddb.txt",
+              "byteLength": 549,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
+                "sourceHash": "80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f",
+                "retrievedAt": "2026-10-14T23:52:27.257689+00:00",
+                "publisher": "Kansas Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.ks.gov/2026/10/14/ms-01-32eb10fb71a38a98/sha256-80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f.pdf",
+                  "byteLength": 76430,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
       "coverageNotes": [
         "Official ballot notices replace these dynamic-list spellings: Kansas House of Representatives District 28: Alex. N Bergman → Alex. N. Bergman; United States House of Representatives District 3: Steven A Hohe → Steven A. Hohe; United States Senate: David C Graham → David C. Graham."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ks-sos-2026-constitutional-amendment-qualifications-of-electors",
+          "whatItDoes": "“§ 1.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ks-sos-2026-constitutional-amendment-qualifications-of-electors#part-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "(1)",
+              "what": "(1) Is a citizen of the United States<del> who</del>;"
+            },
+            {
+              "id": "ks-sos-2026-constitutional-amendment-qualifications-of-electors#part-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "(2)",
+              "what": "(2) has attained the age of eighteen\nyears; and<del> who</del>"
+            },
+            {
+              "id": "ks-sos-2026-constitutional-amendment-qualifications-of-electors#part-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "(3)",
+              "what": "(3) except as provided in subsection"
+            },
+            {
+              "id": "ks-sos-2026-constitutional-amendment-qualifications-of-electors#part-4",
+              "number": "b",
+              "kind": "PROGRAM",
+              "label": "(b)",
+              "what": "(b) or (c), resides in the voting area in\nwhich<del> he or she</del> such person seeks to\nvote<del> shall be deemed a qualified elector</del>."
+            },
+            {
+              "id": "ks-sos-2026-constitutional-amendment-qualifications-of-electors#part-5",
+              "number": "b",
+              "kind": "PROGRAM",
+              "label": "(b)",
+              "what": "(b) Laws of this state relating to\nvoting for presidential electors and\ncandidates for the office of president\nand vice-president of the United\nStates shall comply with the laws of\nthe United States relating thereto. A\ncitizen of the United States, who is\notherwise qualified to vote in Kansas"
+            },
+            {
+              "id": "ks-sos-2026-constitutional-amendment-qualifications-of-electors#part-6",
+              "number": "c",
+              "kind": "PROGRAM",
+              "label": "(c)",
+              "what": "(c) A person who is otherwise a\nqualified elector may vote in the\nvoting area of<del> his or her</del> such person’s\nformer residence either in person or\nby absentee ballot notwithstanding\nthe fact that such person may have\nbecome a nonresident of such voting\narea during a period prescribed by law"
+            }
+          ],
+          "sourceUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
+          "sourceHash": "4afcd618bd2b8335636b50b845f9af6e46e5a1259fbc939b5cca63f00bb89566",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.257689+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
+          "sourceHash": "80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f",
+          "retrievedAt": "2026-10-14T23:52:27.257689+00:00",
+          "publisher": "Kansas Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.ks.gov/2026/10/14/ms-01-32eb10fb71a38a98/sha256-80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f.pdf",
+            "byteLength": 76430,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://ksrevisor.gov/kanconst/093_014_0001.html",
+          "sourceHash": "6cd8ceeab8ee67e638034f2c0edc14a63c8b149663ec5cca8414184825d8a5bc",
+          "retrievedAt": "2026-10-14T23:59:43.432221+00:00",
+          "publisher": "Kansas Secretary of State and Office of Revisor of Statutes",
+          "vault": {
+            "key": "project/freshness/source/ksrevisor.gov/2026/10/14/ms-01-d7e9588b19664952/sha256-6cd8ceeab8ee67e638034f2c0edc14a63c8b149663ec5cca8414184825d8a5bc.html",
+            "byteLength": 17542,
+            "contentType": "text/html"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:12:59Z",
-    "reviewedBy": "BL-12 Kansas official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:39.823438+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
@@ -7590,13 +7758,34 @@
       {
         "requestedUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
         "finalUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
-        "retrievedAt": "2026-10-14T05:04:18Z",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.257689+00:00",
         "rawHash": "80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f",
         "publisher": "Kansas Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "State of Kansas Official General Election Ballot; Constitutional Amendment; November 3, 2026.",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://ksrevisor.gov/kanconst/093_014_0001.html",
+        "finalUrl": "https://ksrevisor.gov/kanconst/093_014_0001.html",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:59:43.432221+00:00",
+        "rawHash": "6cd8ceeab8ee67e638034f2c0edc14a63c8b149663ec5cca8414184825d8a5bc",
+        "publisher": "Kansas Secretary of State and Office of Revisor of Statutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

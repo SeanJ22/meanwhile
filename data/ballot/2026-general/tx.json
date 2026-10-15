@@ -13309,16 +13309,253 @@
         }
       ],
       "measures": [],
-      "absences": [],
+      "absences": [
+        {
+          "ocdId": "ocd-division/country:us/state:tx",
+          "divisionVintage": "2026",
+          "statement": "There are no statewide measures on Texas’s November 3, 2026 ballot. Bosque County’s complete official sample-ballot set contains candidate contests and local city propositions only.",
+          "provenance": {
+            "sourceUrl": "https://www.bosquecounty.gov/194/Elections-Administrator",
+            "sourceOrg": "Bosque County Elections Administrator; Texas Legislature",
+            "collectedAt": "2026-10-15T00:17:57.571489+00:00",
+            "verifiedAt": "2026-10-15T00:21:38.700316+00:00",
+            "doorId": "fec-tx-chief",
+            "quote": "SAMPLE BALLOTS"
+          }
+        }
+      ],
       "coverageNotes": [
-        "The certified report is organized by all 254 counties; identical statewide and district entries are combined. Certified write-in candidates are included. The official general-election page links a sample ballot and candidate certifications but no statewide measure list; statewide measures remain unverified. Separate November 3 special-election candidate certifications for Senate District 22 and House District 93 are not held."
+        "The certified report is organized by all 254 counties; identical statewide and district entries are combined. Certified write-in candidates are included. Separate November 3 special-election candidate certifications for Senate District 22 and House District 93 are not held.",
+        "Texas has no statewide measures on the November 3, 2026 ballot. Bosque County’s complete official set contains 14 ballot styles covering all 11 precincts, including the City of Morgan and City of Clifton variants. All 28 pages, including both sides of every ballot, were inspected. The only propositions are City of Clifton Proposition A (local street-maintenance sales tax) and City of Morgan Proposition A (city council terms); no statewide proposition appears. Texas Constitution article XVII, section 1 submits amendments to statewide qualified voters; Election Code sections 52.095(b)(2) and 274.004 require numbered statewide propositions and place constitutional amendments before local propositions."
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://tcss.legis.texas.gov/resources/EL/pdf/EL.274.pdf",
+          "sourceHash": "b88d87f5a75ceb492a1e2674dc346389bd5fee021cac47649ad5e313c4725d90",
+          "retrievedAt": "2026-10-15T00:19:41.035168+00:00",
+          "publisher": "Texas Legislature",
+          "vault": {
+            "key": "project/freshness/source/tcss.legis.texas.gov/2026/10/15/ms-01-9af7dc11a334098c/sha256-b88d87f5a75ceb492a1e2674dc346389bd5fee021cac47649ad5e313c4725d90.pdf",
+            "byteLength": 117182,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://tcss.legis.texas.gov/resources/EL/pdf/EL.52.pdf",
+          "sourceHash": "cefb0d27fe8994e618fc71660b659f75860ad482ece3612394992159f88083ca",
+          "retrievedAt": "2026-10-15T00:19:41.230486+00:00",
+          "publisher": "Texas Legislature",
+          "vault": {
+            "key": "project/freshness/source/tcss.legis.texas.gov/2026/10/15/ms-01-25db594bcfb38bf3/sha256-cefb0d27fe8994e618fc71660b659f75860ad482ece3612394992159f88083ca.pdf",
+            "byteLength": 153295,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2708",
+          "sourceHash": "0b7c597c7179af1aa1c05f32e31fdb8786c9646d87b09d5477f79a608905aa44",
+          "retrievedAt": "2026-10-15T00:18:37.093813+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-c6c8b5aa9bb2644a/sha256-0b7c597c7179af1aa1c05f32e31fdb8786c9646d87b09d5477f79a608905aa44.pdf",
+            "byteLength": 1293656,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2709",
+          "sourceHash": "545a14c3e300851e3eddc473ae87adb5dcfa1ab6992e0195c36ad849c8e73e27",
+          "retrievedAt": "2026-10-15T00:18:37.270737+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-76c0499676fda232/sha256-545a14c3e300851e3eddc473ae87adb5dcfa1ab6992e0195c36ad849c8e73e27.pdf",
+            "byteLength": 1405807,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2710",
+          "sourceHash": "b04b143908ea583a0473baf689fc4933d5e515ae27ab66e4f9a685e33c0e71a3",
+          "retrievedAt": "2026-10-15T00:18:37.610441+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-b59b74532a415d12/sha256-b04b143908ea583a0473baf689fc4933d5e515ae27ab66e4f9a685e33c0e71a3.pdf",
+            "byteLength": 1300344,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2711",
+          "sourceHash": "527f280de82211177e1314dfd8d11f565b51238907a047c9a2e71f5024b3a41b",
+          "retrievedAt": "2026-10-15T00:18:37.427304+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-f12985577cca65d4/sha256-527f280de82211177e1314dfd8d11f565b51238907a047c9a2e71f5024b3a41b.pdf",
+            "byteLength": 1402569,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2712",
+          "sourceHash": "3a845f6de0c4d03241f3852a823d3268ecc154af993e013e1fab87beb21fb71c",
+          "retrievedAt": "2026-10-15T00:18:37.288895+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-f6fb75713f19e225/sha256-3a845f6de0c4d03241f3852a823d3268ecc154af993e013e1fab87beb21fb71c.pdf",
+            "byteLength": 1291241,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2713",
+          "sourceHash": "6e0c93bff3c9076c8445752b89e61cc0c0b0430e85231cd8c89fa01b1fb813b3",
+          "retrievedAt": "2026-10-15T00:18:37.792358+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-81767069c3d9fa3d/sha256-6e0c93bff3c9076c8445752b89e61cc0c0b0430e85231cd8c89fa01b1fb813b3.pdf",
+            "byteLength": 1293233,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2714",
+          "sourceHash": "58f25548d10c870aa3bc2cb24c14b24eab11f73448917784c28ada90ea079544",
+          "retrievedAt": "2026-10-15T00:18:37.496848+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-daba1ba66de9f6a0/sha256-58f25548d10c870aa3bc2cb24c14b24eab11f73448917784c28ada90ea079544.pdf",
+            "byteLength": 1288855,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2715",
+          "sourceHash": "2cee9fcf033f1f2fd20d40c7ae551a37589d93f1746378b381e75f05197776d6",
+          "retrievedAt": "2026-10-15T00:18:37.248138+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-5af0298bc32777d5/sha256-2cee9fcf033f1f2fd20d40c7ae551a37589d93f1746378b381e75f05197776d6.pdf",
+            "byteLength": 1288949,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2716",
+          "sourceHash": "52e235bab716500f89123cdb9924ab734be23365c4d42a84b1ea33483ceb102e",
+          "retrievedAt": "2026-10-15T00:18:36.861535+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-65527967b8e4d840/sha256-52e235bab716500f89123cdb9924ab734be23365c4d42a84b1ea33483ceb102e.pdf",
+            "byteLength": 1359063,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2717",
+          "sourceHash": "a1503233e27351b7bb1e63965faec10e96075ee135175ed2620c68d938dffda1",
+          "retrievedAt": "2026-10-15T00:18:37.094390+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-0c1b79c6a48bed85/sha256-a1503233e27351b7bb1e63965faec10e96075ee135175ed2620c68d938dffda1.pdf",
+            "byteLength": 1300881,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2718",
+          "sourceHash": "246f463f7955e8ef636ab8565481617aa4d2fd1b709c7aa95def2e44207fc21f",
+          "retrievedAt": "2026-10-15T00:18:37.094141+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-0b2bdb98d70dad08/sha256-246f463f7955e8ef636ab8565481617aa4d2fd1b709c7aa95def2e44207fc21f.pdf",
+            "byteLength": 1283748,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2719",
+          "sourceHash": "85dac09a452ab25c2813304af5d04796acd7ee2b9547a448e1e42f46da84660d",
+          "retrievedAt": "2026-10-15T00:18:36.864362+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-4c878d80f0af224a/sha256-85dac09a452ab25c2813304af5d04796acd7ee2b9547a448e1e42f46da84660d.pdf",
+            "byteLength": 1275892,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2720",
+          "sourceHash": "ecfbb7aa398d7680ee43ab577bdaa6e16b73695bd87b557ce18be25114ee7a3e",
+          "retrievedAt": "2026-10-15T00:18:37.094870+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-61610139cde83828/sha256-ecfbb7aa398d7680ee43ab577bdaa6e16b73695bd87b557ce18be25114ee7a3e.pdf",
+            "byteLength": 1275284,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2721",
+          "sourceHash": "11e3df59ac290ab6fb58c108c2994d170a5f735d8e7037731efa924d05163cfc",
+          "retrievedAt": "2026-10-15T00:18:36.820816+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-3decef4162f33f87/sha256-11e3df59ac290ab6fb58c108c2994d170a5f735d8e7037731efa924d05163cfc.pdf",
+            "byteLength": 1278347,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.bosquecounty.gov/194/Elections-Administrator",
+          "sourceHash": "d520c511cc663f09710bd1d4bdd5c2991139db48bfab40471b3746e5626637c4",
+          "retrievedAt": "2026-10-15T00:17:57.571489+00:00",
+          "publisher": "Bosque County Elections Administrator",
+          "vault": {
+            "key": "project/freshness/source/www.bosquecounty.gov/2026/10/15/ms-01-6ee8e6ac22c1eebc/sha256-d520c511cc663f09710bd1d4bdd5c2991139db48bfab40471b3746e5626637c4.html",
+            "byteLength": 114637,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://tcss.legis.texas.gov/resources/CN/pdf/CN.17.pdf",
+          "sourceHash": "7a42f03b60ca50066828851743f651fec3662ae5666a13585eeaa69e2df91035",
+          "retrievedAt": "2026-10-15T00:19:41.039912+00:00",
+          "publisher": "Texas Legislature",
+          "vault": {
+            "key": "project/freshness/source/tcss.legis.texas.gov/2026/10/15/ms-01-d824ac4399672b96/sha256-7a42f03b60ca50066828851743f651fec3662ae5666a13585eeaa69e2df91035.pdf",
+            "byteLength": 165520,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.texas.gov/elections/laws/advisory2026-22.shtml",
+          "sourceHash": "33164d14c3f8aff2866315632596fdca33fbdc870d1dc1d423374d555e67bd9b",
+          "retrievedAt": "2026-10-15T00:18:37.422134+00:00",
+          "publisher": "Texas Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.texas.gov/2026/10/15/ms-01-a9d08be3ec100889/sha256-33164d14c3f8aff2866315632596fdca33fbdc870d1dc1d423374d555e67bd9b.html",
+            "byteLength": 27880,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.texas.gov/elections/laws/advisory2017-06.shtml",
+          "sourceHash": "a4bcbe874f3d932ac1323deb83c6c4a40b98a153c0a11e7d5f5ffdca01b61a46",
+          "retrievedAt": "2026-10-15T00:18:37.601539+00:00",
+          "publisher": "Texas Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.texas.gov/2026/10/15/ms-01-cc0089fcab90ef56/sha256-a4bcbe874f3d932ac1323deb83c6c4a40b98a153c0a11e7d5f5ffdca01b61a46.html",
+            "byteLength": 23830,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:06:23.519615+00:00",
-    "reviewedBy": "BL-16 source conversion",
+    "reviewedAt": "2026-10-15T04:14:39.955154+00:00",
+    "reviewedBy": "Codex MS-01 complete official sample-ballot review",
     "sources": [
       {
         "requestedUrl": "https://www.sos.state.tx.us/elections/index.shtml",
@@ -13369,6 +13606,226 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Texas Secretary of State",
         "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/194/Elections-Administrator",
+        "finalUrl": "https://www.bosquecounty.gov/194/Elections-Administrator",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:17:57.571489+00:00",
+        "rawHash": "340bf64b9c56c106693c7d5aea539fc708b2d717724531ff12d989973655b35b",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Texas has no statewide measures on the November 3, 2026 ballot. Bosque County’s complete official set contains 14 ballot styles covering all 11 precincts, including the City of Morgan and City of Clifton variants. All 28 pages, including both sides of every ballot, were inspected. The only propositions are City of Clifton Proposition A (local street-maintenance sales tax) and City of Morgan Proposition A (city council terms); no statewide proposition appears. Texas Constitution article XVII, section 1 submits amendments to statewide qualified voters; Election Code sections 52.095(b)(2) and 274.004 require numbered statewide propositions and place constitutional amendments before local propositions.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2715",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2715/Pct-1-Iredell-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.248138+00:00",
+        "rawHash": "2cee9fcf033f1f2fd20d40c7ae551a37589d93f1746378b381e75f05197776d6",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2717",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2717/Pct-2-Walnut-Springs-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.094390+00:00",
+        "rawHash": "a1503233e27351b7bb1e63965faec10e96075ee135175ed2620c68d938dffda1",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2716",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2716/Pct-2-City-of-Morgan-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:36.861535+00:00",
+        "rawHash": "52e235bab716500f89123cdb9924ab734be23365c4d42a84b1ea33483ceb102e",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms only candidate contests and City of Morgan Proposition A, city mayor and council terms. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2718",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2718/Pct-3-Meridian-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.094141+00:00",
+        "rawHash": "246f463f7955e8ef636ab8565481617aa4d2fd1b709c7aa95def2e44207fc21f",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2719",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2719/Pct-4-Meridian-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:36.864362+00:00",
+        "rawHash": "85dac09a452ab25c2813304af5d04796acd7ee2b9547a448e1e42f46da84660d",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2720",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2720/Pct-5-Lakeside-Village-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.094870+00:00",
+        "rawHash": "ecfbb7aa398d7680ee43ab577bdaa6e16b73695bd87b557ce18be25114ee7a3e",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2721",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2721/Pct-6-Laguna-Park-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:36.820816+00:00",
+        "rawHash": "11e3df59ac290ab6fb58c108c2994d170a5f735d8e7037731efa924d05163cfc",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2708",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2708/Pct-7-Cranfills-Gap-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.093813+00:00",
+        "rawHash": "0b7c597c7179af1aa1c05f32e31fdb8786c9646d87b09d5477f79a608905aa44",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2710",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2710/Pct-8-Clifton-County-Only-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.610441+00:00",
+        "rawHash": "b04b143908ea583a0473baf689fc4933d5e515ae27ab66e4f9a685e33c0e71a3",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2709",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2709/Pct-8-City-of-Clifton-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.270737+00:00",
+        "rawHash": "545a14c3e300851e3eddc473ae87adb5dcfa1ab6992e0195c36ad849c8e73e27",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms only candidate contests and City of Clifton Proposition A, a local street-maintenance sales tax. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2712",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2712/Pct-9-Clifton-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.288895+00:00",
+        "rawHash": "3a845f6de0c4d03241f3852a823d3268ecc154af993e013e1fab87beb21fb71c",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2711",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2711/Pct-9-City-of-Clifton-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.427304+00:00",
+        "rawHash": "527f280de82211177e1314dfd8d11f565b51238907a047c9a2e71f5024b3a41b",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms only candidate contests and City of Clifton Proposition A, a local street-maintenance sales tax. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2713",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2713/Pct-10-Valley-Mills-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.792358+00:00",
+        "rawHash": "6e0c93bff3c9076c8445752b89e61cc0c0b0430e85231cd8c89fa01b1fb813b3",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2714",
+        "finalUrl": "https://www.bosquecounty.gov/DocumentCenter/View/2714/Pct-11-Cayote-Sample-Ballots?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.496848+00:00",
+        "rawHash": "58f25548d10c870aa3bc2cb24c14b24eab11f73448917784c28ada90ea079544",
+        "publisher": "Bosque County Elections Administrator",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete two-page official November 3, 2026 Joint General and Special Election sample ballot; original scanned PDF and full OCR text held. Visual review confirms candidate contests only. No statewide measure appears.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.texas.gov/elections/laws/advisory2026-22.shtml",
+        "finalUrl": "https://www.sos.texas.gov/elections/laws/advisory2026-22.shtml",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.422134+00:00",
+        "rawHash": "33164d14c3f8aff2866315632596fdca33fbdc870d1dc1d423374d555e67bd9b",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Secretary of State November 3, 2026 ballot preparation advisory identifies the county election officer as responsible for the official ballot and describes official sample ballot preparation.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.texas.gov/elections/laws/advisory2017-06.shtml",
+        "finalUrl": "https://www.sos.texas.gov/elections/laws/advisory2017-06.shtml",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:18:37.601539+00:00",
+        "rawHash": "a4bcbe874f3d932ac1323deb83c6c4a40b98a153c0a11e7d5f5ffdca01b61a46",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Secretary of State advisory confirms constitutional amendments precede local propositions and statewide measures use numbers while local measures use letters.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://tcss.legis.texas.gov/resources/EL/pdf/EL.52.pdf",
+        "finalUrl": "https://tcss.legis.texas.gov/resources/EL/pdf/EL.52.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:19:41.230486+00:00",
+        "rawHash": "cefb0d27fe8994e618fc71660b659f75860ad482ece3612394992159f88083ca",
+        "publisher": "Texas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Election Code 52.008 requires official sample ballots; 52.095 distinguishes numbered statewide propositions from lettered local propositions and identifies the ordering authority.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://tcss.legis.texas.gov/resources/EL/pdf/EL.274.pdf",
+        "finalUrl": "https://tcss.legis.texas.gov/resources/EL/pdf/EL.274.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:19:41.035168+00:00",
+        "rawHash": "b88d87f5a75ceb492a1e2674dc346389bd5fee021cac47649ad5e313c4725d90",
+        "publisher": "Texas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Election Code 274.004 requires proposed constitutional amendments to appear before every other proposition; 274.002(e) requires each amendment proposition to appear on the official ballot in serial order.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://tcss.legis.texas.gov/resources/CN/pdf/CN.17.pdf",
+        "finalUrl": "https://tcss.legis.texas.gov/resources/CN/pdf/CN.17.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:19:41.039912+00:00",
+        "rawHash": "7a42f03b60ca50066828851743f651fec3662ae5666a13585eeaa69e2df91035",
+        "publisher": "Texas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Texas Constitution article XVII section 1 submits constitutional amendments to qualified voters for statewide offices and propositions, sends the full amendment to each county clerk, and requires returns from each county.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

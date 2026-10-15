@@ -17,19 +17,6 @@ import type { CandidatePublicationDate, CandidateSourceClass } from "../candidat
 
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
-/**
- * The ballot's own entities as things Ask can resolve and retrieve from. Every
- * id, name, party, question text and absence is read from the same committed
- * `BallotSet` the page renders; nothing is duplicated. It yields
- * `BindableEntity` rows for the binder and `EvidenceRecord` rows scoped to one
- * canonical id.
- *
- * A measure contributes three entity rows sharing one canonical id (the filing
- * title, `Proposition N`, `Prop N`), because the binder requires every
- * distinctive token of a name and readers do not type filing titles. Shared ids
- * keep the rows from being read as ambiguous.
- */
-
 /** What a resolved ballot entity actually is, kept beside the binder row. */
 export interface BallotSubjectRecord {
   kind: "CONTEST" | "PERSON" | "MEASURE";
@@ -40,11 +27,7 @@ export interface BallotSubjectRecord {
   contestId: string;
   contestTitle: string;
   ocdId: string;
-  /**
-   * The filing row behind a general-election nominee, where one exists. The
-   * filing and the lineup key the same person differently; carrying both keeps
-   * one person one entity.
-   */
+  // Both keys are needed because the filing and lineup identify the same person differently.
   candidacyId?: string | null;
   /** A sourced former filing, never a currently listed candidate. */
   removedFromFiling?: boolean;
@@ -60,11 +43,6 @@ export interface BallotAskInventory {
   subjects: Map<string, BallotSubjectRecord>;
 }
 
-/**
- * A candidate's target key, the same key the ballot page uses. General-lineup
- * nominees with no filing row are keyed `<contestId>|<name>`, as
- * `app/ballot/page.tsx` builds it.
- */
 export function candidateTargetKey(contestId: string, name: string): string {
   return `${contestId}|${name}`;
 }
@@ -74,10 +52,6 @@ export function candidacyDisplayName(candidacy: Candidacy): string {
   return [candidacy.givenName, candidacy.familyName].filter(Boolean).join(" ");
 }
 
-/**
- * A surname worth offering as an alias. Short surnames and ordinary question
- * words are skipped (see `COMMON_QUESTION_NOUNS`).
- */
 function usableSurname(familyName: string): boolean {
   const token = familyName.trim().toLowerCase();
   return (
@@ -95,10 +69,6 @@ export function measureDesignations(title: string): string[] {
   return [`Proposition ${number}`, `Prop ${number}`];
 }
 
-/**
- * Build the canonical Ask inventory for one reader's ballot. `contests` is the
- * matched subset for the reader's divisions.
- */
 export function ballotAskInventory(
   set: BallotSet | null,
   contests: readonly Contest[],
@@ -154,9 +124,7 @@ export function ballotAskInventory(
       });
     }
 
-    // Office vocabulary varies by filing authority; the district's canonical
-    // OCD key supplies the number. These are names for one existing contest,
-    // never a name-based join between different people or governments.
+    // Use the canonical district number because office wording varies between filing authorities.
     const cd = /\/cd:(\d+)$/.exec(contest.ocdId)?.[1];
     if (cd && officeIdentity(contest.title) === "us_representative") {
       const n = Number(cd);
@@ -171,11 +139,7 @@ export function ballotAskInventory(
     const filed = set.candidacies.filter((c) => c.contestId === contest.id);
     const nominees = nomineesFor(contest.id);
 
-    /*
-     * Where a general lineup exists it is canonical (keyed `<contestId>|<name>`,
-     * as the page renders), and the filing row rides along as `candidacyId`. A
-     * filed candidate the lineup does not carry is not offered.
-     */
+    // Bind to the reader lineup key while retaining the separate filing identity.
     if (nominees.length > 0) {
       for (const nominee of nominees) {
         if (!nominee.name) continue;
@@ -221,11 +185,7 @@ export function ballotAskInventory(
     }
   }
 
-  /*
-   * A held filing the reader's own words named (`namedSourceFilingIds`) is
-   * answerable wherever the reader stands, as that one person, marked
-   * `outsideReaderDivisions` so no record says it is on this reader's ballot.
-   */
+  // Named filings remain answerable outside the reader’s ballot without implying they are on it.
   const requested = new Set(requestedFilingIds);
   for (const candidacy of set.candidacies) {
     if (!requested.has(candidacy.id) || [...subjects.values()].some((subject) => subject.id === candidacy.id || subject.candidacyId === candidacy.id)) continue;
@@ -380,10 +340,7 @@ export function ballotRecordsFor(
         sourceUrl: provision.citesUrl,
       });
     }
-    /*
-     * Each record is this measure's own evidence, so it carries the measure's id
-     * as its subject; `lib/ask/relevance.ts` keeps or drops records by it.
-     */
+    // Relevance filtering uses the measure identity for every supporting passage.
     for (const created of records) created.subjectId = record.id;
     return { records, denominators };
   }
@@ -440,10 +397,7 @@ export function ballotRecordsFor(
       ? ` Source revision ${position.sourceRevisionId}, capture ${position.sourceArtifactId}, extracted UTF-16 span ${position.textStart}-${position.textEnd}.`
       : "";
     records.push({
-      /*
-       * A passage found by searching their published material for the issue's
-       * phrases, quoted; the sentence states that mechanism, never a stance.
-       */
+
       kind: "SOURCE_PASSAGE",
       id: `${record.id}#position-${position.sourceRevisionId ?? index}`,
       text:
@@ -502,13 +456,22 @@ function measureRecords(measure: Measure): EvidenceRecord[] {
       retrievedAt: measure.provenance?.collectedAt ?? null,
     });
   }
+  if (measure.voterGuide) {
+    const guide = measure.voterGuide;
+    for (const [kind, value, source] of [
+      ["Official analysis", guide.summary, guide],
+      ["Fiscal impact", guide.fiscalImpact, guide.fiscalImpactSource ?? guide],
+      ["Passage threshold", guide.passageThreshold, guide.passageThresholdSource ?? guide],
+      ...(guide.argumentsFor ?? []).map(text => ["State-published argument for", text, guide] as const),
+      ...(guide.argumentsAgainst ?? []).map(text => ["State-published argument against", text, guide] as const),
+    ] as const) {
+      if (value) out.push({ kind: "MEASURE_ANALYSIS", id: `${measure.id}#guide-${out.length}`, text: `${kind}: ${value}`,
+        sourceUrl: source.sourceUrl, sourceOrg: source.publisher, retrievedAt: source.retrievedAt });
+    }
+  }
   return out;
 }
 
-/**
- * The authority's own statement that something is not on the ballot,
- * with its citation.
- */
 function absenceRecords(
   ocdId: string,
   absences: readonly BallotAbsence[],

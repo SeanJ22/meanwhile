@@ -8,9 +8,17 @@ import { evidenceProjection } from "../control-plane/workers/evidence-projection
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { Artifact } from "../control-plane/evidence/artifact.ts";
-import { datePath, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
+import { datePath, objectKey, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
+import type { MeasureSourceReference } from "../ballot/types.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { CapturedFinanceResponse } from "../funding/campaign-finance.ts";
+
+function sourceReference(artifact: Artifact, key: string, retrievedAt: string, project = "freshness"): MeasureSourceReference {
+  return { sourceUrl: artifact.canonicalUrl, sourceHash: artifact.contentHash.replace(/^sha256-/, ""),
+    retrievedAt, publisher: artifact.sourceId, vault: { key, byteLength: artifact.byteLength, contentType: artifact.contentType },
+    ...(artifact.extraction ? { originals: [sourceReference(artifact.extraction.parent,
+      objectKey(project, artifact.extraction.parent), artifact.extraction.parent.retrievedAt, project)] } : {}) };
+}
 
 export async function workerPublicationContext(now: string, existingRepos?: ControlPlaneRepositories) {
   const connection = controlPlaneUrlFromEnv();
@@ -27,7 +35,7 @@ export async function workerPublicationContext(now: string, existingRepos?: Cont
       httpStatus: artifact.httpStatus, transport: artifact.transport, partial, sourcePolicy,
       complete: !partial && artifact.transport === "REACHABLE" && artifact.httpStatus !== null && artifact.httpStatus >= 200 && artifact.httpStatus < 300 };
   }, readCapture: async (id: string, records: readonly WorkerResultRecord[]) => {
-    const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);
+    const [{ artifact, key }, input] = await Promise.all([readObject(id), readEvidence(id)]);
     const evidence = evidenceProjection(input);
     const observations = records.flatMap(record => {
       const result = record.result;
@@ -35,7 +43,9 @@ export async function workerPublicationContext(now: string, existingRepos?: Cont
         ? result.walk.filter(step => step.rung === result.source.retrieval && step.target === evidence.canonicalUrl &&
           step.transport === "REACHABLE" && step.outcome === "WALKED_AND_FOUND" && step.artifactIds.includes(id)).map(step => step.at) : [];
     });
-    return { evidence, sourcePolicy, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
+    const observedAt = [evidence.retrievedAt, ...observations].sort().at(-1)!;
+    if (artifact.id !== evidence.artifactId || artifact.contentHash !== evidence.contentHash) throw new Error("PUBLICATION_CAPTURE_VAULT_IDENTITY_MISMATCH");
+    return { evidence, sourcePolicy, sourceReference: sourceReference(artifact, key, observedAt), observedAt, httpStatus: artifact.httpStatus,
       transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
   } };
 }
@@ -63,8 +73,9 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
         retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
         ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
       try {
-        const { input } = await readForParser(store, project, artifact);
-        return { evidence: evidenceProjection(input), observedAt: artifact.retrievedAt,
+        const { input, read } = await readForParser(store, project, artifact);
+        return { evidence: evidenceProjection(input), sourceReference: sourceReference(read.artifact,
+          objectKey(project, read.artifact), artifact.retrievedAt, project), observedAt: artifact.retrievedAt,
           httpStatus: artifact.httpStatus, transport: artifact.transport,
           partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
       } catch { return null; }

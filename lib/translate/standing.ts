@@ -17,6 +17,7 @@ export interface TranslationAttempt {
   readonly subjectId: string;
   readonly sourceHash: string;
   readonly sourceTextHash: string;
+  readonly ballotQuestionHash?: string;
   readonly at: string;
   readonly status: "RUNNING" | TranslationResult["status"];
   readonly usage: TranslationResult["usage"];
@@ -83,17 +84,14 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
   return { outcomes, deferred, persistenceError: null };
 }
 
-/**
- * A leased standing worker calls this with its admitted place's held inputs and
- * guarded transport. Attempts use that worker's existing durable attempt
- * repository; this creates no separate clock, spend guard or production table.
- */
 export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "repos" | "store" | "transportFor" | "now"> & {
   readonly divisions: readonly string[];
   readonly ballots: readonly BallotSet[];
   readonly captures: readonly WorkerPublicationCapture[];
   readonly attempts: readonly TranslationAttempt[];
   readonly saveAttempt: (attempt: TranslationAttempt) => Promise<void>;
+  readonly continueWork?: () => boolean;
+  readonly onPublished?: (attempt: TranslationAttempt) => void;
 }) {
   const nowMs = Date.parse(input.now);
   if (!Number.isFinite(nowMs)) throw new Error("Translation admission requires a clock.");
@@ -106,6 +104,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
   const pages = input.captures.filter(captureIntact);
   for (const ballot of input.ballots) {
     for (const measure of ballot.measureRecords ?? []) {
+      if (input.continueWork && !input.continueWork()) return { outcomes, deferred, persistenceError: null };
       const contest = ballot.contests.find(row => row.id === measure.contestId && row.type === "MEASURE");
       if (!contest || !divisions.has(contest.ocdId)) continue;
       const scope = translationScope(contest.ocdId);
@@ -117,20 +116,27 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       if (duplicates.some(record => JSON.stringify(record) !== JSON.stringify(measure))) {
         deferred.push({ subjectId: contest.id, reason: "Held measure records disagree." }); continue;
       }
-      if (measure.parts.some(part => !part.number)) {
+      const heldMeasure = ballot.measures?.find(row => row.contestId === contest.id && row.officialText);
+      if (heldMeasure && !heldMeasure.provenance.sourceUrl) {
+        deferred.push({ subjectId: contest.id, reason: "The ballot question lacks its official source identity." }); continue;
+      }
+      const ballotQuestion = heldMeasure ? { text: heldMeasure.questionText, sourceUrl: heldMeasure.provenance.sourceUrl! } : undefined;
+      const ballotQuestionHash = ballotQuestion ? translationHash(JSON.stringify(ballotQuestion)) : undefined;
+      const prior = heldMeasure ? null : measure;
+      if (prior?.parts.some(part => !part.number)) {
         deferred.push({ subjectId: contest.id, reason: "Legacy reaction parts need their source-backed migration before rewriting." }); continue;
       }
       const candidates = pages.filter(capture => capture.evidence.canonicalUrl === measure.sourceUrl &&
-        capture.evidence.text.includes(contest.title) && ((capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash ||
+        (capture.evidence.contentHash.replace(/^sha256-/, "") === measure.sourceHash || !heldMeasure &&
           Date.parse(capture.evidence.retrievedAt) >= Date.parse(measure.writtenAt)))
         .sort((a, b) => Date.parse(b.evidence.retrievedAt) - Date.parse(a.evidence.retrievedAt));
       const primary = candidates[0];
       if (!primary) { deferred.push({ subjectId: contest.id, reason: "No complete current source capture is held." }); continue; }
-      const sourceHash = (primary.evidence.sourceDocument?.contentHash ?? primary.evidence.contentHash).replace(/^sha256-/, "");
+      const sourceHash = primary.evidence.contentHash.replace(/^sha256-/, "");
       const sourceTextHash = translationHash(primary.evidence.text);
       const sameTime = candidates.filter(capture => Date.parse(capture.evidence.retrievedAt) === Date.parse(primary.evidence.retrievedAt));
       if (sameTime.some(capture => translationHash(capture.evidence.text) !== sourceTextHash ||
-          (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") !== sourceHash)) {
+          capture.evidence.contentHash.replace(/^sha256-/, "") !== sourceHash)) {
         deferred.push({ subjectId: contest.id, reason: "Current source captures disagree." }); continue;
       }
       const page = section3Page({ url: primary.evidence.canonicalUrl, text: primary.evidence.text,
@@ -138,7 +144,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       PLAIN_ENGLISH_TRANSLATION_ROUTINE.inputRecordClass, input.now);
       if (!page.ok) { deferred.push({ subjectId: contest.id, reason: page.reason ?? "Source is not yet verified." }); continue; }
       const matchingAttempts = input.attempts.filter(attempt => attempt.scope === scope && attempt.subjectId === contest.id &&
-        attempt.sourceHash === sourceHash && attempt.sourceTextHash === sourceTextHash);
+        attempt.sourceHash === sourceHash && attempt.sourceTextHash === sourceTextHash && attempt.ballotQuestionHash === ballotQuestionHash);
       if (matchingAttempts.some(attempt => !Number.isFinite(Date.parse(attempt.at)))) {
         deferred.push({ subjectId: contest.id, reason: "The existing attempt's retry clock is unreadable." }); continue;
       }
@@ -148,15 +154,15 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         deferred.push({ subjectId: contest.id, reason: "The existing attempt is running or its retry is not due." }); continue;
       }
       const attempt: TranslationAttempt = {
-        id: `translation:${translationHash(JSON.stringify([scope, contest.id, sourceHash, sourceTextHash, input.now]))}`,
-        scope, subjectId: contest.id, sourceHash, sourceTextHash, at: input.now, status: "RUNNING", usage: [], versionId: null,
+        id: `translation:${translationHash(JSON.stringify([scope, contest.id, sourceHash, sourceTextHash, ballotQuestionHash, input.now]))}`,
+        scope, subjectId: contest.id, sourceHash, sourceTextHash, ...(ballotQuestionHash ? { ballotQuestionHash } : {}), at: input.now, status: "RUNNING", usage: [], versionId: null,
       };
       // Refuse to spend if the worker cannot first retain its running attempt.
       await input.saveAttempt(attempt);
       const result = await runMeasureTranslation({ ...input, primary, captures: pages,
         batchPriority: { now: input.now, electionAt: [ballot.election?.date ?? ""] },
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
-          state: jurisdictionFromOcdId(contest.ocdId)!.usps, prior: measure } });
+          state: jurisdictionFromOcdId(contest.ocdId)!.usps, prior, ...(ballotQuestion ? { ballotQuestion } : {}) } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,
         versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}) };
       outcomes.push(finished);
@@ -165,6 +171,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         // Return charges even when saving fails, and stop before any more paid work.
         return { outcomes, deferred, persistenceError: sanitizedErrorDiagnostic(error) };
       }
+      if (finished.status === "PUBLISHED") input.onPublished?.(finished);
     }
   }
   return { outcomes, deferred, persistenceError: null };

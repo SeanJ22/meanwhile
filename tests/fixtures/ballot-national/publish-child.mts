@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../../../lib/control-plane/evidence/store.ts";
 import assert from "node:assert/strict";
 import { runBallotPublication } from "../../../scripts/assemble-ballot-package.mts";
 import { MemoryRoutineDataStore, assertRoutineDataStoreMutationAuthority } from "../../../lib/civic-data/store.ts";
@@ -11,7 +12,7 @@ assert.equal(authority.capability, "MANUAL_CONTRACT");
 assert.equal(authority.contract, "ballot-contests");
 const store = new MemoryRoutineDataStore();
 const now = "2026-10-14T00:00:00.000Z";
-const result = await runBallotPublication({ store, directory: process.argv[2], now });
+const result = await runBallotPublication({ evidenceStore: new MemoryEvidenceStore(), store, directory: process.argv[2], now });
 console.log("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(result.report));
 if (result.receipt) {
   assert.equal(await durableRoutineRunnerReceiptIssue(result.receipt,

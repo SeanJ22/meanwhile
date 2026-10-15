@@ -12142,13 +12142,27 @@
         "Governor and Lieutenant Governor are elected together on one ticket; Vote For: 1.",
         "The official certification includes Supreme Court Justice contests in judicial districts 1–5 and 8–13. Those judicial district contests are outside the statewide, congressional and state legislative scope of this file; there is no statewide court contest in the certified offices list.",
         "The statewide measure list contains no records. Broome County Board of Elections marks its Statewide Ballot Proposal (General Election Notice) section NO FILING, and the state certification index lists no 2026 statewide proposal certification. County and city proposals are outside this statewide-measure scope."
+      ],
+      "measureRecords": [],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.broomevotes.com/candidates",
+          "sourceHash": "f42407c35e6f5211593b334d2edc95b6bdd041495ed8d58ee2aaf55096b721d8",
+          "retrievedAt": "2026-10-14T23:52:37.568130+00:00",
+          "publisher": "Broome County Board of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.broomevotes.com/2026/10/14/ms-01-1e546f1fc8534f96/sha256-f42407c35e6f5211593b334d2edc95b6bdd041495ed8d58ee2aaf55096b721d8.html",
+            "byteLength": 758388,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:27.565348Z",
-    "reviewedBy": "Codex BL-14 New York source-file conversion",
+    "reviewedAt": "2026-10-15T04:14:39.880117+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://elections.ny.gov/certification-november-3-2026-general-election",
@@ -12181,16 +12195,6 @@
         "reviewedEvidence": "Official certification index lists the November 3, 2026 general candidate certification but no 2026 statewide proposal certification."
       },
       {
-        "requestedUrl": "https://www.broomevotes.com/candidates",
-        "finalUrl": "https://www.broomevotes.com/candidates",
-        "httpStatus": 200,
-        "rawHash": "d28d40e2cd938e5a610de1c84634e381d783d21c6bf95b37644a74eafa049071",
-        "retrievedAt": "2026-10-14T05:07:37.551681Z",
-        "publisher": "Broome County Board of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official Broome County Board of Elections candidate page: the Statewide Ballot Proposal (General Election Notice) section displays NO FILING; do not widen county-local contests into statewide measures."
-      },
-      {
         "requestedUrl": "https://www.broomecountyny.gov/",
         "finalUrl": "https://www.broomecountyny.gov/",
         "httpStatus": 200,
@@ -12199,6 +12203,16 @@
         "publisher": "Broome County Government",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Government page linking to the Broome County Board of Elections website."
+      },
+      {
+        "requestedUrl": "https://www.broomevotes.com/candidates",
+        "finalUrl": "https://www.broomevotes.com/candidates",
+        "httpStatus": 200,
+        "rawHash": "f42407c35e6f5211593b334d2edc95b6bdd041495ed8d58ee2aaf55096b721d8",
+        "retrievedAt": "2026-10-14T23:52:37.568130+00:00",
+        "publisher": "Broome County Board of Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official Statewide Ballot Proposal (General Election Notice) section states NO FILING. Saved HTML and extracted text confirm no statewide proposal notice for the 2026 general election."
       }
     ]
   }

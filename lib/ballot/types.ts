@@ -16,11 +16,7 @@ export interface Contest {
   /** Stable within a source, namespaced by the source. */
   id: string;
   electionId: string;
-  /**
-   * The division whose voters see this contest. State-level contests carry
-   * the bare state identifier, which resolution derives from any division
-   * at the point — the same hierarchy walk the senators use.
-   */
+  // The bare state division makes statewide contests match every resolved place in that state.
   ocdId: OcdId;
   divisionVintage: string;
   title: string;
@@ -48,6 +44,25 @@ export interface Candidacy {
   provenance: Provenance;
 }
 
+export interface MeasureSourceReference {
+  sourceUrl: string;
+  sourceHash: string;
+  retrievedAt: string;
+  publisher: string;
+  vault: { key: string; byteLength: number; contentType: string };
+  originals?: MeasureSourceReference[];
+}
+
+export interface MeasureVoterGuide extends MeasureSourceReference {
+  summary?: string;
+  fiscalImpact?: string;
+  fiscalImpactSource?: MeasureSourceReference;
+  passageThreshold?: string;
+  passageThresholdSource?: MeasureSourceReference;
+  argumentsFor?: string[];
+  argumentsAgainst?: string[];
+}
+
 export interface Measure {
   id: string;
   contestId: string;
@@ -57,6 +72,8 @@ export interface Measure {
   questionText: string;
   /** The official interpretive statement or analysis, verbatim, if any. */
   officialStatement: string | null;
+  officialText?: MeasureSourceReference;
+  voterGuide?: MeasureVoterGuide;
   provenance: Provenance;
 }
 
@@ -84,6 +101,8 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  sourceDocuments?: readonly MeasureSourceReference[];
+  sourceAuthorities?: readonly MeasureSourceReference[];
   measureRecords?: readonly MeasureRecord[];
   election: Election;
   contests: Contest[];
@@ -92,8 +111,7 @@ export interface BallotSet {
   absences: BallotAbsence[];
   removals?: CandidacyRemoval[];
   coverageNotes?: string[];
-  /** Source notes with explicit applicability; never widened from a county
-   * or one measured ZIP to every reader of a statewide source. */
+  // Local coverage notes must not be widened to every reader of the state source.
   scopedCoverageNotes?: readonly ScopedBallotCoverageNote[];
 }
 

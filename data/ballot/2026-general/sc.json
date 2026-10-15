@@ -7450,20 +7450,57 @@
         }
       ],
       "measures": [],
-      "absences": [],
+      "absences": [
+        {
+          "ocdId": "ocd-division/country:us/state:sc",
+          "divisionVintage": "2026",
+          "statement": "The South Carolina State Election Commission's complete November 3, 2026 referendum list contains 42 local questions and no statewide constitutional amendments.",
+          "provenance": {
+            "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch?electionId=22596",
+            "sourceOrg": "South Carolina State Election Commission",
+            "collectedAt": "2026-10-15T00:06:59.726128+00:00",
+            "verifiedAt": "2026-10-15T00:06:59.726128+00:00",
+            "doorId": "fec-sc-chief"
+          }
+        }
+      ],
       "coverageNotes": [
         "The State Election Commission says an unfiltered Candidate Tracking search returns all candidates for the selected election. Both searches used all offices, all candidate statuses, all parties and all filing locations, with no county or name filters. Every Active candidate for each held contest is included from the full-territory official roster. Sources: https://vrems.scvotes.sc.gov/Candidate/CandidateSearch?electionId=22596 and https://vrems.scvotes.sc.gov/Candidate/CandidateSearch?electionId=22758",
         "The official candidate-placement statement says: \"In South Carolina, political parties are responsible for determining qualifications for their candidates and for certifying them for placement on the ballot in partisan elections.\" Source: https://scvotes.gov/placement-of-candidates-on-ballots-in-south-carolina/",
         "The general-election roster contains all 124 state House districts and all seven U.S. House districts. The separate Special election selector lists SC Senate District 15 Special Election on November 3, 2026; its two Active candidates are included. Source: https://vrems.scvotes.sc.gov/Candidate/CandidateSearch?electionId=22758",
         "The November 3, 2026 referendum search returned 42 Local Questions and zero Statewide Constitutional Amendments when checked. No statewide measure was listed. Source: https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch?electionId=22596",
         "Governor and Lieutenant Governor are held as four joint tickets with each current running mate preserved from the official export. Incumbency and campaign websites are not stated in the export."
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
+          "sourceHash": "32497c069988acf239f8ec381147d8561770623a9d4f5cdbe3c3e2c584d796c7",
+          "retrievedAt": "2026-10-15T00:06:59.726128+00:00",
+          "publisher": "South Carolina State Election Commission",
+          "vault": {
+            "key": "project/freshness/source/vrems.scvotes.sc.gov/2026/10/15/ms-01-96440fb2c5493c06/sha256-32497c069988acf239f8ec381147d8561770623a9d4f5cdbe3c3e2c584d796c7.html",
+            "byteLength": 15109,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
+          "sourceHash": "275796e95c91482fa322a4b983e89cb3b0025109b7cf2512d5951923427a9b43",
+          "retrievedAt": "2026-10-15T00:04:44.610208+00:00",
+          "publisher": "South Carolina State Election Commission",
+          "vault": {
+            "key": "project/freshness/source/vrems.scvotes.sc.gov/2026/10/15/ms-01-96440fb2c5493c06/sha256-275796e95c91482fa322a4b983e89cb3b0025109b7cf2512d5951923427a9b43.html",
+            "byteLength": 2355,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:51:07.034Z",
-    "reviewedBy": "Codex BL-15",
+    "reviewedAt": "2026-10-15T04:14:39.904900+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://www.scvotes.gov/",
@@ -7604,6 +7641,28 @@
         "httpStatus": 200,
         "rawHash": "72d5b3d75ed936579eee0074cace14bc7e2281891533d0f454afd354fbc58fac",
         "reviewedEvidence": "Official CSV export for election 22758 State Senate District 15 Special Election on November 3, 2026; two Active ballot names and printed party labels are projected. The unfiltered official roster covers every selected contest's whole territory and contains every current Active candidate for it."
+      },
+      {
+        "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
+        "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
+        "httpStatus": 200,
+        "rawHash": "275796e95c91482fa322a4b983e89cb3b0025109b7cf2512d5951923427a9b43",
+        "retrievedAt": "2026-10-15T00:04:44.610208+00:00",
+        "publisher": "South Carolina State Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 referendum search: ElectionId=22596, ElectionDate=, SearchType=Default, SelectedGroup=StatewideConst, SelectedPoliticalParty=All. Response contains zero rows under Statewide Constitutional Amendments.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
+        "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
+        "httpStatus": 200,
+        "rawHash": "32497c069988acf239f8ec381147d8561770623a9d4f5cdbe3c3e2c584d796c7",
+        "retrievedAt": "2026-10-15T00:06:59.726128+00:00",
+        "publisher": "South Carolina State Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 referendum search: ElectionId=22596, ElectionDate=, SearchType=Default, SelectedGroup=All, SelectedPoliticalParty=All. Response contains 42 rows, every one a Local Question; zero statewide measures.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

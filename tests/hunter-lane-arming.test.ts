@@ -1,11 +1,3 @@
-/**
- * The standing hunter lane arms the same paid-work guards the
- * round does, from the owner's live controls and the round's host-local Send
- * and area reading. Every unreadable or stale input holds paid work by name;
- * a task's Send lines come from its own obligation's marks; the lane's own
- * requests are counted once across refreshes, at their worst case until they
- * measure.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, writeFileSync } from "node:fs";
@@ -28,9 +20,9 @@ import {
   laneArmingOf,
   laneWorkerTransport,
   readLaneArming,
-  writeLaneArming,
   type ArmedHunterLane,
 } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming-writer.ts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS } from "../lib/models.ts";

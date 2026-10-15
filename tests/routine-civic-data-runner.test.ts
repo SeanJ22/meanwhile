@@ -29,7 +29,7 @@ import {
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate } from "../lib/civic-data/types.ts";
@@ -131,6 +131,65 @@ test("source refreshes are admitted daily without a Send and retry failed source
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now), true);
   }
 });
+
+test("normal supervisor passes run guarded translations beside source work and preserve source results on a translation failure", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const helpers = source.slice(source.indexOf("function boundedExecutionFailure("), source.indexOf("async function latestUnreceiptedSupervisorAttempts("));
+  const launch = source.slice(source.indexOf("const ballotSources = waitForBallotSources("), source.indexOf("async function settlePendingRunResult("));
+  const admissions: unknown[] = [], launched: string[] = [], failures: { code: string }[] = [];
+  const sourceResult = { id: "official-ballot", status: 0, signal: null, stdout: "source receipt", stderr: "", termination: "EXITED", errorMessage: null };
+  let finishTranslation: (value: unknown[]) => void = () => {};
+  let finishSources: (value: unknown[]) => void = () => {};
+  let settleBallot: () => Promise<void> = async () => {};
+  const context = {
+    PUBLISH_NOW: false, ONLY: null as null | Set<string>, ROOT: "/repo", process: { execPath: "node", env: { admitted: "supervisor" }, pid: 12 },
+    requiredManualProductionContract, ROUTINE_CHILD_TIMEOUT_MS, ROUTINE_CHILD_MAX_BUFFER_BYTES: 1_000_000,
+    ROUTINE_SAME_DOMAIN_CHILD_GAP_MS: 60_000, sourceConcurrency: 2,
+    pendingRuns: [{ id: sourceResult.id, task: { id: "ballot-contests" } }, { id: "unrelated", task: { id: "unrelated" } }],
+    settlePendingRunResult: async () => {}, releaseChildMemory() {},
+    supervisorFailures: failures, childFatalLine: () => null, sanitizedErrorDiagnostic: String,
+    console: { log() {}, warn() {}, error() {} }, sourceChildCommand: (command: unknown) => command,
+    admittedRuntimeChildEnvironment: (input: unknown) => { admissions.push(input); return { authority: "manual" }; },
+    runMeetingDiscoveryChain: async (runs: unknown[], run: (runs: unknown[]) => Promise<unknown>) => run(runs),
+    runBoundedChildPass: async (commands: { id: string; args: string[]; env?: unknown }[], options: { onStarting?: unknown; onSettled?: (result: unknown, index: number) => Promise<void> }) => {
+      launched.push(commands[0].id);
+      if (commands[0].id !== "plain-english-translations") {
+        settleBallot = () => options.onSettled!(sourceResult, 0);
+        return new Promise<unknown[]>(resolve => { finishSources = resolve; });
+      }
+      assert.equal(options.onStarting, undefined, "the translation's paid state pool owns its worker slots");
+      assert.deepEqual(Array.from(commands[0].args), ["--experimental-strip-types", "scripts/translate-national-measures.mts"]);
+      assert.equal((commands[0].env as { authority: string }).authority, "manual");
+      return new Promise<unknown[]>(resolve => { finishTranslation = resolve; });
+    },
+  };
+  const compiled = transpileModule(helpers + launch, {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\n({ sourcePass, runMeasureTranslationPass });";
+  const pass = runInNewContext(compiled, context) as { sourcePass: Promise<unknown[]>; runMeasureTranslationPass: () => Promise<unknown> };
+  assert.deepEqual(launched, ["official-ballot"], "new ballot text must settle before the translation worker reads its state");
+  await settleBallot();
+  await Promise.resolve();
+  assert.deepEqual(launched, ["official-ballot", "plain-english-translations"]);
+  assert.deepEqual(JSON.parse(JSON.stringify(admissions)), [{ parentEnv: context.process.env,
+    capability: "MANUAL_CONTRACT", contract: "plain-english-translations", parentPid: 12 }]);
+  finishTranslation([{ ...sourceResult, id: "plain-english-translations", status: 2, stdout: "State persistence failed" }]);
+  finishSources([sourceResult]);
+  assert.deepEqual(await pass.sourcePass, [sourceResult]);
+  assert.equal(failures[0].code, "TRANSLATION_CHILD_EXIT_NONZERO");
+  const next = pass.runMeasureTranslationPass();
+  assert.equal(launched.filter(id => id === "plain-english-translations").length, 2,
+    "each ordinary pass rechecks changed held sources without waiting for a daily source clock");
+  finishTranslation([{ ...sourceResult, id: "plain-english-translations", stdout: "Measure summaries deferred: paid work is paused" }]);
+  assert.equal(await next, null, "a paid pause or a held translation does not fail unrelated publication");
+  context.PUBLISH_NOW = true;
+  assert.equal(await pass.runMeasureTranslationPass(), null);
+  context.PUBLISH_NOW = false; context.ONLY = new Set([sourceResult.id]);
+  assert.equal(await pass.runMeasureTranslationPass(), null);
+  assert.equal(launched.length, 3, "publish-now and explicit source selections do not start a national translation pass");
+  assert.equal(AUTOMATIC_REFRESH_TASKS.some(task => task.id === "plain-english-translations"), false,
+    "per-state translations are not misclassified as a national source receipt");
+});
 import {
   ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_TIMEOUT_MS,
@@ -222,9 +281,7 @@ test("the standing parent durably accounts for a routine child killed outside so
 
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /persistOuterRoutineChildFailure\(cycleId, startedAt, run/);
-  // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
-  // records carrying that exact digestId (a targeted content query, not a scan
-  // of the whole log) and then confirms the supervisor kind.
+  // Cycle-specific digest reads prevent duplicate incidents without scanning the whole log.
   assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
@@ -2021,10 +2078,10 @@ test("the supervisor proves the registry once for two or more meeting children a
   const admitted = source.indexOf("attempted = pendingRuns.length;");
   const proof = source.indexOf("await readRegistryRuntimeProjection({ store })");
   const attest = source.indexOf("attestPromotedVersion(\"REGISTRY_RUNTIME_BINDING\", REGISTRY_RUNTIME_SCOPE, store)");
-  const launch = source.indexOf("const sourcePass = runMeetingDiscoveryChain(");
+  const launch = source.indexOf("const sourcePass = Promise.all(");
   assert.ok(admitted > 0 && admitted < proof && proof < attest && attest < launch, "proved after admission, before any child starts");
   assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
-  assert.match(source, /const sourcePass = runMeetingDiscoveryChain\(pendingRuns, runs => runBoundedChildPass\(\s*runs\.map\(sourceChildCommand\),/, "every ordered discovery subpass builds children through the attestation-aware command factory");
+  assert.match(source, /const sourcePass = Promise\.all\(\[runMeetingDiscoveryChain\(pendingRuns, runs => runBoundedChildPass\(\s*runs\.map\(sourceChildCommand\),/, "every ordered discovery subpass builds children through the attestation-aware command factory");
   assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);
   assert.match(source, /onSettled: async \(run, index\) => settlePendingRun\(runs\[index\]!/, "settlement must match the command's subpass rather than the complete pending list");
   assert.match(source, /catch \(error\) \{\s*console\.log\(`RCD_PASS registry not attested; each meeting child proves it/);

@@ -7394,6 +7394,92 @@
             "verifiedAt": "2026-10-14T16:12:55.005303Z",
             "doorId": "fec-tn-chief",
             "quote": "Shall Article I, Section 15 of the Constitution of Tennessee be amended by deleting the following:\n\nThat all prisoners shall be bailable by sufficient sureties, unless for capital offences, when the proof is evident, or the presumption great. And the privilege of the writ of Habeas Corpus shall not be suspended, unless when in case of rebellion or invasion, the General Assembly shall declare the public safety requires it.\n\nand substituting instead the following:\n\n(a) All prisoners shall be bailable by sufficient sureties unless for the following when the proof is evident or the presumption great:\n\n(1) A capital offense;\n\n(2) An act of terrorism;\n\n(3) Second degree murder;\n\n(4) Aggravated rape of a child;\n\n(5) Aggravated rape;\n\n(6) Grave torture; and\n\n(7) Any other offense for which, as of November 3, 2026, a defendant, if convicted, could not be released prior to the expiration of at least eighty-five percent of the entire sentence imposed.\n\n(b) In any case in which bail for an offense listed in subsection (a) is granted or denied before conviction, the judge or magistrate shall place in the record the judge's or magistrate's reasons for granting or denying bail.\n\n(c) The privilege of the writ of Habeas Corpus shall not be suspended, unless when in case of rebellion or invasion, the General Assembly shall declare the public safety requires it."
+          },
+          "officialText": {
+            "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
+            "sourceHash": "8f541a52b3c1206105f6848c33f754b43215268020988f14a38175eaff043e87",
+            "retrievedAt": "2026-10-14T23:52:27.958909+00:00",
+            "publisher": "Tennessee Secretary of State, Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-7bc1fbb4f81befea/sha256-8f541a52b3c1206105f6848c33f754b43215268020988f14a38175eaff043e87.txt",
+              "byteLength": 2877,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
+                "sourceHash": "0f02c4e91c24667de9bf268e9818bed41031f6ecf99381440d3741334a23e0a1",
+                "retrievedAt": "2026-10-14T23:52:27.958909+00:00",
+                "publisher": "Tennessee Secretary of State, Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-7bc1fbb4f81befea/sha256-0f02c4e91c24667de9bf268e9818bed41031f6ecf99381440d3741334a23e0a1.pdf",
+                  "byteLength": 157201,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+            "sourceHash": "220c8b1b307168357c68cbbbd9edff2d232d00fd5e0d7affa83e7965005340b8",
+            "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+            "publisher": "Tennessee Attorney General and Secretary of State, Division of Elections",
+            "summary": "This amendment changes Article I, section 15 of the Tennessee Constitution by allowing a court to hold a defendant without bail before trial when that defendant is accused of: an offense punishable by the death penalty, an act of terrorism, second degree murder, aggravated rape of a child, aggravated rape, grave torture, or any crime for which a convicted person would be required to serve eighty-five percent of their sentence. This amendment requires courts to state on the record the reasons for their decision to grant or deny bail in those cases.",
+            "passageThreshold": "For an amendment to pass and become part of the Constitution, both of the following must happen: The amendment must receive more “yes” votes than “no” votes; and The number of “yes” votes must be more than half of all votes cast in the governor’s race.",
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0025.pdf",
+              "sourceHash": "a58641af97519f9ad94e1b2a22def6c4653b309b2a14832ae80c6a8491e1ddbf",
+              "retrievedAt": "2026-10-15T00:10:15.273997+00:00",
+              "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+              "vault": {
+                "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-83cd3658b04a0a3c/sha256-a58641af97519f9ad94e1b2a22def6c4653b309b2a14832ae80c6a8491e1ddbf.txt",
+                "byteLength": 3160,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0025.pdf",
+                  "sourceHash": "2186a52f9d34199b652abd3febfa64289215372d97152238ab3d2505fd77f331",
+                  "retrievedAt": "2026-10-15T00:10:15.273997+00:00",
+                  "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+                  "vault": {
+                    "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-83cd3658b04a0a3c/sha256-2186a52f9d34199b652abd3febfa64289215372d97152238ab3d2505fd77f331.pdf",
+                    "byteLength": 126163,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "FISCAL IMPACT:\n\n                                             LOCAL GOVERNMENT\n EXPENDITURES                                                                                                        Mandatory\n FY26-27                                                                                                                $9,400\n Article II, Section 24 of the Tennessee Constitution provides that: no law of general application shall impose increased expenditure\n requirements on cities or counties unless the General Assembly shall provide that the state share in the cost.\n\n       Assumptions:\n\n       • Pursuant to Article XI, Section 3 of the Constitution of Tennessee, following passage by\n         two successive General Assemblies, the proposed amendatory language is submitted to the\n         people for a vote at the next general election in which a Governor is to be chosen.\n       • The proposed constitutional amendment language received its first General Assembly\n         passage with Senate Joint Resolution 919 on April 26, 2024.\n       • Pursuant to Tenn. Code Ann. § 2-5-211(b), at least five days before the beginning of early\n         voting, the county election commission shall either publish a sample ballot in a newspaper\n         of general circulation or mail the sample ballot to every active registered voter.\n       • The requirement to add this constitutional amendment to the 2026 general election ballot\n         will increase the size of the sample ballot to be published and subsequently increase printing\n         costs.\n       • The one-time increase in local expenditures in FY26-27 for publishing costs is estimated to\n         be $9,400 based upon the cost of recent publications incurred by the Secretary of State.\n\n\n\n\n                                                            SJR 25",
+            "vault": {
+              "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-220c8b1b307168357c68cbbbd9edff2d232d00fd5e0d7affa83e7965005340b8.txt",
+              "byteLength": 2328,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+                "sourceHash": "41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e",
+                "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+                "publisher": "Tennessee Secretary of State, Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e.html",
+                  "byteLength": 53208,
+                  "contentType": "text/html"
+                }
+              },
+              {
+                "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+                "sourceHash": "59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60",
+                "retrievedAt": "2026-10-15T00:06:28.078532+00:00",
+                "publisher": "Tennessee Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.tn.gov/2026/10/15/ms-01-59a3e8d4815be58e/sha256-59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60.html",
+                  "byteLength": 53207,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -7409,6 +7495,92 @@
             "verifiedAt": "2026-10-14T16:12:55.005303Z",
             "doorId": "fec-tn-chief",
             "quote": "Shall Article II, Section 28 of the Constitution of the State of Tennessee be amended by deleting the following language from the first sentence:\n\nIn accordance with the following provisions, all property real, personal or mixed shall be subject to taxation, but the Legislature\n\nand substituting instead the following:\n\nIn accordance with the following provisions, all property real, personal, or mixed shall be subject to taxation, but the Legislature shall not levy, authorize, or otherwise permit any state tax upon such property, and the Legislature"
+          },
+          "officialText": {
+            "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
+            "sourceHash": "41603b1482b9ac19581f3f9b03dddca3767547dd38d0588f9eab021e104ed48c",
+            "retrievedAt": "2026-10-14T23:52:27.913718+00:00",
+            "publisher": "Tennessee Secretary of State, Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-254ee000bf1d4ea0/sha256-41603b1482b9ac19581f3f9b03dddca3767547dd38d0588f9eab021e104ed48c.txt",
+              "byteLength": 2655,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
+                "sourceHash": "8d761237225a5a36d6c229ce2d35f3017f7715f9d1fa230f8fd6335f638ce2b2",
+                "retrievedAt": "2026-10-14T23:52:27.913718+00:00",
+                "publisher": "Tennessee Secretary of State, Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-254ee000bf1d4ea0/sha256-8d761237225a5a36d6c229ce2d35f3017f7715f9d1fa230f8fd6335f638ce2b2.pdf",
+                  "byteLength": 155045,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+            "sourceHash": "1c4eb89080be245b40e351e016b871aa33d7ed01bc41f62302428bad291deaa4",
+            "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+            "publisher": "Tennessee Attorney General and Secretary of State, Division of Elections",
+            "summary": "This amendment adds text to Article II, section 28 of the Tennessee Constitution that prohibits the Legislature from imposing a State property tax on real, personal, or mixed property.",
+            "passageThreshold": "For an amendment to pass and become part of the Constitution, both of the following must happen: The amendment must receive more “yes” votes than “no” votes; and The number of “yes” votes must be more than half of all votes cast in the governor’s race.",
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0001.pdf",
+              "sourceHash": "019fa5654922c001d7cd7a03f2eba45578a57a897bbae0af38ff2d7cd15a9b7c",
+              "retrievedAt": "2026-10-15T00:10:15.273627+00:00",
+              "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+              "vault": {
+                "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-f86b6d3cce53f36f/sha256-019fa5654922c001d7cd7a03f2eba45578a57a897bbae0af38ff2d7cd15a9b7c.txt",
+                "byteLength": 2788,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0001.pdf",
+                  "sourceHash": "f9ba7bc7ca8b9dc729228590b5b777cdc46c76258bffb15ac189f818bf59e3f5",
+                  "retrievedAt": "2026-10-15T00:10:15.273627+00:00",
+                  "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+                  "vault": {
+                    "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-f86b6d3cce53f36f/sha256-f9ba7bc7ca8b9dc729228590b5b777cdc46c76258bffb15ac189f818bf59e3f5.pdf",
+                    "byteLength": 123495,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "FISCAL IMPACT:\n\n                                             LOCAL GOVERNMENT\n EXPENDITURES                                                                                                       Mandatory\n FY26-27                                                                                                               $9,400\n Article II, Section 24 of the Tennessee Constitution provides that: no law of general application shall impose increased expenditure\n requirements on cities or counties unless the General Assembly shall provide that the state share in the cost.\n\n\n       Assumptions:\n\n       • Pursuant to Article XI, Section 3 of the Constitution of Tennessee, following passage by\n         two successive General Assemblies, the proposed amendatory language is submitted to the\n         people for a vote at the next general election in which a Governor is to be chosen.\n       • The proposed constitutional amendment language received its first General Assembly\n         passage with House Joint Resolution 81 on March 28, 2024.\n       • Pursuant to Tenn. Code Ann. § 2-5-211(b), at least five days before the beginning of early\n         voting, the county election commission shall either publish a sample ballot in a newspaper\n         of general circulation or mail the sample ballot to every active registered voter.\n       • The requirement to add this constitutional amendment to the 2026 general election ballot\n         will increase the size of the sample ballot to be published and subsequently increase printing\n         costs.\n       • The one-time increase in local expenditures in FY26-27 for publishing costs is estimated to\n         be $9,400 based upon the cost of recent publications incurred by the Secretary of State.",
+            "vault": {
+              "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-1c4eb89080be245b40e351e016b871aa33d7ed01bc41f62302428bad291deaa4.txt",
+              "byteLength": 1154,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+                "sourceHash": "41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e",
+                "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+                "publisher": "Tennessee Secretary of State, Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e.html",
+                  "byteLength": 53208,
+                  "contentType": "text/html"
+                }
+              },
+              {
+                "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+                "sourceHash": "59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60",
+                "retrievedAt": "2026-10-15T00:06:28.078532+00:00",
+                "publisher": "Tennessee Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.tn.gov/2026/10/15/ms-01-59a3e8d4815be58e/sha256-59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60.html",
+                  "byteLength": 53207,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -7424,6 +7596,92 @@
             "verifiedAt": "2026-10-14T16:12:55.005303Z",
             "doorId": "fec-tn-chief",
             "quote": "Shall Article I, Section 35 of the Constitution of Tennessee be amended by deleting the section in its entirety and substituting the following:\n\nSection 35. That to preserve and protect the rights of victims of crime to justice and due process throughout the criminal and juvenile justice systems, a victim, as defined by law and which may be expanded by the General Assembly, shall have the following rights, which shall be protected:\n\n(1) The right to be treated with fairness for the victim's safety and dignity;\n\n(2) The right, upon request, to reasonable notice of all public criminal proceedings and all public juvenile delinquency proceedings involving the accused;\n\n(3) The right to be present at all public criminal proceedings and all public juvenile delinquency proceedings involving the accused;\n\n(4) The right upon request to be heard in any proceeding involving release, plea, sentencing, disposition, and parole, as well as any public proceeding when relevant during which a right of the victim is implicated;\n\n(5) The right to be heard and informed of all parole procedures, to participate in the parole process, to provide information to the parole authority to be considered before the parole of the offender, and to be notified, upon request, of the parole or other release of the offender;\n\n(6) The right to be free from harassment, intimidation, and abuse throughout the criminal justice system, including reasonable protection, as defined by the General Assembly, from the accused or any person acting on behalf of the accused;\n\n(7) The right, upon request, to reasonable notice of any release, transfer, or escape of the accused or convicted person;\n\n(8) The right to full and timely restitution from the offender;\n\n(9) The right to a speedy trial or disposition and a prompt and final conclusion of the case after the conviction or sentence;\n\n(10) The right to be informed of the minimum sentence the offender will serve in custody and the scheduled release date;\n\n(11) The right to have the safety of the victim, the victim's family, and the general public considered before any parole or other post-judgment release decision is made;\n\n(12) The right, upon request, to confer with the prosecution; and\n\n(13) The right to be fully informed of all rights afforded to crime victims.\n\nA victim may assert the rights enumerated in this section, not as a party, but in the manner further provided by the General Assembly protecting the victim's right to standing. The General Assembly has the authority to enact substantive and procedural laws to further define, implement, preserve, and protect the rights guaranteed to victims by this section. This section must be interpreted to preserve and protect the rights of all persons to due process. This section, or any law enacted under this section, does not create a basis for vacating a conviction. This section does not restrict the powers of the District Attorney General or the inherent authority of the court.\n\nOther than as provided in the preceding paragraph, this section does not create a cause of action or claim for damages against the state or a political subdivision of the state; an officer, employee, or agent of the state or of any of its political subdivisions; or an officer or employee of the court."
+          },
+          "officialText": {
+            "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
+            "sourceHash": "4ea9cafb555fc9c29aec63d3c1d13c6c80f32e8c09e6c6a5855bd4b6bbbded59",
+            "retrievedAt": "2026-10-14T23:52:27.983591+00:00",
+            "publisher": "Tennessee Secretary of State, Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-2cf699dbdc9ed887/sha256-4ea9cafb555fc9c29aec63d3c1d13c6c80f32e8c09e6c6a5855bd4b6bbbded59.txt",
+              "byteLength": 4807,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
+                "sourceHash": "95cf370fc57a6749883fbd5d1d6f862d85045bf91e22a241e3a58205578f67d5",
+                "retrievedAt": "2026-10-14T23:52:27.983591+00:00",
+                "publisher": "Tennessee Secretary of State, Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-2cf699dbdc9ed887/sha256-95cf370fc57a6749883fbd5d1d6f862d85045bf91e22a241e3a58205578f67d5.pdf",
+                  "byteLength": 194305,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+            "sourceHash": "aeb741598dd2b8409860acfe4697a4974f2f286132f79c14459e00729499ef38",
+            "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+            "publisher": "Tennessee Attorney General and Secretary of State, Division of Elections",
+            "summary": "This amendment changes Article I, section 35 of the Tennessee Constitution by clarifying existing rights for crime victims and adding new rights. The amendment gives victims new rights: to fair treatment; to be informed about and participate in the parole process; to be protected from harassment, intimidation, and abuse; to be informed of the minimum sentence the convicted criminal will serve, as well as their scheduled release date; and to have their safety, their family’s safety, and the public’s safety taken into account before any decision is made to release the convicted criminal. The amendment also maintains or clarifies victims’ existing rights: to be informed about legal proceedings involving the accused or convicted criminal; to be present at public criminal proceedings; to be informed of any release, transfer, or escape of the accused or convicted criminal; to talk to prosecutors; to make statements about conviction, sentencing, or release of the accused person; to a speedy resolution of the case; to restitution from the convicted criminal; and to be informed of their rights. The amendment does not restrict the powers of prosecutors or courts and does not create a cause of action or claim for damages against the State of Tennessee.",
+            "passageThreshold": "For an amendment to pass and become part of the Constitution, both of the following must happen: The amendment must receive more “yes” votes than “no” votes; and The number of “yes” votes must be more than half of all votes cast in the governor’s race.",
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0009.pdf",
+              "sourceHash": "2e34dd7178758e438889ea45a8f835fec34a3d722e097affd5acc512a764bafc",
+              "retrievedAt": "2026-10-15T00:10:15.253074+00:00",
+              "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+              "vault": {
+                "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-2a5fa6932be31646/sha256-2e34dd7178758e438889ea45a8f835fec34a3d722e097affd5acc512a764bafc.txt",
+                "byteLength": 2725,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0009.pdf",
+                  "sourceHash": "e8584e8e6ca1b3a509e8faa4d34aa5a79b2ff98d115478a6c64fe23b7721fb23",
+                  "retrievedAt": "2026-10-15T00:10:15.253074+00:00",
+                  "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+                  "vault": {
+                    "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-2a5fa6932be31646/sha256-e8584e8e6ca1b3a509e8faa4d34aa5a79b2ff98d115478a6c64fe23b7721fb23.pdf",
+                    "byteLength": 122658,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "FISCAL IMPACT:\n\n                                             LOCAL GOVERNMENT\n EXPENDITURES                                                                                                       Mandatory\n FY26-27                                                                                                               $9,400\n Article II, Section 24 of the Tennessee Constitution provides that: no law of general application shall impose increased expenditure\n requirements on cities or counties unless the General Assembly shall provide that the state share in the cost.\n\n\n       Assumptions:\n\n       • Pursuant to Article XI, Section 3 of the Constitution of Tennessee, following passage by\n         two successive General Assemblies, the proposed amendatory language is submitted to the\n         people for a vote at the next general election in which a Governor is to be chosen.\n       • The proposed constitutional amendment language received its first General Assembly\n         passage with House Joint Resolution 94 on February 26, 2024.\n       • Pursuant to Tenn. Code Ann. § 2-5-211(b), at least five days before the beginning of early\n         voting, the county election commission shall either publish a sample ballot in a newspaper\n         of general circulation or mail the sample ballot to every active registered voter.\n       • The requirement to add this constitutional amendment to the 2026 general election ballot\n         will increase the size of the sample ballot to be published and subsequently increase printing\n         costs.\n       • The one-time increase in local expenditures in FY26-27 for publishing costs is estimated to\n         be $9,400, based upon the cost of recent publications incurred by the Secretary of State.",
+            "vault": {
+              "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-aeb741598dd2b8409860acfe4697a4974f2f286132f79c14459e00729499ef38.txt",
+              "byteLength": 4956,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+                "sourceHash": "41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e",
+                "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+                "publisher": "Tennessee Secretary of State, Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e.html",
+                  "byteLength": 53208,
+                  "contentType": "text/html"
+                }
+              },
+              {
+                "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+                "sourceHash": "59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60",
+                "retrievedAt": "2026-10-15T00:06:28.078532+00:00",
+                "publisher": "Tennessee Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.tn.gov/2026/10/15/ms-01-59a3e8d4815be58e/sha256-59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60.html",
+                  "byteLength": 53207,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         }
       ],
@@ -7444,13 +7702,233 @@
       ],
       "coverageNotes": [
         "Tennessee House of Representatives District 93: No Candidate Qualified. The official November list supplies no candidacy for this district. https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx"
+      ],
+      "measureRecords": [
+        {
+          "contestId": "tn-sos-2026-general-constitutional-amendment-1",
+          "whatItDoes": "A RESOLUTION to propose an amendment to Article I, Section 15 of the Constitution of Tennessee,\nrelative to bail.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-1",
+              "number": "a",
+              "kind": "PROGRAM",
+              "label": "(a)",
+              "what": "(a) All prisoners shall be bailable by sufficient sureties unless for the following when\nthe proof is evident or the presumption great:"
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-2",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "(1)",
+              "what": "(1) A capital offense;"
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "(2)",
+              "what": "(2) An act of terrorism;"
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "(3)",
+              "what": "(3) Second degree murder;"
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-5",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "(4)",
+              "what": "(4) Aggravated rape of a child;"
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-6",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "(5)",
+              "what": "(5) Aggravated rape;"
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-7",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "(6)",
+              "what": "(6) Grave torture; and"
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-8",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "(7)",
+              "what": "(7) Any other offense for which, as of November 3, 2026, a defendant, if\nconvicted, could not be released prior to the expiration of at least eighty-five percent\nof the entire sentence imposed."
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-9",
+              "number": "b",
+              "kind": "PROGRAM",
+              "label": "(b)",
+              "what": "(b) In any case in which bail for an offense listed in subsection (a) is granted or\ndenied before conviction, the judge or magistrate shall place in the record the judge's or\nmagistrate's reasons for granting or denying bail."
+            },
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-1#part-10",
+              "number": "c",
+              "kind": "PROGRAM",
+              "label": "(c)",
+              "what": "(c) The privilege of the writ of Habeas Corpus shall not be suspended, unless when in\ncase of rebellion or invasion, the General Assembly shall declare the public safety requires it.\nBE IT FURTHER RESOLVED, that in accordance with Article XI, Section 3 of the"
+            }
+          ],
+          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
+          "sourceHash": "8f541a52b3c1206105f6848c33f754b43215268020988f14a38175eaff043e87",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.958909+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tn-sos-2026-general-constitutional-amendment-2",
+          "whatItDoes": "A RESOLUTION to propose an amendment to Article II, Section 28 of the Constitution of\nTennessee, to prohibit taxation of property by the State.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
+          "sourceHash": "41603b1482b9ac19581f3f9b03dddca3767547dd38d0588f9eab021e104ed48c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.913718+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tn-sos-2026-general-constitutional-amendment-3",
+          "whatItDoes": "A RESOLUTION proposing an amendment to Article I, Section 35 of the Constitution of Tennessee,\nrelative to the rights of crime victims.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "tn-sos-2026-general-constitutional-amendment-3#section-1",
+              "number": "35",
+              "kind": "PROGRAM",
+              "label": "Section 35.",
+              "what": "Section 35. That to preserve and protect the rights of victims of crime to justice and\ndue process throughout the criminal and juvenile justice systems, a victim, as defined by law\nand which may be expanded by the General Assembly, shall have the following rights, which\nshall be protected:"
+            }
+          ],
+          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
+          "sourceHash": "4ea9cafb555fc9c29aec63d3c1d13c6c80f32e8c09e6c6a5855bd4b6bbbded59",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.983591+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0001.pdf",
+          "sourceHash": "f9ba7bc7ca8b9dc729228590b5b777cdc46c76258bffb15ac189f818bf59e3f5",
+          "retrievedAt": "2026-10-15T00:10:15.273627+00:00",
+          "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+          "vault": {
+            "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-f86b6d3cce53f36f/sha256-f9ba7bc7ca8b9dc729228590b5b777cdc46c76258bffb15ac189f818bf59e3f5.pdf",
+            "byteLength": 123495,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0009.pdf",
+          "sourceHash": "e8584e8e6ca1b3a509e8faa4d34aa5a79b2ff98d115478a6c64fe23b7721fb23",
+          "retrievedAt": "2026-10-15T00:10:15.253074+00:00",
+          "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+          "vault": {
+            "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-2a5fa6932be31646/sha256-e8584e8e6ca1b3a509e8faa4d34aa5a79b2ff98d115478a6c64fe23b7721fb23.pdf",
+            "byteLength": 122658,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0025.pdf",
+          "sourceHash": "2186a52f9d34199b652abd3febfa64289215372d97152238ab3d2505fd77f331",
+          "retrievedAt": "2026-10-15T00:10:15.273997+00:00",
+          "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+          "vault": {
+            "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-83cd3658b04a0a3c/sha256-2186a52f9d34199b652abd3febfa64289215372d97152238ab3d2505fd77f331.pdf",
+            "byteLength": 126163,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+          "sourceHash": "41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e",
+          "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+          "publisher": "Tennessee Secretary of State, Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e.html",
+            "byteLength": 53208,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
+          "sourceHash": "0f02c4e91c24667de9bf268e9818bed41031f6ecf99381440d3741334a23e0a1",
+          "retrievedAt": "2026-10-14T23:52:27.958909+00:00",
+          "publisher": "Tennessee Secretary of State, Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-7bc1fbb4f81befea/sha256-0f02c4e91c24667de9bf268e9818bed41031f6ecf99381440d3741334a23e0a1.pdf",
+            "byteLength": 157201,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
+          "sourceHash": "8d761237225a5a36d6c229ce2d35f3017f7715f9d1fa230f8fd6335f638ce2b2",
+          "retrievedAt": "2026-10-14T23:52:27.913718+00:00",
+          "publisher": "Tennessee Secretary of State, Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-254ee000bf1d4ea0/sha256-8d761237225a5a36d6c229ce2d35f3017f7715f9d1fa230f8fd6335f638ce2b2.pdf",
+            "byteLength": 155045,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
+          "sourceHash": "95cf370fc57a6749883fbd5d1d6f862d85045bf91e22a241e3a58205578f67d5",
+          "retrievedAt": "2026-10-14T23:52:27.983591+00:00",
+          "publisher": "Tennessee Secretary of State, Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-2cf699dbdc9ed887/sha256-95cf370fc57a6749883fbd5d1d6f862d85045bf91e22a241e3a58205578f67d5.pdf",
+            "byteLength": 194305,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+          "sourceHash": "59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60",
+          "retrievedAt": "2026-10-15T00:06:28.078532+00:00",
+          "publisher": "Tennessee Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sos.tn.gov/2026/10/15/ms-01-59a3e8d4815be58e/sha256-59b3d610dbf5b21095599e8189381c99971bacde54526f5e46d00f85be7b9a60.html",
+            "byteLength": 53207,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:12:55.664569Z",
-    "reviewedBy": "BL-15",
+    "reviewedAt": "2026-10-15T04:14:39.910598+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://sos.tn.gov/elections",
@@ -7468,16 +7946,6 @@
         "httpStatus": 200,
         "rawHash": "ff185bc1c2cb86c279bb2cd467e4490b67dfd3cae47904f5bf2419b33e0c5589",
         "retrievedAt": "2026-10-14T16:12:54.959935Z",
-        "publisher": "Tennessee Secretary of State, Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
-      },
-      {
-        "requestedUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
-        "finalUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
-        "httpStatus": 200,
-        "rawHash": "c05034ad26087289ddb90a5cad9ecab2bb4efc63606154e3dcb033b1389df1d1",
-        "retrievedAt": "2026-10-14T16:12:55.005303Z",
         "publisher": "Tennessee Secretary of State, Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
@@ -7593,34 +8061,91 @@
         "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
       },
       {
+        "requestedUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "finalUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
+        "rawHash": "41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
         "requestedUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
         "finalUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.958909+00:00",
         "rawHash": "0f02c4e91c24667de9bf268e9818bed41031f6ecf99381440d3741334a23e0a1",
-        "retrievedAt": "2026-10-14T16:12:55.664569Z",
         "publisher": "Tennessee Secretary of State, Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
         "finalUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.913718+00:00",
         "rawHash": "8d761237225a5a36d6c229ce2d35f3017f7715f9d1fa230f8fd6335f638ce2b2",
-        "retrievedAt": "2026-10-14T16:12:55.640607Z",
         "publisher": "Tennessee Secretary of State, Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
         "finalUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.983591+00:00",
         "rawHash": "95cf370fc57a6749883fbd5d1d6f862d85045bf91e22a241e3a58205578f67d5",
-        "retrievedAt": "2026-10-14T16:12:55.663653Z",
         "publisher": "Tennessee Secretary of State, Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0025.pdf",
+        "finalUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0025.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:15.273997+00:00",
+        "rawHash": "2186a52f9d34199b652abd3febfa64289215372d97152238ab3d2505fd77f331",
+        "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0001.pdf",
+        "finalUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0001.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:15.273627+00:00",
+        "rawHash": "f9ba7bc7ca8b9dc729228590b5b777cdc46c76258bffb15ac189f818bf59e3f5",
+        "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0009.pdf",
+        "finalUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0009.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:15.253074+00:00",
+        "rawHash": "e8584e8e6ca1b3a509e8faa4d34aa5a79b2ff98d115478a6c64fe23b7721fb23",
+        "publisher": "Tennessee General Assembly, Fiscal Review Committee",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

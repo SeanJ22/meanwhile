@@ -189,12 +189,23 @@ function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetRecei
   return missing.map((url) => `The projection cites ${url} without exact-byte evidence in the reviewed source set.`);
 }
 
-function ballotProvenanceUrls(value: unknown): Set<string> {
+export function ballotProvenanceUrls(value: unknown): Set<string> {
   if (Array.isArray(value)) return new Set(value.flatMap(row => [...ballotProvenanceUrls(row)]));
   const row = object(value);
   if (!row) return new Set();
-  const url = string(object(row.provenance)?.sourceUrl);
-  return new Set([...(url ? [url] : []), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
+  const url = string(object(row.provenance)?.sourceUrl), documentUrl = string(row.sourceHash) ? string(row.sourceUrl) : "";
+  return new Set([...[url, documentUrl].filter(Boolean), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
+}
+
+export function mergeBallotSourceReferences(next: BallotSet, before?: BallotSet): Pick<BallotSet, "sourceAuthorities" | "sourceDocuments"> {
+  const merged: Pick<BallotSet, "sourceAuthorities" | "sourceDocuments"> = {};
+  for (const field of ["sourceAuthorities", "sourceDocuments"] as const) {
+    if (next[field] === undefined && before?.[field] === undefined) continue;
+    merged[field] = [...new Map([...before?.[field] ?? [], ...next[field] ?? []]
+      .sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt))
+      .map(source => [source.vault.key, source])).values()];
+  }
+  return merged;
 }
 
 /** An official page's linked lookup is a fact on that page, not another acquired source. */

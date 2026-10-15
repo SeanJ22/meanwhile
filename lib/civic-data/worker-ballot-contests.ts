@@ -6,7 +6,7 @@ import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { linkingPageFrom, section3Contest } from "../control-plane/promotion/section3.ts";
 import type { RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
-import type { BallotSet, Contest, Candidacy } from "../ballot/types.ts";
+import type { BallotSet, Contest, Candidacy, Measure } from "../ballot/types.ts";
 import { ballotElectionKey, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { ManualProjectionPackage, ManualProjectionPrior } from "./manual-projections.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -16,12 +16,15 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
-import { readManualProjectionPrior, manualProjectionCandidate, completeOfficialBallotContests } from "./manual-projections.ts";
+import { readManualProjectionPrior, manualProjectionCandidate, completeOfficialBallotContests, ballotProvenanceUrls, mergeBallotSourceReferences } from "./manual-projections.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
 import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
+import { validateBallotMeasureEvidence } from "../ballot/measure-evidence.ts";
+import { netlifyEvidenceStoreFromEnv } from "../control-plane/evidence/netlify-store.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 
 const words = (value: unknown) => String(value ?? "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const text = (value: unknown) => typeof value === "string" ? value : "";
@@ -43,7 +46,7 @@ export function workerBallotContestsPackage(input: {
   for (const row of source) groups.set(groupKey(row), [...groups.get(groupKey(row)) ?? [], row]);
   const state = checked.contract.jurisdiction.state.toUpperCase();
   const ballots: Record<string, BallotSet> = {}, heldContests: string[] = [];
-    // Structured delimiters are not visible word boundaries in section3Contest, so use the exact replayed source cells.
+  // Structured delimiters are not visible word boundaries in section3Contest, so replay the source cells.
   const pageText = ["DELIMITED_TEXT", "JSON_RECORDS", "XML_RECORDS"].includes(checked.contract.extraction.format)
     ? source.map(row => Object.values(row).join("\n")).join("\n") : checked.primary.evidence.text;
   const page = { url: checked.primary.evidence.canonicalUrl, text: pageText,
@@ -102,17 +105,35 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
     const ids = new Set(ballot.contests.map(row => row.id));
     const keepsMeasure = (contestId: string, sourceUrl: string | null) => !ids.has(contestId) ||
       !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
+    const measures = new Map<string, Measure>((before?.measures ?? []).filter(row =>
+      keepsMeasure(row.contestId, row.officialText?.sourceUrl ?? row.provenance.sourceUrl)).map(row => [row.contestId, row]));
+    for (const fresh of ballot.measures) {
+      const old = before?.measures.find(row => row.contestId === fresh.contestId);
+      const url = ballot.contests.find(row => row.id === fresh.contestId)?.measureTextUrl;
+      const officialText = fresh.officialText ?? (old?.officialText?.sourceUrl === url ? old?.officialText : undefined);
+      const voterGuide = fresh.voterGuide ?? old?.voterGuide;
+      measures.set(fresh.contestId, { ...fresh, ...(officialText ? { officialText } : {}), ...(voterGuide ? { voterGuide } : {}) });
+    }
+    const records = new Map((before?.measureRecords ?? []).filter(row =>
+      keepsMeasure(row.contestId, row.sourceUrl) || measures.get(row.contestId)?.officialText?.sourceHash === row.sourceHash &&
+      measures.get(row.contestId)?.officialText?.sourceUrl === row.sourceUrl)
+      .map(row => [row.contestId, row]));
+    for (const record of ballot.measureRecords ?? []) {
+      const source = measures.get(record.contestId)?.officialText;
+      if (!source || source.sourceHash === record.sourceHash && source.sourceUrl === record.sourceUrl) records.set(record.contestId, record);
+    }
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
     ballots[key] = before ? { ...before, election: { ...ballot.election, date: ballot.election.date || before.election.date },
+      ...mergeBallotSourceReferences(ballot, before),
       contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests],
       candidacies: [...before.candidacies.filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
         !ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
           Date.parse(contest.provenance.collectedAt) >= Date.parse(before.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? ""))), ...ballot.candidacies],
-      measures: [...before.measures.filter(row => keepsMeasure(row.contestId, row.provenance.sourceUrl)), ...ballot.measures],
+      measures: [...measures.values()],
       ...(before.measureRecords !== undefined || ballot.measureRecords !== undefined ? {
-        measureRecords: [...before.measureRecords ?? []].filter(row => keepsMeasure(row.contestId, row.sourceUrl)).concat([...ballot.measureRecords ?? []]) } : {}) } : ballot;
+        measureRecords: [...records.values()] } : {}) } : ballot;
   }
-  const urls = new Set(Object.values(ballots).flatMap(ballot => [...ballot.contests, ...ballot.candidacies, ...ballot.measures].map(row => row.provenance.sourceUrl)));
+  const urls = ballotProvenanceUrls({ ballots });
   const sources = [...input.sourceReceipt.sources, ...prior?.sourceReceipt.sources ?? []].filter(row => urls.has(row.finalUrl) || urls.has(row.requestedUrl));
   return { ...input, payload: { kind: "ballot-contests", ballots }, sourceReceipt: { ...input.sourceReceipt,
     sources: sources.filter((source, at) => sources.findIndex(row => row.finalUrl === source.finalUrl && row.rawHash === source.rawHash) === at) } };
@@ -121,6 +142,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
 export async function publishWorkerBallotContestsResults(input: {
   repos: ControlPlaneRepositories; store: RoutineDataStore; workItemIds: readonly string[]; now: string;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
+  evidenceStore?: EvidenceStore;
 }) {
   const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, input.readCapture);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
@@ -149,6 +171,14 @@ export async function publishWorkerBallotContestsResults(input: {
         registry: await readRegistryRuntimePrior(input.store, input.now) });
       const prior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
       const merged = mergeBallotContests(checked.package, prior);
+      if (plan.contract.recordClass === "BALLOT_MEASURE") {
+        const evidenceStore = input.evidenceStore ?? netlifyEvidenceStoreFromEnv();
+        requirePublication(evidenceStore, "MEASURE_EVIDENCE_VAULT_UNAVAILABLE");
+        for (const key of Object.keys((checked.package.payload as GenericBallotProjection).ballots)) {
+          await validateBallotMeasureEvidence((merged.payload as GenericBallotProjection).ballots[key], evidenceStore,
+            (prior?.payload as GenericBallotProjection | undefined)?.ballots[key]);
+        }
+      }
       const candidate = manualProjectionCandidate(merged);
       candidateId = candidate.id; verified = true;
       const contests = Object.values((checked.package.payload as GenericBallotProjection).ballots).flatMap(ballot => ballot.contests);

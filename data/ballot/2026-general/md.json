@@ -7564,12 +7564,61 @@
           "contestId": "md-2026-question-1",
           "officialNumber": "1",
           "questionText": "Providing that each budget submitted by the Governor shall include proposed expenditures necessary to implement wages, hours, fringe benefits, health benefits, and other terms and conditions of employment in each collective bargaining memorandum of understanding with State employees, whether the State and State employees reached those terms and conditions by mutual agreement or through a neutral decider's order. (Amending Article III of the Maryland Constitution)",
-          "officialStatement": "A vote FOR this amendment means that the Governor has to include money in the proposed State budget to pay for agreements between the State and its employees. Agreements might include changes to wages, hours, fringe benefits, health benefits, and other terms and conditions of employment. The Governor must put enough money in the State budget to cover the agreed upon pay and benefits for employees, whether those terms were negotiated or decided by a neutral decision-maker. A vote AGAINST the amendment means that the law about funding agreements between the State and State employees stays the same.",
+          "officialStatement": "This constitutional amendment would amend the Maryland Constitution to require that the annual budget submitted by the Governor to the General Assembly include the proposed appropriations necessary to implement and fund all terms and conditions of employment in each collective bargaining memorandum of understanding involving the State, a State institution of higher education, or the Maryland Environmental Service, and the exclusive representatives of their respective employees. The requirement applies whether the memorandum of understanding was reached through mutual agreement or binding arbitration. Further, each annual budget must contain a statement showing changes in wages, hours, fringe benefits, health benefits, and other terms and conditions of employment for State employees included in each memorandum of understanding covering State employees for the next fiscal year. Also, contingent on passage of the proposed constitutional amendment, and its ratification by the voters, the bill establishes binding arbitration in the event of an impasse in collective bargaining negotiations for State employees (except for employees of State institutions of higher education). If the constitutional amendment passes, the legislation requires the selection of a neutral arbitrator to oversee all aspects of collective bargaining when a bargaining impasse is declared and clarifies the matters subject to negotiation. The legislation further clarifies that under collective bargaining (1) matters requiring a change in law are contingent on the enactment of legislation making the change; (2) matters requiring an appropriation are contingent on the General Assembly’s approval of the appropriation; and (3) an arbitrator’s decision related to wages is subject to limitations of the State budget.",
           "provenance": {
             "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Allegany.pdf",
             "sourceOrg": "Maryland State Board of Elections",
             "collectedAt": "2026-10-14T05:05:19.452Z",
             "verifiedAt": "2026-10-14T05:05:19.452Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+            "sourceHash": "815c7ad69fdf7c80f421f96e4ef1751b316493dce1119b295487f66f9e5a0970",
+            "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+            "publisher": "Maryland State Board of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-815c7ad69fdf7c80f421f96e4ef1751b316493dce1119b295487f66f9e5a0970.txt",
+              "byteLength": 2980,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+                "sourceHash": "246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3",
+                "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+                "publisher": "Maryland State Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3.pdf",
+                  "byteLength": 76003,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+            "sourceHash": "eca4fd2d793f01c3648b0732d8f3476c5734cb681e115e6692177348ce59a32d",
+            "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+            "publisher": "Maryland Department of Legislative Services",
+            "summary": "This constitutional amendment would amend the Maryland Constitution to require that the annual budget submitted by the Governor to the General Assembly include the proposed appropriations necessary to implement and fund all terms and conditions of employment in each collective bargaining memorandum of understanding involving the State, a State institution of higher education, or the Maryland Environmental Service, and the exclusive representatives of their respective employees. The requirement applies whether the memorandum of understanding was reached through mutual agreement or binding arbitration. Further, each annual budget must contain a statement showing changes in wages, hours, fringe benefits, health benefits, and other terms and conditions of employment for State employees included in each memorandum of understanding covering State employees for the next fiscal year. Also, contingent on passage of the proposed constitutional amendment, and its ratification by the voters, the bill establishes binding arbitration in the event of an impasse in collective bargaining negotiations for State employees (except for employees of State institutions of higher education). If the constitutional amendment passes, the legislation requires the selection of a neutral arbitrator to oversee all aspects of collective bargaining when a bargaining impasse is declared and clarifies the matters subject to negotiation. The legislation further clarifies that under collective bargaining (1) matters requiring a change in law are contingent on the enactment of legislation making the change; (2) matters requiring an appropriation are contingent on the General Assembly’s approval of the appropriation; and (3) an arbitrator’s decision related to wages is subject to limitations of the State budget.",
+            "vault": {
+              "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-eca4fd2d793f01c3648b0732d8f3476c5734cb681e115e6692177348ce59a32d.txt",
+              "byteLength": 1941,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+                "sourceHash": "10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739",
+                "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+                "publisher": "Maryland State Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739.pdf",
+                  "byteLength": 330354,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7577,12 +7626,61 @@
           "contestId": "md-2026-question-2",
           "officialNumber": "2",
           "questionText": "Authorizing temporary substitute appointments to the Commission on Judicial Disabilities when a member is recused or disqualified, or when a member's term expires. In these situations, the Commission Chair may recall a former member of the Commission, or the Governor, at the request of the Commission Chair, may appoint a temporary substitute member or extend the term of a current member until a permanent replacement is appointed. Only individuals who meet the constitutional eligibility requirements may be recalled or appointed to the Commission. (Amending Article IV of the Maryland Constitution)",
-          "officialStatement": "A vote FOR this amendment means that temporary appointments to the Commission are allowed if a member is recused, disqualified, or if a member's term ends without a replacement. The Commission Chair can temporarily fill an opening on the Commission with a former member. The Governor can, at the request of the Commission Chair, pick a temporary substitute to fill an opening on the Commission or extend the term of a current member until a replacement is appointed. Only individuals who meet the constitutional eligibility requirements may be recalled or appointed to the Commission. A vote AGAINST the amendment means that current membership rules for the Commission stay the same. Temporary appointments are not allowed if a member is recused, disqualified, or if a member's term ends.",
+          "officialStatement": "The Commission on Judicial Disabilities is responsible for investigating complaints against State court justices and judges and recommending disciplinary action to the Supreme Court of Maryland, as appropriate. There are no provisions in current law governing the membership of the commission when there is a vacancy at the end of an expired term, a recusal, or a disqualification. This constitutional amendment would authorize the commission chair, in the event of a vacancy at the end of an expired term, a recusal, or a disqualification, to recall a former member to serve as a temporary substitute member of the Commission or request that the Governor appoint a temporary substitute member or extend a current member’s term. If the commission chair requests that the Governor take action, the Governor would be authorized to appoint a temporary substitute member for a specified period or extend a current member’s term until a replacement member is appointed. Under the constitutional amendment, a temporary substitute member: (1) is subject to the same qualifications that applied to the member who is being temporarily replaced; (2) may not have been previously rejected by the Senate for appointment to the commission; and (3) if the member is a judge or an attorney, must be in good standing with the Maryland bar.",
           "provenance": {
             "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Allegany.pdf",
             "sourceOrg": "Maryland State Board of Elections",
             "collectedAt": "2026-10-14T05:05:19.452Z",
             "verifiedAt": "2026-10-14T05:05:19.452Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+            "sourceHash": "8b531dee853e535fbb89fa7de17e8b03c19f66978eeb1138ea0e1abddb2f9022",
+            "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+            "publisher": "Maryland State Board of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-8b531dee853e535fbb89fa7de17e8b03c19f66978eeb1138ea0e1abddb2f9022.txt",
+              "byteLength": 1266,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+                "sourceHash": "246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3",
+                "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+                "publisher": "Maryland State Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3.pdf",
+                  "byteLength": 76003,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+            "sourceHash": "123f3c6069f5d5d560fb729088cfe28d22bf3d903ab0b3b9a4d278990716ea82",
+            "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+            "publisher": "Maryland Department of Legislative Services",
+            "summary": "The Commission on Judicial Disabilities is responsible for investigating complaints against State court justices and judges and recommending disciplinary action to the Supreme Court of Maryland, as appropriate. There are no provisions in current law governing the membership of the commission when there is a vacancy at the end of an expired term, a recusal, or a disqualification. This constitutional amendment would authorize the commission chair, in the event of a vacancy at the end of an expired term, a recusal, or a disqualification, to recall a former member to serve as a temporary substitute member of the Commission or request that the Governor appoint a temporary substitute member or extend a current member’s term. If the commission chair requests that the Governor take action, the Governor would be authorized to appoint a temporary substitute member for a specified period or extend a current member’s term until a replacement member is appointed. Under the constitutional amendment, a temporary substitute member: (1) is subject to the same qualifications that applied to the member who is being temporarily replaced; (2) may not have been previously rejected by the Senate for appointment to the commission; and (3) if the member is a judge or an attorney, must be in good standing with the Maryland bar.",
+            "vault": {
+              "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-123f3c6069f5d5d560fb729088cfe28d22bf3d903ab0b3b9a4d278990716ea82.txt",
+              "byteLength": 1497,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+                "sourceHash": "10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739",
+                "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+                "publisher": "Maryland State Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739.pdf",
+                  "byteLength": 330354,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7590,12 +7688,61 @@
           "contestId": "md-2026-question-3",
           "officialNumber": "3",
           "questionText": "FOR the purpose of clarifying that certain requirements apply only to districts for the election of members of the Senate of Maryland and the House of Delegates; authorizing the General Assembly to grant original jurisdiction to the Supreme Court of Maryland to review the congressional districting plan of the State; and providing that nothing in the Maryland Constitution provides applicable criteria for the boundaries of a congressional districting plan. (Amending Article III of the Maryland Constitution)",
-          "officialStatement": null,
+          "officialStatement": "This constitutional amendment would clarify that the districting standards in Article III, § 4 of the Maryland Constitution apply only for the election of members of the Senate of Maryland and House of Delegates. Currently, under Article III, § 4 of the Maryland Constitution, each legislative district must consist of adjoining territory, be compact in form, and of substantially equal population. Additionally, due regard is to be given to natural boundaries and the boundaries of political subdivisions. In a 2022 ruling, the Circuit Court for Anne Arundel County held that those districting standards apply to congressional districts as well as districts for the election of members of the General Assembly. Additionally, the constitutional amendment would establish that nothing in the Maryland Constitution, including the Declaration of Rights, provides applicable criteria for the boundaries of a congressional districting plan. Finally, the constitutional amendment would grant the General Assembly the power to grant original jurisdiction to the Supreme Court of Maryland to review the congressional districting plans of the State. Under current law, a legal challenge brought in State court to a congressional districting plan must be made in a Maryland circuit court.",
           "provenance": {
             "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Allegany.pdf",
             "sourceOrg": "Maryland State Board of Elections",
             "collectedAt": "2026-10-14T05:05:19.452Z",
             "verifiedAt": "2026-10-14T05:05:19.452Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+            "sourceHash": "fab444ba900c7f8e82ea6b88b92c9cadb398e55483b2ced11e1f5f28c5d5a3b6",
+            "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+            "publisher": "Maryland State Board of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-fab444ba900c7f8e82ea6b88b92c9cadb398e55483b2ced11e1f5f28c5d5a3b6.txt",
+              "byteLength": 697,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+                "sourceHash": "246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3",
+                "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+                "publisher": "Maryland State Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3.pdf",
+                  "byteLength": 76003,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+            "sourceHash": "9feb8239dc9fd342c63243d6c1d882ae578c771b9456279603f80e033718f1c5",
+            "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+            "publisher": "Maryland Department of Legislative Services",
+            "summary": "This constitutional amendment would clarify that the districting standards in Article III, § 4 of the Maryland Constitution apply only for the election of members of the Senate of Maryland and House of Delegates. Currently, under Article III, § 4 of the Maryland Constitution, each legislative district must consist of adjoining territory, be compact in form, and of substantially equal population. Additionally, due regard is to be given to natural boundaries and the boundaries of political subdivisions. In a 2022 ruling, the Circuit Court for Anne Arundel County held that those districting standards apply to congressional districts as well as districts for the election of members of the General Assembly. Additionally, the constitutional amendment would establish that nothing in the Maryland Constitution, including the Declaration of Rights, provides applicable criteria for the boundaries of a congressional districting plan. Finally, the constitutional amendment would grant the General Assembly the power to grant original jurisdiction to the Supreme Court of Maryland to review the congressional districting plans of the State. Under current law, a legal challenge brought in State court to a congressional districting plan must be made in a Maryland circuit court.",
+            "vault": {
+              "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-9feb8239dc9fd342c63243d6c1d882ae578c771b9456279603f80e033718f1c5.txt",
+              "byteLength": 1458,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+                "sourceHash": "10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739",
+                "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+                "publisher": "Maryland State Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739.pdf",
+                  "byteLength": 330354,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -7603,13 +7750,126 @@
       "coverageNotes": [
         "The statewide active candidate CSV was checked against the certified November 3 ballot PDFs for all 23 counties and Baltimore City: 317 printed ballot candidacies or tickets and five active declared write-ins. Governor and Lieutenant Governor names remain together as printed joint tickets.",
         "The State Board of Elections certified the content and arrangement of the general-election ballots on August 31, 2026. Regional and local offices are outside this federal, statewide and legislative projection. Campaign websites remain exactly as printed in the official CSV."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "md-2026-question-1",
+          "whatItDoes": "Article III – Legislative Department 52. (3) On the third Wednesday in January in each year, (except in the case of a newly elected Governor, and then not later than ten days after the convening of the General Assembly), unless such time shall be extended by the General Assembly, the Governor shall submit to the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "md-2026-question-1#1",
+              "number": "52",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 52",
+              "what": "52. (3) On the third Wednesday in January in each year, (except in the case of a newly elected Governor, and then not later than ten days after the convening of the General Assembly), unless such time shall be extended by the General Assembly, the Governor shall submit to the General Assembly a Budget for the next"
+            }
+          ],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+          "sourceHash": "815c7ad69fdf7c80f421f96e4ef1751b316493dce1119b295487f66f9e5a0970",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "md-2026-question-2",
+          "whatItDoes": "Article IV – Judiciary Department 4A. (d) SUBJECT TO THE PROVISIONS OF §4B(A)(5) OF THIS ARTICLE, THE term of office of each member is four years commencing on January 1 following the expiration of the member’s predecessor’s term.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "md-2026-question-2#1",
+              "number": "4A",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4A",
+              "what": "4A. (d) SUBJECT TO THE PROVISIONS OF §4B(A)(5) OF THIS ARTICLE, THE term of office of each member is four years commencing on January 1 following the expiration of the member’s predecessor’s term. A member may not serve more than two four–year terms, or for more than a total of ten years if appointed to fill a vacancy."
+            },
+            {
+              "id": "md-2026-question-2#2",
+              "number": "4B",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4B",
+              "what": "4B. (a) (5) (I) IN THE EVENT OF A MEMBER’S RECUSAL OR DISQUALIFICATION OR THE EXPIRATION OF A MEMBER’S TERM WITHOUT A REPLACEMENT, THE COMMISSION CHAIR MAY: 1. RECALL A FORMER MEMBER TO SERVE AS A TEMPORARY SUBSTITUTE MEMBER; OR 2."
+            }
+          ],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+          "sourceHash": "8b531dee853e535fbb89fa7de17e8b03c19f66978eeb1138ea0e1abddb2f9022",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "md-2026-question-3",
+          "whatItDoes": "Article III – Legislative Department 4. Each legislative district FOR THE ELECTION OF A MEMBER OF THE SENATE AND MEMBERS OF THE HOUSE OF DELEGATES shall consist of adjoining territory, be compact in form, and of substantially equal population.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "md-2026-question-3#1",
+              "number": "4",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4",
+              "what": "4. Each legislative district FOR THE ELECTION OF A MEMBER OF THE SENATE AND MEMBERS OF THE HOUSE OF DELEGATES shall consist of adjoining territory, be compact in form, and of substantially equal population. Due regard shall be given to natural boundaries and the boundaries of political subdivisions."
+            },
+            {
+              "id": "md-2026-question-3#2",
+              "number": "62",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 62",
+              "what": "62. (A) THE GENERAL ASSEMBLY SHALL HAVE THE POWER TO GRANT ORIGINAL JURISDICTION TO THE SUPREME COURT OF MARYLAND TO REVIEW THE CONGRESSIONAL DISTRICTING PLAN OF THE STATE."
+            }
+          ],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+          "sourceHash": "fab444ba900c7f8e82ea6b88b92c9cadb398e55483b2ced11e1f5f28c5d5a3b6",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+          "sourceHash": "246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3",
+          "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+          "publisher": "Maryland State Board of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3.pdf",
+            "byteLength": 76003,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+          "sourceHash": "10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739",
+          "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+          "publisher": "Maryland State Board of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739.pdf",
+            "byteLength": 330354,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:08:06.896Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-15T04:14:39.837232+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -7853,16 +8113,6 @@
       },
       {
         "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
-        "finalUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
-        "httpStatus": 200,
-        "rawHash": "246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3",
-        "retrievedAt": "2026-10-14T05:08:06.896Z",
-        "publisher": "Maryland State Board of Elections",
-        "reviewedEvidence": "Official general-election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
         "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/index.html",
         "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/index.html",
         "httpStatus": 200,
@@ -7930,6 +8180,36 @@
         "retrievedAt": "2026-10-14T05:03:39.133Z",
         "publisher": "Maryland State Board of Elections",
         "reviewedEvidence": "Official general-election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
+        "httpStatus": 200,
+        "rawHash": "246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3",
+        "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
+        "httpStatus": 200,
+        "rawHash": "10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739",
+        "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

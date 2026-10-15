@@ -2657,7 +2657,7 @@
           "divisionVintage": "2026",
           "title": "Initiative Measure No. IP26-645",
           "type": "MEASURE",
-          "measureTextUrl": "https://www.sos.wa.gov/sites/default/files/2026-07/Finaltext_IP26-645_fulltext.pdf",
+          "measureTextUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
           "voteFor": null,
           "termYears": null,
           "scopeNote": null,
@@ -7276,6 +7276,65 @@
             "verifiedAt": "2026-10-14T05:11:28.336677Z",
             "doorId": "fec-wa-chief",
             "quote": "Initiative Measure No. IL26-001 concerns parental rights relating to their children in public school. This measure would repeal amendments to a statute listing certain rights of parents and guardians of public-school children and re-enact the law as it was originally enacted by Initiative to the Legislature 2081. Should this measure be enacted into law? [ ] Yes [ ] No"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
+            "sourceHash": "a058b8f993ecd88f21ca379626c53769e546e23b5801dc410a81f9c28bdfcfd8",
+            "retrievedAt": "2026-10-14T23:52:31.096255+00:00",
+            "publisher": "Washington Secretary of State, Elections Division",
+            "vault": {
+              "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-1877ca359cea9eef/sha256-a058b8f993ecd88f21ca379626c53769e546e23b5801dc410a81f9c28bdfcfd8.txt",
+              "byteLength": 21052,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
+                "sourceHash": "7f5b248dd58f7d7fd48f6807ffb5816d5c7919d67203d95f1c2f8e18f1865be3",
+                "retrievedAt": "2026-10-14T23:52:31.096255+00:00",
+                "publisher": "Washington Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-1877ca359cea9eef/sha256-7f5b248dd58f7d7fd48f6807ffb5816d5c7919d67203d95f1c2f8e18f1865be3.pdf",
+                  "byteLength": 108301,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+            "sourceHash": "6692e83a6e25d7100931dc913464c6705be71d6f8c38d9982f452c0aa1ec218d",
+            "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+            "publisher": "Washington Secretary of State, Elections Division",
+            "summary": "Written by the Office of the Attorney General\n\nThe Law as It Presently Exists\nIn 2024, the Legislature passed Initiative to the Legislature\n2081, which listed certain rights of parents and guardians\nof public-school children. Many of those rights were already\nset forth elsewhere in state or federal law. In 2025, the\nLegislature made several changes to this list of parental\nand guardian rights, which again restated many rights that\nalready existed elsewhere in state and federal law. Currently,\nthe list of parent and guardian rights is set forth in statute at\nRCW 28A.605.005 and provides:\nAccess to Educational Materials and Records: Parents\nand legal guardians have the right to access their child’s\nclassroom and school-sponsored activities to observe\nand to examine textbooks, curriculum, and supplemental\nmaterials used in their child’s classroom in accordance\nwith policies and procedures. Parents and legal guardians\nhave the right to review their child’s education records by\nsubmitting a written request. Records must be provided\nwithin a reasonable period of time not to exceed 45 days.\nEducation records are defined as official records, files,\nand data directly related to a student and maintained by\nthe public school, including records in a child’s cumulative\nfolder, records of attendance and academic work completed,\nrecords of achievement and evaluative tests, disciplinary\nstatus, test protocols, and individualized education\nprograms. Education records do not include records that are\nkept in the sole possession of the maker, are used only as\na personal memory aid, and are not accessible or revealed\nto any other person except a temporary substitute for the\nmaker of the record. Schools may charge a reasonable fee\nfor copying education records for parents and guardians\nso long as the fee does not prevent a parent or guardian\nfrom accessing the records. Parents and guardians are not\nrequired to appear in person to request education records,\nprovided the public school can ascertain the identity of the\nrequestor. Access and disclosure of health care information\nis governed by state health-care disclosure laws.\nStudent Performance and Attendance: Parents and legal\nguardians have the right to be informed of their child’s\nacademic performance, including the child’s performance on\nstate learning standards tests and assessments. A parent or\nlegal guardian has the right to request an in-person meeting\nwith the child’s classroom teacher and principal to discuss\nresources or strategies to support and encourage the child’s\nacademic improvement. Parents and legal guardians also\nhave the right to be notified of unexcused absences and to\nengage in efforts to eliminate or reduce the child’s absences\nin accordance with other state law.\n\nCriminal Action and Law Enforcement: Parents and\nlegal guardians have the right to receive immediate\nnotification when a criminal action is alleged to\nhave been committed against their child on school\nproperty during the school day or during a school\nsponsored activity or when their child has been\ndetained based on probable cause of involvement\nin criminal activity on school property during the\nschool day. Parents and legal guardians also have\nthe right to receive immediate notification if their\nchild is subject to custodial interrogation at the\nschool during the school day, except in cases where\nthe parent or legal guardian has been accused of\nabuse or neglect against the child being questioned.\nPublic schools must also give notice to parents and\nguardians upon receipt of reports that their child\nis the alleged victim of physical or sexual abuse,\nmisconduct, or assault by a school employee or\ncontractor.\nRemoval from Campus: Parents and legal guardians\nhave the right for their child not to be removed\nfrom school grounds or buildings during school\nhours without the authorization of a parent or legal\nguardian according to other provisions of state\nlaw. Notice to parents provided by youth shelters,\nlaw enforcement agencies, and the Department of\nChildren, Youth, and Families when they provide\nshelter to or take custody of children are governed\nby other laws.\nNon-Discrimination: Parents and legal guardians\nhave a right to have their child receive a public\neducation in a setting that prohibits discrimination\non the basis of sex, race, creed, religion, color,\nnational origin, honorably discharged veteran\nor military status, sexual orientation, gender\nexpression, gender identity, the presence of any\nsensory, mental or physical disability, or the use of a\ntrained dog guide or service animal by a person with\na disability.\nHarassment, Intimidation, and Bullying: Parents and\nguardians have the right to file a complaint on behalf\nof their child relating to harassment, intimidation,\nand bullying, as set forth in other state law.\nNotification and Opt Out Rights: Parents and legal\nguardians have the right to receive written notice\nand to opt their children out of surveys, analyses,\nor evaluations that reveal information concerning\ncategories listed in federal opt-out laws, including\npolitical affiliation or beliefs; mental or psychological\nproblems of the student or student’s family; sex\nbehavior and attitudes; illegal, anti-social, self-\n\nInitiative Measure IL26-001\nincriminating, or demeaning behavior; critical appraisals\nof people with close relationships to the child or the\nchild’s family; religious practices, affiliations, or beliefs of\nthe child or the child’s family; and income. Parents and\nlegal guardians also have the right to opt their child out\nof comprehensive sexual education as required by other\nstate law.\nEnrollment Rights: Parents and legal guardians have a\nright to have their child qualify for enrollment in a school\ndistrict if they are transferred to, or pending transfer\nto, a military installation within the state. Parents and\nlegal guardians have a right to have their child qualify\nwithout a legal residence for enrollment in a school\ndistrict. Parents and legal guardians also have the right\nto request enrollment for their child in a nonresident\nschool district. Parents and legal guardians have a right\nto request enrollment for their child in a charter school.\nLanguage Access Rights: Parents and legal guardians\nhave a right to receive annual notice of the public\nschool’s language access policies and services and\nthe parents’ right to free language access services.\nParents and legal guardians also have a right to have\ntheir child whose primary language is not English to\naccess supplemental instruction and services through a\ntransitional bilingual instruction program.\nSpecial Education Rights: Parents and legal guardians\nhave the right to request special education programs\nand assistance for their child if their child is eligible for,\nbut not receiving, special education services, including\ndue to illness. Parents and legal guardians also have the\nright to request an appeal to the superintendent of public\ninstruction if their child with disabilities has been denied\nthe opportunity of a special education program by a\nschool district or public school, and to access special\neducation due process hearings regarding their child.\nSchool Calendar: Parents and legal guardians have a\nright to receive the annual school calendar no later than\n30 days prior to the beginning of the school year, and to\nbe notified of any revisions to the calendar. The calendar\nmust be posted to the school’s website and must\ninclude student attendance days and events that require\nparent or student attendance outside of normal school\ndays or hours.\nRequired Fees: Parents and legal guardians have a right\nto be informed of required fees and their purpose and\nuse, and how economic hardships may be addressed.\nDress Code or Uniform: Parents and legal guardians\nhave a right to be informed of a description of any\nrequired dress code or uniform.\nPrivate Right of Action: Nothing in the statute setting\n\nforth rights of parents and legal guardians creates a\nprivate right of action.\n\nThe Effect of the Proposed Measure if\nApproved\nIf approved, the proposed measure would undo all of the\nchanges made by the 2025 Legislature, and re-institute\nthe list of rights as enacted in 2024 by Initiative to the\nLegislature 2081. Specifically, the proposal would modify\ncurrent law in the following ways:\nAccess to Educational Materials and Records: Parents\nand legal guardians would have a right to examine the\ntextbooks, curriculum, and supplemental material used\nin their child’s classroom. The limitation that parental\nand guardian access is according to the provisions of\nother law and in conformity with school policies would\nbe removed. With respect to records, schools would\nbe prohibited from requiring that parents appear in\nperson to make a records request. The exception for\ncases where the school could not verify the identity of\nthe parent or guardian would be eliminated. Schools\nwould be prohibited from charging for electronic copies,\nand could charge a reasonable fee for copies of paper\nrecords. Records would have to be produced within ten\nbusiness days instead of the 45 days allowed by current\nlaw. The kinds of records that schools would be required\nto produce would be broadened to include any studentspecific files, documents, or other materials that are\nmaintained by the school. The exception for documents\nkept in the sole possession of the maker would be\neliminated. The provision specifying that health care\nrecords are controlled by separate laws about disclosure\nof health care records would be eliminated.\nMedical Services and Treatment: The measure would\nadd that parents and legal guardians have a right to\nreceive prior notification when medical services are\nbeing offered to their child (except emergency medical\ntreatment), to receive notification when any medical\nservice has been provided to their child that could result\nin financial impact to the parent or legal guardian, and\nto receive notification when the school has arranged for\nmedical treatment that results in follow-up care beyond\nnormal school hours.\nCriminal Action and Law Enforcement: The specification\nthat parents and guardians are only entitled to notice\nfrom public schools when the crime or law enforcement\nengagement occurs on school property and during\nschool hours would be removed. The right to receive\nimmediate notification when a child is alleged to be the\nvictim, target, or recipient of physical or sexual abuse,\nsexual misconduct, or assault by a school employee or\ncontractor would be removed.\n\nInitiative Measure IL26-001\n\nRemoval from Campus: The provision specifying\nthat parental and legal guardian notification by youth\nshelters, law enforcement, and the Department of\nChildren, Youth, and Families is governed by other laws\nwould be removed. Public schools would be required to\nnotify parents if a child is taken or removed from a public\nschool without parental permission, including to stay at a\nyouth shelter.\nNon-Discrimination: The provision specifying that\nparents and legal guardians have a right to have their\nchild receive an education in a setting that prohibits\ndiscrimination on a number of bases would be removed.\nThe measure would instead state a right of parents and\nlegal guardians to receive assurance that their child’s\npublic school will not discriminate against their child\nbased upon the sincerely held religious beliefs of the\nchild’s family.\nNotification and Opt Out: Parents and legal guardians\nwould continue to have the right from federal law to\nreceive written notice and to opt their children out of\nsurveys, analyses, or evaluations that reveal information\nconcerning political affiliation or beliefs; mental or\npsychological problems of the student or student’s\nfamily; sex behavior and attitudes; illegal, anti-social,\nself-incriminating, or demeaning behavior; critical\nappraisals of people with close relationships to the child\nor the child’s family; religious practices, affiliations, or\nbeliefs of the child or the child’s family; and income. The\nmeasure would add to the list of topics for which parents\nand legal guardians have the right to receive notice and\nopt-out the child’s sexual experiences or attractions,\nthe child’s family beliefs, morality, or religion, or political\naffiliations; and any mental health or psychological\nproblems of the child or a family member.\nThe right to opt a child out of comprehensive sexual\neducation would be rewritten to state a right to receive\nwritten notice and the option to opt a child out of\ninstruction on topics associated with sexual activity in\naccordance with state law.\nOther Provisions Removed: The right of a parent or\nlegal guardian to file a complaint on behalf of their child\nrelating to harassment, intimidation, and bullying, as\nset forth in other state law, would be removed. The\nstatement that nothing in the statute setting forth rights\nof parents and legal guardians creates a private right\nof action would be removed. The provisions regarding\nenrollment rights, language access rights, and special\neducation rights would be removed.\nCalendar, Fees, and Dress Code: No changes would be\nmade to the provisions regarding the school calendar,\nrequired fees, or the dress code or uniform.",
+            "fiscalImpact": "Written by the Office of Financial Management\n\nFor more information visit www.ofm.wa.gov/ballot\n\nSummary\nIf approved by voters, Initiative Measure No. IL26-001\nwould restore RCW 28A.605.005 as originally passed\nby the Legislature in the 2024 session. It would list\ncertain rights of parents and guardians of public-school\nchildren, such as the right to review their child’s school\nrecords, receive notifications, and opt their child out of\ncertain activities. It would repeal amendments made in\nthe 2025 legislative session. The initiative would have\nno fiscal impact on the state. Local school districts may\nincur minor costs to update policies and procedures, but\nthis fiscal impact is indeterminate.\n\nGeneral assumptions\n• The effective date of the initiative is December 3,\n2026.\n• The provisions of the initiative apply prospectively,\nnot retroactively.\n\nRevenue\nThe initiative would not impact state or local revenue.\n\nExpenditures\nThe initiative would have no fiscal impact on state\ngovernment. Local school districts could incur minor\ncosts to update policies and procedures, but this fiscal\nimpact is indeterminate.",
+            "argumentsFor": [
+              "Vote Yes to Restore Parents’ Rights in Education\nThese rights include access to their child’s instructional\nmaterials and student records, notice of medical services,\nopt-outs from certain activities and instruction, and\nimmediate notification when law enforcement questions their\nchild or their child is removed from campus without parental\npermission.\nProtecting Vulnerable Children\nSchool staff remain mandatory reporters of suspected\nchild abuse or neglect. Privacy for vulnerable children\nremains paramount. But safeguards designed for children\nat risk should not become a default policy of withholding\ninformation from all parents.\nSupport Families, Not Secrecy\nParents must give permission for schools to administer\nmedication, apply sunscreen, or take students on field\ntrips. Yet current policies allow schools to withhold critical\ninformation when a child expresses a new gender identity\nat school. These policies may require staff to conceal this\ninformation from parents, even when doing so conflicts with\ntheir conscience or professional judgment. Opponents call\nsharing this information with parents “outing” even when\nsignificant changes to a minor’s school life may already\nbe known to classmates, teachers, and staff. Deliberately\nexcluding parents treats them as inherently unsafe without\nan individualized assessment. This undermines the vital\nparent-child relationship and denies families the opportunity\nto navigate consequential questions about health and wellbeing together.\nRestore Trust in Washington Schools\nSchools are essential partners in a child’s educational\nsuccess, while parents are responsible for raising their\nchildren. Respecting these distinct roles is essential to\nrestoring trust. Vote yes.",
+              "Don’t be misled. IL26-001 expressly states that schools\n“shall not be required to release” mental health counseling\nrecords when a parent is the target of a child abuse or\nneglect investigation; requires “immediate notification” if a\ncriminal action is deemed committed against or by their child;\nand contains zero mandates placing students in danger. The\nmeasure preserves safeguards while ensuring parents receive\nconsequential information about their children. Vote yes.\n\nWritten by\nTravis Reep, Public School Elementary Teacher, Elected\nUnion Representative; Alesha Perkins, Parent and Education\nAdvocate, Independent Writer; Peter Rosenkranz, M.Ed.,\nSuperintendent, La Center School District; Tony Harris,\nPublic School Science/STEM Teacher, Elected Union\nRepresentative; Amy Sousa, M.A. in Depth Psychology,\nWomen’s Rights Advocate; Jess Grant, Member, Democrats\nfor an Informed Approach to Gender\n\nContact: YESonParentsRights@gmail.com"
+            ],
+            "argumentsAgainst": [
+              "Vote No On Removing Commonsense Protections For\nChild Abuse Victims\nWhile most parents are loving, the sad reality is there were\n117,000 reports of child abuse or neglect in WA in 2024\nalone. This poorly written measure further endangers\nvulnerable child abuse victims by requiring schools to\nhand over sensitive information to parents under criminal\ninvestigation for raping, abusing or otherwise harming their\nown child. That’s why it’s opposed by law enforcement and\nthe WA Coalition Against Domestic Violence and Sexual\nAssault.\nVote No On Delaying Parental Notification When Children\nAre Crime Victims\nIf a student is the victim of a serious crime at school,\nparents should not have to wait to find out. An unintended\nconsequence of IL26-001 is ending Washington’s legal\nrequirement that schools immediately notify parents when\nthe crime is reported. Experts say delayed notification only\nadds to the child’s trauma and can prevent a child from\ngetting immediate help and support from loved ones and\nprofessionals.\nVote No On Worsening The Teen Mental Health And\nHomelessness Crisis\nSchool nurses and counselors say this measure, bankrolled\nby ultra-conservatives, discourages students facing domestic\nviolence, sexual abuse, or bullying from seeking help from\ntrusted teachers and school counselors, who would be\nrequired to release students’ confidential records. It also\nforces schools to knowingly put LGBTQ+ kids in increased\ndanger of violence and homelessness by outing them to\npotentially abusive families.That’s why the WA State Nurses\nAssociation, doctors, and school counselors oppose this\nmeasure.",
+              "IL26-001, bankrolled by ultra-conservative interests, is so\npoorly written it would eliminate key existing parental rights.\nIt will repeal current state laws that guarantee parents’ rights\nto immediate notification if their child is a victim of a crime\nat school. It ends commonsense protections for child abuse\nvictims whose parents are accused of child abuse and\nrape. That’s why it’s opposed by the WA Coalition Against\nDomestic Violence and Sexual Assault. Vote No.\n\nWritten by\nJohn Lovick, State Senator, Democrat, former Snohomish\nCounty Sheriff; Roshelle Cleland, Washington Coalition\nAgainst Domestic Violence and Sexual Assault; Justin Gill,\nAPRN, President, Washington State Nurses Association;\nKaren Crowley, President, League of Women Voters of\nWashington; Courtney Normand, Washington State Director,\nPlanned Parenthood Alliance Advocates; Jaime FinemanMcKinney, Nationally Board Certified School Counselor, Fife\nContact: NoHateInWAState.org/About-I-001;\ninfo@nohateinwastate.org"
+            ],
+            "passageThreshold": "Initiatives and referenda\n\nbecome law with\nmore than 50%\nof the vote.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-6692e83a6e25d7100931dc913464c6705be71d6f8c38d9982f452c0aa1ec218d.txt",
+              "byteLength": 20723,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+                "sourceHash": "4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739",
+                "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+                "publisher": "Washington Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739.pdf",
+                  "byteLength": 5327525,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7291,6 +7350,65 @@
             "verifiedAt": "2026-10-14T05:11:28.336677Z",
             "doorId": "fec-wa-chief",
             "quote": "Initiative Measure No. IL26-638 concerns participation in athletics at K-12 schools. This measure would prohibit students it defines as “biologically male” from competing in certain school athletic activities intended for female students only. It would require verification of biological sex by students’ healthcare providers. Should this measure be enacted into law? [ ] Yes [ ] No"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
+            "sourceHash": "6de73e16cd8dfb1b618d73eef53800e10a7cf8862c7247dc9dbe857c8d86a48a",
+            "retrievedAt": "2026-10-14T23:52:31.343319+00:00",
+            "publisher": "Washington Secretary of State, Elections Division",
+            "vault": {
+              "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-75f249631f930ff5/sha256-6de73e16cd8dfb1b618d73eef53800e10a7cf8862c7247dc9dbe857c8d86a48a.txt",
+              "byteLength": 13558,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
+                "sourceHash": "a0a13e0d07074cd4ff9ee52e4ddeb319df7a2ea2de120a741c857713c0c46e24",
+                "retrievedAt": "2026-10-14T23:52:31.343319+00:00",
+                "publisher": "Washington Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-75f249631f930ff5/sha256-a0a13e0d07074cd4ff9ee52e4ddeb319df7a2ea2de120a741c857713c0c46e24.pdf",
+                  "byteLength": 75700,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+            "sourceHash": "011b9beb02abf312234d6ed60676f3b79a9c510238d51295f2cc67cfa0581667",
+            "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+            "publisher": "Washington Secretary of State, Elections Division",
+            "summary": "Written by the Office of the Attorney General\n\nThe Law as It Presently Exists\nIn Washington, school districts may offer extracurricular\nsports opportunities for students. Those sports must be\noffered to all public school students without regard to\nsex, but public schools may provide separate athletic\nteams based on sex. The Office of the Superintendent of\nPublic Instruction also creates regulations and guidelines\nto eliminate discrimination in sports for students, and\nthese regulations prohibit discrimination based on sex\nand gender identity.\nPublic and private K-12 schools in Washington may\nallow individual athletes and teams to compete\nagainst athletes and teams from other schools. For\npublic schools, a school district’s board of directors\nis responsible for regulating these athletic activities\nbut may delegate that responsibility to a nonprofit\norganization, such as the Washington Interscholastic\nActivities Association (WIAA). A nonprofit organization\nthat regulates interschool sports may not discriminate on\nthe basis of sex and must have written rules and policies\nregarding student participation.\n\nThe Effect of the Proposed Measure if\nApproved\nIf approved, this initiative would change participation\nrules for interschool sports. This initiative would, in\nits own language, prohibit “biologically male students\nfrom competing with and against female students” on\nsports teams or in individual events that are designated\nfor female students only. This would generally prevent\ntransgender girls from participating on girls’ sports\nteams. This prohibition would affect public K-12 schools\nand also private schools that participate in the WIAA or\nsimilar nonprofit organizations.\nStudents who want to participate in interschool sports\nteams or individual events that are designated for female\nstudents only would have to provide a form that verifies\nthe student’s “biological sex.” That form must be signed\nby the student’s personal health care provider. The\nverification would have to be based on the student’s\nreproductive anatomy, genetic makeup, or normal\nendogenously produced testosterone levels. Students\nwould thus have to undergo some type of medical\nevaluation of their sex to participate in interschool sports\ndesignated for female students only.",
+            "fiscalImpact": "Written by the Office of Financial Management\n\nFor more information visit www.ofm.wa.gov/ballot\n\nSummary\nIf approved by voters, Initiative Measure No. IL26-638\nwould prohibit students it defines as “biologically male”\nfrom competing in certain school athletic activities\nintended for female students only. It requires verification\nof biological sex by students’ healthcare providers. The\nOffice of the Superintendent of Public Instruction would\nincur minor costs to update current guidance. Local\nschool districts may also incur costs to revise existing\npolicies, procedures, rules, and other requirements, but\nthis fiscal impact is indeterminate.\n\nGeneral assumptions\n• The effective date of the initiative is December 3,\n2026.\n• The provisions of the initiative apply prospectively,\nnot retroactively.\n• The estimates use the state’s fiscal year (SFY) of\nJuly 1 through June 30. State fiscal year 2026 is\nJuly 1, 2025, through June 30, 2026.\n\nRevenue\nThe initiative would not impact state or local revenue.\n\nExpenditures\nThe Office of the Superintendent of Public Instruction\nwould incur a one-time cost of approximately $21,000\nin SFY 2026 to update existing guidelines to align with\nthe initiative’s requirements. Local school districts\nwould likely also incur costs to revise existing policies,\nprocedures, rules, and other requirements, but this fiscal\nimpact is indeterminate.",
+            "argumentsFor": [
+              "Vote yes to protect fairness in girls’ sports.\nFemale athletes deserve fair opportunities to build\nconfidence, develop skills, and pursue goals. Let’s protect\nthose opportunities and affirm the hard-fought rights\nestablished through Title IX in 1972, which expanded athletic\naccess for women by recognizing the necessity of the female\ncategory. Washington currently allows males to compete\nagainst girls, undermining opportunities generations before\nthem fought to secure.\nApproving IL26-638 would align Washington with world\nsports policies.\nFederal law, the Women’s Tennis Association, World\nAthletics, and the International Olympic Committee have all\nadopted policies to protect eligibility for the female category.\nIn March 2026, the IOC president stated, “It is absolutely\nclear that it would not be fair for biological males to compete\nin the female category.”\nVoting yes gives all students the opportunity to\nparticipate in interscholastic sports.\nMedical clearance is already required to participate safely.\nStudents would compete in the category that aligns with\ntheir sex, verified during routine, medically necessary primary\ncare recommended by the American Academy of Pediatrics.\nDuring a private, consented visit, a licensed medical\nprofessional would verify sex based on the student’s birth\nrecords, medical history and/or a standard, non-invasive\nphysical examination.\nWashington can respect every student while recognizing\nthat sex-based athletic categories are necessary.\nA female athlete should not lose a starting position, medal,\nchampionship, or college recruiting opportunity because the\ncategory created for her was not protected.",
+              "Don’t be misled by the opposition. IL26-638 doesn’t require\ninvasive or expensive exams. Standard primary pediatric\ncare already verifies sex; transferring that record to sports\nis sufficient. Male athletic advantage is well established.\nWashington competition results document at least 269\nplacements by male athletes competing in girls’ interscholastic\ncategories, including 74 firsts and 156 top-three finishes. The\ninitiative doesn’t ban anyone from sports. It simply requires\nparticipation consistent with one’s sex. Vote yes.\n\nWritten by\nAlesha Perkins, Parent and Education Advocate,\nIndependent Writer; Dori Whitford, High School Coach,\nTrack and Cross Country; Carol Brown, Olympic Bronze\nMedalist, Rowing Board Member, ICONS; Erica Li, MD,\nBoard-Certified Pediatrician; Ahnaleigh Wilson, Student\nAthlete, Girls’ Sports Advocate; Jess Grant, Member,\nDemocrats for an Informed Approach to Gender\nContact: diagwash@gmail.com; www.di-ag.org"
+            ],
+            "argumentsAgainst": [
+              "Vote No To Protect All Girls\nWe all want fairness and safety in sports, but this poorly\nwritten measure would require girls as young as 8 to undergo\nintrusive medical sex certification as a new part of sports\nphysicals. It bans parents from using birth certificates.\nSection 2 says doctors must subject girls to invasive\nexaminations of their “reproductive organs,” or expensive\ngenetic or hormone tests. These requirements apply to girls\nonly, boys are exempt.\nVote No Because It’s the Most Extreme Proposal of Its\nKind In The U.S\nThis initiative is bankrolled by an ultra-conservative megadonor to distract from rising costs, foster hate, and divide our\ncommunities. It’s playing politics with kids, and putting girls\nat risk.\nVote No Because Doctors and Nurses Warn It Requires\nInvasive Genital Exams On Girls\nThe WA State Nurses Association, Planned Parenthood\nAlliance Advocates, and doctors warn this measure would\nsubject girls to medically unnecessary, embarrassing, and\npotentially harmful genital exams. Today, students remain\nfully clothed during sports physicals. Many of Washington’s\n147,500 girls without a regular family doctor would be\nsubject to genital examinations by total strangers.\nVote No Because It Discourages Girls From Playing\nSports\nCoaches and athletes say if we truly cared about girls’ sports\nwe would not put up more barriers for girls like invasive\ngenital exam requirements. This statewide blanket ban to\nkick 5 - 10 trans girls off school teams will negatively impact\nall girls, leaving no room for case by case decisions.",
+              "IL26-638 is opposed by pediatricians, nurses, parents, and\nsexual assault prevention groups because it discriminates\nagainst girls and puts them at risk of harm. Today girls\nin elementary, middle, and high school remain fully\nclothed during sports physicals. Doctors say this poorly\nwritten measure will subject girls to new invasive genital\nexaminations. This measure - the most extreme in the\nnation - exempts boys, and bans parents from using birth\ncertificates. Vote No to protect girls.\n\nWritten by\nJustin Gill, APRN, President, WA State Nurses Association;\nCourtney Normand, WA State Director, Planned Parenthood\nAlliance Advocates; Karen Crowley, President, League\nof Women Voters of WA; Grace Shih, M.D., Family\nPhysician; Katie Johnson, RN, Retired School Nurse; Paul\nCharbonneau, High School Girls’ Wrestling Coach\nContact: NoHateInWAState.org/About-I-638;\ninfo@nohateinwastate.org"
+            ],
+            "passageThreshold": "Initiatives and referenda\n\nbecome law with\nmore than 50%\nof the vote.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-011b9beb02abf312234d6ed60676f3b79a9c510238d51295f2cc67cfa0581667.txt",
+              "byteLength": 9802,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+                "sourceHash": "4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739",
+                "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+                "publisher": "Washington Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739.pdf",
+                  "byteLength": 5327525,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7306,19 +7424,297 @@
             "verifiedAt": "2026-10-14T05:11:28.336677Z",
             "doorId": "fec-wa-chief",
             "quote": "Initiative Measure No. IP26-645 concerns state and local taxes. This measure would repeal a 9.9% tax on annual individual income over $1,000,000; prohibit taxes measured by individual income and taxes on individual income or the receipt of individual income; and define “income.” This measure would decrease funding for public K-12 education, higher education (including universities and community colleges), and human services (primarily healthcare). Should this measure be enacted into law? [ ] Yes [ ] No"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+            "sourceHash": "493638fe2332aea57df3b6f3f8f8854d89ba433480759fc0716929dbdca5db9d",
+            "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+            "publisher": "Washington Secretary of State, Elections Division",
+            "vault": {
+              "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-493638fe2332aea57df3b6f3f8f8854d89ba433480759fc0716929dbdca5db9d.txt",
+              "byteLength": 5231,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+                "sourceHash": "4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739",
+                "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+                "publisher": "Washington Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739.pdf",
+                  "byteLength": 5327525,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+            "sourceHash": "7038226b913e8db852822e41215ff8cc9aeca42a5f9f78aef017196118e87fa7",
+            "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+            "publisher": "Washington Secretary of State, Elections Division",
+            "summary": "Written by the Office of the Attorney General\n\nThe Law As It Presently Exists\nThe State of Washington imposes various taxes to raise\nrevenue to fund state government. Those taxes include\nthe retail sales tax, the business and occupation tax, the\nstate property tax, the capital gains tax, and other state\ntaxes. In 2026, the Legislature passed a law imposing a\n9.9 percent tax on an individual’s receipt of income over\n$1,000,000, beginning in calendar year 2028. Beginning\nin 2029, the $1,000,000 standard deduction is increased\nto account for inflation.\nThe amount of income subject to tax is based on\nadjusted gross income reported on federal income tax\nreturns, with some modifications.\nIn addition to the $1,000,000 standard deduction,\ntaxpayers may deduct up to $100,000 for charitable\ncontributions. The $1,000,000 standard deduction\nand the possible $100,000 deduction for charitable\ncontributions apply per household, so a married\ncouple or domestic partnership shares a single\n$1,000,000 deduction and up to $100,000 for charitable\ncontributions. Additional deductions are available for\ncertain specific situations. Certain expenses related\nto pass-through entities that are deducted for federal\ntax purposes are added to the amount subject to\nWashington’s tax.\nThe law also allows certain tax credits, which lower the\namount of taxes due. These credits are available for\nincome tax paid to another state; amounts paid under\nWashington’s capital gains tax; and taxes owed for\nbusiness and occupation taxes or public utility taxes\npaid on the same income subject to this tax.\nNonresidents of Washington are only subject to this\ntax based on income derived from sources within\nWashington. Income that they earn from other sources is\nnot counted.\nFive percent of the money collected from this tax is\ndeposited into an account that can only be used for\nchildcare and early learning purposes. The remaining 95\npercent of money collected from the tax and any interest\nand penalties is deposited into the state’s general fund.\nThe 2026 law enacting the tax on income above\n$1,000,000 also enacted or expanded various tax\nexemptions, deductions and credits. First, it eliminated\nsales tax on the sale of diapers, over-the-counter drugs,\ngrooming and hygiene products, and certain software,\ndigital services, data processing, and live presentations.\nSecond, it reduced business and occupation taxes by\nincreasing a small-business tax credit, increasing the\n\nminimum threshold for businesses to file taxes, and\nremoving a surcharge on high grossing businesses\nfor health care providers, hospitals, prescription drug\nresellers, and wholesale food sales. Third, it expanded\neligibility for the Working Families Tax Credit, which\nprovides a tax refund for qualifying low-­income\nindividuals.\n\nThe Effect of the Proposed Measure if\nApproved\nIf approved, the proposed measure would repeal the\nannual tax on individual income over $1,000,000. This\nwould also eliminate the funding collected from the tax\nthat would go to the general fund (which funds public\nK-12 education, higher education such as universities\nand community colleges, health care, and other human\nservices) and childcare and early learning. The nonincome tax credits, exemptions, and deductions that\naccompanied this tax would not be repealed and would\nremain in place.\nThe measure would also prohibit state and local\ngovernments from imposing taxes on individual income\nor the receipt of individual income and taxes measured\nby an individual’s income. The only tax explicitly listed\nand repealed by the measure is the tax on income over\n$1,000,000.\nThe measure would also provide definitions for some\nterms used in the measure. It would define “income”\nfor purposes of excise taxes as “any gain or benefit\nmeasured in money derived from an individual’s capital,\nlabor, property, or other source.” It would define\n“individual” for purposes of excise taxes as “a natural\nperson.”",
+            "fiscalImpact": "Written by the Office of Financial Management\n\nFor more information visit www.ofm.wa.gov/ballot\n\nSummary\nIf approved by voters, Initiative Measure No. IP26-645\nwill result in an estimated loss to state revenue of $11.4\nbillion over state fiscal years 2027-2031. This would\nreduce funding to the state general fund to support core\ngovernment services, particularly public K-12 education,\nhigher education (including universities and community\ncolleges), and human services (primarily healthcare). The\nLegislature expressed an intent to use the additional\nrevenue created by Engrossed Substitute Senate Bill\n6346 (2026) (ESSB 6346) towards providing free school\nmeals, transferring funds for childcare and early learning,\nand transferring funds to local governments to mitigate\nsales tax loss.\n\nInitiative Measure IP26-645\nGeneral assumptions\nA state tax equal to 9.9 percent on Washington taxable\nincome greater than $1,000,000 per individual became\nlaw following the 2026 legislative session due to ESSB\n6346 - Establishing a tax on millionaires. If approved,\nthe initiative will repeal the tax such that it will no longer\ngo into effect on January 1, 2028, and the state will no\nlonger impose this tax.\n• The effective date of the initiative is December 3,\n2026.\n• The provisions of the initiative apply prospectively,\nnot retroactively.\n• The Department of Revenue (DOR) ceases all\nimplementation activities on the effective date,\nincluding those activities that are in progress.\n\n• The Economic and Revenue Forecast Council\n(ERFC) June 2026 tax revenue forecast.\n• The Internal Revenue Service (IRS) publication 6149\ncalendar year projections by state for 2024.\n• IRS individual income tax returns for tax year 2022.\n• The National Library of Medicine publication, “US\nTaxation of Gambling Winnings and Incentives to\nBet.”\nThe following additional assumptions are made for\ncalculation purposes:\n• The first impacted year of tax collections is state\nfiscal year 2029.\n• The only tax impacted is the tax described in ESSB\n6346 from the 2026 Legislative Session.\n\n• Estimates use the state’s fiscal year (SFY) of July\n1 through June 30. State fiscal year 2027 is July 1,\n2026, to June 30, 2027.\n\n• There are no estimated tax payments required in tax\nyear 2028 (calendar year 2028), therefore the first\npayments are due from taxpayers in April 2029.\n\n• Calendar year refers to January 1 to December 31.\n\n• Approximately 89 percent of total tax payments will\noccur in April 2029 and the remaining 11 percent\nof payments will occur in October 2029, due to the\nsix-month extension deadline.\n\n• RCW 29A.72.025 regarding fiscal impact\nstatements indicates any such statement “must\ndescribe any projected increase or decrease in\nrevenues, costs, expenditures, or indebtedness that\nthe state or local governments will experience if the\nballot measure were approved by state voters.” As\nsuch, impacts that might occur due to actions\nof a future Legislature or those only expressed\nthrough legislative intent, are not included.\n\nRevenue\nLocal Revenue\nThe initiative will not impact local revenue.\n\nState Revenue\nThe initiative is estimated to result in revenue loss of\n$11,432,414,000 over five fiscal years from the state\ngeneral fund, federal general fund, and fair start for kids\naccount. The general fund is the principal state fund\nsupporting the operation of the state. The fair start for\nkids account is used only for childcare and early learning\npurposes.\n\nState Revenue Assumptions\nState General Fund\nRevenue estimates are based on several available data\nsources including:\n• Department of Revenue (DOR) excise data.\n\n• The first estimated tax payments, for the January\n2029 to June 2029 period, are due July 1, 2029.\n• Based on information from the Institute on Taxation\nand Economic Policy (ITEP), it is assumed that there\nis a reduced IRS enforcement budget. Based on the\nITEP analysis, a 4.71 percent downward adjustment\nis applied to taxpayers’ Adjusted Gross Income\n(AGI) prior to estimating tax collections.\n• Due to assumed taxpayer behavior, an assumption\nabout taxpayer compliance is applied to revenue\nestimates. It is assumed that 90 percent of tax\nrevenue will be collected for tax year 2028 (calendar\nyear 2028) and 95 percent of tax revenue will be\ncollected for tax year 2029 (calendar year 2029) and\nthereafter.\n\nFederal General Fund\nESSB 6346 made state income tax refunds subject\nto child support collection action by the Department\nof Social and Health Services. To implement this\nprovision, the Department of Social and Health Services\nanticipates receipt of federal funding for information\ntechnology updates, policy updates, and staff training.\nThis federal revenue would be eliminated if the initiative\nwas approved.\n\nInitiative Measure IP26-645\n\nFair Start for Kids Account\n\nOffice of the Attorney General\n\nESSB 6346 directed the Office of the State Treasurer to\ndeposit five percent of the tax revenue collected to the\nfair start for kids account beginning July 1, 2029, and\neach July 1st thereafter. The repeal of the tax means\nthat this transfer will no longer occur. The total amount\nthat will no longer be transferred to the fair start for kids\naccount is $377,000,000, including $155,400,000 in\nstate fiscal year 2030 and $221,600,000 in state fiscal\nyear 2031.\n\nThe Office of the Attorney General (AGO) will have no\nincrease or decrease in costs each state fiscal year\nfrom 2027 through 2031. The anticipated change in the\namount of legal services workload is minimal. The AGO\ndid not receive funding specific to implementing ESSB\n6346.\n\nState Revenue Impacts\nTable 1. Revenue loss, by account\n(See Table 1 on page 13.)\n\nState Government Expenditures\nState Agency Implementation Cost Assumptions\nState agency savings are estimated to be a net total of\n$150,471,700 over five state fiscal years as a result of\nthe initiative. Savings by agency are:\n\nDepartment of Social and Health Services\nIn state fiscal year 2027, the Department of Social and\nHealth Services (DSHS) will save $139,000 in state funds\nand $279,000 in federal funds. In state fiscal year 2028,\nDSHS will save $74,000 in state funds and $143,000 in\nfederal funds. This funding was provided for information\ntechnology updates, policy updates, and staff training\nfor the agency to implement child support collections on\nstate tax refunds.\n\nOffice of the State Treasurer\n\nTable 2. Expenditures, by agency (state general fund and\nfederal general fund)\n(See Table 2 on page 13.)\n\nThe Office of the State Treasurer (OST) will have no\nincrease or decrease in costs in state fiscal years 2030\nand 2031 to administer the transfer to the fair start for\nkids account. The OST did not receive funding specific\nto implement ESSB 6346.\n\nDepartment of Revenue\n\nDepartment of Corrections\n\nThe Department will save a net of $149,844,700 over the\nfive fiscal years between 2027 and 2031. It is assumed\nthat the existing state general fund appropriation for\nadministering the tax will end as of June 30, 2027.\nImpacts to expenditures and subsequent savings are\nestimated to occur on or after January 1, 2027.\nCurrently, the Department has received a total\nappropriation of $10,196,000 for state fiscal year 2027.\nThe total appropriation for the period from January\n2027 to June 2027 is $5,408,400. Unspent amounts\nfrom the general fund for state fiscal year 2027 are\ncurrently unknown due to potential contracts and vendor\ncommitments. For state fiscal years 2028, 2029, 2030,\nand 2031 it is assumed that DOR would receive funding\nfrom the legislature in accordance with the fiscal note\nfor parts I – VIII of ESSB 6346 – Establishing a tax on\nmillionaires. Savings are assumed for tax administration\nduties for approximately 30,000 taxpayers that will no\nlonger be required. These savings by state fiscal year are\nas follows:\n• Savings of $53,676,000 for state fiscal year 2028.\n• Savings of $35,696,900 for state fiscal year 2029.\n• Savings of $30,544,400 for state fiscal year 2030.\n• Savings of $29,927,400 for state fiscal year 2031.\n\nThe Department of Corrections will have indeterminate\nsavings resulting from the elimination of the class C\nfelony for evading this tax.\n\nDepartment of Children, Youth, and Families\nThe Department of Children, Youth, and Families will\nhave indeterminate savings resulting from the elimination\nof the class C felony for evading this tax. It is unclear if\nthese criminal offenses are limited to adult crimes.\n\nInitiative Measure IP26-645\n\nTable 1. Revenue loss, by account\nAccount\nState General Fund\n\nSFY 2027\n\nSFY 2028\n\nSFY 2029\n\nSFY 2030\n\nSFY 2031\n\n$0\n\n$0\n\n($3,108,000,000)\n\n($4,276,600,000)\n\n($3,670,400,000)\n\nFair Start for Kids\nAccount\nFederal General Fund\n\n$0\n\n$0\n\n$0\n\n($155,400,000)\n\n($221,600,000)\n\n($271,000)\n\n($143,000)\n\n$0\n\n$0\n\n$0\n\nTotal\n\n($271,000)\n\n($143,000)\n\n($3,108,000,000)\n\n($4,432,000,000)\n\n($3,892,000,000)\n\nTable 2. Expenditures, by agency (state general fund and federal general fund)\nAccount\nDepartment of Revenue\nOffice of the Attorney\nGeneral\nDepartment of Social\nand Health Services –\nState General Fund\nDepartment of Social\nand Health Services –\nFederal General Fund\nOffice of the State\nTreasurer\nDepartment of\nCorrections\nDepartment of Children,\nYouth, and Families\nState General Fund\nTotal\nAll Funds Total\n\nSFY 2027\n\nSFY 2028\n\nSFY 2029\n\nSFY 2030\n\nSFY 2031\n\nUnknown\n\n($53,676,000)\n\n($35,696,900)\n\n($30,544,400)\n\n($29,927,400)\n\n$0\n\n$0\n\n$0\n\n$0\n\n$0\n\n($139,000)\n\n($74,000)\n\n$0\n\n$0\n\n$0\n\n($271,000)\n\n($143,000)\n\n$0\n\n$0\n\n$0\n\n$0\n\n$0\n\n$0\n\n$0\n\n$0\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\nIndeterminate\n\n($139,000) ($53,750,000)\n($410,000) ($53,893,000)\n\n($35,696,900)\n($35,696,900)\n\n($30,544,400)\n($30,544,400)\n\n($29,927,400)\n($29,927,400)",
+            "argumentsFor": [
+              "Vote Yes: Repeal the Income Tax, Make Olympia Keep Its\nWord\nTrust isn’t built by passing another tax, it’s earned by keeping\npromises. Over the last 90 years, Washingtonians have\nrejected an income tax ten times because they knew it would\nthreaten economic growth, discourage investment, and\nreach beyond the people originally targeted. This year, the\nLegislature enacted a new income tax anyway. I-645 restores\nyour right to decide.\nTaxes Always Expand\nSupporters insist the tax is narrow, applying only to income\nabove $1 million. But lawmakers rejected opportunities to\npermanently limit its reach, giving Olympia the ability to\nexpand the income tax to everyone. Before asking taxpayers\nfor more, they should demonstrate they can keep the\ncommitments they’ve already made.\nA History of Broken Promises\n80 times in the last five years Olympia has moved money\nfrom dedicated accounts to the general fund. They’ve taken\nmoney from state healthcare, flood control, pipeline safety,\nschool employees’ insurance, and others to backfill the\ngeneral fund. The capital gains tax was promised to support\nearly learning and childcare, yet those commitments were\ndelayed, reduced, or cancelled. First responders spent\ncareers relying on promises about their retirements, only to\nwatch the legislature raid their pensions to plug holes in the\ngeneral fund. Trust erodes when dedicated funding doesn’t\nproduce the results people were promised.\nVoting Yes repeals the new income tax before it begins,\npreserves the Working Families Tax Credit, paid family leave,\nand small-business tax relief. Voters have the final say.",
+              "The No campaign's claims are false. I-645 repeals the\nincome tax. Without I-645, Olympia can expand the income\ntax to reach into your paycheck with the simple stroke of a\npen. No public vote and no permission required, any time\nthey want. This was never about schools or diapers, that's a\nscare tactic. Washington has record revenues. An income tax\non anyone will become an income tax on everyone. Vote Yes.\n\nWritten by\nChris Gildon, State Senator, Republican, Puyallup; Jesse\nProudman, Lifelong Washingtonian and Three-Time\nEntrepreneur; Patti Mann, Retired Firefighter/Paramedic,\nSeattle Fire Department; Viet Nguyen, Small Business\nOwner, Independent, Seattle; Semmelle Abraham, Small\nBusiness Owner; Julie H. Olds, Grandmother and Small\nBusiness Owner\nContact: (360) 259-9771; chris@chrisgildon.com"
+            ],
+            "argumentsAgainst": [
+              "Washington has one of the nation’s most upside-down tax\nsystems, where working and middle class families pay a\nfar higher tax rate than the wealthiest. I-645 would make\nthat worse. I-645 is fiscally irresponsible, slashing billions in\nfunding for education and healthcare, increasing taxes on\n460,000 hard-working families, and jeopardizing tax cuts for\nthousands of small businesses.\nVote No: Stop a Tax Break for the Wealthiest\nHedge fund mogul Brian Heywood has spent millions\nbacking I-645 because he wants a tax cut for the top 1%,\nwhile sticking working and middle class families and small\nbusinesses with higher costs. I-645 could mean higher taxes\nfor thousands of small businesses, force families to pay sales\ntax for basic household items like diapers, and raise taxes for\n460,000 Washington families – just so those making over a\nmillion dollars in a year get a tax break.\nVote No: Stop Cuts to Schools, Healthcare, and Childcare\nThis measure cuts funding for K-12 public schools,\nhealthcare, childcare, and other important public services\nby $13 billion over four years. That means larger class sizes,\nhigher costs for healthcare and childcare, and the elimination\nof free school lunches for many children.\nVote No: Stop Higher Costs for Working Families\nI-645 gives the wealthiest a big break while the rest of us\nface higher healthcare and childcare costs and cuts to public\nschools and higher education. Join Washington nurses,\nteachers, and small business owners. Vote No on I-645.",
+              "The Millionaires Tax only applies to those making above one\nmillion dollars per year. Any attempt to expand it to those of\nus making under a million would be decided on the ballot voters always have the final say. I-645 blows a $13 billion\nhole in the budget - don’t believe lies that we can keep tax\ncuts for working families and small businesses but eliminate\nthe tax on the wealthy few that pays for them.\n\nWritten by\nJanie White, President, Washington Education Association;\nMatt Hipp, Small Business Owner, Halcyon Brewing\nCompany; Rosa Potts, Registered Nurse, Vancouver; April\nSims, President, Washington State Labor Council; Thom\nGarrard, Retired classroom teacher, Edmonds School Board\nMember; Lindsay Johnson, Planned Parenthood Advocates\nof Greater Washington, Yakima\nContact: (360) 545-3362; info@no645.com;\nhttps://no645.com/"
+            ],
+            "passageThreshold": "Initiatives and referenda\n\nbecome law with\nmore than 50%\nof the vote.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-7038226b913e8db852822e41215ff8cc9aeca42a5f9f78aef017196118e87fa7.txt",
+              "byteLength": 19712,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+                "sourceHash": "4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739",
+                "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+                "publisher": "Washington Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739.pdf",
+                  "byteLength": 5327525,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
       "coverageNotes": [
         "Washington’s official current-election page lists U.S. Representative, state legislative offices, Supreme Court, Court of Appeals and local offices on the November 3 ballot. No U.S. Senate or statewide executive contest is listed for this election. Court of Appeals district contests and local offices are outside this statewide-office and legislative package."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wa-sos-2026-general-initiative-il26-001",
+          "whatItDoes": "INITIATIVE IL26-001\n1 AN  ACT  Relating  to  the  Washington  parents'  bill  of  rights;\n2 amending RCW 28A.605.005; and creating new sections.\n3 BE IT ENACTED BY THE PEOPLE OF THE STATE OF WASHINGTON:\n4 Sec. 1.  RCW 28A.605.005 and 2025 c 369 s 501 are each amended to\n5 read as follows:",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wa-sos-2026-general-initiative-il26-001#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "4 Sec. 1.  RCW 28A.605.005 and 2025 c 369 s 501 are each amended to\n5 read as follows:\n6 <u>(1) Subsections 2 through 5 of this section reinstate Initiative</u>\n7 <u>2081's  laws  guaranteeing  parents'  rights,  including  reviewing  their</u>"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-001#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "36 <u>NEW  SECTION.</u>    Sec.  2.    The  provisions  of  this  act  are  to  be\n37 liberally construed to effectuate the policies, purposes, and intent\n38 of this act.\np. 8 INITIATIVE IL26-001"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-001#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "1 <u>NEW  SECTION.</u>    Sec.  3.    If  any  provision  of  this  act  or  its\n2 application  to  any  person  or  circumstance  is  held  invalid,  the\n3 remainder  of  the  act  or  the  application  of  the  provision  to  other\n4 persons or circumstances is not affected."
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-001#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "5 <u>NEW SECTION.</u>  Sec. 4.  This act is known and may be cited as the\n6 Washington Parents' Bill of Rights.\np. 9 INITIATIVE IL26-001"
+            }
+          ],
+          "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
+          "sourceHash": "a058b8f993ecd88f21ca379626c53769e546e23b5801dc410a81f9c28bdfcfd8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:40.019415+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wa-sos-2026-general-initiative-il26-638",
+          "whatItDoes": "INITIATIVE IL26-638\n1 AN  ACT  Relating  to  defending  equity  in  interscholastic  sports;\n2 amending  RCW  28A.600.200  and  28A.640.020;  adding  a  new  section  to\n3 chapter 28A.600 RCW; and creating new sections.\n4 BE IT ENACTED BY THE PEOPLE OF THE STATE OF WASHINGTON:\n5 <u>NEW SECTION.</u>  Sec. 1.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wa-sos-2026-general-initiative-il26-638#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "5 <u>NEW SECTION.</u>  Sec. 1.  The people find:\n6 (1)  Existing  Washington  state  law  and  school  district  policies\n7 require  students  to  undergo  a  routine  physical  examination  prior  to\n8 participation in interscholastic sports, which includes documentation\n9 of the student's sex assigned at birth;"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-638#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "19 Sec. 2.  RCW 28A.600.200 and 2012 c 155 s 2 are each amended to\n20 read as follows:\np. 1 INITIATIVE IL26-638\n\n1 <u>(1)</u> Each school district board of directors is hereby granted and\n2 shall  exercise  the  authority  to  control,  supervise  and  regulate  the"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-638#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "9 <u>NEW SECTION.</u>  Sec. 3.  A new section is added to chapter 28A.600\n10 RCW to read as follows:\n11 (1)  Policies,  procedures,  rules,  and  other  requirements  adopted\n12 in  accordance  with  RCW  28A.600.200  by  a  school  district  board  of"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-638#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "28 Sec. 4.  RCW 28A.640.020 and 2023 c 242 s 3 are each amended to\n29 read as follows:\n30 (1)  The  superintendent  of  public  instruction  shall  develop\n31 regulations  and  guidelines  to  eliminate  sex  discrimination  as  it\n32 applies to public school employment, counseling and guidance services"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-638#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "19 <u>NEW  SECTION.</u>    Sec.  5.    This  act  may  be  known  and  cited  as  the\n20 defending equity in interscholastic sports act."
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-il26-638#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "21 <u>NEW  SECTION.</u>    Sec.  6.    If  any  provision  of  this  act  or  its\n22 application  to  any  person  or  circumstance  is  held  invalid,  the\n23 remainder  of  the  act  or  the  application  of  the  provision  to  other\n24 persons or circumstances is not affected.\np. 6 INITIATIVE IL26-638"
+            }
+          ],
+          "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
+          "sourceHash": "6de73e16cd8dfb1b618d73eef53800e10a7cf8862c7247dc9dbe857c8d86a48a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:40.019415+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wa-sos-2026-general-initiative-ip26-645",
+          "whatItDoes": "Initiative Measure No. IP26-645\nAN ACT Relating to taxes, repealing chapter 238,\nLaws of 2026, and prohibiting taxes on individual income;\nadding a new chapter to Title 82 RCW; creating new\nsections; repealing 2026 c 238 ss 101, 102, 201, 202, 203,\n204, 205, 206, 301, 302, 303, 304, 305, 306, 307, 308,",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wa-sos-2026-general-initiative-ip26-645#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "NEW SECTION.</u>  Sec. 1. The people find that for\nnearly a century Washington courts have held that income\nis property subject to ownership under the state’s Consti-\ntution. Income therefore cannot be taxed unless it meets\nall constitutional requirements for property taxes including"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-ip26-645#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "NEW SECTION.</u>  Sec. 2. The following acts or parts of\nacts are each repealed:\n(1) 2026 c 238 s 1 (uncodified);\n(2) RCW 82A.--.--- and 2026 c 238 s 101;\n(3) RCW 82A.--.--- and 2026 c 238 s 102;\n(4) RCW 82A.--.--- and 2026 c 238 s 201;\n(5) RCW 82A.--.--- and 2026 c 238 s 202;\n(6) RCW 82A.--.--- and 2026 c 238 s 203;"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-ip26-645#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "NEW SECTION.</u> Sec. 3. DEFINITIONS. The definitions\nin this section apply throughout Title 82 RCW unless the\ncontext clearly requires otherwise.\nInitiative Measure IP26-645 |\n\n(1) “Income” means any gain or benefit measured in\nmoney derived from an individual’s capital, labor, property,\nor other source."
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-ip26-645#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "NEW SECTION.</u> Sec. 4. PROHIBITING TAXES ON\nINDIVIDUAL INCOME.\n(1) No tax may be imposed on individual income, the re-\nceipt of individual income, or measured by an individual’s\nincome, regardless of the source.\n(2) Income is subject to individual ownership.\n(3) The prohibition in this section applies to the state,"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-ip26-645#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "NEW SECTION.</u> Sec. 5. Sections 3 and 4 of this act\nconstitute a new chapter in Title 82 RCW.\n<u>"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-ip26-645#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "NEW SECTION.</u> Sec. 6. Sections 3 and 4 of this act\nare to be liberally construed to prohibit any form of indi-\nvidual income tax.\n<u>"
+            },
+            {
+              "id": "wa-sos-2026-general-initiative-ip26-645#section-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "Section 7",
+              "what": "NEW SECTION.</u> Sec. 7. If any provision of this act\nor its application to any person or circumstance is held\ninvalid, the remainder of the act or the application of the\nprovision to other persons or circumstances is not affect-\ned."
+            }
+          ],
+          "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+          "sourceHash": "493638fe2332aea57df3b6f3f8f8854d89ba433480759fc0716929dbdca5db9d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:40.019415+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-07/Finaltext_IP26-645_fulltext.pdf",
+          "sourceHash": "9bcde60de354e1f52de84b93fb76d766c0f30c144a82b90937e94a7724bbef5d",
+          "retrievedAt": "2026-10-14T23:52:31.010672+00:00",
+          "publisher": "Washington Secretary of State, Elections Division",
+          "vault": {
+            "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-f73d251912fa6778/sha256-9bcde60de354e1f52de84b93fb76d766c0f30c144a82b90937e94a7724bbef5d.pdf",
+            "byteLength": 1014538,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
+          "sourceHash": "7f5b248dd58f7d7fd48f6807ffb5816d5c7919d67203d95f1c2f8e18f1865be3",
+          "retrievedAt": "2026-10-14T23:52:31.096255+00:00",
+          "publisher": "Washington Secretary of State, Elections Division",
+          "vault": {
+            "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-1877ca359cea9eef/sha256-7f5b248dd58f7d7fd48f6807ffb5816d5c7919d67203d95f1c2f8e18f1865be3.pdf",
+            "byteLength": 108301,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
+          "sourceHash": "a0a13e0d07074cd4ff9ee52e4ddeb319df7a2ea2de120a741c857713c0c46e24",
+          "retrievedAt": "2026-10-14T23:52:31.343319+00:00",
+          "publisher": "Washington Secretary of State, Elections Division",
+          "vault": {
+            "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-75f249631f930ff5/sha256-a0a13e0d07074cd4ff9ee52e4ddeb319df7a2ea2de120a741c857713c0c46e24.pdf",
+            "byteLength": 75700,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
+          "sourceHash": "4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739",
+          "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
+          "publisher": "Washington Secretary of State, Elections Division",
+          "vault": {
+            "key": "project/freshness/source/www.sos.wa.gov/2026/10/14/ms-01-b32cd525dd2b85e8/sha256-4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739.pdf",
+            "byteLength": 5327525,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:11:28.336677Z",
-    "reviewedBy": "BL-16 official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:40.016085+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899",
@@ -7355,40 +7751,54 @@
         "finalUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%201%20-%20Adams%2C%20Yakima%20-%20English.pdf",
         "httpStatus": 200,
         "rawHash": "4bad57a500be93e395068e913b8312cc7e09fd0a56996f6dcde414e14fcd5739",
-        "retrievedAt": "2026-10-14T05:11:28.336677Z",
+        "retrievedAt": "2026-10-14T23:52:31.152865+00:00",
         "publisher": "Washington Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 general election document acquired from links published by Washington Secretary of State."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
         "finalUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-001%20fulltext.pdf",
         "httpStatus": 200,
         "rawHash": "7f5b248dd58f7d7fd48f6807ffb5816d5c7919d67203d95f1c2f8e18f1865be3",
-        "retrievedAt": "2026-10-14T05:06:39.953362Z",
+        "retrievedAt": "2026-10-14T23:52:31.096255+00:00",
         "publisher": "Washington Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 general election document acquired from links published by Washington Secretary of State."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
         "finalUrl": "https://www.sos.wa.gov/sites/default/files/2026-03/INITIATIVE%20IL26-638%20fulltext.pdf",
         "httpStatus": 200,
         "rawHash": "a0a13e0d07074cd4ff9ee52e4ddeb319df7a2ea2de120a741c857713c0c46e24",
-        "retrievedAt": "2026-10-14T05:06:40.157250Z",
+        "retrievedAt": "2026-10-14T23:52:31.343319+00:00",
         "publisher": "Washington Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 general election document acquired from links published by Washington Secretary of State."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.sos.wa.gov/sites/default/files/2026-07/Finaltext_IP26-645_fulltext.pdf",
         "finalUrl": "https://www.sos.wa.gov/sites/default/files/2026-07/Finaltext_IP26-645_fulltext.pdf",
         "httpStatus": 200,
         "rawHash": "9bcde60de354e1f52de84b93fb76d766c0f30c144a82b90937e94a7724bbef5d",
-        "retrievedAt": "2026-10-14T05:06:41.253445Z",
+        "retrievedAt": "2026-10-14T23:52:31.010672+00:00",
         "publisher": "Washington Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 general election document acquired from links published by Washington Secretary of State."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

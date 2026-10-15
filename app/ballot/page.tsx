@@ -1547,10 +1547,6 @@ export default async function BallotPage({
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-2 text-[0.6875rem] text-muted">
-                      Each part is written from the official analysis below, and
-                      says what it would do — never whether it is a good idea.
-                    </p>
                   </details>
                 )}
 
@@ -1578,14 +1574,40 @@ export default async function BallotPage({
                             {measure.officialStatement}
                           </p>
                         </div>
-                      ) : (
+                      ) : !measure.voterGuide ? (
                         <CardGapContribution id={`measure-statement:${contest.id}`} label="the official statement" />
-                      )}
+                      ) : null}
                     </div>
                   </details>
                 )}
 
-                {measure && <CardSourcesContribution id={`measure-text:${contest.id}`} sources={[{ what: "Official measure text", provenance: measure.provenance }]} />}
+                {measure && <CardSourcesContribution id={`measure-text:${contest.id}`} sources={[
+                  { what: "Official ballot question", provenance: measure.provenance },
+                  ...[measure.officialText, measure.voterGuide, measure.voterGuide?.passageThresholdSource, measure.voterGuide?.fiscalImpactSource].flatMap((source, at) => source ? [{
+                    what: ["Full proposed law", "Complete guide entry", "Passage threshold", "Fiscal impact"][at], provenance: { sourceUrl: source.sourceUrl,
+                      sourceOrg: source.publisher, collectedAt: source.retrievedAt, verifiedAt: source.retrievedAt },
+                  }] : []),
+                ]} />}
+
+                {measure?.voterGuide && (
+                  <details className="mt-2.5" data-measure-voter-guide>
+                    <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">Official voter guide — {measure.voterGuide.publisher}</summary>
+                    <div className="mt-2 space-y-3 rounded-md border border-[var(--panel-border)] p-3">
+                      {[
+                        ["Official analysis", measure.voterGuide.summary],
+                        ["Fiscal impact", measure.voterGuide.fiscalImpact],
+                        ["Passage threshold", measure.voterGuide.passageThreshold],
+                        ...measure.voterGuide.argumentsFor?.map(text => ["Argument for", text]) ?? [],
+                        ...measure.voterGuide.argumentsAgainst?.map(text => ["Argument against", text]) ?? [],
+                      ].filter(([, text]) => text).map(([label, text], index) => (
+                        <section key={`${label}:${index}`}>
+                          <h3 className="t-eyebrow text-muted">{label}</h3>
+                          <p className="t-record mt-1.5 whitespace-pre-line t-body leading-relaxed text-paper-dim">{text}</p>
+                        </section>
+                      ))}
+                    </div>
+                  </details>
+                )}
 
                 {analysis?.text ? (
                   <details className="mt-2.5">

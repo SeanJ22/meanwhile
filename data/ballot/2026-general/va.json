@@ -1058,7 +1058,7 @@
           "contestId": "va-sbe-2026-amendment-1",
           "officialNumber": "Question 1",
           "questionText": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?",
-          "officialStatement": null,
+          "officialStatement": "Present Law Currently, the Virginia Constitution does not explicitly provide to its citizens a right to reproductive freedom nor does it explicitly protect or prohibit certain kinds of health care procedures or decisions. Proposed Amendment The proposed amendment would add to the Virginia Constitution's Bill of Rights the fundamental right to make and carry out decisions about a person’s own reproductive care with only certain, specific exceptions. The proposed amendment specifically allows the state government to pass laws to regulate abortion care in the third trimester of pregnancy, but requires any such law to allow for abortion care when it is medically needed to protect the life and health of the pregnant person or because the fetus is not viable.",
           "provenance": {
             "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
             "sourceOrg": "Virginia Department of Elections",
@@ -1066,6 +1066,55 @@
             "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
             "doorId": "fec-va-chief",
             "quote": "Proposed Constitutional Amendment Question 1 | Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceHash": "244170b35d7b2d96267973b046d1a490962cc2c23c3d52bb615aadbb4d916a6d",
+            "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+            "publisher": "Virginia Department of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-244170b35d7b2d96267973b046d1a490962cc2c23c3d52bb615aadbb4d916a6d.txt",
+              "byteLength": 2114,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+                "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+                "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+                "publisher": "Virginia Department of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
+                  "byteLength": 1091676,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceHash": "9aafee174f4749e69de1c62cf33794f7aefb67de6ee5658a3ea59a7041d49a06",
+            "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+            "publisher": "Virginia Department of Elections",
+            "summary": "Present Law Currently, the Virginia Constitution does not explicitly provide to its citizens a right to reproductive freedom nor does it explicitly protect or prohibit certain kinds of health care procedures or decisions. Proposed Amendment The proposed amendment would add to the Virginia Constitution's Bill of Rights the fundamental right to make and carry out decisions about a person’s own reproductive care with only certain, specific exceptions. The proposed amendment specifically allows the state government to pass laws to regulate abortion care in the third trimester of pregnancy, but requires any such law to allow for abortion care when it is medically needed to protect the life and health of the pregnant person or because the fetus is not viable.",
+            "vault": {
+              "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-9aafee174f4749e69de1c62cf33794f7aefb67de6ee5658a3ea59a7041d49a06.txt",
+              "byteLength": 803,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+                "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+                "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+                "publisher": "Virginia Department of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
+                  "byteLength": 1091676,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1073,7 +1122,7 @@
           "contestId": "va-sbe-2026-amendment-2",
           "officialNumber": "Question 2",
           "questionText": "Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?",
-          "officialStatement": null,
+          "officialStatement": "Present Law Marriages, civil unions, and other legal relationships with the same rights, benefits, and effects of marriage between persons of the same sex or gender are prohibited under Virginia’s Constitution. This prohibition is no longer enforceable as a result of the United States Supreme Court decision in Obergefell v. Hodges in 2015, but the prohibition on marriages between persons of the same sex or gender remains in the state’s Constitution. If the Supreme Court were to overturn its previous decision, that prohibition would be enforceable again. Proposed Amendment The proposed amendment removes the prohibition on marriages between persons of the same sex or gender from the Virginia Constitution's Bill of Rights. It is replaced with the fundamental right to marry, requiring the state to recognize and treat equally under the law any lawful marriage between two adult persons, regardless of the sex, gender, or race of either person. The proposed amendment prohibits the state from denying a marriage license to two adult persons because of their sex, gender, or race.",
           "provenance": {
             "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
             "sourceOrg": "Virginia Department of Elections",
@@ -1081,6 +1130,55 @@
             "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
             "doorId": "fec-va-chief",
             "quote": "Proposed Constitutional Amendment Question 2 | Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceHash": "c3947a7adbb81d42d83318f2d11c4b09b822253ad506a8363a4183c879b55cf1",
+            "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+            "publisher": "Virginia Department of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-c3947a7adbb81d42d83318f2d11c4b09b822253ad506a8363a4183c879b55cf1.txt",
+              "byteLength": 564,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+                "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+                "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+                "publisher": "Virginia Department of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
+                  "byteLength": 1091676,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceHash": "720913884b7a047eafd116ac455b1be3f8afa1cc5e32b7979d554e0aab1857cf",
+            "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+            "publisher": "Virginia Department of Elections",
+            "summary": "Present Law Marriages, civil unions, and other legal relationships with the same rights, benefits, and effects of marriage between persons of the same sex or gender are prohibited under Virginia’s Constitution. This prohibition is no longer enforceable as a result of the United States Supreme Court decision in Obergefell v. Hodges in 2015, but the prohibition on marriages between persons of the same sex or gender remains in the state’s Constitution. If the Supreme Court were to overturn its previous decision, that prohibition would be enforceable again. Proposed Amendment The proposed amendment removes the prohibition on marriages between persons of the same sex or gender from the Virginia Constitution's Bill of Rights. It is replaced with the fundamental right to marry, requiring the state to recognize and treat equally under the law any lawful marriage between two adult persons, regardless of the sex, gender, or race of either person. The proposed amendment prohibits the state from denying a marriage license to two adult persons because of their sex, gender, or race.",
+            "vault": {
+              "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-720913884b7a047eafd116ac455b1be3f8afa1cc5e32b7979d554e0aab1857cf.txt",
+              "byteLength": 1125,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+                "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+                "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+                "publisher": "Virginia Department of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
+                  "byteLength": 1091676,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1088,7 +1186,7 @@
           "contestId": "va-sbe-2026-amendment-3",
           "officialNumber": "Question 3",
           "questionText": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?",
-          "officialStatement": null,
+          "officialStatement": "EXPLANATION FOR VOTERS QUESTION 3 Present Law Virginia's Constitution currently provides that a person who is convicted of any felony loses the right to vote for the rest of their life unless the Governor of Virginia takes administrative action to restore that specific person’s right to vote. This is the only means of getting back the right to vote after a felony conviction. The current constitutional provision also imposes a broad restriction, while using outdated terminology, on voting by persons found to be incapacitated. A person who is determined by a court to be incapacitated, regardless of the kind of incapacity, loses the right to vote, and only a court can restore the person’s right to vote later. EXPLANATION FOR VOTERS QUESTION 3 Proposed Amendment The proposed amendment enshrines in the Constitution the fundamental right of all qualified persons in the Commonwealth to vote. Two exceptions to this right are for persons who are serving a sentence of incarceration for a felony conviction and persons who are determined by a court to not understand the act of voting. Such right cannot otherwise be restricted by laws. Under the proposed amendment, a person who is convicted of a felony loses the right to vote during their period of incarceration. Once released from incarceration, the person gets back the right to vote without needing to apply for restoration by the Governor. The proposed amendment also requires a specific finding by a court that a person does not understand the act of voting in order for that person’s right to vote to be taken away. With the right to vote, a person also has the right to be a juror, the right to be elected to an office, and the right to be a notary public.",
           "provenance": {
             "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
             "sourceOrg": "Virginia Department of Elections",
@@ -1096,19 +1194,156 @@
             "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
             "doorId": "fec-va-chief",
             "quote": "Proposed Constitutional Amendment Question 3 | Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceHash": "b623f4d561a5f3e4f7fc487650e3292b01a3d03c9fe508b58eec274e19b30855",
+            "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+            "publisher": "Virginia Department of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-b623f4d561a5f3e4f7fc487650e3292b01a3d03c9fe508b58eec274e19b30855.txt",
+              "byteLength": 2279,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+                "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+                "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+                "publisher": "Virginia Department of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
+                  "byteLength": 1091676,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceHash": "6db955deba98f37444b0bffdebd4d05468202fbe5ae5a14e027d6211d6df1671",
+            "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+            "publisher": "Virginia Department of Elections",
+            "summary": "EXPLANATION FOR VOTERS QUESTION 3 Present Law Virginia's Constitution currently provides that a person who is convicted of any felony loses the right to vote for the rest of their life unless the Governor of Virginia takes administrative action to restore that specific person’s right to vote. This is the only means of getting back the right to vote after a felony conviction. The current constitutional provision also imposes a broad restriction, while using outdated terminology, on voting by persons found to be incapacitated. A person who is determined by a court to be incapacitated, regardless of the kind of incapacity, loses the right to vote, and only a court can restore the person’s right to vote later. EXPLANATION FOR VOTERS QUESTION 3 Proposed Amendment The proposed amendment enshrines in the Constitution the fundamental right of all qualified persons in the Commonwealth to vote. Two exceptions to this right are for persons who are serving a sentence of incarceration for a felony conviction and persons who are determined by a court to not understand the act of voting. Such right cannot otherwise be restricted by laws. Under the proposed amendment, a person who is convicted of a felony loses the right to vote during their period of incarceration. Once released from incarceration, the person gets back the right to vote without needing to apply for restoration by the Governor. The proposed amendment also requires a specific finding by a court that a person does not understand the act of voting in order for that person’s right to vote to be taken away. With the right to vote, a person also has the right to be a juror, the right to be elected to an office, and the right to be a notary public.",
+            "vault": {
+              "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-6db955deba98f37444b0bffdebd4d05468202fbe5ae5a14e027d6211d6df1671.txt",
+              "byteLength": 1727,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+                "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+                "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+                "publisher": "Virginia Department of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
+                  "byteLength": 1091676,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
       "coverageNotes": [
         "The statewide All Offices list includes a special election for House of Delegates District 20. No other state legislative or statewide executive offices are listed for November 3, 2026."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "va-sbe-2026-amendment-1",
+          "whatItDoes": "ARTICLE I BILL OF RIGHTS Section 11-A. Fundamental right to reproductive freedom.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "va-sbe-2026-amendment-1#1",
+              "number": "11-A",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 11-A",
+              "what": "Section 11-A. Fundamental right to reproductive freedom. That every individual has the fundamental right to reproductive freedom, including the ability to make and carry out decisions relating to one's own prenatal care, childbirth, postpartum care, contraception, abortion care, miscarriage management, and fertility"
+            }
+          ],
+          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "sourceHash": "244170b35d7b2d96267973b046d1a490962cc2c23c3d52bb615aadbb4d916a6d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-sbe-2026-amendment-2",
+          "whatItDoes": "ARTICLE I BILL OF RIGHTS Section 15-A. Marriage. That marriage is one of the vital personal rights essential to the orderly pursuit of happiness.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "va-sbe-2026-amendment-2#1",
+              "number": "15-A",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 15-A",
+              "what": "Section 15-A. Marriage. That marriage is one of the vital personal rights essential to the orderly pursuit of happiness."
+            }
+          ],
+          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "sourceHash": "c3947a7adbb81d42d83318f2d11c4b09b822253ad506a8363a4183c879b55cf1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-sbe-2026-amendment-3",
+          "whatItDoes": "ARTICLE II. FRANCHISE AND OFFICERS. Section 1. Qualifications of voters. (a) In elections by the people, the qualifications of voters shall be as follows: Each voter shall be a citizen of the United States, shall be eighteen years of age, shall fulfill the residence requirements set forth in subsection (b), and shall",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "va-sbe-2026-amendment-3#1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "Section 1. Qualifications of voters. (a) In elections by the people, the qualifications of voters shall be as follows: Each voter shall be a citizen of the United States, shall be eighteen years of age, shall fulfill the residence requirements set forth in subsection (b), and shall be registered to vote pursuant to"
+            }
+          ],
+          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "sourceHash": "b623f4d561a5f3e4f7fc487650e3292b01a3d03c9fe508b58eec274e19b30855",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+          "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
+          "publisher": "Virginia Department of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
+            "byteLength": 1091676,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:08:19.030107+00:00",
-    "reviewedBy": "Codex BL-16",
+    "reviewedAt": "2026-10-15T04:14:39.916275+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
@@ -1153,12 +1388,22 @@
       {
         "requestedUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
         "finalUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
-        "retrievedAt": "2026-10-14T05:08:19.030107+00:00",
         "httpStatus": 200,
         "rawHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+        "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
         "publisher": "Virginia Department of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official proposed constitutional amendments brochure includes the complete constitutional amendment text and explanations for all three questions."
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

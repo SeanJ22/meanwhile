@@ -6,19 +6,20 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import { captureIntact, section3SourceReceipt } from "../civic-data/worker-publication-evidence.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
-import { translationRecordIssue, type TranslationRecord } from "./records.ts";
+import { translationHash, translationRecordIssue, type TranslationRecord } from "./records.ts";
 
 export function translationPackage(input: {
   record: TranslationRecord; captures: readonly WorkerPublicationCapture[]; now: string;
 }): ManualProjectionPackage {
   const { record, now } = input;
-  const issue = translationRecordIssue(record);
-  if (issue) throw new Error(issue);
   const primary = input.captures.find(capture => capture.evidence.canonicalUrl === record.sourceUrl &&
-    capture.evidence.text === record.sourceText && (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash) === `sha256-${record.sourceHash}`);
+    translationHash(capture.evidence.text) === record.sourceTextHash && (record.kind === "MEASURE" ? capture.evidence.contentHash : capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash) === `sha256-${record.sourceHash}`);
   if (!primary || !captureIntact(primary) || primary.evidence.retrievedAt !== record.retrievedAt) throw new Error("Translation has no complete saved source capture.");
+  const issue = translationRecordIssue(record, primary.evidence.text);
+  if (issue) throw new Error(issue);
+  if (record.kind === "MEASURE" && JSON.stringify(primary.sourceReference) !== JSON.stringify(record.sourceReference)) throw new Error("Translation source reference differs from its verified capture.");
   const linkingPage = linkingPageFrom(record.sourceUrl, input.captures.filter(captureIntact).map(capture => capture.evidence));
-  const verified = section3Page({ url: record.sourceUrl, text: record.sourceText, retrievedAt: record.retrievedAt, linkingPage, sourcePolicy: primary.sourcePolicy },
+  const verified = section3Page({ url: record.sourceUrl, text: primary.evidence.text, retrievedAt: record.retrievedAt, linkingPage, sourcePolicy: primary.sourcePolicy },
     record.kind === "MEASURE" ? "BALLOT_MEASURE" : record.kind === "AGENDA" || record.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", now);
   if (!verified.ok || !isOfficialSource(record.sourceUrl) && !linkingPage) throw new Error("Translation source is stale or not an official document.");
   // The review clock orders this open fact set; subject IDs and source hashes

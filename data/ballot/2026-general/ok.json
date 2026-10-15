@@ -1879,7 +1879,7 @@
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
-          "measureTextUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+          "measureTextUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
           "provenance": {
             "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
             "sourceOrg": "Oklahoma Secretary of State",
@@ -1898,7 +1898,7 @@
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
-          "measureTextUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+          "measureTextUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
           "provenance": {
             "sourceUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
             "sourceOrg": "Oklahoma Secretary of State",
@@ -5361,6 +5361,81 @@
             "collectedAt": "2026-10-14T05:05:52.355858+00:00",
             "verifiedAt": "2026-10-14T05:05:52.355858+00:00",
             "doorId": "fec-ok-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
+            "sourceHash": "4920162dc94161ccd2e3c49b899289695a3979a49a8448fad7fbd8047c2c0b44",
+            "retrievedAt": "2026-10-14T23:57:11.719636+00:00",
+            "publisher": "Oklahoma Legislature",
+            "vault": {
+              "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-9636da40efa87579/sha256-4920162dc94161ccd2e3c49b899289695a3979a49a8448fad7fbd8047c2c0b44.txt",
+              "byteLength": 9525,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
+                "sourceHash": "83caa991dbdae5741990470056fdefb4c63370f3a35a0774979a7c2a2a402c1c",
+                "retrievedAt": "2026-10-14T23:57:11.719636+00:00",
+                "publisher": "Oklahoma Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-9636da40efa87579/sha256-83caa991dbdae5741990470056fdefb4c63370f3a35a0774979a7c2a2a402c1c.pdf",
+                  "byteLength": 58207,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+            "sourceHash": "d01577d92194b13eb9a9670f08ff0cfd3bcb10f84fd2625863b97549b86edf56",
+            "retrievedAt": "2026-10-14T23:52:27.680218+00:00",
+            "publisher": "Oklahoma Attorney General, published by the Oklahoma Secretary of State",
+            "summary": "This measure amends article 7-B, section 3 of the Oklahoma Constitution, changing the Judicial Nominating Commission’s structure. Currently appointments are based on congressional districts as constituted in 1967. If approved, appointments to the fifteen-member Commission will be as follows: 1) Governor appoints six members, including one from each congressional district as of the time of their appointment; 2) the Oklahoma Bar Association appoints six members, including one from each congressional district as of the date of selection; and 3) no less than eight members select three at- large members. The measure will permit any number of the commissioners to be licensed attorneys in Oklahoma or another state. The prohibition against immediate family members from practicing law will be removed. The measure changes terms so that at-large commissioners would serve a two-year term, and all other commissioners would serve a six-year term. Additionally, it removes restrictions on political party membership for members appointed by the Governor and at-large members. The measure also permits a commissioner to succeed himself or herself. Vacancies will be filled in the same manner as a commissioner is appointed or selected for the remainder of the relevant term. This measure will not have a fiscal impact.",
+            "fiscalImpact": "This measure will not have a fiscal impact.",
+            "passageThreshold": "If a majority of all the electors voting on any proposed amendment at such election shall vote in favor thereof, it shall thereby become a part of this Constitution.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
+              "sourceHash": "d9e067006ecdea72df5f6c3df96c831f03d60679e46650ea027dea6ee2ec5bb6",
+              "retrievedAt": "2026-10-15T00:00:49.701456+00:00",
+              "publisher": "Oklahoma Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.oklegislature.gov/2026/10/15/ms-01-c62244365d88822f/sha256-d9e067006ecdea72df5f6c3df96c831f03d60679e46650ea027dea6ee2ec5bb6.txt",
+                "byteLength": 2410,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
+                  "sourceHash": "e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e",
+                  "retrievedAt": "2026-10-15T00:00:49.701456+00:00",
+                  "publisher": "Oklahoma Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.oklegislature.gov/2026/10/15/ms-01-c62244365d88822f/sha256-e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e.bin",
+                    "byteLength": 55253,
+                    "contentType": "application/rtf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a4a840ff563f59fb/sha256-d01577d92194b13eb9a9670f08ff0cfd3bcb10f84fd2625863b97549b86edf56.txt",
+              "byteLength": 1514,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+                "sourceHash": "7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2",
+                "retrievedAt": "2026-10-14T23:52:27.680218+00:00",
+                "publisher": "Oklahoma Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a4a840ff563f59fb/sha256-7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2.pdf",
+                  "byteLength": 2716576,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -5375,6 +5450,81 @@
             "collectedAt": "2026-10-14T05:05:54.114889+00:00",
             "verifiedAt": "2026-10-14T05:05:54.114889+00:00",
             "doorId": "fec-ok-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
+            "sourceHash": "0d088866fac80bd63796a289c75e7b015b0712c4a55da41a7f662204e3b29931",
+            "retrievedAt": "2026-10-14T23:57:11.749434+00:00",
+            "publisher": "Oklahoma Legislature",
+            "vault": {
+              "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-cefa0942c547995a/sha256-0d088866fac80bd63796a289c75e7b015b0712c4a55da41a7f662204e3b29931.txt",
+              "byteLength": 11825,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
+                "sourceHash": "3ec86aa1c49941fe63fc8435cf8278796a1824a6fb5a82832034f1cd43040d7c",
+                "retrievedAt": "2026-10-14T23:57:11.749434+00:00",
+                "publisher": "Oklahoma Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-cefa0942c547995a/sha256-3ec86aa1c49941fe63fc8435cf8278796a1824a6fb5a82832034f1cd43040d7c.pdf",
+                  "byteLength": 75727,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+            "sourceHash": "439b0e091c66c92417c1577208b1af7fcba14e5ba09afc245acc7c565e272b28",
+            "retrievedAt": "2026-10-14T23:52:27.656067+00:00",
+            "publisher": "Oklahoma Attorney General, published by the Oklahoma Secretary of State",
+            "summary": "This measure amends article 10, sections 8B and 8C of the Oklahoma Constitution. Currently, section 8B limits annual growth in fair cash value to 5% for most real property or 3% for homesteads and agricultural land. If approved, the measure would limit annual growth in fair cash value for tax year 2027 and after to 4% for most real property or 1.75% for homesteads and agricultural land. Currently, section 8C prohibits any increase in fair cash value of homestead property for persons age sixty-five (65) or older whose income does not exceed certain limits, sometimes referred to as the “senior freeze.” Instead of prohibiting any increase in fair cash value for these homesteads, there would be an annual limit of 1.75%. The measure eliminates the income cap on gross household income to qualify for the senior freeze. If approved, the annual limit on an increase in fair cash value would be tied to how much gross household income the homestead owner had in the preceding year. If a homeowner’s gross household income from the previous year was at or below the median income for their county or area (as determined by the U.S. Department of Housing and Urban Development’s estimated median income amount for the county or metropolitan statistical area), a homeowner’s homestead fair cash value cannot be increased. If the income amount was in excess of certain thresholds, the limit on increases in fair cash value for homesteads owned by persons age 65 or older could be 0.35% (income over 100% up to 120%); 0.7% (income over 120% up to 140%); 1.05% (income over 140% up to 160%); 1.4% (income over 160% up to 180%); or 1.75% (income over 180%). If passed, this measure would have a fiscal impact on the state, but the exact impact is unknown.",
+            "fiscalImpact": "If passed, this measure would have a fiscal impact on the state, but the exact impact is unknown.",
+            "passageThreshold": "If a majority of all the electors voting on any proposed amendment at such election shall vote in favor thereof, it shall thereby become a part of this Constitution.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
+              "sourceHash": "d9e067006ecdea72df5f6c3df96c831f03d60679e46650ea027dea6ee2ec5bb6",
+              "retrievedAt": "2026-10-15T00:00:49.701456+00:00",
+              "publisher": "Oklahoma Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.oklegislature.gov/2026/10/15/ms-01-c62244365d88822f/sha256-d9e067006ecdea72df5f6c3df96c831f03d60679e46650ea027dea6ee2ec5bb6.txt",
+                "byteLength": 2410,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
+                  "sourceHash": "e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e",
+                  "retrievedAt": "2026-10-15T00:00:49.701456+00:00",
+                  "publisher": "Oklahoma Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.oklegislature.gov/2026/10/15/ms-01-c62244365d88822f/sha256-e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e.bin",
+                    "byteLength": 55253,
+                    "contentType": "application/rtf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a1b39b9ee0aa9a9e/sha256-439b0e091c66c92417c1577208b1af7fcba14e5ba09afc245acc7c565e272b28.txt",
+              "byteLength": 1879,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+                "sourceHash": "92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b",
+                "retrievedAt": "2026-10-14T23:52:27.656067+00:00",
+                "publisher": "Oklahoma Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a1b39b9ee0aa9a9e/sha256-92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b.pdf",
+                  "byteLength": 1069017,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -5398,13 +5548,147 @@
         "The Cleveland County Election Board’s official November 3, 2026 sample ballot supplies all nine statewide judicial-retention names and exact questions.",
         "Unopposed candidates do not appear on an Oklahoma ballot, according to the State Election Board. Unopposed offices are excluded from this ballot projection.",
         "State Question 845 uses the Secretary of State’s August 13 corrected CLEAN final ballot title. The county list labels its legislative referendum 378; the State Election Board’s question page and corrected final title identify referendum 379."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ok-2026-general-state-question-845",
+          "whatItDoes": "A Joint Resolution directing the Secretary of State\nto refer to the people for their approval or\nrejection a proposed amendment to Section 3 of\nArticle VII-B of the Constitution of the State of\nOklahoma; updating references to congressional\ndistricts; modifying provisions related to terms of\noffice;",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ok-2026-general-state-question-845#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.  The Secretary of State shall refer to the people for\ntheir approval or rejection, as and in the manner provided by law,\nthe following proposed amendment to Section 3 of Article VII-B of\nthe Constitution of the State of Oklahoma to read as follows:"
+            },
+            {
+              "id": "ok-2026-general-state-question-845#section-2",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  (a)  There is established as a part of the Judicial\nDepartment a Judicial Nominating Commission of fifteen (15) members,\nto consist of:\n\n(1)  six members to be appointed by the Governor, which shall\ninclude at least one from each congressional district <del>established by</del>"
+            },
+            {
+              "id": "ok-2026-general-state-question-845#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.  The Ballot Title for the proposed Constitutional\namendment as set forth in SECTION 1 of this resolution shall be in\nthe following form:\nBALLOT TITLE\nLegislative Referendum No. ____\nState Question No. ____\nTHE GIST OF THE PROPOSITION IS AS FOLLOWS:"
+            },
+            {
+              "id": "ok-2026-general-state-question-845#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3.  The Chief Clerk of the House of Representatives,\nimmediately after the passage of this resolution, shall prepare and\nfile one copy thereof, including the Ballot Title set forth in\nSECTION 2 hereof, with the Secretary of State and one copy with the\nAttorney General."
+            }
+          ],
+          "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
+          "sourceHash": "4920162dc94161ccd2e3c49b899289695a3979a49a8448fad7fbd8047c2c0b44",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:11.719636+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ok-2026-general-state-question-847",
+          "whatItDoes": "A Joint Resolution directing the Secretary of State\nto refer to the people for their approval or\nrejection proposed amendments to Section 8B and\nSection 8C of Article X of the Oklahoma Constitution,\nwhich relate to the limit on percentage of fair cash\nvalue of real property and limit on the fair cash",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ok-2026-general-state-question-847#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.  The Secretary of State shall refer to the people for\ntheir approval or rejection, as and in the manner provided by law,\nthe following proposed amendments to Section 8B and Section 8C of\nArticle X of the Oklahoma Constitution to read as follows:\n\nSection 8B."
+            },
+            {
+              "id": "ok-2026-general-state-question-847#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.  The Ballot Title for the proposed Constitutional\namendment as set forth in SECTION 1 of this resolution shall be in\nthe following form:\nBALLOT TITLE\nLegislative Referendum No. ____\nState Question No. ____\nTHE GIST OF THE PROPOSITION IS AS FOLLOWS:"
+            },
+            {
+              "id": "ok-2026-general-state-question-847#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3.  The President Pro Tempore of the Senate shall,\nimmediately after the passage of this resolution, prepare and file\none copy thereof, including the Ballot Title set forth in SECTION 2\nhereof, with the Secretary of State and one copy with the Attorney\nGeneral.\nPassed the Senate the 27th day of April, 2026."
+            }
+          ],
+          "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
+          "sourceHash": "0d088866fac80bd63796a289c75e7b015b0712c4a55da41a7f662204e3b29931",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:11.749434+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
+          "sourceHash": "83caa991dbdae5741990470056fdefb4c63370f3a35a0774979a7c2a2a402c1c",
+          "retrievedAt": "2026-10-14T23:57:11.719636+00:00",
+          "publisher": "Oklahoma Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-9636da40efa87579/sha256-83caa991dbdae5741990470056fdefb4c63370f3a35a0774979a7c2a2a402c1c.pdf",
+            "byteLength": 58207,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+          "sourceHash": "7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2",
+          "retrievedAt": "2026-10-14T23:52:27.680218+00:00",
+          "publisher": "Oklahoma Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a4a840ff563f59fb/sha256-7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2.pdf",
+            "byteLength": 2716576,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+          "sourceHash": "92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b",
+          "retrievedAt": "2026-10-14T23:52:27.656067+00:00",
+          "publisher": "Oklahoma Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a1b39b9ee0aa9a9e/sha256-92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b.pdf",
+            "byteLength": 1069017,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
+          "sourceHash": "3ec86aa1c49941fe63fc8435cf8278796a1824a6fb5a82832034f1cd43040d7c",
+          "retrievedAt": "2026-10-14T23:57:11.749434+00:00",
+          "publisher": "Oklahoma Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-cefa0942c547995a/sha256-3ec86aa1c49941fe63fc8435cf8278796a1824a6fb5a82832034f1cd43040d7c.pdf",
+            "byteLength": 75727,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
+          "sourceHash": "e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e",
+          "retrievedAt": "2026-10-15T00:00:49.701456+00:00",
+          "publisher": "Oklahoma Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.oklegislature.gov/2026/10/15/ms-01-c62244365d88822f/sha256-e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e.bin",
+            "byteLength": 55253,
+            "contentType": "application/rtf"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:15:17.641547+00:00",
-    "reviewedBy": "Codex BL-15 official-list completeness correction",
+    "reviewedAt": "2026-10-15T04:14:39.889095+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://oklahoma.gov/elections.html",
@@ -5462,28 +5746,6 @@
         "reviewOutcome": "SUPPORTED"
       },
       {
-        "requestedUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
-        "finalUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
-        "httpStatus": 200,
-        "rawHash": "7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2",
-        "retrievedAt": "2026-10-14T05:05:52.355858+00:00",
-        "publisher": "Oklahoma Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official State Question 845 supporting documents and corrected CLEAN final ballot title filed August 13, 2026; exact printed wording extracted from the corrected CLEAN page.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
-        "finalUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
-        "httpStatus": 200,
-        "rawHash": "92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b",
-        "retrievedAt": "2026-10-14T05:05:54.114889+00:00",
-        "publisher": "Oklahoma Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official State Question 847 supporting documents and certified final ballot title; exact printed wording extracted from its Final Ballot Title page.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
         "requestedUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
         "finalUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
         "httpStatus": 200,
@@ -5514,6 +5776,61 @@
         "publisher": "Cleveland County Election Board",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "The page identifies this domain as the official site of the Cleveland County Election Board, Norman, Oklahoma.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
+        "finalUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:57:11.719636+00:00",
+        "rawHash": "83caa991dbdae5741990470056fdefb4c63370f3a35a0774979a7c2a2a402c1c",
+        "publisher": "Oklahoma Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+        "finalUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.680218+00:00",
+        "rawHash": "7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2",
+        "publisher": "Oklahoma Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+        "finalUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.656067+00:00",
+        "rawHash": "92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b",
+        "publisher": "Oklahoma Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
+        "finalUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:57:11.749434+00:00",
+        "rawHash": "3ec86aa1c49941fe63fc8435cf8278796a1824a6fb5a82832034f1cd43040d7c",
+        "publisher": "Oklahoma Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
+        "finalUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:00:49.701456+00:00",
+        "rawHash": "e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e",
+        "publisher": "Oklahoma Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
         "reviewOutcome": "SUPPORTED"
       }
     ]

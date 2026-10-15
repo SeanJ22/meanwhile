@@ -6422,6 +6422,60 @@
             "verifiedAt": "2026-10-14T05:05:05.741795Z",
             "doorId": "fec-ut-chief",
             "quote": "Shall the Utah Constitution be amended to change how proposed constitutional amendments are published, requiring publication for 60 days immediately before the general election in a manner established by state law instead of in newspapers?\n\nIf voters approve Constitutional Amendment A, state statute would change to require the Lieutenant Governor to publish the full text of all proposed constitutional amendments and other ballot questions from the Legislature, on the Utah Public Notice Website and on the Lieutenant Governor’s website for 60 days immediately before the general election."
+          },
+          "officialText": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+            "sourceHash": "220cb183a93f5c7dc57155fb8d386c944585d8ffcc3605267258f35bad981f31",
+            "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+            "publisher": "Utah Office of the Lieutenant Governor",
+            "vault": {
+              "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-220cb183a93f5c7dc57155fb8d386c944585d8ffcc3605267258f35bad981f31.txt",
+              "byteLength": 2274,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+                "sourceHash": "5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434",
+                "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+                "publisher": "Utah Office of the Lieutenant Governor",
+                "vault": {
+                  "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434.pdf",
+                  "byteLength": 30792889,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+            "sourceHash": "e4cfcc4dfd469b70afe3acbdc5a70f00fba21b2e68cf4188c1d40e386881fb55",
+            "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+            "publisher": "Utah Office of the Lieutenant Governor",
+            "summary": "Current Provisions of the Utah Constitution\nUnder the Utah Constitution, the Legislature may propose a constitutional\namendment with a two-thirds vote in each house. The proposed amendment is\nthen submitted to voters at a general election for approval or rejection.\nBefore the election, the Constitution requires the Legislature to publish the\nproposed amendment in a newspaper in each county for two months.\nEffect of Constitutional Amendment A\nConstitutional Amendment A would require publication of a proposed\nconstitutional amendment for 60 calendar days immediately before the general\nelection in a manner set by state law rather than requiring publication in\nnewspapers for two months immediately before the general election.\nConstitutional Amendment A would not change how constitutional amendments\nare proposed or approved by voters.\n\nImplementing Legislation\nIf voters approve Constitutional Amendment A, H.B. 481, Ballot Proposition\nRequirements, enacted during the 2025 General Session, will take effect. H.B. 481\nrequires the Lieutenant Governor to publish the full text of all proposed\nconstitutional amendments and other ballot questions from the Legislature, on\nthe Utah Public Notice Website and on the Lieutenant Governor’s website for 60\ncalendar days immediately before the general election.",
+            "fiscalImpact": "If approved, Constitutional Amendment A, together with H.B. 481, could reduce\nstate costs by up to $1.4 million every two years, based on recent estimates. The\nsavings from changing the publication requirement for proposed constitutional\namendments from newspapers to publicly operated websites would vary\ndepending on the length of each proposed constitutional amendment and\nnewspaper publication rates.",
+            "passageThreshold": "If the amendment proposed by this joint resolution is approved by a majority of those\nvoting on it at the next regular general election, the amendment shall take effect on\nJanuary 1, 2027.",
+            "argumentsFor": [
+              "The Utah Constitution currently requires public notices about constitutional amendments\nand statewide initiatives to be published in print newspapers in all 29 counties. While that\nmade sense when newspapers were the primary source of information, most Utahns now\nrely on digital sources, mobile devices, and online platforms to stay informed.\nAmendment A updates Utah’s public notice requirements to reflect how people access\ninformation today while preserving transparency and public awareness. Utah taxpayers\ncurrently spend approximately $800,000 to publish these notices in newspapers\nstatewide. Despite that expense, print notices are increasingly unlikely to reach the broad\naudience they once did. Amendment A allows Utah to use modern publication methods\nthat can better connect voters with important election information while reducing\nunnecessary costs.\nWhat Amendment A Does:\nModernizes Utah’s public notices to utilize the most up-to-date and effective\ncommunication methods.\nMaintains the Constitution’s 60-day public notice period before general elections.\nImproves accessibility for voters throughout Utah.\nAllows publication methods to adapt as technology evolves.\nSaves taxpayers approximately $800,000 in publication costs.\nKeeps voters informed while maintaining transparency.\nPublic notice is only effective if people can easily find and review it. Amendment A ensures\ninformation about proposed constitutional amendments remains widely available while\nallowing state law to use communication methods that reflect how Utahns receive\ninformation today. Amendment A does not eliminate public notice. It updates how public\nnotice is delivered. By modernizing an outdated constitutional requirement, Utah can\nmaintain transparency, improve accessibility and save taxpayer dollars.\n\nA FOR vote on Amendment A supports a public notice process designed for today’s Utah\nvoters while preserving the Constitution’s requirement that voters receive notice before a\ngeneral election.\nJoin us in voting FOR Amendment A.\nRep. Anthony Loubet\nSen. Daniel McCay"
+            ],
+            "vault": {
+              "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-e4cfcc4dfd469b70afe3acbdc5a70f00fba21b2e68cf4188c1d40e386881fb55.txt",
+              "byteLength": 7280,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+                "sourceHash": "5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434",
+                "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+                "publisher": "Utah Office of the Lieutenant Governor",
+                "vault": {
+                  "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434.pdf",
+                  "byteLength": 30792889,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -6437,19 +6491,174 @@
             "verifiedAt": "2026-10-14T05:05:05.741795Z",
             "doorId": "fec-ut-chief",
             "quote": "Shall the Utah Constitution be amended to require that citizen-proposed laws that increase taxes compared to existing law be approved by at least 60% of voters, instead of a simple majority?"
+          },
+          "officialText": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+            "sourceHash": "b9287bf30bdedc9ee9d49b0dbed6cd502930c3b144caa38e61176f42767bf3d2",
+            "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+            "publisher": "Utah Office of the Lieutenant Governor",
+            "vault": {
+              "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-b9287bf30bdedc9ee9d49b0dbed6cd502930c3b144caa38e61176f42767bf3d2.txt",
+              "byteLength": 3098,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+                "sourceHash": "5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434",
+                "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+                "publisher": "Utah Office of the Lieutenant Governor",
+                "vault": {
+                  "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434.pdf",
+                  "byteLength": 30792889,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+            "sourceHash": "e930500b8dff8428ecc3d0e19852238932b39e39e97a20054277ca1add16b6cc",
+            "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+            "publisher": "Utah Office of the Lieutenant Governor",
+            "summary": "Current Constitutional Provision\nThe Utah Constitution allows voters to propose and pass a state law through a\nstatewide initiative. Statewide initiatives are voted on by the people, and most are\napproved if a majority (more than half) of voters approve the measure; however,\nstatewide initiatives related to the taking of wildlife require approval by two-thirds of\nvoters.\nEffect of Constitutional Amendment B\nConstitutional Amendment B would increase the voter approval required for\nstatewide initiatives that increase taxes compared to existing law.\nStatewide initiatives voted on after November 1, 2026, would require approval by at\nleast 60% of voters if the statewide initiative:\nCreates a new tax;\nExpands an existing tax to cover additional items or transactions;\nIncreases an existing tax rate; or\nChanges a property tax rate in a way that results in a smaller decrease in the\nproperty tax rate than would occur under existing law.\nConstitutional Amendment B would not change the vote required to approve any\nother type of statewide initiative.",
+            "fiscalImpact": "Enactment of Constitutional Amendment B likely would not materially impact\ncurrent state revenues or expenditures.",
+            "passageThreshold": "If the amendment proposed by this joint resolution is approved by a majority of those\nvoting on it at the next regular general election, the amendment shall take effect on\nNovember 23, 2026.",
+            "argumentsFor": [
+              "Amendment B asks: How easy should it be for your neighbor to raise your taxes?\nAmendment B would require only statewide ballot initiatives that create new taxes,\nincrease existing taxes or expand existing taxes to receive at least 60% voter approval\nbefore becoming law.\nWhy Amendment B Matters\nTaxes affect every Utahn, shaping family budgets, retirement income, businesses,\nhousing costs, the cost of living, and the state’s economy.\nBecause tax increases affect all Utahns, they should be adopted only if there is\nsubstantial support from the voters who ultimately pay them.\nAmendment B requires stronger voter agreement before new taxes are approved.\nWhat Amendment B Does\nRequires statewide tax-increasing ballot initiatives to receive at least 60% voter approval\nbefore becoming law.\nPreserves Utah’s citizen initiative process and voters’ ability to propose measures on the\nballot.\nKeeps the decision in the hands of Utah voters.\nAccountability and Tax Policy\nThe Utah Constitution will still protect the right to propose initiatives, place measures on\nthe ballot and vote directly on public policy questions. Initiatives that increase taxes,\nhowever, deserve extra consideration because they directly affect every Utah taxpayer.\nAmendment B would ensure broad community support for potential tax increases.\nIf elected officials vote to raise taxes, voters know and can hold them accountable at the\nballot box.\nTaxes imposed by elected bodies can be reversed by new legislators at any time, but\nstatewide initiatives operate differently. They are drafted only by proponents of the\nincrease, there is no public input in the details, and cannot be revised or adjusted once\npassed, other than by another costly initiative. Tax increases have long-term consequences\nfor family budgets and the economy, and should require broader public support before\nbecoming law.\nA Higher Bar for Higher Taxes\nThe higher approval threshold is a meaningful and achievable standard. Utah voters have\nsupported funding measures when they believed the benefits justified the costs, and\nmany have received well over 60% of the vote.\nAmendment B does not prevent initiatives with new taxes or tax increases from\nsucceeding. It simply requires proponents to persuade a broader share of voters that a\nproposed tax increase is necessary and beneficial before asking taxpayers to pay more\nfrom their family budgets.\n\nProtecting Utah’s Decision-Making\nAmendment B ensures major tax changes demonstrate broad support among Utah\nvoters. Requiring a 60% vote encourages proponents to build support across communities,\nregions and political viewpoints before a tax increase becomes law.\nThe Choice Belongs to Utah Voters\nAny proposal that will take more money from Utah families, workers and businesses\nshould have widespread agreement from the people who will pay for it.\nAmendment B provides that safeguard by requiring statewide tax-related ballot initiatives\nearn 60% voter approval before becoming law. The amendment does not prevent voters\nfrom approving tax hikes they support. It simply ensures proposals affecting taxpayers\nstatewide have broad backing before they take effect.\nA vote FOR on Amendment B means higher standards for higher taxes.\nSen. Lincoln Fillmore\nRep. Jason Kyle",
+              "Amendment B is straightforward: before outside interests can raise your taxes through a\nballot initiative, they should have to convince a broad majority of Utahns — not just 50%\nplus one.\nThe opposition calls this a “power grab” But the only power Amendment B limits is the\nability of well-funded campaigns — often backed by out-of-state interests — to increase\ntaxes on every Utah family with a razor-thin majority. That’s not a power grab. That’s\nprotection.\nAmendment B does not eliminate the initiative process or restrict anyone’s right to vote. It\nsimply requires that measures raising taxes earn 60% support before they take effect.\nOther states have learned this lesson the hard way: bare-majority tax initiatives have\npassed with narrow support, locked in lasting tax increases that proved nearly impossible\nto reverse, and left families and businesses paying the price for years. Utah can choose a\nbetter standard.\nYes, Amendment B sets a higher bar for ballot initiatives than for the legislature — and\nthat’s exactly the point. Legislators who raise your taxes face voters at the next election.\nThey can be replaced. A tax increase passed by initiative faces no such accountability: it is\ndrafted solely by its proponents, bypasses the normal legislative process, and once passed,\ncan only be undone by another costly campaign. A less accountable process deserves a\nhigher threshold. That’s not unfair; that’s common sense.\nAmendment B protects your voice, your vote and your wallet.\n\nVote FOR on Amendment B.\nSen. Lincoln Fillmore\nRep. Jason Kyle"
+            ],
+            "argumentsAgainst": [
+              "Vote NO on SJR 2.\nSJR 2 is an attack on ballot initiatives and our constitutional ability to govern\nourselves. Utahns deserve the same rules that apply to their elected officials. The Utah\nConstitution protects the people’s power to reform their government and make laws\ndirectly through the initiative process. SJR 2 would make that process harder by requiring\n60% voter approval for certain citizen initiatives, setting a precedent that could eventually\nchange the entire initiative process. The Legislature can often pass similar measures with a\nsimple majority; voters should be held to the same standard. Utah's initiative process exists\nso that citizens can act when they believe the government has failed to do so. We should\nnot make that constitutional right harder to use. Do not be fooled, this is a power grab.\nVote NO on SJR 2.\nSenator Luz Escamilla & Representative Angela Romero",
+              "Amendment B (SJR 2) asks: Should elected officials have more power than you?\nThe argument for Amendment B (SJR 2) is built on the lie that Utah voters cannot be\ntrusted to make decisions about taxes unless politicians raise the bar.\nUtahns already weigh the costs and benefits of ballot initiatives before voting. Requiring\n60% approval for tax-related initiatives does not create accountability. It creates an unequal\nsystem where voters face stricter rules than the Legislature itself. Lawmakers can raise\ntaxes with a simple majority. The people should have that same power.\nSupporters of Amendment B (SJR 2) claim initiatives lack public input, but citizen-led\ninitiatives are among the most public forms of lawmaking. They require collecting\nthousands of signatures, organizing across the state, and persuading a majority of voters.\nThat is direct democracy in action.\nAmendment B (SJR 2) also creates a dangerous precedent. It carves out one category of\npolicy and subjects it to a higher standard, opening the door for future lawmakers to chip\naway at the initiative process issue by issue. Today it is taxes. Tomorrow it could be\nredistricting, healthcare, education, or public safety.\nThis amendment is not about protecting taxpayers. It is about protecting legislative power.\nUtah’s Constitution gives citizens the right to act when their government will not.\nAmendment B (SJR 2) weakens that right.\n\nVOTE NO ON AMENDMENT B (SJR 2).\nSenator Luz Escamilla & Representative Angela Romero"
+            ],
+            "vault": {
+              "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-e930500b8dff8428ecc3d0e19852238932b39e39e97a20054277ca1add16b6cc.txt",
+              "byteLength": 12107,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+                "sourceHash": "5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434",
+                "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+                "publisher": "Utah Office of the Lieutenant Governor",
+                "vault": {
+                  "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434.pdf",
+                  "byteLength": 30792889,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
       "coverageNotes": [
         "The September 21 amended certification lists all statewide and legislative contests on the November 3 general-election ballot; three certified write-in candidates are included. The certification states that no statewide ballot propositions qualified and separately certifies Constitutional Amendments A and B. County and local contests and judicial district retentions are outside this statewide and legislative projection."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ut-ltgov-2026-amendment-a",
+          "whatItDoes": "Proposal to Amend Utah Constitution - Publication Amendments\n2025 General Session\nUtah Constitution Sections Affected:\nAMENDS:\nARTICLE XXIII, SECTION 1\nBe it resolved by the Legislature of the state of Utah, two-thirds of all members elected\nto each of the two houses voting in favor thereof:\nSection 1.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ut-ltgov-2026-amendment-a#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. It is proposed to amend Utah Constitution, Article XXIII, Section 1 to read\nArticle XXIII, Section 1. [Amendments: proposal, election.]\nAny amendment or amendments to this Constitution may be proposed in either house\nof the Legislature, and if two-thirds of all the members elected to each of the two"
+            },
+            {
+              "id": "ut-ltgov-2026-amendment-a#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Section 2. Submittal to voters.\n<u>The lieutenant governor is directed to submit this proposed amendment to the voters</u>\n<u>of the state at the next regular general election in the manner provided by law.</u>"
+            },
+            {
+              "id": "ut-ltgov-2026-amendment-a#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "Section 3. Contingent effective date.\n<u>If the amendment proposed by this joint resolution is approved by a majority of those</u>\n<u>voting on it at the next regular general election, the amendment shall take effect on</u>\n<u>January 1, 2027.</u>"
+            }
+          ],
+          "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+          "sourceHash": "220cb183a93f5c7dc57155fb8d386c944585d8ffcc3605267258f35bad981f31",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:36.891158+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ut-ltgov-2026-amendment-b",
+          "whatItDoes": "Proposal to Amend Utah Constitution - Statewide Initiatives\n2025 General Session\nUtah Constitution Sections Affected:\nAMENDS:\nARTICLE VI, SECTION 1\nBe it resolved by the Legislature of the state of Utah, two-thirds of all members elected\nto each of the two houses voting in favor thereof:\nSection 1.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ut-ltgov-2026-amendment-b#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. It is proposed to amend Utah Constitution, Article VI, Section 1 to read\nArticle VI, Section 1 Effective 11/23/26. [Power vested in Senate, House, and People.]\n(1) The Legislative power of the State shall be vested in:\n(a) a Senate and House of Representatives which shall be designated the Legislature of"
+            },
+            {
+              "id": "ut-ltgov-2026-amendment-b#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Section 2. Submittal to voters.\nThe lieutenant governor is directed to submit this proposed amendment to the voters\nof the state at the next regular general election in the manner provided by law."
+            },
+            {
+              "id": "ut-ltgov-2026-amendment-b#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "Section 3. Contingent effective date.\nIf the amendment proposed by this joint resolution is approved by a majority of those\nvoting on it at the next regular general election, the amendment shall take effect on\nNovember 23, 2026."
+            }
+          ],
+          "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+          "sourceHash": "b9287bf30bdedc9ee9d49b0dbed6cd502930c3b144caa38e61176f42767bf3d2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:36.891158+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+          "sourceHash": "5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434",
+          "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
+          "publisher": "Utah Office of the Lieutenant Governor",
+          "vault": {
+            "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434.pdf",
+            "byteLength": 30792889,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:05:05.741795Z",
-    "reviewedBy": "BL-16 source conversion",
+    "reviewedAt": "2026-10-15T04:14:40.022534+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://vote.utah.gov/",
@@ -6496,10 +6705,21 @@
         "finalUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
         "httpStatus": 200,
         "rawHash": "5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434",
-        "retrievedAt": "2026-10-14T05:05:05.741795Z",
+        "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Utah Office of the Lieutenant Governor",
-        "reviewedEvidence": "Official election-office file converted locally; certification candidate names optically extracted and checked against all printed candidate rows."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

@@ -6147,17 +6147,225 @@
             "verifiedAt": "2026-10-14T05:05:14.898442Z",
             "doorId": "fec-ky-chief",
             "quote": "Are you in favor of limiting a Governor's ability to grant pardons or commute sentences by prohibiting him or her from granting pardons or commuting sentences during the time period beginning 60 days prior to the general election at which the Governor is elected, and ending when the Governor is sworn in for that term by amending the Constitution of Kentucky as stated below?"
+          },
+          "officialText": {
+            "sourceUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
+            "sourceHash": "21c38eb56d03eec5e144a74ced706dd0e48058a2b0e0d1cc3bfc22ff3d059c72",
+            "retrievedAt": "2026-10-14T23:52:28.017078+00:00",
+            "publisher": "Kentucky Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-9234de83dadb11fe/sha256-21c38eb56d03eec5e144a74ced706dd0e48058a2b0e0d1cc3bfc22ff3d059c72.txt",
+              "byteLength": 3831,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
+                "sourceHash": "075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f",
+                "retrievedAt": "2026-10-14T23:52:28.017078+00:00",
+                "publisher": "Kentucky Legislative Research Commission",
+                "vault": {
+                  "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-9234de83dadb11fe/sha256-075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f.pdf",
+                  "byteLength": 22080,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+            "sourceHash": "084b21ba603e798be4fdf303b65f0f427902b177f40baaa4bf2b3db379257fd3",
+            "retrievedAt": "2026-10-14T23:53:06.857729+00:00",
+            "publisher": "Kentucky Secretary of State",
+            "summary": "Are you in favor of limiting a Governor's ability to grant pardons or commute sentences by prohibiting him or her from granting pardons or commuting sentences during the time period beginning 60 days prior to the general election at which the Governor is elected, and ending when the Governor is sworn in for that term by amending the Constitution of Kentucky as stated below?",
+            "passageThreshold": "If it shall appear that a majority of the votes cast for and against an amendment at said election was for the amendment, then the same shall become a part of the Constitution of this Commonwealth, and shall be so proclaimed by the Governor, and published in such manner as the General Assembly may direct.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://apps.legislature.ky.gov/Law/Constitution/Constitution/ViewConstitution?rsn=294",
+              "sourceHash": "46c9552292325a69723e131688c1b96625cfec9394fa9f9e48730e7369c83f35",
+              "retrievedAt": "2026-10-14T23:59:44.155018+00:00",
+              "publisher": "Kentucky Legislative Research Commission",
+              "vault": {
+                "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-beef9786da9473a2/sha256-46c9552292325a69723e131688c1b96625cfec9394fa9f9e48730e7369c83f35.txt",
+                "byteLength": 2343,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://apps.legislature.ky.gov/Law/Constitution/Constitution/ViewConstitution?rsn=294",
+                  "sourceHash": "43ce7c5e424dad753ec6ac4fec9be196ba2fbd314b069c03b15e44b11dadb7cf",
+                  "retrievedAt": "2026-10-14T23:59:44.155018+00:00",
+                  "publisher": "Kentucky Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-beef9786da9473a2/sha256-43ce7c5e424dad753ec6ac4fec9be196ba2fbd314b069c03b15e44b11dadb7cf.pdf",
+                    "byteLength": 6252,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://apps.legislature.ky.gov/recorddocuments/note/26RS/sb10/LM.pdf",
+              "sourceHash": "683589b861b9b47beeba0a294008f597b4f330990cab6f1133eca294ffd65922",
+              "retrievedAt": "2026-10-15T00:13:09.961105+00:00",
+              "publisher": "Kentucky Legislative Research Commission",
+              "vault": {
+                "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/15/ms-01-d4e54623e2d3dd7b/sha256-683589b861b9b47beeba0a294008f597b4f330990cab6f1133eca294ffd65922.txt",
+                "byteLength": 3385,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://apps.legislature.ky.gov/recorddocuments/note/26RS/sb10/LM.pdf",
+                  "sourceHash": "a06c4b9b2caaec4daebf44038075b62783847e9743df828969814e990485c6ba",
+                  "retrievedAt": "2026-10-15T00:13:09.961105+00:00",
+                  "publisher": "Kentucky Legislative Research Commission",
+                  "vault": {
+                    "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/15/ms-01-d4e54623e2d3dd7b/sha256-a06c4b9b2caaec4daebf44038075b62783847e9743df828969814e990485c6ba.pdf",
+                    "byteLength": 87100,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "The costs of SB 10 GA to local governments due to adding a constitutional\n  amendment to a ballot would be minimal.\n\n  Section 256 of the Kentucky Constitution specifies that constitutional amendments are\n  only added to the ballot for the general election in even-numbered years (“next general\n  election for members of the House of Representatives”). Therefore, the constitutional\n  amendment would be submitted to the voters in November, 2026.\n\n\n\n                                             Page 1\n\f  Balloting and publishing proposed constitutional amendments is a regular duty of county\n  clerks, paid for by the county fiscal court. According to information received in early 2020\n  from Harp Enterprises, a vendor which provides electronic voting machines to almost 100\n  Kentucky counties, there are additional programming costs associated with adding a new\n  category (local option question or constitutional amendment) to the ballot on an already\n  scheduled statewide election. For example, the cost to add a new category to the ballot for\n  Lexington-Fayette Urban County Government, with 286 precincts, has recently been\n  estimated at between $3,500 and $4,500, and for Franklin County, with 44 precincts, the\n  cost has been estimated at between $1,700 and $2,500.\n\n  Ballot printing costs are also a factor in election expenses. If the proposed amendment\n  results in additional pages needed for the ballot, that would be an additional cost to the\n  county clerk’s office.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.ky.gov/2026/10/14/ms-01-fc659bda06595557/sha256-084b21ba603e798be4fdf303b65f0f427902b177f40baaa4bf2b3db379257fd3.txt",
+              "byteLength": 1642,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+                "sourceHash": "6f92a581df88ec616d6ab1d4745471193202e2384c5d951df610c7755c90c2f8",
+                "retrievedAt": "2026-10-14T23:53:06.857729+00:00",
+                "publisher": "Kentucky Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.ky.gov/2026/10/14/ms-01-fc659bda06595557/sha256-6f92a581df88ec616d6ab1d4745471193202e2384c5d951df610c7755c90c2f8.html",
+                  "byteLength": 67911,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [
+        {
+          "contestId": "ky-sos-2026-constitutional-amendment-1",
+          "whatItDoes": "AN ACT proposing to amend Section 77 of the Constitution of Kentucky relating to limiting the Governor's\nability to grant pardons and commute sentences.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ky-sos-2026-constitutional-amendment-1#part-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.   Are you in favor of limiting a Governor's ability to grant pardons or commute sentences by\nprohibiting him or her from granting pardons or commuting sentences during the time period beginning 60 days prior"
+            },
+            {
+              "id": "ky-sos-2026-constitutional-amendment-1#part-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2.   It is proposed that Section 77 of the Constitution of Kentucky be amended to read as follows:\n(1)\nThe Governor<del>[He]</del> shall have power to:\n(a)\nRemit fines and forfeitures; and<del>[,]</del>\n(b)\nCommute sentences and<del>[,]</del> grant reprieves and pardons, except:\n1.\nIn case of impeachment;"
+            },
+            {
+              "id": "ky-sos-2026-constitutional-amendment-1#part-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.   This amendment shall be submitted to the voters of the Commonwealth for their ratification or\nrejection at the time and in the manner provided for under Sections 256 and 257 of the Constitution, KRS 118.415,\nand Sections 4 and 5 of this Act."
+            },
+            {
+              "id": "ky-sos-2026-constitutional-amendment-1#part-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4.   Notwithstanding any provision of KRS 118.415 to the contrary, the Secretary of State shall\ncause the entirety of the question in Section 1 of this Act and the entirety of the proposed amendment to the"
+            },
+            {
+              "id": "ky-sos-2026-constitutional-amendment-1#part-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5.",
+              "what": "Section 5.   Notwithstanding any provision of KRS 118.415 to the contrary, the Secretary of State, not later\nthan the second Monday after the second Tuesday in August preceding the next regular election at which members of"
+            }
+          ],
+          "sourceUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
+          "sourceHash": "21c38eb56d03eec5e144a74ced706dd0e48058a2b0e0d1cc3bfc22ff3d059c72",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:28.017078+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://apps.legislature.ky.gov/recorddocuments/note/26RS/sb10/LM.pdf",
+          "sourceHash": "a06c4b9b2caaec4daebf44038075b62783847e9743df828969814e990485c6ba",
+          "retrievedAt": "2026-10-15T00:13:09.961105+00:00",
+          "publisher": "Kentucky Legislative Research Commission",
+          "vault": {
+            "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/15/ms-01-d4e54623e2d3dd7b/sha256-a06c4b9b2caaec4daebf44038075b62783847e9743df828969814e990485c6ba.pdf",
+            "byteLength": 87100,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+          "sourceHash": "6f92a581df88ec616d6ab1d4745471193202e2384c5d951df610c7755c90c2f8",
+          "retrievedAt": "2026-10-14T23:53:06.857729+00:00",
+          "publisher": "Kentucky Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.ky.gov/2026/10/14/ms-01-fc659bda06595557/sha256-6f92a581df88ec616d6ab1d4745471193202e2384c5d951df610c7755c90c2f8.html",
+            "byteLength": 67911,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
+          "sourceHash": "075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f",
+          "retrievedAt": "2026-10-14T23:52:28.017078+00:00",
+          "publisher": "Kentucky Legislative Research Commission",
+          "vault": {
+            "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-9234de83dadb11fe/sha256-075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f.pdf",
+            "byteLength": 22080,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://apps.legislature.ky.gov/Law/Constitution/Constitution/ViewConstitution?rsn=294",
+          "sourceHash": "43ce7c5e424dad753ec6ac4fec9be196ba2fbd314b069c03b15e44b11dadb7cf",
+          "retrievedAt": "2026-10-14T23:59:44.155018+00:00",
+          "publisher": "Kentucky Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-beef9786da9473a2/sha256-43ce7c5e424dad753ec6ac4fec9be196ba2fbd314b069c03b15e44b11dadb7cf.pdf",
+            "byteLength": 6252,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:12:46.547738Z",
-    "reviewedBy": "BL-12 scripted official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:39.828826+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://web.sos.ky.gov/CandidateFilings/",
@@ -6180,16 +6388,6 @@
         "reviewedEvidence": "The official chief-election-office door links the public Candidate Filings application and the 2026 Constitutional Amendments page."
       },
       {
-        "requestedUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
-        "finalUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
-        "httpStatus": 200,
-        "rawHash": "73c64c0da8bd610cf6e96f2a9f52adbbcbeee81d9eee47594cfd6ce72fbf251a",
-        "retrievedAt": "2026-10-14T05:05:14.898442Z",
-        "publisher": "Kentucky Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "2026 Constitutional Amendments page prints the statewide amendment ballot question and complete proposed Section 77 text, and links Senate Bill 10."
-      },
-      {
         "requestedUrl": "https://apps.legislature.ky.gov/record/26rs/sb10.html",
         "finalUrl": "https://apps.legislature.ky.gov/record/26rs/sb10.html",
         "httpStatus": 200,
@@ -6200,14 +6398,58 @@
         "reviewedEvidence": "Official enacted Senate Bill 10 record links Acts Chapter 12, containing the full amendment and its ballot language."
       },
       {
+        "requestedUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+        "finalUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:53:06.857729+00:00",
+        "rawHash": "6f92a581df88ec616d6ab1d4745471193202e2384c5d951df610c7755c90c2f8",
+        "publisher": "Kentucky Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
         "requestedUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
         "finalUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:28.017078+00:00",
         "rawHash": "075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f",
-        "retrievedAt": "2026-10-14T05:12:02.223807Z",
         "publisher": "Kentucky Legislative Research Commission",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Acts Chapter 12 is the enacted full constitutional amendment and submission to voters."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://apps.legislature.ky.gov/Law/Constitution/Constitution/ViewConstitution?rsn=294",
+        "finalUrl": "https://apps.legislature.ky.gov/Law/Constitution/Constitution/ViewConstitution?rsn=294",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:59:44.155018+00:00",
+        "rawHash": "43ce7c5e424dad753ec6ac4fec9be196ba2fbd314b069c03b15e44b11dadb7cf",
+        "publisher": "Kentucky Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://apps.legislature.ky.gov/recorddocuments/note/26RS/sb10/LM.pdf",
+        "finalUrl": "https://apps.legislature.ky.gov/recorddocuments/note/26RS/sb10/LM.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:13:09.961105+00:00",
+        "rawHash": "a06c4b9b2caaec4daebf44038075b62783847e9743df828969814e990485c6ba",
+        "publisher": "Kentucky Legislative Research Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

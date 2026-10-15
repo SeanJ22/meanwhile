@@ -1,3 +1,4 @@
+import { measureReference } from "./helpers/measure-reference.ts";
 import { fixturePlaybooks } from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -12,6 +13,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { MeasureRecord } from "../lib/ballot/measure-records.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { runMeasureTranslation } from "../lib/translate/runtime.ts";
+import { readSpendWindow } from "../lib/control-plane/spend-window.ts";
 
 const now = "2026-10-05T18:00:00Z";
 const source = "Proposition 12. The levy funds library services. A YES vote adopts the levy. A NO vote keeps the current levy.";
@@ -28,14 +30,18 @@ const response = (request: ModelRequest, input: unknown): ModelResponse => ({ mo
 
 test("the guarded writer and independent checker publish exact source-supported meanings into the typed reader", async () => {
   const requests: ModelRequest[] = [];
-  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+  const repos = createMemoryRepositories();
+  const result = await translateMeasure({ repos, evidence, sourceReference: measureReference(evidence), subject, now,
     transportFor: () => async request => { requests.push(request); return response(request, requests.length === 1 ? { measure, sentences } : { checked }); } });
   assert.equal(requests.length, 2); assert.notEqual(requests[0].model, requests[1].model);
-  assert.equal(translationRecordIssue(result.record), null);
+  assert.equal(translationRecordIssue(result.record, evidence.text), null);
+  assert.equal("sourceText" in result.record, false);
+  assert.deepEqual(result.record.sourceReference, measureReference(evidence));
   assert.ok(result.usage.every(row => typeof row.usd === "number"));
+  assert.equal((await readSpendWindow(repos, new Date().toISOString())).length, 2, "both model calls count immediately against the shared spend window");
   const store = new MemoryRoutineDataStore();
   const published = await publishMeasureTranslation(store, { record: result.record, now,
-    captures: [{ evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }] });
+    captures: [{ evidence, sourceReference: measureReference(evidence), observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }] });
   assert.ok(published.promoted, JSON.stringify(published.candidate));
   assert.equal(published.readerReadback?.status, "PASS");
   const held = await readTranslations([subject.ocdId], { store, now, bypassCache: true });
@@ -46,12 +52,13 @@ test("the guarded writer and independent checker publish exact source-supported 
 });
 
 test("an unsupported writer sentence or failed independent check never publishes a translation", async () => {
-  for (const failure of ["quote", "checker", "truncation", "identity"]) {
+  for (const failure of ["quote", "checker", "truncation", "identity", "arguments"]) {
     let calls = 0;
-    await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+    await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, sourceReference: measureReference(evidence), subject, now,
       transportFor: () => async request => {
         calls++;
-        if (calls === 1) return { ...response(request, { measure: failure === "identity" ? { ...measure, contestId: "other" } : measure,
+        if (calls === 1) return { ...response(request, { measure: failure === "identity" ? { ...measure, contestId: "other" }
+          : failure === "arguments" ? { ...measure, argumentsFor: ["An invented recommendation."] } : measure,
           sentences: failure === "quote" ? [{ ...sentences[0], quote: "Invented benefit." }, ...sentences.slice(1)] : sentences }),
           ...(failure === "truncation" ? { stop_reason: "max_tokens" } : {}) };
         return response(request, { checked: checked.map((row, at) => ({ ...row, supported: failure !== "checker" || at !== 0 })) });
@@ -62,7 +69,7 @@ test("an unsupported writer sentence or failed independent check never publishes
 
 test("both model calls retain the existing budget transport and a refusal prevents further work", async () => {
   let calls = 0;
-  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, sourceReference: measureReference(evidence), subject, now,
     transportFor: () => async () => { calls++; throw new Error("DENIED_BY_POLICY: existing budget paused"); } }), /existing budget paused/);
   assert.equal(calls, 1);
 });
@@ -74,7 +81,7 @@ test("the next translator start reads the latest Bank playbook and distinct allo
     payload: { text: "Keep every material exception.", model: defaults.checkerModel } });
   await writeFieldManual(repos, [entry], now);
   let system = "";
-  await translateMeasure({ repos, evidence, subject, now, transportFor: () => async request => {
+  await translateMeasure({ repos, evidence, sourceReference: measureReference(evidence), subject, now, transportFor: () => async request => {
     system = request.system[0].text;
     return response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked });
   } });
@@ -87,8 +94,8 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
   const repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
   let calls = 0, rejectCheck = false;
   const run = (primary = evidence) => runMeasureTranslation({ repos, store, subject, now, primary: {
-    evidence: primary, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE",
-  }, captures: [{ evidence: primary, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }],
+    evidence: primary, sourceReference: measureReference(primary), observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE",
+  }, captures: [{ evidence: primary, sourceReference: measureReference(primary), observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }],
   transportFor: () => async request => {
     calls++;
     return response(request, request.tools[0].name === "write_measure_translation"
@@ -109,10 +116,10 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
 
 test("a translation for another exact district remains separate and same-place publication retains another checked subject", async () => {
   const store = new MemoryRoutineDataStore(), repos = createMemoryRepositories();
-  const translate = () => translateMeasure({ repos, subject, evidence, now,
+  const translate = () => translateMeasure({ repos, subject, evidence, sourceReference: measureReference(evidence), now,
     transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked }) });
   const { record } = await translate();
-  const captures = [{ evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" as const }];
+  const captures = [{ evidence, sourceReference: measureReference(evidence), observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" as const }];
   await publishMeasureTranslation(store, { record, captures, now });
   const other = { ...record, id: "translation:measure:13", subjectId: "measure:13", measure: { ...measure, contestId: "measure:13" } };
   const published = await publishMeasureTranslation(store, { record: other, captures, now });
@@ -136,7 +143,7 @@ test("officially numbered parts retain their reaction identities on a checked re
     { field: `parts.${part.id}.label`, text: part.label, quote: part.label },
     { field: `parts.${part.id}.what`, text: part.what, quote: part.what },
   ])];
-  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence: primary, subject: { ...subject, prior: proposed }, now,
+  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence: primary, sourceReference: measureReference(primary), subject: { ...subject, prior: proposed }, now,
     transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation"
       ? { measure: proposed, sentences: support } : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) }) });
   assert.deepEqual(result.record.measure.parts.map(part => [part.id, part.number]), parts.map(part => [part.id, part.number]));
@@ -146,7 +153,7 @@ test("an independent checker cannot authorize an invented official part number",
   const part = { id: `${measure.contestId}#funding`, number: "7", kind: "FUNDING" as const, label: "Funding", what: measure.whatItDoes };
   const support = [...sentences, { field: `parts.${part.id}.label`, text: part.label, quote: "funds" },
     { field: `parts.${part.id}.what`, text: part.what, quote: part.what }];
-  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, sourceReference: measureReference(evidence), subject, now,
     transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation"
       ? { measure: { ...measure, parts: [part] }, sentences: support }
       : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) }) }), /unique numbering/);
@@ -156,7 +163,7 @@ test("a rewrite cannot drop or move a prior reaction identity to another officia
   const prior = { ...measure, parts: [{ id: `${measure.contestId}#funding`, number: "1", kind: "FUNDING" as const, label: "Funding", what: measure.whatItDoes }] };
   for (const parts of [[], [{ ...prior.parts[0], number: "2" }]]) {
     let calls = 0;
-    await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject: { ...subject, prior }, now,
+    await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, sourceReference: measureReference(evidence), subject: { ...subject, prior }, now,
       transportFor: () => async request => { calls++; return response(request, { measure: { ...measure, parts }, sentences }); } }), /reaction identity/);
     assert.equal(calls, 1, "unsupported identity rewrites stop before another paid model call");
   }

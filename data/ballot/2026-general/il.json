@@ -7445,10 +7445,24 @@
         }
       ],
       "measures": [],
-      "absences": [],
+      "absences": [
+        {
+          "ocdId": "ocd-division/country:us/state:il",
+          "divisionVintage": "2026",
+          "statement": "The certified complete November 3, 2026 specimen ballots contain no statewide ballot measures. The printed public questions apply to named local jurisdictions.",
+          "provenance": {
+            "sourceUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+            "sourceOrg": "Peoria County Board of Election Commissioners",
+            "collectedAt": "2026-10-15T00:02:46.226373+00:00",
+            "verifiedAt": "2026-10-15T00:07:18.572358+00:00",
+            "doorId": "fec-il-chief",
+            "quote": "I HEREBY CERTIFY THE FOLLOWING"
+          }
+        }
+      ],
       "coverageNotes": [
-        "The Illinois State Board of Elections public root and general-election candidate-list pages returned HTTP 403 with the statement: Please contact the site owner for access. The statewide certified candidate file and statewide measure list remain unacquired; this is an access gap, not a statement that certification has not occurred.",
-        "Lake and DuPage County referenda publications list county and local questions. They do not establish the statewide measure inventory; no statewide measure absence is claimed.",
+        "The Illinois State Board of Elections public root and general-election candidate-list pages returned HTTP 403 with the statement: Please contact the site owner for access. The statewide certified candidate file remains unacquired; this is an access gap, not a statement that certification has not occurred.",
+        "The certified complete November 3, 2026 Peoria County and City of Rockford specimen ballots contain no statewide measure. Peoria’s seven public questions and Rockford’s three Winnebago County advisory questions are expressly local. These complete certified ballots establish the statewide question inventory; local-only referenda lists do not establish that inventory on their own.",
         "Named write-in candidates on county-only filing lists are not included in statewide or district-wide contests because their qualification beyond the publishing county has not been established. The statewide write-in inventory remains unacquired. The unnamed write-in lines and No Candidate placeholders on specimen ballots are not candidate names.",
         "The Chicago Board's February 25, 2020 and May 11, 2021 meeting minutes confirm its Azure Government website hosting and storage. Publisher-produced HTML from its .gov site directly loads a logo from the same cboeprod.blob.core.usgovcloudapi.net host as the candidate PDF; that HTML returned HTTP 404 and is described separately from the positive source receipts.",
         "Governor and Lieutenant Governor are one vote-for-one ticket contest on the certified Rockford specimen ballot. Each ticket retains both printed candidate names and their shared party.",
@@ -7459,13 +7473,37 @@
         "House 118 spans Alexander, Jackson, Pulaski, Union and Williamson counties. The acquired Williamson ballot supplies candidate facts only. Public Williamson and Pulaski services list primary-election data, Jackson’s acquired November notice lists offices without nominees, the Union public results door returned 500 and its candidate-filings door required login, and Alexander’s acquired clerk page supplied no qualifying general-election inventory. The complete official district candidate set remains unacquired.",
         "All 17 U.S. House districts are acquired. State Senate districts 27 and State House districts 2, 17, 30, 37, 38, 44, 53, 54, 63, 80, 86, 97, 98, 99, 103, 104 remain unacquired after searches of public State Board and county nominee inventories.",
         "The Chicago Board candidate list is dated August 19, 2026 and lists whole district offices intersecting Chicago. Candidate rows are included; Removed and Withdrawn rows are excluded."
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+          "sourceHash": "ffc5b022b726edce4c24bba746ba339de4d47bd798213b7f1b2666885c518e70",
+          "retrievedAt": "2026-10-14T16:55:31.306654+00:00",
+          "publisher": "Peoria County Board of Election Commissioners",
+          "vault": {
+            "key": "project/freshness/source/www.peoriaelections.gov/2026/10/14/ms-01-53ffa34beadd8248/sha256-ffc5b022b726edce4c24bba746ba339de4d47bd798213b7f1b2666885c518e70.pdf",
+            "byteLength": 614694,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
+          "sourceHash": "b7788f7de06ebda208a88670fa5d50d36d1371d96a30b4b28ef81d64ad456d47",
+          "retrievedAt": "2026-10-14T05:05:15Z",
+          "publisher": "City of Rockford Board of Election Commissioners",
+          "vault": {
+            "key": "project/freshness/source/www.voterockfordil.gov/2026/10/14/ms-01-ce5e22e0c1c6c9e3/sha256-b7788f7de06ebda208a88670fa5d50d36d1371d96a30b4b28ef81d64ad456d47.pdf",
+            "byteLength": 114772,
+            "contentType": "application/pdf"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T18:12:22Z",
-    "reviewedBy": "codex:BL-12:Illinois",
+    "reviewedAt": "2026-10-15T04:14:39.811668+00:00",
+    "reviewedBy": "Codex MS-01 official measure inventory review",
     "sources": [
       {
         "requestedUrl": "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
@@ -7475,18 +7513,7 @@
         "retrievedAt": "2026-10-14T05:05:15Z",
         "publisher": "City of Rockford Board of Election Commissioners",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Converted 15 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
-      },
-      {
-        "requestedUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
-        "finalUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
-        "httpStatus": 200,
-        "rawHash": "ffc5b022b726edce4c24bba746ba339de4d47bd798213b7f1b2666885c518e70",
-        "retrievedAt": "2026-10-14T16:55:31.306654+00:00",
-        "publisher": "Peoria County Board of Election Commissioners",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "November 3, 2026 certified countywide master specimen publishes all Peoria County district contests, including both congressional districts and six numbered House districts, with Precinct SPECIMEN BALLOT rather than a voter precinct. Census official full district/county relationship table establishes all House District 92 land and water lie in Peoria County, so this countywide publication covers the entire contest territory. Printed House92 candidate and party exactly match the held candidate."
+        "reviewedEvidence": "Converted 15 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained. Identical raw bytes were reacquired on 2026-10-15T00:03:36.399289+00:00. Complete certified specimen ballot explicitly declares itself a complete set of ballots for the November 3, 2026 General Election. The three public questions are expressly for the electors of Winnebago County; no statewide question is printed."
       },
       {
         "requestedUrl": "https://shelbycounty-il.gov/documents/CountyClerk/Election%20information/2026%20General%20Election%2011.3.2026/2026%20Nov%203%20countywide%20sample%20ballot.pdf",
@@ -8137,6 +8164,17 @@
         "publisher": "DeKalb County Clerk and Recorder",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 Referenda publication lists local school-district questions. This does not establish the statewide measure inventory or the absence of statewide measures."
+      },
+      {
+        "requestedUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+        "finalUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+        "httpStatus": 200,
+        "rawHash": "ffc5b022b726edce4c24bba746ba339de4d47bd798213b7f1b2666885c518e70",
+        "retrievedAt": "2026-10-14T16:55:31.306654+00:00",
+        "publisher": "Peoria County Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "November 3, 2026 certified countywide master specimen publishes all Peoria County district contests, including both congressional districts and six numbered House districts, with Precinct SPECIMEN BALLOT rather than a voter precinct. Census official full district/county relationship table establishes all House District 92 land and water lie in Peoria County, so this countywide publication covers the entire contest territory. Printed House92 candidate and party exactly match the held candidate. Identical raw bytes were reacquired on 2026-10-15T00:02:46.226373+00:00. The certified complete November 3, 2026 Peoria County and City of Rockford specimen ballots contain no statewide measure. Peoria’s seven public questions and Rockford’s three Winnebago County advisory questions are expressly local. These complete certified ballots establish the statewide question inventory; local-only referenda lists do not establish that inventory on their own."
       }
     ]
   }

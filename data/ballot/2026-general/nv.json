@@ -3932,6 +3932,89 @@
             "verifiedAt": "2026-10-14T05:10:00.005103+00:00",
             "doorId": "fec-nv-chief",
             "quote": "Condensation (Ballot Question)\n\n\n\n Should the Nevada Constitution be amended to create\n an individual’s fundamental right to an abortion, without\n interference by state or local governments, whenever\n the abortion is performed by a qualified healthcare\n professional until fetal viability or when necessary to\n protect the health or life of the pregnant individual at\n any point during the pregnancy?"
+          },
+          "officialText": {
+            "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+            "sourceHash": "6c63ba29ed30f213d80127dbc3652529c214d712946a750f777fb97288f19c2b",
+            "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+            "publisher": "Nevada Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-6c63ba29ed30f213d80127dbc3652529c214d712946a750f777fb97288f19c2b.txt",
+              "byteLength": 1898,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+                "sourceHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
+                "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+                "publisher": "Nevada Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0.pdf",
+                  "byteLength": 532489,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+            "sourceHash": "31fe4401652b62e9ca5691a1e964e16a70cc18e47f3f0b7d25dd091aac574c3c",
+            "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+            "publisher": "Nevada Secretary of State",
+            "summary": "Explanation:\nThis initiative, if approved by the voters, amends the Nevada Constitution to create a\nconstitutional right to abortion.\nThis right to abortion would apply from the start of a person’s pregnancy up until the start of\n“fetal viability,” unless the pregnant person needs medical care to protect that person’s life or\nhealth, in which case the right applies throughout the pregnancy. “Fetal viability” means “the\npoint in pregnancy when, in the professional judgment of the patient's treating health care\npractitioner, there is a significant likelihood of the fetus’ sustained survival outside the uterus\nwithout the application of extraordinary medical measures.”\nThe initiative makes clear that the State of Nevada, including county and city governments in\nNevada, generally cannot interfere with this right. But a state, county, or city government can\ninterfere with the right if there is a “compelling state interest” in doing so. A “compelling state\ninterest” exists only if the government uses the least restrictive means to protect or improve\nthe pregnant person’s life or health in ways that follow clinical standards of practice.\nLastly, this proposed right to abortion does not require or force any individual in Nevada to\nhave an abortion. Instead, it creates a right that allows an individual to make their own\ndecision.\nA “Yes” vote would create a new section of the Nevada Constitution to establish a person’s\nconstitutional right to abortion, so that a person can make decisions about matters relating\nto abortion and reproductive healthcare, without interference from state or local\ngovernments.\n\nA “No” vote would keep the Nevada Constitution in its current form and would not impact\nthe availability of abortion as a statutory right under Nevada law.\n\nNevada Secretary of State\n\nDigest:\nExisting law states that abortions are legal in Nevada and must occur within 24 weeks after the\nstart of the pregnancy. An exception currently exists to allow an abortion after 24 weeks if a\nphysician reasonably believes that an abortion is necessary to preserve the pregnant person’s\nlife or health. Existing law also requires that abortions performed after the 24th week of\npregnancy be performed in a hospital licensed by the State of Nevada.\nIf approved by the voters, this ballot measure would add a new section to Article 1 of the\nNevada Constitution with the following information.\nSection 1 of this amendment to the Nevada Constitution would create a “fundamental right to\nabortion.” This means that the Nevada Constitution would make abortion a legal option for all\nindividuals, not just Nevadans, that is protected by the Nevada Constitution. The proposed\namendment also includes the right to have an abortion procedure done by a qualified\nhealthcare professional.\nThe amendment proposes that the right to an abortion would extend until “fetal viability, or\nwhen needed to protect the life or health of the pregnant patient.” “Fetal viability” means “the\npoint in pregnancy when, in the professional judgment of the patient's treating health care\npractitioner, there is a significant likelihood of the fetus’ sustained survival outside the uterus\nwithout the application of extraordinary medical measures.”\nIf the abortion would be necessary to protect the pregnant person’s life or health, the proposed\namendment allows an abortion procedure to be carried out after the start of fetal viability.\nThe proposed amendment would also generally prevent the State of Nevada or any of its\npolitical subdivisions (e.g., the Nevada Legislature, county and city governments) from\ninterfering with the constitutional right to abortion. State and local governments can interfere\nwith this right only if they have a “compelling state interest” in doing so. A “compelling state\ninterest” exists only if the government uses the least restrictive means to protect or improve\nthe pregnant person’s life or health in ways that follow clinical standards of practice.\nSection 2 of the proposed constitutional amendment states that if any part of the amendment\nis challenged in court, then the rest of the amendment is not affected and remains in force.\nThis section ensures that the right to abortion is protected to the greatest extent possible in\nthe event of future lawsuits.\n\nNevada Secretary of State\n\nQUESTION 6",
+            "fiscalImpact": "FINANCIAL IMPACT – CANNOT BE DETERMINED\nOVERVIEW\nThe Statewide Constitutional Initiative Petition – Identifier: C-05-2023 (Initiative) proposes to\namend Article 1 of the Nevada Constitution by adding a new section, designated as Section 25,\nestablishing a fundamental right to abortion performed or administered by a qualified health\ncare practitioner until fetal viability, or when needed to protect the life or health of the pregnant\npatient, without interference from the state or its political subdivisions, unless the denial of\nthat right is justified by a compelling state interest that is achieved by the least restrictive\nmeans.\n\nFINANCIAL IMPACT OF THE INITIATIVE\nPursuant to Article 19, Section 2 of the Nevada Constitution, an initiative proposing to amend\nthe Nevada Constitution must be approved by the voters at two successive general elections in\norder to become a part of the Constitution. If this Initiative is approved by voters at the\nNovember 2024 and November 2026 General Elections, the provisions of the Initiative would\nbecome effective on the fourth Tuesday of November 2026 (November 24, 2026), when the\nvotes are canvassed by the Supreme Court pursuant to NRS 293.395.\nIf this Initiative is approved by the voters at the November 2024 and November 2026 General\nElections, the Legislature may be required to evaluate existing laws governing abortion to\ndetermine whether they are in compliance with the provisions of this amendment. If it is\ndetermined that existing laws are not in compliance, it is possible that the amount of\nresources utilized by the State or local governments for the administration or enforcement of\nnew abortion laws that would comply with these provisions may be affected.\nHowever, because it is unknown what laws, if any, may not be in compliance with the\nprovisions of the Initiative, nor is it known how the Legislature may revise existing laws if they\n\nNevada Secretary of State\n\nare determined to not comply with these provisions, the financial effect upon the State or local\ngovernments cannot be determined with any reasonable degree of certainty.\nPrepared by the Fiscal Analysis Division of the Legislative Counsel Bureau – August 1, 2024\n\n[REMAINDER OF THIS PAGE INTENTIONALLY LEFT BLANK]\n\nNevada Secretary of State\n\nQUESTION 6",
+            "argumentsFor": [
+              "Decisions about abortion should be left to women and qualified healthcare professionals, who\ntake a pledge to act in their patients’ best interest. When it comes to something as personal\nand complicated as pregnancy, politicians are never more qualified to make healthcare\ndecisions than women and their doctors. That’s why it is so important to vote YES on this\namendment.\nPeople across Nevada are voting YES because:\n•\n\nYES protects doctors so that they will never have to risk jail time just to treat the\npatient in front of them.1\n\n•\n\nExtreme abortion bans are already in place across the country – from Texas2 to\nFlorida3 to right next door in Utah and Arizona – and they are having dangerous\neffects. A 10-year-old girl from Ohio who was raped had to travel to Indiana to get\nthe abortion she needed,4 and in Texas, one woman who miscarried lost liters of\nblood and had to go on a breathing machine before doctors could legally help her.5\nYES protects the right to abortion in our state for good, so these tragic stories can\nnever happen here.\n\n•\n\nYES establishes a permanent layer of protection6 so that no matter who holds office\nin our state, extreme abortion bans7 cannot become law in Nevada.\n\n1 Pierson, Brenden. “Texas AG Threatens to Prosecute Doctors in Emergency Abortion | Reuters.” Reuters,\n\nhttps://www.reuters.com/legal/texas-judge-allows-woman-get-emergency-abortion-despite-state-ban-2023-12-07/ Accessed\n25 July 2024.\n2 Weber, Paul J., and Jamie Stengle. “Texas Governor Defends Abortion Law with No Rape Exceptions.” AP News, AP News, 8\n\nSept. 2021, https://apnews.com/article/health-texas-dallas-laws-greg-abbott-3717a0258b598eba06bb1baf90b645f4.\n3 Fischer, David, and Stephany Matat. “Florida’s 6-Week Abortion Ban Takes Effect as Doctors Worry Women Will Lose Access\n\nto Health Care.” AP News, AP News, 1 May 2024, https://apnews.com/article/florida-abortion-ban9509a806453e1eab50d118aaecffa2f1.\n4 Helmore, Edward. “10-Year-Old Rape Victim Forced to Travel from Ohio to Indiana for Abortion.” The Guardian, Guardian\n\nNews and Media, 3 July 2022, https://www.theguardian.com/us-news/2022/jul/03/ohio-indiana-abortion-rape-victim.\n5 Tanner, Lindsey. “Abortion Laws Spark Profound Changes in Other Medical Care.” AP News, AP News, 16 July 2022,\n\nhttps://apnews.com/article/abortion-science-health-medication-lupus-e4042947e4cc0c45e38837d394199033.\n6 From constitutional amendment text: “All individuals shall have a fundamental right to abortion… The right established by this\n\nsection shall not be denied, burdened, or infringed upon…”\n7 Lieb, David A., and Geoff Mulvihill. “Missouri Lawmakers Propose Allowing Homicide Charges for Women Who Have\n\nAbortions.” PBS, Public Broadcasting Service, 8 Dec. 2023, https://www.pbs.org/newshour/politics/missouri-lawmakerspropose-allowing-homicide-charges-for-women-who-have-abortions.\nNevada Secretary of State\n\n•\n\nYES keeps families – not politicians – in charge of their own healthcare decisions,\nso that women can make these personal decisions in consultation with their doctors\nand those they love and trust.\n\nWe should trust women and doctors to make the right decisions for their own situations\nwithout government getting involved. If this amendment fails, future generations could have\nfewer rights and freedoms than their parents and grandparents.8 Vote YES to keep politicians\nout of our personal, private decisions.\nQuestion 6 has no fiscal or environmental impact.\nThe above argument was submitted by the Ballot Question Committee composed of citizens in favor\nof this question as provided for in NRS 293.252. Committee members: Lindsey Harmon (Chair),\nDenise Lopez, and Bradley Schrager. This argument can also be found at www.nvsos.gov.\n\nQUESTION 6",
+              "The people against this amendment are lying to scare voters. Nevadans know that a woman\nmay end a pregnancy for many different reasons. We also know that women and doctors do\nnot decide on an abortion later in pregnancy unless there is a serious reason, like a risk to her\nlife or pregnancy.\nAnd this amendment does nothing to change parental rights in Nevada, because we all want\nyoung people to get the support they need from those who love them when making decisions.\nAll this amendment does is ensure families – not politicians – are in charge of their own health\ncare decisions and can make the right choice for their unique situations without government\ngetting in the way.\nWhen families are making difficult, personal medical decisions, one-size-fits all laws don’t\nwork. As bans across the country are already putting lives at risk, this amendment adds a\npermanent layer of protection for abortion rights in Nevada so that no matter who holds office\nin our state, these extreme bans cannot become law here.\nAgain, this amendment has no fiscal or tax implications.\nThe above rebuttal was submitted by the Ballot Question Committee composed of citizens in favor of\nthis question as provided for in NRS 293.252. Committee members: Lindsey Harmon (Chair), Denise\nLopez, and Bradley Schrager. This argument can also be found at nvsos.gov.\n\nNevada Secretary of State\n\nQUESTION 6"
+            ],
+            "argumentsAgainst": [
+              "Vote NO to stop Question 6 from re-writing our State Constitution.\nVote No to stop Question 6 from writing a blank check to fund unlimited, 9-month abortions\nusing taxpayer money.17\nQuestion 6 may force you the taxpayer to pay for abortions.18 The cost and fiscal impact of\nQuestion 6 cannot be determined:19 It may cost taxpayers MORE than $120-million-dollars\nevery year.20\nVote NO to protect our current abortion law. Abortion is legal in Nevada.21 Currently, doctors\ncan do abortions—without restriction—up to 24 weeks (6 months).22 After that, it's also\nallowed to save the mom's life or health.23\nOur current law is more pro-choice than Roe v. Wade.24 Only voters can change our state’s\nabortion law, and it hasn’t changed in decades.25 Unlike Nevada, other states have recently\n\n17 The total cost cannot be known, and a single abortion can cost “ $15,000 or more” according to the State of Nevada Division\n\nof (“DPBH”), “Abortion Information for Nevadans,” https://dpbh.nv.gov/Programs/MIP/AbortionInNevada/ (For a “later\npregnancy” using “induction abortion” procedure to “induce labor and delivery,” the cost is “$8,000 to $15,000 or more” for\neach delivery, labor and abortion procedure)\n18 The Nevada Legislative Counsel Bureau (Aug. 1, 2024),\n\nhttps://www.nvsos.gov/sos/home/showpublisheddocument/14294/638581076670730000 (this non-partisan government\nbody analyzed the language of Question 6 and concluded that “it is it not known how the Legislature may revise existing laws\nif they are determined to not comply with these provisions, the financial effect upon the State or local governments cannot be\ndetermined with any reasonable degree of certainty).\n19 See Notes 1-2.\n20 An abortion in Nevada can cost anywhere from “$500” for a chemical abortion to “$15,000 or more” for an induction\n\nabortion, according to the State of Nevada Division of (“DPBH”), “Abortion Information for Nevadans,”\nhttps://dpbh.nv.gov/Programs/MIP/AbortionInNevada/ ; The Nevada Independent, “Indy Explains: What happens to Nevada’s\nabortion laws if Roe is overturned?,” (May 2, 2022), https://thenevadaindependent.com/article/indy-explains-what-happens-tonevadas-abortion-laws-if-roe-is-overturned (estimating that approximately 8,000 to 10,000 abortions were performed annually\nin Nevada between 2017 and 2019, with the predication that more would follow if Nevada became an abortion “refuge.”).\n21 See Nevada Revised Statute (NRS) § 442.250 (Question 7 on the 1990 Nevada Ballot).\n22 Nevada Division of Public and Behavioral Health (“DPBH”), “Abortion Information for Nevadans,”\n\nhttps://dpbh.nv.gov/Programs/MIP/AbortionInNevada/.\n23 NRS § 442.250\n24 The Nevada Independent, “Indy Explains: What happens to Nevada’s abortion laws if Roe is overturned?,” (May 2, 2022),\n\nhttps://thenevadaindependent.com/article/indy-explains-what-happens-to-nevadas-abortion-laws-if-roe-is-overturned.\n25 See Notes 5-8.\n\nNevada Secretary of State\n\nchanged their abortion laws, and “litigation has exploded.”26 Vote NO to keep the courts out of\nprivate, personal decisions.27\nIf you like the current law, protect it: Vote NO. If you don’t like the current law, vote NO so it’s\nnot even harder to fix.28\nQuestion 6 has no bright-line rule saying when abortion is legal. Is it always legal at 4 months?\n6 months? 9 months? Our current law is clear. Question 6 is not.\nQuestion 6 has no bright-line rule saying when taxpayers must pay for abortions. Do taxpayers\npay for an optional abortion at 9 months? Our current law is clear. Question 6 is not.\nWhat about doctors? Can a non-doctor perform a surgical abortion at 9 months outside a\nhospital? Question 6 may not stop this, but the current law protects women. Vote NO.\nWhat about parents? Can a non-doctor perform a secret surgical abortion on a 13-year-old\ngirl? Question 6 may not stop this, but the current law protects children and parents. Vote NO.\nWhen laws are unclear, the result is expensive lawsuits.29 The legal, fiscal and environmental\nimpacts of Question 6 are unknown.30 Lawsuits cost taxpayers money.31\nVote NO because Question 6 is:\n•\n\nDangerous: It lets people who aren't doctors do abortions.\n\n•\n\nWrong: It allows abortions through all 9 months of pregnancy.\n\n•\n\nHarmful: It strips out rules that keep women safe.\n\n•\n\nExpensive: It may cause lawsuits and cost millions to fund abortions.\n\n•\n\nUnwanted: It changes our current abortion laws which are clear.\n\nKeep our laws clear. Keep tax spending transparent. Keep courts out of abortion. Keep\ndecisions between women and doctors. Vote NO.\n\n26 Reuters, “Abortion rights: Tracking state lawsuits two years after Roe reversal” (“Nearly two years after the U.S. Supreme\n\nCourt overturned its landmark 1973 ruling in Roe v. Wade, litigation over abortion has exploded”),\nhttps://www.reuters.com/world/us/us-abortion-rights-still-flux-two-years-after-roe-reversal-2024-06-17/.\n27 For example, Silver State Hope Fund vs. The State of Nevada ex rel. Nevada Dept. of Health and Human Services, Division of\n\nHealth Care Financing and Policy, (Case NO. A-23-876702-W), Eighth Judicial District Court Clark County, Nevada (lawsuit to\nforce Nevada taxpayers to pay for more abortions as a result of the “yes” vote for Question 1 on the 2022 Ballot).\n28 See above Notes 10-11.\n29 See Notes 10-11.\n30 See Note 1.\n31 See Notes 10-11.\n\nNevada Secretary of State\n\nThe above argument was submitted by the Ballot Question Committee composed of citizens opposed\nto this question as provided for in NRS 293.252. Committee members: Emily Mimnaugh (Chair) and\nJason Guinasso. This argument can also be found at nvsos.gov.\n\nQUESTION 6",
+              "Do you want courts and judges making decisions about pregnancy instead of women and\ndoctors?9\nVote NO to stop courts from invading your personal, private medical decisions.\nVote NO to protect our current abortion laws.10 There literally cannot be “any reasonable\ndegree of certainty”11 what laws will change or how much you will have to pay to fund abortion\nwith Question 6. Vote NO.\n\n8 Pfannenstiel, Kyle. “Idaho Is Losing Ob-Gyns after Strict Abortion Ban. but Health Exceptions Unlikely This Year. • Idaho\n\nCapital Sun.” Idaho Capital Sun, 5 Apr. 2024, https://idahocapitalsun.com/2024/04/05/idaho-is-losing-ob-gyns-after-strictabortion-ban-but-health-exceptions-unlikely-this-year/.\n9 Silver State Hope Fund vs. The State of Nevada ex rel. Nevada Dept. of Health and Human Services, Division of Health Care\n\nFinancing and Policy, (Case NO. A-23-876702-W), Eighth Judicial District Court Clark County, Nevada (lawsuit financed by the\nACLU to force Nevada taxpayers to pay for more abortions as a result of the “yes” vote for Question 1 on the 2022 Ballot).\n10 The Nevada Legislative Counsel Bureau (Aug. 1, 2024)\n\nhttps://www.nvsos.gov/sos/home/showpublisheddocument/14294/638581076670730000.\n11 The Nevada Legislative Counsel Bureau (Aug. 1, 2024)\n\nhttps://www.nvsos.gov/sos/home/showpublisheddocument/14294/638581076670730000 (this nonpartisan government\nbody analyzed the language of Question 6 and concluded that “it is it not known how the Legislature may revise existing laws\nNevada Secretary of State\n\nDo you want to spend millions of taxpayer dollars to fund abortions through all 9-months of\npregnancy? Do you want to write a blank check to use taxpayer money to pay for abortions?12\nLast year, California spent $200 million13 on an abortion-funding package to pay for\nabortions14 and even to create a website explaining how to have the state pay for an abortion\n“at no cost to you.”15 Don’t want that policy? Vote NO.\nHere's a list of people NOT mentioned in Question 6:\n•\n\nWomen and girls – No specific protection.\n\n•\n\nMothers and parents – No specific protection.\n\n•\n\nDoctors – No specific protection.\n\nA young mother in Las Vegas recently bled to death after taking abortion pills.16 Protect our\ncurrent law, women and doctors, keep the courts out of our personal lives, and vote NO.\nThe above rebuttal was submitted by the Ballot Question Committee composed of citizens opposed\nto this question as provided for in NRS 293.252. Committee members: Emily Mimnaugh (Chair) and\nJason Guinasso. This argument can also be found at nvsos.gov.\n\nif they are determined to not comply with these provisions, the financial effect upon the State or local governments cannot be\ndetermined with any reasonable degree of certainty).\n12 The Nevada Legislative Counsel Bureau (Aug. 1, 2024)\n\nhttps://www.nvsos.gov/sos/home/showpublisheddocument/14294/638581076670730000 (concluding that the financial\nimpact of a “yes” vote on Question 6 simply “cannot be determined”).\n13 Gov. Gavin Newsom, “New Protections for People Who Need Abortion Care and Birth Control, Bill package builds upon more\n\nthan $200 million in state funding to create abortion.ca.gov, cover uninsured care,” https://www.gov.ca.gov/2022/09/27/newprotections-for-people-who-need-abortion-care-and-birth-control/.\n14 California Abortion Access: How to Pay for an Abortion, Official Website of the State of California,\n\nhttps://abortion.ca.gov/getting-an-abortion/how-to-pay-for-an-abortion/index.html .\n15 California Abortion Access: How to Pay for an Abortion, Official Website of the State of California,\n\nhttps://abortion.ca.gov/getting-an-abortion/how-to-pay-for-an-abortion/index.html .\n16 “Nevada woman’s death after taking abortion pills spurs lawsuit, safety fears,” Washington Times (Sept. 28, 2023)\n\nhttps://www.washingtontimes.com/news/2023/sep/28/nevada-womans-death-after-taking-abortion-pills-sp/.\nNevada Secretary of State\n\nQUESTION 6"
+            ],
+            "passageThreshold": "If a majority of such voters votes approval of such amendment, the Secretary of State shall publish and resubmit the question of approval or disapproval to a vote of the voters at the next succeeding general election in the same manner as such question was originally submitted. If a majority of such voters votes disapproval of such amendment, no further action shall be taken on such petition. If a majority of such voters votes approval of such amendment, it shall, unless precluded by subsection 5 or 6, become a part of this Constitution upon completion of the canvass of votes by the Supreme Court.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.leg.state.nv.us/const/nvconst.html",
+              "sourceHash": "49fcc3104f0619015df1f69171597a66feec4c53c757aa81c0d6399705b028e8",
+              "retrievedAt": "2026-10-15T00:00:43.713341+00:00",
+              "publisher": "Nevada Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.leg.state.nv.us/2026/10/15/ms-01-cbc4cc50cebfc861/sha256-49fcc3104f0619015df1f69171597a66feec4c53c757aa81c0d6399705b028e8.txt",
+                "byteLength": 604,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.leg.state.nv.us/const/nvconst.html",
+                  "sourceHash": "726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc",
+                  "retrievedAt": "2026-10-15T00:00:43.713341+00:00",
+                  "publisher": "Nevada Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/www.leg.state.nv.us/2026/10/15/ms-01-cbc4cc50cebfc861/sha256-726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc.html",
+                    "byteLength": 431607,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-31fe4401652b62e9ca5691a1e964e16a70cc18e47f3f0b7d25dd091aac574c3c.txt",
+              "byteLength": 24206,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+                "sourceHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
+                "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+                "publisher": "Nevada Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0.pdf",
+                  "byteLength": 532489,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -3947,16 +4030,193 @@
             "verifiedAt": "2026-10-14T05:10:00.005103+00:00",
             "doorId": "fec-nv-chief",
             "quote": "Condensation (Ballot Question)\n\n\n\nShould the Nevada Constitution be amended to require\nvoters to either present photo identification to verify\ntheir identity when voting in-person or to provide certain\npersonal information to verify their identity when voting\nby mail ballot?"
+          },
+          "officialText": {
+            "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+            "sourceHash": "89ad2d0c62944d14b9cfffe4a11c3478465fb3fc22328e175c1f8d1c955bbfe1",
+            "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+            "publisher": "Nevada Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-89ad2d0c62944d14b9cfffe4a11c3478465fb3fc22328e175c1f8d1c955bbfe1.txt",
+              "byteLength": 2058,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+                "sourceHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
+                "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+                "publisher": "Nevada Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0.pdf",
+                  "byteLength": 532489,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+            "sourceHash": "8b8f48db0a017a39f195ded31a8ed4e44cc0d2c68b7d27ac9fe0dcb6f8eb54bf",
+            "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+            "publisher": "Nevada Secretary of State",
+            "summary": "Explanation:\nThis initiative, if enacted, changes Article 2 of the Nevada Constitution to create a requirement\nfor voters to provide identification before they receive a ballot.\nVoters who vote in person at a polling place would need to show an ID that is current or that\nhas not been expired for more than four years. If a voter is more than 70 years old, the\nidentification could be expired for any length of time so long as it is otherwise valid.\nThe acceptable forms of identification include:\n1. Nevada driver's license.\n2. Identification card issued by the State of Nevada, any other State, or the US\nGovernment.\n3. Employee photo identification card issued by the US government, Nevada\ngovernment, or any county, municipality, board, authority, or other Nevada\ngovernment entity.\n4. US passport.\n5. US military identification card.\n6. Student photo identification card issued by a Nevada public college, university, or\ntechnical school.\n7. Tribal photo identification.\n8. Nevada concealed firearms permit.\n9. Other form of government-issued photo identification that the Legislature may\napprove.\nVoters who vote by mail ballot would need to include certain information so that election\nofficials can use it to verify the voter’s identity. That information includes:\n1. The last four digits of their Nevada driver's license number.\n2. If the voter does not possess a Nevada driver's license, the last four digits of their\nSocial Security number.\n3. If the voter has neither a Nevada driver's license or a Social Security number, the\nnumber provided by the county clerk when the voter registered to vote.\nNevada Secretary of State\n\nA “Yes” vote would amend Article 2 of the Nevada Constitution to require in-person Nevada\nvoters to present certain identification and mail ballot voters to provide certain information\nin\norder to cast a legal ballot.\n\nA “No” vote would keep the Nevada Constitution in its current form.\n\nDigest:\nUnder current law, Nevada voters must only show identification in certain situations. These\nsituations are rare and related to the method and timing of how they register to vote.\nCurrently only voters who register to vote by mail or computer, or who preregister to vote by\nmail or computer, and have not previously voted in an election for federal office in Nevada\nmust provide identification. Additionally, state law requires voters who register to vote online\nless than 14 days before an election must also vote in person and present an identification and\nproof of residency.\nBecause voters approved the measure during the 2024 General Election, it will appear on the\n2026 General Election ballot for a second vote. If approved there, the Nevada Legislature could\ncreate related laws through legislation during the 2027 Legislative Session and these changes\nwould go into effect for the 2028 election cycle.\n\nQUESTION 7",
+            "fiscalImpact": "FINANCIAL IMPACT – YES\nOVERVIEW\nThe Statewide Constitutional Initiative Petition – Identifier: C-02-2023 (Initiative) proposes to\namend Article 2 of the Nevada Constitution by adding new Sections 1B and 1C, as follows:\n•\n\nSection 1B would require the presentation of a specified form of identification in\norder to vote in person in an election in Nevada, either through early voting or on\nelection day.\n\n•\n\nSection 1C would require voters who submit a mail-in ballot to provide certain\nspecified information in order to verify that voter’s identity.\n\nFINANCIAL IMPACT OF THE INITIATIVE\nPursuant to Article 19, Section 2 of the Nevada Constitution, an initiative proposing to amend\nthe Nevada Constitution must be approved by the voters at two successive general elections in\norder to become a part of the Constitution. If this Initiative is approved by voters at the\nNovember 2024 and November 2026 General Elections, the provisions of the Initiative would\nbecome effective on the fourth Tuesday of November 2026 (November 24, 2026), when the\nvotes are canvassed by the Supreme Court pursuant to NRS 293.395.\nThe provisions of the Initiative are anticipated to have a financial impact upon the State and\nlocal governments relating to procedures and systems utilized during the election process.\nThe Secretary of State’s Office has indicated that these provisions will require modifications to\nprocesses and systems related to check-in of voters at the polling location and verification of\n\nNevada Secretary of State\n\nmail-in ballots, as well as ensuring that the statewide voter registration system is modified to\nensure that all data necessary to implement the provisions of the Initiative is captured.\nBased on information provided by the Secretary of State’s Office, the estimated costs to make\nthese changes to voter systems in Nevada would be approximately $6,750, and these changes\nwould need to be made in time for the elections that would be held in the year 2028.\nThe provisions of the Initiative additionally allow the Legislature to determine additional forms\nof valid identification that can be used to verify identity for voting, aside from those already\nspecified in the Initiative, which the Fiscal Analysis Division assumes will need to be created by\nthe Legislature for those people who do not have or cannot obtain another form of allowable\nidentification.\nThe Fiscal Analysis Division additionally assumes that this alternate form of voter\nidentification will be provided to the voter at no cost, which means that the cost for these\nidentification documents will be wholly borne by the State or by one or more local\ngovernments. However, the Initiative does not specify the form which these alternative\nidentification documents must take, nor does it specify which agency or agencies (either at the\nstate or local level) will be required to provide these documents. Additionally, it is unknown\nhow many registered voters will not have one of the specified documents that would be\nacceptable to provide as proof of identity for in-person voting, who would need to be issued\none of these alternative documents.\nThus, the financial effect upon the State or local governments relating to the issuance of an\nalternative identity document to those voters who will require such a document in order to vote\nin person cannot be determined with any reasonable degree of certainty.\nPrepared by the Fiscal Analysis Division of the Legislative Counsel Bureau – July 29, 2024\n\nNevada Secretary of State\n\nQUESTION 7",
+            "argumentsFor": [
+              "Flaws in the nation’s registration and voting laws are being seen as creating a lack of\nconfidence in election outcomes. Many people lost trust in how elections were run.\n\nNevada Secretary of State\n\nNew voting technology raised worries about mistakes. More mail-in ballots also led to fears of\nfraud. A national bipartisan committee reviewed voting laws in many states. One of their\nrecommendations in their report was to require Voter ID.32\nRequiring voters to show a photo ID before voting is a sensible and effective step to help make\nour elections more secure and to give people more confidence in the results.\nIn Nevada, many people support this idea. A recent poll shows 74% of Nevadans back it. This\nincludes 68% of Independents, and 62% of Democrats.33\nAs of 2024, 36 states have laws requiring photo ID for voting. There have been no major\ncomplaints in these states, and, contrary to what people were told would happen, turnout has\nnot decreased.34\nSome argue that requiring a photo ID would unfairly impact minorities. They say that many\nminorities and low-income people don't have a photo ID. This is not true, because people need\na photo ID to apply for a job, cash a check, use a credit card, apply for a loan, see a doctor, pick\nup a prescription, apply to college, buy alcohol or tobacco, get on a plane, check into a hotel,\nand vote in some union elections.\nNevada law requires those who don’t register in person show identification and address the\nfirst time they vote. This doesn’t have to be a photo ID. It can be a utility bill or some other\nofficial document that shows only their name and address. Also, this is only for the first time\nthey vote. After that, there is no requirement to show an ID when voting.35\nOthers say that voter fraud is rare. However, identity theft is a growing problem. Close\nelections also show the need for every vote to be legal. For example, a 2002 race in Nevada\nended in a tie. Former U.S. Attorney Jennifer Arbittier Williams said, \"If even one vote has been\nillegally cast…it diminishes faith in the process.\"36\n\n32 Building Confidence in U.S. Elections: Report of the Commission on Federal Election Reform, American University Center for\n\nDemocracy and Election management, Washington DC, 2005, pp 9-20.\n33 Poll: Plurality of Nevada voters approve of Lombardo, majority support voter ID - The Nevada Independent\n\nhttps://thenevadaindependent.com/article/poll-plurality-of-nevada-voters-approve-of-lombardo-majority-support-voter-id\n34 Requiring Photo ID Has Little Effect on Voter Turnout, MU Study Finds | MU News Bureau (missouri.edu)\n35 Nevada Revised Statutes 293.272, 293.2725\n36 Eastern District of Pennsylvania | Former U.S. Congressman and Philadelphia Political Operative Pleads Guilty to Election\n\nFraud Charges | United States Department of Justice https://www.justice.gov/usao-edpa/pr/former-us-congressman-andphiladelphia-political-operative-pleads-guilty-election-fraud.\nNevada Secretary of State\n\nRequiring a photo ID has no environmental, public health, safety, or welfare impact.\nA photo ID requirement will help people trust our election system and make sure that every\nvote is valid. Vote \"YES\" on Question 7.\nThe above argument was submitted by the Ballot Question Committee composed of citizens in favor\nof this question as provided for in NRS 293.252. Committee members: David Gibbs (Chair), Chuck\nMuth, and David O’Mara. This argument can also be found at www.nvsos.gov.\n\nQUESTION 7",
+              "Opponents say that “impersonating someone else at the polls never happens.” But without a\nphoto ID required, how can they be sure?\nTo try to back their argument, opponents cite an opinion column from Washington, DC, from\nover ten years ago. This was before Nevada adopted new election laws in 2021.\nOpponents also claim that “21% of all voting-age Americans don’t have a valid driver’s license.”\nHowever, the same study shows that only 1% lack some other acceptable photo ID. The\nLegislature can find a way to help these voters, just like 36 other states have done.\nOpponents say voter ID laws “reduce turnout” among minorities. But the same study also says\nthat “the research is mixed on whether ID laws actually reduce turnout.”\nA similar claim was made against Georgia’s photo ID law in 2021. Yet, Georgia’s Secretary of\nState reported that turnout in the 2022 general election set new records after the law took\neffect.43\nThe bottom line is this: Requiring a Photo ID won’t make it harder to vote. It will make it harder\nto cheat. Vote YES on Question 7.\n\n43 https://sos.ga.gov/news/record-breaking-turnout-georgias-runoff-election\n\nNevada Secretary of State\n\nThe above rebuttal was submitted by the Ballot Question Committee composed of citizens in favor\nof this question as provided for in NRS 293.252. Committee members: David Gibbs (Chair), Chuck\nMuth, and David O’Mara. This argument can also be found at nvsos.gov.\n\nQUESTION 7"
+            ],
+            "argumentsAgainst": [
+              "When it comes to voting rights, we shouldn’t be leaving anyone behind. The ID requirements in\nQuestion 7 will mean fewer eligible people will cast ballots, while the new law would do nothing\nto prevent voter fraud.\nThe measure’s supporters say they want more confidence in elections, but they don’t tell you\nthat impersonating someone else at the polls never happens. One study found that out of more\nthan a billion votes cast, it happened 31 times—statistically zero.37 You have a better chance\nof being struck by lightning.38 Question 7 overreacts to a problem that simply does not exist.\nAnd the risks of Question 7 are big. It does not ensure that Nevadans have the kinds of ID the\nlaw demands, IDs that cost money and take time to get. Voters living in rural or tribal\ncommunities will have to travel long distances to a DMV to receive an ID. In fact, almost 21%\nof all voting-age Americans don’t have a valid driver’s license with their current name and\naddress.39 In terms of Nevada’s population, that would equal more than half a million\npeople.40\nStudies have shown that strict voter ID laws reduce turnout among underserved communities\nand communities of color, making it harder to have their voices heard at the ballot box.41\nVoter ID laws are also a waste of taxpayer dollars. Indiana, for example, spent over $10 million\nto produce free ID cards between 2007 and 2010.42\n\n37 Justin Levitt, “A Comprehensive Investigation of Voter Impersonation Finds 31 Credible Incidents Out of One Billion Ballots\n\nCast,” Washington Post, August 6, 2014, https://www.washingtonpost.com/news/wonk/wp/2014/08/06/a-comprehensiveinvestigation-of-voter-impersonation-finds-31-credible-incidents-out-of-one-billion-ballots-cast/.\n38 Brennan Center for Justice, January 31, 2017, https://www.brennancenter.org/our-work/research-reports/debunking-voter-\n\nfraud-myth\n39 “Who Lacks ID in America Today? An Exploration of Voter ID Access, Barriers, and Knowledge,” Analyses Led by the Center\n\nfor Democracy and Civic Engagement at the University of Maryland, https://cdce.umd.edu/sites/cdce.umd.edu/files/pubs/\nVoter%20ID%20survey%20Key%20Results%20June%202024.pdf\n40 https://www.federalregister.gov/documents/2023/03/31/2023-06717/estimates-of-the-voting-age-population-for-2022\n41 “Voter ID Laws: What Do We Know So Far?” Berkeley Public Policy, Goldman School Working Paper, March 19, 2023,\n\nhttps://ghostarchive.org/archive/UiqiW; “Who Do Voter ID Laws Keep from Voting?,” Bernard L. Fraga and Michael G. Miller,\nThe Journal of Politics, Vol. 84, No. 2, April 2022.\n42 ACLU Fact Sheet On Voter ID Laws, August 2021, https://assets.aclu.org/live/uploads/document/aclu_voter_id_fact_sheet_-\n\n_final__1_.pdf\nNevada Secretary of State\n\nQuestion 7 will keep eligible Nevadans from voting, and won’t improve election integrity. Vote\nno on laws that reduce participation in democracy, like Question 7.\nRequiring a photo ID has no environmental impact.\n\nThe above argument was submitted by the Ballot Question Committee composed of citizens\nopposed to this question as provided for in NRS 293.252. Committee members: Jennifer\nFleischmann Willoughby (Chair), Daniel Bravo, and Jessica Rodriguez. This argument can also be\nfound at ”http://www.nvsos.gov”.\n\nQUESTION 7",
+              "The people who support Question 7 talk a lot about fear and mistrust. They’ve spent years\ntrying to make us doubt our election system. But they can’t show us even one time when voter\nID would have actually made our elections safer in Nevada.\nThey don’t tell you what bad things voter ID will stop because there haven’t been any. They\ndon’t mention that identity theft has never changed any election here. They don’t talk about\nhow many Nevadans—people just like you and me—don’t have the ID that Question 7 needs.\nThey also don’t explain how Question 7 helps people get those IDs. It doesn’t.\nThey just say that other states have voter ID and people there like it. But remember, not\neveryone does things like cash checks, go to college, or fly on planes. These aren’t like voting.\nVoting is a right we all have to choose our leaders. We shouldn’t stop anyone who can vote\nfrom voting.\nThink about this: you’re more likely to get hit by a meteor than to find someone cheating by\npretending to be someone else when they vote. Question 7 is a step back for our democracy.\nThe above rebuttal was submitted by the Ballot Question Committee composed of citizens opposed\nto this question as provided for in NRS 293.252. Committee members: Jennifer Fleischmann\nWilloughby (Chair), Daniel Bravo, and Jessica Rodriguez. This argument can also be found at\nnvsos.gov.\n\nNevada Secretary of State\n\nQUESTION 7"
+            ],
+            "passageThreshold": "If a majority of such voters votes approval of such amendment, the Secretary of State shall publish and resubmit the question of approval or disapproval to a vote of the voters at the next succeeding general election in the same manner as such question was originally submitted. If a majority of such voters votes disapproval of such amendment, no further action shall be taken on such petition. If a majority of such voters votes approval of such amendment, it shall, unless precluded by subsection 5 or 6, become a part of this Constitution upon completion of the canvass of votes by the Supreme Court.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.leg.state.nv.us/const/nvconst.html",
+              "sourceHash": "49fcc3104f0619015df1f69171597a66feec4c53c757aa81c0d6399705b028e8",
+              "retrievedAt": "2026-10-15T00:00:43.713341+00:00",
+              "publisher": "Nevada Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.leg.state.nv.us/2026/10/15/ms-01-cbc4cc50cebfc861/sha256-49fcc3104f0619015df1f69171597a66feec4c53c757aa81c0d6399705b028e8.txt",
+                "byteLength": 604,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.leg.state.nv.us/const/nvconst.html",
+                  "sourceHash": "726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc",
+                  "retrievedAt": "2026-10-15T00:00:43.713341+00:00",
+                  "publisher": "Nevada Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/www.leg.state.nv.us/2026/10/15/ms-01-cbc4cc50cebfc861/sha256-726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc.html",
+                    "byteLength": 431607,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-8b8f48db0a017a39f195ded31a8ed4e44cc0d2c68b7d27ac9fe0dcb6f8eb54bf.txt",
+              "byteLength": 18827,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+                "sourceHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
+                "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+                "publisher": "Nevada Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0.pdf",
+                  "byteLength": 532489,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "measureRecords": [
+        {
+          "contestId": "nv-2026-general-question-6",
+          "whatItDoes": "Explanation - Matter in italics is new; matter between brackets [omitted material] is material to be omitted.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nv-2026-general-question-6#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Sec. 1. That a new section, designated Section 25, be added to Article 1 of the Nevada Constitution to\nread as follows:\n\nNEW TEXT — TO BE ADDED TO THE NEVADA CONSTITUTION IF APPROVED"
+            },
+            {
+              "id": "nv-2026-general-question-6#section-1-2",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Sec. 1. All individuals shall have a fundamental right to abortion performed or administered\nby a qualified health care practitioner until fetal viability, or when needed to protect the life\nor health of the pregnant patient, without interference from the state or its political\nsubdivisions."
+            },
+            {
+              "id": "nv-2026-general-question-6#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Sec. 2. As used in this section: A “compelling state interest” means an interest which is\nlimited exclusively to the state’s interest in protecting, maintaining, or improving the health\nof an individual who is seeking abortion care that is consistent with accepted clinical\nstandards of practice; and"
+            },
+            {
+              "id": "nv-2026-general-question-6#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Sec. 2. Severability. If any part of this Act be declared invalid, or the application thereof to\nany person, thing or circumstance is held invalid, such invalidity shall not affect the\nremaining provisions or application of this Act which can be given effect without the invalid"
+            }
+          ],
+          "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+          "sourceHash": "6c63ba29ed30f213d80127dbc3652529c214d712946a750f777fb97288f19c2b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nv-2026-general-question-7",
+          "whatItDoes": "Explanation - Matter in italics is new; matter between brackets [omitted material] is material to be omitted.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nv-2026-general-question-7#section-1B",
+              "number": "1B",
+              "kind": "PROGRAM",
+              "label": "Section 1B",
+              "what": "Sec 1B. Photo Identification. Each voter in Nevada shall present photo identification to\nverify their identity when voting in person at a polling place during early voting or on\nelection day before being provided a ballot. To be considered valid, the photo identification"
+            },
+            {
+              "id": "nv-2026-general-question-7#section-C",
+              "number": "C",
+              "kind": "PROGRAM",
+              "label": "Section C",
+              "what": "Sec C. Voter Verification. Each voter in Nevada who votes by mail-in ballot shall enter one\nof the following in the block provided next to the voter's signature for election officials to\nuse in verifying the voter's identity:\n\n1. The last four digits of their Nevada driver's license number.\n2."
+            }
+          ],
+          "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+          "sourceHash": "89ad2d0c62944d14b9cfffe4a11c3478465fb3fc22328e175c1f8d1c955bbfe1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+          "sourceHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
+          "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
+          "publisher": "Nevada Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0.pdf",
+            "byteLength": 532489,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.leg.state.nv.us/const/nvconst.html",
+          "sourceHash": "726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc",
+          "retrievedAt": "2026-10-15T00:00:43.713341+00:00",
+          "publisher": "Nevada Legislature",
+          "vault": {
+            "key": "project/freshness/source/www.leg.state.nv.us/2026/10/15/ms-01-cbc4cc50cebfc861/sha256-726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc.html",
+            "byteLength": 431607,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:10:00.005103+00:00",
-    "reviewedBy": "Codex BL-14",
+    "reviewedAt": "2026-10-15T04:14:40.032513+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
@@ -3971,12 +4231,13 @@
       {
         "requestedUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
         "finalUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
-        "retrievedAt": "2026-10-14T05:05:10.655305+00:00",
+        "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
         "httpStatus": 200,
         "rawHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
-        "publisher": "Washoe County Registrar of Voters; Nevada Secretary of State booklet",
+        "publisher": "Nevada Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Nevada Secretary of State 2026 Statewide Ballot Questions booklet, 30 pages, downloaded from Washoe County Registrar of Voters. Cover specifies November 3, 2026. The opening page explicitly says there are no statewide questions 1–5 and Questions 6 and 7 return for second voter approval. Script extracted both ballot questions exactly and confirmed matching exact wording in the current official county ballot workbook. The booklet contains the full text of each measure."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.washoecounty.gov/voters/files/Washoe%20County%202026%20General%20Election%20Contests.xlsx",
@@ -3987,6 +4248,17 @@
         "publisher": "Washoe County Registrar of Voters",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Washoe County Registrar of Voters 2026 General Election Contests workbook, linked as the full general-election contest list. Script read XLSX shared strings and cells to recover the current name-on-ballot and party for Veronica Cortes; the certified master file prints that candidate without a delimiter. Both statewide question strings independently matched the official Secretary of State booklet."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.nv.us/const/nvconst.html",
+        "finalUrl": "https://www.leg.state.nv.us/const/nvconst.html",
+        "httpStatus": 200,
+        "rawHash": "726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc",
+        "retrievedAt": "2026-10-15T00:00:43.713341+00:00",
+        "publisher": "Nevada Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

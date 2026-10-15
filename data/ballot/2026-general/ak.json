@@ -1096,7 +1096,7 @@
           "divisionVintage": "2020",
           "title": "Ballot Measure No.2 — 24ESEG - An Act Restoring Political Party Primaries, Ending Ranked-Choice General Elections, and Repealing Recent Campaign Finance Laws",
           "type": "MEASURE",
-          "measureTextUrl": "https://www.elections.alaska.gov/petitions/24ESEG/24ESEG-Bill.pdf",
+          "measureTextUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1116,7 +1116,7 @@
           "divisionVintage": "2020",
           "title": "Ballot Measure No.3 — 25USCV - An Act Addressing Voter Qualification",
           "type": "MEASURE",
-          "measureTextUrl": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+          "measureTextUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -3540,6 +3540,87 @@
             "verifiedAt": "2026-10-14T05:03:07.845669Z",
             "doorId": "fec-ak-chief",
             "quote": "Ballot Measure No.2\n24ESEG - An Act Restoring\nPolitical Party Primaries,\nEnding Ranked-Choice\nGeneral Elections, and\nRepealing Recent Campaign\nFinance Laws\nThis act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+            "sourceHash": "2ad69f8de5ad85146a2fb007b46b0801576613a293c960814cba1ac4c2140a2d",
+            "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+            "publisher": "Alaska Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-2ad69f8de5ad85146a2fb007b46b0801576613a293c960814cba1ac4c2140a2d.txt",
+              "byteLength": 69638,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+                "sourceHash": "7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f",
+                "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+                "publisher": "Alaska Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f.pdf",
+                  "byteLength": 9427765,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+            "sourceHash": "a0f57ecf73584cd19201c4099c2f78659ad3d4464a22645e4090be5844f3e8fa",
+            "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+            "publisher": "Alaska Division of Elections",
+            "summary": "This Act will reverse changes made by voters in 2020 to state elections.\nThe Act changes the rules for primary elections. The Act ends the top four open primary. The primary\nwill be a party primary. The director of elections will make a ballot for each party. Each party ballot will\nlist the candidates running for that party’s nomination.\nThe Act changes the campaign finance rules. The Act removes limits on contributions to a joint\ncampaign for governor and lieutenant governor. The Act allows entities to accept more than $2,000\nin dark money. The Act lets people contribute money through a third party without disclosing the true\nsource. The Act ends a requirement that a “paid for by” message appear during the entirety of a\ncommunication. The Act ends a requirement that a disclaimer appear on ads paid for by an outside\nsource.\n\nBallot Measure No. 2 - 24ESEG\nAn Act Restoring Political Party Primaries, Ending Ranked-Choice\nGeneral Elections, and Repealing Recent Campaign Finance Laws\nA party will choose who may run and vote in its primary. In the primary a voter may vote only one\nparty’s ballot. The person who gets the most votes in a party primary is the party’s nominee. The party\nnominees will move on to the general election. Other candidates may petition to be on the general\nelection ballot. Reenacts unconstitutional law that a candidate must register as a member of a political\nparty to run in that party’s primary. Reenacts unconstitutional laws requiring a separate ballot for each\npolitical party.\nThe Act changes the process used to fill vacancies in office. The Act ends special primaries. A party will\nuse a petition to nominate its candidate for a special election to fill a vacancy. Other candidates may\npetition to be on the ballot. The Act adds a special runoff to some races. The Act sets the timeframes\nfor special elections and special runoff elections. The governor will call a special runoff if no candidate\nin a special election for congress gets more than half the votes. A ballot measure may appear on a\nspecial runoff ballot. When the governor appoints a person to fill a vacancy in the state legislature, the\ngovernor will appoint a member of the same party, if any, that nominated the predecessor.\nThe Act changes the ballot for general elections. The ballot will show a candidate’s party designation,\nif any. Write-in candidates for governor and lieutenant governor will be members of the same party or\ngroup. The Act changes voting in general elections. The Act ends ranked-choice voting. A voter will\nvote for one candidate for each office; the candidate with the most votes wins.\nThe Act will change the definition of “political party”. Members of the governor’s party and members\nof the party that received the second most votes in the last election for governor will serve on some\nstate boards. The Governor must appoint two members of the Alaska Public Offices Commission\nfrom lists made by these parties. A candidate may appoint a poll watcher if the candidate does not\nrepresent a party.",
+            "fiscalImpact": "Multi Agency Cost Summary\nAgency\nAlaska Public Offices Commission\nOffice of the Lieutenant Governor\nOffice of the Lieutenant Governor – Division of Elections\nTOTAL\n\nCost\n$6,975\n$15,000\n$2,608,983\n$2,630,958\n\nEstimate of Costs to the Alaska Public Offices Commission\nAs required by AS 15.45.090(a)(4), the Alaska Public Offices Commission (APOC) has prepared\nthe following statement of costs to implement the proposed ballot initiative.\nThe proposed initiative seeks to repeal provisions of Ballot Measure 2 passed by voters in the\n2020 state general election. If passed the initiative would repeal certain reporting requirements for\npersons engaged in independent expenditure activities and their contributors; and certain identifier\nrequirements for political communications.\n\nBallot Measure No. 2 - 24ESEG\nAn Act Restoring Political Party Primaries, Ending Ranked-Choice\nGeneral Elections, and Repealing Recent Campaign Finance Laws\nApproximately 60 programming hours will be required to design, test, and deploy changes to the\nagency’s online filing program. Estimated Cost: ~$3,975\nApproximately 30 staff hours will be required to revise, publish notice, and adopt regulations\nneeded to implement the measure. Estimated Cost: ~$3,000\n$6,975\n\nEstimated cost to amend APOC’s online filing program and adopt new regulations\n\nEstimate of Costs to the Office of the Lieutenant Governor and the Division of Elections\nAs required by AS 15.45.090(a)(3), the Office of the Lieutenant Governor and the Division of\nElections has prepared the following statement of costs to implement the proposed ballot initiative.\nLieutenant Governor\nUnder Alaska Statute 15.45.195, at least 30 days before the election at which an initiative is to\nappear on the ballot, the lieutenant governor or a designee of the lieutenant governor shall hold\ntwo or more public hearings concerning the initiative in each judicial district of the state. Each\npublic hearing under this section shall include the written or oral testimony of one supporter and\none opponent of the initiative.\n$15,000\n\nEstimated cost of travel and LIO services for Lt. Governor and one staff member\nDivision of Elections\n\nThe minimum cost to the Division of Elections associated with certification of the initiative\napplication and review of the initiative petition, excluding legal costs to the state and the costs to\nthe state of any challenge to the validity of the petition, is estimated to be $2,608,983.\nEstimate by Category\nPersonal Services\nPrinting Services\nVoter Education\nLanguage Assistance\nTOTAL\n\n$81,626\n$1,505\n$2,500,000\n$25,852\n$2,608,983\n\nAnalysis of Fiscal Impact of Ballot Initiative\nInitiative Petition Review\nPersonal Services: Six temporary employees to review signatures for 2,520 hours.\nEstimated cost: $57,312\nCertification of the initiative application and review of the initiative petition estimated for 504 hours.\nEstimated cost: $24,314.\n\nBallot Measure No. 2 - 24ESEG\nAn Act Restoring Political Party Primaries, Ending Ranked-Choice\nGeneral Elections, and Repealing Recent Campaign Finance Laws\nPrinting Services: Printing service expenses associated with certification of the initiative application\nand review of initiative petition.\nPrinting of voter booklets: $1,505\nPublic Education Campaign\nA public education campaign will need to take place to inform candidates, voters, and election\nworkers of the changes to the primary and general election processes.\nEstimated cost: $2,500,000\nLanguage Assistance\nEstimated cost of translating the ballot measure language for audio and sample ballots and,\nOfficial Election Pamphlet pro statement, Official Election Pamphlet con statement and Official\nElection Pamphlet neutral summary into languages required by the Toyukak Settlement and\nSection 203 of the Federal Voting Rights Act.\nEstimated cost: $25,852\nTOTAL all categories: $2,630,958\n\nBallot Measure No. 2 - 24ESEG\nAn Act Restoring Political Party Primaries, Ending Ranked-Choice\nGeneral Elections, and Repealing Recent Campaign Finance Laws",
+            "argumentsFor": [
+              "Voting Yes on Ballot Measure 2 restores Alaska’s elections to how they were before 2020:\n1. End Ranked Choice Voting\n2. Bring Back Open Primaries\n3. Restore Pre-2020 Campaign Disclosure Laws\n(1) Yes on 2 Ends Ranked Choice Voting\n• Dark Money: Out-of-state dark money groups have spent tens of millions of dollars trying to sell Alaskans on\nranked choice voting.\n• Banned in 19 States: Dark money billionaires from the lower 48 are losing the fight for ranked choice voting all\nover the country. They hope that, if they spend enough dark money here, Alaskans will keep their failed system.\n• Complicated Ballots: Ranked choice ballots are a complicated mess. Ending ranked choice voting will return to\nsimple, One Person, One Vote elections.\n• Trashed Ballots: Thousands of ballots don’t count every year. Ending ranked choice voting will ensure that\nelection results represent the will of all voters, not just the ones who properly fill out an overly-complex ballot.\n• Manipulated Results: Due to low turnout, trashed ballots, and incorrectly filled out ballots, the results of every\nelection are not representative of Alaskans. This harms Alaskans, but helps candidates supported by the out-ofstate dark money.\n• High Risk: Ranked choice voting has created many documented cases of election irregularities. Worse, it is\nimpossible to verify those questionable results by human hand count - instead we have to just trust a computer\nalgorithm.\n• Waiting Weeks for Results: Results already take forever to collect from across Alaska. Ranked choice voting\nmakes that problem even worse by delaying results for weeks.\n(2) Yes on 2 Brings Back Open Primaries\n• Bring Back Open Primaries: Yes on 2 will *not* close Alaska’s primaries. That’s a lie. Our primaries will return to\nthe pre-2020 system that was open to 100% of Alaskans - including those who are not members of any party.\n• Alaska’s History of Open Primaries: A nonpartisan study by the Bipartisan Policy Center rated Alaska’s elections\nbefore the 2020 Jungle Primary system as “Open.” That’s because they were Open to 100% of Alaskan voters. A\nYes vote on 2 restores that same Open Primary system.\n• Dark Money Lies: The same out-of-state money falsely claiming that Yes on 2 will close Alaska’s primaries\nactually funded the nonpartisan study that rated our elections as “Open.” So, they know better. They must just\nthink Alaskans are dumb.\n• End the Jungle Primary: Yes on 2 will end the complicated jungle primary system that resulted in 17 candidates\nfor governor this year and 48 candidates for Congress in 2022.\n(3) Yes on 2 Restores Pre-2020 Campaign Disclosure Laws\n• Dark Money is Still Flowing: The same out-of-state billionaires claiming that a Yes on 2 will cause dark money to\nflow into Alaska have spent tens of millions of dollars in dark money to protect ranked choice voting.\n• Defeat Ranked Choice Dark Money: Yes on 2 will defeat the largest source of dark money Alaska has ever seen\n- the tens of millions of dollars spent to support ranked choice voting.\nMead Treadwell, former Lt. Governor of Alaska\nCraig Campbell, former Lt. Governor of Alaska\nLoren Leman, former Lt. Governor of Alaska\nThe statement printed on this page is the opinion of the author(s) and is presented as submitted to the Division of Elections.\n\nBallot Measure No. 2 - 24ESEG\nAn Act Restoring Political Party Primaries, Ending Ranked-Choice\nGeneral Elections, and Repealing Recent Campaign Finance Laws"
+            ],
+            "argumentsAgainst": [
+              "Measure 2 would ﬂood Alaska with untraceable campaign cash, take away our freedom to vote for any candidate we\nchoose, and allow politicians to win without a majority of the vote.\nTo stop Dark Money and to stop political insiders from taking away your right to vote for who you want, VOTE NO.\nAlaska’s election system has three parts that together make us unique from any other state in the country:\n• Dark Money disclosure laws give us the right to know who is spending in our elections and require outside\nspenders to publicly disclose the true source of their funding.\n• Open primaries ensure political parties do not control our primary elections and that every Alaskan has the\nright to vote for whichever candidates we want.\n• Ranked choice voting ensures that the winning candidate must earn the support of a majority of the voters.\nBallot Measure 2 would get rid of all three parts.\nWhy are the sponsors of this initiative ONLY talking about repealing ranked choice voting, with no mention of the\nﬂood of anonymous campaign cash coming our way if it passes?\nBecause they are trying to hide what this measure is really about:\n• Ballot Measure 2 gets rid of campaign ﬁnance transparency requirements and allows secret, undisclosed\nspending in Alaska’s elections.\n• Ballot Measure 2 also gives political party bosses the right to deny unafﬁliated voters the ability to vote in\nprimary elections. 60%+ of Alaskan voters are unafﬁliated.\nVoting No protects voter freedom:\n• Voting No says NO to Outside Billionaires buying our elections with no accountability.\n• Voting No afﬁrms that Alaskans have the right to know who is spending in our elections.\n• Voting No protects every Alaskans’ freedom to vote in every election.\nA few questions to consider before you vote:\n• Do you think we should have LESS transparency in our elections?\n• Do you think names of those spending money in Alaska’s elections should be kept SECRET?\n• Do you think we should give more power and inﬂuence to political party insiders and their outside billionaire\ndonors?\n• Do you think we should allow political parties to ban 60%+ of Alaskans from voting in primary elections just\nbecause they prefer not to join a party?\nIf your answers to any of these questions is NO, you should vote NO on Ballot Measure 2.\nThis is the third time in six years that Alaskans are being asked to vote on our election system. Special interest\ngroups and political party insiders are demanding we waste more time and money on this costly repeat ballot\nmeasure so that they can take power away from the voters and back for themselves.\nThis issue is not Democrats vs. Republicans. It is Alaskans vs. Outside Billionaires and political insiders.\nVote No on Measure 2 to stop Dark Money and protect Alaskans’ independence.\nNicole Borromeo, President, ANCSA Regional Association\nSen. Cathy Giessel, Senate Majority Leader (R)\nJoelle Hall, President, Alaska AFL-CIO\nThe statement printed on this page is the opinion of the author(s) and is presented as submitted to the Division of Elections."
+            ],
+            "passageThreshold": "If a majority of the votes cast on the proposition favor its adoption, the initiated measure is enacted.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
+              "sourceHash": "6bbc84f5ff3d4b05377c8653488f84ed4c33ced912cec78b9ed78e235fc701e3",
+              "retrievedAt": "2026-10-15T00:00:18.316167+00:00",
+              "publisher": "Alaska Legislature",
+              "vault": {
+                "key": "project/freshness/source/akleg.gov/2026/10/15/ms-01-dfc39a98f2bf72d3/sha256-6bbc84f5ff3d4b05377c8653488f84ed4c33ced912cec78b9ed78e235fc701e3.txt",
+                "byteLength": 104,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
+                  "sourceHash": "5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438",
+                  "retrievedAt": "2026-10-15T00:00:18.316167+00:00",
+                  "publisher": "Alaska Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/akleg.gov/2026/10/15/ms-01-dfc39a98f2bf72d3/sha256-5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438.pdf",
+                    "byteLength": 689391,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-a0f57ecf73584cd19201c4099c2f78659ad3d4464a22645e4090be5844f3e8fa.txt",
+              "byteLength": 89622,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+                "sourceHash": "7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f",
+                "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+                "publisher": "Alaska Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f.pdf",
+                  "byteLength": 9427765,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -3555,6 +3636,85 @@
             "verifiedAt": "2026-10-14T05:03:07.845669Z",
             "doorId": "fec-ak-chief",
             "quote": "Ballot Measure No.3\n25USCV - An Act Addressing\nVoter Qualification\nAlaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+            "sourceHash": "aeae2359de15464f1efada4c7845d8e70c82a4b95f4e506090fb99c433f2dcd8",
+            "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+            "publisher": "Alaska Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-aeae2359de15464f1efada4c7845d8e70c82a4b95f4e506090fb99c433f2dcd8.txt",
+              "byteLength": 775,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+                "sourceHash": "7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f",
+                "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+                "publisher": "Alaska Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f.pdf",
+                  "byteLength": 9427765,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+            "sourceHash": "e8bb4446bf482a549477c6d2582142a7eacdc8ee4eefd801b36d8f0cfbccae01",
+            "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+            "publisher": "Alaska Division of Elections",
+            "summary": "Alaska statute has four requirements a person must meet before they can vote. First, the person must\nbe a citizen of the United States. Second, the person must be at least 18 years of age or older. Third,\nthe person must be a resident of Alaska and the applicable state house district for 30 days before the\nelection. And fourth, the person must have registered to vote in Alaska and cannot be registered to\nvote in another jurisdiction. This Act would reword that statute so that it says only a person who meets\nall four requirements may vote. This Act would not change the requirements or qualifications to vote.",
+            "fiscalImpact": "Agency Cost Summary\nAgency\nOffice of the Lieutenant Governor\nOffice of the Lieutenant Governor – Division of Elections\nTOTAL\n\nCost\n$15,000\n$99,050\n$114,050\n\nEstimate of Costs to the Office of the Lieutenant Governor and the Division of Elections\nAs required by AS 15.45.090(a)(3), the Office of the Lieutenant Governor and the Division of\nElections have prepared the following statement of costs to implement the proposed ballot initiative.\nLieutenant Governor\nUnder Alaska Statute 15.45.195, at least 30 days before the election at which an initiative is to\nappear on the ballot, the lieutenant governor or a designee of the lieutenant governor shall hold\ntwo or more public hearings concerning the initiative in each judicial district of the state. Each\npublic hearing under this section shall include the written or oral testimony of one supporter and\none opponent of the initiative.\nEstimated cost of travel for Lt. Governor and one staff member\n\n$15,000\n\nBallot Measure No. 3 - 25USCV\nAn Act Addressing Voter Qualification\nDivision of Elections\nThe minimum cost to the Division of Elections associated with certification of the initiative application\nand review of the initiative petition, excluding legal costs to the state and the costs to the state of\nany challenge to the validity of the petition, is estimated to be $99,050.\nSix temporary employees will be required to review signatures for 2,520 hours at an estimated cost\nof $58,804 and certification of the initiative application and review of the initiative petition estimated\nfor 504 hours will cost an estimated $23,639. Printing service expenses associated with certification\nof the initiative application and review of the initiative petition will require $1,605 for the printing of\nvoter booklets.\nEstimated cost of translating the ballot measure language for audio and sample ballots, an Official\nElection Pamphlet pro statement, Official Election Pamphlet con statement, and Official Election\nPamphlet neutral summary into languages required by the Toyukak Settlement and Section 203 of\nthe Federal Voting Rights Act, will require an estimated $15,002.\nEstimate by Category\nPetition Review\nPetition Printing Services\nLanguage Translations of Initiative Text\nTOTAL\n\n$82,443\n$1,605\n$15,002\n$99,050\n\nBallot Measure No. 3 - 25USCV\nAn Act Addressing Voter Qualification",
+            "argumentsFor": [
+              "By Sponsors John Coghill, Mike Chenault, and Josh Revak\nWhat is Ballot Measure 25USCV?\nBallot Measure 25USCV is a citizens’ initiative that would add clarity to Alaska law by stating that only\nUnited States citizens may be qualified voters in Alaska elections.\nCurrent law says citizens may vote, but it does not specifically state that only citizens may vote. This\nmeasure closes that gap and makes Alaska law unmistakably clear.\nIt does not change who is a U.S. citizen or affect federal immigration law. It clarifies Alaska election law\nso it reflects what most voters already understand: when Alaskans cast ballots for local, state, or federal\noffices, they are participating in a uniquely American act of self-government reserved for citizens.\nWhat will Ballot Measure 25USCV do?\nIf approved, this measure will write into law that voter qualification in Alaska is limited to\nU.S. citizens, while keeping existing protections against discrimination on the basis of race, gender,\nreligion, or disability.\nThe initiative does not change registration procedures for eligible citizens. It clarifies that non-citizens,\neven if lawfully present, may not register or vote in state or local elections.\nBallot Measure 25USCV also helps ensure that Alaska’s election system remains straightforward and\neasier to run. Clear standards reduce confusion at the Division of Elections, the DMV, and other agencies\nthat help register voters, and they make it less likely that ineligible individuals will be accidentally added to\nthe rolls.\nWhat will voting YES on Ballot Measure 25USCV do?\nA YES vote will affirm that Alaskans want to keep voting a core right and responsibility of citizenship.\nAround the country, a growing number of cities have begun allowing certain non-citizens to vote in local\nelections, creating confusion and controversy about who should participate in choosing community leaders\nand passing laws. By passing 25USCV, Alaska will make clear that it is not going down that path.\nVoting YES will also give clearer guidance to election officials and potential voters. When the rule is simple\n— you must be a U.S. citizen to vote — people are less likely to make honest mistakes, and the state is\nbetter able to maintain accurate voter lists.\nVote YES to Protect the Integrity of Alaska’s Elections\nAlaskans are proud of a tradition of civic participation, close-knit communities, and competitive elections\ndecided by small margins. Public confidence that every legal vote counts — and that only legal votes\ncount — is essential.\nBallot Measure 25USCV strengthens that confidence by confirming in law that Alaska elections are for\nU.S. citizens, while leaving intact all of the ways eligible Alaskans can register and vote.\nThis initiative also honors the path of legal immigration and citizenship. It supports immigrants who work\nhard to become U.S. citizens and then fully earn the right to vote.\nJohn Coghill Jr., Former Senator\nCharles M. Chenault, Former Speaker of the House\nJoshua C. Revak, Former Alaska State Senator\nThe statement printed on this page is the opinion of the author(s) and is presented as submitted to the Division of Elections.\n\nBallot Measure No. 3 - 25USCV\nAn Act Addressing Voter Qualification"
+            ],
+            "argumentsAgainst": [],
+            "passageThreshold": "If a majority of the votes cast on the proposition favor its adoption, the initiated measure is enacted.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
+              "sourceHash": "6bbc84f5ff3d4b05377c8653488f84ed4c33ced912cec78b9ed78e235fc701e3",
+              "retrievedAt": "2026-10-15T00:00:18.316167+00:00",
+              "publisher": "Alaska Legislature",
+              "vault": {
+                "key": "project/freshness/source/akleg.gov/2026/10/15/ms-01-dfc39a98f2bf72d3/sha256-6bbc84f5ff3d4b05377c8653488f84ed4c33ced912cec78b9ed78e235fc701e3.txt",
+                "byteLength": 104,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
+                  "sourceHash": "5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438",
+                  "retrievedAt": "2026-10-15T00:00:18.316167+00:00",
+                  "publisher": "Alaska Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/akleg.gov/2026/10/15/ms-01-dfc39a98f2bf72d3/sha256-5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438.pdf",
+                    "byteLength": 689391,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-e8bb4446bf482a549477c6d2582142a7eacdc8ee4eefd801b36d8f0cfbccae01.txt",
+              "byteLength": 7938,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+                "sourceHash": "7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f",
+                "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+                "publisher": "Alaska Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f.pdf",
+                  "byteLength": 9427765,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -3564,13 +3724,755 @@
         "The general-election sample ballot prints Ballot Measures No.2 (24ESEG) and No.3 (25USCV). Initiative 23RCF2 is excluded: its official status page says it was approved by voters, YES – 117,962, NO – 45,418, and its audio link identifies the 2026 Primary Election.",
         "The official website includes this general-election statement: “Updates will occur as they are received and processed.” Certified write-ins in the roster are included; future certifications can change the list.",
         "The election office’s .gov hostname returned an upstream certificate verification error. The same public election-office publications were recovered from the hostname’s observed CloudFront DNS target with certificate verification enabled."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ak-doe-2026-general-measure-2",
+          "whatItDoes": "AN INITIATIVE TO:\nREPEAL A NONPARTISAN AND OPEN TOP FOUR PRIMARY ELECTION SYSTEM AND\nRANKED-CHOICE GENERAL ELECTION SYSTEM; AND TO REESTABLISH A PARTISAN\nPOLITICAL PRIMARY AND CHANGE NECESSARY APPOINTMENT PROCEDURES FOR\nCERTAIN ELECTION BOARDS AND WATCHERS AND THE ALASKA PUBLIC OFFICES\nCOMMISSION;",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ak-doe-2026-general-measure-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "*Sec. 1. AS 15.10.120(c) is amended to read:\n(c) An election supervisor shall appoint one nominee of the political party or political group\nwith the largest number of registered voters at the time of the preceding gubernatorial\nelection of which the Governor is a member and one nominee of the political party or"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "*Sec. 2. AS 15.10.170 is amended to read:\nSec. 15.10.170. Appointment and privileges of watchers. The precinct party\ncommittee, where an organized precinct committee exists, or the party district committee\nwhere no organized precinct committee exists, or the state party chairperson where"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "*Sec. 3. AS 15.13.020(b) through AS 15.13.020(d) is amended to read:\n(b) The governor shall appoint two members of each of the two political parties or political\ngroups with the largest number of registered voters at the time of whose candidate for"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "*Sec. 4. AS 15.13.040(s) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "*Sec. 5. AS 15.13.070(g) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "*Sec. 6. AS 15.13.074(b) is amended to read:\n(b) A person or group may not make a contribution anonymously, using a fictitious name,\nor using the name of another."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "Section 7",
+              "what": "*Sec. 7. AS 15.13.074(c) is amended to read:\n(c) A person or group may not make a contribution\n(1) to a candidate or an individual who files with the commission the document\nnecessary to permit that individual to incur certain election-related expenses as"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "Section 8",
+              "what": "*Sec. 8. AS 15.13.090(c) is amended to read:\n(c) To satisfy the requirements of (a)(1) of this section and, if applicable, (a)(2)(C) of this\nsection, a communication that includes a print or video component must have the following\nstatement or statements placed in the communication so as to be easily discernible;"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "Section 9",
+              "what": "*Sec. 9. AS 15.13.090(g) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "Section 10",
+              "what": "*Sec. 10. AS 15.13.110(f) is amended to read:\n(f) During the year in which the election is scheduled, each of the following shall file the\ncampaign disclosure reports in the manner and at the times required by this section:\n(1) a person who, under the regulations adopted by the commission to implement AS"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-11",
+              "number": "11",
+              "kind": "PROGRAM",
+              "label": "Section 11",
+              "what": "*Sec. 11. AS 15.13.110(k) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-12",
+              "number": "12",
+              "kind": "PROGRAM",
+              "label": "Section 12",
+              "what": "*Sec. 12. AS 15.13.390(a) is amended to read:\n(a) A person who fails to register when required by AS 15.13.050(a) or who fails to file\na properly completed and certified report within the time required by AS 15.13.040,\n15.13.060(b) - (d), 15.13.110(a)(1), (3), or (4); (e), or (f) is subject to a civil penalty of"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-13",
+              "number": "13",
+              "kind": "PROGRAM",
+              "label": "Section 13",
+              "what": "*Sec. 13. AS 15.13.400(3) is amended to read:\n(3) “communication” means an announcement or advertisement disseminated through\nprint or broadcast media, including radio, television, cable, and satellite, the Internet, or\nthrough a mass mailing, excluding those placed by an individual or nongroup entity and"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-14",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "Section 14",
+              "what": "*Sec. 14. AS 15.13.400(4) is amended to read:\n(4) “contribution”\n(A) means a purchase, payment, promise or obligation to pay, loan or loan\nguarantee, deposit or gift of money, goods, or services for which charge is ordinarily\nmade, and includes the payment by a person other than a candidate or political party,"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-15",
+              "number": "15",
+              "kind": "PROGRAM",
+              "label": "Section 15",
+              "what": "*Sec. 15. AS 15.13.400(6) is amended to read:\n(6) “expenditure”\n(A) means a purchase or a transfer of money or anything of value, or promise or\nagreement to purchase or transfer money or anything of value, incurred or made for\nthe purpose of"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-16",
+              "number": "16",
+              "kind": "PROGRAM",
+              "label": "Section 16",
+              "what": "*Sec. 16. AS 15.13.400(18) through AS 15.13.400(19) are repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-17",
+              "number": "17",
+              "kind": "PROGRAM",
+              "label": "Section 17",
+              "what": "*Sec. 17. AS 15.15.005 is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-18",
+              "number": "18",
+              "kind": "PROGRAM",
+              "label": "Section 18",
+              "what": "*Sec. 18. AS 15.15.025 is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-19",
+              "number": "19",
+              "kind": "PROGRAM",
+              "label": "Section 19",
+              "what": "*Sec. 19. AS 15.15.030(5) is amended to read:\n(5) The names of the candidates and their party designations shall be placed in separate\nsections on the state general election ballot under the office designation to which they\nwere nominated if a candidate is registered as affiliated with a political party or political"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-20",
+              "number": "20",
+              "kind": "PROGRAM",
+              "label": "Section 20",
+              "what": "*Sec. 20. AS 15.15.030(14) - (17) are repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-21",
+              "number": "21",
+              "kind": "PROGRAM",
+              "label": "Section 21",
+              "what": "*Sec. 21. AS 15.15.060(e) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-22",
+              "number": "22",
+              "kind": "PROGRAM",
+              "label": "Section 22",
+              "what": "*Sec. 22. AS 15.15.350(c) - (g) are repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-23",
+              "number": "23",
+              "kind": "PROGRAM",
+              "label": "Section 23",
+              "what": "*Sec. 23. AS 15.15.360(a) is amended to read:\n(a) The election board shall count ballots according to the following rules:\n1. A voter may mark a ballot only by filling in, making “X” marks, diagonal, horizontal,\nor vertical marks, solid marks, stars, circles, asterisks, checks, or plus signs that"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-24",
+              "number": "24",
+              "kind": "PROGRAM",
+              "label": "Section 24",
+              "what": "*Sec. 24. AS 15.15.370 is amended to read:\nSec. 15.15.370. Completion of ballot count; certificate. When the count of ballots is\ncompleted, and in no event later than the day after the election, the election board shall\nmake a certificate in duplicate of the results. The certificate includes the number of votes"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-25",
+              "number": "25",
+              "kind": "PROGRAM",
+              "label": "Section 25",
+              "what": "*Sec. 25. AS 15.15.450 is amended to read:\nSec. 15.15.450. Certification of state ballot counting review. Upon completion of\nthe state ballot counting review the director shall certify the person receiving the largest\nnumber of votes for the office for which that person was a candidate as elected to that"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-26",
+              "number": "26",
+              "kind": "PROGRAM",
+              "label": "Section 26",
+              "what": "*Sec. 26. AS 15.20.081 (h) is amended to read:\n(h) Except as provided in AS 15.20.480, an absentee ballot returned by mail from outside\nthe United States or from an overseas voter qualifying under AS 15.05.011 that has been\nmarked and mailed not later than election day may not be counted unless the ballot is"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-27",
+              "number": "27",
+              "kind": "PROGRAM",
+              "label": "Section 27",
+              "what": "*Sec. 27. AS 15.20.190(a) is amended to read:\n(a) Thirty days before the date of an election, the election supervisors shall appoint, in the\nsame manner provided for the appointment of election officials prescribed in AS 15.10,\ndistrict absentee ballot counting boards and district questioned ballot counting boards,"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-28",
+              "number": "28",
+              "kind": "PROGRAM",
+              "label": "Section 28",
+              "what": "*Sec. 28. AS 15.20.203(i) is amended to read:\n(i) The director shall mail the materials described in (h) of this section to the voter not later\nthan\n(1) 10 days after completion of the review of ballots by the state review board for a\nprimary election, or for a special election under AS 15.40.140 that is followed by a"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-29",
+              "number": "29",
+              "kind": "PROGRAM",
+              "label": "Section 29",
+              "what": "*Sec. 29. AS 15.20.203(j) is amended to read:\n(j)The director shall make available through a free access system to each absentee voter\na system to check to see whether the voter’s ballot was counted and, if not counted, the\nreason why the ballot was not counted. The director shall make this information available"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-30",
+              "number": "30",
+              "kind": "PROGRAM",
+              "label": "Section 30",
+              "what": "*Sec. 30. AS 15.20.207(i) is amended to read:\n(i) The director shall mail the materials described in (h) of this section to the voter not later\nthan\n\nThe text of this bill is presented as submitted by petition sponsors.\n\n(1) 10 days after completion of the review of ballots by the state review board for a"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-31",
+              "number": "31",
+              "kind": "PROGRAM",
+              "label": "Section 31",
+              "what": "*Sec. 31. AS 15.20.207(k) is amended to read:\n(k) The director shall make available through a free access system to each voter voting\na questioned ballot a system to check to see whether the voter’s ballot was counted and,\nif not counted, the reason why the ballot was not counted. The director shall make this"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-32",
+              "number": "32",
+              "kind": "PROGRAM",
+              "label": "Section 32",
+              "what": "*Sec. 32. AS 15.20.211(d) is amended to read:\n(d) The director shall mail the materials described in (c) of this section to the voter not later\nthan\n(1) 10 days after completion of the review of ballots by the state review board for a\nprimary election, or for a special election under AS 15.40.140 that is followed by a"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-33",
+              "number": "33",
+              "kind": "PROGRAM",
+              "label": "Section 33",
+              "what": "*Sec. 33. AS 15.20.211(f) is amended to read:\n(f) The director shall make available through a free access system to each voter whose\nballot was subject to partial counting under this section a system to check to see whether\nthe voter’s ballot was partially counted and, if not counted, the reason why the ballot was"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-34",
+              "number": "34",
+              "kind": "PROGRAM",
+              "label": "Section 34",
+              "what": "*Sec. 34. AS 15.25.010 is amended to read:\nSec. 15.25.010. Provision for primary election. Candidates for the elective state\nexecutive and state and national legislative offices shall be nominated in a primary\nelection by direct vote of the people in the manner prescribed by this chapter. The"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-35",
+              "number": "35",
+              "kind": "PROGRAM",
+              "label": "Section 35",
+              "what": "*Sec. 35. AS 15.25.014 is reenacted to read:\nSec. 15.25.014. Participation in primary election selection of a political party’s\ncandidates.\n(a) Not later than 5:00 p.m., Alaska time, on September 1 of the calendar year before\nthe calendar year in which a primary election is to be held, a political party shall submit"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-36",
+              "number": "36",
+              "kind": "PROGRAM",
+              "label": "Section 36",
+              "what": "*Sec. 36. AS 15.25.030(a) is amended to read:\n(a) A member of a political party who seeks to become a candidate of the party in the primary\nelection shall execute and file a declaration of candidacy. The declaration shall be executed"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-37",
+              "number": "37",
+              "kind": "PROGRAM",
+              "label": "Section 37",
+              "what": "*Sec. 37. AS 15.25.056 is reenacted to read:\nSec. 15.25.056. Nomination by party petition where incumbent dies or is disqualified\nor incapacitated.\n(a) If an unopposed incumbent candidate for renomination dies, becomes disqualified from"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-38",
+              "number": "38",
+              "kind": "PROGRAM",
+              "label": "Section 38",
+              "what": "*Sec. 38. AS 15.25.060 is repealed and reenacted to read:\nSec. 15.25.060. Preparation and distribution of ballots; appropriate ballot.\n(a) The primary election ballots shall be prepared and distributed by the director in the\nmanner prescribed in this section. The director shall prepare and provide a primary election"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-39",
+              "number": "39",
+              "kind": "PROGRAM",
+              "label": "Section 39",
+              "what": "*Sec. 39. AS 15.25.100 is reenacted to read:\nSec. 15.25.100. Placement of candidates on general election ballot. The director shall\nplace the name of the candidate receiving the highest number of votes for an office by a\npolitical party on the general election ballot."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-40",
+              "number": "40",
+              "kind": "PROGRAM",
+              "label": "Section 40",
+              "what": "*Sec. 40. AS 15.25.105(a) is amended to read:\n(a) If a candidate does not appear on the primary election ballot or is not successful in\nadvancing to the general election and wishes to be a candidate in the general election,\nthe candidate may file as a write-in candidate. Votes for a write-in candidate may not be"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-41",
+              "number": "41",
+              "kind": "PROGRAM",
+              "label": "Section 41",
+              "what": "*Sec. 41. AS 15.25.105(b) is amended to read:\n(b) If a write-in candidate is running for the office of governor, the candidate must file a joint\nletter of intent together with a candidate for lieutenant governor. Both candidates must be\nof the same political party or group."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-42",
+              "number": "42",
+              "kind": "PROGRAM",
+              "label": "Section 42",
+              "what": "*Sec. 42. AS 15.25.110 is reenacted to read:\nSec. 15.25.110. Filling vacancies by party petition. If a candidate of a political party\nnominated at the primary election dies, withdraws, resigns, becomes disqualified\nfrom holding the office for which the candidate is nominated, or is certified as being"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-43",
+              "number": "43",
+              "kind": "PROGRAM",
+              "label": "Section 43",
+              "what": "*Sec. 43. AS 15.25.120 is reenacted to read:\nSec. 15.25.120. Requirements for party petition. Party petitions for the nomination of\ncandidates shall state in substance that the political party desires and intends to support\nthe named candidate for the named office and requests that the name of the proposed"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-44",
+              "number": "44",
+              "kind": "PROGRAM",
+              "label": "Section 44",
+              "what": "*Sec. 44. AS 15.25.130 is reenacted to read:\nSec. 15.25.130. Selection of nominees for party petition. The nominees of political\nparties by party petition may be selected for statewide offices by the state party central\ncommittee or in any other manner prescribed by the party bylaws, and the petition for"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-45",
+              "number": "45",
+              "kind": "PROGRAM",
+              "label": "Section 45",
+              "what": "*Sec. 45. AS 15.25.140 is reenacted to read:\nSec. 15.25.140. Provision for no-party candidate nominations. Candidates not\nrepresenting a political party are nominated by petition."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-46",
+              "number": "46",
+              "kind": "PROGRAM",
+              "label": "Section 46",
+              "what": "*Sec. 46. AS 15.25.150 is reenacted to read:\nSec. 15.25.150. Date of filing petition. A candidate seeking nomination by petition\nshall submit the information required under AS 15.25.180(a)(1) - (8) and (11) - (17) to\nthe director in the time and manner specified in AS 15.25.040. The full petition with voter"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-47",
+              "number": "47",
+              "kind": "PROGRAM",
+              "label": "Section 47",
+              "what": "*Sec. 47. AS 15.25.160 is reenacted to read:\nSec. 15.25.160. Required number of signatures for statewide office. Petitions for the\nnomination of candidates for the office of governor, lieutenant governor, United States\nsenator, and United States representative shall be signed by qualified voters of the state"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-48",
+              "number": "48",
+              "kind": "PROGRAM",
+              "label": "Section 48",
+              "what": "*Sec. 48. AS 15.25.170 is reenacted to read:\nSec. 15.25.170. Required number of signatures for district-wide offices. Petition for\nthe nomination of candidate for the office of state senator or state representative shall be\nsigned by qualified voters of the house or senate district in which the proposed nominee"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-49",
+              "number": "49",
+              "kind": "PROGRAM",
+              "label": "Section 49",
+              "what": "*Sec. 49. AS 15.25.180 is reenacted to read:\nSec. 15.25.180. Requirements for petition.\n(a) The petition must state in substance\n(1) the full name of the candidate;\nThe text of this bill is presented as submitted by petition sponsors.\n\n(2) the full residence address of the candidate and the date on which residency at"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-50",
+              "number": "50",
+              "kind": "PROGRAM",
+              "label": "Section 50",
+              "what": "*Sec. 50. AS 15.25.185 is reenacted to read:\nSec. 15.25.185. Eligibility of candidate. The provisions of AS 15.25.042 and 15.25.043\napply to determinations of a candidate’s eligibility when a candidate seeks nomination by\npetition under AS 15.25.140 - 15.25.200."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-51",
+              "number": "51",
+              "kind": "PROGRAM",
+              "label": "Section 51",
+              "what": "*Sec. 51. AS 15.25.190 is reenacted to read:\nSec. 15.25.190. Placement of names on general election ballot. The director shall place\nthe names and the political group affiliation of persons who have been properly nominated\nby petition on the general election ballot."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-52",
+              "number": "52",
+              "kind": "PROGRAM",
+              "label": "Section 52",
+              "what": "*Sec. 52. AS 15.25.200 is reenacted to read:\nSec. 15.25.200. Withdrawal of candidate’s name. If a candidate nominated by petition\ndies or withdraws after the petition has been filed and 64 days or more before the general\nelection, the director may not place the name of the candidate on the general election\nballot."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-53",
+              "number": "53",
+              "kind": "PROGRAM",
+              "label": "Section 53",
+              "what": "*Sec. 53. AS 15.30.010 is amended to read:\nSec. 15.30.010. Provision for selection of electors. Electors of President and Vice\nThe text of this bill is presented as submitted by petition sponsors.\n\nPresident of the United States are selected by election at the general election in\npresidential election years."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-54",
+              "number": "54",
+              "kind": "PROGRAM",
+              "label": "Section 54",
+              "what": "*Sec. 54. AS 15.40.140 is amended to read:\nSec. 15.40.140. Condition of calling special primary election and special election.\nWhen a vacancy occurs in the office of United States senator or United States\nrepresentative, the governor shall, by proclamation, call a special election under AS\n15.40.142(a)."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-55",
+              "number": "55",
+              "kind": "PROGRAM",
+              "label": "Section 55",
+              "what": "*Sec. 55. AS 15.40.141 is reenacted to read:\nSec. 15.40.141. Condition of calling special runoff election.\n(a) If no candidate in a special election called under AS 15.40.140 receives over 50 percent\nof the votes cast for the office, the governor shall, by proclamation, call a special runoff"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-56",
+              "number": "56",
+              "kind": "PROGRAM",
+              "label": "Section 56",
+              "what": "*Sec. 56. AS 15.40.142 is reenacted to read:\nSec. 15.40.142. Time of calling the special election and the special runoff election.\n(a) Except as provided in (c) of this section, if a special election is called under AS\n15.40.140, it shall be held on a date not less than 60, nor more than 90, days after the date"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-57",
+              "number": "57",
+              "kind": "PROGRAM",
+              "label": "Section 57",
+              "what": "*Sec. 57. AS 15.40.150 is reenacted to read:\nSec. 15.40.150. Condition for holding special election with primary. If the vacancy\noccurs on a date not less than 60, nor more than 90, days before the date of the primary\nelection, the governor shall, by proclamation, call the special election to be held on the"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-58",
+              "number": "58",
+              "kind": "PROGRAM",
+              "label": "Section 58",
+              "what": "*Sec. 58. AS 15.40.160 is amended to read:\nSec. 15.40.160. Proclamation. The governor shall issue the proclamation calling the\nspecial primary election and special election at least 50 days before the [(1)] special\nprimary election; and (2) if a special runoff election is required under AS 15.40.141 (a),"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-59",
+              "number": "59",
+              "kind": "PROGRAM",
+              "label": "Section 59",
+              "what": "*Sec. 59. AS 15.40.165 is amended to read:\nSec. 15.40.165. Term of elected senator. At the special election, or, as provided by AS\n15.40.141, at the special runoff election, a United States senator shall be elected to fill\nthe remainder of the unexpired term. The person elected shall take office on the date the"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-60",
+              "number": "60",
+              "kind": "PROGRAM",
+              "label": "Section 60",
+              "what": "*Sec. 60. AS 15.40.170 is amended to read:\nSec. 15.40.170. Term of elected representative. At the special election, or as provided by\nAS 15.40.141, at the special runoff election, a United States representative shall be elected\nto fill the remainder of the unexpired term."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-61",
+              "number": "61",
+              "kind": "PROGRAM",
+              "label": "Section 61",
+              "what": "*Sec. 61. AS 15.40.190 is amended to read:\nSec. 15.40.190. Requirements of petition for no-party candidates. Petitions for the\nnomination of candidates not representing a political party shall be signed by qualified\nvoters of the state equal in number to at least one percent of the number of voters who"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-62",
+              "number": "62",
+              "kind": "PROGRAM",
+              "label": "Section 62",
+              "what": "*Sec. 62. AS 15.40.200 is reenacted to read:\nSec. 15.40.200. Requirements of party petition. Petitions for the nomination of\ncandidates of political parties shall state in substance that the party desires and intends\nto support the named candidate for the office of United States senator or United States"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-63",
+              "number": "63",
+              "kind": "PROGRAM",
+              "label": "Section 63",
+              "what": "*Sec. 63. AS 15.40.210 is reenacted to read:\nSec. 15.40.210. Selection of party nominees. The nominees of political parties may be\nselected by the state convention or in any other manner prescribed by the party bylaws,\nand the petition shall be signed by the chairperson and secretary of the state convention,"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-64",
+              "number": "64",
+              "kind": "PROGRAM",
+              "label": "Section 64",
+              "what": "*Sec. 64. AS 15.40.220 is amended to read:\nSec. 15.40.220. General provisions for conduct of the special primary election\nand special runoff election. Unless specifically provided otherwise, all provisions\nregarding the conduct of the general election shall govern the conduct of the special"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-65",
+              "number": "65",
+              "kind": "PROGRAM",
+              "label": "Section 65",
+              "what": "*Sec. 65. AS 15.40.230 is amended to read:\nSec. 15.40.230. Condition and time of calling special primary election and special\nelection. When a person appointed to succeed to the office of lieutenant governor\nsucceeds to the office of acting governor, the acting governor shall, by proclamation, call"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-66",
+              "number": "66",
+              "kind": "PROGRAM",
+              "label": "Section 66",
+              "what": "*Sec. 66. AS 15.40.240 is amended to read:\nSec. 15.40.240. Conditions for holding special election with primary or general\nelection. If the vacancy occurs on a date not less than 60, nor more than 90, days before\nthe date of the primary election in years in which a governor is regularly elected or if the"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-67",
+              "number": "67",
+              "kind": "PROGRAM",
+              "label": "Section 67",
+              "what": "*Sec. 67. AS 15.40.250 is amended to read:\nSec. 15.40.250. Proclamation of special election. The acting governor shall issue the\nproclamation at least 50 days before the election."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-68",
+              "number": "68",
+              "kind": "PROGRAM",
+              "label": "Section 68",
+              "what": "*Sec. 68. AS 15.40.280 is amended to read:\nSec. 15.40.280. Requirements of petition for no-party candidates. Petitions for the\nnomination of candidates not representing a political party shall be signed by qualified\nvoters of the state equal in number to at least one percent of the number of voters who"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-69",
+              "number": "69",
+              "kind": "PROGRAM",
+              "label": "Section 69",
+              "what": "*Sec. 69. AS 15.40.290 is reenacted to read:\nSec. 15.40.290. Requirements of party petition. Petitions for the nomination of\ncandidates of political parties shall state in substance that the party desires and intends to\nsupport the named candidates for the offices of governor and lieutenant governor at the"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-70",
+              "number": "70",
+              "kind": "PROGRAM",
+              "label": "Section 70",
+              "what": "*Sec. 70. AS 15.40.300 is reenacted to read:\nSec. 15.40.300. Selection of party nominees. The nominees of political parties may be\nselected by state convention or in any other manner prescribed by the party bylaws, and\nthe petition shall be signed by the chairperson and secretary of the state convention, or, if"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-71",
+              "number": "71",
+              "kind": "PROGRAM",
+              "label": "Section 71",
+              "what": "*Sec. 71. AS 15.40.310 is amended to read:\nSec. 15.40.310. General provisions for conduct of special election. Unless specifically\nThe text of this bill is presented as submitted by petition sponsors.\n\nprovided otherwise, all provisions regarding the conduct of the general election shall govern"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-72",
+              "number": "72",
+              "kind": "PROGRAM",
+              "label": "Section 72",
+              "what": "*Sec. 72. AS 15.40.330 is amended to read:\nSec. 15.40.330. Qualification and confirmation of appointee.\n(a) The appointee shall meet the qualifications of a member of the legislature as prescribed\nin art. 11, sec. 2, Constitution of the State of Alaska, shall be a member of the same"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-73",
+              "number": "73",
+              "kind": "PROGRAM",
+              "label": "Section 73",
+              "what": "*Sec. 73. AS 15.40.380 is amended to read:\nSec. 15.40.380. Conditions for part-term senate appointment and special election. If\nthe vacancy is for an unexpired senate term of more than two years and five full calendar\nmonths, the governor shall call a special election by proclamation and the appointment"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-74",
+              "number": "74",
+              "kind": "PROGRAM",
+              "label": "Section 74",
+              "what": "*Sec. 74. AS 15.40.390 is amended to read:\nSec. 15.40.390. Date of special election. The special election to fill a vacancy in the\nThe text of this bill is presented as submitted by petition sponsors.\n\nstate senate shall be held on the date of the first general election held more than three full"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-75",
+              "number": "75",
+              "kind": "PROGRAM",
+              "label": "Section 75",
+              "what": "*Sec. 75. AS 15.40.400 is amended to read:\nSec. 15.40.400. Proclamation of special election. The governor shall issue the\nproclamation calling the special election at least 50 days before the election."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-76",
+              "number": "76",
+              "kind": "PROGRAM",
+              "label": "Section 76",
+              "what": "*Sec. 76. AS 15.40.440 is amended to read:\nSec. 15.40.440. Requirements of petition for no-party candidates. Petitions for the\nnomination of candidates not representing a political party shall be signed by qualified\nvoters equal in number to at least one percent of the number of voters who cast ballots"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-77",
+              "number": "77",
+              "kind": "PROGRAM",
+              "label": "Section 77",
+              "what": "*Sec. 77. AS 15.40.450 is reenacted to read:\nSec. 15.40.450. Requirements of petition by political party. Petitions for the nomination\nof candidates of political parties shall state in substance that the party desires and intends"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-78",
+              "number": "78",
+              "kind": "PROGRAM",
+              "label": "Section 78",
+              "what": "*Sec. 78. AS 15.40.460 is reenacted to read:\nSec. 15.40.460. Selection of political party nominees. The nominees of political parties\nmay be selected by the respective party district committee or by any other manner as\nprovided by the party bylaws, and the petition shall be signed by the chairperson of the"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-79",
+              "number": "79",
+              "kind": "PROGRAM",
+              "label": "Section 79",
+              "what": "*Sec. 79. AS 15.40.470 is amended to read:\nSec. 15.40.470. General provision for conduct of the special election. Unless\nspecifically provided otherwise, all provisions regarding the conduct of the general\nelection shall govern the conduct of the special election of state senators, including"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-80",
+              "number": "80",
+              "kind": "PROGRAM",
+              "label": "Section 80",
+              "what": "*Sec. 80. AS 15.45.190 is amended to read:\nSec. 15.45.190. Placing proposition on ballot. The lieutenant governor shall direct the\ndirector to place the ballot title and proposition on the election ballot of the first statewide\ngeneral, special, special runoff, or primary election that is held after"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-81",
+              "number": "81",
+              "kind": "PROGRAM",
+              "label": "Section 81",
+              "what": "*Sec. 81. AS 15.45.420 is amended to read:\nSec. 15.45.420. Placing proposition on ballot. The lieutenant governor shall direct the\ndirector to place the ballot title and proposition on the election ballot for the first statewide\ngeneral, special, special runoff, or primary election held more than 180 days after"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-82",
+              "number": "82",
+              "kind": "PROGRAM",
+              "label": "Section 82",
+              "what": "*Sec. 82. AS 15.58.010 is amended to read:\nSec. 15.58.010. Election pamphlet. Before each state general election, and before each\nstate primary, special, or special runoff election at which a ballot proposition is scheduled\nto appear on the ballot, the lieutenant governor shall prepare, publish, and mail at least"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-83",
+              "number": "83",
+              "kind": "PROGRAM",
+              "label": "Section 83",
+              "what": "*Sec. 83. AS 15.58.020(a)(13) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-84",
+              "number": "84",
+              "kind": "PROGRAM",
+              "label": "Section 84",
+              "what": "*Sec. 84. AS 15.58.020(b) is amended to read:\n(b) Each primary, special, or special runoff election pamphlet shall contain only the\ninformation specified in (a)(G) and (a)(9) of this section for each ballot measure scheduled\nto appear on the primary, special, or special runoff election ballot."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-85",
+              "number": "85",
+              "kind": "PROGRAM",
+              "label": "Section 85",
+              "what": "*Sec. 85. AS 15.58.020(c) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-86",
+              "number": "86",
+              "kind": "PROGRAM",
+              "label": "Section 86",
+              "what": "*Sec. 86. AS 15.58.030(b) is amended to read:\n(b) No later than July 22 of a year in which a state general election will be held, an\nindividual who becomes a candidate for the office of United States senator, United States\nrepresentative, governor, lieutenant governor, state senator, or state representative under"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-87",
+              "number": "87",
+              "kind": "PROGRAM",
+              "label": "Section 87",
+              "what": "*Sec. 87. AS 15.80.010(9) is amended to read:\n(9) “federal election” means a general, special, special runoff, or primary election held\nsolely or in part for the purpose of selecting, nominating, or electing a candidate for the\noffice of President, Vice-President, presidential elector, United States senator, or United"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-88",
+              "number": "88",
+              "kind": "PROGRAM",
+              "label": "Section 88",
+              "what": "*Sec. 88. AS 15.80.010(27) is amended to read:\n(27) “political party” means an organized group of voters that represents a political\nprogram and\n(A) that nominated a candidate for governor who received at least three percent of\nthe total votes cast for governor at the preceding general election or has registered"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-89",
+              "number": "89",
+              "kind": "PROGRAM",
+              "label": "Section 89",
+              "what": "*Sec. 89. AS 15.80.010(46) is repealed."
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-90",
+              "number": "90",
+              "kind": "PROGRAM",
+              "label": "Section 90",
+              "what": "*Sec. 90. AS 39.50.020(b) is amended to read:\n(b) A public official or former public official other than an elected or appointed municipal\nofficer shall file the statement with the Alaska Public Offices Commission. Candidates for\nthe office of governor and lieutenant governor and, if the candidate is not subject to AS"
+            },
+            {
+              "id": "ak-doe-2026-general-measure-2#section-91",
+              "number": "91",
+              "kind": "PROGRAM",
+              "label": "Section 91",
+              "what": "*Sec. 91. The uncodified law of the State of Alaska is amended by adding a new section to\nread:\nTRANSITION; VOTER EDUCATION AS TO CHANGES MADE TO RETURN TO A TRADITIONAL\nVOTING SYSTEM.\nFor a period of not less than two calendar years immediately following the effective date of this"
+            }
+          ],
+          "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+          "sourceHash": "2ad69f8de5ad85146a2fb007b46b0801576613a293c960814cba1ac4c2140a2d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:58:15.526908+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ak-doe-2026-general-measure-3",
+          "whatItDoes": "AN INITIATIVE TO:\nREQUIRE THAT ONLY UNITED STATES CITIZENS MAY BE QUALIFIED VOTERS IN\nALASKA ELECTIONS.\nA BILL BY INITIATIVE\nFor an Act Entitled\n“An Act requiring that only United States citizens may be qualified to vote in Alaska elections”\nBE IT ENACTED BY THE PEOPLE OF THE STATE OF ALASKA:\n*Section 1.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ak-doe-2026-general-measure-3#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "*Section 1. AS 15.05.010 is amended to read:\nSec. 15.05.010. Voter qualification. Only a person who\n\t\t\t(1) is a citizen of the United States;\n\t\t\t(2) is 18 years of age or older;\n\t\t\t(3) has been a resident of the state and of the house district in which the person seeks to"
+            }
+          ],
+          "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+          "sourceHash": "aeae2359de15464f1efada4c7845d8e70c82a4b95f4e506090fb99c433f2dcd8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:58:15.526908+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+          "sourceHash": "7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f",
+          "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+          "publisher": "Alaska Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f.pdf",
+            "byteLength": 9427765,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.elections.alaska.gov/petitions/24ESEG/24ESEG-Bill.pdf",
+          "sourceHash": "e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf",
+          "retrievedAt": "2026-10-14T23:52:28.872172+00:00",
+          "publisher": "Alaska Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-fc23347025893e06/sha256-e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf.pdf",
+            "byteLength": 1780817,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+          "sourceHash": "f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570",
+          "retrievedAt": "2026-10-14T23:52:28.212479+00:00",
+          "publisher": "Alaska Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-eff7be3316f2e2b8/sha256-f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570.pdf",
+            "byteLength": 75961,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
+          "sourceHash": "5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438",
+          "retrievedAt": "2026-10-15T00:00:18.316167+00:00",
+          "publisher": "Alaska Legislature",
+          "vault": {
+            "key": "project/freshness/source/akleg.gov/2026/10/15/ms-01-dfc39a98f2bf72d3/sha256-5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438.pdf",
+            "byteLength": 689391,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+          "sourceHash": "188710841f5b8d7c15cebbd6d2371ce9325465965891f5493b5bbf7726d4fa84",
+          "retrievedAt": "2026-10-14T05:03:07.845669Z",
+          "publisher": "Alaska Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/d1gqre4bkgnik3.cloudfront.net/2026/10/14/ms-01-bd0ec07652b2eb02/sha256-188710841f5b8d7c15cebbd6d2371ce9325465965891f5493b5bbf7726d4fa84.pdf",
+            "byteLength": 398339,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:05:10.560204Z",
+    "reviewedBy": "Codex MS-01",
+    "reviewedAt": "2026-10-15T04:14:40.056197+00:00",
     "sources": [
       {
         "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
@@ -3613,24 +4515,26 @@
         "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
       },
       {
-        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/24ESEG/24ESEG-Bill.pdf",
+        "requestedUrl": "https://www.elections.alaska.gov/petitions/24ESEG/24ESEG-Bill.pdf",
         "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/24ESEG/24ESEG-Bill.pdf",
         "httpStatus": 200,
         "rawHash": "e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf",
-        "retrievedAt": "2026-10-14T05:03:07.906921Z",
+        "retrievedAt": "2026-10-14T23:52:28.872172+00:00",
         "publisher": "Alaska Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
-        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+        "requestedUrl": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
         "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
         "httpStatus": 200,
         "rawHash": "f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570",
-        "retrievedAt": "2026-10-14T05:03:07.867432Z",
+        "retrievedAt": "2026-10-14T23:52:28.212479+00:00",
         "publisher": "Alaska Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=25USCV#is81213",
@@ -3661,6 +4565,38 @@
         "publisher": "Alaska Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
+        "httpStatus": 200,
+        "rawHash": "7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f",
+        "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
+        "finalUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
+        "httpStatus": 200,
+        "rawHash": "5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438",
+        "retrievedAt": "2026-10-15T00:00:18.316167+00:00",
+        "publisher": "Alaska Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

@@ -8744,6 +8744,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "e9abab190910ef323f24109df10dc806ce71ac4c9704a882da5d9ca3a5569a34",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-e9abab190910ef323f24109df10dc806ce71ac4c9704a882da5d9ca3a5569a34.txt",
+              "byteLength": 2087,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "01086a9ae576c188f6f83631e2c953d6760a64c8c70cfe619c34461cf1915f43",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This proposed law would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law. This proposed law would exempt documents related to the development of public policy and communications between legislators\n\nand their constituents, if those communications are reasonably related to a constituent’s request for assistance in obtaining government-provided benefits or services or interacting with a government agency.",
+            "fiscalImpact": "The proposed law has no discernible material fiscal consequences for state and municipal government finances.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nMassachusetts deserves open government. Good government groups rank our state the least transparent in the nation. We’re one of only two states where both the Governor’s office and the Legislature claim a blanket exemption from the public records law. Every city, town, and state agency must follow that law, but the politicians on Beacon Hill exempted themselves.\n\nQuestion 1 puts the Legislature and the Governor’s office under the same public records law as everyone else. It protects constituent privacy, and the Secretary of Administration and Finance certified that it has no cost to taxpayers.\n\nIn 2024, 72% of voters said yes to auditing the Legislature. Beacon Hill is still fighting that vote — but Question 1 will give you and every taxpayer the ability to access public records directly.\n\nYou have a right to see what your government is doing with your hard-earned taxpayer dollars. Please vote YES on Question 1.\n\nAuthored by: Diana DiZoglio Committee for Transparency and Democracy 16 Rosewood Ave. Ayer, MA 01432 978-984-7747 www.dianaforma.com/ballot"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nAs of the printing of this book, there was no organized group urging a “No” vote on Question 1. The information below has been compiled by the Office of the Secretary of the Commonwealth, in part from arguments presented in the Legislature’s Majority Report. The argument below does not reflect the opinions of the Office of the Secretary of the Commonwealth.\n\nThe proposed law includes overly broad and poorly defined exemptions. It would exempt from public disclosure documents related to the development of public policy, but only during policy development. These records would become public once the policy is developed. This limited and temporary exemption will chill open communications by lawmakers, raising significant constitutional concerns, particularly around legislative speech and debate protections.\n\nThe narrow protection for constituent communications creates serious privacy risks. By only exempting correspondence tied to benefits or agency interaction, the law leaves vulnerable to public disclosure all other general constituent communications, such as emails and letters from citizens expressing personal political views, sharing sensitive local grievances, or criticizing lawmakers. This lack of comprehensive privacy protection will negatively affect civic engagement and deter residents from contacting their elected officials.\n\nUltimately, this measure creates a flawed framework that fails to deliver genuine accountability while actively compromising constituent privacy.\n\nAuthored by: “If no argument is received by the secretary from the principal proponents or opponents of a measure within the time allowed by this section, the secretary shall prepare such argument.” – M.G.L. c. 54 § 54.\n\n7"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-01086a9ae576c188f6f83631e2c953d6760a64c8c70cfe619c34461cf1915f43.txt",
+              "byteLength": 3874,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8757,6 +8838,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "65b413833ad8a86ca075413225dc15d5b2a50266cbc07f65ce3ba2cf9f687602",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-65b413833ad8a86ca075413225dc15d5b2a50266cbc07f65ce3ba2cf9f687602.txt",
+              "byteLength": 1176,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "f219b00d5467fbfdc6ecd9ba7aed533b26fb57d1554a82f61bb476a7bd9e0955",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This proposed law would specify that employees of the Committee for Public Counsel Services (“CPCS”) are permitted to engage in collective bargaining with their employer. It\n\nwould also require CPCS, after executing a collective bargaining agreement, to request the appropriation necessary to fund such agreement from the Governor.",
+            "fiscalImpact": "The proposed law may have an impact on state finances. CPCS receives its funding, in part, from state government appropriations. The fiscal impact of the proposed law is difficult to project due to the uncertainty regarding the outcomes of any such collective bargaining by CPCS employees.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nA YES vote will give employees of the Massachusetts Committee for Public Counsel Services (CPCS) the right to organize a union and collectively bargain with their employer if they choose to do so.\n\nCPCS employees provide critical support for the constitutional right to counsel and help ensure that Massachusetts residents who cannot afford an attorney have access to legal representation. Yet, unlike other state employees, CPCS employees do not currently have the right to choose whether to organize and collectively bargain over wages, benefits and working conditions.\n\nThis ballot question would allow CPCS employees to form a union if they so choose. It simply gives CPCS employees the right to make that choice for themselves.\n\nVote YES to give CPCS employees the right to choose.\n\nAuthored by: Tom McKeever Labor Unions for Public Counsel Workers Rights PO Box 9536 c/o North Side Ventures Lowell, MA 01853 617-241-3300"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nAs of the printing of this book, there was no organized group urging a “No” vote on Question 2. The information below has been compiled by the Office of the Secretary of the Commonwealth, in part from arguments presented in the Legislature’s Majority Report. The argument below does not reflect the opinions of the Office of the Secretary of the Commonwealth.\n\nAllowing employees of the Committee for Public Counsel Services (CPCS) to collectively bargain creates serious operational and fiscal risks for the judiciary. CPCS operates as an independent judicial branch agency tasked with providing constitutional defense to indigent clients. Introducing collective bargaining into this framework could disrupt existing management and supervisory frameworks, introduce ambiguity into lines of authority, and create operational inefficiencies.\n\nChanges to labor relations policies of this scale could have unintended consequences for the delivery of legal services, particularly if they limit the agency’s ability to respond flexibly to fluctuating caseloads, staffing needs, and court demands.\n\nAuthored by: “If no argument is received by the secretary from the principal proponents or opponents of a measure within the time allowed by this section, the secretary shall prepare such argument.” – M.G.L. c. 54 § 54.\n\n9"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-f219b00d5467fbfdc6ecd9ba7aed533b26fb57d1554a82f61bb476a7bd9e0955.txt",
+              "byteLength": 3384,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8770,6 +8932,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "2bfb6006d4fc98ead571a8fe30ff22d55fe34e33233a16b9c3435a6b69f639c8",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-2bfb6006d4fc98ead571a8fe30ff22d55fe34e33233a16b9c3435a6b69f639c8.txt",
+              "byteLength": 7554,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "57b545740926ab52258202a1666b65100c04c5b5dfbdde0cfa8422f8d45ee1fe",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This proposed law would eliminate political party primaries for state elections and instead establish a system where there would be a single, all-party primary in which all candidates, regardless of their party affiliation, would be listed on one ballot, and voters could vote for any candidate on the ballot. The two candidates receiving the most votes in the primary would advance to the general election ballot.\n\nThis proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary.\n\nThis proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.",
+            "fiscalImpact": "The proposed law has no discernible material fiscal consequences for state and municipal government finances",
+            "argumentsFor": [
+              "IN FAVOR:\n\nMassachusetts elected officials should work for us, not insiders. But for years insiders have held the advantage. Many elections are over before most of us ever cast a ballot. Candidates can be blocked at party conventions. Today, two-thirds of the legislature is running unopposed. They can take voters for granted and ignore important issues like affordable housing, energy costs, better schools, and the audit 72% of us demanded.\n\nAll-Party Primaries will bring accountability and transparency to Massachusetts politics by making elections more competitive, forcing politicians to listen. All candidates appear on your primary ballot, and the top two advance to November where they need a majority of votes to win. Insiders have less control and we get fresh voices running for office.\n\nMore competition means more accountability. Legislators who know voters can replace them listen to us and deliver real results.\n\nVote Yes on Question 3 for accountability and competition.\n\nAuthored by: Danielle Allen Coalition for Healthy Democracy 124 Washington St., Suite 101 Foxborough, MA 02035 617-987-4192"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nVOTE NO ON QUESTION 3\n\nSimilar top-two systems in California and Washington have favored wealthy, self-funded candidates who can out-advertise crowded fields and the corporate PACs seeking to purchase offices, while sidelining grassroots candidates and historically marginalized and underrepresented groups such as candidates of color and women. Third-party and independent candidates would be shut out of the general election, and working-class candidates would lose out on institutional support and access to party resources.\n\nThis proposal would limit voter choice by allowing only two candidates to advance to November — even if they belong to the same party — reducing competition, lowering voter participation, worsening inequities, and narrowing debate.\n\nMassachusetts voters deserve real choices, not a system that rewards money and name recognition over community support. Vote No.\n\nAuthored by: Vanessa A. Snow Voter Rights MA P.O. Box 317 Roslindale, MA 02131 617-383-4336 www.voterrightsma.com\n\n11"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-57b545740926ab52258202a1666b65100c04c5b5dfbdde0cfa8422f8d45ee1fe.txt",
+              "byteLength": 3517,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8783,6 +9026,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "34115e176927a6ea5e095d7dc728132969c23ccc24c55b958a7ff5052eb762f1",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-34115e176927a6ea5e095d7dc728132969c23ccc24c55b958a7ff5052eb762f1.txt",
+              "byteLength": 7918,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "983e866d421073a5741d7c20477d01e65bbe147ee7a44b11a9c4b64ea2d50fbd",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This proposed law would permit eligible individuals to register to vote or update their voter registration address on Election Day.\n\nAn individual who is eligible to vote could register to vote on Election Day by going to the polling place in the precinct where they live during voting hours and presenting proof of residency and signing a written oath. Proof of residency could be a valid photo identification, or documentation showing the individual’s name and the address where the individual resides, such as a current utility bill, bank statement, government check, residential lease, wireless telephone statement, paycheck, current student fee statement or other document from a post-secondary school, or another government document or correspondence. The written oath would require the individual to certify that they are a citizen of the United States, are at least 18 years old, are not legally prohibited from voting, and have not and will not vote in the same election at another\n\nlocation. The oath would require the individual to acknowledge that providing false information is a felony punishable by not more than 5 years imprisonment or a fine of not more than $10,000, or both.\n\nIf an individual did not present proof of residency, they would be allowed to cast a provisional ballot, which would be counted only if the individual returned to provide the required information before the close of polls for a municipal election; within two days after a state primary; or within six days after a state election.\n\nIndividuals who register to vote on Election Day would be registered to vote in future elections as well as in the election taking place that day.\n\nIndividuals who are already registered to vote would not be able to change their political party affiliation on Election Day.\n\nThe proposed law would take effect on January 1, 2028.",
+            "fiscalImpact": "The proposed law has no discernible material fiscal consequences for state and municipal government finances.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nA vote for Election Day Registration ensures our democracy is truly representative, secure, and modern.\n\nThis law would give eligible Massachusetts citizens the ability to register or update their address on Election Day – an opportunity voters in the rest of New England already have.\n\nAllowing voters to register at the polls will give thousands of citizens the chance to participate in important national elections. This policy especially helps those who move frequently, like young people and renters.\n\nImportantly, Election Day Registration enhances election security. Election Day registrants must present verified proof of residence at the polls and sign an oath backed by severe felony penalties to ensure accountability and deter fraud. Provisional ballots would be available to protect the integrity of the vote if documentation is missing.\n\nThis law provides maximum voter access with rigorous security safeguards. It is a common-sense reform that guarantees every eligible voice is heard.\n\nAuthored by: Norma B. Shulman YES on Election Day Registration 444 Washington St. Brighton, MA 02135 www.electiondayvoterregistration.com"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nThe public welfare demands that elections be protected from fraud. Same-day voter registration prejudices that welfare by eliminating the advance period during which election officials can examine a registrant’s identity, residence, eligibility, or duplicate registration before a ballot is issued.\n\nInstead, officials would be required to make those determinations at the polling place, under substantial time pressure and amid the extraordinary demands of Election Day. Errors, false statements, or conflicting records that escape detection may not be discovered until after the ballot has been cast and commingled with all others, when it can no longer be identified or withdrawn.\n\nElection security depends upon meaningful verification before voting. This ballot question would replace advance review with hurried, same-day judgments that could create avoidable vulnerabilities in election administration, increase the risk that unlawful ballots could affect close contests, and weaken confidence that every ballot was lawfully cast in our elections. Vote No.\n\nAuthored by: Amy Carnevale Massachusetts Republican Party 85 Merrimac St., Suite 505 Boston, MA 02114 www.massgop.com\n\n13"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-983e866d421073a5741d7c20477d01e65bbe147ee7a44b11a9c4b64ea2d50fbd.txt",
+              "byteLength": 4760,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8796,6 +9120,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "5125aa791dabb1aebf80ef28fdc9d1f0a8c95567ed4052e7a3e66672087221d8",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-5125aa791dabb1aebf80ef28fdc9d1f0a8c95567ed4052e7a3e66672087221d8.txt",
+              "byteLength": 2504,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "3fca17c0f5001cecd40093094c10f104bc1db55a69094ac53416ac90f1155255",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This proposed law would change the limit on how much revenue the state can collect in a given year. The proposal would limit state revenue in a given year to the net amount of state revenue from the year before, increased by a rate equal to the average growth of wages and salaries in Massachusetts over the most recent three years. If revenue collected by the state in a given year exceeds the limit, the excess amount would be refunded to taxpayers the following year. The proposed law would include all revenue\n\nfrom the surtax on incomes over $1 million when calculating the revenue limit and when determining whether state revenue exceeds the limit.\n\nThe provisions of the proposed law would all be effective as of July 1, 2027.\n\nThe proposed law states that, if any of its parts were declared invalid, the other parts would stay in effect.",
+            "fiscalImpact": "The proposed law would put stricter limits on allowable annual revenue growth available for budgeting. As a result, the proposal would reduce the amount of money available to support the state budget, which includes local aid for schools and municipal budgets. The proposal would also reduce the amounts available to build the state’s Stabilization, or “rainy day,” Fund – a reserve of money set aside to help Massachusetts manage economic downturns or emergencies without raising taxes or making major spending cuts. Depending on future conditions, the proposal could change the frequency of statutorily-required refunds to taxpayers.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nA YES vote sets reasonable limits on the growth of state government revenue and ensures that taxpayers receive refunds when the Commonwealth collects more money than it needs.\n\nThis proposal modernizes the state’s existing laws to create stronger fiscal guardrails, promote accountability, guard against future tax increases, and ensure government growth reflects what taxpayers can afford. It will not cut state spending for important services like education, transportation, or healthcare.\n\nMassachusetts families are struggling with the rising cost of housing, groceries, and childcare. When government collects excess revenue, taxpayers deserve to get that money back instead of seeing it absorbed into a state budget that is growing faster than inflation.\n\nWith Massachusetts continuing to lose residents to lower-cost states, this ballot question puts taxpayers first. A YES vote means you keep more of your hard-earned money, and makes Massachusetts a more affordable place to live, work, and raise a family.\n\nAuthored by: Taxpayers for an Affordable Massachusetts P.O. Box 9536 Lowell, MA 01853 www.affordablema.org"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nVote NO on 5 to protect public schools, healthcare, and public safety.\n\nQuestion 5 would put a strict limit on state revenue and investment, requiring repeated budget cuts. Healthcare costs would rise, and cities and towns would have to raise property taxes or lay off teachers and firefighters.\n\nQuestion 5 would reduce the state’s ‘Rainy Day’ fund, forcing massive budget cuts to schools, healthcare, affordable housing, and public safety during recessions, when spending to create jobs and support residents is needed most.\n\nQuestion 5 would include revenue from the ‘millionaires’ tax’ — which funds schools and transportation — in the complex, unpredictable algorithm that sets the revenue limit. Millionaires would get frequent tax rebates, while the rest of us pay the price.\n\nQuestion 5 would even threaten Massachusetts’ bond rating, raising the cost of repairing bridges and schools.\n\nThe multi-millionaires funding Question 5 don’t need public services themselves. Vote NO on 5.\n\nAuthored by: Colette Berard, History Teacher, Andover Public Schools Protect Massachusetts’ Future P.O. Box 15 Boston, MA 02137 617-857-7793 www.protectmassachusettsfuture.com\n\n15"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-3fca17c0f5001cecd40093094c10f104bc1db55a69094ac53416ac90f1155255.txt",
+              "byteLength": 4322,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8809,6 +9214,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "a3cd47d2877b64b3948e58b2028bcc604e5fa9e4fdc55d62c73d7c26dc3491de",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-a3cd47d2877b64b3948e58b2028bcc604e5fa9e4fdc55d62c73d7c26dc3491de.txt",
+              "byteLength": 4990,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "18056fd37c22db48b60415226b8f592c030b7bee39c86ac5c8a62c1ab18ae925",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This proposed law would establish a Nature for All Fund that, subject to appropriation by the Legislature, would receive 50% of state taxes collected from the sale and use of sporting goods, recreational vehicles, and golf courses for the first year of its operation. After July 1, 2028, the Nature for All Fund would begin receiving, subject to appropriation by the Legislature, 100% of state taxes collected on the sale and use of sporting goods, recreational vehicles, and golf courses. The sales tax revenue received by the Nature for All Fund would exclude sales tax revenue transferred to the Massachusetts Bay Transportation Authority State and Local Contribution Fund and the School Modernization and Reconstruction Trust Fund. The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend the money in the Nature for All Fund for natural resource conservation.\n\nThe proposed law would allow public and private donations to the Nature for All Fund. The proposed law would prevent the state comptroller from transferring surplus funds in the Nature for All Fund at the end of the fiscal year. It would also allow state agencies, municipalities, public charities involved in natural resource conservation, tribal governments, and other regional public entities to receive money from the Nature for All Fund.\n\nNatural resource conservation would include the conservation or restoration of land to protect drinking water, streams, rivers, lakes, coasts, farms, forests, connectivity between open\n\nspaces, and lands and natural resources of indigenous cultural significance. Natural resource conservation would also include the creation, improvement, and management of parks, trails, greenspaces or outdoor recreation access.\n\nThe proposed law would establish a 15-member Nature for All Board that consists of five state officials and ten members of the public appointed by the Governor. The proposed law would require the ten members of the public to include representatives of underserved communities and indigenous peoples and at least one person with expertise or experience in natural resource conservation. The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend money from the Nature for All Fund to hire staff to manage the fund. The proposed law would also require the Nature for All Board to establish rules about how the money in the Nature for All Fund should be spent, including rules regarding alignment with environmental justice principles, access to and restoration of lands and natural resources of indigenous cultural significance, promotion of affordable housing development, and other matters regarding spending and bond issuance.\n\nThe proposed law would require the state Executive Office of Energy and Environmental Affairs to submit an annual report to various state committees regarding the funds spent to buy or improve land in cities and towns containing environmental justice populations.\n\nThe proposed law would take effect on July 1, 2027.",
+            "fiscalImpact": "The proposed law would have a significant impact on state and local budgets. While a full fiscal analysis is not feasible, it is estimated that, on an annual basis, the proposed law would automatically divert tens of millions of dollars of tax receipts that are currently supporting the state operating budget to the new fund. This proposed law would also have substantial implementation costs.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nWe all need clean water and nature. Voting YES on 6 protects water, land, and wildlife in Massachusetts — without raising taxes.\n\nVoting YES dedicates as much as $100 million/year to:\n\n• Prevent flooding and storm damage\n\n• Protect clean drinking water\n\n• Reduce pollution in rivers, lakes, and the ocean\n\n• Create and improve parks, trails, and greenspaces for public use\n\n• Conserve forests, family farms, and natural wildlife habitat\n\nQuestion 6 doesn’t raise taxes or create a new tax. It dedicates the sales tax we already pay on sporting goods to protecting water and nature, and requires strict oversight and annual reporting so we can see how funds are spent.\n\nMassachusetts is home to beautiful natural areas and diverse species of birds, fish, and other animals. That’s why 90+ local conservation organizations and businesses support YES on 6 to permanently protect our rivers, lakes, forests, farms, and wildlife habitat for future generations to enjoy.\n\nMass Audubon 208 S. Great Rd. Lincoln, MA 01773 617-682-9926 www.natureforma.org"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nAs of the printing of this book, there was no organized group urging a “No” vote on Question 6. The information below has been compiled by the Office of the Secretary of the Commonwealth, in part from arguments presented in the Legislature’s Majority Report. The argument below does not reflect the opinions of the Office of the Secretary of the Commonwealth.\n\nThe proposed law creates an unstable fiscal framework by permanently earmarking up to 100% of state sales tax revenues from sporting goods, recreational vehicles, and golf courses. The proposal would rely on existing state revenue streams that are currently allocated to other ongoing programs and priorities. Implementation of the measure would require the reallocation or reduction of funds presently directed toward other state initiatives, raising questions of opportunity costs and the potential displacement of existing infrastructure and environmental funding priorities.\n\nEven if approved by the voters, the funds may not be allocated to the “Nature for All Fund,” as the Legislature retains exclusive authority over appropriations decisions. This constitutional framework ensures that funding decisions remain subject to annual budget deliberation and fiscal prioritization.\n\nThe proposed law, as written, raises questions regarding fiscal impacts, programmatic displacement, and constraints on administrative flexibility.\n\nAuthored by: “If no argument is received by the secretary from the principal proponents or opponents of a measure within the time allowed by this section, the secretary shall prepare such argument.” – M.G.L. c. 54 § 54.\n\n17"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-18056fd37c22db48b60415226b8f592c030b7bee39c86ac5c8a62c1ab18ae925.txt",
+              "byteLength": 6730,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8822,6 +9308,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "27bea7c909f27168be4b43004021215843b8880835092d5f7806c2f932ace64f",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-27bea7c909f27168be4b43004021215843b8880835092d5f7806c2f932ace64f.txt",
+              "byteLength": 1413,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "c653eb2e551fef2639fb7b3cd68b025c6947e9b9f4b9e87b400c5fad30ef7d9c",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This proposed law would allow single-family homes to be built in a residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those\n\nsingle-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they can be rented out on a short-term basis. The proposed law would also allow the Executive Office of Housing and Livable Communities to issue guidance or regulations to administer the proposed law.",
+            "fiscalImpact": "If the proposed law enables the growth of housing in communities, it could provide positive new growth revenues to municipalities. However, it is difficult to project the potential scale of new growth tied to the proposed law. The proposed law thus has no discernible material fiscal consequences for state and municipal government finances.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nMassachusetts is the hardest state in the country for young adults to buy a home. The middle class is shrinking because housing costs have doubled since 2014. Many seniors are stuck in their homes without somewhere nearby to downsize.\n\nMassachusetts residents, especially young people, are leaving the state to find a more affordable place to live, separating extended families and hurting our economy.\n\nRequiring huge lot sizes to build a single-family home makes houses expensive, reduces construction of new single-family housing, and encourages developers to build giant McMansions to recoup land costs. Anyone who needs a low-cost, single-family suburban home is all but locked out of the market.\n\nA yes vote would reduce minimum lot size requirements to 5,000 square feet - a size more typical of suburbs nationwide - in places with sufficient infrastructure, so we can have more affordable homes for young families and seniors.\n\nAuthored by: Wesley Lima Legalize Starter Homes P.O. Box 9536 Lowell, MA 01853 617-506-9464 Legalizestarterhomes.com"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nVote NO on question 7.\n\nMassachusetts needs more housing, but this statewide ballot measure is the wrong approach. It would override local planning by requiring every city and town to allow single-family homes on lots as small as 5,000 square feet, regardless of existing neighborhoods, infrastructure or environmental conditions.\n\nLocal officials are directly responsible to taxpayers, and this would remove significant oversight on behalf of their residents. They understand their communities best, and work with residents to plan for housing while balancing public safety, traffic, water and sewer capacity, schools, and environmental protection. This proposal replaces thoughtful local planning with a one-size-fits-all mandate that ignores the individual needs of all 351 Massachusetts cities and towns.\n\nCommunities should continue expanding housing through local planning and collaboration—not through a statewide mandate that removes local decision-making.\n\nVote NO.\n\nAuthored by: Adam Chapdelaine Massachusetts Municipal Association 3 Center Plaza, Suite 610 Boston, MA 02108 617-426-7272 www.mma.org\n\n19"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-c653eb2e551fef2639fb7b3cd68b025c6947e9b9f4b9e87b400c5fad30ef7d9c.txt",
+              "byteLength": 3761,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8835,6 +9402,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "e6c9895217b89a8b18de4a889a6b2b9a1c6096e9b74079c3b7948089c26f88b1",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-e6c9895217b89a8b18de4a889a6b2b9a1c6096e9b74079c3b7948089c26f88b1.txt",
+              "byteLength": 14594,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "d6ead0840007ce560e8efefa54c65503d104e3ae136d0ef89417bdc0e65981af",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "The proposed law would change the type and amount of marijuana that may legally be possessed in Massachusetts by repealing the laws that legalize, regulate, and tax the retail sale of adult recreational use marijuana in Massachusetts. The proposed law would also permit persons 21 years of age and older to possess 1 ounce or less of marijuana including no more than 5 grams in the form of concentrate, and to gift or transfer to another person 21 years of age and older 1 ounce or less of marijuana including no more than 5 grams in the form of concentrate. The proposed law would also impose a civil penalty of $100 and forfeiture of the marijuana for the possession of marijuana between the weight of 1 and 2 ounces.\n\nFor persons 21 years of age and younger, the proposed law would make the possession of 2 ounces or less of marijuana a civil infraction subject to a $100 fine, forfeiture of the marijuana,\n\ncompletion of a drug awareness program and community service, and notification to their parents or legal guardian of the offense and penalties.\n\nThe proposed law would allow currently licensed adult recreational marijuana businesses to apply on an expedited basis to become a licensed medical marijuana dispensary and to sell their remaining inventory of adult recreational marijuana to medical marijuana dispensaries. The proposed law would retain the Cannabis Control Commission but modify its authority so it would regulate only the medical marijuana market.\n\nThe proposed law states that, if any of its parts were declared invalid, the other parts would stay in effect.\n\nThe proposed law would take effect on January 1, 2028.",
+            "fiscalImpact": "By repealing the laws that legalize and tax the retail sale of adult recreational use marijuana, the proposed law would reduce the amount that state and municipal governments receive from the taxation of those sales. In fiscal year 2025, taxation of the retail sale of adult recreational use marijuana raised approximately $280 million in state revenue and $50 million in local revenue. The state budget, which is supported by tax revenue, funds local aid for schools and municipal budgets.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nMEDICAL AND MENTAL HEALTH PROFESSIONALS, PARENTS, AND BUSINESS OWNERS URGE YES ON QUESTION 8\n\n• Question 8 would keep personal possession of marijuana legal, keep medical marijuana legal, and stop commercial marijuana stores\n\n• Since commercial legalization, marijuana is now the most common drug found in fatal car accidents in Massachusetts\n\n• 85% of marijuana users admit to driving after and over 50% drive within an hour or less\n\n• Business owners have increased costs from higher rates of workplace injuries, increased healthcare costs, and higher turnover\n\n• For every $1 gained in tax revenue, taxpayers spend $4.50 to mitigate the effects of legalization from societal expenses including increased healthcare, lost productivity, and crime (like DUI’s)\n\n• Modern concentrates and edibles have been linked to mental health conditions like psychosis, severe anxiety, and schizophrenia, particularly in young adults\n\n• As a result of commercial marijuana, ER visits in Massachusetts have drastically increased for teenagers with psychiatric conditions\n\nAuthored by: Dr. Jeffrey Morgan, MD (Ret.) Retired Oncologist and Physician and Retired Instructor of Medicine Coalition For a Healthy Massachusetts 138 Conant Street Beverly, MA 01915 www.HealthierMA.com"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nVOTE NO ON QUESTION 8\n\nQuestion 8 would create serious public health and safety problems by repealing the rules and regulations that currently control the production and sale of marijuana in Massachusetts.\n\nFor ten years, Massachusetts has regulated marijuana, ensuring that products are tested for safety, packaged and labelled properly, and sold in licensed businesses to adults 21 and over.\n\nQuestion 8 would undo that progress, returning marijuana to the illicit market where there are no safeguards in place. Law enforcement would be forced to waste time and resources on marijuana arrests instead of fighting serious crime. Historically, marijuana arrests have disproportionately impacted communities of color. Recriminalizing marijuana would make Massachusetts less safe.\n\nQuestion 8 would shut down hundreds of small businesses, kill thousands of jobs, and eliminate billions of dollars in state tax revenue.\n\nWe must not go backwards on public health and safety.\n\nVote NO on Question 8.\n\nAuthored by: Ryan Dominguez Massachusetts Cannabis Coalition 6 Liberty Square PMB 421 Boston, MA 02109 617-286-6173 www.stoptherepealma.com\n\n21"
+            ],
+            "passageThreshold": "If it shall be approved by voters equal in number to at least thirty per cent of the total number of ballots cast at such state election and also by a majority of the voters voting on such law, it shall become law, and shall take effect in thirty days after such state election or at such time after such election as may be provided in such law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-c54a6b06b279396559a774cee70acb4e4d80e0ca115f91fea2ab6f4987569834.txt",
+                "byteLength": 345,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-d6ead0840007ce560e8efefa54c65503d104e3ae136d0ef89417bdc0e65981af.txt",
+              "byteLength": 5036,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8848,6 +9496,87 @@
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-14T05:12:38.592Z",
             "verifiedAt": "2026-10-14T05:12:38.592Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "84ed259bcb0a4838525870653e9ecbecb0d7fa724bcae3c273956c2737e6fff4",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-84ed259bcb0a4838525870653e9ecbecb0d7fa724bcae3c273956c2737e6fff4.txt",
+              "byteLength": 210960,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+            "sourceHash": "f202a501a8e40ecfa9390ce5385b9aba28405e9cec80f0a4775722451c4da989",
+            "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+            "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+            "summary": "This law makes a number of changes to Massachusetts laws governing firearms.\n\nThe law adds school administrators and licensed healthcare providers as parties permitted to ask a court to issue an Extreme Risk Protection Order – requiring an individual to surrender or relinquish their firearm licenses, permits, and firearms - if an individual is a present danger to self or others. The law also provides that, when issuing an Harassment Prevention Order, a court may also order the surrender of firearms licenses, permits, and firearms.\n\nThe law imposes penalties for possessing, creating, and transferring untraceable “ghost gun” firearms and requires all firearms except antiques and relics, including unfinished frames and receivers that can be readily made into a finished product, to have serial numbers. The law includes privately-made guns like 3D-printed guns within the provisions governing untraceable “ghost gun” firearms.\n\nThe law changes firearms licensing requirements to: (1) allow local licensing authorities to request prior license and permit information from the state, as well as access petitions for involuntary mental health commitments denied by a court in addition to prior involuntary commitments, as a part of their review of applications for licenses to carry firearms, firearm ID cards, and licenses to sell firearms; (2) require an individual to be 21 years of age to own semiautomatic rifles or shotguns; (3) add the possibility of incarceration of up to six months for a second offense of failing to report a firearm loss or theft; and (4) enable 12-15 year olds to apply for a self-defense spray permit with parental permission, and 15 to 18 year olds to apply independently.\n\nThe law allows local firearm licensing authorities to transfer the responsibility to inspect firearm dealers to the State Police. The law requires local licensing authorities to attend statewide training regarding those inspections. It requires dealers\n\nto confiscate expired or suspended licenses and report them to the state and to local licensing authorities.\n\nThe law changes the definition of “machine gun” to include bump stocks, trigger cranks, Glock switches and auto sears among the devices whose possession and use are subject to penalties. It expands the definition of “silencer” to include the parts used to construct a silencer.\n\nThe law clarifies how to determine whether a firearm is an assault-style weapon and the circumstances under which a person may continue to possess assault-style weapons and large capacity feeding devices they already own.\n\nThe law requires the state Firearm Control Advisory Board and the state Secretary of Public Safety and Security to review and update the rosters of prohibited assault-style firearms, approved firearms, and approved firearms sold for target shooting.\n\nThe law clarifies requirements relating to the carry and transport of firearms in motor vehicles and ATVs. It prohibits the carrying of firearms in government buildings, polling locations, and schools, with certain exceptions.\n\nThe law expands data compilation and reporting requirements to and from the state, and creates a publicly-accessible dashboard of anonymized aggregate firearm data, along with a commission to study that data.\n\nThe law requires the State Police to provide training and a test for new applicants for licenses to carry or Firearm ID cards.\n\nThe law establishes two special legislative commissions – one to examine funding for violence prevention services, and one to study emerging firearms technology.\n\nThe law criminalizes discharging a firearm and striking a building in use.",
+            "fiscalImpact": "Since the passage of this safety law in 2024, the Commonwealth has made significant investments to implement the law including training employees, promulgating new gun licensure processes, and developing IT infrastructure. Repealing the law would require the Commonwealth to expend resources in suspending or re-directing those investments.",
+            "argumentsFor": [
+              "IN FAVOR:\n\nA YES vote will keep in place Massachusetts’ lifesaving 2024 gun safety law. The law made vital updates, including banning ghost guns; outlawing devices that turn semi-automatic weapons into machine guns; expanding tools to help prevent firearm suicide and mass shootings; creating a firearms data dashboard to better understand gun trafficking; and more.\n\nThanks to our comprehensive approach to gun violence prevention, Massachusetts has a gun death rate 70% lower than the national average. Critical elements of the 2024 law are actively being implemented; they are already helping keep our communities safe.\n\nTo continue driving the rate of gun violence even lower, we must maintain the strong policies included in this existing law. A YES vote will preserve this law, safeguard important progress, and allow us to continue the work of eradicating gun violence. Repealing it would make everyone in Massachusetts less safe.\n\nAuthored by: Ned Notis-McConarty Vote Yes for a Safe Massachusetts PO Box 15 Boston, MA 02137 508-203-7985 www.yesforasafema.com"
+            ],
+            "argumentsAgainst": [
+              "AGAINST:\n\nA No vote on Question 9 repeals an unnecessary reinvention of state firearms law. Before the new law, the state already had some of the strictest gun laws in the country. Chapter 135 isn’t about public safety—it is a deeply flawed, 116-page piece of bureaucratic overreach that wastes valuable tax dollars and burdens local communities. Passed without proper planning, the law mandates an expensive, real-time electronic tracking system that the state hasn’t funded and doesn’t know how to build. It also forces local police departments to enforce a confusing patchwork of vague rules, pulling officers away from investigating violent crime to plow through piles of administrative paperwork. State agencies have struggled to explain the law, issuing dozens of clarifications for rules that treat harmless historical re-enactors and antique hobbyists like criminals. Vote no on Question 9. Demand common-sense, transparent legislation focused on violent criminals, not limiting citizens’ civil rights.\n\nAuthored by: Toby Leary The Civil Rights Coalition PO Box 252 North Andover, MA 01845 978-481-6990 TheCivilRightsCoalition.com\n\n23"
+            ],
+            "passageThreshold": "and if it shall not be approved by a majority of the qualified voters voting thereon, it shall, at the expiration of thirty days after such election, be thereby repealed; but no such law shall be held to be disapproved if the negative vote is less than thirty per cent of the total number of ballots cast at such state election.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+              "sourceHash": "36d19a9fa5737f29336826d27b6ef898534c615be1470f6b5f85253a189c75a5",
+              "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+              "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+              "vault": {
+                "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-36d19a9fa5737f29336826d27b6ef898534c615be1470f6b5f85253a189c75a5.txt",
+                "byteLength": 328,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+                  "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+                  "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+                  "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+                  "vault": {
+                    "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+                    "byteLength": 458486,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-f202a501a8e40ecfa9390ce5385b9aba28405e9cec80f0a4775722451c4da989.txt",
+              "byteLength": 6794,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+                "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+                "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+                "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+                "vault": {
+                  "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+                  "byteLength": 1349833,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -8857,13 +9586,1660 @@
         "The official list omits party labels for Richard E. Neal, Steven G. Xiarhos, Michelle Marie DuBois, and Mary S. Keefe. John Francis Moran’s printed party label is “Demo”.",
         "The official candidate list does not state incumbency or campaign websites.",
         "The projection includes all listed statewide, U.S. Senate, U.S. House, state Senate, and state House contests. Regional Councillor, district attorney, county, and local offices and non-binding district questions are outside this statewide and legislative assignment."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ma-2026-11-03:question-1",
+          "whatItDoes": "SECTION 1. The first paragraph of Clause Twenty-Sixth of Section 7 of Chapter 4 of the General Laws is hereby amended by inserting after the words “chapter 32” the following phrase “or by the general court, or by the office of the governor of the commonwealth,”.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-1#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. The first paragraph of Clause Twenty-Sixth of Section 7 of Chapter 4 of the General Laws is hereby amended by inserting after the words “chapter 32” the following phrase “or by the general court, or by the office of the governor of the commonwealth,”."
+            },
+            {
+              "id": "ma-2026-11-03:question-1#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Said Clause Twenty-Sixth of Section 7 of Chapter 4 of the General Laws is hereby further amended by inserting the following new subparagraphs following subparagraph (v):-"
+            },
+            {
+              "id": "ma-2026-11-03:question-1#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. The third sentence of the first paragraph of Section 6A of Chapter 66 of the General Laws is hereby amended by striking said third sentence and inserting in place thereof the following:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-1#section-4-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4. Section 18 of Chapter 66 of the General Laws is hereby amended by striking said Section 18 and inserting in place thereof the following:-\n\nSection 18."
+            },
+            {
+              "id": "ma-2026-11-03:question-1#section-5-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5. This act shall take effect on January 1, 2027."
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "e9abab190910ef323f24109df10dc806ce71ac4c9704a882da5d9ca3a5569a34",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-2",
+          "whatItDoes": "SECTION 1: Section 1 of chapter 150E of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by adding to the end of the seventh paragraph, titled “Employer” or “public employer”, the following sentence: “In the case of employees of the committee for public counsel services, employer shall",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-2#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1:",
+              "what": "SECTION 1: Section 1 of chapter 150E of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by adding to the end of the seventh paragraph, titled “Employer” or “public employer”, the following sentence: “In the case of employees of the committee for public counsel services, employer shall"
+            },
+            {
+              "id": "ma-2026-11-03:question-2#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Section 7 of said chapter 150E of the General\n\nLaws, as so appearing, is hereby amended by striking the word “or” before the phrase “the state lottery commission” in line 16 and adding the following words after that phrase: “or the committee for public counsel services.”"
+            },
+            {
+              "id": "ma-2026-11-03:question-2#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. Said section 7 of said chapter 150E of the General Laws, as so appearing, is hereby amended by striking the word “and” before the words “the state lottery commission” appearing in line 34 and inserting after the word “commission” in line 35 the following words: “and committee for public counsel services.”"
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "65b413833ad8a86ca075413225dc15d5b2a50266cbc07f65ce3ba2cf9f687602",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-3",
+          "whatItDoes": "SECTION 1. Section 1 of Chapter 50 of the General Laws is hereby amended by amending the definition of “Political party” therein by inserting after the phrase “to a party which at” in the first sentence thereof the phrase “the latest state primary held prior to”, and by striking the second sentence thereof in its",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-3#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Section 1 of Chapter 50 of the General Laws is hereby amended by amending the definition of “Political party” therein by inserting after the phrase “to a party which at” in the first sentence thereof the phrase “the latest state primary held prior to”, and by striking the second sentence thereof in its"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Chapter 50 of the General laws is hereby\n\namended by inserting after Section 2 the following Section 2A:-\n\nSection 2A."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. Section 2 of Chapter 53 of the General Laws is hereby amended by inserting the phrase “Except as provided in section two-A of chapter fifty,” at the beginning of the second sentence thereof."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-4-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4. Section 6 of Chapter 53 of the General Laws is hereby amended by striking from said Section 6 the first two sentences of the first paragraph thereof, and the second and third paragraphs thereof in their entirety."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-5-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5. Section 8 of Chapter 53 of the General Laws is hereby amended by striking from said Section 8 the first three sentences of the first paragraph thereof, and the first and fourth sentences of the second paragraph thereof."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-6-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "SECTION 6.",
+              "what": "SECTION 6. Section 10 of Chapter 53 of the General Laws is hereby amended by striking the first four sentences from the first paragraph of said Section 10 and inserting in place thereof the following:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-7-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "SECTION 7.",
+              "what": "SECTION 7. Section 14 of Chapter 53 of the General Laws is hereby amended by inserting after the word “otherwise” in the first sentence thereof the following:- shall first be filled by the candidate who received the next highest number of votes for such office in the applicable state primary, and if there is no such"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-8-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "SECTION 8.",
+              "what": "SECTION 8. Section 33 of Chapter 53 of the General Laws is hereby amended by striking said Section 33 and inserting in place thereof the following:-\n\nSection 33. At least three facsimile copies of the ballot shall be provided for each polling place as specimen ballots."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-9-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "SECTION 9.",
+              "what": "SECTION 9. Section 34 of Chapter 53 of the General Laws is hereby amended by striking from the first sentence thereof the phrase “Official ballot of the (here shall follow the party name)” and inserting in place thereof the phrase “Official primary ballot”, and by inserting following the first paragraph thereof the"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-10-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "SECTION 10.",
+              "what": "SECTION 10. Section 37 of Chapter 53 of the General Laws is hereby amended by striking from the first paragraph thereof the first sentence in its entirety, the phrases “Except as provided by section thirty-seven A,” and “, and, if the party enrolment of such voter is shown on the voting list, the name of the party in"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-11-11",
+              "number": "11",
+              "kind": "PROGRAM",
+              "label": "SECTION 11.",
+              "what": "SECTION 11. Section 41 of Chapter 53 of the General Laws is hereby amended by striking the phrase “of political parties” from the first sentence thereof."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-12-12",
+              "number": "12",
+              "kind": "PROGRAM",
+              "label": "SECTION 12.",
+              "what": "SECTION 12. Section 44 of Chapter 53 of the General Laws is hereby amended by striking the last sentence thereof and inserting in place thereof the following:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-13-13",
+              "number": "13",
+              "kind": "PROGRAM",
+              "label": "SECTION 13.",
+              "what": "SECTION 13. Section 45 of Chapter 53 of the General Laws is hereby amended by striking the phrase “the political party whose nomination he seeks” in the first sentence thereof, and inserting in place thereof the phrase “the political party or designation that he represents, if any, as determined by his voter"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-14-14",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "SECTION 14.",
+              "what": "SECTION 14. Section 46 of Chapter 53 of the General Laws is hereby amended by striking the phrase “and who are not enrolled in any other party than that whose nomination the candidate seeks,” from the fifth sentence thereof."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-15-15",
+              "number": "15",
+              "kind": "PROGRAM",
+              "label": "SECTION 15.",
+              "what": "SECTION 15. Section 53 of Chapter 53 of the General Laws is hereby amended by striking said Section 53 and inserting in place thereof the following:-\n\nSection 53. In case of a tie vote where the number of persons receiving equal votes exceeds the number of nominations available, the state secretary shall forthwith"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-16-16",
+              "number": "16",
+              "kind": "PROGRAM",
+              "label": "SECTION 16.",
+              "what": "SECTION 16. Section 33 of Chapter 54 of the General Laws is hereby amended by striking the phrase “and elections and of voting for candidates of more than one political party at a primary” from the first paragraph thereof, striking the final sentence of the second paragraph thereof, and striking the phrase “or of"
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-17-17",
+              "number": "17",
+              "kind": "PROGRAM",
+              "label": "SECTION 17.",
+              "what": "SECTION 17. Section 43A of Chapter 54 of the General Laws is hereby amended by striking the phrase “at a state\n\nelection” from the first sentence thereof."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-18-18",
+              "number": "18",
+              "kind": "PROGRAM",
+              "label": "SECTION 18.",
+              "what": "SECTION 18. This act shall take effect on January 1, 2028."
+            },
+            {
+              "id": "ma-2026-11-03:question-3#section-19-19",
+              "number": "19",
+              "kind": "PROGRAM",
+              "label": "SECTION 19.",
+              "what": "SECTION 19. The provisions of this act are severable, and if any clause, sentence, paragraph or section of this law or an application thereof shall be adjudged by any court of competent jurisdiction to be invalid, such judgment shall not affect, impair, or invalidate the remainder thereof but shall be confined in its"
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "2bfb6006d4fc98ead571a8fe30ff22d55fe34e33233a16b9c3435a6b69f639c8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-4",
+          "whatItDoes": "SECTION 1. Section 1 of chapter 51 of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by striking out the last sentence and inserting in place thereof the following sentence:- A person otherwise qualified to vote for national or state officers, but who has not registered in accordance",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-4#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Section 1 of chapter 51 of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by striking out the last sentence and inserting in place thereof the following sentence:- A person otherwise qualified to vote for national or state officers, but who has not registered in accordance"
+            },
+            {
+              "id": "ma-2026-11-03:question-4#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Section 1F of chapter 51 of the General Laws is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-4#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. Said chapter 51, as so appearing, is hereby amended, by striking out section 3, as so appearing, and inserting in place thereof the following section:\n\nSection 3. For all elections and primaries, a person shall be registered and may vote in the voting precinct where they reside;"
+            },
+            {
+              "id": "ma-2026-11-03:question-4#section-4-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4. Section 26 of said chapter 51, as so appearing, is hereby amended by striking the last sentence."
+            },
+            {
+              "id": "ma-2026-11-03:question-4#section-5-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5. Said chapter 51 is hereby further amended by striking out section 34, as appearing in the 2022 Official Edition, and inserting in place thereof the following section:—\n\nSection 34. Except as otherwise provided in section 34A, after 5:00 p.m."
+            },
+            {
+              "id": "ma-2026-11-03:question-4#section-6-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "SECTION 6.",
+              "what": "SECTION 6. Said chapter 51 is hereby further amended by inserting after section 34 the following section: —\n\nSection 34A."
+            },
+            {
+              "id": "ma-2026-11-03:question-4#section-7-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "SECTION 7.",
+              "what": "SECTION 7.This act shall take effect on January 1, 2028."
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "34115e176927a6ea5e095d7dc728132969c23ccc24c55b958a7ff5052eb762f1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-5",
+          "whatItDoes": "SECTION 1. Section 2 of chapter 62F of the General Laws as appearing in the 2024 Official Edition is hereby amended by replacing the definitions of “Computed Maximum State Tax Revenues” and “State Tax Revenues” with the following —",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-5#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Section 2 of chapter 62F of the General Laws as appearing in the 2024 Official Edition is hereby amended by replacing the definitions of “Computed Maximum State Tax Revenues” and “State Tax Revenues” with the following —"
+            },
+            {
+              "id": "ma-2026-11-03:question-5#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Effective for purposes of any calculation under chapter 62F of the General Laws as appearing in the 2024 Official Edition for any fiscal year beginning after June 30, 2027, Section 2BBBBBB of chapter 29 of the General Laws as appearing in the 2024 Official Edition is hereby amended by striking out"
+            },
+            {
+              "id": "ma-2026-11-03:question-5#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. The provisions of this law are severable, and if any clause, sentence, paragraph or section of this chapter, or an application thereof, shall be adjudged by any court of competent jurisdiction to be invalid, such judgment shall not affect, impair, or invalidate the remainder thereof but shall be confined in"
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "5125aa791dabb1aebf80ef28fdc9d1f0a8c95567ed4052e7a3e66672087221d8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-6",
+          "whatItDoes": "SECTION 1. Chapter 29 of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by adding the following section:\n\nSection 2EEEEEE. (a) There shall be established and set up on the books of the commonwealth a separate fund to be known as the nature for all fund.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-6#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Chapter 29 of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by adding the following section:\n\nSection 2EEEEEE. (a) There shall be established and set up on the books of the commonwealth a separate fund to be known as the nature for all fund."
+            },
+            {
+              "id": "ma-2026-11-03:question-6#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Subsection 2EEEEEE(a) of chapter 29 of the General Laws is hereby amended in the second sentence by striking out the words “50% of”."
+            },
+            {
+              "id": "ma-2026-11-03:question-6#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. Section 1 shall take effect on July 1, 2027."
+            },
+            {
+              "id": "ma-2026-11-03:question-6#section-4-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4. Section 2 shall take effect on July 1, 2028."
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "a3cd47d2877b64b3948e58b2028bcc604e5fa9e4fdc55d62c73d7c26dc3491de",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-7",
+          "whatItDoes": "SECTION 1. Section 3 of chapter 40A of the Massachusetts General Laws, as so appearing, is hereby amended by adding the following paragraph:",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-7#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Section 3 of chapter 40A of the Massachusetts General Laws, as so appearing, is hereby amended by adding the following paragraph:"
+            },
+            {
+              "id": "ma-2026-11-03:question-7#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. This act shall take effect as provided in Article 48 of the Amendments to the Massachusetts Constitution, as amended."
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "27bea7c909f27168be4b43004021215843b8880835092d5f7806c2f932ace64f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-8",
+          "whatItDoes": "SECTION 1. The Act’s purpose is to modify the criteria for the legal possession, distribution, and use of marijuana by: (a) continuing the medical use of marijuana program;",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-8#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. The Act’s purpose is to modify the criteria for the legal possession, distribution, and use of marijuana by: (a) continuing the medical use of marijuana program;"
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. This act may be known as “An Act to Restore A Sensible Marijuana Policy.”"
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. Chapter 64N of the General Laws is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-4-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4. Chapter 94C of the General Laws, as appearing in the 2024 Official Edition, is hereby amended by striking out section 32L and inserting in place thereof the following section:\n\nSection 32L Possession of marihuana; civil penalty and forfeiture; other sanctions or disqualifications prohibited"
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-5-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5. Section 32M of said chapter 94C, as so appearing, is hereby amended by striking out both of said section’s references to the word “eighteen” and inserting in place thereof the following word:- 21"
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-6-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "SECTION 6.",
+              "what": "SECTION 6. Chapter 94G of the General Laws is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-7-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "SECTION 7.",
+              "what": "SECTION 7. Chapter 94I of the General Laws is hereby amended by inserting after section 1 the following section:-\n\nSection 1A. The Cannabis Control Commission.\n\n(a) The commission shall have all the powers necessary or convenient to carry out and effectuate its purposes including, but not limited to, the power to:"
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-8-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "SECTION 8.",
+              "what": "SECTION 8. Notwithstanding any general or special law to the contrary, the Cannabis Control Commission shall act to expedite and streamline the process for licensees under Chapter 94G, including marijuana establishments, to apply for and obtain licenses to participate in the medical use marijuana program administered"
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-9-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "SECTION 9.",
+              "what": "SECTION 9. Severability\n\nThe provisions of this law are severable and if any clause, sentence, paragraph or section of this measure, or an application thereof, shall be adjudged by any court of competent jurisdiction to be invalid, such judgment shall not affect, impair, or invalidate the remainder thereof but shall"
+            },
+            {
+              "id": "ma-2026-11-03:question-8#section-10-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "SECTION 10.",
+              "what": "SECTION 10. Effective Date\n\nThis law shall take effect January 1, 2028."
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "e6c9895217b89a8b18de4a889a6b2b9a1c6096e9b74079c3b7948089c26f88b1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-11-03:question-9",
+          "whatItDoes": "SECTION 1. Section 172M of chapter 6 of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by striking out, in lines 6 and 7, the words:- “and unmonitored contact with firearms, shotguns or rifles” and inserting in place thereof the following words:- contact with firearms, as defined in",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ma-2026-11-03:question-9#section-1-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Section 172M of chapter 6 of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by striking out, in lines 6 and 7, the words:- “and unmonitored contact with firearms, shotguns or rifles” and inserting in place thereof the following words:- contact with firearms, as defined in"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-2-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Section 18¾ of chapter 6A of the General Laws, as so appearing, is hereby amended by striking out, in lines 88 and 89, the words “and (v) the effectiveness of section 128B of chapter 140” and inserting in place thereof the following words:- (v) the effectiveness of section 128B of chapter 140;"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-3-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. Section 5J of chapter 18 of the General Laws, as so appearing, is hereby amended by striking out, in lines 10 and 11, inclusive, the words “and ammunitions dealers licensed pursuant to section 122B of said chapter 140”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-4-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4. Section 2LLL of chapter 29 of the General Laws, as so appearing, is hereby amended by striking out, in lines 8 and 9, the words “fee assessed under sections 122, 122B, 129B, 131, 131A, 131F, and 131H” and inserting in place thereof the following words:- fees assessed under section 121F, 131A and 131F."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-5-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5. Said chapter 29 is hereby further amended by inserting after section 2DDDDDD the following section:-\n\nSection 2EEEEEE."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-6-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "SECTION 6.",
+              "what": "SECTION 6. Section 10B of chapter 66 of the General Laws, as appearing in the 2022 Official Edition, is hereby amended by striking out, in lines 7 and 8, the following words:- , rifles, shotguns, machine guns."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-7-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "SECTION 7.",
+              "what": "SECTION 7. Said section 10B of said chapter 66, as so appearing, is hereby further amended, in line 14, by inserting after the word “request” the following words:- provided, however, that nothing in this section shall prohibit the transmission of data and other information to the department of criminal justice"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-8-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "SECTION 8.",
+              "what": "SECTION 8. Section 26 of chapter 90B of the General Laws, as so appearing, is hereby amended by striking out, in line 66, the words “rifle or shotgun” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-9-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "SECTION 9.",
+              "what": "SECTION 9. Said section 26 of said chapter 90B, as so appearing, is hereby further amended by striking out, in lines 68 and 69, the words “such firearm, rifle or shotgun is unloaded and in an enclosed case” and inserting in place thereof the following words:- such person possesses the required license to carry or"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-10-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "SECTION 10.",
+              "what": "SECTION 10. Section 35 of chapter 123 of the General\n\nLaws, as so appearing, is hereby amended by striking out, in line 122, the words “rifle or shotgun” and inserting in place thereof the following words:- as defined in section 121 of chapter 140."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-11-11",
+              "number": "11",
+              "kind": "PROGRAM",
+              "label": "SECTION 11.",
+              "what": "SECTION 11. Section 36A of said chapter 123, as so appearing, is hereby amended by striking out the second paragraph and inserting in place thereof the following paragraph:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-12-12",
+              "number": "12",
+              "kind": "PROGRAM",
+              "label": "SECTION 12.",
+              "what": "SECTION 12. Section 36C of said chapter 123, as so appearing, is hereby amended by adding the following subsection:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-13-13",
+              "number": "13",
+              "kind": "PROGRAM",
+              "label": "SECTION 13.",
+              "what": "SECTION 13. Chapter 131 of the General Laws is hereby amended by striking out section 62, as so appearing, and inserting in place thereof the following section:-\n\nSection 62."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-14-14",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "SECTION 14.",
+              "what": "SECTION 14. Section 90 of said chapter 131, as appearing in the 2022 Official Edition, is hereby amended by striking out, in line 7, the figure “, 62”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-15-15",
+              "number": "15",
+              "kind": "PROGRAM",
+              "label": "SECTION 15.",
+              "what": "SECTION 15. Section 121 of chapter 140, as so appearing, is hereby amended by inserting after the definition of “Ammunition” the following definition:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-16-16",
+              "number": "16",
+              "kind": "PROGRAM",
+              "label": "SECTION 16.",
+              "what": "SECTION 16. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definition of “Assault weapon” and inserting in place thereof the following 5 definitions:-\n\n“Assault-style firearm”, any firearm which is:"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-17-17",
+              "number": "17",
+              "kind": "PROGRAM",
+              "label": "SECTION 17.",
+              "what": "SECTION 17. Said section 121 of said chapter 140, as so appearing, is hereby further amended by inserting after the definition of “Court” the following 2 definitions:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-18-18",
+              "number": "18",
+              "kind": "PROGRAM",
+              "label": "SECTION 18.",
+              "what": "SECTION 18. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the ii\n\ndefinition of “Deceptive weapon device” and inserting in place thereof the following definition:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-19-19",
+              "number": "19",
+              "kind": "PROGRAM",
+              "label": "SECTION 19.",
+              "what": "SECTION 19. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definition of “Extreme risk protection order” and inserting in place thereof the following definition:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-20-20",
+              "number": "20",
+              "kind": "PROGRAM",
+              "label": "SECTION 20.",
+              "what": "SECTION 20. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definitions of “Firearm”, “Gunsmith” and “Imitation firearm” and inserting in place thereof the following 5 definitions:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-21-21",
+              "number": "21",
+              "kind": "PROGRAM",
+              "label": "SECTION 21.",
+              "what": "SECTION 21. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definition of “Large capacity feeding device” and inserting in place thereof the following definition:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-22-22",
+              "number": "22",
+              "kind": "PROGRAM",
+              "label": "SECTION 22.",
+              "what": "SECTION 22. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definition of “Large capacity weapon” and inserting in place thereof the following definition:-\n\n“Large capacity firearm”, any firearm that: (i) is semiautomatic with a fixed large capacity feeding device;"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-23-23",
+              "number": "23",
+              "kind": "PROGRAM",
+              "label": "SECTION 23.",
+              "what": "SECTION 23. Said section 121 of said chapter 140, as so appearing, is hereby further amended by inserting, in line 119, after the word “them” the following words:- ; provided, however, that should no such chief or officer exist the colonel of the state police or their designee shall act as the licensing authority."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-24-24",
+              "number": "24",
+              "kind": "PROGRAM",
+              "label": "SECTION 24.",
+              "what": "SECTION 24. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definition of “Machine gun” and inserting in place thereof the following 4 definitions:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-25-25",
+              "number": "25",
+              "kind": "PROGRAM",
+              "label": "SECTION 25.",
+              "what": "SECTION 25. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definitions of “Petition” and “Petitioner” and inserting in place thereof the following 3 definitions:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-26-26",
+              "number": "26",
+              "kind": "PROGRAM",
+              "label": "SECTION 26.",
+              "what": "SECTION 26. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definition of “Respondent” and inserting in place thereof the following 3 definitions:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-27-27",
+              "number": "27",
+              "kind": "PROGRAM",
+              "label": "SECTION 27.",
+              "what": "SECTION 27. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 136, 139, 140 and 147, the word “weapon”, each time it appears, and inserting in place thereof, in each instance, the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-28-28",
+              "number": "28",
+              "kind": "PROGRAM",
+              "label": "SECTION 28.",
+              "what": "SECTION 28. Said section 121 of said chapter 140, as so appearing, is hereby further amended by inserting after the definition of “Sawed-off shotgun” the following 2 definitions:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-29-29",
+              "number": "29",
+              "kind": "PROGRAM",
+              "label": "SECTION 29.",
+              "what": "SECTION 29. Said section 121 of said chapter 140, as so appearing, is hereby further amended by inserting after the definition of “Semiautomatic” the following definition:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-30-30",
+              "number": "30",
+              "kind": "PROGRAM",
+              "label": "SECTION 30.",
+              "what": "SECTION 30. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out the definition of “Trigger crank” and inserting in place thereof the following 5 definitions:"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-31-31",
+              "number": "31",
+              "kind": "PROGRAM",
+              "label": "SECTION 31.",
+              "what": "SECTION 31. Said section 121 of said chapter 140, as so appearing, is hereby further amended by striking out lines 175 to 192, inclusive."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-32-32",
+              "number": "32",
+              "kind": "PROGRAM",
+              "label": "SECTION 32.",
+              "what": "SECTION 32. Said chapter 140 is hereby further amended by inserting after section 121A the following 5 sections:\n\nSection 121B. (a)(1) The department of criminal justice information services shall develop and maintain a real time electronic firearms registration system."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-33-33",
+              "number": "33",
+              "kind": "PROGRAM",
+              "label": "SECTION 33.",
+              "what": "SECTION 33. Said chapter 140 is hereby further amended by striking out section 122, as so appearing, and inserting in place thereof the following section:-\n\nSection 122."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-34-34",
+              "number": "34",
+              "kind": "PROGRAM",
+              "label": "SECTION 34.",
+              "what": "SECTION 34. Said chapter 140 is hereby further amended by striking out section 122B, as so appearing, and inserting in place thereof the following section:-\n\nSection 122B."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-35-35",
+              "number": "35",
+              "kind": "PROGRAM",
+              "label": "SECTION 35.",
+              "what": "SECTION 35. Said chapter 140 is hereby further amended by striking out section 122C, as so appearing, and inserting in place thereof the following section:-\n\nSection 122C."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-36-36",
+              "number": "36",
+              "kind": "PROGRAM",
+              "label": "SECTION 36.",
+              "what": "SECTION 36. Said chapter 140 is hereby further amended by striking out section 122D, as so appearing, and inserting in place thereof the following section:-\n\nSection 122D."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-37-37",
+              "number": "37",
+              "kind": "PROGRAM",
+              "label": "SECTION 37.",
+              "what": "SECTION 37. Said chapter 140 is hereby further amended by striking out section 123, as so appearing, and inserting in place thereof the following section:-\n\nSection 123. (a) As used in this section “licensee” shall mean a person with a license to sell under section 122."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-38-38",
+              "number": "38",
+              "kind": "PROGRAM",
+              "label": "SECTION 38.",
+              "what": "SECTION 38. Said chapter 140 is hereby further amended by striking out section 125, as so appearing, and inserting in place thereof the following section:-\n\nSection 125."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-39-39",
+              "number": "39",
+              "kind": "PROGRAM",
+              "label": "SECTION 39.",
+              "what": "SECTION 39. Section 126 of said chapter 140, as so appearing, is hereby amended by striking out, in lines 3 and 4 and lines 6 and 7, each time they appear, the words “, rifles, shotguns or machine guns”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-40-40",
+              "number": "40",
+              "kind": "PROGRAM",
+              "label": "SECTION 40.",
+              "what": "SECTION 40. Section 128 of said chapter 140, as so appearing, is hereby amended by striking out the first paragraph and inserting in place thereof the following paragraph:"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-41-41",
+              "number": "41",
+              "kind": "PROGRAM",
+              "label": "SECTION 41.",
+              "what": "SECTION 41. Said chapter 140 is hereby further amended by striking out section 128A, as so appearing, and inserting in place thereof the following section:-\n\nSection 128A."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-42-42",
+              "number": "42",
+              "kind": "PROGRAM",
+              "label": "SECTION 42.",
+              "what": "SECTION 42. Said chapter 140 is hereby further amended by striking out section 128B, as so appearing, and inserting in place thereof the following section:-\n\nSection 128B."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-43-43",
+              "number": "43",
+              "kind": "PROGRAM",
+              "label": "SECTION 43.",
+              "what": "SECTION 43. Section 129 of said chapter 140, as so appearing, is hereby amended by striking out, in lines 1 to 3, inclusive, the words “, renting or hiring a firearm, rifle, shotgun or machine gun, or in making application for any form of license or permit” and inserting in place thereof the following words:- “or"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-44-44",
+              "number": "44",
+              "kind": "PROGRAM",
+              "label": "SECTION 44.",
+              "what": "SECTION 44. Said chapter 140 is hereby further amended by striking out section 129B, as so appearing, and inserting in place thereof the following section:-\n\nSection 129B. A firearm identification card shall be issued and possessed subject to the following conditions and restrictions:"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-45-45",
+              "number": "45",
+              "kind": "PROGRAM",
+              "label": "SECTION 45.",
+              "what": "SECTION 45. Said chapter 140 is hereby further amended by striking out section 129C, as so appearing, and inserting in place thereof the following section:-\n\nSection 129C."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-46-46",
+              "number": "46",
+              "kind": "PROGRAM",
+              "label": "SECTION 46.",
+              "what": "SECTION 46. Said chapter 140 is hereby further amended by striking out section 129D, as so appearing, and inserting in place thereof the following section:-\n\nSection 129D."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-47-47",
+              "number": "47",
+              "kind": "PROGRAM",
+              "label": "SECTION 47.",
+              "what": "SECTION 47. Section 130 of said chapter 140 is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-48-48",
+              "number": "48",
+              "kind": "PROGRAM",
+              "label": "SECTION 48.",
+              "what": "SECTION 48. Section 130½ of said chapter 140, as appearing in the 2022 Official Edition, is hereby amended by striking out, in lines 2 and 5, the word “weapon” and inserting in place thereof, in each instance, the following\n\nword:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-49-49",
+              "number": "49",
+              "kind": "PROGRAM",
+              "label": "SECTION 49.",
+              "what": "SECTION 49. Said chapter 140 is hereby further amended by striking out section 131, as so appearing, and inserting in place thereof the following section:-\n\nSection 131. The issuance and possession of a license to carry firearms shall be subject to the following conditions and restrictions:"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-50-50",
+              "number": "50",
+              "kind": "PROGRAM",
+              "label": "SECTION 50.",
+              "what": "SECTION 50. Said chapter 140 is hereby further amended by striking out section 131½, as so appearing, and inserting in place thereof the following section:-\n\nSection 131½."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-51-51",
+              "number": "51",
+              "kind": "PROGRAM",
+              "label": "SECTION 51.",
+              "what": "SECTION 51. Said chapter 140 is hereby further amended by striking out section 131¾, as so appearing, and inserting in place thereof the following section:-\n\nSection 131¾."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-52-52",
+              "number": "52",
+              "kind": "PROGRAM",
+              "label": "SECTION 52.",
+              "what": "SECTION 52. Section 131A of said chapter 140, as so appearing, is hereby amended by striking out, in line 10, the words “rifle or shotgun,”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-53-53",
+              "number": "53",
+              "kind": "PROGRAM",
+              "label": "SECTION 53.",
+              "what": "SECTION 53. Section 131B of said chapter 140, as so appearing, is hereby amended by striking out, in lines 2 and 7, the words “, rifle, shotgun or machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-54-54",
+              "number": "54",
+              "kind": "PROGRAM",
+              "label": "SECTION 54.",
+              "what": "SECTION 54. Section 131C of said chapter 140, as so i\n\nappearing, is hereby amended by inserting after the word “section”, in line 2, the following number: 129B."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-55-55",
+              "number": "55",
+              "kind": "PROGRAM",
+              "label": "SECTION 55.",
+              "what": "SECTION 55. Said section 131C of said chapter 140, as so appearing, is hereby further amended by inserting after figure “131F”, in lines 2 and 7, the following words:- or through an exemption under section 129C."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-56-56",
+              "number": "56",
+              "kind": "PROGRAM",
+              "label": "SECTION 56.",
+              "what": "SECTION 56. Said section 131C of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 6, 8 and 9, the words “rifle or shotgun”, each time they appear, and inserting in place thereof, in each instance, the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-57-57",
+              "number": "57",
+              "kind": "PROGRAM",
+              "label": "SECTION 57.",
+              "what": "SECTION 57. Said section 131C of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 9 and 10, the words “contained within the locked trunk of the vehicle or in a locked case or other secure container” and inserting in place thereof the following words:- secured in a locked container"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-58-58",
+              "number": "58",
+              "kind": "PROGRAM",
+              "label": "SECTION 58.",
+              "what": "SECTION 58. Said section 131C of said chapter 140, as so appearing, is hereby further amended by striking out, in line 19, the word “weapon” and inserting in place thereof the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-59-59",
+              "number": "59",
+              "kind": "PROGRAM",
+              "label": "SECTION 59.",
+              "what": "SECTION 59. Section 131E of said chapter 140 is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-60-60",
+              "number": "60",
+              "kind": "PROGRAM",
+              "label": "SECTION 60.",
+              "what": "SECTION 60. Section 131F of said chapter 140, as appearing in the 2022 Official Edition, is hereby amended by striking out, in lines 1 and 2, the words “, rifles or shotguns”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-61-61",
+              "number": "61",
+              "kind": "PROGRAM",
+              "label": "SECTION 61.",
+              "what": "SECTION 61. Said section 131F of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 5 and 6, the words “alien that resides outside the commonwealth” and inserting in place thereof the following words:- a citizen or national of the United States or a person who maintains legal"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-62-62",
+              "number": "62",
+              "kind": "PROGRAM",
+              "label": "SECTION 62.",
+              "what": "SECTION 62. Said section 131F of said chapter 140, as so appearing, is hereby further amended by striking out, in line 9, the number “131” and inserting in place therefor the following number:- 121F."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-63-63",
+              "number": "63",
+              "kind": "PROGRAM",
+              "label": "SECTION 63.",
+              "what": "SECTION 63. Said section 131F of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 18 to 21, inclusive the words “and a large capacity feeding device therefor may be carried if the person has been issued a license."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-64-64",
+              "number": "64",
+              "kind": "PROGRAM",
+              "label": "SECTION 64.",
+              "what": "SECTION 64. Section 131G of said chapter 140 is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-65-65",
+              "number": "65",
+              "kind": "PROGRAM",
+              "label": "SECTION 65.",
+              "what": "SECTION 65. Section 131H of said chapter 140 is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-66-66",
+              "number": "66",
+              "kind": "PROGRAM",
+              "label": "SECTION 66.",
+              "what": "SECTION 66. Section 131K of said chapter 140, as appearing in the 2022 Official Edition, is hereby amended by striking out, in lines 1, 3, 11, 16, 28, 31, 32, 37, 40, 44 and 45, the word “weapon” and inserting in place thereof, in each instance, the word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-67-67",
+              "number": "67",
+              "kind": "PROGRAM",
+              "label": "SECTION 67.",
+              "what": "SECTION 67. Section 131L of said chapter 140, as so appearing, is hereby amended by striking out, in lines 2 and 3, the words “, rifle or shotgun including, but not limited to, large capacity weapons, or machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-68-68",
+              "number": "68",
+              "kind": "PROGRAM",
+              "label": "SECTION 68.",
+              "what": "SECTION 68. Said section 131L of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 3, 6, 8, 10, 22, 39 and 41, the word “weapon”, each time it appears, and inserting in place thereof, in each instance, the word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-69-69",
+              "number": "69",
+              "kind": "PROGRAM",
+              "label": "SECTION 69.",
+              "what": "SECTION 69. Said section 131L of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 14 and 22, each time they appear, the words “rifle or shotgun that is not a large capacity weapon” and inserting in place thereof, in each instance the following words:- that is not a large capacity"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-70-70",
+              "number": "70",
+              "kind": "PROGRAM",
+              "label": "SECTION 70.",
+              "what": "SECTION 70. Said section 131L of said chapter 140, as so appearing, is hereby further amended by inserting after the word “capacity”, in line 17 the following words:- or semiautomatic."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-71-71",
+              "number": "71",
+              "kind": "PROGRAM",
+              "label": "SECTION 71.",
+              "what": "SECTION 71. Said chapter 140 is hereby further amended by striking out section 131M, as so appearing, and inserting in place thereof the following section:-\n\nSection 131M."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-72-72",
+              "number": "72",
+              "kind": "PROGRAM",
+              "label": "SECTION 72.",
+              "what": "SECTION 72. Section 131N of said chapter 140, as so appearing, is hereby amended by striking out the first sentence and inserting in place thereof the following sentence:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-73-73",
+              "number": "73",
+              "kind": "PROGRAM",
+              "label": "SECTION 73.",
+              "what": "SECTION 73. Section 131O of said chapter 140, as so appearing, is hereby amended by striking out, in line 22, the word “weapons” and inserting in place thereof the following word:- firearms."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-74-74",
+              "number": "74",
+              "kind": "PROGRAM",
+              "label": "SECTION 74.",
+              "what": "SECTION 74. Said chapter 140 is hereby further amended by striking out section 131P, as so appearing, and inserting in place thereof the following section:-\n\nSection 131P. (a) Any person applying for the issuance of a license or card under sections 129B, 131 or 131F shall,"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-75-75",
+              "number": "75",
+              "kind": "PROGRAM",
+              "label": "SECTION 75.",
+              "what": "SECTION 75. Said chapter 140 is hereby further amended by striking out section 131Q, as so appearing, and inserting in place thereof the following section:-\n\nSection 131Q. (a) A firearm used to carry out a criminal iii"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-76-76",
+              "number": "76",
+              "kind": "PROGRAM",
+              "label": "SECTION 76.",
+              "what": "SECTION 76. Section 131R of said chapter 140, as so appearing, is hereby amended by striking out, in lines 1 and 2, the words “holding a license to carry firearms or a firearm identification card”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-77-77",
+              "number": "77",
+              "kind": "PROGRAM",
+              "label": "SECTION 77.",
+              "what": "SECTION 77. Said section 131R of said chapter 140, as so appearing, is hereby further amended by striking out, in line 11, each time it appears, the words “, rifle, shotgun, machine gun, weapon”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-77a-78",
+              "number": "77A",
+              "kind": "PROGRAM",
+              "label": "SECTION 77A.",
+              "what": "SECTION 77A. Said section 131R of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 12 and 13, the words “, rifles, shotguns, machine guns, weapons”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-78-79",
+              "number": "78",
+              "kind": "PROGRAM",
+              "label": "SECTION 78.",
+              "what": "SECTION 78. Said section 131R of said chapter 140, as so appearing, is hereby further amended by striking out, in line 40, the words “the provisions of”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-79-80",
+              "number": "79",
+              "kind": "PROGRAM",
+              "label": "SECTION 79.",
+              "what": "SECTION 79. Said chapter 140 is hereby further amended by striking out section 131S, as so appearing, and inserting in place thereof the following section:-\n\nSection 131S. (a) The court shall, within 10 days of receipt of a petition pursuant to section 131R, conduct a hearing on the petition."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-80-81",
+              "number": "80",
+              "kind": "PROGRAM",
+              "label": "SECTION 80.",
+              "what": "SECTION 80. Said chapter 140 is hereby further amended by striking out section 131T, as so appearing, and inserting in place thereof the following section:-\n\nSection 131T."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-81-82",
+              "number": "81",
+              "kind": "PROGRAM",
+              "label": "SECTION 81.",
+              "what": "SECTION 81. Section 131X of said chapter 140, as so appearing, is hereby further amended by striking out, in lines 2 and 3, and 4 and 5, each time they appear, the words “, rifles, shotguns, machine guns, weapons”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-82-83",
+              "number": "82",
+              "kind": "PROGRAM",
+              "label": "SECTION 82.",
+              "what": "SECTION 82. Said section 131X of said chapter 140, as so appearing, is hereby amended by inserting after the word “license”, in line 8, the following words:- to carry firearms or a firearm identification card."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-83-84",
+              "number": "83",
+              "kind": "PROGRAM",
+              "label": "SECTION 83.",
+              "what": "SECTION 83. Said section 131X of said chapter 140, as so appearing, is hereby further amended by striking out, in line 12, the words “family or household member” and inserting in place thereof the following word:- “petitioner”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-84-85",
+              "number": "84",
+              "kind": "PROGRAM",
+              "label": "SECTION 84.",
+              "what": "SECTION 84. Said section 131X of said chapter 140, as so appearing, is hereby further amended by striking out subsection (d) and inserting in place thereof the following 4 subsections:-i"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-85-86",
+              "number": "85",
+              "kind": "PROGRAM",
+              "label": "SECTION 85.",
+              "what": "SECTION 85. Section 131Y of said chapter 140, as so appearing, is hereby amended by striking out clauses (7) to (12), inclusive, and inserting in place thereof the following 10 clauses:-\n\n(7) the number of warrants issued pursuant to subsection (d) of section 131S or section 131T;"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-86-87",
+              "number": "86",
+              "kind": "PROGRAM",
+              "label": "SECTION 86.",
+              "what": "SECTION 86. Section 3B of chapter 209A of the General Laws, as so appearing, is hereby amended by striking out, in lines 6 and 7 and 20 and 21, each time it appears, the words “, rifles, shotguns, machine guns”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-87-88",
+              "number": "87",
+              "kind": "PROGRAM",
+              "label": "SECTION 87.",
+              "what": "SECTION 87. Said section 3B of said chapter 209A, as so appearing, is hereby further amended by striking out, in line 13, the word “weapon” and inserting in place thereof the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-88-89",
+              "number": "88",
+              "kind": "PROGRAM",
+              "label": "SECTION 88.",
+              "what": "SECTION 88. Said section 3B of said chapter 209A, as so appearing, is hereby further amended by striking out, in line 15 the word “weapons” and inserting in place thereof the following word:- firearms."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-88a-90",
+              "number": "88A",
+              "kind": "PROGRAM",
+              "label": "SECTION 88A.",
+              "what": "SECTION 88A. Said section 3B of said chapter 209A, as so appearing, is hereby further amended by striking out, in line 37, the words “, rifle, shotgun, machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-89-91",
+              "number": "89",
+              "kind": "PROGRAM",
+              "label": "SECTION 89.",
+              "what": "SECTION 89. Section 3C of said chapter 209A, as so appearing, is hereby amended by striking out, in lines 6 and 9, each time they appear, the words “, rifles, shotguns, machine guns”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-90-92",
+              "number": "90",
+              "kind": "PROGRAM",
+              "label": "SECTION 90.",
+              "what": "SECTION 90. Said section 3C of said chapter 209A, as so appearing, is hereby further amended by striking out, in line 13, the word “weapon” and inserting in place thereof the following word:- firearm.i"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-91-93",
+              "number": "91",
+              "kind": "PROGRAM",
+              "label": "SECTION 91.",
+              "what": "SECTION 91. Said section 3C of said chapter 209A, as so appearing, is hereby further amended by striking out, in line 17, the word “weapons” and inserting in place thereof the following word:- firearms."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-92-94",
+              "number": "92",
+              "kind": "PROGRAM",
+              "label": "SECTION 92.",
+              "what": "SECTION 92. Chapter 258E of the General Laws is hereby amended by inserting after section 4 the following 3 sections:-\n\nSection 4A."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-93-95",
+              "number": "93",
+              "kind": "PROGRAM",
+              "label": "SECTION 93.",
+              "what": "SECTION 93. Section 15E of chapter 265 of the General\n\nLaws, as appearing in the 2022 Official Edition, is hereby amended by striking out, in lines 2 and 3, the words “, large capacity weapon, rifle, shotgun, sawed-off shotgun or machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-94-96",
+              "number": "94",
+              "kind": "PROGRAM",
+              "label": "SECTION 94.",
+              "what": "SECTION 94. Section 15F of said chapter 265, as so appearing, is hereby amended by striking out, in lines 2 and 3, the words “, large capacity weapon, rifle, shotgun, sawed-off shotgun or machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-95-97",
+              "number": "95",
+              "kind": "PROGRAM",
+              "label": "SECTION 95.",
+              "what": "SECTION 95. Section 17 of said chapter 265, as so appearing, is hereby amended by striking out, in lines 10 and 11, the words “shotgun, rifle, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-96-98",
+              "number": "96",
+              "kind": "PROGRAM",
+              "label": "SECTION 96.",
+              "what": "SECTION 96. Said section 17 of said chapter 265, as so appearing, is hereby further amended by striking out, in lines 13 and 14, the words “, shotgun, rifle, machine gun or assault weapon”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-97-99",
+              "number": "97",
+              "kind": "PROGRAM",
+              "label": "SECTION 97.",
+              "what": "SECTION 97. Section 18 of said chapter 265, as so appearing, is hereby amended by striking out, in lines 5 and 6 and line 30, the words “shotgun, rifle, machine gun or assault weapon” and inserting in place thereof, in each instance, the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-98-100",
+              "number": "98",
+              "kind": "PROGRAM",
+              "label": "SECTION 98.",
+              "what": "SECTION 98. Section 18A of said chapter 265, as so appearing, is hereby amended by striking out, in line 8, the words “shotgun, rifle or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-99-101",
+              "number": "99",
+              "kind": "PROGRAM",
+              "label": "SECTION 99.",
+              "what": "SECTION 99. Section 18B of said chapter 265, as so appearing, is hereby amended by striking out, in line 4, the words “rifle or shotgun” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-100-102",
+              "number": "100",
+              "kind": "PROGRAM",
+              "label": "SECTION 100.",
+              "what": "SECTION 100. Said section 18B of said chapter 265, as so appearing, is hereby further amended by striking out, in lines 6 and 7,18 and 19 and line 21, each time they appear, the words “, rifle or shotgun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-101-103",
+              "number": "101",
+              "kind": "PROGRAM",
+              "label": "SECTION 101.",
+              "what": "SECTION 101. Said section 18B of said chapter 265, as so appearing, is hereby further amended by striking out, in lines 7 and 22, each time it appears, the word “weapon” and inserting in place thereof, in each instance, the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-102-104",
+              "number": "102",
+              "kind": "PROGRAM",
+              "label": "SECTION 102.",
+              "what": "SECTION 102. Said section 18B of said chapter 265, as so appearing, is hereby further amended by striking out, in lines 14 and 15, the words “, rifle or shotgun including, but not limited to, a large capacity weapon or machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-103-105",
+              "number": "103",
+              "kind": "PROGRAM",
+              "label": "SECTION 103.",
+              "what": "SECTION 103. Section 21A of said chapter 265, as so\n\nappearing, is hereby amended by striking out, in lines 14 and 15, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-104-106",
+              "number": "104",
+              "kind": "PROGRAM",
+              "label": "SECTION 104.",
+              "what": "SECTION 104. Section 22 of said chapter 265, as so appearing, is hereby amended by striking out, in lines 28 and 29, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-105-107",
+              "number": "105",
+              "kind": "PROGRAM",
+              "label": "SECTION 105.",
+              "what": "SECTION 105. Section 24 of said chapter 265, as so appearing, is hereby amended by striking out, in line 8, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-106-108",
+              "number": "106",
+              "kind": "PROGRAM",
+              "label": "SECTION 106.",
+              "what": "SECTION 106. Section 24B of said chapter 265, as so appearing, is hereby amended by striking out, in line 9, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-107-109",
+              "number": "107",
+              "kind": "PROGRAM",
+              "label": "SECTION 107.",
+              "what": "SECTION 107. Section 26 of said chapter 265, as so appearing, is hereby amended by striking out, in line 16, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-108-110",
+              "number": "108",
+              "kind": "PROGRAM",
+              "label": "SECTION 108.",
+              "what": "SECTION 108. Said section 26 of said chapter 265, as so appearing, is hereby further amended by striking out, in lines 22 and 23, the words “, rifle, shotgun, machine gun or assault weapon”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-109-111",
+              "number": "109",
+              "kind": "PROGRAM",
+              "label": "SECTION 109.",
+              "what": "SECTION 109. Section 39 of said chapter 265, as so appearing, is hereby amended by striking out, in line 22, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-110-112",
+              "number": "110",
+              "kind": "PROGRAM",
+              "label": "SECTION 110.",
+              "what": "SECTION 110. Section 58 of said chapter 265, as so appearing, is hereby amended by striking out, in line 2, the word “weapon” and inserting in place thereof the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-111-113",
+              "number": "111",
+              "kind": "PROGRAM",
+              "label": "SECTION 111.",
+              "what": "SECTION 111. Section 14 of chapter 266 of the General Laws, as so appearing, is hereby amended by striking out, in line 10, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-112-114",
+              "number": "112",
+              "kind": "PROGRAM",
+              "label": "SECTION 112.",
+              "what": "SECTION 112. Section 17 of said chapter 266, as so appearing, is hereby amended by striking out, in line 7, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-113-115",
+              "number": "113",
+              "kind": "PROGRAM",
+              "label": "SECTION 113.",
+              "what": "SECTION 113. Section 18 of said chapter 266, as so appearing, is hereby amended by striking out, in lines 8 and 9, the words “rifle, shotgun, machine gun or assault weapon” and inserting in place thereof the following words:- as defined in section 121 of chapter 140,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-114-116",
+              "number": "114",
+              "kind": "PROGRAM",
+              "label": "SECTION 114.",
+              "what": "SECTION 114. Section 10 of chapter 269 of the General Laws, as so appearing, is hereby amended by inserting, in line 28, after the words “possession of” the following words: not semiautomatic."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-115-117",
+              "number": "115",
+              "kind": "PROGRAM",
+              "label": "SECTION 115.",
+              "what": "SECTION 115. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in line 101, the words “as defined in” and inserting in place thereof the following words:- automatic part, bump stock, rapid-fire trigger activator or trigger modifier, as those terms are defined in."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-116-118",
+              "number": "116",
+              "kind": "PROGRAM",
+              "label": "SECTION 116.",
+              "what": "SECTION 116. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in line 134, the words “, any rifle or shotgun” and inserting in place thereof the following words:- any firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-117-119",
+              "number": "117",
+              "kind": "PROGRAM",
+              "label": "SECTION 117.",
+              "what": "SECTION 117. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in lines 135 to 137, inclusive, the words “the requirement of a serial number, as provided in section one hundred and twenty-nine B of chapter one hundred and forty” and inserting in place thereof the"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-118-120",
+              "number": "118",
+              "kind": "PROGRAM",
+              "label": "SECTION 118.",
+              "what": "SECTION 118. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in lines 140 and 141, line 150 and lines 151 and 152, each time they appear, the words “, rifle, shotgun”.\n\n[Editors Note: There is no SECTION 119]"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-120-121",
+              "number": "120",
+              "kind": "PROGRAM",
+              "label": "SECTION 120.",
+              "what": "SECTION 120. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in line 158, the words “or machine guns”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-121-122",
+              "number": "121",
+              "kind": "PROGRAM",
+              "label": "SECTION 121.",
+              "what": "SECTION 121. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in line 162, the words “, rifle, shotgun or machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-122-123",
+              "number": "122",
+              "kind": "PROGRAM",
+              "label": "SECTION 122.",
+              "what": "SECTION 122. Said section 10 of said section 269, as so appearing, is hereby further amended by striking out, in line 170, the words “law enforcement officer” and inserting in place thereof the following words:- qualified law enforcement officer or a qualified retired law enforcement officer, as defined in the Law"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-123-124",
+              "number": "123",
+              "kind": "PROGRAM",
+              "label": "SECTION 123.",
+              "what": "SECTION 123. Said section 10 of said section 269, as so appearing, is hereby further amended by inserting after the word “university”, in line 174, the following words “, including transport used for students of said institution,."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-124-125",
+              "number": "124",
+              "kind": "PROGRAM",
+              "label": "SECTION 124.",
+              "what": "SECTION 124. Said section 10 of said section 269, as so appearing, is hereby further amended by inserting after subsection (j) the following subsection:"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-125-126",
+              "number": "125",
+              "kind": "PROGRAM",
+              "label": "SECTION 125.",
+              "what": "SECTION 125. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in line 196 and 226, the word “weapon” and inserting in place thereof, in each instance, the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-126-127",
+              "number": "126",
+              "kind": "PROGRAM",
+              "label": "SECTION 126.",
+              "what": "SECTION 126. Said section 10 of said chapter 269, as so appearing, is hereby further amended by striking out, in line 240, the words “, loaded sawed off shotgun or loaded machine gun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-127-128",
+              "number": "127",
+              "kind": "PROGRAM",
+              "label": "SECTION 127.",
+              "what": "SECTION 127. Subsection (o) of said section 10 of said chapter 269, as so appearing, is hereby amended by striking out the second paragraph and inserting in place thereof the following paragraph:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-128-129",
+              "number": "128",
+              "kind": "PROGRAM",
+              "label": "SECTION 128.",
+              "what": "SECTION 128. Section 10A of said chapter 269, as so appearing, is hereby amended by striking out, in line 11, the words “firearm shall” and inserting in place thereof the following words:- firearm, including any combination of parts designed or redesigned and intended for use in assembling or fabricating any such"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-129-130",
+              "number": "129",
+              "kind": "PROGRAM",
+              "label": "SECTION 129.",
+              "what": "SECTION 129. Said section 10A of said chapter 269, as so appearing, is hereby further amended by striking out, in line 16, the words “or appliance” and inserting in place thereof the following words:- , appliance or parts."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-130-131",
+              "number": "130",
+              "kind": "PROGRAM",
+              "label": "SECTION 130.",
+              "what": "SECTION 130. Section 10E of said chapter 269 of the General Laws, as so appearing, is hereby amended by striking out, in lines 4 and 5, the words “rifles, shotguns, machines guns, or any combination thereof,” and inserting in place thereof the following words:- as defined in section 121 of chapter 140."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-131-132",
+              "number": "131",
+              "kind": "PROGRAM",
+              "label": "SECTION 131.",
+              "what": "SECTION 131. Said section 10E of said chapter 269, as so appearing, is hereby further amended by striking out, in lines 5 and 6, the words “, rifles, shotguns, machines guns, or any combination thereof”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-132-133",
+              "number": "132",
+              "kind": "PROGRAM",
+              "label": "SECTION 132.",
+              "what": "SECTION 132. Section 10F of said chapter 269, as so appearing, is hereby amended by striking out, in lines 3 and 31, each time it appears, the word “weapon” and inserting in place thereof, in each instance, the following\n\nword:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-133-134",
+              "number": "133",
+              "kind": "PROGRAM",
+              "label": "SECTION 133.",
+              "what": "SECTION 133. Section 10H of said chapter 269, as so appearing, is hereby amended by inserting after the figure “140,”, in line 4, the following words:- while with a percentage, by weight, of alcohol in their blood of eight one-hundredths or greater, or."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-134-135",
+              "number": "134",
+              "kind": "PROGRAM",
+              "label": "SECTION 134.",
+              "what": "SECTION 134. Said chapter 269 is hereby further amended by striking out section 10I, as so appearing, and inserting in place thereof the following section:-\n\nSection 10I."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-135-136",
+              "number": "135",
+              "kind": "PROGRAM",
+              "label": "SECTION 135.",
+              "what": "SECTION 135. Section 10K of said chapter 269, as so appearing, is hereby amended by striking out, in lines 9 and 10, lines 15 and 16, and line 19, the words “, rifle, shotgun, machine gun or ammunition” and inserting in place thereof, in each instance, the following words:- or ammunition, as defined in section 121 of"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-136-137",
+              "number": "136",
+              "kind": "PROGRAM",
+              "label": "SECTION 136.",
+              "what": "SECTION 136. Said chapter 269 is hereby amended by striking out section 11A, as so appearing, and inserting in place thereof the following section:-\n\nSection 11A."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-137-138",
+              "number": "137",
+              "kind": "PROGRAM",
+              "label": "SECTION 137.",
+              "what": "SECTION 137. Section 11B of said chapter 269, as so appearing, is hereby amended by striking out the first sentence and inserting in place thereof the following sentence:-"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-138-139",
+              "number": "138",
+              "kind": "PROGRAM",
+              "label": "SECTION 138.",
+              "what": "SECTION 138. Said chapter 269 is hereby amended by striking out section 11C, as so appearing, and inserting in place thereof the following section:-\n\nSection 11C."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-139-140",
+              "number": "139",
+              "kind": "PROGRAM",
+              "label": "SECTION 139.",
+              "what": "SECTION 139. Section 11E of said chapter 269, as so appearing, is hereby repealed."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-140-141",
+              "number": "140",
+              "kind": "PROGRAM",
+              "label": "SECTION 140.",
+              "what": "SECTION 140. Section 12D of said chapter 269, as so appearing, is hereby amended by striking out, in line 30, the word “weapon” and inserting in place thereof the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-141-142",
+              "number": "141",
+              "kind": "PROGRAM",
+              "label": "SECTION 141.",
+              "what": "SECTION 141. Said chapter 269 is hereby further amended by striking out section 12E, as so appearing, and inserting in place thereof the following section:-\n\nSection 12E."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-142-143",
+              "number": "142",
+              "kind": "PROGRAM",
+              "label": "SECTION 142.",
+              "what": "SECTION 142. Section 12F of said chapter 269, as so appearing, is hereby amended by striking out, in lines 11 and 12, the words “as defined in section 131J of chapter 140, any rifle, shotgun”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-143-144",
+              "number": "143",
+              "kind": "PROGRAM",
+              "label": "SECTION 143.",
+              "what": "SECTION 143. Said chapter 269 is hereby further amended by inserting after section 12F the following section:-\n\nSection 12G."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-144-145",
+              "number": "144",
+              "kind": "PROGRAM",
+              "label": "SECTION 144.",
+              "what": "SECTION 144. Section 14 of said chapter 269, as appearing in the 2022 Official Edition, is hereby amended by striking out, in line 15, the words “rifle, shotgun, machine gun or assault weapon,”."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-145-146",
+              "number": "145",
+              "kind": "PROGRAM",
+              "label": "SECTION 145.",
+              "what": "SECTION 145. Section 58A of chapter 276 of the General Laws, as so appearing, is hereby amended by striking out, in line 21, the words “weapon or machine gun” and inserting in place thereof the following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-146-147",
+              "number": "146",
+              "kind": "PROGRAM",
+              "label": "SECTION 146.",
+              "what": "SECTION 146. Said section 58A of said chapter 276, as so appearing, is hereby further amended by striking out, in line 28, the word “weapon” and inserting in place thereof ii\n\nthe following word:- firearm."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-147-148",
+              "number": "147",
+              "kind": "PROGRAM",
+              "label": "SECTION 147.",
+              "what": "SECTION 147. Section 25 of chapter 279 of the General Laws, as so appearing, is hereby amended by striking out, in lines 17 and 18, the words “, shotgun, rifle, machine gun, or assault weapon,” and inserting in place thereof the following words:- as defined in section 121 of chapter 140."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-148-149",
+              "number": "148",
+              "kind": "PROGRAM",
+              "label": "SECTION 148.",
+              "what": "SECTION 148. (a) As used in this section, the following words shall, unless the context clearly requires otherwise, have the following meanings:"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-149-150",
+              "number": "149",
+              "kind": "PROGRAM",
+              "label": "SECTION 149.",
+              "what": "SECTION 149. (a) There is hereby established, pursuant to section 2A of chapter 4 of the General Laws, a special legislative commission to study the commonwealth’s funding structure for violence prevention services."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-150-151",
+              "number": "150",
+              "kind": "PROGRAM",
+              "label": "SECTION 150.",
+              "what": "SECTION 150. (a) There is hereby established, pursuant to section 2A of chapter 4 of the General Laws, a special legislative commission to study the collection, maintenance, access, use and distribution of firearm data by the commonwealth."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-151-152",
+              "number": "151",
+              "kind": "PROGRAM",
+              "label": "SECTION 151.",
+              "what": "SECTION 151. (a) Notwithstanding any general or special law to the contrary, the executive office of health and human services shall establish a task force to review the availability of federal funding to support community violence prevention programs and to make"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-152-153",
+              "number": "152",
+              "kind": "PROGRAM",
+              "label": "SECTION 152.",
+              "what": "SECTION 152. Notwithstanding any general or special law, rule or regulation to the contrary, the secretary of public safety and security or a designee shall study and report to the legislature on recommendations to ensure the effective implementation of live firearm training as required pursuant to section 131P of"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-153-154",
+              "number": "153",
+              "kind": "PROGRAM",
+              "label": "SECTION 153.",
+              "what": "SECTION 153. A valid license to carry a firearm issued under sections 131 or 131F of chapter 140 of the General Laws, a valid firearm identification card under section 129B of said chapter 140 or a valid license to sell under section 122 of said chapter 140, shall remain valid until the expiration, suspension or"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-154-155",
+              "number": "154",
+              "kind": "PROGRAM",
+              "label": "SECTION 154.",
+              "what": "SECTION 154. Not later than 6 months after the effective date of this act, the executive office of public safety and security shall notify all individuals with licenses to carry and firearm identification cards valid on the effective date of this act of the requirements under section 121B and 121C of chapter 140 of"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-155-156",
+              "number": "155",
+              "kind": "PROGRAM",
+              "label": "SECTION 155.",
+              "what": "SECTION 155. (a) Not later than 6 months after the effective date of this act, the executive office of public safety and security shall promulgate regulations required by section 121B of chapter 140 of the General Laws, as inserted by section 32.ii"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-156-157",
+              "number": "156",
+              "kind": "PROGRAM",
+              "label": "SECTION 156.",
+              "what": "SECTION 156. Not later than 1 year after the effective date of this act, the department of criminal justice information services shall establish the online dashboard and publish firearm data required by subsection (c) of section 121E of chapter 140 of the General Laws, as inserted by section 32."
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-157-158",
+              "number": "157",
+              "kind": "PROGRAM",
+              "label": "SECTION 157.",
+              "what": "SECTION 157. The department of criminal justice information services shall establish the electronic firearms registration system established pursuant to section 121B of chapter 140 of the General Laws, as inserted by section 32, not later than 1 year after the effective date of this act;"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-158-159",
+              "number": "158",
+              "kind": "PROGRAM",
+              "label": "SECTION 158.",
+              "what": "SECTION 158. The department of criminal justice information services shall establish the serial number request system established pursuant to section 121C of chapter 140 of the General Laws, as inserted by section 32, not later than 1 year after the effective date of this act;"
+            },
+            {
+              "id": "ma-2026-11-03:question-9#section-159-160",
+              "number": "159",
+              "kind": "PROGRAM",
+              "label": "SECTION 159.",
+              "what": "SECTION 159. Sections 38 and 75 shall take effect 18 months after the effective date of this act."
+            }
+          ],
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "84ed259bcb0a4838525870653e9ecbecb0d7fa724bcae3c273956c2737e6fff4",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:40.092477+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+          "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+          "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+          "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+          "vault": {
+            "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
+            "byteLength": 1349833,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://malegislature.gov/Laws/Constitution",
+          "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+          "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+          "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+          "vault": {
+            "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
+            "byteLength": 458486,
+            "contentType": "text/html"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:12:38.592Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-15T04:14:39.781892+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -8886,14 +11262,34 @@
         "reviewedEvidence": "Official November 3, 2026 State Election page identifies nine binding statewide questions and prints their ballot wording."
       },
       {
-        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceClass": "OFFICIAL_PUBLISHER",
         "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
         "finalUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
         "httpStatus": 200,
         "rawHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
-        "retrievedAt": "2026-10-14T05:04:16.732Z",
-        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
-        "reviewedEvidence": "Official 2026 Information for Voters booklet contains the full texts of all nine statewide ballot questions."
+        "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
+        "reviewedEvidence": "Full official legal texts and voter-guide entries for all nine statewide questions. The PDF requires a browser User-Agent and a cookie-aware HTTP opener; this retrieves the public document after the state site cookie redirect. Legal text columns and separate question bands were extracted independently to preserve reading order."
+      },
+      {
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://malegislature.gov/Laws/Constitution",
+        "finalUrl": "https://malegislature.gov/Laws/Constitution",
+        "httpStatus": 200,
+        "rawHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
+        "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
+        "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
+        "reviewedEvidence": "Current operative threshold provisions in Article LXXXI, sections 2 and 5: initiative law approval and referendum repeal each require the prevailing side to reach 30 percent of all ballots as well as a majority on the question. The guide’s majority-only description for Question 9 omits this additional constitutional condition; the constitutional text controls the displayed passage threshold."
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

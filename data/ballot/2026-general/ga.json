@@ -13376,6 +13376,105 @@
             "verifiedAt": "2026-10-14T05:05:54.043974Z",
             "doorId": "fec-ga-chief",
             "quote": "Shall the Constitution of Georgia, for the purpose of protecting family farmland, be amended so as to increase the maximum acreage to qualify for assessment and taxation as a bona fide conservation use property from 2,000 acres to 4,000 acres?"
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+            "sourceHash": "c2d0e5821e1927493c7545cb1492171d8504e7242232035d7125113f83835571",
+            "retrievedAt": "2026-10-14T23:52:27.035700+00:00",
+            "publisher": "Georgia Secretary of State, Elections Division",
+            "vault": {
+              "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-c2d0e5821e1927493c7545cb1492171d8504e7242232035d7125113f83835571.txt",
+              "byteLength": 2464,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+                "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
+                "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+                "publisher": "Georgia Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
+                  "byteLength": 152039,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+            "sourceHash": "39ad25336fa0832f08519c91c1d1059c94cb310eab18d05c8d03253ae03ce8bc",
+            "retrievedAt": "2026-10-14T23:52:27.035700+00:00",
+            "publisher": "Georgia Attorney General, Secretary of State, and Legislative Counsel",
+            "summary": "This proposal increases the maximum acreage to qualify for assessment and taxation as a bona fide conservation use property from 2,000 acres to 4,000 acres. It amends Article VII, Section I, Paragraph III of the Georgia Constitution, relating to uniformity, classification of property, assessment of agricultural land, and utilities, by revising subparagraph (e)(1).",
+            "passageThreshold": "If such proposal is ratified by a majority of the electors qualified to vote for members of the General Assembly voting thereon in such general election, such proposal shall become a part of this Constitution or shall become a new Constitution, as the case may be.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+              "sourceHash": "6c556dc1b7974f2f539b13ee440fd74c85cfdfe957237adb5795e99f0c06e469",
+              "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+              "publisher": "Georgia Secretary of State",
+              "vault": {
+                "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-6c556dc1b7974f2f539b13ee440fd74c85cfdfe957237adb5795e99f0c06e469.txt",
+                "byteLength": 286541,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+                  "sourceHash": "1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06",
+                  "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+                  "publisher": "Georgia Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06.pdf",
+                    "byteLength": 1780352,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/senate-journal-document-library/2025-senate-journal.pdf?sfvrsn=d6f944b4_2",
+              "sourceHash": "7ca5e15bd28d5eea9b16699db6aedee97208bf94e2a6bfb5e64bd80a0a2b1589",
+              "retrievedAt": "2026-10-15T00:14:47.994254+00:00",
+              "publisher": "Georgia Department of Community Affairs, published in the Georgia Senate Journal",
+              "vault": {
+                "key": "project/freshness/source/www.legis.ga.gov/2026/10/15/ms-01-fd2ba70f8fc4435c/sha256-7ca5e15bd28d5eea9b16699db6aedee97208bf94e2a6bfb5e64bd80a0a2b1589.txt",
+                "byteLength": 1540,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/senate-journal-document-library/2025-senate-journal.pdf?sfvrsn=d6f944b4_2",
+                  "sourceHash": "500fe907789a703600ba59acda8982a585a3bda60d4e7f71ef0e804cf16bea21",
+                  "retrievedAt": "2026-10-15T00:14:47.994254+00:00",
+                  "publisher": "Georgia Department of Community Affairs, published in the Georgia Senate Journal",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.ga.gov/2026/10/15/ms-01-fd2ba70f8fc4435c/sha256-500fe907789a703600ba59acda8982a585a3bda60d4e7f71ef0e804cf16bea21.pdf",
+                    "byteLength": 14217266,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "A fiscal note can not be performed on this House Bill with current data reporting.\nAccording to experts at the Department of Revenue, Conservation Use is very\nunique. The owner and the property must qualify for this level of assessment.\nThese are 10-year covenants entered into by the taxpayer with the individual county\nassessors. When an application is submitted to the local tax assessors, an appraiser\nmust visit the property and determine eligibility. There is no standard way to\ndetermine what does and does not qualify since this is determined at the local\nlevel.\nAdditionally using parcel data to approximate for all possible properties up to 4000\nacres would inflate the cost. DCA would suggest the Committee seek an actuarial\nanalysis due to the complexity of this program. The subsequent House\nResolution's impact on local governments would be directly related to the impact\nof the House Bill if it were to pass.",
+            "vault": {
+              "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-39ad25336fa0832f08519c91c1d1059c94cb310eab18d05c8d03253ae03ce8bc.txt",
+              "byteLength": 945,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+                "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
+                "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+                "publisher": "Georgia Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
+                  "byteLength": 152039,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -13391,6 +13490,80 @@
             "verifiedAt": "2026-10-14T05:05:54.043974Z",
             "doorId": "fec-ga-chief",
             "quote": "Shall the Constitution of Georgia be amended so as to require that all probate court judges be elected in nonpartisan elections?"
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+            "sourceHash": "64b868759fd8bf55471e9c64adf2440bec47f6342ce2a38a1058d5bfc709e3e5",
+            "retrievedAt": "2026-10-14T23:52:27.038583+00:00",
+            "publisher": "Georgia Secretary of State, Elections Division",
+            "vault": {
+              "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-64b868759fd8bf55471e9c64adf2440bec47f6342ce2a38a1058d5bfc709e3e5.txt",
+              "byteLength": 1851,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+                "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
+                "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+                "publisher": "Georgia Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
+                  "byteLength": 152039,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+            "sourceHash": "7e2bd28b93f2f73045541e0c538bee01a7be37a2c2b291645e00d5afdf230b8b",
+            "retrievedAt": "2026-10-14T23:52:27.038583+00:00",
+            "publisher": "Georgia Attorney General, Secretary of State, and Legislative Counsel",
+            "summary": "This proposal provides that all probate judges shall be elected in nonpartisan elections. It amends Article VI, Section VII, Paragraph I of the Georgia Constitution, relating to selection and term of office of judges, by revising subparagraph (a).",
+            "passageThreshold": "If such proposal is ratified by a majority of the electors qualified to vote for members of the General Assembly voting thereon in such general election, such proposal shall become a part of this Constitution or shall become a new Constitution, as the case may be.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+              "sourceHash": "6c556dc1b7974f2f539b13ee440fd74c85cfdfe957237adb5795e99f0c06e469",
+              "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+              "publisher": "Georgia Secretary of State",
+              "vault": {
+                "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-6c556dc1b7974f2f539b13ee440fd74c85cfdfe957237adb5795e99f0c06e469.txt",
+                "byteLength": 286541,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+                  "sourceHash": "1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06",
+                  "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+                  "publisher": "Georgia Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06.pdf",
+                    "byteLength": 1780352,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-7e2bd28b93f2f73045541e0c538bee01a7be37a2c2b291645e00d5afdf230b8b.txt",
+              "byteLength": 669,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+                "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
+                "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+                "publisher": "Georgia Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
+                  "byteLength": 152039,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -13406,17 +13579,222 @@
             "verifiedAt": "2026-10-14T05:05:54.043974Z",
             "doorId": "fec-ga-chief",
             "quote": "Shall the Constitution of Georgia be amended so as to authorize the General Assembly to dedicate certain existing revenues, including revenues reallocated by law, to a nonlapsing fund to be used exclusively for the expansion, maintenance, and operation of emergency 9-1-1 systems in this state?"
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+            "sourceHash": "588700f5806b88f9e9bd2e72f67e2ff81d4a223406a9013162ae95fb90426688",
+            "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+            "publisher": "Georgia Secretary of State, Elections Division",
+            "vault": {
+              "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-588700f5806b88f9e9bd2e72f67e2ff81d4a223406a9013162ae95fb90426688.txt",
+              "byteLength": 2197,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+                "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
+                "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+                "publisher": "Georgia Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
+                  "byteLength": 152039,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+            "sourceHash": "b0eeeb2972eaf6b43cf9010df5d41240773235f6a0153dc328eefe324332f059",
+            "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+            "publisher": "Georgia Attorney General, Secretary of State, and Legislative Counsel",
+            "summary": "This proposal authorizes the General Assembly to provide by general law for the creation of the Georgia Next Generation 9-1-1 Fund. It amends Article III, Section IX, Paragraph VI of the Georgia Constitution, relating to appropriations to be for specific sums, by adding a new subparagraph (s).",
+            "passageThreshold": "If such proposal is ratified by a majority of the electors qualified to vote for members of the General Assembly voting thereon in such general election, such proposal shall become a part of this Constitution or shall become a new Constitution, as the case may be.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+              "sourceHash": "6c556dc1b7974f2f539b13ee440fd74c85cfdfe957237adb5795e99f0c06e469",
+              "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+              "publisher": "Georgia Secretary of State",
+              "vault": {
+                "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-6c556dc1b7974f2f539b13ee440fd74c85cfdfe957237adb5795e99f0c06e469.txt",
+                "byteLength": 286541,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+                  "sourceHash": "1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06",
+                  "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+                  "publisher": "Georgia Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06.pdf",
+                    "byteLength": 1780352,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-b0eeeb2972eaf6b43cf9010df5d41240773235f6a0153dc328eefe324332f059.txt",
+              "byteLength": 931,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+                "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
+                "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+                "publisher": "Georgia Secretary of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
+                  "byteLength": 152039,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [
+        {
+          "contestId": "ga-sos-2026-constitutional-amendment-1",
+          "whatItDoes": "Proposing an amendment to the\nConstitution so as to increase the\nmaximum acreage to qualify for\nassessment and taxation as a\nbona fide conservation use\nproperty; to provide for related\nmatters; to provide for the\nsubmission of this amendment\nfor ratification or rejection; and\nfor other purposes.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ga-sos-2026-constitutional-amendment-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.\nArticle VII, Section I, Paragraph\nIII of the Constitution is\namended\nby\nrevising\nsubparagraph (e)(1) as follows:\nʺ(e) The General Assembly\nshall provide by general law:\n(1) For the definition and\nmethods of assessment and\ntaxation, such methods to\ninclude a formula based on\ncurrent\nuse,\nannual"
+            },
+            {
+              "id": "ga-sos-2026-constitutional-amendment-1#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.\nThe above proposed amendment\nto the Constitution shall be\npublished and submitted as\nprovided in Article X, Section I,\nParagraph II of the Constitution.\nThe ballot submitting the above\nproposed amendment shall have\nwritten or printed thereon the\nfollowing:\n\"( ) YE Shall the Constitution\nS"
+            }
+          ],
+          "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+          "sourceHash": "c2d0e5821e1927493c7545cb1492171d8504e7242232035d7125113f83835571",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.035700+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ga-sos-2026-constitutional-amendment-2",
+          "whatItDoes": "Proposing an amendment to the\nConstitution so as to provide that\nall probate judges shall be\nelected in nonpartisan elections;\nto provide for related matters; to\nprovide for submission of this\namendment for ratification or\nrejection; and for other\npurposes.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ga-sos-2026-constitutional-amendment-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.\nArticle VI, Section VII of the\nConstitution is amended in\nParagraph I by revising\nsubparagraph (a) as follows:\nʺ(a) All superior court and\nstate court judges shall be\nelected on a nonpartisan basis\nfor a term of four years. All\nJustices of the Supreme Court\nand the Judges of the Court of"
+            },
+            {
+              "id": "ga-sos-2026-constitutional-amendment-2#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.\nThe above proposed amendment\nto the Constitution shall be\npublished and submitted as\nprovided in Article X, Section I,\nParagraph II of the Constitution.\nThe ballot submitting the above\nproposed amendment shall have\nwritten or printed thereon the\nfollowing:\n\"( ) YES Shall\nthe\nConstitution\nof\nGeorgia\nbe"
+            }
+          ],
+          "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+          "sourceHash": "64b868759fd8bf55471e9c64adf2440bec47f6342ce2a38a1058d5bfc709e3e5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.038583+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ga-sos-2026-constitutional-amendment-3",
+          "whatItDoes": "Proposing an amendment to the\nConstitution so as to authorize\ncreation of the Georgia Next\nGeneration 9-1-1 Fund; to\nprovide for submission of this\namendment for ratification or\nrejection; and for other purposes.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ga-sos-2026-constitutional-amendment-3#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.\nArticle III, Section IX of the\nConstitution is amended in\nParagraph VI by adding a new\nsubparagraph to read as follows:\nʺ(s) The General Assembly\nis authorized to provide by\ngeneral law for the creation of\nthe Georgia Next Generation\n9-1-1 Fund. The General\nAssembly may provide by"
+            },
+            {
+              "id": "ga-sos-2026-constitutional-amendment-3#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.\nThe above proposed amendment\nto the Constitution shall be\npublished and submitted as\nprovided in Article X, Section I,\nParagraph II of the Constitution.\nThe ballot submitting the above\nproposed amendment shall have\nwritten or printed thereon the\nfollowing:\n\"( ) YE Shall\nthe\nS\nConstitution\nof"
+            }
+          ],
+          "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+          "sourceHash": "588700f5806b88f9e9bd2e72f67e2ff81d4a223406a9013162ae95fb90426688",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.136747+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/senate-journal-document-library/2025-senate-journal.pdf?sfvrsn=d6f944b4_2",
+          "sourceHash": "500fe907789a703600ba59acda8982a585a3bda60d4e7f71ef0e804cf16bea21",
+          "retrievedAt": "2026-10-15T00:14:47.994254+00:00",
+          "publisher": "Georgia Department of Community Affairs, published in the Georgia Senate Journal",
+          "vault": {
+            "key": "project/freshness/source/www.legis.ga.gov/2026/10/15/ms-01-fd2ba70f8fc4435c/sha256-500fe907789a703600ba59acda8982a585a3bda60d4e7f71ef0e804cf16bea21.pdf",
+            "byteLength": 14217266,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
+          "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
+          "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
+          "publisher": "Georgia Secretary of State, Elections Division",
+          "vault": {
+            "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
+            "byteLength": 152039,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+          "sourceHash": "1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06",
+          "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+          "publisher": "Georgia Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06.pdf",
+            "byteLength": 1780352,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:05:54.088315Z",
-    "reviewedBy": "BL-12 scripted official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:39.798951+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://sos.ga.gov/november-3-2026-general-election",
@@ -13452,11 +13830,44 @@
         "requestedUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
         "finalUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
         "rawHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
-        "retrievedAt": "2026-10-14T05:05:54.043974Z",
         "publisher": "Georgia Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official constitutional-amendment booklet contains all three proposed amendments in full, their ballot questions, and official summaries for November 3, 2026."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+        "finalUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
+        "rawHash": "1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06",
+        "publisher": "Georgia Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.ga.gov/api/document/docs/default-source/senate-journal-document-library/2025-senate-journal.pdf?sfvrsn=d6f944b4_2",
+        "finalUrl": "https://www.legis.ga.gov/api/document/docs/default-source/senate-journal-document-library/2025-senate-journal.pdf?sfvrsn=d6f944b4_2",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:14:47.994254+00:00",
+        "rawHash": "500fe907789a703600ba59acda8982a585a3bda60d4e7f71ef0e804cf16bea21",
+        "publisher": "Georgia Department of Community Affairs, published in the Georgia Senate Journal",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official Senate Journal bytes saved. The Department of Community Affairs fiscal statement for HB90/HR32 on pages 1705–1706 is extracted verbatim and attributed.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

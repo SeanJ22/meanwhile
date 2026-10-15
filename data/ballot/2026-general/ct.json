@@ -13745,19 +13745,68 @@
           }
         }
       ],
-      "absences": [],
+      "absences": [
+        {
+          "ocdId": "ocd-division/country:us/state:ct",
+          "divisionVintage": "2026",
+          "statement": "The official November 3, 2026 ballot-question inventory contains no statewide measures; its 57 questions apply to 23 named municipalities.",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45337/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-10-14T23:57:20.087158+00:00",
+            "verifiedAt": "2026-10-15T00:07:18.572358+00:00",
+            "doorId": "fec-ct-chief",
+            "quote": "1.  \"Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?\""
+          }
+        }
+      ],
       "coverageNotes": [
         "The Secretary of the State’s statewide November 3, 2026 List of Nominees covers all 5 statewide contests, 5 U.S. House districts, 36 state Senate districts and 151 state House districts. Every listed nomination and registered write-in candidate is included.",
         "Fusion nominations remain separate party lines. The joint Governor and Lieutenant Governor ticket is retained as printed in one candidacy per party line.",
         "The official nomination list does not state incumbency or campaign websites.",
-        "The official Questions on the Ballot page contains 2018 materials and no 2026 statewide measure list. The public election-management ballot-question dataset lists town questions only; a statewide measure certification remains unacquired."
+        "The Secretary of the State’s complete November 3, 2026 election-management ballot-question dataset, version 45337, contains 57 local questions in 23 municipalities and no statewide question. Statewide measure coverage is confirmed from that complete official question inventory."
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
+          "sourceHash": "cf136e66a0c3798170dd380b412909d8bd98f6c879a0945681f510085c6d7d06",
+          "retrievedAt": "2026-10-14T23:56:58.274104+00:00",
+          "publisher": "Connecticut Secretary of the State",
+          "vault": {
+            "key": "project/freshness/source/ctemspublic.tgstg.net/2026/10/14/ms-01-29e3ae6a7f3b3b57/sha256-cf136e66a0c3798170dd380b412909d8bd98f6c879a0945681f510085c6d7d06.json",
+            "byteLength": 23,
+            "contentType": "application/json"
+          }
+        },
+        {
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "retrievedAt": "2026-10-14T16:15:11.213638Z",
+          "publisher": "Connecticut Secretary of the State",
+          "vault": {
+            "key": "project/freshness/source/ctemspublic.pcctg.net/2026/10/14/ms-01-3b759850095987ec/sha256-ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.json",
+            "byteLength": 17682,
+            "contentType": "application/json"
+          }
+        },
+        {
+          "sourceUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45337/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "retrievedAt": "2026-10-14T23:57:20.087158+00:00",
+          "publisher": "Connecticut Secretary of the State",
+          "vault": {
+            "key": "project/freshness/source/ctemspublic.tgstg.net/2026/10/14/ms-01-9977db93b4be9c70/sha256-ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.json",
+            "byteLength": 17682,
+            "contentType": "application/json"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T16:18:54.614063Z",
+    "reviewedBy": "Codex MS-01 official measure inventory review",
+    "reviewedAt": "2026-10-15T04:14:39.971599+00:00",
     "sources": [
       {
         "requestedUrl": "https://portal.ct.gov/sots/election-services/election-results/election-results",
@@ -13848,6 +13897,28 @@
         "httpStatus": 200,
         "rawHash": "daf3f8ec984579faa4a5377f206abcf49a466c4e693d0e842cfdf0905536be99",
         "reviewedEvidence": "Official candidate publication converted programmatically from these exact saved source bytes."
+      },
+      {
+        "requestedUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
+        "httpStatus": 200,
+        "rawHash": "cf136e66a0c3798170dd380b412909d8bd98f6c879a0945681f510085c6d7d06",
+        "retrievedAt": "2026-10-14T23:56:58.274104+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The official Version.json identifies 45337 as the current data publication for election 108.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45337/ballotQuestion_Electiondata.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45337/ballotQuestion_Electiondata.json",
+        "httpStatus": 200,
+        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+        "retrievedAt": "2026-10-14T23:57:20.087158+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "The Secretary of the State’s complete November 3, 2026 election-management ballot-question dataset, version 45337, contains 57 local questions in 23 municipalities and no statewide question. Statewide measure coverage is confirmed from that complete official question inventory."
       }
     ]
   }

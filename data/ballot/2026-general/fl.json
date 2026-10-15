@@ -11118,6 +11118,105 @@
             "verifiedAt": "2026-10-14T05:02:36.983Z",
             "doorId": "fec-fl-chief",
             "quote": "Proposing an amendment to the State Constitution to increase the amount of funds that may be retained in the budget stabilization fund from 10% to 25% of general revenue collections, require the legislature to transfer the lesser of $750 million or the amount required to reach 25% of the general revenue collections each year unless certain conditions are met, and allow the legislature to withdraw funds for critical state needs."
+          },
+          "officialText": {
+            "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+            "sourceHash": "a0bfb274d56c2b03b5d26a793d4b735b8f764845acfe0252cd19bb59525b394d",
+            "retrievedAt": "2026-10-14T23:52:26.933108+00:00",
+            "publisher": "Florida Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-4ab5282e3af3f1b8/sha256-a0bfb274d56c2b03b5d26a793d4b735b8f764845acfe0252cd19bb59525b394d.txt",
+              "byteLength": 16826,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+                "sourceHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+                "retrievedAt": "2026-10-14T23:52:26.933108+00:00",
+                "publisher": "Florida Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-4ab5282e3af3f1b8/sha256-b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587.pdf",
+                  "byteLength": 129617,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+            "sourceHash": "27dffe79baf96ae8d4dd2ecb5ea35bb1ce44115ddc55839cdfc223f5e352258b",
+            "retrievedAt": "2026-10-14T23:53:06.228775+00:00",
+            "publisher": "Florida Division of Elections",
+            "summary": "Proposing an amendment to the State Constitution to increase the amount of funds that may be retained in the budget stabilization fund from 10% to 25% of general revenue collections, require the legislature to transfer the lesser of $750 million or the amount required to reach 25% of the general revenue collections each year unless certain conditions are met, and allow the legislature to withdraw funds for critical state needs.",
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/5019/Analyses/h5019z1.BUC.PDF",
+              "sourceHash": "c0a7a0952d9beef4736c07df8eeacadc56d605e1c9bc38c6bbc22f002fdd4295",
+              "retrievedAt": "2026-10-15T00:00:09.466194+00:00",
+              "publisher": "Florida House of Representatives, nonpartisan committee staff",
+              "vault": {
+                "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-b6e2073e23d8b5a1/sha256-c0a7a0952d9beef4736c07df8eeacadc56d605e1c9bc38c6bbc22f002fdd4295.txt",
+                "byteLength": 10794,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/5019/Analyses/h5019z1.BUC.PDF",
+                  "sourceHash": "ca53fe9a5bcad74f61f4344c63008addd81d0ec1eaa6befff97d77eecf9423d7",
+                  "retrievedAt": "2026-10-15T00:00:09.466194+00:00",
+                  "publisher": "Florida Legislature and Division of Elections",
+                  "vault": {
+                    "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-b6e2073e23d8b5a1/sha256-ca53fe9a5bcad74f61f4344c63008addd81d0ec1eaa6befff97d77eecf9423d7.pdf",
+                    "byteLength": 517945,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "The fiscal impact on the state is indeterminate but likely insignificant.",
+            "passageThreshold": "A proposed amendment requires at least 60% approval from voters to pass",
+            "passageThresholdSource": {
+              "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+              "sourceHash": "9a6e82735a6a93dbab9de0d02db15bc183adb57880cb06ad724637675e761598",
+              "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+              "publisher": "Florida Division of Elections",
+              "vault": {
+                "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-9a6e82735a6a93dbab9de0d02db15bc183adb57880cb06ad724637675e761598.txt",
+                "byteLength": 6010,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+                  "sourceHash": "b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a",
+                  "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+                  "publisher": "Florida Legislature and Division of Elections",
+                  "vault": {
+                    "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a.html",
+                    "byteLength": 31881,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-461964f7716dc0ac/sha256-27dffe79baf96ae8d4dd2ecb5ea35bb1ce44115ddc55839cdfc223f5e352258b.txt",
+              "byteLength": 1076,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+                "sourceHash": "3d767ec1add6f557da61b581214b794abb5fb6c806e5ba2e3ff12b4d891d5c62",
+                "retrievedAt": "2026-10-14T23:53:06.228775+00:00",
+                "publisher": "Florida Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-461964f7716dc0ac/sha256-3d767ec1add6f557da61b581214b794abb5fb6c806e5ba2e3ff12b4d891d5c62.html",
+                  "byteLength": 18392,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -11133,6 +11232,105 @@
             "verifiedAt": "2026-10-14T05:05:18.046Z",
             "doorId": "fec-fl-chief",
             "quote": "Proposing an amendment to the State Constitution to exempt tangible personal property habitually located or typically present on land classified as agricultural, used in the production of agricultural products or for agritourism activities, and owned by the landowner or leaseholder of the agricultural land from ad valorem taxation. If approved this amendment would first apply for tax years beginning January 1, 2027."
+          },
+          "officialText": {
+            "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+            "sourceHash": "8ddc389df3be1036f83562e58e8225ec52aa2ad6a9bc2bb6f77ade455d933af6",
+            "retrievedAt": "2026-10-14T23:52:26.760742+00:00",
+            "publisher": "Florida Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-f86418b648890772/sha256-8ddc389df3be1036f83562e58e8225ec52aa2ad6a9bc2bb6f77ade455d933af6.txt",
+              "byteLength": 7786,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+                "sourceHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+                "retrievedAt": "2026-10-14T23:52:26.760742+00:00",
+                "publisher": "Florida Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-f86418b648890772/sha256-409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae.pdf",
+                  "byteLength": 111435,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+            "sourceHash": "d5586e89e9e1a10a8efe5547f8021476c9bfc195381c46f4bf00744cae57e2d8",
+            "retrievedAt": "2026-10-14T23:53:06.273706+00:00",
+            "publisher": "Florida Division of Elections",
+            "summary": "Proposing an amendment to the State Constitution to exempt tangible personal property habitually located or typically present on land classified as agricultural, used in the production of agricultural products or for agritourism activities, and owned by the landowner or leaseholder of the agricultural land from ad valorem taxation. If approved this amendment would first apply for tax years beginning January 1, 2027.",
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/1215/Analyses/h1215z.WMC.PDF",
+              "sourceHash": "d50f90436feaadc44011c490b66c477076864dba5863ae5f20b28e56a39a4c6b",
+              "retrievedAt": "2026-10-15T00:00:09.132252+00:00",
+              "publisher": "Florida House of Representatives, nonpartisan committee staff",
+              "vault": {
+                "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-fef2b431dc2850e0/sha256-d50f90436feaadc44011c490b66c477076864dba5863ae5f20b28e56a39a4c6b.txt",
+                "byteLength": 10513,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/1215/Analyses/h1215z.WMC.PDF",
+                  "sourceHash": "be6c20c3059d152f25677b2e4e4e8fbfe063eefc65b94fa84a97238f2c6df156",
+                  "retrievedAt": "2026-10-15T00:00:09.132252+00:00",
+                  "publisher": "Florida Legislature and Division of Elections",
+                  "vault": {
+                    "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-fef2b431dc2850e0/sha256-be6c20c3059d152f25677b2e4e4e8fbfe063eefc65b94fa84a97238f2c6df156.pdf",
+                    "byteLength": 451941,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "The Revenue Estimating Conference estimates that, if approved by the voters, the amendment proposed by the joint resolution will have a negative recurring impact on local government revenues of $31.0 million, beginning in Fiscal Year 2027-28.",
+            "passageThreshold": "A proposed amendment requires at least 60% approval from voters to pass",
+            "passageThresholdSource": {
+              "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+              "sourceHash": "9a6e82735a6a93dbab9de0d02db15bc183adb57880cb06ad724637675e761598",
+              "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+              "publisher": "Florida Division of Elections",
+              "vault": {
+                "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-9a6e82735a6a93dbab9de0d02db15bc183adb57880cb06ad724637675e761598.txt",
+                "byteLength": 6010,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+                  "sourceHash": "b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a",
+                  "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+                  "publisher": "Florida Legislature and Division of Elections",
+                  "vault": {
+                    "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a.html",
+                    "byteLength": 31881,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-2433f20220be3ff7/sha256-d5586e89e9e1a10a8efe5547f8021476c9bfc195381c46f4bf00744cae57e2d8.txt",
+              "byteLength": 1120,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+                "sourceHash": "4addbda0e4d806a05ee66c525089199da918ab66eb0ea1352d453c24a58bb649",
+                "retrievedAt": "2026-10-14T23:53:06.273706+00:00",
+                "publisher": "Florida Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-2433f20220be3ff7/sha256-4addbda0e4d806a05ee66c525089199da918ab66eb0ea1352d453c24a58bb649.html",
+                  "byteLength": 18435,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -11148,17 +11346,304 @@
             "verifiedAt": "2026-10-14T05:05:18.650Z",
             "doorId": "fec-fl-chief",
             "quote": "This amendment increases the homestead exemption, for all non-school taxes, to $150,000 in 2027 and $250,000 in 2028, and adjusts for inflation thereafter. It requires the Legislature to prescribe a uniform procedure for counties and municipalities, for their respective levies, to increase the homestead exemption up to full assessed value, and allows special districts, subject to referendum approval, to do the same. Persons who are not Florida residents on December 31, 2026, will receive the existing homestead exemption upon qualifying for a homestead exemption, with the increased homestead exemption beginning with the fifth year of exemption, to the extent permitted by the U.S. Constitution. This amendment reduces the annual cap on assessment increases for non-homestead properties from 10% to 5%. This amendment requires counties and municipalities to use property taxes solely for public safety, education and schools, infrastructure, natural resources, bond debt service, retirement benefits for employees, and operations and administration. Other expenditures may be approved by county officers or county or municipal governing bodies unless prohibited by general law, notwithstanding Article VII, Section 9(a) of the Florida Constitution, which allows counties and municipalities to levy property taxes for their respective purposes. This amendment takes effect January 1, 2027."
+          },
+          "officialText": {
+            "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+            "sourceHash": "ff2b6f3028f07e4a6c92e772dad1b49180977d95d72b628ccc5452d0b5259f45",
+            "retrievedAt": "2026-10-14T23:52:26.827581+00:00",
+            "publisher": "Florida Division of Elections",
+            "vault": {
+              "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-070bd5167f3394db/sha256-ff2b6f3028f07e4a6c92e772dad1b49180977d95d72b628ccc5452d0b5259f45.txt",
+              "byteLength": 30442,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+                "sourceHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+                "retrievedAt": "2026-10-14T23:52:26.827581+00:00",
+                "publisher": "Florida Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-070bd5167f3394db/sha256-b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6.pdf",
+                  "byteLength": 158181,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+            "sourceHash": "175b02b8d180fbb0e559646305d3f020d3dd92bd38d5842302c2997d0ae5c372",
+            "retrievedAt": "2026-10-14T23:53:06.104619+00:00",
+            "publisher": "Florida Division of Elections",
+            "summary": "This amendment increases the homestead exemption, for all non-school taxes, to $150,000 in 2027 and $250,000 in 2028, and adjusts for inflation thereafter. It requires the Legislature to prescribe a uniform procedure for counties and municipalities, for their respective levies, to increase the homestead exemption up to full assessed value, and allows special districts, subject to referendum approval, to do the same. Persons who are not Florida residents on December 31, 2026, will receive the existing homestead exemption upon qualifying for a homestead exemption, with the increased homestead exemption beginning with the fifth year of exemption, to the extent permitted by the U.S. Constitution. This amendment reduces the annual cap on assessment increases for non-homestead properties from 10% to 5%. This amendment requires counties and municipalities to use property taxes solely for public safety, education and schools, infrastructure, natural resources, bond debt service, retirement benefits for employees, and operations and administration. Other expenditures may be approved by county officers or county or municipal governing bodies unless prohibited by general law, notwithstanding Article VII, Section 9(a) of the Florida Constitution, which allows counties and municipalities to levy property taxes for their respective purposes. This amendment takes effect January 1, 2027.",
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026F/1/Analyses/h0001z.SAC.PDF",
+              "sourceHash": "6eff985fadb349b7aa9615976c72c3960e10573a9add84af2250973401a4c979",
+              "retrievedAt": "2026-10-15T00:00:50.907625+00:00",
+              "publisher": "Florida House of Representatives, nonpartisan committee staff",
+              "vault": {
+                "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-38d9222b23851aea/sha256-6eff985fadb349b7aa9615976c72c3960e10573a9add84af2250973401a4c979.txt",
+                "byteLength": 25109,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026F/1/Analyses/h0001z.SAC.PDF",
+                  "sourceHash": "c64e45cca764cb8d1edd1b1072920f5dbde8eb5d626ddee7939e547f11d8c5b5",
+                  "retrievedAt": "2026-10-15T00:00:50.907625+00:00",
+                  "publisher": "Florida Legislature and Division of Elections",
+                  "vault": {
+                    "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-38d9222b23851aea/sha256-c64e45cca764cb8d1edd1b1072920f5dbde8eb5d626ddee7939e547f11d8c5b5.pdf",
+                    "byteLength": 548255,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "If the constitutional amendment proposed by the joint resolution is approved by the voters, it is estimated that the cash impacts on local non-school property tax revenues would be -$4.95 billion in Fiscal Year (FY) 2027-28 (with the $150,000 exemption in place) and -$8.78 billion in FY 2028-29 (with the $250,000 exemption in place). The recurring impact in all years is estimated to be -$11.86 billion on local non-school property tax revenues, which represents the cash impact in FY 3031-32.",
+            "passageThreshold": "A proposed amendment requires at least 60% approval from voters to pass",
+            "passageThresholdSource": {
+              "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+              "sourceHash": "9a6e82735a6a93dbab9de0d02db15bc183adb57880cb06ad724637675e761598",
+              "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+              "publisher": "Florida Division of Elections",
+              "vault": {
+                "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-9a6e82735a6a93dbab9de0d02db15bc183adb57880cb06ad724637675e761598.txt",
+                "byteLength": 6010,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+                  "sourceHash": "b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a",
+                  "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+                  "publisher": "Florida Legislature and Division of Elections",
+                  "vault": {
+                    "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a.html",
+                    "byteLength": 31881,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-640c0d8fb349f101/sha256-175b02b8d180fbb0e559646305d3f020d3dd92bd38d5842302c2997d0ae5c372.txt",
+              "byteLength": 2164,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+                "sourceHash": "b27e9c689eafdf8a44064aaf9cdd4dd6f1dfc2b9345970f1481abbb102a1feaa",
+                "retrievedAt": "2026-10-14T23:53:06.104619+00:00",
+                "publisher": "Florida Division of Elections",
+                "vault": {
+                  "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-640c0d8fb349f101/sha256-b27e9c689eafdf8a44064aaf9cdd4dd6f1dfc2b9345970f1481abbb102a1feaa.html",
+                  "byteLength": 19873,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [
+        {
+          "contestId": "fl-doe-2026-general-amendment-1",
+          "whatItDoes": "A joint resolution proposing an amendment to Section\n19 of Article III of the State Constitution to\nincrease the amount of funds that may be retained in\nthe budget stabilization fund, require an annual\ntransfer to the budget stabilization fund unless\ncertain conditions are met, and allow the legislature",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "fl-doe-2026-general-amendment-1#section-1",
+              "number": "19",
+              "kind": "PROGRAM",
+              "label": "SECTION 19.",
+              "what": "SECTION 19.  State Budgeting, Planning and Appropriations\nProcesses.—\n(a)  ANNUAL BUDGETING.\n(1)  General law shall prescribe the adoption of annual\nstate budgetary and planning processes and require that detail\nreflecting the annualized costs of the state budget and"
+            }
+          ],
+          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+          "sourceHash": "a0bfb274d56c2b03b5d26a793d4b735b8f764845acfe0252cd19bb59525b394d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:26.933108+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-doe-2026-general-amendment-2",
+          "whatItDoes": "A joint resolution proposing an amendment to Section 3\nof Article VII and the creation of a new section in\nArticle XII of the State Constitution to exempt\ncertain tangible personal property from ad valorem\ntaxation.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "fl-doe-2026-general-amendment-2#section-1",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3.  Taxes; exemptions.—\n(a)  All property owned by a municipality and used\nexclusively by it for municipal or public purposes shall be\nexempt from taxation. A municipality, owning property outside\nthe municipality, may be required by general law to make payment"
+            }
+          ],
+          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+          "sourceHash": "8ddc389df3be1036f83562e58e8225ec52aa2ad6a9bc2bb6f77ade455d933af6",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:26.760742+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-doe-2026-general-amendment-3",
+          "whatItDoes": "A joint resolution proposing amendments to Sections 4,\n6, and 9 of Article VII and the creation of a new\nsection in Article XII of the State Constitution to\nrevise the limitation on annual assessment increases\nfor specified real property, to increase the homestead\nexemption, to provide a limitation on the use of ad",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "fl-doe-2026-general-amendment-3#section-1",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4.  Taxation; assessments.—By general law\nregulations shall be prescribed which shall secure a just\nvaluation of all property for ad valorem taxation, provided:\n(a)  Agricultural land, land producing high water recharge\nto Florida's aquifers, or land used exclusively for\nPage 1 of 20"
+            },
+            {
+              "id": "fl-doe-2026-general-amendment-3#section-2",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "SECTION 6.",
+              "what": "SECTION 6.  Homestead exemptions.—\n(a)(1)a.  Every person who has the legal or equitable title\nto real estate and maintains thereon the permanent residence of\nthe owner, or another legally or naturally dependent upon the\nowner, shall be exempt from taxation thereon, except assessments\nfor special benefits, as follows:"
+            },
+            {
+              "id": "fl-doe-2026-general-amendment-3#section-3",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "SECTION 9.",
+              "what": "SECTION 9.  Local taxes.—\n(a)(1)  Counties, school districts, and municipalities\nshall, and special districts may, be authorized by law to levy\nad valorem taxes and may be authorized by general law to levy\nother taxes, for their respective purposes, except ad valorem"
+            }
+          ],
+          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+          "sourceHash": "ff2b6f3028f07e4a6c92e772dad1b49180977d95d72b628ccc5452d0b5259f45",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:26.827581+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/5019/Analyses/h5019z1.BUC.PDF",
+          "sourceHash": "ca53fe9a5bcad74f61f4344c63008addd81d0ec1eaa6befff97d77eecf9423d7",
+          "retrievedAt": "2026-10-15T00:00:09.466194+00:00",
+          "publisher": "Florida Legislature and Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-b6e2073e23d8b5a1/sha256-ca53fe9a5bcad74f61f4344c63008addd81d0ec1eaa6befff97d77eecf9423d7.pdf",
+            "byteLength": 517945,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/1215/Analyses/h1215z.WMC.PDF",
+          "sourceHash": "be6c20c3059d152f25677b2e4e4e8fbfe063eefc65b94fa84a97238f2c6df156",
+          "retrievedAt": "2026-10-15T00:00:09.132252+00:00",
+          "publisher": "Florida Legislature and Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-fef2b431dc2850e0/sha256-be6c20c3059d152f25677b2e4e4e8fbfe063eefc65b94fa84a97238f2c6df156.pdf",
+            "byteLength": 451941,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026F/1/Analyses/h0001z.SAC.PDF",
+          "sourceHash": "c64e45cca764cb8d1edd1b1072920f5dbde8eb5d626ddee7939e547f11d8c5b5",
+          "retrievedAt": "2026-10-15T00:00:50.907625+00:00",
+          "publisher": "Florida Legislature and Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-38d9222b23851aea/sha256-c64e45cca764cb8d1edd1b1072920f5dbde8eb5d626ddee7939e547f11d8c5b5.pdf",
+            "byteLength": 548255,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+          "sourceHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+          "retrievedAt": "2026-10-14T23:52:26.933108+00:00",
+          "publisher": "Florida Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-4ab5282e3af3f1b8/sha256-b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587.pdf",
+            "byteLength": 129617,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+          "sourceHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+          "retrievedAt": "2026-10-14T23:52:26.760742+00:00",
+          "publisher": "Florida Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-f86418b648890772/sha256-409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae.pdf",
+            "byteLength": 111435,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+          "sourceHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+          "retrievedAt": "2026-10-14T23:52:26.827581+00:00",
+          "publisher": "Florida Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-070bd5167f3394db/sha256-b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6.pdf",
+            "byteLength": 158181,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+          "sourceHash": "3d767ec1add6f557da61b581214b794abb5fb6c806e5ba2e3ff12b4d891d5c62",
+          "retrievedAt": "2026-10-14T23:53:06.228775+00:00",
+          "publisher": "Florida Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-461964f7716dc0ac/sha256-3d767ec1add6f557da61b581214b794abb5fb6c806e5ba2e3ff12b4d891d5c62.html",
+            "byteLength": 18392,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+          "sourceHash": "4addbda0e4d806a05ee66c525089199da918ab66eb0ea1352d453c24a58bb649",
+          "retrievedAt": "2026-10-14T23:53:06.273706+00:00",
+          "publisher": "Florida Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-2433f20220be3ff7/sha256-4addbda0e4d806a05ee66c525089199da918ab66eb0ea1352d453c24a58bb649.html",
+            "byteLength": 18435,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+          "sourceHash": "b27e9c689eafdf8a44064aaf9cdd4dd6f1dfc2b9345970f1481abbb102a1feaa",
+          "retrievedAt": "2026-10-14T23:53:06.104619+00:00",
+          "publisher": "Florida Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-640c0d8fb349f101/sha256-b27e9c689eafdf8a44064aaf9cdd4dd6f1dfc2b9345970f1481abbb102a1feaa.html",
+            "byteLength": 19873,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+          "sourceHash": "b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a",
+          "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+          "publisher": "Florida Legislature and Division of Elections",
+          "vault": {
+            "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a.html",
+            "byteLength": 31881,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:07:24.342Z",
-    "reviewedBy": "Codex",
+    "reviewedAt": "2026-10-15T04:14:39.791182+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
@@ -11211,66 +11696,6 @@
         "reviewedEvidence": "Official election publication converted from the saved source bytes."
       },
       {
-        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
-        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
-        "publisher": "Florida Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:05:19.522Z",
-        "httpStatus": 200,
-        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
-        "reviewedEvidence": "Official election publication converted from the saved source bytes."
-      },
-      {
-        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
-        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
-        "publisher": "Florida Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:05:19.411Z",
-        "httpStatus": 200,
-        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
-        "reviewedEvidence": "Official election publication converted from the saved source bytes."
-      },
-      {
-        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
-        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
-        "publisher": "Florida Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:05:19.089Z",
-        "httpStatus": 200,
-        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
-        "reviewedEvidence": "Official election publication converted from the saved source bytes."
-      },
-      {
-        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
-        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
-        "publisher": "Florida Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:05:18.650Z",
-        "httpStatus": 200,
-        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
-        "reviewedEvidence": "Official election publication converted from the saved source bytes."
-      },
-      {
-        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
-        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
-        "publisher": "Florida Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:05:18.046Z",
-        "httpStatus": 200,
-        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
-        "reviewedEvidence": "Official election publication converted from the saved source bytes."
-      },
-      {
-        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
-        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
-        "publisher": "Florida Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:02:36.983Z",
-        "httpStatus": 200,
-        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
-        "reviewedEvidence": "Official election publication converted from the saved source bytes."
-      },
-      {
         "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
         "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
         "publisher": "Florida Division of Elections",
@@ -11309,6 +11734,116 @@
         "httpStatus": 200,
         "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
         "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.flsenate.gov/Session/Bill/2025/5019/Analyses/h5019z1.BUC.PDF",
+        "finalUrl": "https://www.flsenate.gov/Session/Bill/2025/5019/Analyses/h5019z1.BUC.PDF",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:00:09.466194+00:00",
+        "rawHash": "ca53fe9a5bcad74f61f4344c63008addd81d0ec1eaa6befff97d77eecf9423d7",
+        "publisher": "Florida Legislature and Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.flsenate.gov/Session/Bill/2025/1215/Analyses/h1215z.WMC.PDF",
+        "finalUrl": "https://www.flsenate.gov/Session/Bill/2025/1215/Analyses/h1215z.WMC.PDF",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:00:09.132252+00:00",
+        "rawHash": "be6c20c3059d152f25677b2e4e4e8fbfe063eefc65b94fa84a97238f2c6df156",
+        "publisher": "Florida Legislature and Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.flsenate.gov/Session/Bill/2026F/1/Analyses/h0001z.SAC.PDF",
+        "finalUrl": "https://www.flsenate.gov/Session/Bill/2026F/1/Analyses/h0001z.SAC.PDF",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:00:50.907625+00:00",
+        "rawHash": "c64e45cca764cb8d1edd1b1072920f5dbde8eb5d626ddee7939e547f11d8c5b5",
+        "publisher": "Florida Legislature and Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:26.933108+00:00",
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:26.760742+00:00",
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:26.827581+00:00",
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:53:06.228775+00:00",
+        "rawHash": "3d767ec1add6f557da61b581214b794abb5fb6c806e5ba2e3ff12b4d891d5c62",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:53:06.273706+00:00",
+        "rawHash": "4addbda0e4d806a05ee66c525089199da918ab66eb0ea1352d453c24a58bb649",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:53:06.104619+00:00",
+        "rawHash": "b27e9c689eafdf8a44064aaf9cdd4dd6f1dfc2b9345970f1481abbb102a1feaa",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+        "finalUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
+        "rawHash": "b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a",
+        "publisher": "Florida Legislature and Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

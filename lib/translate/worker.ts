@@ -1,3 +1,5 @@
+import type { MeasureSourceReference } from "../ballot/types.ts";
+import { measureSourceReferenceValid } from "../ballot/measure-source-contract.ts";
 import { canonicalModelId } from "../models.ts";
 import { randomUUID } from "node:crypto";
 import { costEntryWithModel } from "../control-plane/cost.ts";
@@ -13,9 +15,10 @@ import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-record
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { registeredKind } from "../registry/kinds.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-type TranslationCostRepos = FieldManualRepos & Partial<Pick<ControlPlaneRepositories, "costs">>;
+import { costRecordId, countCharge } from "../control-plane/spend-window.ts";
+type TranslationCostRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "costs" | "spendWindow">;
 export type MeasureTranslationRepos = TranslationCostRepos & Pick<ControlPlaneRepositories, "adminConfig">;
-import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
+import { translationHash, translationScope, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 
 export interface TranslationPlaybook {
   readonly writerText: string;
@@ -48,23 +51,22 @@ async function loadTranslationPlaybook(repos: FieldManualRepos) {
 }
 
 /** Preserve each writer/checker charge even when its proposed translation is rejected. */
-function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTransport, subjectId: string): ModelTransport {
+function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTransport, subjectId: string, routeTaskId: string | null = null): ModelTransport {
   return async request => {
     const started = performance.now();
     const response = await send(request);
     const usage = readMeteredUsage(response.usage, response.batch === true);
     const at = new Date().toISOString(), id = `translation:${randomUUID()}`;
-    if (repos.costs) {
-      const checker = request.tools[0]?.name.startsWith("check_") === true;
-      const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId: null, routeId: "plain-english-translation",
-        source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
-        costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
-        cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
-          inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
-          outputTokens: usage.outputTokens, usd: priceMeteredUsage(response.model, usage, "1h").usd,
-          durationMs: Math.round(performance.now() - started) } }, response.model);
-      await repos.costs.append(subjectId, id, entry, at);
-    }
+    const checker = request.tools[0]?.name.startsWith("check_") === true;
+    const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId, routeId: "plain-english-translation",
+      source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
+      costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
+      cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
+        inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
+        outputTokens: usage.outputTokens, usd: priceMeteredUsage(response.model, usage, "1h").usd,
+        durationMs: Math.round(performance.now() - started) } }, response.model);
+    await repos.costs.append(subjectId, costRecordId(entry), entry, at);
+    await countCharge(repos, entry, at);
     return response;
   };
 }
@@ -77,7 +79,7 @@ function toolResult(response: ModelResponse, name: string, model: string): unkno
 }
 
 const writerTool = {
-  name: "write_measure_translation", description: "Write the measure summary, vote meanings and only officially numbered parts, with one exact supporting source quote per written sentence.",
+  name: "write_measure_translation", description: "Write the measure summary, vote meanings and material officially numbered parts from the official text, with one exact supporting source quote per written sentence. Do not write arguments for or against the measure.",
   input_schema: { type: "object", required: ["measure", "sentences"], properties: {
     measure: { type: "object", description: "MeasureRecord: contestId, whatItDoes, yesMeans, noMeans, parts[{id, number, kind, label, what}], sourceUrl, sourceHash, writtenAt. Preserve supplied existing part IDs when rewriting the same parts." },
     sentences: { type: "array", items: { type: "object", required: ["field", "text", "quote"], properties: {
@@ -166,43 +168,50 @@ export async function translateMeasure(input: {
   readonly batchPriority?: import("../control-plane/model-batch.ts").BatchPriority;
   readonly repos: MeasureTranslationRepos;
   readonly evidence: WorkerEvidence;
-  readonly subject: { readonly contestId: string; readonly title: string; readonly ocdId: string; readonly state: string; readonly prior: MeasureRecord | null };
+  readonly sourceReference: MeasureSourceReference;
+  readonly subject: { readonly contestId: string; readonly title: string; readonly ocdId: string; readonly state: string; readonly prior: MeasureRecord | null;
+    readonly ballotQuestion?: { readonly text: string; readonly sourceUrl: string } };
   readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
   readonly now: string;
 }) {
   const { evidence, subject, now } = input;
-  if (!evidence.text.trim() || evidence.contentHash !== `sha256-${translationHash(evidence.text)}` ||
-      !/^https:\/\//.test(evidence.canonicalUrl) || !subject.title.trim() || !evidence.text.includes(subject.title) ||
+  if (!measureSourceReferenceValid(input.sourceReference) || input.sourceReference.sourceHash !== translationHash(evidence.text) ||
+      input.sourceReference.sourceUrl !== evidence.canonicalUrl || !evidence.text.trim() || evidence.contentHash !== `sha256-${translationHash(evidence.text)}` ||
+      !/^https:\/\//.test(evidence.canonicalUrl) || !subject.title.trim() ||
+      subject.prior !== null && subject.prior.sourceUrl !== evidence.canonicalUrl ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Translation source is incomplete or does not name this measure.");
   const playbook = await loadTranslationPlaybook(input.repos);
-  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId);
+  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId, translationScope(subject.ocdId));
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: "TRANSLATOR", priority: input.batchPriority },
     model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
     system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${model === playbook.writerModel ? playbook.writerText : playbook.checkerText}`, cache_control: { type: "ephemeral", ttl: "1h" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
-  const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
+  const sourceHash = evidence.contentHash.replace(/^sha256-/, "");
   const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
   const writer = await send(request(playbook.writerModel, writerTool, { source: evidence.text, subject,
     sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
-    partKinds: kinds.measurePart }));
+    partKinds: kinds.measurePart,
+    instruction: "Use the attributed ballot question only to identify this measure within the official text. Shared laws may authorize several separate ballot questions: translate only this question's provisions and the shared terms that apply to it. Every supporting quote must come from the full official text, never the ballot context. Include every material condition. Select material officially numbered parts; do not reproduce every section of a long law. Preserve all prior checked part IDs. Text enclosed in ~~double tildes~~ is printed struck-out text being removed. *Italics*, **bold**, and <u>underlining</u> preserve printed formatting; use the source's legend to identify additions. Never write arguments for or against the measure." }));
   const proposal = toolResult(writer, writerTool.name, playbook.writerModel) as { measure: MeasureRecord; sentences: TranslationSentence[] };
   if (!proposal || measureRecordIssue(proposal.measure) || proposal.measure.contestId !== subject.contestId ||
+      Object.keys(proposal.measure).some(key => !["contestId", "whatItDoes", "yesMeans", "noMeans", "parts", "sourceUrl", "sourceHash", "sourceHashKind", "writtenAt", "citation"].includes(key)) ||
+      proposal.measure.parts.some(part => Object.keys(part).some(key => !["id", "number", "kind", "label", "what"].includes(key))) ||
       proposal.measure.sourceUrl !== evidence.canonicalUrl || proposal.measure.sourceHash !== sourceHash || proposal.measure.writtenAt !== now ||
       !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || typeof sentence.quote !== "string" || !evidence.text.includes(sentence.quote))) throw new Error("Translation writer returned unsupported fields or source passages.");
   if (proposal.measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new Error("Translation part kind is absent from the current kinds setting.");
   if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id &&
       (part.number === null || proposed.number === part.number)))) throw new Error("Translation would lose or reassign an existing measure part's reaction identity.");
   const checker = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject,
-    proposal, instruction: "Check every written sentence and its qualifications against the original source. Every official part number must appear there. Return a false check for any unsupported sentence." }));
+    proposal, instruction: "Use the attributed ballot question only to identify the requested measure in a shared law. Reject provisions belonging to other ballot questions. Check every written sentence and its qualifications against the full original source, never the ballot context. Every official part number must appear there. Text enclosed in ~~double tildes~~ is printed struck-out text being removed. *Italics*, **bold**, and <u>underlining</u> preserve printed formatting; use the source's legend to identify additions. Return a false check for unsupported sentences, generated arguments, or any omitted material qualification." }));
   const result = toolResult(checker, checkerTool.name, playbook.checkerModel) as { checked: MeasureTranslation["checked"] };
   const record: MeasureTranslation = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
-    ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,
+    ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceReference: input.sourceReference,
     sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt, writtenAt: now,
     writerModel: canonicalModelId(writer.model), checkerModel: canonicalModelId(checker.model), playbookVersion: playbook.version,
-    measure: proposal.measure, sentences: proposal.sentences, checked: result?.checked };
-  const issue = translationRecordIssue(record);
+    measure: proposal.measure, ...(subject.ballotQuestion ? { ballotQuestionHash: translationHash(JSON.stringify(subject.ballotQuestion)) } : {}), sentences: proposal.sentences, checked: result?.checked };
+  const issue = translationRecordIssue(record, evidence.text);
   if (issue) throw new Error(issue);
   return { record, usage: [writer, checker].map(response => ({ model: response.model,
     usage: readMeteredUsage(response.usage, response.batch === true), usd: priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "1h").usd })) };

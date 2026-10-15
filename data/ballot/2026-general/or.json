@@ -4688,19 +4688,33 @@
             "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
             "sourceOrg": "Oregon Secretary of State, Elections Division",
             "collectedAt": "2026-10-14T05:06:40.467Z",
-            "verifiedAt": "2026-10-14T05:06:40.467Z",
+            "verifiedAt": "2026-10-14T23:52:32.830035+00:00",
             "doorId": "fec-or-chief",
             "quote": "There are no statewide measures on the November 3, 2026, General Election ballot."
           }
         }
       ],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+          "sourceHash": "96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f",
+          "retrievedAt": "2026-10-14T05:06:40.467Z",
+          "publisher": "Oregon Secretary of State, Elections Division",
+          "vault": {
+            "key": "project/freshness/source/sos.oregon.gov/2026/10/14/ms-01-2621ff218e2958a1/sha256-96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f.pdf",
+            "byteLength": 1117942,
+            "contentType": "application/pdf"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:07:38.971Z",
-    "reviewedBy": "Codex BL-15",
+    "reviewedAt": "2026-10-15T04:14:39.894434+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
@@ -4730,7 +4744,7 @@
         "retrievedAt": "2026-10-14T05:06:40.467Z",
         "publisher": "Oregon Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official Oregon election office route and dated general-election ballot statement; script extracts certified candidate names, printed parties, offices, and the explicit statewide-measure absence."
+        "reviewedEvidence": "Official Oregon election office route and dated general-election ballot statement; script extracts certified candidate names, printed parties, offices, and the explicit statewide-measure absence. Identical raw bytes were reacquired on 2026-10-14T23:52:32.830035+00:00. Official Oregon 2026 ballot directive explicitly states: There are no statewide measures on the November 3, 2026, General Election ballot."
       },
       {
         "requestedUrl": "https://sos.oregon.gov/elections/Pages/current-election.aspx",

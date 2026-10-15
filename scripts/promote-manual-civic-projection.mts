@@ -35,7 +35,7 @@ if (workerResults) {
   if (receipt) console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
   if (exitCode) process.exitCode = exitCode;
 } else {
-const packageContracts = MANUAL_PROJECTION_CONTRACT_IDS.filter(id => id !== "ballot-contests");
+const packageContracts = MANUAL_PROJECTION_CONTRACT_IDS.filter(id => id !== "ballot-contests" && id !== "plain-english-translations");
 if (!contractId || !packageContracts.some(id => id === contractId) || !packageArgument) {
   throw new Error(
     `usage: tsx scripts/promote-manual-civic-projection.mts --contract=${packageContracts.join("|")} --package=<absolute path outside repository>`,
@@ -50,6 +50,10 @@ if (fromRoot === "" || (!fromRoot.startsWith("..") && !isAbsolute(fromRoot))) {
 }
 
 const input = JSON.parse(readFileSync(packagePath, "utf8")) as ManualProjectionPackage;
+if (input.contractId === "plain-english-translations" ||
+    input.payload && "kind" in input.payload && input.payload.kind === "plain-english-translations") {
+  throw new Error("TRANSLATION_REQUIRES_CHECKED_SOURCE_PUBLICATION");
+}
 if (input.contractId !== contractId) {
   throw new Error(`MANUAL_PROMOTION_CONTRACT_MISMATCH:${contractId}:${input.contractId}`);
 }

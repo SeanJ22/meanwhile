@@ -2334,7 +2334,7 @@
           "divisionVintage": "2026",
           "title": "Amendment No. 1: Citizenship Requirement to Vote in West Virginia Elections Amendment",
           "type": "MEASURE",
-          "measureTextUrl": "https://www.wvlegislature.gov/Bill_Status/bills_text.cfm?billdoc=sjr9%20sub1%20enr.htm&yr=2026&sesstype=RS&i=9&houseorig=s&billtype=jr",
+          "measureTextUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
           "voteFor": null,
           "termYears": null,
           "scopeNote": null,
@@ -6621,7 +6621,7 @@
           "contestId": "wv-sos-2026-general-amendment-1",
           "officialNumber": "Amendment 1",
           "questionText": "Amendment No. 1: Citizenship Requirement to Vote in West Virginia Elections Amendment Summary of Purpose: This amendment provides that in all elections held in West Virginia only citizens of the United States who are citizens of this state are qualified to vote.",
-          "officialStatement": null,
+          "officialStatement": "This amendment provides that in all elections held in West Virginia only citizens of the United States who are citizens of this state are qualified to vote.",
           "provenance": {
             "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Barbour%20261103%20General%20-%2014inch.pdf",
             "sourceOrg": "West Virginia Secretary of State",
@@ -6629,6 +6629,55 @@
             "verifiedAt": "2026-10-14T05:09:10.093334Z",
             "doorId": "fec-wv-chief",
             "quote": "Amendment No. 1: Citizenship Requirement to Vote in West Virginia Elections Amendment Summary of Purpose: This amendment provides that in all elections held in West Virginia only citizens of the United States who are citizens of this state are qualified to vote."
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+            "sourceHash": "c1c0dbfc1cc30635cfcf7eeda35fbc5be514b6acf08593e910c1aab0b0271ac8",
+            "retrievedAt": "2026-10-14T23:52:45.721852+00:00",
+            "publisher": "West Virginia Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/sos.wv.gov/2026/10/14/ms-01-5c201f020fb84fe3/sha256-c1c0dbfc1cc30635cfcf7eeda35fbc5be514b6acf08593e910c1aab0b0271ac8.txt",
+              "byteLength": 721,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+                "sourceHash": "113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f",
+                "retrievedAt": "2026-10-14T23:52:45.721852+00:00",
+                "publisher": "West Virginia Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.wv.gov/2026/10/14/ms-01-5c201f020fb84fe3/sha256-113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f.html",
+                  "byteLength": 100567,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+            "sourceHash": "98a338545fda44e10f5e7d34e9f0bff6abc65bef700c9f4486aac219470877e7",
+            "retrievedAt": "2026-10-14T23:52:45.721852+00:00",
+            "publisher": "West Virginia Secretary of State",
+            "summary": "This amendment provides that in all elections held in West Virginia only citizens of the United States who are citizens of this state are qualified to vote.",
+            "vault": {
+              "key": "project/freshness/source/sos.wv.gov/2026/10/14/ms-01-5c201f020fb84fe3/sha256-98a338545fda44e10f5e7d34e9f0bff6abc65bef700c9f4486aac219470877e7.txt",
+              "byteLength": 1043,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+                "sourceHash": "113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f",
+                "retrievedAt": "2026-10-14T23:52:45.721852+00:00",
+                "publisher": "West Virginia Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.wv.gov/2026/10/14/ms-01-5c201f020fb84fe3/sha256-113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f.html",
+                  "byteLength": 100567,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         }
       ],
@@ -6637,13 +6686,61 @@
         "The Secretary of State links a 2026 General Candidate Listing at https://candidates.wvsos.gov/, which returned HTTP 503 during this acquisition. Candidates were converted from the Secretary of State’s official November 3, 2026 sample ballots for all 55 counties. The sample-ballot index says “Please select your county.” All U.S. Senate, both U.S. House, all 100 House of Delegates districts, all 17 State Senate districts and the unexpired Senate District 3 and District 17 contests are represented; The statewide certified candidate list was not acquired. The sample ballots give party abbreviations, which are preserved as printed, and state no candidate websites or incumbency.",
         "The official sample ballots acquired across all counties list one statewide constitutional amendment and no statewide executive or statewide judicial contest for this election. County, municipal and district judicial contests are outside this package.",
         "Printed name variation for FOR MEMBER OF HOUSE OF DELEGATES, district 40: JENNIFER GILKERSON in Monroe and JENNIFER LEA GILKERSON in Summers. The saved candidacy preserves the name printed in its cited sample ballot."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wv-sos-2026-general-amendment-1",
+          "whatItDoes": "§4-1. Only citizens of the United States who are citizens of this state shall be entitled to vote at all elections held within the counties in which they respectively reside;",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wv-sos-2026-general-amendment-1#4-1",
+              "number": "§4-1",
+              "kind": "PROGRAM",
+              "label": "§4-1",
+              "what": "§4-1. Only citizens of the United States who are citizens of this state shall be entitled to vote at all elections held within the counties in which they respectively reside;"
+            }
+          ],
+          "sourceUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+          "sourceHash": "c1c0dbfc1cc30635cfcf7eeda35fbc5be514b6acf08593e910c1aab0b0271ac8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:45.721852+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+          "sourceHash": "113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f",
+          "retrievedAt": "2026-10-14T23:52:45.721852+00:00",
+          "publisher": "West Virginia Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sos.wv.gov/2026/10/14/ms-01-5c201f020fb84fe3/sha256-113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f.html",
+            "byteLength": 100567,
+            "contentType": "text/html"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:13.674938Z",
-    "reviewedBy": "BL-16 official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:39.928228+00:00",
+    "reviewedBy": "Codex MS-01 official source comparison",
     "sources": [
       {
         "requestedUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
@@ -7234,6 +7331,27 @@
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official general-election source discovered from the West Virginia Secretary of State elections root and GoVoteWV, including Amendment 1 full text."
+      },
+      {
+        "requestedUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+        "finalUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
+        "httpStatus": 200,
+        "rawHash": "113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f",
+        "retrievedAt": "2026-10-14T23:52:45.721852+00:00",
+        "publisher": "West Virginia Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "July 23, 2026 public notice explicitly certifies Amendment 1 for November 3 and prints the complete §4-1 amendment and Summary of Purpose. Saved text and summary were exact-compared to the notice.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

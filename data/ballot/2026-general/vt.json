@@ -8440,7 +8440,7 @@
           "contestId": "vt-sos-2026-proposal-3",
           "officialNumber": "PROPOSAL 3",
           "questionText": "To see if the voters will amend the Vermont Constitution by adding Article 23 to read: Article 23. [Right to collectively bargain] That employees have a right to organize or join a labor organization for the purpose of collectively bargaining with their employer through an exclusive representative of their choosing for the purpose of negotiating wages, hours, and working conditions and to protect their economic welfare and safety in the workplace. Therefore, no law shall be adopted that interferes with, negates, or diminishes the right of employees to collectively bargain with respect to wages, hours, and other terms and conditions of employment and workplace safety, or that prohibits the application or execution of an agreement between an employer and a labor organization representing the employer’s employees that requires membership in the labor organization as a condition of employment.",
-          "officialStatement": null,
+          "officialStatement": "Proposal 3 proposes to codify in the Vermont Constitution employees’ right to collectively bargain with their employer",
           "provenance": {
             "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
             "sourceOrg": "Vermont Secretary of State ballot published by Town of Fair Haven",
@@ -8448,6 +8448,55 @@
             "verifiedAt": "2026-10-14T05:08:52.512327+00:00",
             "doorId": "fec-vt-chief",
             "quote": "PROPOSAL 3\nTo see if the voters will amend the Vermont Constitution by adding Article 23 to read: Article 23. [Right to collectively bargain] That employees have a right to organize or join a labor organization for the purpose of collectively bargaining with their employer through an exclusive representative of their choosing for the purpose of negotiating wages, hours, and working conditions and to protect their economic welfare and safety in the workplace. Therefore, no law shall be adopted that interferes with, negates, or diminishes the right of employees to collectively bargain with respect to wages, hours, and other terms and conditions of employment and workplace safety, or that prohibits the application or execution of an agreement between an employer and a labor organization representing the employer’s employees that requires membership in the labor organization as a condition of employment."
+          },
+          "officialText": {
+            "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+            "sourceHash": "7c6a0a0d47095544289fe9e79a7baf6cb02a86c153669e626b6b014aeedba18c",
+            "retrievedAt": "2026-10-14T23:52:38.167576+00:00",
+            "publisher": "Vermont Secretary of State ballot published by Town of Fair Haven",
+            "vault": {
+              "key": "project/freshness/source/fairhavenvt.gov/2026/10/14/ms-01-06c83461ccc22060/sha256-7c6a0a0d47095544289fe9e79a7baf6cb02a86c153669e626b6b014aeedba18c.txt",
+              "byteLength": 817,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+                "sourceHash": "79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac",
+                "retrievedAt": "2026-10-14T23:52:38.167576+00:00",
+                "publisher": "Vermont Secretary of State ballot published by Town of Fair Haven",
+                "vault": {
+                  "key": "project/freshness/source/fairhavenvt.gov/2026/10/14/ms-01-06c83461ccc22060/sha256-79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac.pdf",
+                  "byteLength": 402628,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
+            "sourceHash": "abd5e74291f49ef43685552168e8c33781ac8cbc3798566f384fd4fc3d7a0a08",
+            "retrievedAt": "2026-10-15T00:20:29.223238+00:00",
+            "publisher": "Vermont Secretary of State voter guide published by Town of Plainfield",
+            "passageThreshold": "4. Voters decide. The amendment is placed as a question on the next general election\n ballot. If more voters say ‘yes,’ the amendment is ‘ratified,’ or\n becomes part of the Constitution. If more voters say ‘no,’ it does not.",
+            "vault": {
+              "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-cec21259779c3aaf/sha256-abd5e74291f49ef43685552168e8c33781ac8cbc3798566f384fd4fc3d7a0a08.txt",
+              "byteLength": 2018,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
+                "sourceHash": "943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5",
+                "retrievedAt": "2026-10-15T00:20:29.223238+00:00",
+                "publisher": "Vermont Secretary of State voter guide published by Town of Plainfield",
+                "vault": {
+                  "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-cec21259779c3aaf/sha256-943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5.pdf",
+                  "byteLength": 5964023,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -8455,7 +8504,7 @@
           "contestId": "vt-sos-2026-proposal-4",
           "officialNumber": "PROPOSAL 4",
           "questionText": "To see if the voters will amend the Vermont Constitution by adding Article 23 to read: Article 23. [Equality of rights] That the people are guaranteed equal protection under the law. The State shall not deny equal treatment under the law on account of a person’s race, ethnicity, sex, religion, disability, sexual orientation, gender identity, gender expression, or national origin. Nothing in this Article shall be interpreted or applied to prevent the adoption or implementation of measures intended to provide equality of treatment and opportunity for members of groups that have historically been subject to discrimination.",
-          "officialStatement": null,
+          "officialStatement": "Proposal 4 would add an amendment to the Vermont Constitution guaranteeing people equal protection under the law. # Governor Phil Scott Formally Proclaims Constitutional Amendment Proposals 3 and 4 Will Appear on November Ballot Press Release July 28, 2026 Montpelier, Vt. - Governor Phil Scott today formally notified Vermonters Proposals 3 and 4, proposed amendments to the Vermont Constitution passed by the General Assembly, will appear on the general election ballot in November. Pursuant to Section 72 of Chapter II of the Vermont Constitution and Chapter 32 of Title 17 of the Vermont Statutes Annotated, the Governor gave formal public notice of the proposed amendments by official proclamation. Proposal 3 proposes to codify in the Vermont Constitution employees’ right to collectively bargain with their employer and Proposal 4 would add an amendment to the Vermont Constitution guaranteeing people equal protection under the law.",
           "provenance": {
             "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
             "sourceOrg": "Vermont Secretary of State ballot published by Town of Fair Haven",
@@ -8463,16 +8512,142 @@
             "verifiedAt": "2026-10-14T05:08:52.512327+00:00",
             "doorId": "fec-vt-chief",
             "quote": "PROPOSAL 4\nTo see if the voters will amend the Vermont Constitution by adding Article 23 to read: Article 23. [Equality of rights] That the people are guaranteed equal protection under the law. The State shall not deny equal treatment under the law on account of a person’s race, ethnicity, sex, religion, disability, sexual orientation, gender identity, gender expression, or national origin. Nothing in this Article shall be interpreted or applied to prevent the adoption or implementation of measures intended to provide equality of treatment and opportunity for members of groups that have historically been subject to discrimination."
+          },
+          "officialText": {
+            "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+            "sourceHash": "b1c41040487957b8c0f099ca11afc018c6c70ce46f87597ff5ff935d2f006c80",
+            "retrievedAt": "2026-10-14T23:52:38.167576+00:00",
+            "publisher": "Vermont Secretary of State ballot published by Town of Fair Haven",
+            "vault": {
+              "key": "project/freshness/source/fairhavenvt.gov/2026/10/14/ms-01-06c83461ccc22060/sha256-b1c41040487957b8c0f099ca11afc018c6c70ce46f87597ff5ff935d2f006c80.txt",
+              "byteLength": 542,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+                "sourceHash": "79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac",
+                "retrievedAt": "2026-10-14T23:52:38.167576+00:00",
+                "publisher": "Vermont Secretary of State ballot published by Town of Fair Haven",
+                "vault": {
+                  "key": "project/freshness/source/fairhavenvt.gov/2026/10/14/ms-01-06c83461ccc22060/sha256-79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac.pdf",
+                  "byteLength": 402628,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
+            "sourceHash": "af2a8eaf067f26fe20a68e683fd789f11d5426ef1f4ea81045d56e6457c8684a",
+            "retrievedAt": "2026-10-15T00:20:29.223238+00:00",
+            "publisher": "Vermont Secretary of State voter guide published by Town of Plainfield",
+            "passageThreshold": "4. Voters decide. The amendment is placed as a question on the next general election\n ballot. If more voters say ‘yes,’ the amendment is ‘ratified,’ or\n becomes part of the Constitution. If more voters say ‘no,’ it does not.",
+            "vault": {
+              "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-cec21259779c3aaf/sha256-af2a8eaf067f26fe20a68e683fd789f11d5426ef1f4ea81045d56e6457c8684a.txt",
+              "byteLength": 1742,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
+                "sourceHash": "943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5",
+                "retrievedAt": "2026-10-15T00:20:29.223238+00:00",
+                "publisher": "Vermont Secretary of State voter guide published by Town of Plainfield",
+                "vault": {
+                  "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-cec21259779c3aaf/sha256-943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5.pdf",
+                  "byteLength": 5964023,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "measureRecords": [
+        {
+          "contestId": "vt-sos-2026-proposal-3",
+          "whatItDoes": "Article 23. [Right to collectively bargain] That employees have a right to organize or join a labor organization for the purpose of collectively bargaining with their employer through an exclusive representative of their choosing for the purpose of negotiating wages, hours, and working conditions and to protect their",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "vt-sos-2026-proposal-3#1",
+              "number": "23",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Article 23",
+              "what": "Article 23. [Right to collectively bargain] That employees have a right to organize or join a labor organization for the purpose of collectively bargaining with their employer through an exclusive representative of their choosing for the purpose of negotiating wages, hours, and working conditions and to protect their"
+            }
+          ],
+          "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+          "sourceHash": "7c6a0a0d47095544289fe9e79a7baf6cb02a86c153669e626b6b014aeedba18c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-sos-2026-proposal-4",
+          "whatItDoes": "Article 23. [Equality of rights] That the people are guaranteed equal protection under the law. The State shall not deny equal treatment under the law on account of a person’s race, ethnicity, sex, religion, disability, sexual orientation, gender identity, gender expression, or national origin.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "vt-sos-2026-proposal-4#1",
+              "number": "23",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Article 23",
+              "what": "Article 23. [Equality of rights] That the people are guaranteed equal protection under the law. The State shall not deny equal treatment under the law on account of a person’s race, ethnicity, sex, religion, disability, sexual orientation, gender identity, gender expression, or national origin."
+            }
+          ],
+          "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+          "sourceHash": "b1c41040487957b8c0f099ca11afc018c6c70ce46f87597ff5ff935d2f006c80",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
+          "sourceHash": "943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5",
+          "retrievedAt": "2026-10-15T00:20:29.223238+00:00",
+          "publisher": "Vermont Secretary of State voter guide published by Town of Plainfield",
+          "vault": {
+            "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-cec21259779c3aaf/sha256-943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5.pdf",
+            "byteLength": 5964023,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.plainfieldvt.gov/2026113-general-election.html",
+          "sourceHash": "ee2e012cfa4b6d800f8188f7aaa1b7248ae210680d4fc104fffe9115e90b6e50",
+          "retrievedAt": "2026-10-15T00:20:08.690125+00:00",
+          "publisher": "Town of Plainfield, Vermont",
+          "vault": {
+            "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-eac962cf1476a6f2/sha256-ee2e012cfa4b6d800f8188f7aaa1b7248ae210680d4fc104fffe9115e90b6e50.html",
+            "byteLength": 71801,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
+          "sourceHash": "79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac",
+          "retrievedAt": "2026-10-14T23:52:38.167576+00:00",
+          "publisher": "Vermont Secretary of State ballot published by Town of Fair Haven",
+          "vault": {
+            "key": "project/freshness/source/fairhavenvt.gov/2026/10/14/ms-01-06c83461ccc22060/sha256-79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac.pdf",
+            "byteLength": 402628,
+            "contentType": "application/pdf"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:08:52.512327+00:00",
-    "reviewedBy": "Codex BL-16",
+    "reviewedAt": "2026-10-15T04:14:39.918536+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
@@ -8487,12 +8662,34 @@
       {
         "requestedUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
         "finalUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
-        "retrievedAt": "2026-10-14T05:08:52.512327+00:00",
         "httpStatus": 200,
         "rawHash": "79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac",
-        "publisher": "Town of Fair Haven, Vermont",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 sample ballot published by the town election office. Both statewide proposal questions and complete amendment text converted by OCR and visually verified against the source scan."
+        "retrievedAt": "2026-10-14T23:52:38.167576+00:00",
+        "publisher": "Vermont Secretary of State ballot published by Town of Fair Haven",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
+        "finalUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
+        "httpStatus": 200,
+        "rawHash": "943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5",
+        "retrievedAt": "2026-10-15T00:20:29.223238+00:00",
+        "publisher": "Vermont Secretary of State voter guide published by Town of Plainfield",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete 2026 Vermont Secretary of State voter guide published by the Town of Plainfield; measure entries and constitutional passage process extracted from pages 8–9 and retained with the original HTTP 200 PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.plainfieldvt.gov/2026113-general-election.html",
+        "finalUrl": "https://www.plainfieldvt.gov/2026113-general-election.html",
+        "httpStatus": 200,
+        "rawHash": "ee2e012cfa4b6d800f8188f7aaa1b7248ae210680d4fc104fffe9115e90b6e50",
+        "retrievedAt": "2026-10-15T00:20:08.690125+00:00",
+        "publisher": "Town of Plainfield, Vermont",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official town election page identifies and links the Secretary of State’s district voter guide, establishing the state attribution of the saved publication."
       }
     ]
   }

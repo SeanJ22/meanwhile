@@ -3263,20 +3263,58 @@
         }
       ],
       "measures": [],
-      "absences": [],
+      "absences": [
+        {
+          "ocdId": "ocd-division/country:us/state:pa",
+          "divisionVintage": "2026",
+          "statement": "The complete official November 3, 2026 ballot corpus contains no statewide ballot measures. York County’s only printed question is a Conewago Township referendum.",
+          "provenance": {
+            "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195",
+            "sourceOrg": "York County Board of Elections",
+            "collectedAt": "2026-10-15T00:02:46.800166+00:00",
+            "verifiedAt": "2026-10-15T00:07:18.572358+00:00",
+            "doorId": "fec-pa-chief",
+            "quote": "OFFICIAL MAIL-IN BALLOT/PAPELETA OFICIAL"
+          }
+        }
+      ],
       "coverageNotes": [
         "Pennsylvania candidate coverage remains partial by district: the full official Philadelphia, York, and Allegheny county candidate lists provide 68 contests and 105 printed candidacies. Congressional districts 2, 3, 5, 10, 11, 12, and 17, six state Senate districts, and 54 state House districts are held. Candidates in the other Pennsylvania districts remain to be acquired.",
         "The statewide Candidate Database linked by the Pennsylvania Department of State returned an Incapsula page stating “Request unsuccessful.” The saved response supplied no candidate list. The Department states: “To obtain electronic copies of nomination petitions, please visit the Candidate Database or email your request to ra-elections@pa.gov.”",
         "All 68 held contests have complete official candidate-list evidence for their named races. Philadelphia publishes all November 3 ballot choices, including independent-party candidates. Allegheny identifies the linked current general-election file as a full candidate list; it includes candidates from outside the county. York’s full candidate listing was script-corroborated against every printed choice across its official 162-precinct ballot corpus. The unofficial labels on the York and Allegheny files describe their publication status; they do not limit the lists to county-resident candidates or filing applicants.",
-        "Statewide measures remain unverified. The official ballot-question file linked by Philadelphia is titled “PROPOSED CHARTER CHANGE QUESTION” and contains two Philadelphia Home Rule Charter questions. It is a county document and cannot establish that Pennsylvania has no statewide measures. A statewide measure list or official no-measure statement remains to be acquired.",
+        "York County’s complete official November 3, 2026 ballot corpus contains all 162 precincts, both sides of every ballot, and only the local Conewago Township supervisor referendum. It contains no statewide measure. The Department of State’s 2026 calendar requires every statewide constitutional amendment and question to be transmitted to every county for ballot placement; the complete official ballot corpus therefore establishes the statewide measure inventory. Philadelphia’s two charter questions are local.",
         "The statewide ticket names are preserved as the joint candidacies printed on the ballot. Incumbency and candidate websites are not stated in the saved list."
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195",
+          "sourceHash": "c181147c903099a66a6b665be868a683acb57788c357e0975a453d8705002c9b",
+          "retrievedAt": "2026-10-15T00:02:46.800166+00:00",
+          "publisher": "York County Board of Elections",
+          "vault": {
+            "key": "project/freshness/source/yorkcountypa.gov/2026/10/15/ms-01-25bd93380a35d3d5/sha256-c181147c903099a66a6b665be868a683acb57788c357e0975a453d8705002c9b.pdf",
+            "byteLength": 1590108,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
+          "sourceHash": "338f1b949be336251ec9ebd5c9aace1d57a68fecb78185121ba2172d6e9b8b25",
+          "retrievedAt": "2026-10-15T00:06:51.528473+00:00",
+          "publisher": "Pennsylvania Department of State",
+          "vault": {
+            "key": "project/freshness/source/www.pa.gov/2026/10/15/ms-01-51139a1cd6ad6877/sha256-338f1b949be336251ec9ebd5c9aace1d57a68fecb78185121ba2172d6e9b8b25.pdf",
+            "byteLength": 385165,
+            "contentType": "application/pdf"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:15:18.875293Z",
-    "reviewedBy": "BL-15 official full candidate-list review",
+    "reviewedAt": "2026-10-15T04:14:39.897577+00:00",
+    "reviewedBy": "Codex MS-01 official measure inventory review",
     "sources": [
       {
         "requestedUrl": "https://vote.phila.gov/voting/candidates-for-office/",
@@ -3317,16 +3355,6 @@
         "publisher": "Philadelphia City Commissioners",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "PROPOSED CHARTER CHANGE QUESTION. Questions #1 and #2 each ask about the Philadelphia Home Rule Charter; this county document does not establish statewide measure absence."
-      },
-      {
-        "requestedUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
-        "finalUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
-        "httpStatus": 200,
-        "rawHash": "338f1b949be336251ec9ebd5c9aace1d57a68fecb78185121ba2172d6e9b8b25",
-        "retrievedAt": "2026-10-14T05:10:08.874329Z",
-        "publisher": "Pennsylvania Department of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Tuesday, November 3, 2026 General Election."
       },
       {
         "requestedUrl": "https://www.dos.pa.gov/VotingElections/Pages/default.aspx",
@@ -3389,16 +3417,6 @@
         "reviewedEvidence": "The 2026 General Election section links the Unofficial Candidates List XLSX. The official sample-ballot page identifies these files as full candidate lists; every printed candidate/party choice in its 25 held district contests was script-compared with the state data."
       },
       {
-        "requestedUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195",
-        "finalUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195/MIB-Merge-File?bidId=",
-        "httpStatus": 200,
-        "rawHash": "c181147c903099a66a6b665be868a683acb57788c357e0975a453d8705002c9b",
-        "retrievedAt": "2026-10-14T16:15:18.875293Z",
-        "publisher": "York County Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 mail-in ballots for all 162 York precincts. A script parsed every ballot and compared each complete printed candidate/party set with the county candidate list and all 10 held York district contests; every set matched exactly."
-      },
-      {
         "requestedUrl": "https://yorkcountypa.gov/971/Sample-Ballots",
         "finalUrl": "https://yorkcountypa.gov/971/Sample-Ballots",
         "httpStatus": 200,
@@ -3407,6 +3425,28 @@
         "publisher": "York County Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "The page links \"2026 General Election Sample Ballots\" to one official PDF containing all precinct ballots; this provides countywide corroboration for the full candidate listing, rather than a single town specimen."
+      },
+      {
+        "requestedUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195",
+        "finalUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195/MIB-Merge-File?bidId=",
+        "httpStatus": 200,
+        "rawHash": "c181147c903099a66a6b665be868a683acb57788c357e0975a453d8705002c9b",
+        "retrievedAt": "2026-10-15T00:02:46.800166+00:00",
+        "publisher": "York County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "York County’s complete official November 3, 2026 ballot corpus contains all 162 precincts, both sides of every ballot, and only the local Conewago Township supervisor referendum. It contains no statewide measure. The Department of State’s 2026 calendar requires every statewide constitutional amendment and question to be transmitted to every county for ballot placement; the complete official ballot corpus therefore establishes the statewide measure inventory. Philadelphia’s two charter questions are local."
+      },
+      {
+        "requestedUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
+        "finalUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
+        "httpStatus": 200,
+        "rawHash": "338f1b949be336251ec9ebd5c9aace1d57a68fecb78185121ba2172d6e9b8b25",
+        "retrievedAt": "2026-10-15T00:06:51.528473+00:00",
+        "publisher": "Pennsylvania Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "The August 25 calendar entry states that the Secretary transmits to each county all candidates and all constitutional amendments and other questions to be voted on at the November election, with their required form. This establishes why a complete official county ballot corpus covers statewide questions."
       }
     ]
   }

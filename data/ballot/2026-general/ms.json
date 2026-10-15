@@ -549,31 +549,47 @@
         }
       ],
       "measures": [],
-      "absences": [],
+      "absences": [
+        {
+          "ocdId": "ocd-division/country:us/state:ms",
+          "divisionVintage": "2026",
+          "statement": "The official statewide November 3, 2026 sample ballot contains no statewide ballot measures.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+            "sourceOrg": "Mississippi Secretary of State",
+            "collectedAt": "2026-10-14T23:56:18.655486+00:00",
+            "verifiedAt": "2026-10-15T00:07:18.572358+00:00",
+            "doorId": "fec-ms-chief",
+            "quote": "SAMPLE Official Election Ballot"
+          }
+        }
+      ],
       "coverageNotes": [
         "The statewide November 3, 2026 SAMPLE Official Election Ballot supplies all listed candidates for U.S. Senate, all four U.S. House districts, and State House special elections in districts 70 and 77. Names and party labels follow the ballot. Incumbency and candidate websites are not stated.",
         "State Senate District 34 remains unverified for November 3: the Candidate Qualifying List has a State Senate 34 card with six names but supplies no election date, and that contest does not appear on the dated November sample ballot.",
-        "A certified November 3, 2026 statewide measure list was not found in the captured official sources. The dated statewide sample ballot has no measure question. The initiatives page labels its entries Proposed Ballot Title and requires certified petition signatures before placement on a statewide general-election ballot; those proposals are not treated as certified November measures.",
+        "The Secretary of State’s complete 12-page November 3, 2026 statewide SAMPLE Official Election Ballot contains candidate contests and no measure question through its END OF BALLOT marker. Statewide measure coverage is confirmed from the complete official ballot. The initiatives page lists proposals requiring certified signatures, not certified November measures.",
         "The qualifying-list page states that its entries reflect submitted papers and that the State Board of Election Commissioners determines qualifications before general-election ballot placement. Candidate completeness here is supported by the dated statewide official sample ballot."
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+          "sourceHash": "36752cfc3c7b44da74a42e9d49571221f4f8d48381259ab2f6b7ebed723bd67f",
+          "retrievedAt": "2026-10-14T05:09:21.150Z",
+          "publisher": "Mississippi Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.ms.gov/2026/10/14/ms-01-9cb18b7b4a839b5a/sha256-36752cfc3c7b44da74a42e9d49571221f4f8d48381259ab2f6b7ebed723bd67f.pdf",
+            "byteLength": 87597,
+            "contentType": "application/pdf"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:22.746Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-15T04:14:39.964121+00:00",
+    "reviewedBy": "Codex MS-01 official measure inventory review",
     "sources": [
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
-        "finalUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
-        "httpStatus": 200,
-        "rawHash": "36752cfc3c7b44da74a42e9d49571221f4f8d48381259ab2f6b7ebed723bd67f",
-        "retrievedAt": "2026-10-14T05:09:21.150Z",
-        "publisher": "Mississippi Secretary of State",
-        "reviewedEvidence": "Statewide SAMPLE Official Election Ballot for Tuesday, November 3, 2026; page 1 supplies all candidates for U.S. Senate, all four U.S. House districts, and State House special elections in districts 70 and 77. This statewide sample covers each listed contest’s whole territory.",
-        "reviewOutcome": "SUPPORTED"
-      },
       {
         "sourceClass": "ELECTION_AUTHORITY",
         "requestedUrl": "https://sos.ms.gov/content/CandidateQualifying/default.aspx",
@@ -627,6 +643,17 @@
         "retrievedAt": "2026-10-14T05:07:13.256Z",
         "publisher": "Office of Governor Tate Reeves",
         "reviewedEvidence": "Governor’s June 24, 2026 announcement sets State House districts 70 and 77 special elections for November 3, 2026.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+        "finalUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
+        "httpStatus": 200,
+        "rawHash": "36752cfc3c7b44da74a42e9d49571221f4f8d48381259ab2f6b7ebed723bd67f",
+        "retrievedAt": "2026-10-14T05:09:21.150Z",
+        "publisher": "Mississippi Secretary of State",
+        "reviewedEvidence": "Statewide SAMPLE Official Election Ballot for Tuesday, November 3, 2026; page 1 supplies all candidates for U.S. Senate, all four U.S. House districts, and State House special elections in districts 70 and 77. This statewide sample covers each listed contest’s whole territory. Identical raw bytes were reacquired on 2026-10-14T23:56:18.655486+00:00. The Secretary of State’s complete 12-page November 3, 2026 statewide SAMPLE Official Election Ballot contains candidate contests and no measure question through its END OF BALLOT marker. Statewide measure coverage is confirmed from the complete official ballot. The initiatives page lists proposals requiring certified signatures, not certified November measures.",
         "reviewOutcome": "SUPPORTED"
       }
     ]

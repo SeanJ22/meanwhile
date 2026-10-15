@@ -1,7 +1,7 @@
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { TRANSLATION_SCOPE, translationScope, translationRecordIssue, type TranslationRecord } from "./records.ts";
+import { TRANSLATION_SCOPE, translationScope, translationHash, translationRecordIssue, type TranslationRecord } from "./records.ts";
 import { translationProjectionProblems, type TranslationProjection } from "./projection-contract.ts";
-import { currentReaderAuthorityEdge, currentPromotedEdge } from "../registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "../ballot/types.ts";
 
 export async function readTranslationProjection(options: PromotedCivicDataReadOptions & { scope?: string } = {}) {
@@ -14,25 +14,27 @@ export async function readTranslationProjection(options: PromotedCivicDataReadOp
 
 export async function readTranslations(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly TranslationRecord[]> {
   const divisionsToRead = [...new Set(divisions)].filter(division => /^ocd-division\/country:us\/(state|district|territory):/.test(division));
-  const edgeContext = options.store === undefined && currentReaderAuthorityEdge() !== null;
-  // Request bundles that do not name this family keep their held ballot records
-  // without adding optional database reads on every cold visit.
-  const results = await Promise.all(divisionsToRead.flatMap(division => {
-    const scope = translationScope(division), served = edgeContext ? currentPromotedEdge("CURATED_READER_RECORD", scope) : null;
-    if (edgeContext && !served) return [];
-    return [readTranslationProjection({ ...options, ...(served ? { edge: served.value } : {}), scope })];
+  const edgeContext = options.store === undefined ? currentReaderAuthorityEdge() : null;
+  const results = await Promise.all(divisionsToRead.map(async division => {
+    const scope = translationScope(division);
+    const edge = edgeContext ? await edgeContext.translations?.load(division) : null;
+    if (edgeContext && !edge) return null;
+    return readTranslationProjection({ ...options, ...(edge ? { edge } : {}), scope });
   }));
-  return results.flatMap(result => result.kind === "PROMOTED" ? result.value.records : []);
+  return results.flatMap(result => result?.kind === "PROMOTED" ? result.value.records : []);
 }
 
 /** Only the loaded ballot's exact subjects and currently held source hashes attach. */
 export function withMeasureTranslations(ballot: BallotSet, records: readonly TranslationRecord[]): BallotSet {
   const current = ballot.measureRecords ?? [];
-  const translated = current.map(record => {
+  const translated = current.flatMap(record => {
     const contest = ballot.contests.find(row => row.id === record.contestId && row.type === "MEASURE");
+    const measure = ballot.measures?.find(measure => measure.contestId === record.contestId && measure.officialText);
     const translation = records.find(row => row.kind === "MEASURE" && row.subjectId === record.contestId && row.ocdId === contest?.ocdId &&
-      row.sourceUrl === record.sourceUrl && (row.sourceHash === record.sourceHash || Date.parse(row.retrievedAt) >= Date.parse(record.writtenAt)) && !translationRecordIssue(row));
-    return translation?.kind === "MEASURE" ? translation.measure : record;
+      row.sourceUrl === record.sourceUrl && row.sourceHash === record.sourceHash && !translationRecordIssue(row) &&
+      (!measure || row.ballotQuestionHash === translationHash(JSON.stringify({ text: measure.questionText, sourceUrl: measure.provenance.sourceUrl }))));
+    if (translation?.kind === "MEASURE") return [translation.measure];
+    return measure ? [] : [record];
   });
-  return translated.some((row, at) => row !== current[at]) ? { ...ballot, measureRecords: translated } : ballot;
+  return translated.length !== current.length || translated.some((row, at) => row !== current[at]) ? { ...ballot, measureRecords: translated } : ballot;
 }

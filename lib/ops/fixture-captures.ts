@@ -1,5 +1,3 @@
-/** What a sanitized fixture came from: the provenance of a committed capture whose credentials were removed. */
-
 import { createHash } from "node:crypto";
 import { writeFileSync } from "node:fs";
 

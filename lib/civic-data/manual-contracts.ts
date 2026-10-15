@@ -22,10 +22,6 @@ export interface ManualProductionSourceContract {
   readonly classification: RoutineDataClassification;
   readonly bootstrapFixturePaths: readonly string[];
   readonly lkgBehavior: string;
-  /**
-   * Who besides the owner may invoke it, and on whose decision. Still explicit invocation, never a clock: the
-   * reviewing agent session runs the same verified door the owner does.
-   */
   readonly delegatedInvocation?: {
     readonly to: "REVIEWING_AGENT_SESSION";
     readonly authorization: string;
@@ -77,7 +73,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     sourceId: "curated-reader-primary-sources",
     recordClass: "CURATED_READER_RECORD",
     scope: "US:plain-english-translations",
-    command: ["scripts/promote-manual-civic-projection.mts", "--contract=plain-english-translations"],
+    command: ["scripts/translate-national-measures.mts"],
     parserNormalizerVersion: "curated-reader-records/2",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },
     validationContract: VALIDATION_CHECKS,

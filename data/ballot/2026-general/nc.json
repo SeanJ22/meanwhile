@@ -10453,6 +10453,80 @@
             "verifiedAt": "2026-10-14T05:04:09.390749Z",
             "doorId": "fec-nc-chief",
             "quote": "Constitutional amendment to require all voters, not just those presenting to vote in person, to present photo identification before voting."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+            "sourceHash": "3e1dbbba6449c8432db435c05bda7cff472c35589580a8f500a93b7d93a257a0",
+            "retrievedAt": "2026-10-14T23:52:27.588029+00:00",
+            "publisher": "North Carolina State Board of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-6a4bd42886e32073/sha256-3e1dbbba6449c8432db435c05bda7cff472c35589580a8f500a93b7d93a257a0.txt",
+              "byteLength": 2760,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+                "sourceHash": "9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e",
+                "retrievedAt": "2026-10-14T23:52:27.588029+00:00",
+                "publisher": "North Carolina General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-6a4bd42886e32073/sha256-9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e.html",
+                  "byteLength": 17418,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+            "sourceHash": "1b093bbb5257c5097ecf6785f15187c9a8f4f35808c846dcdc596a9461d3895c",
+            "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+            "publisher": "North Carolina General Assembly, Legislative Services Officer; published by Forsyth County Board of Elections",
+            "summary": "This amendment to the North Carolina Constitution would require presentation of photographic identification for voters in all instances in North Carolina elections.",
+            "passageThreshold": "If a majority of votes cast on the question are in favor of the amendment set out in Sections 1 and 2 of this act, the Secretary of State shall enroll the amendment among the permanent records of that office.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+              "sourceHash": "b7b42d713bbf58978f0fd2f11c1384ec88dfe24aaee877ba467380ab8ef0fe1b",
+              "retrievedAt": "2026-10-14T23:52:27.588029+00:00",
+              "publisher": "North Carolina State Board of Elections",
+              "vault": {
+                "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-6a4bd42886e32073/sha256-b7b42d713bbf58978f0fd2f11c1384ec88dfe24aaee877ba467380ab8ef0fe1b.txt",
+                "byteLength": 2706,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+                  "sourceHash": "9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e",
+                  "retrievedAt": "2026-10-14T23:52:27.588029+00:00",
+                  "publisher": "North Carolina General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-6a4bd42886e32073/sha256-9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e.html",
+                    "byteLength": 17418,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-1b093bbb5257c5097ecf6785f15187c9a8f4f35808c846dcdc596a9461d3895c.txt",
+              "byteLength": 769,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+                "sourceHash": "f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822",
+                "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+                "publisher": "North Carolina General Assembly and Forsyth County Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822.pdf",
+                  "byteLength": 213231,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -10467,6 +10541,105 @@
             "verifiedAt": "2026-10-14T05:04:09.390749Z",
             "doorId": "fec-nc-chief",
             "quote": "Constitutional amendment to keep the State income tax rate from being raised higher than three and one-half percent (3.5%)."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+            "sourceHash": "31eabdbe90f9d90dd8a4bf57978f52f2253428f8c08792810f0015b8b005c705",
+            "retrievedAt": "2026-10-14T23:52:27.677833+00:00",
+            "publisher": "North Carolina State Board of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-1fbb694aad74574f/sha256-31eabdbe90f9d90dd8a4bf57978f52f2253428f8c08792810f0015b8b005c705.txt",
+              "byteLength": 2299,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+                "sourceHash": "f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf",
+                "retrievedAt": "2026-10-14T23:52:27.677833+00:00",
+                "publisher": "North Carolina General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-1fbb694aad74574f/sha256-f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf.html",
+                  "byteLength": 16860,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+            "sourceHash": "9f0d06d2dbfd585cf1832ad6cca906d05cf3c3b595e0628e5eafdec6c6c52e62",
+            "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+            "publisher": "North Carolina General Assembly, Legislative Services Officer; published by Forsyth County Board of Elections",
+            "summary": "This amendment to the North Carolina Constitution would lower the State income tax rate from a maximum of 7% to a maximum of 3.5% beginning January 1, 2027.",
+            "passageThreshold": "If a majority of votes cast on the question are in favor of the amendment set out in Section 1 of this act, the Secretary of State shall enroll the amendment among the permanent records of that office.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+              "sourceHash": "c016ddae2f200493bef56c04ad553a38cc85a6a4aa65d1ecfda907549698d096",
+              "retrievedAt": "2026-10-14T23:52:27.677833+00:00",
+              "publisher": "North Carolina State Board of Elections",
+              "vault": {
+                "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-1fbb694aad74574f/sha256-c016ddae2f200493bef56c04ad553a38cc85a6a4aa65d1ecfda907549698d096.txt",
+                "byteLength": 2257,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+                  "sourceHash": "f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf",
+                  "retrievedAt": "2026-10-14T23:52:27.677833+00:00",
+                  "publisher": "North Carolina General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-1fbb694aad74574f/sha256-f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf.html",
+                    "byteLength": 16860,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119135",
+              "sourceHash": "88feb26758ce1ef6ef303faadfd601195273279160f70e26e713aa9d1a8642c0",
+              "retrievedAt": "2026-10-15T00:10:36.156391+00:00",
+              "publisher": "North Carolina General Assembly, Fiscal Research Division",
+              "vault": {
+                "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-68dee48f28d17703/sha256-88feb26758ce1ef6ef303faadfd601195273279160f70e26e713aa9d1a8642c0.txt",
+                "byteLength": 8553,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119135",
+                  "sourceHash": "e475af02b2eb6e3e08cb3515df8843827e973df0eaa361a3c6dab293a23695e2",
+                  "retrievedAt": "2026-10-15T00:10:36.156391+00:00",
+                  "publisher": "North Carolina General Assembly, Fiscal Research Division",
+                  "vault": {
+                    "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-68dee48f28d17703/sha256-e475af02b2eb6e3e08cb3515df8843827e973df0eaa361a3c6dab293a23695e2.pdf",
+                    "byteLength": 972953,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "FISCAL IMPACT SUMMARY\nThe bill would require a referendum to be held on a Constitutional Amendment that would\ndecrease the maximum allowable income tax rate, including both personal income tax and\ncorporate income tax, from 7% to 3.5%, beginning on January 1, 2027.\n\nThis bill is estimated to have no fiscal impact for the following reasons:\n    The outcome of the ballot measure is unknown.\n    The personal income tax rate is expected to be below the maximum allowable rate due to\n       the projected impact of exceeding statutory revenue triggers.\n    The statutory corporate income tax rate is and will be below the maximum allowable rate.\n    Additional costs associated with administering the election for the referendum are\n       anticipated to be minimal.\n\nFISCAL ANALYSIS\nSenate Bill 1080 would put to the voters of the State the question of whether to amend the State's\nConstitution to reduce the maximum allowable State tax rate on income from 7% to 3.5%. The\nballot question would be considered at the statewide general election in November 2026. If\napproved by a majority of the voters, the amendment would limit the maximum allowable tax rate\non both personal and corporate incomes to 3.5% for taxable years beginning on or after January 1,\n2027.\n\n\n\n     FISCAL RESEARCH DIVISION                      Page 1 of 3                                     May 18, 2026\n\fFRD estimates this bill has no fiscal impact because 1) the rates on applicable taxes are anticipated\nto be under the 3.5% cap in 2027 and after, and 2) FRD anticipates any additional costs of placing\na second statewide referendum on the same ballot would be minimal and could be absorbed using\nexisting local board of elections resources.\n\n1a) Personal Income Tax\n\nCurrent Law and Triggers: S.L. 2023-134 reduced the personal income tax rate to 3.99% in 2026\nand authorized up to 3 additional rate reductions between 2027 and 2034, provided that total\nGeneral Fund net revenue in the preceding ﬁscal year reaches certain thresholds. Whenever\nGeneral Fund revenue in a given ﬁscal year exceeds the threshold (“trigger”) amount speciﬁed for\nthat ﬁscal year, the personal income tax rate drops by one-half percentage point (0.50%)\nbeginning January 1st of the following tax year.\n\nTable 1 provides the trigger amounts for ﬁscal years 2025-26 through 2032-33. The May 2026\nConsensus Revenue Forecast anticipates exceeding the triggers in each of FY 2025-26 and FY\n2026-27, lowering the personal income tax rate to 3.49% in 2027 and 2.99% in 2028 and after.\n\nTable 1: Trigger Amounts, General Fund Forecast, and Expected Personal Income Tax Rates\n                                    $ in millions and rounded to the nearest million\n\n                         Trigger             May 2026 General         Tax\n  Fiscal Year                                                                   Personal Income Tax Rate\n                         Amount               Fund Forecast           Year\n       -                        -                      -             2026                  3.99%\n                                                                                           3.49%\n   2025-26               $33,042                   $35,688           2027\n                                                                              (Trigger hit, 1st rate reduction)\n                                                                                            2.99%\n   2026-27               $34,100                   $35,433           2028\n                                                                              (Trigger hit, 2nd rate reduction)\n   2027-28               $34,760                                     2029                 2.99%\n   2028-29               $35,750                                     2030         Up to 1 additional rate\n                                                                               reduction of 0.5% contingent\n   2029-30               $36,510                                     2031\n                                                                                       on triggers:\n   2030-31               $38,000                                     2032\n   2031-32               $38,500                                     2033      3rd reduction: 2.99% to 2.49%\n   2032-33               $39,000                                     2034         (minimum rate = 2.49%)\n\nFiscal Impact: Since the rate is anticipated to fall to 3.49% in 2027 and 2.99% in 2028 and after,\nFRD estimates that the constitutional cap would have no fiscal impact as 3.5% is 0.01% and 0.51%\nhigher than the respective projected personal income tax rates. The constitutional cap would not\naffect the 2026 tax rate of 3.99% because it does not apply until January 1, 2027.\n\n\n\n\n     FISCAL RESEARCH DIVISION                          Page 2 of 3                                 May 18, 2026\n\f1b) Corporate Income Tax\n\nCurrent Law: S.L. 2021-180 reduced the corporate income tax rate to 2% in 2026 and 2027, 1% in\n2028 and 2029, and 0% in 2030 and after.\n\nFiscal Impact: FRD estimates that the constitutional cap would have no fiscal impact as 3.5% is\n1.5%, 2.5%, and 3.5% higher than the respective statutory corporate income tax rates.\n\n2) Referendum Costs\n\nIn addition to the traditional races appearing on a ballot in a midterm election (e.g., NC House of\nRepresentatives and Senate, U.S. House of Representatives, etc.), November 2026 election ballots\nwill already contain one referendum for a Constitutional Amendment, which relates to requiring\nphoto identification for voting. S.B. 1080 would add a second referendum to this ballot, but this is\nestimated to be of minimal additional cost because it is not creating fundamental changes (e.g.,\nentirely separate election day, separate ballot, etc.). While the State and local boards of elections\nmay incur additional administrative costs for a second referendum (e.g., ink for printing, extra\nballot pages because of spacing, etc.), FRD estimates these costs would be minimal and could be\nabsorbed within additional resources.\n\nTECHNICAL CONSIDERATIONS\nThe estimates in this document are in part based on forecasted net General Fund revenue. Under\ncurrent law, if net General Fund revenue totaled less than the trigger amount of $33,042 million\nfor FY 2025-26, the tax rate of 3.99% would apply in 2027 and after unless a trigger was exceeded\nin a future fiscal year. In this case, the 3.5% maximum allowable income tax rate would become\nbinding and require a reduction to the personal income tax rate.",
+            "vault": {
+              "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-9f0d06d2dbfd585cf1832ad6cca906d05cf3c3b595e0628e5eafdec6c6c52e62.txt",
+              "byteLength": 717,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+                "sourceHash": "f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822",
+                "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+                "publisher": "North Carolina General Assembly and Forsyth County Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822.pdf",
+                  "byteLength": 213231,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -10481,17 +10654,337 @@
             "verifiedAt": "2026-10-14T05:04:09.390749Z",
             "doorId": "fec-nc-chief",
             "quote": "Constitutional amendment requiring limits on property tax increases by local governments."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
+            "sourceHash": "844dc1eafc59582eaaa959f3131ec9dd1fa1f43bfc093a42b6c151a8b96434d6",
+            "retrievedAt": "2026-10-14T23:52:27.629458+00:00",
+            "publisher": "North Carolina State Board of Elections",
+            "vault": {
+              "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-20baf586bb48344a/sha256-844dc1eafc59582eaaa959f3131ec9dd1fa1f43bfc093a42b6c151a8b96434d6.txt",
+              "byteLength": 2469,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
+                "sourceHash": "5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead",
+                "retrievedAt": "2026-10-14T23:52:27.629458+00:00",
+                "publisher": "North Carolina General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-20baf586bb48344a/sha256-5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead.html",
+                  "byteLength": 16854,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+            "sourceHash": "c1f626f1a8a390e143593fc9f0da383a210d34de9ce2d1dd813f05a913855739",
+            "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+            "publisher": "North Carolina General Assembly, Legislative Services Officer; published by Forsyth County Board of Elections",
+            "summary": "This amendment to the North Carolina Constitution would require the General Assembly to set limits on property tax increases by local governments.",
+            "passageThreshold": "If a majority of votes cast on the question are in favor of the amendment set out in Section 1 of this act, the Secretary of State shall enroll the amendment among the permanent records of that office.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
+              "sourceHash": "5f4943efac07389dd2e9e73660e7c7adb35eaa84d389890cebdbf58408a2938a",
+              "retrievedAt": "2026-10-14T23:52:27.629458+00:00",
+              "publisher": "North Carolina State Board of Elections",
+              "vault": {
+                "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-20baf586bb48344a/sha256-5f4943efac07389dd2e9e73660e7c7adb35eaa84d389890cebdbf58408a2938a.txt",
+                "byteLength": 2431,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
+                  "sourceHash": "5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead",
+                  "retrievedAt": "2026-10-14T23:52:27.629458+00:00",
+                  "publisher": "North Carolina General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-20baf586bb48344a/sha256-5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead.html",
+                    "byteLength": 16854,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119269",
+              "sourceHash": "9e486834c1446e3cf107e6a7fb1c5b07ce0bdf2f4f81b86d06fc65a185ed5778",
+              "retrievedAt": "2026-10-15T00:12:40.661648+00:00",
+              "publisher": "North Carolina General Assembly, Fiscal Research Division",
+              "vault": {
+                "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-1818f793267ac0e2/sha256-9e486834c1446e3cf107e6a7fb1c5b07ce0bdf2f4f81b86d06fc65a185ed5778.txt",
+                "byteLength": 7443,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119269",
+                  "sourceHash": "401ebb837c6b7394866b44fbf4cb903fbf6e17614fa6b1c8c047bb89e95502f3",
+                  "retrievedAt": "2026-10-15T00:12:40.661648+00:00",
+                  "publisher": "North Carolina General Assembly, Fiscal Research Division",
+                  "vault": {
+                    "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-1818f793267ac0e2/sha256-401ebb837c6b7394866b44fbf4cb903fbf6e17614fa6b1c8c047bb89e95502f3.pdf",
+                    "byteLength": 660663,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "FISCAL IMPACT SUMMARY\nThe bill would require a referendum to be held on a Constitutional Amendment that would require\nthe General Assembly to enact laws limiting how much county and municipal property tax levies\ncan increase.\n\nThe bill is estimated to have no fiscal impact because:\n    The outcome of the ballot measure is unknown, and the specifics of a potential levy limit\n       the General Assembly would enact are not specified in the bill, but would be addressed by a\n       future fiscal note should the referendum pass, and\n    Additional costs associated with administering the election for the referendum are\n       anticipated to be minimal.\n\n\n\n\n     FISCAL RESEARCH DIVISION                     Page 1 of 3                                   May 5, 2026\n\fFISCAL ANALYSIS\nHB 1089 would put to the voters of the State the question of whether or not to adopt a\nConstitutional Amendment to require the General Assembly limit how much a local government’s\nproperty tax revenues can increase. The election would be held in November 2026. FRD estimates\nthe bill has no fiscal impact as 1) it is only holding a referendum—the specifics of any limits on\nlevies would be specified in subsequent legislation following the referendum passing, and 2) FRD\nanticipates any additional costs of placing a second statewide referendum on the same ballot\nwould be minimal and could be absorbed using existing local board of elections resources. Each of\nthese two matters are discussed in the following sections.\n\nLevy Limit\nIf successful, the referendum would enact an amendment to the State Constitution that would\nrequire the General Assembly to enact limits on how much revenue can be generated from\nproperty tax. The specific criteria needed to compute an estimate are not contained in HB 1089\nand instead would be outlined in subsequent legislation if the amendment passes; for example, the\nbill does not require or prohibit the General Assembly to use or not use any specific variables to\nmeasure or define allowable increases in property tax revenues if the referendum is successful,\nsuch as growth percentages that are flat, based on population changes, on inflationary changes, a\ncombination thereof, or something entirely different.\n\nWhile there is no fiscal impact, Table 1 provides the following historical information on property\ntax levies by counties, municipalities, and the two together, including the percentage change in\nlevies for each.\n\n                  Table 1: Historical County and Municipal Property Tax Revenues\n              County Property Tax Revenues            Municipal (Towns, Cities, etc.)           County & Municipal\n  Fiscal                                                                                                   Year Over\n                Revenues         Year Over Year          Revenues          Year Over          Revenues\n  Year                                                                                                        Year\n               ($ Billions)         Change              ($ Billions)      Year Change        ($ Billions)\n                                                                                                            Change\n 2019-20                  8.1                                      3.3                                11.3\n 2020-21                  8.3                2.8%                  3.4            4.0%                11.7       3.2%\n 2021-22                  8.7                4.4%                  3.6            5.4%                12.3       4.7%\n 2022-23                  9.1                5.0%                  3.8            6.2%                12.9       5.4%\n 2023-24                  9.8                7.6%                  4.2            9.7%                14.0       8.2%\n 2024-25                 10.5                6.7%                  4.6           11.6%                15.1       8.1%\n Note: Values may not sum to totals shown due to rounding. Amounts shown do not include revenues from other districts, such\n as fire districts. Source: NC Department of Revenue.\n\n\nReferendum Costs\nIn addition to the traditional races appearing on a ballot in a midterm election (e.g., NC House of\nRepresentatives and Senate, U.S. House of Representatives, etc.), November 2026 election ballots\nwill already contain one referendum for a Constitutional Amendment, which relates to requiring\nphoto identification for voting. HB 1089 would add a second referendum to this ballot, but this is\nestimated to be of minimal additional cost because it is not creating fundamental changes (e.g.,\nentirely separate election day, separate ballot, etc.). While the State and local boards of elections\nmay incur additional administrative costs for a second referendum (e.g., ink for printing, extra\n\n\n      FISCAL RESEARCH DIVISION                           Page 2 of 3                                            May 5, 2026\n\fballot pages because of spacing, etc.), FRD estimates these costs would be minimal and could be\nabsorbed within additional resources.\n\nTECHNICAL CONSIDERATIONS\nN/A.",
+            "vault": {
+              "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-c1f626f1a8a390e143593fc9f0da383a210d34de9ce2d1dd813f05a913855739.txt",
+              "byteLength": 676,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+                "sourceHash": "f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822",
+                "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+                "publisher": "North Carolina General Assembly and Forsyth County Board of Elections",
+                "vault": {
+                  "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822.pdf",
+                  "byteLength": 213231,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [
+        {
+          "contestId": "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting",
+          "whatItDoes": "AN ACT to AMEND the north\ncarolina constitution TO REQUIRE ALL VOTERS TO PRESENT PHOTOGRAPHIC\nIDENTIFICATION BEFORE VOTING, NOT JUST THOSE PRESENTING TO VOTE IN PERSON.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.  Section 2(4) of Article VI of the Constitution of North\nCarolina reads as rewritten:\n\"(4)      Photo identification\nfor <del>voting in person. </del>voting. Voters <del>offering to vote in\nperson </del>shall present photographic identification before voting. The General"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.  Section 3 of Article VI of the Constitution of North\nCarolina reads as rewritten:\n\"Sec. 3. Registration; <del>Voting in Person.</del>Voting.\n…\n(2)        Voters <del>offering to\nvote in person </del>shall present photographic identification before voting. The"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3.  The amendment set out in Sections 1 and 2 of this act\nshall be submitted to the qualified voters of the State at the statewide\ngeneral election to be held on November 3, 2026, which election shall be\nconducted under the laws then governing elections in the State. The question to"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4.  The State Board of Elections shall certify the results of\nthe referendum conducted under Section 3 of this act. If a majority of votes\ncast on the question are in favor of the amendment set out in Sections 1 and 2\nof this act, the Secretary of State shall enroll the amendment among the"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5.  If the certification from the State Board of Elections\nunder Section 4 of this act reflects that a majority of votes cast on the\nquestion are in favor of the amendment set out in Sections 1 and 2 of this act,\nthe amendment set out in Sections 1 and 2 of this act is effective upon\ncertification."
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "SECTION 6.",
+              "what": "SECTION 6.  Except as otherwise\nprovided, this act is effective when it becomes law.\nIn the General Assembly read\nthree times and ratified this the 13th day of December, 2024.\ns/\nCarl Ford\nPresiding\nOfficer of the Senate\ns/\nMike Clampitt\nPresiding\nOfficer of the House of Representatives"
+            }
+          ],
+          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+          "sourceHash": "3e1dbbba6449c8432db435c05bda7cff472c35589580a8f500a93b7d93a257a0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.588029+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5",
+          "whatItDoes": "AN ACT to amend the north\ncarolina constitution to provide that the maximum tax rate on incomes cannot\nexceed three and one‑half percent.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.  Section 2 of Article V of the North Carolina Constitution\nreads as rewritten:\n\"Sec. 2. State and local\ntaxation.\n…\n(6)        Income tax. The rate of\ntax on incomes shall not in any case exceed <del>seven </del>three and one‑half\npercent, and there shall be allowed personal exemptions and deductions so"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.  The amendment set out in Section 1 of this act shall be\nsubmitted to the qualified voters of the State at the statewide general\nelection to be held on November 3, 2026, which election shall be conducted in\naccordance with the laws governing elections at that time. The question to be"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3.  The State Board of Elections shall certify the results of\nthe referendum conducted under Section 2 of this act. If a majority of votes\ncast on the question are in favor of the amendment set out in Section 1 of this\nact, the Secretary of State shall enroll the amendment among the permanent"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4.  If the certification from the State Board of Elections\nunder Section 3 of this act reflects that a majority of votes cast on the\nquestion are in favor of the amendment set out in Section 1 of this act, the\namendment set out in Section 1 of this act is effective upon certification and"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5.  Except as otherwise\nprovided, this act is effective when it becomes law.\nIn the General Assembly read\nthree times and ratified this the 21st day of May, 2026.\ns/\nPhil Berger\nPresident\nPro Tempore of the Senate\ns/\nDonna McDowell White\nPresiding\nOfficer of the House of Representatives"
+            }
+          ],
+          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+          "sourceHash": "31eabdbe90f9d90dd8a4bf57978f52f2253428f8c08792810f0015b8b005c705",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.677833+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit",
+          "whatItDoes": "AN ACT to amend the constitution\nof the state to require the legislature to enact a property tax levy limit.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.  Subsection (5) of Section 2 of Article V of the North\nCarolina Constitution reads as rewritten:\n\"(5)      <del>Purposes of\nproperty tax. </del>Property tax purposes, limitation. The General\nAssembly shall not authorize any county, city or town, special district, or"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2.  The amendment set out in Section 1 of this act shall be\nsubmitted to the qualified voters of the State at the statewide general\nelection to be held on November 3, 2026, which election shall be conducted in\naccordance with the laws governing elections at that time. The question to be"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3.  The State Board of Elections shall certify the results of\nthe referendum conducted under Section 2 of this act. If a majority of votes\ncast on the question are in favor of the amendment set out in Section 1 of this\nact, the Secretary of State shall enroll the amendment among the permanent"
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4.  If the certification from the State Board of Elections\nunder Section 3 of this act reflects that a majority of votes cast on the\nquestion are in favor of the amendment set out in Section 1 of this act, the\namendment set out in Section 1 of this act is effective upon certification."
+            },
+            {
+              "id": "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5.  Except as otherwise\nprovided, this act is effective when it becomes law.\nIn the General Assembly read\nthree times and ratified this the 21st day of May, 2026.\ns/\nPhil Berger\nPresident\nPro Tempore of the Senate\ns/\nDonna McDowell White\nPresiding\nOfficer of the House of Representatives"
+            }
+          ],
+          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
+          "sourceHash": "844dc1eafc59582eaaa959f3131ec9dd1fa1f43bfc093a42b6c151a8b96434d6",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.629458+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119269",
+          "sourceHash": "401ebb837c6b7394866b44fbf4cb903fbf6e17614fa6b1c8c047bb89e95502f3",
+          "retrievedAt": "2026-10-15T00:12:40.661648+00:00",
+          "publisher": "North Carolina General Assembly, Fiscal Research Division",
+          "vault": {
+            "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-1818f793267ac0e2/sha256-401ebb837c6b7394866b44fbf4cb903fbf6e17614fa6b1c8c047bb89e95502f3.pdf",
+            "byteLength": 660663,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119135",
+          "sourceHash": "e475af02b2eb6e3e08cb3515df8843827e973df0eaa361a3c6dab293a23695e2",
+          "retrievedAt": "2026-10-15T00:10:36.156391+00:00",
+          "publisher": "North Carolina General Assembly, Fiscal Research Division",
+          "vault": {
+            "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-68dee48f28d17703/sha256-e475af02b2eb6e3e08cb3515df8843827e973df0eaa361a3c6dab293a23695e2.pdf",
+            "byteLength": 972953,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
+          "sourceHash": "f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf",
+          "retrievedAt": "2026-10-14T23:52:27.677833+00:00",
+          "publisher": "North Carolina General Assembly",
+          "vault": {
+            "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-1fbb694aad74574f/sha256-f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf.html",
+            "byteLength": 16860,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
+          "sourceHash": "5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead",
+          "retrievedAt": "2026-10-14T23:52:27.629458+00:00",
+          "publisher": "North Carolina General Assembly",
+          "vault": {
+            "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-20baf586bb48344a/sha256-5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead.html",
+            "byteLength": 16854,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+          "sourceHash": "9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e",
+          "retrievedAt": "2026-10-14T23:52:27.588029+00:00",
+          "publisher": "North Carolina General Assembly",
+          "vault": {
+            "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-6a4bd42886e32073/sha256-9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e.html",
+            "byteLength": 17418,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+          "sourceHash": "f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822",
+          "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+          "publisher": "North Carolina General Assembly and Forsyth County Board of Elections",
+          "vault": {
+            "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822.pdf",
+            "byteLength": 213231,
+            "contentType": "application/pdf"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:05:58.208641Z",
-    "reviewedBy": "BL-14 official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:39.872220+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/2026_general_candidate_list_by_contest_federal_and_state.pdf",
@@ -10544,34 +11037,70 @@
         "reviewedEvidence": "Official 2026 general-election page identifies the election date and required office universe: one U.S. Senate, 14 U.S. House, four statewide judges, all 50 N.C. Senate and all 120 N.C. House seats, and statewide referenda."
       },
       {
-        "requestedUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
-        "finalUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
-        "httpStatus": 200,
-        "rawHash": "9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e",
-        "retrievedAt": "2026-10-14T05:05:57.858723Z",
-        "publisher": "North Carolina General Assembly",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Enacted North Carolina constitutional-amendment law: full amendment text and ballot question submitted at the November 3, 2026 statewide general election."
-      },
-      {
         "requestedUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
         "finalUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.677833+00:00",
         "rawHash": "f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf",
-        "retrievedAt": "2026-10-14T05:05:58.042846Z",
         "publisher": "North Carolina General Assembly",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Enacted North Carolina constitutional-amendment law: full amendment text and ballot question submitted at the November 3, 2026 statewide general election."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
         "finalUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.629458+00:00",
         "rawHash": "5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead",
-        "retrievedAt": "2026-10-14T05:05:58.208641Z",
         "publisher": "North Carolina General Assembly",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Enacted North Carolina constitutional-amendment law: full amendment text and ballot question submitted at the November 3, 2026 statewide general election."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+        "finalUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.588029+00:00",
+        "rawHash": "9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e",
+        "publisher": "North Carolina General Assembly",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+        "finalUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
+        "rawHash": "f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822",
+        "publisher": "North Carolina General Assembly and Forsyth County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119135",
+        "finalUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119135",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:36.156391+00:00",
+        "rawHash": "e475af02b2eb6e3e08cb3515df8843827e973df0eaa361a3c6dab293a23695e2",
+        "publisher": "North Carolina General Assembly, Fiscal Research Division",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119269",
+        "finalUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119269",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:12:40.661648+00:00",
+        "rawHash": "401ebb837c6b7394866b44fbf4cb903fbf6e17614fa6b1c8c047bb89e95502f3",
+        "publisher": "North Carolina General Assembly, Fiscal Research Division",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

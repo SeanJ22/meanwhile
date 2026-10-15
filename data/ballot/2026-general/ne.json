@@ -2678,6 +2678,86 @@
             "verifiedAt": "2026-10-14T05:03:24.807443Z",
             "doorId": "fec-ne-chief",
             "quote": "Shall the Nebraska Constitution be amended to authorize the enactment of laws allowing persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska?"
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceHash": "e9b37eec3cbc73ea562d38388afc44f4166cfeb1af706db66daadc0adddc0f7e",
+            "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+            "publisher": "Nebraska Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-e9b37eec3cbc73ea562d38388afc44f4166cfeb1af706db66daadc0adddc0f7e.txt",
+              "byteLength": 4751,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+                "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+                "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+                "publisher": "Nebraska Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
+                  "byteLength": 299141,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceHash": "893e92420f618ff164699e15857d3f10477a3256457ebe008b1a1b7ec0370815",
+            "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+            "publisher": "Nebraska Secretary of State",
+            "summary": "A vote “FOR” will amend the Nebraska Constitution to authorize the\nenactment of laws to allow persons located within Nebraska to place sports\nwagers through an Internet-based platform when offered by an authorized\ngaming operator conducting games of chance within a licensed racetrack\nenclosure in Nebraska.\nA vote “AGAINST” means the Nebraska Constitution will not be amended in\nthis manner.",
+            "argumentsFor": [
+              "Vote FOR Initiative 440 to legalize online sports wagering and direct more\nthan $166 million to property tax relief. We know Nebraskans are already\nwagering on sports through illegal and offshore platforms or driving to a\nneighboring state where wagering is legal. This means millions of dollars\nin tax revenue leave our state every year. Initiative 440 keeps the money\nin Nebraska through a legal, regulated and secure marketplace that is\nprojected to deliver more than $166 million in direct property tax relief\nto Nebraska homeowners, farmers, ranchers and small businesses over\nthe next ten years. Legal online sports wagering will keep the money in\nNebraska and generate millions of dollars in real property tax relief. Vote\nFOR Initiative 440."
+            ],
+            "argumentsAgainst": [
+              "Initiative Measure 440 turns every phone into a casino, every play into a\nwager, and every athlete into a target—sending hundreds of millions of\ndollars out of Nebraska to out-of-state gambling conglomerates. It is\nfunded by out-of-state billion-dollar gambling corporations and opposed\nby many Nebraska leaders, players, and coaches. Online sports betting\nfuels corruption in sports and is one of the most common forms of abuse\nathletes receive, including threats of violence to themselves and their\nfamilies. Every teenager with a phone will face aggressive advertising,\nwhile taxpayers and families get no real property tax relief, as casinos\npromised five years ago, and will be forced to pay for increased social\ncosts. Vote AGAINST Initiative Measure 440 to protect Nebraska families,\ntaxpayers, and student-athletes."
+            ],
+            "passageThreshold": "A measure initiated shall become a law or part of the Constitution, as the case may be, when a majority of the votes cast thereon, and not less than thirty-five per cent of the total vote cast at the election at which the same was submitted, are cast in favor thereof, and shall take effect upon proclamation by the Governor which shall be made within ten days after the official canvass of such votes.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+              "sourceHash": "4ed101431f38fd99f29232d96d938dab36df9e7f51ed098ba78f4260b8354fdd",
+              "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+              "publisher": "Nebraska Legislature",
+              "vault": {
+                "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-4ed101431f38fd99f29232d96d938dab36df9e7f51ed098ba78f4260b8354fdd.txt",
+                "byteLength": 402,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+                  "sourceHash": "84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8",
+                  "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+                  "publisher": "Nebraska Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8.html",
+                    "byteLength": 1054006,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-893e92420f618ff164699e15857d3f10477a3256457ebe008b1a1b7ec0370815.txt",
+              "byteLength": 7390,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+                "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+                "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+                "publisher": "Nebraska Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
+                  "byteLength": 299141,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -2693,6 +2773,86 @@
             "verifiedAt": "2026-10-14T05:03:24.807443Z",
             "doorId": "fec-ne-chief",
             "quote": "Shall statutes be enacted that: (1) Allow persons located within Nebraska to place sports wagers through an Internet-based platform when offered by an authorized gaming operator conducting games of chance within a licensed racetrack enclosure in Nebraska or the operator’s platform provider; and (2) Regulate such sports wagers?"
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceHash": "5e61811ee52fbac19a56c4cdb4e729dca112dc3fe12ee0fbeb871bfe69c9a2bd",
+            "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+            "publisher": "Nebraska Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-5e61811ee52fbac19a56c4cdb4e729dca112dc3fe12ee0fbeb871bfe69c9a2bd.txt",
+              "byteLength": 13455,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+                "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+                "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+                "publisher": "Nebraska Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
+                  "byteLength": 299141,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceHash": "77ef160f429c532e516a6dae7205598580a80974b90965db1027072ca0526a8d",
+            "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+            "publisher": "Nebraska Secretary of State",
+            "summary": "A vote “FOR” will enact statutes allowing persons located within Nebraska to\nplace sports wagers through an Internet-based platform when offered by an\nauthorized gaming operator conducting games of chance within a licensed\nracetrack enclosure in Nebraska or the operator’s platform provider, and\nregulating such sports wagers.\nA vote “AGAINST” means no such statutes will be enacted.",
+            "argumentsFor": [
+              "Vote FOR Initiative 441 to create and regulate a safe and secure online\nwagering marketplace in Nebraska and use existing state gaming laws to\ndirect more than $166 million to property tax relief. Initiative 441 creates\nthe legal and regulatory framework for online sports wagering, with real\nconsumer protections and oversight by the Nebraska Racing and Gaming\nCommission. More importantly, this initiative requires that 70 percent of\nall wagering tax revenue goes directly to Nebraska's Property Tax Credit\nCash Fund. That means more than $166 million in real property tax relief\ngoes straight to Nebraskans over the first ten years. Legal and regulated\nsports wagering means millions in direct property tax relief. Vote FOR\nInitiative 441."
+            ],
+            "argumentsAgainst": [
+              "Initiative Measure 441 puts out-of-state gambling interests ahead of\nNebraska taxpayers and student-athletes. It would turn every phone into\na casino, every play into a wager, and every athlete into a potential\ntarget—sending hundreds of millions of dollars out of Nebraska to the\npockets of out-of-state gambling companies. It is opposed by many\nNebraska players, leaders, and coaches. Online sports betting fuels\ncorruption in sports and is one of the most common forms of abuse\nathletes receive. Every teenager with a phone will face aggressive\nadvertising, while taxpayers and families will face increased social costs\nand no real property tax relief. Vote AGAINST Initiative Measure 441 to\nprotect Nebraska families, taxpayers, and student-athletes."
+            ],
+            "passageThreshold": "A measure initiated shall become a law or part of the Constitution, as the case may be, when a majority of the votes cast thereon, and not less than thirty-five per cent of the total vote cast at the election at which the same was submitted, are cast in favor thereof, and shall take effect upon proclamation by the Governor which shall be made within ten days after the official canvass of such votes.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+              "sourceHash": "4ed101431f38fd99f29232d96d938dab36df9e7f51ed098ba78f4260b8354fdd",
+              "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+              "publisher": "Nebraska Legislature",
+              "vault": {
+                "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-4ed101431f38fd99f29232d96d938dab36df9e7f51ed098ba78f4260b8354fdd.txt",
+                "byteLength": 402,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+                  "sourceHash": "84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8",
+                  "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+                  "publisher": "Nebraska Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8.html",
+                    "byteLength": 1054006,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-77ef160f429c532e516a6dae7205598580a80974b90965db1027072ca0526a8d.txt",
+              "byteLength": 15572,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+                "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+                "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+                "publisher": "Nebraska Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
+                  "byteLength": 299141,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -2708,6 +2868,86 @@
             "verifiedAt": "2026-10-14T05:03:24.807443Z",
             "doorId": "fec-ne-chief",
             "quote": "Shall the Nebraska Constitution be amended to provide: (1) Schools must expressly designate each athletic team or sport as one of the following based on biological sex: (a) Males, men, or boys; (b) females, women, or girls; or (c) coed or mixed; and (2) Athletic teams or sports designated for females, women, or girls shall not be open to students of the male sex? The amendment would apply to all athletic teams or sports sponsored by public schools or postsecondary educational institutions, and private schools or educational institutions whose athletic teams or sports compete against public schools or institutions."
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceHash": "cf60bfb478a731b6045b8c9c836cbadfa1d3f8ad9a60ac093ee18fadfe11cc13",
+            "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+            "publisher": "Nebraska Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-cf60bfb478a731b6045b8c9c836cbadfa1d3f8ad9a60ac093ee18fadfe11cc13.txt",
+              "byteLength": 1871,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+                "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+                "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+                "publisher": "Nebraska Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
+                  "byteLength": 299141,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+            "sourceHash": "2fc4555148a72d54292d5930d34795be5e510409a13d33a99da13bd392e2b856",
+            "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+            "publisher": "Nebraska Secretary of State",
+            "summary": "A vote “FOR” will amend the Nebraska Constitution to provide: (1) Schools\nmust expressly designate each athletic team or sport as one of the following\nbased on biological sex: (a) Males, men, or boys; (b) females, women, or\ngirls; or (c) coed or mixed; and (2) Athletic teams or sports designated for\nfemales, women, or girls shall not be open to students of the male sex. The\namendment would apply to all athletic teams or sports sponsored by public\nschools or postsecondary educational institutions, and private schools or\neducational institutions whose athletic teams or sports compete against\npublic schools or institutions.\nA vote “AGAINST” means the Nebraska Constitution will not be amended in\nthis manner.",
+            "argumentsFor": [
+              "Initiative 442, Fairness for Girls, protects fairness, opportunities, and\nsafety for Nebraska girls in sports. It establishes constitutional\nprotections for sex-separated athletics in Nebraska grade schools, high\nschools, and colleges. Fairness for Girls ensures female athletes are not\nforced to compete against biological males. Allowing biological males to\ncompete against girls poses safety risks because of physical differences\nin strength, bone density, and size, increasing the likelihood of injury. The\ninitiative protects female athletes from losing scholarships, medals, or\ntournament advancement after being displaced in rankings by biological\nmales. Fairness for Girls protects every girl’s opportunity to succeed on\na fair playing field."
+            ],
+            "argumentsAgainst": [
+              "Initiative 442 adds unnecessary limits on participation in girls’ sports into\nthe Nebraska State Constitution. Initiative 442 raises significant concerns\nabout fairness and privacy by making gender verification constitutionally\nrequired for girls and young women who want to play sports at their\npublic school, college or university, but would not place a similar\nrequirement on boys and young men. It would also empower bad actors\nto unfairly cast doubt on young athletes who don’t fit within traditional\ngender expectations. Proponents say that this measure is about\npromoting fairness and safety by ensuring transgender girls cannot\nparticipate, but it would actually subject all girls to greater barriers and\nrisk of harm and create a constitutional right to bully kids about their\nappearance. Vote AGAINST 442."
+            ],
+            "passageThreshold": "A measure initiated shall become a law or part of the Constitution, as the case may be, when a majority of the votes cast thereon, and not less than thirty-five per cent of the total vote cast at the election at which the same was submitted, are cast in favor thereof, and shall take effect upon proclamation by the Governor which shall be made within ten days after the official canvass of such votes.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+              "sourceHash": "4ed101431f38fd99f29232d96d938dab36df9e7f51ed098ba78f4260b8354fdd",
+              "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+              "publisher": "Nebraska Legislature",
+              "vault": {
+                "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-4ed101431f38fd99f29232d96d938dab36df9e7f51ed098ba78f4260b8354fdd.txt",
+                "byteLength": 402,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+                  "sourceHash": "84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8",
+                  "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+                  "publisher": "Nebraska Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8.html",
+                    "byteLength": 1054006,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-2fc4555148a72d54292d5930d34795be5e510409a13d33a99da13bd392e2b856.txt",
+              "byteLength": 5229,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+                "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+                "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+                "publisher": "Nebraska Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
+                  "byteLength": 299141,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -2723,17 +2963,323 @@
             "verifiedAt": "2026-10-14T05:04:38.936128Z",
             "doorId": "fec-ne-chief",
             "quote": "A constitutional amendment to change the limit on legislative terms from two consecutive terms to three consecutive terms."
+          },
+          "officialText": {
+            "sourceUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+            "sourceHash": "46ee8600d7d8ddf77e75c560b75f8c6dab1a42003d02f7db46c045ef06737f9d",
+            "retrievedAt": "2026-10-14T23:52:29.419870+00:00",
+            "publisher": "Nebraska Legislature",
+            "vault": {
+              "key": "project/freshness/source/nebraskalegislature.gov/2026/10/14/ms-01-f30d2bebe4056342/sha256-46ee8600d7d8ddf77e75c560b75f8c6dab1a42003d02f7db46c045ef06737f9d.txt",
+              "byteLength": 1618,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+                "sourceHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+                "retrievedAt": "2026-10-14T23:52:29.419870+00:00",
+                "publisher": "Nebraska Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/nebraskalegislature.gov/2026/10/14/ms-01-f30d2bebe4056342/sha256-1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306.pdf",
+                  "byteLength": 51898,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/LR19CA_Approved_Ballot_Statement_Language.pdf",
+            "sourceHash": "50c3e5f3cd622505c5a9f1601e64741ff6ff01bfb7bb6f884083a803f620dabd",
+            "retrievedAt": "2026-10-15T00:14:45.542202+00:00",
+            "publisher": "Nebraska Legislative Council",
+            "summary": "A vote FOR will amend the state constitution to increase the term limit for state legislators from two consecutive four-year terms (eight years) to three consecutive four-year terms (12 years).\n\nA vote AGAINST will not amend the Nebraska Constitution, so the current limit of two consecutive four-year terms will remain in effect. State legislators will continue to be ineligible for office in the Legislature for four years after serving two consecutive terms.",
+            "passageThreshold": "If a majority of the electors voting on any such amendment adopt the same, it shall become a part of this Constitution, provided the votes cast in favor of such amendment shall not be less than thirty-five per cent of the total votes cast at such election.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+              "sourceHash": "5ebb1084f828e03e60155674f3cf697a4db8ba625011b0ac85d48fd5c35180bf",
+              "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+              "publisher": "Nebraska Legislature",
+              "vault": {
+                "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-5ebb1084f828e03e60155674f3cf697a4db8ba625011b0ac85d48fd5c35180bf.txt",
+                "byteLength": 256,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+                  "sourceHash": "84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8",
+                  "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+                  "publisher": "Nebraska Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8.html",
+                    "byteLength": 1054006,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sos.nebraska.gov/2026/10/15/ms-01-53aabb73b6428269/sha256-50c3e5f3cd622505c5a9f1601e64741ff6ff01bfb7bb6f884083a803f620dabd.txt",
+              "byteLength": 497,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/LR19CA_Approved_Ballot_Statement_Language.pdf",
+                "sourceHash": "d209c98b235bee8b9738ec4997620eeebefb033dd1b88fb98bb87817d22ac961",
+                "retrievedAt": "2026-10-15T00:14:45.542202+00:00",
+                "publisher": "Nebraska Legislative Council",
+                "vault": {
+                  "key": "project/freshness/source/sos.nebraska.gov/2026/10/15/ms-01-53aabb73b6428269/sha256-d209c98b235bee8b9738ec4997620eeebefb033dd1b88fb98bb87817d22ac961.pdf",
+                  "byteLength": 408964,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [
+        {
+          "contestId": "ne-sos-2026-general-initiative-440",
+          "whatItDoes": "OBJECT STATEMENT: The object of this petition is to amend the\nNebraska Constitution to state that laws may be enacted allowing\nsports wagers to be placed within the State of Nebraska through an\nInternet-based platform offered by an authorized gaming operator.\nProposed Constitutional Amendment Language",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ne-sos-2026-general-initiative-440#subsection-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Subsection 1",
+              "what": "(1)  Except  as  provided  in  this  section,  the  Legislature  shall  not\nauthorize any game of chance or any lottery or gift enterprise when the\nconsideration for a chance to participate involves the payment of money\nfor the purchase of property, services, or a chance or admission ticket or"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-440#subsection-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Subsection 2",
+              "what": "(2)  The  Legislature  may  authorize  and  regulate  a  state  lottery\npursuant to subsection (3) of this section and other lotteries, raffles, and\ngift enterprises which are intended solely as business promotions or the\nproceeds  of  which  are  to  be  used solely  for  charitable  or  community"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-440#subsection-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Subsection 3",
+              "what": "(3)(a) The Legislature may establish a lottery to be operated and\nregulated by the State of Nebraska. The proceeds of the lottery shall be\nappropriated  by  the  Legislature  for  the  costs  of  establishing  and\nmaintaining the lottery and for the following purposes, as directed by the\nLegislature:"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-440#subsection-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Subsection 4",
+              "what": "(4)  Nothing  in  this  section  shall  be  construed  to  prohibit  (a)  the\nenactment of laws providing for the licensing and regulation of wagering\non the results of horseraces, wherever run, either within or outside of\nthe state, by the parimutuel method, when such wagering is conducted"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-440#subsection-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Subsection 5",
+              "what": "(5)  This  section  shall  not  apply  to  any  law  which  is  enacted\ncontemporaneously with the adoption of this subsection or at any time\nthereafter  and  which  provides  for  the  licensing,  authorization,\nregulation, or taxation of all forms of games of chance when such games"
+            }
+          ],
+          "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+          "sourceHash": "e9b37eec3cbc73ea562d38388afc44f4166cfeb1af706db66daadc0adddc0f7e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-sos-2026-general-initiative-441",
+          "whatItDoes": "OBJECT STATEMENT: The object of this petition is to enact a statute\nallowing sports wagers to be placed within the State of Nebraska\nthrough Internet-based platforms offered by an authorized gaming\noperator, or its contracted platform provider, and regulate such sports\nwagers.\nProposed Statutory Language",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ne-sos-2026-general-initiative-441#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. Section 9-1102, Reissue Revised Statutes of Nebraska, is\namended to read:\n9-1102  Notwithstanding any other provision of law, and to the full\nextent  permitted  by  the  Constitution  of  Nebraska,  including\namendments  to  the  Constitution  of  Nebraska  adopted"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-441#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Sec.  2.  Section  9-1103,  Revised  Statutes  Supplement,  2025,  is\namended to read:\n9-1103  For purposes of the Nebraska Racetrack Gaming Act:\n(1) Authorized gaming operator means a person or entity licensed\npursuant  to  the  act  to  operate  games  of  chance  within  a  licensed\nracetrack enclosure;"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-441#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "Sec.  3.  Section  9-1110,  Revised  Statutes  Supplement,  2025,  is\namended to read:\n9-1110 (1) The commission ~~may~~ <u>shall</u> permit an authorized gaming\noperator to conduct sports wagering. Any sports wager shall be placed\n<u>(a)  through  an  online  sports  wagering  platform  by  a  person  who  is</u>"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-441#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "Sec. 4.  This act becomes operative on January 1, 2027."
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-441#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "Sec. 5. If any section or provision of this act is determined by a court\nof  competent  jurisdiction  to  be  unconstitutional  or  otherwise  void  or\ninvalid for any reason, such determination shall not affect the validity of\nthe act as a whole or any part thereof, other than the part so determined"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-441#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "Sec. 6. Original section 9-1102, Reissue Revised Statutes of Nebraska,\nand sections 9-1103 and 9-1110, Revised Statutes Supplement, 2025, are\nrepealed."
+            }
+          ],
+          "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+          "sourceHash": "5e61811ee52fbac19a56c4cdb4e729dca112dc3fe12ee0fbeb871bfe69c9a2bd",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-sos-2026-general-initiative-442",
+          "whatItDoes": "OBJECT STATEMENT: The object of this petition is to amend the\nNebraska Constitution to establish constitutional protections for sex-\nseparate athletics to ensure equal access to athletic opportunities for\nfemales.\nProposed Constitutional Amendment Language",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ne-sos-2026-general-initiative-442#subsection-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Subsection 1",
+              "what": "(1) Schools must expressly designate each athletic team or sport as\none of the following based on biological sex: (a) Males, men, or boys; (b)\nfemales, women, or girls; or (c) coed or mixed."
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-442#subsection-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Subsection 2",
+              "what": "(2) Athletic teams or sports designated for females, women, or girls\npursuant to subsection (1) of this section shall not be open to students\nof the male sex."
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-442#subsection-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Subsection 3",
+              "what": "(3)  For  purposes  of  this  section,  “schools”  shall  mean\ninterscholastic, intercollegiate, and intramural athletic teams or sports\nthat  are  sponsored  by  a  common  school  of  this  state,  a  public\npostsecondary  educational  institution  of  this  state,  or  any  school  or"
+            },
+            {
+              "id": "ne-sos-2026-general-initiative-442#subsection-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Subsection 4",
+              "what": "(4)  This  section  shall  be  self-executing,  but  legislation  may  be\nenacted to facilitate its operation. If any part or parts of this section are\n\nfound to conflict with federal law or the Constitution of the United States,\nthis section shall be implemented to the maximum extent permitted by"
+            }
+          ],
+          "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+          "sourceHash": "cf60bfb478a731b6045b8c9c836cbadfa1d3f8ad9a60ac093ee18fadfe11cc13",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-sos-2026-general-lr19ca",
+          "whatItDoes": "LR19CA LR19CA\n2025 2025\nLEGISLATIVE RESOLUTION 19CA\nPROPOSED CONSTITUTIONAL AMENDMENT\nPassed by the Legislature May 28, 2025\nIntroduced by Dover, 19; Bosn, 25; Cavanaugh, M., 6; Clouse, 37; Conrad, 46;\nDeBoer, 10; Dorn, 30; Dungan, 26; Hallstrom, 1; Hansen, 16;\nIbach, 44; Juarez, 5; Kauth, 31; McKeon, 41;",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ne-sos-2026-general-lr19ca#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section  1.  At  the  general  election  in  November  2026,  the  following\nproposed  amendment  to  the  Constitution  of  Nebraska  shall  be  submitted  to  the\nelectors of the State of Nebraska for approval or rejection:\nTo amend Article III, section 12:"
+            },
+            {
+              "id": "ne-sos-2026-general-lr19ca#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Sec. 2.  The proposed amendment shall be submitted to the electors in the\nmanner prescribed by the Constitution of Nebraska, Article XVI, section 1, with\nthe following ballot language:\nA constitutional amendment to change the limit on legislative terms from\ntwo consecutive terms to three consecutive terms.\nFor"
+            }
+          ],
+          "sourceUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+          "sourceHash": "46ee8600d7d8ddf77e75c560b75f8c6dab1a42003d02f7db46c045ef06737f9d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+          "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+          "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
+          "publisher": "Nebraska Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
+            "byteLength": 299141,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+          "sourceHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+          "retrievedAt": "2026-10-14T23:52:29.419870+00:00",
+          "publisher": "Nebraska Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/nebraskalegislature.gov/2026/10/14/ms-01-f30d2bebe4056342/sha256-1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306.pdf",
+            "byteLength": 51898,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/LR19CA_Approved_Ballot_Statement_Language.pdf",
+          "sourceHash": "d209c98b235bee8b9738ec4997620eeebefb033dd1b88fb98bb87817d22ac961",
+          "retrievedAt": "2026-10-15T00:14:45.542202+00:00",
+          "publisher": "Nebraska Legislative Council",
+          "vault": {
+            "key": "project/freshness/source/sos.nebraska.gov/2026/10/15/ms-01-53aabb73b6428269/sha256-d209c98b235bee8b9738ec4997620eeebefb033dd1b88fb98bb87817d22ac961.pdf",
+            "byteLength": 408964,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+          "sourceHash": "84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8",
+          "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
+          "publisher": "Nebraska Legislature",
+          "vault": {
+            "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8.html",
+            "byteLength": 1054006,
+            "contentType": "text/html"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:04:38.936128Z",
-    "reviewedBy": "BL-14 scripted official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:40.041588+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
@@ -2760,20 +3306,54 @@
         "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
         "httpStatus": 200,
         "rawHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
-        "retrievedAt": "2026-10-14T05:03:24.807443Z",
+        "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
         "publisher": "Nebraska Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Script extracted all three initiative numbers, ballot questions, official statements, and the official full-text PDF link."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
         "finalUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
         "httpStatus": 200,
         "rawHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
-        "retrievedAt": "2026-10-14T05:04:38.936128Z",
+        "retrievedAt": "2026-10-14T23:52:29.419870+00:00",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+        "finalUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
+        "httpStatus": 200,
+        "rawHash": "84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8",
+        "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
         "publisher": "Nebraska Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Script extracted the enacted LR19CA ballot language and official full-text link for the November 2026 general election."
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/LR19CA_Approved_Ballot_Statement_Language.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/LR19CA_Approved_Ballot_Statement_Language.pdf",
+        "httpStatus": 200,
+        "rawHash": "d209c98b235bee8b9738ec4997620eeebefb033dd1b88fb98bb87817d22ac961",
+        "retrievedAt": "2026-10-15T00:14:45.542202+00:00",
+        "publisher": "Nebraska Legislative Council",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official approved ballot statement: both FOR and AGAINST explanations visually verified against scanned page 2.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

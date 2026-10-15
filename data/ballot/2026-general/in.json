@@ -2767,7 +2767,7 @@
             "doorId": "fec-in-chief",
             "quote": "Currently, under the Constitution of the State of Indiana, a person charged with murder or treason is not entitled to be released on bail if the proof is evident or the presumption strong. Shall the Constitution of the State of Indiana be amended to provide that a person charged with an offense other than murder or treason is not entitled to bail if: (1) the proof is evident or the presumption strong; and (2) the state proves by clear and convincing evidence that no release conditions will reasonably protect the safety of any other person or the community. (This question concerns Article 1, Section 17 of the Constitution of the State of Indiana.)"
           },
-          "measureTextUrl": "https://iga.in.gov/legislative/2026/resolutions/senate/joint/1/details"
+          "measureTextUrl": "https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf"
         },
         {
           "id": "in-ied-2026-public-question-2",
@@ -2787,7 +2787,7 @@
             "doorId": "fec-in-chief",
             "quote": "Shall the Constitution of the State of Indiana be amended to permit the judge of a city or town court to reside in: (1) the county in which the court is located; or (2) the bordering county closest to the city or town in which the court is located? (This question concerns Article 6, Section 6 of the Constitution of the State of Indiana.)"
           },
-          "measureTextUrl": "https://iga.in.gov/legislative/2025/resolutions/house/joint/1/details"
+          "measureTextUrl": "https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf"
         },
         {
           "id": "in-ied-2026-retention-mary-a-deboer",
@@ -7790,7 +7790,7 @@
           "contestId": "in-ied-2026-public-question-1",
           "officialNumber": "1",
           "questionText": "Currently, under the Constitution of the State of Indiana, a person charged with murder or treason is not entitled to be released on bail if the proof is evident or the presumption strong. Shall the Constitution of the State of Indiana be amended to provide that a person charged with an offense other than murder or treason is not entitled to bail if: (1) the proof is evident or the presumption strong; and (2) the state proves by clear and convincing evidence that no release conditions will reasonably protect the safety of any other person or the community. (This question concerns Article 1, Section 17 of the Constitution of the State of Indiana.)",
-          "officialStatement": null,
+          "officialStatement": "In 2023 and 2025 the General Assembly adopted a joint resolution proposing to amend Article 1, Section 17 of the Constitution of the State of Indiana to change the standard for who is eligible for bail after being charged with a crime. The amendment would allow the court to restrict bail to a person charged with a crime when the accused poses a substantial risk to any other person or the community. An offense other than murder or treason shall not be bailable if: (1) the proof is evident or the presumption strong; and (2) the state proves by clear and convincing evidence that no release conditions will reasonably protect the safety of any other person or the community.",
           "provenance": {
             "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
             "sourceOrg": "Indiana Election Division, Office of the Secretary of State",
@@ -7798,6 +7798,56 @@
             "verifiedAt": "2026-10-14T05:08:08.414229Z",
             "doorId": "fec-in-chief",
             "quote": "Currently, under the Constitution of the State of Indiana, a person charged with murder or treason is not entitled to be released on bail if the proof is evident or the presumption strong. Shall the Constitution of the State of Indiana be amended to provide that a person charged with an offense other than murder or treason is not entitled to bail if: (1) the proof is evident or the presumption strong; and (2) the state proves by clear and convincing evidence that no release conditions will reasonably protect the safety of any other person or the community. (This question concerns Article 1, Section 17 of the Constitution of the State of Indiana.)"
+          },
+          "officialText": {
+            "sourceUrl": "https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf",
+            "sourceHash": "a7416d80a4e4129c6cc62c2879f136677de5867ac70ed10b3e26f13237851918",
+            "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+            "publisher": "Indiana General Assembly",
+            "vault": {
+              "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-a58920213c17f5af/sha256-a7416d80a4e4129c6cc62c2879f136677de5867ac70ed10b3e26f13237851918.txt",
+              "byteLength": 1020,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf",
+                "sourceHash": "4e01184dcce5554b05a20be7b6d29daf8aa4151531ce23aff6e8bef1e27e8083",
+                "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+                "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
+                "vault": {
+                  "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-a58920213c17f5af/sha256-4e01184dcce5554b05a20be7b6d29daf8aa4151531ce23aff6e8bef1e27e8083.pdf",
+                  "byteLength": 79980,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+            "sourceHash": "f355fd23d9f3f482c2ec25fff335d37b7cbf1e8de3f57ca991769d3b941ca754",
+            "retrievedAt": "2026-10-14T23:53:05.435222+00:00",
+            "publisher": "Indiana Election Division",
+            "summary": "In 2023 and 2025 the General Assembly adopted a joint resolution proposing to amend Article 1, Section 17 of the Constitution of the State of Indiana to change the standard for who is eligible for bail after being charged with a crime. The amendment would allow the court to restrict bail to a person charged with a crime when the accused poses a substantial risk to any other person or the community. An offense other than murder or treason shall not be bailable if: (1) the proof is evident or the presumption strong; and (2) the state proves by clear and convincing evidence that no release conditions will reasonably protect the safety of any other person or the community.",
+            "passageThreshold": "The amendment will take effect if ratified by a majority of the state’s voters voting on the amendment as a public question on the ballot at the November 3, 2026, general election.",
+            "vault": {
+              "key": "project/freshness/source/www.in.gov/2026/10/14/ms-01-231f181a659322a0/sha256-f355fd23d9f3f482c2ec25fff335d37b7cbf1e8de3f57ca991769d3b941ca754.txt",
+              "byteLength": 1926,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+                "sourceHash": "babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52",
+                "retrievedAt": "2026-10-14T23:53:05.435222+00:00",
+                "publisher": "Indiana Election Division, Office of the Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.in.gov/2026/10/14/ms-01-231f181a659322a0/sha256-babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52.pdf",
+                  "byteLength": 281917,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7805,7 +7855,7 @@
           "contestId": "in-ied-2026-public-question-2",
           "officialNumber": "2",
           "questionText": "Shall the Constitution of the State of Indiana be amended to permit the judge of a city or town court to reside in: (1) the county in which the court is located; or (2) the bordering county closest to the city or town in which the court is located? (This question concerns Article 6, Section 6 of the Constitution of the State of Indiana.)",
-          "officialStatement": null,
+          "officialStatement": "In 2023 and 2025 the General Assembly adopted a joint resolution proposing to amend Article 6, Section 6 of the Constitution of the State of Indiana to allow a judge of a city or town court to live in the county where the court is located or the bordering Indiana county that is the closest Indiana county to the city or town in which the court is located, calculated by measuring the shortest distance from the city or town limits to the county line.",
           "provenance": {
             "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
             "sourceOrg": "Indiana Election Division, Office of the Secretary of State",
@@ -7813,6 +7863,56 @@
             "verifiedAt": "2026-10-14T05:08:08.414229Z",
             "doorId": "fec-in-chief",
             "quote": "Shall the Constitution of the State of Indiana be amended to permit the judge of a city or town court to reside in: (1) the county in which the court is located; or (2) the bordering county closest to the city or town in which the court is located? (This question concerns Article 6, Section 6 of the Constitution of the State of Indiana.)"
+          },
+          "officialText": {
+            "sourceUrl": "https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf",
+            "sourceHash": "3da4ea8ef14cc6f2ec420e47e6bfb8b25325ec84f7f35c52053dc48dde126a73",
+            "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+            "publisher": "Indiana General Assembly",
+            "vault": {
+              "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-291291a1a9d488ce/sha256-3da4ea8ef14cc6f2ec420e47e6bfb8b25325ec84f7f35c52053dc48dde126a73.txt",
+              "byteLength": 1097,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf",
+                "sourceHash": "152b0e4c41b3fb88055576d3213820ebd98b998a64a79c163d62567db201b224",
+                "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+                "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
+                "vault": {
+                  "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-291291a1a9d488ce/sha256-152b0e4c41b3fb88055576d3213820ebd98b998a64a79c163d62567db201b224.pdf",
+                  "byteLength": 80959,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+            "sourceHash": "a278e775ebefffa8cd17590f433d3e15aff4c37ea57856b673fecfa1fa85cf5e",
+            "retrievedAt": "2026-10-14T23:53:05.435222+00:00",
+            "publisher": "Indiana Election Division",
+            "summary": "In 2023 and 2025 the General Assembly adopted a joint resolution proposing to amend Article 6, Section 6 of the Constitution of the State of Indiana to allow a judge of a city or town court to live in the county where the court is located or the bordering Indiana county that is the closest Indiana county to the city or town in which the court is located, calculated by measuring the shortest distance from the city or town limits to the county line.",
+            "passageThreshold": "The amendment will take effect if ratified by a majority of the state's voters voting on the amendment as a public question on the ballot at the November 3, 2026, general election.",
+            "vault": {
+              "key": "project/freshness/source/www.in.gov/2026/10/14/ms-01-231f181a659322a0/sha256-a278e775ebefffa8cd17590f433d3e15aff4c37ea57856b673fecfa1fa85cf5e.txt",
+              "byteLength": 1459,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+                "sourceHash": "babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52",
+                "retrievedAt": "2026-10-14T23:53:05.435222+00:00",
+                "publisher": "Indiana Election Division, Office of the Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.in.gov/2026/10/14/ms-01-231f181a659322a0/sha256-babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52.pdf",
+                  "byteLength": 281917,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -7824,13 +7924,117 @@
         "Both public questions link to their official General Assembly resolution pages: Senate Enrolled Joint Resolution 1 (2026) and House Enrolled Joint Resolution 1 (2025). The exact links were read from the Indiana Senate and House Republican Caucuses’ public legislative articles. Both resolution pages returned HTTP 200 with their JavaScript application shell; their full amendment texts are linked and were not extracted.",
         "The official Court of Appeals districts page states: Judges representing the 4th and 5th districts stand for retention statewide. Judges named from these districts stand for retention only in their districts. The county ballot’s Second District retention is outside the requested statewide-office scope and was excluded.",
         "Indiana’s Fall 2026 election reminder states that the federal-only ballot includes only United States Representative. No U.S. Senate contest is on the 2026 general ballot. https://www.in.gov/sos/elections/files/Fall%202026%20Clerks%20Meetings.FINAL.pptx"
+      ],
+      "measureRecords": [
+        {
+          "contestId": "in-ied-2026-public-question-1",
+          "whatItDoes": "SECTION 2. ARTICLE 1, SECTION 17 OF THE CONSTITUTION OF THE STATE OF INDIANA IS AMENDED TO READ AS FOLLOWS: Section 17.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "in-ied-2026-public-question-1#section-1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "SECTION 1. The following proposed amendment to the Constitution of the State of Indiana, which was agreed to by the One Hundred Twenty-Third General Assembly of the State of Indiana and referred to this General Assembly for reconsideration and agreement, is agreed to by this the One Hundred Twenty-Fourth General"
+            },
+            {
+              "id": "in-ied-2026-public-question-1#section-2",
+              "number": "2",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 2",
+              "what": "SECTION 2. ARTICLE 1, SECTION 17 OF THE CONSTITUTION OF THE STATE OF INDIANA IS AMENDED TO READ AS FOLLOWS: Section 17."
+            }
+          ],
+          "sourceUrl": "https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf",
+          "sourceHash": "a7416d80a4e4129c6cc62c2879f136677de5867ac70ed10b3e26f13237851918",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:16:44.882794+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "in-ied-2026-public-question-2",
+          "whatItDoes": "SECTION 2. ARTICLE 6, SECTION 6 OF THE CONSTITUTION OF THE STATE OF INDIANA IS AMENDED TO READ AS FOLLOWS: Section 6. **(a) Except as provided in subsection (b),** all county, township, and town officers, shall reside within their respective counties, townships, and towns;",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "in-ied-2026-public-question-2#section-1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "SECTION 1. The following proposed amendment to the Constitution of the State of Indiana, which was agreed to by the One Hundred Twenty-Third General Assembly of the State of Indiana and referred to this General Assembly for reconsideration and agreement, is agreed to by this the One Hundred Twenty-Fourth General"
+            },
+            {
+              "id": "in-ied-2026-public-question-2#section-2",
+              "number": "2",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 2",
+              "what": "SECTION 2. ARTICLE 6, SECTION 6 OF THE CONSTITUTION OF THE STATE OF INDIANA IS AMENDED TO READ AS FOLLOWS: Section 6. **(a) Except as provided in subsection (b),** all county, township, and town officers, shall reside within their respective counties, townships, and towns;"
+            }
+          ],
+          "sourceUrl": "https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf",
+          "sourceHash": "3da4ea8ef14cc6f2ec420e47e6bfb8b25325ec84f7f35c52053dc48dde126a73",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:16:44.882794+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+          "sourceHash": "babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52",
+          "retrievedAt": "2026-10-14T23:53:05.435222+00:00",
+          "publisher": "Indiana Election Division, Office of the Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.in.gov/2026/10/14/ms-01-231f181a659322a0/sha256-babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52.pdf",
+            "byteLength": 281917,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf",
+          "sourceHash": "4e01184dcce5554b05a20be7b6d29daf8aa4151531ce23aff6e8bef1e27e8083",
+          "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+          "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
+          "vault": {
+            "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-a58920213c17f5af/sha256-4e01184dcce5554b05a20be7b6d29daf8aa4151531ce23aff6e8bef1e27e8083.pdf",
+            "byteLength": 79980,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf",
+          "sourceHash": "152b0e4c41b3fb88055576d3213820ebd98b998a64a79c163d62567db201b224",
+          "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+          "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
+          "vault": {
+            "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-291291a1a9d488ce/sha256-152b0e4c41b3fb88055576d3213820ebd98b998a64a79c163d62567db201b224.pdf",
+            "byteLength": 80959,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:12:24.415652Z",
-    "reviewedBy": "BL-12 official-file conversion",
+    "reviewedAt": "2026-10-15T04:14:39.817961+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
@@ -7852,17 +8056,6 @@
         "publisher": "Indiana Election Division, Office of the Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "august.pdf; exact downloaded bytes converted by convert-in.py",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
-        "finalUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
-        "httpStatus": 200,
-        "rawHash": "babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52",
-        "retrievedAt": "2026-10-14T05:08:08.414229Z",
-        "publisher": "Indiana Election Division, Office of the Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "legislation-2026.pdf; exact downloaded bytes converted by convert-in.py",
         "reviewOutcome": "SUPPORTED"
       },
       {
@@ -7974,6 +8167,48 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "fall-clerks.pptx; exact downloaded bytes converted by convert-in.py",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+        "finalUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+        "httpStatus": 200,
+        "rawHash": "babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52",
+        "retrievedAt": "2026-10-14T23:53:05.435222+00:00",
+        "publisher": "Indiana Election Division, Office of the Secretary of State",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official 2026 election legislation summary; exact per-question explanation, ballot text and passage requirement held in the voter-guide entry."
+      },
+      {
+        "requestedUrl": "https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf",
+        "finalUrl": "https://web.archive.org/web/20260219112358id_/https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf",
+        "httpStatus": 200,
+        "rawHash": "4e01184dcce5554b05a20be7b6d29daf8aa4151531ce23aff6e8bef1e27e8083",
+        "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+        "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete enrolled resolution referenced by content hash in the ballot source documents. Retrieved from the archived official IGA URL at 20260219112358; saved CDX index binds the original .gov URL, PDF MIME type and SHA1 digest to the exact retrieved bytes, and saved response headers identify rel=original plus the original Amazon S3 publication metadata. Both numbered legal sections are held; source bold additions are preserved as **bold text**. The current IGA URL, JS bundle and alternate code routes return a 691-byte HTML shell; API and OpenStates proxy return 403. The archived official text matches the previously held mirror text word for word. The mirror files and references were replaced by this verified original capture."
+      },
+      {
+        "requestedUrl": "https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf",
+        "finalUrl": "https://web.archive.org/web/20261006233731id_/https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf",
+        "httpStatus": 200,
+        "rawHash": "152b0e4c41b3fb88055576d3213820ebd98b998a64a79c163d62567db201b224",
+        "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
+        "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete enrolled resolution referenced by content hash in the ballot source documents. Retrieved from the archived official IGA URL at 20261006233731; saved CDX index binds the original .gov URL, PDF MIME type and SHA1 digest to the exact retrieved bytes, and saved response headers identify rel=original plus the original Amazon S3 publication metadata. Both numbered legal sections are held; source bold additions are preserved as **bold text**. The current IGA URL, JS bundle and alternate code routes return a 691-byte HTML shell; API and OpenStates proxy return 403. The archived official text matches the previously held mirror text word for word. The mirror files and references were replaced by this verified original capture."
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

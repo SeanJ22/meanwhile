@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 
-import type { Candidacy, Contest, Election } from "../lib/ballot/types.ts";
+import type { BallotSet, Candidacy, Contest, Election, MeasureSourceReference } from "../lib/ballot/types.ts";
+import { provisionsForContest } from "../lib/ballot/measure-provisions.ts";
+import { ballotAskInventory, ballotRecordsFor } from "../lib/ask/ballot-inventory.ts";
 import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsOfOffice } from "../lib/ask/ballot-summary.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
@@ -23,6 +26,47 @@ const CONTESTS: Contest[] = [
   contest("p141", "Proposition 141: Prohibit tax; monitoring; vehicle mileage", "ocd-division/country:us/state:az", "MEASURE"),
   contest("p423", "Proposition 423: Vail Unified School District budget override continuation", "ocd-division/country:us/state:az/school_district:vail_unified_district", "MEASURE"),
 ];
+
+test("Ask retrieves compact measure provisions and attributed guide excerpts from vault references", () => {
+  const held = contest("watershed", "Question 1: Watershed restoration", "ocd-division/country:us/state:az", "MEASURE");
+  const source = (text: string, path: string, publisher: string): MeasureSourceReference => {
+    const sourceHash = createHash("sha256").update(text).digest("hex");
+    return { sourceUrl: `https://example.gov/${path}`, sourceHash, publisher, retrievedAt: "2026-10-12T00:00:00Z",
+      vault: { key: `project/freshness/source/example.gov/2026/10/12/ms-01/sha256-${sourceHash}.txt`, byteLength: Buffer.byteLength(text), contentType: "text/plain; charset=utf-8" } };
+  };
+  const provision = "The restoration fund expires on December 31, 2032.";
+  const law = source(`Section 1. ${provision}`, "law.pdf", "State legislature");
+  const summary = "The proposal establishes a temporary watershed restoration fund.";
+  const fiscalImpact = "Annual administration costs are estimated at $240,000.";
+  const passageThreshold = "Approval requires a majority of votes cast on the question.";
+  const argumentsFor = ["Watershed Committee: The dedicated fund supports stream repairs."];
+  const argumentsAgainst = ["Taxpayer Committee: Existing programs should handle stream repairs."];
+  const guide = { ...source([summary, ...argumentsFor, ...argumentsAgainst].join("\n"), "guide.pdf", "State election office"),
+    summary, fiscalImpact, fiscalImpactSource: source(fiscalImpact, "fiscal.pdf", "State fiscal office"),
+    passageThreshold, passageThresholdSource: source(passageThreshold, "vote-rule", "State legislature"), argumentsFor, argumentsAgainst };
+  const set: BallotSet = { election: ELECTION, contests: [held], candidacies: [], absences: [],
+    measures: [{ id: "watershed:question", contestId: held.id, questionText: "Shall the watershed restoration fund be established?",
+      officialStatement: null, officialText: law, voterGuide: guide, provenance: held.provenance }],
+    measureRecords: [{ contestId: held.id, whatItDoes: provision, yesMeans: null, noMeans: null,
+      parts: [{ id: `${held.id}#1`, number: "1", kind: "OFFICIAL_TEXT", label: "Section 1", what: provision }],
+      sourceUrl: law.sourceUrl, sourceHash: law.sourceHash, sourceHashKind: "HELD_TEXT", writtenAt: law.retrievedAt, citation: "measure-source" }] };
+  const subject = ballotAskInventory(set, set.contests).subjects.get(held.id)!;
+  const result = ballotRecordsFor(subject, { set, contests: set.contests, absences: [], measureSummary: () => null,
+    measureProvisions: id => provisionsForContest(id, set.measureRecords) });
+  assert.ok(result.records.every(record => typeof record.text === "string"));
+  assert.equal(result.records.some(record => record.id.endsWith("#full-law") || record.kind === "MEASURE_SUMMARY"), false);
+  assert.equal(result.denominators.provisionsRecorded, 1);
+  assert.equal(result.records.find(record => record.kind === "MEASURE_PROVISION")?.text, `Section 1: ${provision}`);
+  const excerpts = result.records.filter(record => record.kind === "MEASURE_ANALYSIS");
+  assert.deepEqual(excerpts.map(record => [record.text, record.sourceUrl, record.sourceOrg]), [
+    [`Official analysis: ${summary}`, guide.sourceUrl, guide.publisher],
+    [`Fiscal impact: ${fiscalImpact}`, guide.fiscalImpactSource.sourceUrl, guide.fiscalImpactSource.publisher],
+    [`Passage threshold: ${passageThreshold}`, guide.passageThresholdSource.sourceUrl, guide.passageThresholdSource.publisher],
+    [`State-published argument for: ${argumentsFor[0]}`, guide.sourceUrl, guide.publisher],
+    [`State-published argument against: ${argumentsAgainst[0]}`, guide.sourceUrl, guide.publisher],
+  ]);
+  assert.ok(!JSON.stringify(result.records).includes(law.vault.key));
+});
 
 test("the ballot questions are read from their words; an office the table does not hold, or a named person, is not this", () => {
   for (const question of ["What is on my ballot?", "What's on my ballot", "What am I voting on?", "What races are on my ballot?", "What do I vote on?", "Show me my ballot"]) {

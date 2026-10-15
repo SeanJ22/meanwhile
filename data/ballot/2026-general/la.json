@@ -1052,6 +1052,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+            "sourceHash": "34e94203641f04964e7ce011f1817342c83d6ad78ca5b6775c78a72d2beb31ee",
+            "retrievedAt": "2026-10-14T23:52:27.413146+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-0f15c54b626c9f4f/sha256-34e94203641f04964e7ce011f1817342c83d6ad78ca5b6775c78a72d2beb31ee.txt",
+              "byteLength": 6931,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+                "sourceHash": "40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d",
+                "retrievedAt": "2026-10-14T23:52:27.413146+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-0f15c54b626c9f4f/sha256-40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d.pdf",
+                  "byteLength": 58068,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "f31f12c9513d9feaa482e7d064b1609896b18ac43861da8e4915c7b4b870fae2",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Allows a one-time transfer of a property tax exemption for the surviving spouse of a disabled veteran",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471476",
+              "sourceHash": "0de8c4c7b21a84bea82944009c046a6047389705d927e67c5a7c34b6b10fbd4d",
+              "retrievedAt": "2026-10-15T00:10:35.743232+00:00",
+              "publisher": "Louisiana Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-aef10424cb3c854f/sha256-0de8c4c7b21a84bea82944009c046a6047389705d927e67c5a7c34b6b10fbd4d.txt",
+                "byteLength": 6491,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471476",
+                  "sourceHash": "ada396c495677746f3efb2062edfc957aefccb455ed7357d51c4ea1a97267210",
+                  "retrievedAt": "2026-10-15T00:10:35.743232+00:00",
+                  "publisher": "Louisiana Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-aef10424cb3c854f/sha256-ada396c495677746f3efb2062edfc957aefccb455ed7357d51c4ea1a97267210.pdf",
+                    "byteLength": 215071,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "EXPENDITURE EXPLANATION\nThe Secretary of State may incur minimal ballot processing costs associated with this measure. As a regular practice, the\nSecretary of State typically budgets for up to 10 constitutional amendments and statewide propositions for the fall statewide\nelections. To the extent the ballot includes more than 10 constitutional amendments and statewide propositions, the\nSecretary of State may require additional SGF resources for the November 3, 2026, statewide election. Any expenditure\nimpact would be realized in FY 27.\n\nThere is no other anticipated direct material effect on governmental expenditures as a result of this measure. Any\nadministrative workload needed to transfer a small number of existing tax exemptions from one property to another is\nexpected to be minimal.\n\n\n\n\nREVENUE EXPLANATION\nProposed constitutional amendment may result in a decrease in tax revenues to the extent that surviving spouses transfer a\ntax exemption to a new homestead when they would otherwise have lost the tax exemption altogether; however, the\naggregate revenue impact is not expected to be significant.\n\nAccording to data received from the Louisiana Tax Commission, there were 229 surviving spouses claiming the service-\nconnected disability tax exemption in 2025 for a total exempt assessed value of approximately $1.6 M. At the 2025 average\nparish-wide millage of 105 mills, $1.6 M in assessed value equals $168,000 in forgone tax revenue due to the exemption.\nThe portion of these spouses who will purchase a new home and therefore benefit from proposed constitutional amendment\nin any given year is indeterminable but expected to be low, and therefore any tax impacts in the near future are expected to\nbe minimal.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-f31f12c9513d9feaa482e7d064b1609896b18ac43861da8e4915c7b4b870fae2.txt",
+              "byteLength": 3227,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1065,6 +1164,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+            "sourceHash": "a271abc058e6102c0be701d4d76a328760d4c011a0b7d24bed2f8fcf21201a45",
+            "retrievedAt": "2026-10-14T23:52:27.443910+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-748e4aac787c2fcb/sha256-a271abc058e6102c0be701d4d76a328760d4c011a0b7d24bed2f8fcf21201a45.txt",
+              "byteLength": 3894,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+                "sourceHash": "8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb",
+                "retrievedAt": "2026-10-14T23:52:27.443910+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-748e4aac787c2fcb/sha256-8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb.pdf",
+                  "byteLength": 46666,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "4ba30f470066f6824f8646366f197c89f56e2f855f3fb109a49373f7f1016677",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Authorizes a local taxing authority to levy a lower mill- age rate without losing its ability to adjust to the prior year’s max- imum authorized millage rate",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471612",
+              "sourceHash": "0a5596da2281e6e8c3b74cff98b47eb553c152800c513537d713666242fd9ef3",
+              "retrievedAt": "2026-10-15T00:10:35.747950+00:00",
+              "publisher": "Louisiana Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-13284b0b8e148a2a/sha256-0a5596da2281e6e8c3b74cff98b47eb553c152800c513537d713666242fd9ef3.txt",
+                "byteLength": 7406,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471612",
+                  "sourceHash": "fe647e6711c40733a2ab6b1b812fe58f6e42b996ae7aac2a27561e0300c75595",
+                  "retrievedAt": "2026-10-15T00:10:35.747950+00:00",
+                  "publisher": "Louisiana Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-13284b0b8e148a2a/sha256-fe647e6711c40733a2ab6b1b812fe58f6e42b996ae7aac2a27561e0300c75595.pdf",
+                    "byteLength": 229485,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "EXPENDITURE EXPLANATION\nThe Secretary of State may incur minimal ballot processing costs associated with this measure. As a regular practice, the\nSecretary of State typically budgets for up to 10 constitutional amendments and statewide propositions for the fall statewide\nelections. To the extent the ballot includes more than 10 constitutional amendments and statewide propositions, the\nSecretary of State may require additional SGF resources for the November 3, 2026, statewide election. Any expenditure\nimpact would be realized in FY 27. There is no other anticipated impact on governmental expenditures.\nREVENUE EXPLANATION\nProposed constitutional amendment may result in foregone ad valorem tax revenues by allowing taxing authorities to\ncontinue taxing at a lower millage post-reassessment without losing their ability to adjust the millage to a prior maximum at\na later date. However, this will depend on the decision of each taxing authority on whether they defer “rolling forward” their\nmillages for longer due to the proposed constitutional amendment; therefore, the extent of any decrease is indeterminable.\n\nCurrently, after a reassessment, millage rates are subsequently adjusted to keep ad valorem tax revenues from increasing\nor decreasing. If the millage is adjusted downward, the local taxing authority can, by a two-thirds vote and after a public\nhearing, elect to increase (”roll forward”) the millage up to the prior year’s maximum. This allows the local taxing authority\nto capture the revenue associated with the increase in the value of the existing tax base. However, if the taxing authority\ndoes not implement this increase before the next reassessment, then it permanently loses the ability to increase rates to\nthat maximum millage.\n\nBy allowing local taxing authorities to retain the ability to return to a prior year’s maximum millage rate even after the\nfollowing reassessment, they may elect to continue using the lower millage rate for longer, as there would no longer be a\n“use it or lose it” incentive to increase the millage before the next reassessment. However, the extent to which local taxing\nauthorities will defer rolling forward their millages because of proposed constitutional amendment is indeterminable.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-4ba30f470066f6824f8646366f197c89f56e2f855f3fb109a49373f7f1016677.txt",
+              "byteLength": 1874,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1078,6 +1276,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+            "sourceHash": "6dd101ff6654a23d37bb5ff6df892fabb17caf345156f10c7d299a3c612ed34b",
+            "retrievedAt": "2026-10-14T23:52:27.439759+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a70e2dcbd0a4f883/sha256-6dd101ff6654a23d37bb5ff6df892fabb17caf345156f10c7d299a3c612ed34b.txt",
+              "byteLength": 1998,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+                "sourceHash": "a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458",
+                "retrievedAt": "2026-10-14T23:52:27.439759+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a70e2dcbd0a4f883/sha256-a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458.pdf",
+                  "byteLength": 42195,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "164fb4dd64abf9afb5e0ec6aca48b0b9fe236796d33c8818f08e9cbca9b7ecdd",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Prohibits post-conviction bail for a defendant who is convicted of an aggravated offense against a victim who is a minor",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1473181",
+              "sourceHash": "cc2babcdfde8d4603b2cdefc02f84b5d452987107fe64dde0e061b2309487b87",
+              "retrievedAt": "2026-10-15T00:10:35.655137+00:00",
+              "publisher": "Louisiana Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-946e13b540ad7c83/sha256-cc2babcdfde8d4603b2cdefc02f84b5d452987107fe64dde0e061b2309487b87.txt",
+                "byteLength": 5998,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1473181",
+                  "sourceHash": "f12d9b91d456cf2fab0ecba2d2a8fd19eb75821b5decd7d39932ad193fe0116b",
+                  "retrievedAt": "2026-10-15T00:10:35.655137+00:00",
+                  "publisher": "Louisiana Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-946e13b540ad7c83/sha256-f12d9b91d456cf2fab0ecba2d2a8fd19eb75821b5decd7d39932ad193fe0116b.pdf",
+                    "byteLength": 197627,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "EXPENDITURE EXPLANATION\nLocal Sheriffs\nProposed law may result in an indeterminable increase in Local Funds expenditures for local governing authorities, to the\nextent that bail is not allowed for aggravated offenses committed against victims who are minors after conviction. Proposed\nlaw has the effect of eliminating the possibility for offenders charged with aggravated offenses against minors to receive bail,\nwhich will result in those offenders who are convicted being held in the custody of Local Sheriffs in parish jails prior to their\ntransfer to either state facilities or being housed as a state offender in a local jail. The exact fiscal impact is indeterminable,\nbecause it is unknown the number of instances in which offenders will be convicted of aggravated offenses against minors,\nnor how long they will be held in the custody of Local Sheriffs before being transferred.\nSecretary of State\nIn certain circumstances, the Secretary of State may incur minimal ballot processing costs associated with this measure. As\na regular practice, the department budgets for up to 10 constitutional amendments and statewide propositions for the fall\nstatewide elections. To the extent the ballot includes more than 10 constitutional amendments and statewide propositions,\nthe Secretary of State may require additional SGF resources for the 11/03/26 statewide election. Any expenditure impact\nwould be realized in FY 27.\n\nREVENUE EXPLANATION\nThere is no anticipated direct material effect on governmental revenues as a result of this measure.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-164fb4dd64abf9afb5e0ec6aca48b0b9fe236796d33c8818f08e9cbca9b7ecdd.txt",
+              "byteLength": 2463,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1091,6 +1388,80 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+            "sourceHash": "64f5f3db44195469c8ce9acb649c20cd18241bce6c3754e861c5403cb43c7983",
+            "retrievedAt": "2026-10-14T23:52:27.442105+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-6752a659600beb31/sha256-64f5f3db44195469c8ce9acb649c20cd18241bce6c3754e861c5403cb43c7983.txt",
+              "byteLength": 2121,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+                "sourceHash": "f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696",
+                "retrievedAt": "2026-10-14T23:52:27.442105+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-6752a659600beb31/sha256-f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696.pdf",
+                  "byteLength": 42403,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "2b6a5f2c3be094e54a9e0d5ca503f3d893c17bc76ae9bbd332d6807724179135",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Places a lifetime term limit on a person who has served as governor for more than one and one-half terms",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-2b6a5f2c3be094e54a9e0d5ca503f3d893c17bc76ae9bbd332d6807724179135.txt",
+              "byteLength": 702,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1104,6 +1475,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+            "sourceHash": "ba1580242dd439a23f3c323d8220d457d3b8f81fe2edf39ba480995522d0abff",
+            "retrievedAt": "2026-10-14T23:52:27.476289+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a2ad00ae3c196c5b/sha256-ba1580242dd439a23f3c323d8220d457d3b8f81fe2edf39ba480995522d0abff.txt",
+              "byteLength": 3882,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+                "sourceHash": "233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832",
+                "retrievedAt": "2026-10-14T23:52:27.476289+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a2ad00ae3c196c5b/sha256-233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832.pdf",
+                  "byteLength": 47083,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "d15fccc398a27dd2768cce80f337a21dafff1a13388d015efba1c89619232cf7",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Authorizes a state retirement system receiving nonre- curring state monies to apply those monies to any of its outstand- ing unfunded accrued liability (UAL) rather than its oldest UAL first",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1478551",
+              "sourceHash": "fbd143c7df3be51ac093f3bbb93d12f58a477299b04bb648a55574552a7e8dcd",
+              "retrievedAt": "2026-10-15T00:10:35.649783+00:00",
+              "publisher": "Louisiana Legislative Auditor and Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-b441557f8cbb0188/sha256-fbd143c7df3be51ac093f3bbb93d12f58a477299b04bb648a55574552a7e8dcd.txt",
+                "byteLength": 12872,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1478551",
+                  "sourceHash": "e67dc36de74cf4ffe1c6bdb25d7bd0c02c0eff2dd45a31b000962dec7f56918f",
+                  "retrievedAt": "2026-10-15T00:10:35.649783+00:00",
+                  "publisher": "Louisiana Legislative Auditor and Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-b441557f8cbb0188/sha256-e67dc36de74cf4ffe1c6bdb25d7bd0c02c0eff2dd45a31b000962dec7f56918f.pdf",
+                    "byteLength": 250413,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "II. FISCAL IMPACT ON RETIREMENT SYSTEMS\n\nThis section of the actuarial note pertains to annual fiscal costs (savings) associated with the retirement systems.\n\nNonrecurring monies are not anticipated revenue by the retirement systems; therefore the proposed legislation is not expected to have\nany measurable effects on retirement related fiscal costs and revenues during the five-year measurement period\n\n\n                                 III. FISCAL IMPACT ON LOCAL GOVERNMENT ENTITIES\n\nThis section of the actuarial note pertains to annual fiscal costs (savings) related to administrative expenditures and revenue impacts\nincurred by local government entities other than those included in Section II.\n\nN/A – This bill only impacts state government, and therefore, has no local government impact.\n\n\n                                 IV. FISCAL IMPACT ON STATE GOVERNMENT ENTITIES\n                                            (Prepared by Legislative Fiscal Office)\n\nThis section of the actuarial note pertains to annual fiscal costs (savings) related to administrative expenditures and revenue impacts\nincurred by state government entities other than those included in Section II.\n\nFrom time to time, legislation is proposed that has an indirect effect on administrative expenditures and revenues associated with state\ngovernment entities (other than the impact included in Section II). Table [B/C] shows the estimated fiscal administrative cost impact of\nthe proposed legislation on such state government entities. A fiscal cost is denoted by “Increase” or a positive number. Fiscal savings\nare denoted by “Decrease” or a negative number. A revenue increase is denoted by “Increase” or a positive number. A revenue decrease\nis denoted by “Decrease” or a negative number.\n\n                                       Table [A]: Fiscal Costs for State Government Entities\n Expenditures                  2026-27         2027-28            2028-29        2029-30                  2030-31           5-Year Total\n  State General Fund         SEE BELOW $                  0 $              0 $              0         $                0   $            0\n  Agy Self-Generated                    0                 0                0                0                          0                0\n  Stat Deds/Other                       0                 0                0                0                          0                0\n  Federal Funds                         0                 0                0                0                          0                0\n  Local Funds                           0                 0                0                0                          0                0\n  Annual Total              $           0 $               0 $              0 $              0         $                0   $            0\n\n Revenues                       2026-27           2027-28             2028-29           2029-30           2030-31           5-Year Total\n  State General Fund        $             0   $              0    $             0   $             0   $                0   $            0\n  Agy Self-Generated                      0                  0                  0                 0                    0                0\n  Stat Deds/Other                         0                  0                  0                 0                    0                0\n  Federal Funds                           0                  0                  0                 0                    0                0\n  Local Funds                             0                  0                  0                 0                    0                0\n  Annual Total              $             0   $              0    $             0   $             0   $                0   $            0\n\n\n  This Note has been prepared by the Actuary for the Louisiana\n  Legislative Auditor (LLA) with assistance from either the Fiscal Notes\n  staff of the Legislative Auditor or staff of the Legislative Fiscal Office\n  (LFO). The attachment of this Note provides compliance with the\n  requirements of R.S. 24:521 as amended by Act 353 of the 2016                     Kenneth J. “Kenny” Herbold, ASA, EA, MAAA\n  Regular Session.                                                                  Director of Actuarial Services\n                                                                                    Louisiana Legislative Auditor\n\n                                                                 Page 1 of 3\n\f                                                   2026 REGULAR SESSION\n                                                   ACTUARIAL NOTE HB 27\n\n     The proposed legislation will have the following effects on fiscal costs and revenues related to state government entities during\n     the five-year measurement period.\n\n    1.    Expenditures:\n\n          The Secretary of State may incur minimal ballot processing costs associated with this measure. As a regular practice, the\n          Secretary of State typically budgets for up to 10 constitutional amendments and statewide propositions for the fall statewide\n          elections. To the extent that the ballot includes more than 10 constitutional amendments and statewide propositions, the\n          Secretary of State may require additional SGF resources.\n\n          There is no other anticipated direct material effect on state governmental expenditures as a result of this measure.\n\n    2.    Revenues:\n\n          There is no anticipated direct material effect on governmental revenues as a result of this measure",
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-d15fccc398a27dd2768cce80f337a21dafff1a13388d015efba1c89619232cf7.txt",
+              "byteLength": 1138,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1117,6 +1587,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+            "sourceHash": "6adb70100dc25345024cfc5dcde59a9df1a2bacc3e465087072d8edb37455de7",
+            "retrievedAt": "2026-10-14T23:52:27.447115+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-5b4c8dde43383654/sha256-6adb70100dc25345024cfc5dcde59a9df1a2bacc3e465087072d8edb37455de7.txt",
+              "byteLength": 5687,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+                "sourceHash": "61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808",
+                "retrievedAt": "2026-10-14T23:52:27.447115+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-5b4c8dde43383654/sha256-61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808.pdf",
+                  "byteLength": 49318,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "b3d32537f955a76bcfbfb2ab25a8c14ef3daa9773954c84a85c7c9174bc49a9b",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Authorizes extension of an additional property tax ex- emption for owners who are 65 or older",
+            "fiscalImpact": "EXPENDITURE EXPLANATION\nThere may be indeterminable costs to parish assessors to implement a multi-tier tax exemption where qualifying taxpayers transfer to new\ntiers as they age, as this will require updated systems and possible data entry. Nearly 200,000 taxpayers currently claim the special\nassessment level because they are 65 or older, and data they submit on their birthdate will need to be incorporated into calculations to\ndetermine the appropriate additional exemption. The Assessor’s Association reports that costs associated with upgrades to software or\nadditional data entry needed for implementation are indeterminable but likely absorbable for individual assessors’ offices. The LFO\nassumes costs may be significant at the aggregate, statewide level and may begin prior to the implementation date during FY 28.\nREVENUE EXPLANATION\nProposed constitutional amendment will result in an indeterminable but significant decrease in ad valorem tax revenues to local taxing\nauthorities to the extent that the exemptions are approved through local elections. The extent of the decrease will depend on the ages of\nhomeowners subject to the exemption as well as the value of their homes.\n\nCurrently, the homestead exemption provides owner-occupied homes with a tax exemption on the first $7,500 of the assessed value of\ntheir homestead property ($75,000 market value). The table below illustrates the exempt market value of homesteads subject to the\nproposed exemption, other exemptions notwithstanding.\n\n                                                              Additional                      Exempt Market\nAge                                     Homestead             Exemption            Total          Value\nAt least 65 but not yet 69                $7,500                $6,000           $13,500         $135,000\nAt least 69 but not yet 73                $7,500               $12,000           $19,500         $195,000\nAt least 73 but not yet 77                $7,500               $18,000           $25,500         $255,000\nAt least 77 but not yet 81                $7,500               $24,000           $31,500         $315,000\nAt least 81                               $7,500               $30,000           $37,500         $375,000\n\nFor illustrative purposes, a homeowner aged 65 but not yet 69 receiving $6,000 in additional tax exemptions, when multiplied by the 2025\nstatewide average millage of 105 mills, would see a tax reduction of $630 per year. However, they would only receive the full benefit of\nthe tax exemption if their homestead is worth at least $135,000.\n\nAccording to the 2025 Louisiana Tax Commission Annual Report, 184,329 taxpayers received the special assessment level on the basis of\nbeing aged 65 or older in 2025. As an illustrative example, if each of these taxpayers’ homestead properties received only $1,000 in\nadditional tax exemptions above the homestead exemption (i.e., their homesteads are worth $85,000), then at the statewide average\nmillage of 105 mills, the total statewide local revenue loss would equal approximately $19.4 M.\n\nA significant change in local property tax collections may impact the local effort included in the Minimum Foundation Program (MFP)\nformula calculation, but any resulting impacts on state MFP funding allocations are indeterminable.",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1475571",
+              "sourceHash": "e7efc13262cad7df67652e0cc28ad52883f8efde387332caac02a70fadd0ae41",
+              "retrievedAt": "2026-10-15T00:10:35.648571+00:00",
+              "publisher": "Louisiana Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-420f7d6bc946a29e/sha256-e7efc13262cad7df67652e0cc28ad52883f8efde387332caac02a70fadd0ae41.txt",
+                "byteLength": 8618,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1475571",
+                  "sourceHash": "4f92ba828a840c9f2a5c514244d6306397ae07e3d04c91889f51564cf82d0de6",
+                  "retrievedAt": "2026-10-15T00:10:35.648571+00:00",
+                  "publisher": "Louisiana Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-420f7d6bc946a29e/sha256-4f92ba828a840c9f2a5c514244d6306397ae07e3d04c91889f51564cf82d0de6.pdf",
+                    "byteLength": 215832,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-b3d32537f955a76bcfbfb2ab25a8c14ef3daa9773954c84a85c7c9174bc49a9b.txt",
+              "byteLength": 2967,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1130,6 +1699,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+            "sourceHash": "2c4991a47a8777b48e4fe2f3701e2783691735aaf5af44611216b9915c9749db",
+            "retrievedAt": "2026-10-14T23:52:27.517491+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-cdcdd170eb8dc49a/sha256-2c4991a47a8777b48e4fe2f3701e2783691735aaf5af44611216b9915c9749db.txt",
+              "byteLength": 7648,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+                "sourceHash": "585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462",
+                "retrievedAt": "2026-10-14T23:52:27.517491+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-cdcdd170eb8dc49a/sha256-585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462.pdf",
+                  "byteLength": 62071,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "36ccae1b4966fe188ee44463483fb897c7626fb963dc7c27505dc787967b092f",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Authorizes the use of public funds to identify, inven- tory, remove, or replace certain water lines on property owned by utility customers",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1479498",
+              "sourceHash": "ec4d85d352d9281f30370853a67642a88a1c1f3c248889ae702c3083aeae385d",
+              "retrievedAt": "2026-10-15T00:10:35.574706+00:00",
+              "publisher": "Louisiana Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-7385738e92fcc952/sha256-ec4d85d352d9281f30370853a67642a88a1c1f3c248889ae702c3083aeae385d.txt",
+                "byteLength": 5233,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1479498",
+                  "sourceHash": "9cca384fca0dfba5d472f3358cefba8ebd2696318459736e6d324a5dc24ae253",
+                  "retrievedAt": "2026-10-15T00:10:35.574706+00:00",
+                  "publisher": "Louisiana Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-7385738e92fcc952/sha256-9cca384fca0dfba5d472f3358cefba8ebd2696318459736e6d324a5dc24ae253.pdf",
+                    "byteLength": 195801,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "EXPENDITURE EXPLANATION\nProposed constitutional amendment may increase local fund expenditures for political subdivisions. The proposed\nconstitutional amendment provides for the use of public funds by a political subdivision for the purpose of remedying\ndrinking water utility service lines on private property for lines that are made of or affected by hazardous materials. To the\nextent that political subdivisions use public funds to remedy drinking water utility service lines, a corresponding increase in\nexpenditures will occur.\n\nIn certain circumstances, the Secretary of State may incur minimal ballot processing costs associated with this measure. As\na regular practice, the department budgets for up to 10 constitutional amendments and statewide propositions for the fall\nstatewide elections. To the extent the ballot includes more than 10 constitutional amendments and statewide propositions,\nthe Secretary of State may require additional SGF resources for the 11/03/26 statewide election. Any expenditure impact\nwould be realized in FY 27.\n\n\n\n\nREVENUE EXPLANATION\nThere is no anticipated direct material effect on governmental revenues as a result of this measure.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-36ccae1b4966fe188ee44463483fb897c7626fb963dc7c27505dc787967b092f.txt",
+              "byteLength": 1668,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1143,6 +1811,80 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+            "sourceHash": "a70fc5b3283a8d8434e7e0d37ed1615cae614bf78bec02502c536216052f413e",
+            "retrievedAt": "2026-10-14T23:52:27.474268+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-b2f321f7a80dffb3/sha256-a70fc5b3283a8d8434e7e0d37ed1615cae614bf78bec02502c536216052f413e.txt",
+              "byteLength": 2351,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+                "sourceHash": "4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32",
+                "retrievedAt": "2026-10-14T23:52:27.474268+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-b2f321f7a80dffb3/sha256-4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32.pdf",
+                  "byteLength": 43485,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "fe07f5eeb8fd4242b17ae1c64f656899dc13fb44a9612fea3ef0d5a58bcae185",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Prohibits expropriation of property by a foreign adver- sary or an agent of a foreign adversary",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-fe07f5eeb8fd4242b17ae1c64f656899dc13fb44a9612fea3ef0d5a58bcae185.txt",
+              "byteLength": 823,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1156,6 +1898,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+            "sourceHash": "df642e1c1d44184c0ef3e0605c9d23591d12712bb37b3bf86f73ba0d2a125e70",
+            "retrievedAt": "2026-10-14T23:52:27.445236+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-94bf6f4e31c3cbe0/sha256-df642e1c1d44184c0ef3e0605c9d23591d12712bb37b3bf86f73ba0d2a125e70.txt",
+              "byteLength": 4217,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+                "sourceHash": "1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f",
+                "retrievedAt": "2026-10-14T23:52:27.445236+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-94bf6f4e31c3cbe0/sha256-1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f.pdf",
+                  "byteLength": 47156,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "a05cca4da60ad6b638ab086e700b41b6f1565b343363f88fba0f3ddd7154d4da",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Increases the income limit for qualifying for the special property tax assessment level from $100,000, to be adjusted an- nually for inflation beginning in 2026, to $150,000, to be adjusted annually for inflation beginning in 2028",
+            "fiscalImpact": "EXPENDITURE EXPLANATION\nThere is no anticipated direct material effect on governmental expenditures as a result of this measure. It is expected by\nLFO, though not verified by response, that removing the income limit for the AVT special assessment will require local tax\nsystem adjustments that are closely related to the existing special assessment with minimal resources required. The\nDepartment of State may incur minimal ballot processing costs associated with this measure. Any expenditure impact would\nbe realized in FY 26.\nREVENUE EXPLANATION\nThe bill increases the eligibility pool for the special assessment to include all properties receiving the homestead exemption\nowned and occupied by those who qualify under the stated criteria (65+, veterans with a service-related disability of 50% or\nmore, members (spouses) of armed forces or national guard killed in action, missing in action or prisoner of war, and the\npermanently and totally disabled) and with federal adjusted gross income less than $150,000 per year, growing by inflation\nbeginning in tax year 2028. The current law income limit is $100,000 growing by inflation beginning with tax year 2026. As\nincome data related to property ownership is not readily available, the magnitude of the repeal of the income requirement\ncannot be determined. However, the bill can only serve to decrease ad valorem tax revenue collections as a significant\nnumber of properties immediately become eligible for the special assessment on Tax Year 2027 bills and will forgo any\nincreases in assessed value in the future. Local revenue will decrease for any entity funded by a millage or fee that is\ncharged against a special assessment property as the bill prohibits a millage adjustment to accommodate the lower\nassessments in the bill (although this assessment freeze will presumably be automatically rolled into quadrennial\nreassessment year adjustments).\n\nThe 2024 Tax Commission Annual Report identifies 422,344 properties currently receiving these special assessments\nstatewide. Tax Year 2024 was a quadrennial reassessment year so the next major impact from the bill would be expected\nwith Tax Year 2028 payments, which is also the date that the inflation adjustment to the income limit will begin.\n\nA significant change in local property tax collections could impact the local effort included in the MFP calculation, which in\nturn could impact SGF, depending on the local taxing structure.",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1423903",
+              "sourceHash": "1c42987bad300f67bc8d71c801890a7e9c59f959f6ce84cd1e3ccb3bd987815b",
+              "retrievedAt": "2026-10-15T00:10:35.742983+00:00",
+              "publisher": "Louisiana Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-bc521ecc90d942af/sha256-1c42987bad300f67bc8d71c801890a7e9c59f959f6ce84cd1e3ccb3bd987815b.txt",
+                "byteLength": 7548,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1423903",
+                  "sourceHash": "e61b84d374032ad6d58439ec8364e3816c9d75599ec898aacb0821ea0c3748a3",
+                  "retrievedAt": "2026-10-15T00:10:35.742983+00:00",
+                  "publisher": "Louisiana Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-bc521ecc90d942af/sha256-e61b84d374032ad6d58439ec8364e3816c9d75599ec898aacb0821ea0c3748a3.pdf",
+                    "byteLength": 212892,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-a05cca4da60ad6b638ab086e700b41b6f1565b343363f88fba0f3ddd7154d4da.txt",
+              "byteLength": 3044,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1169,6 +2010,105 @@
             "sourceOrg": "Louisiana Secretary of State",
             "collectedAt": "2026-10-14T05:06:22.400Z",
             "verifiedAt": "2026-10-14T05:06:22.400Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+            "sourceHash": "be5c3a30774e90496650d83e3b8fb247279b8e124e89b363759c432dbdaf722f",
+            "retrievedAt": "2026-10-14T23:52:27.496728+00:00",
+            "publisher": "Louisiana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-86ba7dd819d97c59/sha256-be5c3a30774e90496650d83e3b8fb247279b8e124e89b363759c432dbdaf722f.txt",
+              "byteLength": 3037,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+                "sourceHash": "9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138",
+                "retrievedAt": "2026-10-14T23:52:27.496728+00:00",
+                "publisher": "Louisiana Legislature",
+                "vault": {
+                  "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-86ba7dd819d97c59/sha256-9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138.pdf",
+                  "byteLength": 44369,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+            "sourceHash": "ab3081fb36e489dfef2c4158657de9d572f6cf0fd63c123185ee3ae104abeab5",
+            "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+            "publisher": "Louisiana Legislature, published by the Louisiana Secretary of State",
+            "summary": "Authorizes an exemption from property taxes for blight- ed or derelict property that has been rehabilitated and requires the legislature to enact laws relative to implementation and adminis- tration of the exemption",
+            "passageThreshold": "If a majority of the electors voting on the proposed amendment approve it, the governor shall proclaim its adoption, and it shall become part of this constitution, effective twenty days after the proclamation, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+              "sourceHash": "731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39",
+              "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+              "publisher": "Louisiana Legislature",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-731b47399191fd17584bce01c129fe49a9a95ea009d4bf6e419242c903f4ed39.txt",
+                "byteLength": 3792,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+                  "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+                  "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+                  "publisher": "Louisiana Legislature and Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+                    "byteLength": 32678,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1474951",
+              "sourceHash": "788b5f57e0fa1cd7141929b31816eb88be2c464e4c45c07ebf76e2f6fe3fdfbc",
+              "retrievedAt": "2026-10-15T00:10:35.643639+00:00",
+              "publisher": "Louisiana Legislative Fiscal Office",
+              "vault": {
+                "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-6d0b68a8f4da28b4/sha256-788b5f57e0fa1cd7141929b31816eb88be2c464e4c45c07ebf76e2f6fe3fdfbc.txt",
+                "byteLength": 6426,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1474951",
+                  "sourceHash": "7c89405e1e7c73f2ad8261d54a3ab54f7da05e35f1a343ebaa3c037a47599444",
+                  "retrievedAt": "2026-10-15T00:10:35.643639+00:00",
+                  "publisher": "Louisiana Legislative Fiscal Office",
+                  "vault": {
+                    "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-6d0b68a8f4da28b4/sha256-7c89405e1e7c73f2ad8261d54a3ab54f7da05e35f1a343ebaa3c037a47599444.pdf",
+                    "byteLength": 210288,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "EXPENDITURE EXPLANATION\nThere is no anticipated direct material effect on governmental expenditures as a result of this measure. Implementation of\nthe exemption will require local tax system adjustments for processing the new exemption, but the cost is not expected to\nbe significant.\n\n\n\nREVENUE EXPLANATION\nThe impact of the proposed exemption on local property tax revenues is indeterminable and will depend on the extent to\nwhich parishes adopt the exemption, the extent to which the proposed exemption causes an increase in rehabilitation of\nblighted or derelict property, and the magnitude of the subsequent change in property values following rehabilitation.\n\nThe proposed constitutional amendment does not specify the amount or duration of the exemption; instead, it provides that\nthe legislature shall establish the term of the exemption and the conditions, requirements, and procedures necessary for a\npolitical subdivision to administer the exemption. Because blighted and derelict property values are generally low, revenue\nimpacts would be felt primarily in the form of foregone revenue on the increase in property values pursuant to rehabilitation.\n\nNote that the Louisiana constitution requires parish assessors to reappraise and value property at least every four years, and\nmillages are subsequently adjusted to maintain tax revenues consistent with the prior year despite changes to the tax base.\nIf a parish assessor were to reappraise and value property upon implementation of this exemption, and millages were\nsubsequently adjusted upward, the revenue impacts of the exemption would be borne by the taxpayers rather than being\nabsorbed by the taxing authority.\n\nA significant change in local property tax collections may impact the local effort included in the Minimum Foundation\nProgram (MFP) formula calculation, but any resulting impacts on state MFP funding allocations are indeterminable.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-ab3081fb36e489dfef2c4158657de9d572f6cf0fd63c123185ee3ae104abeab5.txt",
+              "byteLength": 1446,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+                "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+                "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+                "publisher": "Louisiana Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+                  "byteLength": 554843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -1177,13 +2117,695 @@
         "The Secretary of State labels November 3 as U.S. Senate General/Open U.S. Representative Primary/Open Primary Election. U.S. House races are open primaries, with a December 12 general election if necessary.",
         "The public November 3 candidate inquiry lists U.S. Senate, all six U.S. House districts and State Representative District 92. The captured inquiry does not state that this is a certified candidate list; certification status remains unconfirmed.",
         "Regional Supreme Court, Public Service Commission, BESE and local judicial offices listed by the office selector are outside this statewide/federal/legislative projection."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "la-sos-2026-amendment-1",
+          "whatItDoes": "2026 Regular Session\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1. Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state, for\ntheir approval or rejection in the manner provided by law, a proposal to amend Article VII,"
+            },
+            {
+              "id": "la-sos-2026-amendment-1#section-2",
+              "number": "21",
+              "kind": "PROGRAM",
+              "label": "Section 21.",
+              "what": "Section 21. In addition to the homestead exemption provided for in Section\n20 of this Article, the following property and no other shall be exempt from ad\nvalorem taxation:\n*          *          *\n(K)(1)(a) In addition to the homestead exemption authorized pursuant to the"
+            },
+            {
+              "id": "la-sos-2026-amendment-1#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. Be it further resolved that the provisions of this amendment shall become\neffective January 1, 2027, and shall apply to all taxable years beginning on January 1, 2027."
+            },
+            {
+              "id": "la-sos-2026-amendment-1#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3. Be it further resolved that this proposed amendment shall be submitted to\nthe electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-1#section-5",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4. Be it further resolved that on the official ballot to be used at said election\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+          "sourceHash": "34e94203641f04964e7ce011f1817342c83d6ad78ca5b6775c78a72d2beb31ee",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.413146+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-2",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to"
+            },
+            {
+              "id": "la-sos-2026-amendment-2#section-2",
+              "number": "23",
+              "kind": "PROGRAM",
+              "label": "Section 23.",
+              "what": "Section 23.\n*          *          *\n(C)  Increases Permitted.  Nothing herein shall prohibit a taxing authority\nfrom collecting, in the year in which Sections 18 and 20 of this Article are\nimplemented or in any subsequent year, a larger dollar amount of ad valorem taxes"
+            },
+            {
+              "id": "la-sos-2026-amendment-2#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. Be it further resolved that the provisions of the amendment contained in\nthis Joint Resolution shall become effective January 1, 2027, and shall be applicable to all\ntaxable years beginning on or after January 1, 2027."
+            },
+            {
+              "id": "la-sos-2026-amendment-2#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-2#section-5",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+          "sourceHash": "a271abc058e6102c0be701d4d76a328760d4c011a0b7d24bed2f8fcf21201a45",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.443910+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-3",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-3#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to add"
+            },
+            {
+              "id": "la-sos-2026-amendment-3#section-2",
+              "number": "18",
+              "kind": "PROGRAM",
+              "label": "Section 18.",
+              "what": "Section 18.\n*          *          *\n(C)  However, after conviction, a person shall not be bailable if the offense\nis an aggravated offense as defined by R.S. 15:541 that is committed against a victim\nwho is a minor."
+            },
+            {
+              "id": "la-sos-2026-amendment-3#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-3#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:\nPage 1 of 2"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+          "sourceHash": "6dd101ff6654a23d37bb5ff6df892fabb17caf345156f10c7d299a3c612ed34b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.439759+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-4",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-4#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to"
+            },
+            {
+              "id": "la-sos-2026-amendment-4#section-2",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.\n*          *          *\n(B)  Limitation on Governor.  A person who has served as governor for more\nthan one and one-half terms <del>in two consecutive terms</del> shall not be elected governor\n<del>for the succeeding term</del>.\n*          *          *"
+            },
+            {
+              "id": "la-sos-2026-amendment-4#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-4#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:\nPage 1 of 2"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+          "sourceHash": "64f5f3db44195469c8ce9acb649c20cd18241bce6c3754e861c5403cb43c7983",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.442105+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-5",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-5#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to"
+            },
+            {
+              "id": "la-sos-2026-amendment-5#section-2",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "Section 10.",
+              "what": "Section 10.\n*          *          *\n(D)  Appropriations.\n*          *          *\n(2)  Except as otherwise provided in this constitution, the appropriation or\nallocation of any money designated in the official forecast as nonrecurring shall be\nmade only for the following purposes:\n*          *          *\n(b)"
+            },
+            {
+              "id": "la-sos-2026-amendment-5#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026.\nPage 2 of 3\nCODING:  Words in <del>struck through</del> type are deletions from existing law; words underscored\nare additions.\n\nHB NO."
+            },
+            {
+              "id": "la-sos-2026-amendment-5#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+          "sourceHash": "ba1580242dd439a23f3c323d8220d457d3b8f81fe2edf39ba480995522d0abff",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.476289+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-6",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-6#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to add"
+            },
+            {
+              "id": "la-sos-2026-amendment-6#section-2",
+              "number": "21",
+              "kind": "PROGRAM",
+              "label": "Section 21.",
+              "what": "Section 21.  In addition to the homestead exemption provided for in Section\n20 of this Article, the following property and no other shall be exempt from ad\nvalorem taxation:\n*          *          *\n(P)(1) In addition to the homestead exemption authorized pursuant to the"
+            },
+            {
+              "id": "la-sos-2026-amendment-6#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. Be it further resolved that the provisions of the amendment contained in\nthis Joint Resolution shall become effective January 1, 2028, and shall be applicable to all\ntax years beginning on or after January 1, 2028."
+            },
+            {
+              "id": "la-sos-2026-amendment-6#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-6#section-5",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+          "sourceHash": "6adb70100dc25345024cfc5dcde59a9df1a2bacc3e465087072d8edb37455de7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.447115+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-7",
+          "whatItDoes": "2026 Regular Session\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-7#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1. Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state, for\ntheir approval or rejection in the manner provided by law, a proposal to amend Article VII,"
+            },
+            {
+              "id": "la-sos-2026-amendment-7#section-2",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "Section 14.",
+              "what": "Section 14.(A)\n*          *          *\n(B) Authorized Uses. Nothing in this Section shall prevent (1) the use of\npublic funds for programs of social welfare for the aid and support of the needy; (2)\ncontributions of public funds to pension and insurance programs for the benefit of\npublic employees;"
+            },
+            {
+              "id": "la-sos-2026-amendment-7#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. Be it further resolved that this proposed amendment shall be submitted to\nthe electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-7#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3. Be it further resolved that on the official ballot to be used at said election\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:\nPage 3 of 4"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+          "sourceHash": "2c4991a47a8777b48e4fe2f3701e2783691735aaf5af44611216b9915c9749db",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.517491+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-8",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-8#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to"
+            },
+            {
+              "id": "la-sos-2026-amendment-8#section-2",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4.\n*          *          *\n(B)\n*          *          *\n(4)  Property shall not be taken or damaged by any private entity authorized\nby law to expropriate, except for a public and necessary purpose and with just\ncompensation paid to the owner; in such proceedings, whether the purpose is public"
+            },
+            {
+              "id": "la-sos-2026-amendment-8#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026.\nPage 1 of 2\nCODING:  Words in <del>struck through</del> type are deletions from existing law; words underscored\nare additions.\n\nHB NO."
+            },
+            {
+              "id": "la-sos-2026-amendment-8#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+          "sourceHash": "a70fc5b3283a8d8434e7e0d37ed1615cae614bf78bec02502c536216052f413e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.474268+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-9",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-9#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to"
+            },
+            {
+              "id": "la-sos-2026-amendment-9#section-2",
+              "number": "18",
+              "kind": "PROGRAM",
+              "label": "Section 18.",
+              "what": "Section 18.\n*          *          *\n(G)  Special Assessment Level.\n(1)(a)\n*          *          *\n(ii)  Any person or persons shall be prohibited from receiving the special\nassessment as provided in this Section if such person's or persons' adjusted gross"
+            },
+            {
+              "id": "la-sos-2026-amendment-9#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2.  Be it further resolved that the provisions of the amendment contained in\nthis Joint Resolution shall become effective on January 1, 2027, and shall be applicable to\nall tax years beginning on or after January 1, 2027."
+            },
+            {
+              "id": "la-sos-2026-amendment-9#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-9#section-5",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:\nPage 2 of 3"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+          "sourceHash": "df642e1c1d44184c0ef3e0605c9d23591d12712bb37b3bf86f73ba0d2a125e70",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.445236+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "la-sos-2026-amendment-10",
+          "whatItDoes": "ENROLLED\nACT No.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "la-sos-2026-amendment-10#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1.  Be it resolved by the Legislature of Louisiana, two-thirds of the members\nelected to each house concurring, that there shall be submitted to the electors of the state of\nLouisiana, for their approval or rejection in the manner provided by law, a proposal to add"
+            },
+            {
+              "id": "la-sos-2026-amendment-10#section-2",
+              "number": "21",
+              "kind": "PROGRAM",
+              "label": "Section 21.",
+              "what": "Section 21. In addition to the homestead exemption provided for in Section\n20 of this Article, the following property and no other shall be exempt from ad\nvalorem taxation:\n*          *          *\n(P)  There shall be an optional ad valorem tax exemption for blighted or\nderelict property that has been rehabilitated."
+            },
+            {
+              "id": "la-sos-2026-amendment-10#section-3",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2.  Be it further resolved that the provisions of the amendment contained in\nthis Joint Resolution shall become effective on January 1, 2027, and apply to tax years\nbeginning on or after January 1, 2027."
+            },
+            {
+              "id": "la-sos-2026-amendment-10#section-4",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3.  Be it further resolved that this proposed amendment shall be submitted\nto the electors of the state of Louisiana at the statewide election to be held on November 3,\n2026."
+            },
+            {
+              "id": "la-sos-2026-amendment-10#section-5",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4.  Be it further resolved that on the official ballot to be used at the election,\nthere shall be printed a proposition, upon which the electors of the state shall be permitted\nto vote YES or NO, to amend the Constitution of Louisiana, which proposition shall read as\nfollows:"
+            }
+          ],
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+          "sourceHash": "be5c3a30774e90496650d83e3b8fb247279b8e124e89b363759c432dbdaf722f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.496728+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1474951",
+          "sourceHash": "7c89405e1e7c73f2ad8261d54a3ab54f7da05e35f1a343ebaa3c037a47599444",
+          "retrievedAt": "2026-10-15T00:10:35.643639+00:00",
+          "publisher": "Louisiana Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-6d0b68a8f4da28b4/sha256-7c89405e1e7c73f2ad8261d54a3ab54f7da05e35f1a343ebaa3c037a47599444.pdf",
+            "byteLength": 210288,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1478551",
+          "sourceHash": "e67dc36de74cf4ffe1c6bdb25d7bd0c02c0eff2dd45a31b000962dec7f56918f",
+          "retrievedAt": "2026-10-15T00:10:35.649783+00:00",
+          "publisher": "Louisiana Legislative Auditor and Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-b441557f8cbb0188/sha256-e67dc36de74cf4ffe1c6bdb25d7bd0c02c0eff2dd45a31b000962dec7f56918f.pdf",
+            "byteLength": 250413,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1423903",
+          "sourceHash": "e61b84d374032ad6d58439ec8364e3816c9d75599ec898aacb0821ea0c3748a3",
+          "retrievedAt": "2026-10-15T00:10:35.742983+00:00",
+          "publisher": "Louisiana Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-bc521ecc90d942af/sha256-e61b84d374032ad6d58439ec8364e3816c9d75599ec898aacb0821ea0c3748a3.pdf",
+            "byteLength": 212892,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1473181",
+          "sourceHash": "f12d9b91d456cf2fab0ecba2d2a8fd19eb75821b5decd7d39932ad193fe0116b",
+          "retrievedAt": "2026-10-15T00:10:35.655137+00:00",
+          "publisher": "Louisiana Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-946e13b540ad7c83/sha256-f12d9b91d456cf2fab0ecba2d2a8fd19eb75821b5decd7d39932ad193fe0116b.pdf",
+            "byteLength": 197627,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1475571",
+          "sourceHash": "4f92ba828a840c9f2a5c514244d6306397ae07e3d04c91889f51564cf82d0de6",
+          "retrievedAt": "2026-10-15T00:10:35.648571+00:00",
+          "publisher": "Louisiana Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-420f7d6bc946a29e/sha256-4f92ba828a840c9f2a5c514244d6306397ae07e3d04c91889f51564cf82d0de6.pdf",
+            "byteLength": 215832,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471612",
+          "sourceHash": "fe647e6711c40733a2ab6b1b812fe58f6e42b996ae7aac2a27561e0300c75595",
+          "retrievedAt": "2026-10-15T00:10:35.747950+00:00",
+          "publisher": "Louisiana Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-13284b0b8e148a2a/sha256-fe647e6711c40733a2ab6b1b812fe58f6e42b996ae7aac2a27561e0300c75595.pdf",
+            "byteLength": 229485,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471476",
+          "sourceHash": "ada396c495677746f3efb2062edfc957aefccb455ed7357d51c4ea1a97267210",
+          "retrievedAt": "2026-10-15T00:10:35.743232+00:00",
+          "publisher": "Louisiana Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-aef10424cb3c854f/sha256-ada396c495677746f3efb2062edfc957aefccb455ed7357d51c4ea1a97267210.pdf",
+            "byteLength": 215071,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1479498",
+          "sourceHash": "9cca384fca0dfba5d472f3358cefba8ebd2696318459736e6d324a5dc24ae253",
+          "retrievedAt": "2026-10-15T00:10:35.574706+00:00",
+          "publisher": "Louisiana Legislative Fiscal Office",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-7385738e92fcc952/sha256-9cca384fca0dfba5d472f3358cefba8ebd2696318459736e6d324a5dc24ae253.pdf",
+            "byteLength": 195801,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+          "sourceHash": "40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d",
+          "retrievedAt": "2026-10-14T23:52:27.413146+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-0f15c54b626c9f4f/sha256-40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d.pdf",
+            "byteLength": 58068,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+          "sourceHash": "9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138",
+          "retrievedAt": "2026-10-14T23:52:27.496728+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-86ba7dd819d97c59/sha256-9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138.pdf",
+            "byteLength": 44369,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+          "sourceHash": "8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb",
+          "retrievedAt": "2026-10-14T23:52:27.443910+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-748e4aac787c2fcb/sha256-8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb.pdf",
+            "byteLength": 46666,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+          "sourceHash": "a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458",
+          "retrievedAt": "2026-10-14T23:52:27.439759+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a70e2dcbd0a4f883/sha256-a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458.pdf",
+            "byteLength": 42195,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+          "sourceHash": "f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696",
+          "retrievedAt": "2026-10-14T23:52:27.442105+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-6752a659600beb31/sha256-f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696.pdf",
+            "byteLength": 42403,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+          "sourceHash": "233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832",
+          "retrievedAt": "2026-10-14T23:52:27.476289+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a2ad00ae3c196c5b/sha256-233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832.pdf",
+            "byteLength": 47083,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+          "sourceHash": "61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808",
+          "retrievedAt": "2026-10-14T23:52:27.447115+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-5b4c8dde43383654/sha256-61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808.pdf",
+            "byteLength": 49318,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+          "sourceHash": "585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462",
+          "retrievedAt": "2026-10-14T23:52:27.517491+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-cdcdd170eb8dc49a/sha256-585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462.pdf",
+            "byteLength": 62071,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+          "sourceHash": "4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32",
+          "retrievedAt": "2026-10-14T23:52:27.474268+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-b2f321f7a80dffb3/sha256-4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32.pdf",
+            "byteLength": 43485,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+          "sourceHash": "1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f",
+          "retrievedAt": "2026-10-14T23:52:27.445236+00:00",
+          "publisher": "Louisiana Legislature",
+          "vault": {
+            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-94bf6f4e31c3cbe0/sha256-1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f.pdf",
+            "byteLength": 47156,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+          "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+          "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+          "publisher": "Louisiana Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
+            "byteLength": 554843,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+          "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+          "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+          "publisher": "Louisiana Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
+            "byteLength": 32678,
+            "contentType": "text/html"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:23:06.166Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-15T04:14:39.834431+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -1203,106 +2825,6 @@
         "rawHash": "cc60d4aac717bb761819109191482625168d78333abf27d69a95f9a8e68d954e",
         "retrievedAt": "2026-10-14T05:06:22.400Z",
         "publisher": "Louisiana Secretary of State",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
-        "httpStatus": 200,
-        "rawHash": "40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d",
-        "retrievedAt": "2026-10-14T05:11:41.754Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
-        "httpStatus": 200,
-        "rawHash": "8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb",
-        "retrievedAt": "2026-10-14T05:11:41.796Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
-        "httpStatus": 200,
-        "rawHash": "a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458",
-        "retrievedAt": "2026-10-14T05:11:41.753Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
-        "httpStatus": 200,
-        "rawHash": "f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696",
-        "retrievedAt": "2026-10-14T05:11:41.765Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
-        "httpStatus": 200,
-        "rawHash": "233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832",
-        "retrievedAt": "2026-10-14T05:11:41.765Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
-        "httpStatus": 200,
-        "rawHash": "61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808",
-        "retrievedAt": "2026-10-14T05:11:41.898Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
-        "httpStatus": 200,
-        "rawHash": "585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462",
-        "retrievedAt": "2026-10-14T05:11:41.901Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
-        "httpStatus": 200,
-        "rawHash": "4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32",
-        "retrievedAt": "2026-10-14T05:11:41.935Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
-        "httpStatus": 200,
-        "rawHash": "1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f",
-        "retrievedAt": "2026-10-14T05:11:41.898Z",
-        "publisher": "Louisiana Legislature",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
-        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
-        "httpStatus": 200,
-        "rawHash": "9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138",
-        "retrievedAt": "2026-10-14T05:11:41.857Z",
-        "publisher": "Louisiana Legislature",
         "reviewedEvidence": "Official election publication converted from the captured response bytes."
       },
       {
@@ -1344,6 +2866,236 @@
         "retrievedAt": "2026-10-14T05:11:42.158Z",
         "publisher": "Louisiana Secretary of State",
         "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.413146+00:00",
+        "rawHash": "40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.496728+00:00",
+        "rawHash": "9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.443910+00:00",
+        "rawHash": "8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.439759+00:00",
+        "rawHash": "a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.442105+00:00",
+        "rawHash": "f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.476289+00:00",
+        "rawHash": "233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.447115+00:00",
+        "rawHash": "61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.517491+00:00",
+        "rawHash": "585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.474268+00:00",
+        "rawHash": "4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+        "finalUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.445236+00:00",
+        "rawHash": "1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f",
+        "publisher": "Louisiana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+        "finalUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
+        "rawHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
+        "publisher": "Louisiana Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+        "finalUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
+        "rawHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
+        "publisher": "Louisiana Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471476",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471476",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.743232+00:00",
+        "rawHash": "ada396c495677746f3efb2062edfc957aefccb455ed7357d51c4ea1a97267210",
+        "publisher": "Louisiana Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471612",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471612",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.747950+00:00",
+        "rawHash": "fe647e6711c40733a2ab6b1b812fe58f6e42b996ae7aac2a27561e0300c75595",
+        "publisher": "Louisiana Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1473181",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1473181",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.655137+00:00",
+        "rawHash": "f12d9b91d456cf2fab0ecba2d2a8fd19eb75821b5decd7d39932ad193fe0116b",
+        "publisher": "Louisiana Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1478551",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1478551",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.649783+00:00",
+        "rawHash": "e67dc36de74cf4ffe1c6bdb25d7bd0c02c0eff2dd45a31b000962dec7f56918f",
+        "publisher": "Louisiana Legislative Auditor and Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1475571",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1475571",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.648571+00:00",
+        "rawHash": "4f92ba828a840c9f2a5c514244d6306397ae07e3d04c91889f51564cf82d0de6",
+        "publisher": "Louisiana Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1479498",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1479498",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.574706+00:00",
+        "rawHash": "9cca384fca0dfba5d472f3358cefba8ebd2696318459736e6d324a5dc24ae253",
+        "publisher": "Louisiana Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1423903",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1423903",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.742983+00:00",
+        "rawHash": "e61b84d374032ad6d58439ec8364e3816c9d75599ec898aacb0821ea0c3748a3",
+        "publisher": "Louisiana Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1474951",
+        "finalUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1474951",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:10:35.643639+00:00",
+        "rawHash": "7c89405e1e7c73f2ad8261d54a3ab54f7da05e35f1a343ebaa3c037a47599444",
+        "publisher": "Louisiana Legislative Fiscal Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

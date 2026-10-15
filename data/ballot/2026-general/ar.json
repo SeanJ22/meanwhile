@@ -1004,6 +1004,62 @@
             "collectedAt": "2026-10-14T05:00:26.924395Z",
             "verifiedAt": "2026-10-14T05:00:26.924395Z",
             "quote": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO CREATE \"THE CITIZENS ONLY VOTING AMENDMENT\"; TO PROVIDE THAT ONLY A CITIZEN OF THE UNITED STATES MEETING THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION MAY VOTE IN AN ELECTION IN THIS STATE; AND PROVIDING THAT A PERSON WHO DOES NOT MEET THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION SHALL NOT BE PERMITTED TO VOTE IN ANY STATE OR LOCAL ELECTION HELD IN THIS STATE."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+            "sourceHash": "5a0acb92d0567ce82e66b4c2316a8dc0af423d2d6e9c4b1ef1f780f7c3085dee",
+            "retrievedAt": "2026-10-14T23:52:26.882839+00:00",
+            "publisher": "Arkansas Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-f051c2ca5bbbea3a/sha256-5a0acb92d0567ce82e66b4c2316a8dc0af423d2d6e9c4b1ef1f780f7c3085dee.txt",
+              "byteLength": 4892,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+                "sourceHash": "a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e",
+                "retrievedAt": "2026-10-14T23:52:26.882839+00:00",
+                "publisher": "Arkansas Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-f051c2ca5bbbea3a/sha256-a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e.pdf",
+                  "byteLength": 127809,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+            "sourceHash": "318982a4b043a6640a904abc810c6ddd5e3d74d7bb8ac5248e0bc37459afcfa4",
+            "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+            "publisher": "University of Arkansas System Division of Agriculture, Public Policy Center",
+            "summary": "Issue 1 proposes changing the existing wording in Article 3 of the Arkansas Constitution about who can vote in Arkansas elections and adding specific language that people who don’t meet the criteria, specifically noncitizens, cannot vote in local and state elections.",
+            "argumentsFor": [
+              "• Whether you say, ‘every citizen, any citizen or all citizens,’ none of those phrases are sufficient because they constitute a floor rather than a ceiling. A floor says that any citizens can vote but leaves room as we have discovered in other states for other people to be added to that list. By moving to only-citizen language we’re setting a ceiling for eligibility that only citizens may vote and nobody else. That’s exclusive, unambiguous and absolute. • We all have voters in our districts and across the state who are concerned about the crisis of illegal immigration and they want us to do something about it. • Major American cities have taken steps to allow for noncitizens to legally cast ballots in their elections. Even though cities in Arkansas have not yet taken that step, it is much easier to address before that happens here. • Simply put, the future of American government should be decided by Americans, rather than by allowing legalized noncitizen voting, which would dilute the voting power of American citizens."
+            ],
+            "argumentsAgainst": [
+              "• The Arkansas Constitution already restricts the right to vote to U.S. citizens who are residents of Arkansas. The amendment changes a few words but makes no substantive changes. So why propose the amendment at all? • If voters approve the proposed amendment, the General Assembly could use the amendment as the impetus to pass new restrictive proof of citizenship legislation in 2027, establishing requirements that many qualified voters could not meet. • Since 1920, the Arkansas Constitution has restricted the right to vote to U.S. citizens who are residents of Arkansas. The amendment changes a few words but makes no substantive changes. A months-long investigation by election officials on whether non-citizens were illegally voting in Arkansas found they were not. Immigrants will not vote if they are not citizens and risk future citizenship, prison or deportation. • This amendment sends the message to immigrants that they do not belong. Its presence on the ballot is a waste of time and tax payer dollars."
+            ],
+            "passageThreshold": "Amending the state constitution requires the approval of a majority of voters in a statewide election.",
+            "vault": {
+              "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-318982a4b043a6640a904abc810c6ddd5e3d74d7bb8ac5248e0bc37459afcfa4.txt",
+              "byteLength": 15798,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+                "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+                "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+                "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+                "vault": {
+                  "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
+                  "byteLength": 2699601,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1018,6 +1074,86 @@
             "collectedAt": "2026-10-14T05:00:27.039040Z",
             "verifiedAt": "2026-10-14T05:00:27.039040Z",
             "quote": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO PROVIDE THAT THE CITIZENS OF THE STATE OF ARKANSAS SHALL HAVE THE RIGHT TO KEEP AND BEAR ARMS FOR THEIR COMMON DEFENSE, FOR LAWFUL HUNTING AND RECREATIONAL USE, AND FOR ANY OTHER LAWFUL PURPOSE; PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS INCLUDES WITHOUT LIMITATION THE POSSESSION AND USE OF AMMUNITION, FIREARM ACCESSORIES, AND FIREARM COMPONENTS; AND PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS IS A NATURAL, FUNDAMENTAL, AND INDIVIDUAL RIGHT THAT SHALL NOT BE INFRINGED."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+            "sourceHash": "839b620304500e81ff2873c2abfb4debb4ddd758366b8e39675fcea137c9514b",
+            "retrievedAt": "2026-10-14T23:52:27.047640+00:00",
+            "publisher": "Arkansas Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-26aff230c356252f/sha256-839b620304500e81ff2873c2abfb4debb4ddd758366b8e39675fcea137c9514b.txt",
+              "byteLength": 2906,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+                "sourceHash": "e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e",
+                "retrievedAt": "2026-10-14T23:52:27.047640+00:00",
+                "publisher": "Arkansas Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-26aff230c356252f/sha256-e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e.pdf",
+                  "byteLength": 145418,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+            "sourceHash": "4bc02c9d4e60394296bd52cc54207937d66e1bb9dd046f08061ee302c279eaa5",
+            "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+            "publisher": "University of Arkansas System Division of Agriculture, Public Policy Center",
+            "summary": "Issue 2 proposes changing Article 2 of the Arkansas Constitution regarding the right of citizens to keep and bear arms, and emphasizing that keeping and bearing arms are fundamental rights. The proposed constitutional amendment specifies that this right includes the possession and use of ammunition, firearm accessories, and firearm components. In addition to existing language for common defense, the proposal specifies the right to bear arms applies to hunting, recreational purposes, and any other lawful purpose.",
+            "argumentsFor": [
+              "• The Second Amendment to the U.S. Constitution deals with firearms, the right to keep and bear arms. I would argue that within the terminology “arms,” that includes ammunition, components and accessories but it is not specifically spelled out. In the Arkansas Constitution, it mentions also that it’s for their common defense. What this does is it is very clear that it includes ammunition, accessories and components, and it’s very clear that it’s recognized as an individual right. It is in my opinion trying to clarify the language to where people can’t take advantage of it being vague. • In a time when every tragedy results in renewed calls to disarm law-abiding citizens, SJR11 strengthens our Arkansas Constitution to protect our freedom to keep and bear arms. • SJR11 acknowledges that a free Arkansas depends on citizens prepared to protect their communities and resist government overreach. • There’s been a lot of time and effort spent making the arguments at all different levels of the judicial system.The more clear we can make it the fewer arguments we have to have and the less time has to be spent debating it."
+            ],
+            "argumentsAgainst": [
+              "• Our current state constitution already protects an individual’s right to bear arms. The addition of this amendment, could make reasonable firearm- safety regulations more difficult to defend. • This amendment does not do anything to help protect the children. • Declaring that the right to keep and bear arms includes “without limitation” the possession and use of ammunition and firearm accessories and components could open the door to legal challenges that actually undermine responsible gun ownership and public safety. By using absolute language this amendment could make it harder to enforce existing commonsense gun laws that protect law-abiding citizens from criminals and those that abuse their rights. Instead of strengthening the second amendment it could cause confusion and conflict in our legal system. For example, it could be used to challenge laws restricting possession by individuals convicted of serious crimes or subject to certain domestic violence prohibitions. These legal challenges could make it harder to regulate dangerous firearm accessories like bump stocks or high-capacity magazines. • Our sheriff, police officers and first responders are already stretched very thin and this amendment may make their jobs harder by undercutting the very laws they rely on to keep firearms out of the wrong hands."
+            ],
+            "passageThreshold": "Amending the state constitution requires the approval of a majority of voters in a statewide election.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+              "sourceHash": "acedc005466683859440ead3b720a1a46dd8f62ac32d81ccc1cd5228d33386c4",
+              "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+              "publisher": "University of Arkansas System Division of Agriculture, Public Policy Center",
+              "vault": {
+                "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-acedc005466683859440ead3b720a1a46dd8f62ac32d81ccc1cd5228d33386c4.txt",
+                "byteLength": 102,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+                  "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+                  "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+                  "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+                  "vault": {
+                    "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
+                    "byteLength": 2699601,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-4bc02c9d4e60394296bd52cc54207937d66e1bb9dd046f08061ee302c279eaa5.txt",
+              "byteLength": 8242,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+                "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+                "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+                "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+                "vault": {
+                  "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
+                  "byteLength": 2699601,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1032,6 +1168,111 @@
             "collectedAt": "2026-10-14T05:00:27.130228Z",
             "verifiedAt": "2026-10-14T05:00:27.130228Z",
             "quote": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION CONCERNING ECONOMIC DEVELOPMENT IN THE STATE OF ARKANSAS; AND AUTHORIZING THE GENERAL ASSEMBLY TO PROVIDE FOR THE CREATION OF ECONOMIC DEVELOPMENT DISTRICTS WITHIN CITIES, COUNTIES, OR COOPERATIVE AREAS TO PROMOTE ECONOMIC DEVELOPMENT WITHIN THE ECONOMIC DEVELOPMENT DISTRICT."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+            "sourceHash": "04f5e6430f96d53abd069b481e0c6af32d70e66be2a06b66b2e1cdc977f82057",
+            "retrievedAt": "2026-10-14T23:52:26.885123+00:00",
+            "publisher": "Arkansas Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-0debaf037a4ddf40/sha256-04f5e6430f96d53abd069b481e0c6af32d70e66be2a06b66b2e1cdc977f82057.txt",
+              "byteLength": 10674,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+                "sourceHash": "77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f",
+                "retrievedAt": "2026-10-14T23:52:26.885123+00:00",
+                "publisher": "Arkansas Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-0debaf037a4ddf40/sha256-77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f.pdf",
+                  "byteLength": 162933,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+            "sourceHash": "58cc3f1578d9472cc7c0e674664e43e6525d1f867a5b005cfd42e201ed8a557b",
+            "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+            "publisher": "University of Arkansas System Division of Agriculture, Public Policy Center",
+            "summary": "Issue 3 proposes to change the Arkansas Constitution to authorize the General Assembly to create economic development programs and to pass legislation permitting cities, counties, or cooperative areas to establish economic development districts. It also asks voters to approve transferring taxing authority of certain properties. The amendment itself would not create a district or approve any particular project. Legislators would be responsible for passing laws determining how the programs and districts would operate. If approved by voters, this amendment would: 1. Allow legislators to pass laws if they choose to that would create programs, loans and grants using public money for the purposes of (1) development and diversification of the state’s economy; (2) elimination and prevention of unemployment or underemployment; (3) development or expansion of transportation or commerce; or (4) development or improvement of property that contributes to economic development in the state. 2. Authorize the legislature to pass laws that enable local governments to create economic development districts, which are defined as a “designated area within a city, county, or cooperative area established",
+            "argumentsFor": [
+              "• Depending on the implementing legislation and the locally adopted economic development plan, the authority could be used to encourage housing, retail, restaurants, hospitality, healthcare, childcare, business incubators, and other development desired by a community. It could also support public infrastructure, demolition, and the redevelopment o abandoned or deteriorated buildings and shopping centers. The proposed implementing legislation also contemplated grants, forgivable loans, transferable credits, abatements, and other assistance that could be made available to existing businesses within a district, rather than limiting assistance to newly recruited or out-of-state companies. • A city or county might choose to establish a district to concentrate resources on a locally identified development or revitalization need. Depending on the implementing legislation and the district’s economic development plan, a district could be used to support housing or retail development, redevelop an abandoned building or shopping center, finance infrastructure needed to make a project feasible, or provide grants or other assistance to existing businesses within the district. • I think it is healthy for neighboring cities to have competition as they try to recruit people and businesses to come into their area. • Arkansas is the only state in our region that does not allow these types of Economic Development Districts. That puts our communities — urban and rural — at a disadvantage when competing for retail, tourism, entertainment, and mixed-use projects. • Issue 3 would give communities across Arkansas more flexibility to invest in infrastructure, support housing, and compete for economic development opportunities, all without raising taxes. • This ensures local leaders can negotiate quickly with prospects, offering the same cash, infrastructure, or tax rebates that neighboring states use to seal deals. • Neighboring states dangle robust deals, luring big projects away. SJR15 lets Arkansas meet or beat those offers. • TIF-like districts can fund public infrastructure, repair blight, and spark private redevelopment — f 8 exactly what’s fueling growth in states like Texas and Oklahoma. • Lets localities respond fast — no drawn-out lawsuits or major constitutional obstacles — so Arkansas can match its neighbors’ competitive timelines."
+            ],
+            "argumentsAgainst": [
+              "• This proposal prioritizes business, developments and investments not already in the state — We need to take care of the businesses that are in Arkansas right now, and the way we do that as a government is by getting out of the way, and not letting governments pick winners and losers. • Cities already have TIF, bonds, and the ability to fund private projects. The gap is not authority, it is political will. Creating a separate district does not fix that, it just puts the decision somewhere voters cannot reach. • We are being asked to put this in the constitution before the rules are written. The legislature would fill in how these districts work in a later session, and if a project fails the taxpayer is the one left holding the bag. • When property goes into one of these districts it comes off the tax rolls for schools, the county and the city. Those services still have to be paid for, so the cost shifts to everyone outside the district. This is not just an incentive for one project, it is a change to who pays for the sheriff, the roads and the schools. The finance plans of bonds and ad valorem taxes will lead to the transfer of public funding to private businesses. It creates another level of government, one that’s unelected, unaccountable and opaque. The government picks which businesses receive advantages, usually big, out-of-state corporations. What message does this send to longstanding local companies that have faithfully served their communities for decades? The incentives go to businesses the government selects, and the risk stays with the public. If a project does not work out, the company that got the deal is not the one holding the debt. Meanwhile the local companies that have been paying taxes here for decades get nothing, and in some cases end up competing against a subsidized newcomer. SJR15 would expand Arkansas’s welfare state by creating “corporate welfare districts,” funneling your hard-earned money to government-favored corporations through subsidies, tax breaks, and permanent tax-exempt status for handpicked insiders. • • • • •"
+            ],
+            "passageThreshold": "Amending the state constitution requires the approval of a majority of voters in a statewide election.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+              "sourceHash": "acedc005466683859440ead3b720a1a46dd8f62ac32d81ccc1cd5228d33386c4",
+              "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+              "publisher": "University of Arkansas System Division of Agriculture, Public Policy Center",
+              "vault": {
+                "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-acedc005466683859440ead3b720a1a46dd8f62ac32d81ccc1cd5228d33386c4.txt",
+                "byteLength": 102,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+                  "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+                  "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+                  "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+                  "vault": {
+                    "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
+                    "byteLength": 2699601,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpactSource": {
+              "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FAssembly%2F2025%2F2025R%2FFiscal+Impacts%2FSJR15-DFA2.pdf",
+              "sourceHash": "c14f7de4d12a32025701111dca07a86cde628b75e4e87b116be60cf90e51a2f8",
+              "retrievedAt": "2026-10-15T00:13:36.648528+00:00",
+              "publisher": "Arkansas Department of Finance and Administration",
+              "vault": {
+                "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/15/ms-01-45b85259717f7e21/sha256-c14f7de4d12a32025701111dca07a86cde628b75e4e87b116be60cf90e51a2f8.txt",
+                "byteLength": 5660,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FAssembly%2F2025%2F2025R%2FFiscal+Impacts%2FSJR15-DFA2.pdf",
+                  "sourceHash": "74b55a76a924aa6ce01f0fe8b8168673ff32b46f6b095416985709d906dbf4eb",
+                  "retrievedAt": "2026-10-15T00:13:36.648528+00:00",
+                  "publisher": "Arkansas General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/15/ms-01-45b85259717f7e21/sha256-74b55a76a924aa6ce01f0fe8b8168673ff32b46f6b095416985709d906dbf4eb.pdf",
+                    "byteLength": 33770,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "fiscalImpact": "Fiscal Impact:\n\nProvided that the voters approve the amendment to the Arkansas Constitution and upon the creation of\nan economic development district, local tax entities would see a decrease in property tax collections.\n\nTaxpayer Impact:\n\nAn owner of property located in the economic development district would not be required to assess\ntheir business personal property and real property would not be subject to mandatory county wide\nreappraisals. The economic development district would have the ability to levy taxes, assessments, or\nother charges for property contained within the district.",
+            "vault": {
+              "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-58cc3f1578d9472cc7c0e674664e43e6525d1f867a5b005cfd42e201ed8a557b.txt",
+              "byteLength": 21720,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+                "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+                "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+                "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+                "vault": {
+                  "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
+                  "byteLength": 2699601,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -1046,6 +1287,87 @@
             "collectedAt": "2026-10-14T05:00:27.244077Z",
             "verifiedAt": "2026-10-14T05:00:27.244077Z",
             "quote": "Shall the Arkansas Natural Resources Commission be authorized to issue general obligation bonds under the authority of the Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025, for the financing and refinancing of the development of water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects to serve the citizens of the State of Arkansas, in total principal amount not to exceed five hundred million dollars ($500,000,000), with no more than one hundred sixty-five million dollars ($165,000,000) in total principal amount of such bonds to be issued to finance and refinance the development of irrigation facilities, in series from time to time in principal amounts not to exceed, without prior approval of the General Assembly, sixty million dollars ($60,000,000) in any two-year period beginning on July 1 of each odd-numbered year, which bonds shall be secured by a pledge of the full faith and credit of the State of Arkansas?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+            "sourceHash": "8856909080f5dfc4f298fd1e2d77deb3175197b5adc05c416849257ea7b723c2",
+            "retrievedAt": "2026-10-14T23:52:28.317067+00:00",
+            "publisher": "Arkansas General Assembly",
+            "vault": {
+              "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/14/ms-01-875c43d3740f35c2/sha256-8856909080f5dfc4f298fd1e2d77deb3175197b5adc05c416849257ea7b723c2.txt",
+              "byteLength": 46641,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+                "sourceHash": "487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa",
+                "retrievedAt": "2026-10-14T23:52:28.317067+00:00",
+                "publisher": "Arkansas General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/14/ms-01-875c43d3740f35c2/sha256-487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa.pdf",
+                  "byteLength": 257420,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+            "sourceHash": "756d61b6fedec05493f764c54419433b1d2e75a8f89a192005d55e47f54c5914",
+            "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+            "publisher": "University of Arkansas System Division of Agriculture, Public Policy Center",
+            "summary": "Issue 4 asks voters to approve the state issuing up to $500 million in general obligation bonds to pay for water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects. Bonds could also be used to refinance previous bond issues.",
+            "argumentsFor": [
+              "• This money is essential. The last two bond issues have been a tremendous help but the future is going to need more money. • Over the last four years, every single county has received at least one of these loans. • It will be absolutely devastating to the tune of up to $500 million worth of water and sewer projects in the state of Arkansas that can’t be funded, can’t be assisted without funding without this happening. • We can ultimately attract a better interest rate, so borrow at better interest rate and then turn around and pass that savings on to the communities that come to us."
+            ],
+            "argumentsAgainst": [
+              "• Because our counties are already struggling to pay their bills, how will we be able to pay that back plus interest? • The breadth is part of the concern. Issue 4’s broad language raises questions about who could benefit from taxpayer-backed bonds. Vague definitions could allow bond money to flow to select projects or organizations while some projects could also generate rent and fees. • Arkansas cannot borrow its way to prosperity. • Arkansas has accumulated billions of dollars in reserves. Borrowing allows infrastructure costs to be spread across generations that will use it—but borrowing also means paying interest, particularly when today’s rates are considerably higher than they were several years ago."
+            ],
+            "fiscalImpact": "The initial cost associated with bonds is normally paid from the state’s general revenue fund. Debt servicing costs for general obligation bonds have first priority on general revenue funds. State agencies cannot receive any appropriated money until debt service costs on outstanding general revenue bonds are paid. Debt service on the bonds is also paid from loan repayments. Operationally, the state has an established trust fund for each bond issue where proceeds from the bond sales and funds used to repay the bonds are deposited. Proceeds from the sale of the bonds, revenues received by the commission from any project financed or refinanced using the bonds, and other revenues received by the commission for repayment of the bonds may be invested and reinvested to generate additional revenue. These investments would be made by the State Investing Office.",
+            "passageThreshold": "If a majority of the qualified electors voting on the question\nsubmitted under § 15-20-1518 vote for the issuance of State of Arkansas\nWater, Waste Disposal, and Pollution Abatement Facilities general obligation\nbonds, the Arkansas Natural Resources Commission shall proceed with the sale\nand the issuance of the bonds as provided in this subchapter.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+              "sourceHash": "8856909080f5dfc4f298fd1e2d77deb3175197b5adc05c416849257ea7b723c2",
+              "retrievedAt": "2026-10-14T23:52:28.317067+00:00",
+              "publisher": "Arkansas Secretary of State",
+              "vault": {
+                "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/14/ms-01-875c43d3740f35c2/sha256-8856909080f5dfc4f298fd1e2d77deb3175197b5adc05c416849257ea7b723c2.txt",
+                "byteLength": 46641,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+                  "sourceHash": "487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa",
+                  "retrievedAt": "2026-10-14T23:52:28.317067+00:00",
+                  "publisher": "Arkansas General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/14/ms-01-875c43d3740f35c2/sha256-487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa.pdf",
+                    "byteLength": 257420,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-756d61b6fedec05493f764c54419433b1d2e75a8f89a192005d55e47f54c5914.txt",
+              "byteLength": 13921,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+                "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+                "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+                "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+                "vault": {
+                  "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
+                  "byteLength": 2699601,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -1055,13 +1377,271 @@
         "County-based acquisition leaves U.S. House districts 1 and 2 unacquired. State Senate districts in the official running-for-office handbook’s 2026 regular-election list that remain unacquired: 2, 7, 9, 10, 11, 13, 14, 15, 16, 21, 24, 28, 30, 31, 32, 35. State House districts that remain unacquired: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100. Later special-election additions outside the acquired county notice also remain unverified.",
         "The Secretary of State lists four 2026 proposed initiatives as certified by the General Assembly. Its separate “2026 Proposed Initiatives as Certified by the Attorney General” section says “None for the 2026 General Election”; that section also warns that Attorney General certification would not establish certification for ballot placement.",
         "Candidate names and parties preserve the official county notice, including printed office titles. The notice lists “State Representative Ryan Rose”; the county’s individual official sample ballot prints “State Representative Ryan A. Rose”. The notice’s candidate-list form is retained here."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ar-sos-2026-general-issue-1",
+          "whatItDoes": "A Constitutional Amendment to be Known as \"The Citizens Only Voting Amendment\" and\nProviding That Only a Citizen of the United States Meeting the Qualifications of an Elector\nUnder the Arkansas Constitution May Vote in an Election in this State.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ar-sos-2026-general-issue-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Short title. This amendment to the Arkansas Constitution shall be known and may\nbe cited as \"The Citizens Only Voting Amendment.\""
+            },
+            {
+              "id": "ar-sos-2026-general-issue-1#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Arkansas Constitution, Article 3, § 1, is amended to read as follows:\n§ 1. Qualifications of electors.\n(a)(1) Only a citizen of the United States meeting the qualifications of an elector under\nthis section may vote in an election in this state."
+            },
+            {
+              "id": "ar-sos-2026-general-issue-1#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. EFFECTIVE DATE. This amendment is effective on and after January 1, 2027."
+            }
+          ],
+          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+          "sourceHash": "5a0acb92d0567ce82e66b4c2316a8dc0af423d2d6e9c4b1ef1f780f7c3085dee",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:26.882839+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-sos-2026-general-issue-2",
+          "whatItDoes": "A Constitutional Amendment to Amend Arkansas Constitution, Article 2, § 5, to Protect the\nRight to Keep and Bear Arms.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ar-sos-2026-general-issue-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. INTENT OF AMENDMENT. It is the intent of this amendment to the Arkansas\nConstitution to protect the right to keep and bear arms guaranteed under the Arkansas\nConstitution."
+            },
+            {
+              "id": "ar-sos-2026-general-issue-2#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Arkansas Constitution, Article 2, § 5, is amended to read as follows:\n§ 5. Right to keep and bear arms.\n(a) The citizens of this State shall have the right to keep and bear arms<del>,</del> for:\n(1) <del>their</del> Their common defense;\n(2) Lawful hunting and recreational use; and"
+            },
+            {
+              "id": "ar-sos-2026-general-issue-2#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. EFFECTIVE DATE. This amendment to the Arkansas Constitution is effective on\nand after January 1, 2027."
+            }
+          ],
+          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+          "sourceHash": "839b620304500e81ff2873c2abfb4debb4ddd758366b8e39675fcea137c9514b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:27.047640+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-sos-2026-general-issue-3",
+          "whatItDoes": "A Constitutional Amendment Concerning Economic Development in the State of Arkansas; and\nAuthorizing the General Assembly to Provide for the Creation of Economic Development\nDistricts Within Cities, Counties, or Cooperative Areas to Promote Economic Development\nWithin the Economic Development District.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ar-sos-2026-general-issue-3#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1. Loans and grants of public money. (a) Notwithstanding any other provision of the\nArkansas Constitution, the General Assembly may provide for the creation of programs and the\nmaking of loans and grants of public money for the public purposes of:"
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "SECTION 2.",
+              "what": "SECTION 2. Economic development district projects.\n(a) An economic development district may issue bonds for the purpose of financing\nprojects within the economic development district.\n(b) The bonds under subsection (a) of this section:\n(1) May be secured by and be payable from all or a portion of any funds received"
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "SECTION 3.",
+              "what": "SECTION 3. Implementation. The General Assembly shall provide by law for the\nimplementation of this amendment."
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "SECTION 4.",
+              "what": "SECTION 4. Arkansas Constitution, Article 12, § 5, is amended to read as follows:\n\n§ 5. Political subdivisions not to become stockholders in or lend credit to private\ncorporations — Exceptions.\n(a) No county, city, town or other municipal corporation, shall become a stockholder in"
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "SECTION 5.",
+              "what": "SECTION 5. Arkansas Constitution, Article 16, § 5, is amended to read as follows:\n§ 5. Property taxed according to value — Procedures for valuation — Tax exemptions.\n(a) All real and tangible personal property subject to taxation shall be taxed according to"
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "SECTION 6.",
+              "what": "SECTION 6. Arkansas Constitution, Amendment 62, § 6, is amended to read as follows:\n§ 6. Conduct of elections.\n(a) The General Assembly may enact laws governing the conduct of elections authorized\nby this Amendment. Absent the enactment of such laws, such elections shall be held, called and"
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "SECTION 7.",
+              "what": "SECTION 7. Repealer — Construction.\n(a) Any provision of this Constitution, including without limitation amendments to this\nConstitution, that conflicts with or is in any way inconsistent with this amendment is repealed or\ndeemed modified to give precedence to this amendment."
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "SECTION 8.",
+              "what": "SECTION 8. Severability. The provisions of this amendment are severable, and if any provision\nof this amendment should be held invalid, the remainder shall stand."
+            },
+            {
+              "id": "ar-sos-2026-general-issue-3#section-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "SECTION 9.",
+              "what": "SECTION 9. Effective date. This amendment to the Arkansas Constitution shall be effective on\nand after January 1, 2027."
+            }
+          ],
+          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+          "sourceHash": "04f5e6430f96d53abd069b481e0c6af32d70e66be2a06b66b2e1cdc977f82057",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:26.885123+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-sos-2026-general-issue-4",
+          "whatItDoes": "AN ACT AUTHORIZING THE ARKANSAS NATURAL RESOURCES\nCOMMISSION TO ISSUE GENERAL OBLIGATION BONDS TO\nFINANCE AND REFINANCE THE DEVELOPMENT OF WATER, WASTE\nDISPOSAL, POLLUTION CONTROL, ABATEMENT AND\nPREVENTION, DRAINAGE, IRRIGATION, FLOOD CONTROL, AND\nWETLANDS AND AQUATIC RESOURCES PROJECTS TO SERVE THE",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ar-sos-2026-general-issue-4#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "SECTION 1.",
+              "what": "SECTION 1.  Arkansas Code Title 15, Chapter 20, is amended to add an\nadditional subchapter to read as follows:\nSubchapter 15 — Arkansas Water, Waste Disposal, and Pollution Abatement\nFacilities Financing Act of 2025\n15-20-1501.  Title.\nThis subchapter shall be known and may be cited as the “Arkansas Water,"
+            }
+          ],
+          "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+          "sourceHash": "8856909080f5dfc4f298fd1e2d77deb3175197b5adc05c416849257ea7b723c2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:28.317067+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+          "sourceHash": "a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e",
+          "retrievedAt": "2026-10-14T23:52:26.882839+00:00",
+          "publisher": "Arkansas Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-f051c2ca5bbbea3a/sha256-a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e.pdf",
+            "byteLength": 127809,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+          "sourceHash": "e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e",
+          "retrievedAt": "2026-10-14T23:52:27.047640+00:00",
+          "publisher": "Arkansas Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-26aff230c356252f/sha256-e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e.pdf",
+            "byteLength": 145418,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+          "sourceHash": "77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f",
+          "retrievedAt": "2026-10-14T23:52:26.885123+00:00",
+          "publisher": "Arkansas Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-0debaf037a4ddf40/sha256-77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f.pdf",
+            "byteLength": 162933,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
+          "sourceHash": "487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa",
+          "retrievedAt": "2026-10-14T23:52:28.317067+00:00",
+          "publisher": "Arkansas General Assembly",
+          "vault": {
+            "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/14/ms-01-875c43d3740f35c2/sha256-487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa.pdf",
+            "byteLength": 257420,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FAssembly%2F2025%2F2025R%2FFiscal+Impacts%2FSJR15-DFA2.pdf",
+          "sourceHash": "74b55a76a924aa6ce01f0fe8b8168673ff32b46f6b095416985709d906dbf4eb",
+          "retrievedAt": "2026-10-15T00:13:36.648528+00:00",
+          "publisher": "Arkansas General Assembly",
+          "vault": {
+            "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/15/ms-01-45b85259717f7e21/sha256-74b55a76a924aa6ce01f0fe8b8168673ff32b46f6b095416985709d906dbf4eb.pdf",
+            "byteLength": 33770,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+          "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+          "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+          "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+          "vault": {
+            "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
+            "byteLength": 2699601,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://portal.arkansas.gov/",
+          "sourceHash": "8883d29c9a086ea422ba5cee996cd5132df3ed8df62a7dfbb9a472edc410a91b",
+          "retrievedAt": "2026-10-15T00:07:12.327926+00:00",
+          "publisher": "State of Arkansas",
+          "vault": {
+            "key": "project/freshness/source/portal.arkansas.gov/2026/10/15/ms-01-445bac0d2c696ae7/sha256-8883d29c9a086ea422ba5cee996cd5132df3ed8df62a7dfbb9a472edc410a91b.html",
+            "byteLength": 759112,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:09:39.762012Z",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
+    "reviewedAt": "2026-10-15T04:14:40.002825+00:00",
     "sources": [
       {
         "requestedUrl": "https://www.sos.arkansas.gov/elections",
@@ -1104,36 +1684,6 @@
         "reviewedEvidence": "2026 Proposed Initiatives as Certified by the General Assembly: Issue 1, Issue 2, Issue 3, Issue 4. The Attorney General section says “None for the 2026 General Election” and warns that posting does not establish ballot-placement certification."
       },
       {
-        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
-        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
-        "retrievedAt": "2026-10-14T05:00:26.924395Z",
-        "httpStatus": 200,
-        "rawHash": "a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e",
-        "publisher": "Arkansas Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO CREATE \"THE CITIZENS ONLY VOTING AMENDMENT\"; TO PROVIDE THAT ONLY A CITIZEN OF THE UNITED STATES MEETING THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION MAY VOTE IN AN ELECTION IN THIS STATE; AND PROVIDING THAT A PERSON WHO DOES NOT MEET THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION SHALL NOT BE PERMITTED TO VOTE IN ANY STATE OR LOCAL ELECTION HELD IN THIS STATE."
-      },
-      {
-        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
-        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
-        "retrievedAt": "2026-10-14T05:00:27.039040Z",
-        "httpStatus": 200,
-        "rawHash": "e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e",
-        "publisher": "Arkansas Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO PROVIDE THAT THE CITIZENS OF THE STATE OF ARKANSAS SHALL HAVE THE RIGHT TO KEEP AND BEAR ARMS FOR THEIR COMMON DEFENSE, FOR LAWFUL HUNTING AND RECREATIONAL USE, AND FOR ANY OTHER LAWFUL PURPOSE; PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS INCLUDES WITHOUT LIMITATION THE POSSESSION AND USE OF AMMUNITION, FIREARM ACCESSORIES, AND FIREARM COMPONENTS; AND PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS IS A NATURAL, FUNDAMENTAL, AND INDIVIDUAL RIGHT THAT SHALL NOT BE INFRINGED."
-      },
-      {
-        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
-        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
-        "retrievedAt": "2026-10-14T05:00:27.130228Z",
-        "httpStatus": 200,
-        "rawHash": "77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f",
-        "publisher": "Arkansas Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION CONCERNING ECONOMIC DEVELOPMENT IN THE STATE OF ARKANSAS; AND AUTHORIZING THE GENERAL ASSEMBLY TO PROVIDE FOR THE CREATION OF ECONOMIC DEVELOPMENT DISTRICTS WITHIN CITIES, COUNTIES, OR COOPERATIVE AREAS TO PROMOTE ECONOMIC DEVELOPMENT WITHIN THE ECONOMIC DEVELOPMENT DISTRICT."
-      },
-      {
         "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
         "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
         "retrievedAt": "2026-10-14T05:00:27.244077Z",
@@ -1144,14 +1694,15 @@
         "reviewedEvidence": "Shall the Arkansas Natural Resources Commission be authorized to issue general obligation bonds under the authority of the Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025, for the financing and refinancing of the development of water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects to serve the citizens of the State of Arkansas, in total principal amount not to exceed five hundred million dollars ($500,000,000), with no more than one hundred sixty-five million dollars ($165,000,000) in total principal amount of such bonds to be issued to finance and refinance the development of irrigation facilities, in series from time to time in principal amounts not to exceed, without prior approval of the General Assembly, sixty million dollars ($60,000,000) in any two-year period beginning on July 1 of each odd-numbered year, which bonds shall be secured by a pledge of the full faith and credit of the State of Arkansas?"
       },
       {
-        "requestedUrl": "https://www.arkleg.state.ar.us/Acts/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2F&file=578.pdf&ddBienniumSession=2025%2F2025R",
+        "requestedUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
         "finalUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
-        "retrievedAt": "2026-10-14T05:02:04.711072Z",
         "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:28.317067+00:00",
         "rawHash": "487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa",
         "publisher": "Arkansas General Assembly",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Act 578 of the Regular Session; official full act linked from the General Assembly act search."
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
@@ -1192,6 +1743,81 @@
         "publisher": "Sebastian County Board of Election Commissioners",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Individual official November 3, 2026 ballot for precinct 9F127.1 prints State Representative Ryan A. Rose, while the county notice lists State Representative Ryan Rose."
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:26.882839+00:00",
+        "rawHash": "a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.047640+00:00",
+        "rawHash": "e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:26.885123+00:00",
+        "rawHash": "77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f",
+        "publisher": "Arkansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+        "finalUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
+        "rawHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
+        "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FAssembly%2F2025%2F2025R%2FFiscal+Impacts%2FSJR15-DFA2.pdf",
+        "finalUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FAssembly%2F2025%2F2025R%2FFiscal+Impacts%2FSJR15-DFA2.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T00:13:36.648528+00:00",
+        "rawHash": "74b55a76a924aa6ce01f0fe8b8168673ff32b46f6b095416985709d906dbf4eb",
+        "publisher": "Arkansas General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official fiscal analysis for the held measure. Full original document and extracted text are saved; fiscal excerpt is exact source text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
+      },
+      {
+        "requestedUrl": "https://portal.arkansas.gov/",
+        "finalUrl": "https://portal.arkansas.gov/",
+        "httpStatus": 200,
+        "rawHash": "8883d29c9a086ea422ba5cee996cd5132df3ed8df62a7dfbb9a472edc410a91b",
+        "retrievedAt": "2026-10-15T00:07:12.327926+00:00",
+        "publisher": "State of Arkansas",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

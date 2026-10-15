@@ -3356,7 +3356,7 @@
           "divisionVintage": "2026",
           "title": "Statewide Amendment 1",
           "type": "MEASURE",
-          "measureTextUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+          "measureTextUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -3376,7 +3376,7 @@
           "divisionVintage": "2026",
           "title": "Statewide Amendment 2",
           "type": "MEASURE",
-          "measureTextUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+          "measureTextUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -3396,7 +3396,7 @@
           "divisionVintage": "2026",
           "title": "Statewide Amendment 3",
           "type": "MEASURE",
-          "measureTextUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+          "measureTextUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -3416,7 +3416,7 @@
           "divisionVintage": "2026",
           "title": "Statewide Amendment 4",
           "type": "MEASURE",
-          "measureTextUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+          "measureTextUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -7784,6 +7784,57 @@
             "verifiedAt": "2026-10-14T05:00:47+00:00",
             "doorId": "fec-al-chief",
             "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to provide for the election of a Lieutenant Governor if the Office of Lieutenant Governor becomes vacant during the first two years of a term, to authorize the Legislature to set the salary of the Lieutenant Governor and officers of the Legislature, and to require any expenditure of legislative funds for travel to be approved by a legislative officer. (Proposed by Act 2026-341)"
+          },
+          "officialText": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
+            "sourceHash": "1386c968f0a6994d50f7628abe7d3fe572fb60d96fb68bf79ab705ec6916e0a0",
+            "retrievedAt": "2026-10-14T23:57:11.824280+00:00",
+            "publisher": "Alabama Legislature",
+            "vault": {
+              "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-8b28efaded972f66/sha256-1386c968f0a6994d50f7628abe7d3fe572fb60d96fb68bf79ab705ec6916e0a0.txt",
+              "byteLength": 6639,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
+                "sourceHash": "6da243c5dce4625abcb7c484bc8b590dd163789ac0ca175e1ffef832f60eeb45",
+                "retrievedAt": "2026-10-14T23:57:11.824280+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-8b28efaded972f66/sha256-6da243c5dce4625abcb7c484bc8b590dd163789ac0ca175e1ffef832f60eeb45.pdf",
+                  "byteLength": 86106,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-1.pdf",
+            "sourceHash": "69d528356c11a1caf5c25ce238e6b5ce49c640e76559b6a3718eb393382b3626",
+            "retrievedAt": "2026-10-14T23:56:40.834122+00:00",
+            "publisher": "Alabama Fair Ballot Commission, published by the Alabama Secretary of State",
+            "summary": "Current law generally provides that if the office of Lieutenant Governor becomes vacant during a term of office, the vacancy remains until the next regular election for that office. The Alabama Constitution also sets the pay of the Lieutenant Governor and certain legislative officers. If approved, this amendment would require an election to fill the office of Lieutenant Governor for the remainder of an unexpired term if the office becomes vacant more than 60 days before the next general election in which state officers are elected. The amendment would also authorize the Legislature to set the pay of the Lieutenant Governor and officers of the Legislature by joint resolution. In addition, the amendment would require expenditures of legislative funds for travel by members of the Legislature to be approved by an officer elected by the members of that legislative chamber.",
+            "fiscalImpact": "There are no costs or taxes associated with Amendment 1.",
+            "passageThreshold": "If the majority of voters vote “yes” on Amendment 1, the Alabama Constitution will be changed.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-54aabcbfb88ffaa2/sha256-69d528356c11a1caf5c25ce238e6b5ce49c640e76559b6a3718eb393382b3626.txt",
+              "byteLength": 3213,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-1.pdf",
+                "sourceHash": "e2bd5886c549f86266a2ade6c2ed766e90c691edf92c2886403502309dcc443e",
+                "retrievedAt": "2026-10-14T23:56:40.834122+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-54aabcbfb88ffaa2/sha256-e2bd5886c549f86266a2ade6c2ed766e90c691edf92c2886403502309dcc443e.pdf",
+                  "byteLength": 149636,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7799,6 +7850,57 @@
             "verifiedAt": "2026-10-14T05:00:47+00:00",
             "doorId": "fec-al-chief",
             "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to provide a process for the creation of a consolidated county school system by merging two or more contiguous county boards of education; to require the State Board of Education to conduct an impact study on the potential effects of the consolidation; to require publication of the impact study; to provide a procedure for protesting a proposed consolidation of two or more county school systems; and to require the State Board of Education to adopt rules. (Proposed by Act 2026-378)"
+          },
+          "officialText": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
+            "sourceHash": "4bfbcc814a9a5cb2d16a9fa6b2bdd05f39e1d264de4e326fbb5b1947540f3b24",
+            "retrievedAt": "2026-10-14T23:57:11.919987+00:00",
+            "publisher": "Alabama Legislature",
+            "vault": {
+              "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-55a894706b161992/sha256-4bfbcc814a9a5cb2d16a9fa6b2bdd05f39e1d264de4e326fbb5b1947540f3b24.txt",
+              "byteLength": 6341,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
+                "sourceHash": "875d37e5c7d9db56086f533741f8f185cec66d3ce430f401c0461dab9e0a4995",
+                "retrievedAt": "2026-10-14T23:57:11.919987+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-55a894706b161992/sha256-875d37e5c7d9db56086f533741f8f185cec66d3ce430f401c0461dab9e0a4995.pdf",
+                  "byteLength": 88606,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+            "sourceHash": "f1e235e039921f3dcce9db5be6b0bf0a46f3643df41a09fe3d86f1a4fcf6d33d",
+            "retrievedAt": "2026-10-14T23:56:40.918132+00:00",
+            "publisher": "Alabama Fair Ballot Commission, published by the Alabama Secretary of State",
+            "summary": "Currently, each county has a board of education that operates independently. A process allowing the merger of two or more county boards of education does not currently exist in the Alabama Constitution. If approved, this amendment would allow two or more neighboring county boards of education to agree to merge their county school systems into one multi-county school system by formal resolution of the affected county school boards. Before a merger could occur, the State Board of Education would be required to conduct a study of the proposed merger, including its potential effects on students, families, educational programs, transportation, finances, taxes, and school operations. The study must be published before the merger could be finalized. If at least 25 percent of the qualified voters in any of the affected county school systems submits a written protest, the proposed merger could not take effect unless it is approved by a majority of the voters in each of the affected counties at the next general election. In addition to a majority of voters in each county, the amendment also requires that the merger be approved by an overall majority of the votes cast in all the affected counties. The amendment would also require the State Board of Education to adopt rules to implement the merger process. The Legislature could pass laws to implement approved mergers.",
+            "fiscalImpact": "There are no costs or taxes associated with Amendment 2.",
+            "passageThreshold": "If the majority of voters vote “yes” on Amendment 2, the Alabama Constitution will be changed.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-bdedd332027c0b08/sha256-f1e235e039921f3dcce9db5be6b0bf0a46f3643df41a09fe3d86f1a4fcf6d33d.txt",
+              "byteLength": 3823,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+                "sourceHash": "f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1",
+                "retrievedAt": "2026-10-14T23:56:40.918132+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-bdedd332027c0b08/sha256-f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1.pdf",
+                  "byteLength": 151319,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7814,6 +7916,57 @@
             "verifiedAt": "2026-10-14T05:00:47+00:00",
             "doorId": "fec-al-chief",
             "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to recite The Pledge of Allegiance to the United States flag at the beginning of each school day; and to require local boards of education to adopt a policy authorizing student-initiated and student-led prayer. (Proposed by Act 2026-379)"
+          },
+          "officialText": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
+            "sourceHash": "5aea7fbcbc759d3655db606372b511a885b8b1f5f481736f3b3982dc3b613bb8",
+            "retrievedAt": "2026-10-14T23:57:11.908668+00:00",
+            "publisher": "Alabama Legislature",
+            "vault": {
+              "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-431a9d5290c42fe0/sha256-5aea7fbcbc759d3655db606372b511a885b8b1f5f481736f3b3982dc3b613bb8.txt",
+              "byteLength": 3150,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
+                "sourceHash": "df97387cb8c466b8358042b03573dfc762654f40916994b47238f3374aed4a0b",
+                "retrievedAt": "2026-10-14T23:57:11.908668+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-431a9d5290c42fe0/sha256-df97387cb8c466b8358042b03573dfc762654f40916994b47238f3374aed4a0b.pdf",
+                  "byteLength": 83229,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+            "sourceHash": "3e186d75dab65474817eb3087b8cdaff016a64c35c7ae6c47674e4d784c63948",
+            "retrievedAt": "2026-10-14T23:56:40.752684+00:00",
+            "publisher": "Alabama Fair Ballot Commission, published by the Alabama Secretary of State",
+            "summary": "Currently, the Alabama Constitution does not require local boards of education to adopt policies requiring each public K-12 school to conduct the Pledge of Allegiance each school day or to adopt policies allowing student-initiated and student-led prayer. If approved, this amendment would require each local board of education to adopt a policy requiring each public K-12 school to conduct the Pledge of Allegiance to the United States flag at the beginning of each school day and give students the opportunity to voluntarily recite the Pledge of Allegiance. The amendment would also require each local board of education to adopt a policy allowing student-initiated and student-led prayer in public K-12 schools. No student could be required to participate in the prayer, and students would have the right to opt out of participating in the Pledge of Allegiance or the prayer based on their own beliefs. Reported violations would be reviewed by the local superintendent of education.",
+            "fiscalImpact": "There are no costs or taxes associated with Amendment 3.",
+            "passageThreshold": "If the majority of voters vote “yes” on Amendment 3, the Alabama Constitution will be changed.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-cbdbb5bbee5f6870/sha256-3e186d75dab65474817eb3087b8cdaff016a64c35c7ae6c47674e4d784c63948.txt",
+              "byteLength": 3269,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+                "sourceHash": "2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e",
+                "retrievedAt": "2026-10-14T23:56:40.752684+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-cbdbb5bbee5f6870/sha256-2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e.pdf",
+                  "byteLength": 150843,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7829,64 +7982,374 @@
             "verifiedAt": "2026-10-14T05:00:47+00:00",
             "doorId": "fec-al-chief",
             "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to broadcast or sanction the performance of the first stanza of The Star-Spangled Banner at least once per week during school hours. (Proposed by Act 2026-424)"
+          },
+          "officialText": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
+            "sourceHash": "ca88a14072012076362f03ac93fb7fc0b93e5ce64cf6402a9ede57d8a459c739",
+            "retrievedAt": "2026-10-14T23:57:11.873666+00:00",
+            "publisher": "Alabama Legislature",
+            "vault": {
+              "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-34ee9648e190a665/sha256-ca88a14072012076362f03ac93fb7fc0b93e5ce64cf6402a9ede57d8a459c739.txt",
+              "byteLength": 4250,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
+                "sourceHash": "1fd88b3cbc195dbc42caba1297e6302eeb03d142cda7b1454b8fc9a1f4e536e2",
+                "retrievedAt": "2026-10-14T23:57:11.873666+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-34ee9648e190a665/sha256-1fd88b3cbc195dbc42caba1297e6302eeb03d142cda7b1454b8fc9a1f4e536e2.pdf",
+                  "byteLength": 82096,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+            "sourceHash": "a173c9331c33605d642b00d182d4915178fc262972fce0a4e7a8fbe50734501e",
+            "retrievedAt": "2026-10-14T23:56:40.748299+00:00",
+            "publisher": "Alabama Fair Ballot Commission, published by the Alabama Secretary of State",
+            "summary": "Currently, the Alabama Constitution does not require local boards of education to adopt policies requiring each public K-12 school to broadcast or allow the performance of the first stanza of The Star-Spangled Banner during school hours. If approved, this amendment would require each local board of education to adopt a policy requiring each public K-12 school to broadcast the first stanza of The Star-Spangled Banner at least once each week during school hours. A local board of education could instead allow the first stanza of The Star-Spangled Banner to be performed during school hours by a school-approved band, choir, vocal group, or vocalist using the version archived by the Library of Congress.",
+            "fiscalImpact": "There are no costs or taxes associated with Amendment 4.",
+            "passageThreshold": "If the majority of voters vote “yes” on Amendment 4, the Alabama Constitution will be changed.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-7b243a78651eee4a/sha256-a173c9331c33605d642b00d182d4915178fc262972fce0a4e7a8fbe50734501e.txt",
+              "byteLength": 2908,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+                "sourceHash": "f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277",
+                "retrievedAt": "2026-10-14T23:56:40.748299+00:00",
+                "publisher": "Alabama Legislature and Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-7b243a78651eee4a/sha256-f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277.pdf",
+                  "byteLength": 148049,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
       "coverageNotes": [
         "The Alabama Secretary of State certified the Democratic, Republican and independent candidate lists on August 26, 2026. Republican amendments received August 28 and September 2 add House District 51, the August special-primary congressional nominees and Senate District 25. All listed federal, statewide, legislative and State Board of Education contests are held. The certified lists do not state incumbency or candidate websites."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "al-2026-general-statewide-amendment-1",
+          "whatItDoes": "Proposing an amendment to Section 127 of the\nConstitution of Alabama of 2022, relating to certain state\nofficers; to require the office of Lieutenant Governor to be\nfilled by election rather than remain vacant in certain\ncircumstances; to authorize the Legislature to set the salary",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "al-2026-general-statewide-amendment-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1. The following amendment to the Constitution\nof Alabama of 2022, is proposed:\nPROPOSED AMENDMENT\nPART I.\nSection 127 of the Constitution of Alabama of 2022, is\namended to read as follows:\n\"Section 127\n(a) <del>In case of the governor's removal from office,</del>"
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-1#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. An election upon the proposed amendment\nshall be held in accordance with Sections 284 and 285 of the\nConstitution of Alabama of 2022, and the election laws of this\nstate. The appropriate election official shall assign a ballot\nnumber for the proposed constitutional amendment on the"
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-1#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3. The proposed amendment shall become valid as\na part of the Constitution of Alabama of 2022, when approved\nby a majority of the qualified electors voting thereon."
+            }
+          ],
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
+          "sourceHash": "1386c968f0a6994d50f7628abe7d3fe572fb60d96fb68bf79ab705ec6916e0a0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:11.824280+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-2026-general-statewide-amendment-2",
+          "whatItDoes": "Proposing an amendment to the Constitution of Alabama\nof 2022, to provide a process for the creation of a\nconsolidated county school system by merging two or more\ncounty boards of education; to require the State Board of\nEducation to conduct an impact study on the potential effects\nof the consolidation;",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "al-2026-general-statewide-amendment-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1. The following amendment to the Constitution\nof Alabama of 2022, is proposed:\nPROPOSED AMENDMENT\n(a) Whenever two or more contiguous county boards of\neducation deem it advisable to consolidate the administration\nof their respective county school systems under one remaining"
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-2#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. An election upon the proposed amendment\nshall be held in accordance with Sections 284 and 285 of the\nConstitution of Alabama of 2022, and the election laws of this\nstate. The appropriate election official shall assign a ballot\nnumber for the proposed constitutional amendment on the"
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-2#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3. The proposed amendment shall become valid as\na part of the Constitution of Alabama of 2022, when approved\nby a majority of the qualified electors voting thereon."
+            }
+          ],
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
+          "sourceHash": "4bfbcc814a9a5cb2d16a9fa6b2bdd05f39e1d264de4e326fbb5b1947540f3b24",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:11.919987+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-2026-general-statewide-amendment-3",
+          "whatItDoes": "Proposing an amendment to the Constitution of Alabama\nof 2022, to require local boards of education to adopt\npolicies requiring each public K-12 school to conduct The\nPledge of Allegiance to the United States flag each day; to\nauthorize local boards of education to adopt policies allowing",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "al-2026-general-statewide-amendment-3#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1. The following amendment to the Constitution\nof Alabama of 2022, is proposed:\nPROPOSED AMENDMENT\n(a) Each local board of education shall adopt a policy\nrequiring each public K-12 school under its jurisdiction, at\nthe beginning of each school day, to conduct The Pledge of"
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-3#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. An election upon the proposed amendment\nshall be held in accordance with Sections 284 and 285 of the\nConstitution of Alabama of 2022, and the election laws of this\nstate. The appropriate election official shall assign a ballot\nnumber for the proposed constitutional amendment on the"
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-3#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3. The proposed amendment shall become valid as\na part of the Constitution of Alabama of 2022, when approved\nby a majority of the qualified electors voting thereon."
+            }
+          ],
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
+          "sourceHash": "5aea7fbcbc759d3655db606372b511a885b8b1f5f481736f3b3982dc3b613bb8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:11.908668+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-2026-general-statewide-amendment-4",
+          "whatItDoes": "Proposing an amendment to the Constitution of Alabama\nof 2022, to require local boards of education to adopt\npolicies requiring each public K-12 school to broadcast or\nsanction the performance of the first stanza of The\nStar-Spangled Banner at least once per week during school\nhours.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "al-2026-general-statewide-amendment-4#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1.",
+              "what": "Section 1. The Legislature finds and declares the\nfollowing:\n(1) During the Battle of Baltimore of the War of 1812,\nFrancis Scott Key visited the British fleet in the Chesapeake\nBay on September 7, 1814, to secure the release of Dr. William\nBeanes, who had been captured after the British burned\nWashington, D.C."
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-4#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2.",
+              "what": "Section 2. The following amendment to the Constitution\nof Alabama of 2022, is proposed:\nPROPOSED AMENDMENT\n(a) Each local board of education shall adopt a policy\nrequiring each public K-12 school under its jurisdiction to\nbroadcast The Star-Spangled Banner during school hours, at\nleast once per week."
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-4#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3.",
+              "what": "Section 3. An election upon the proposed amendment\nshall be held in accordance with Sections 284 and 285 of the\nConstitution of Alabama of 2022, and the election laws of this\nstate. The appropriate election official shall assign a ballot\nnumber for the proposed constitutional amendment on the"
+            },
+            {
+              "id": "al-2026-general-statewide-amendment-4#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4.",
+              "what": "Section 4. The proposed amendment shall become valid as\na part of the Constitution of Alabama of 2022, when approved\nby a majority of the qualified electors voting thereon."
+            }
+          ],
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
+          "sourceHash": "ca88a14072012076362f03ac93fb7fc0b93e5ce64cf6402a9ede57d8a459c739",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:11.873666+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+          "sourceHash": "31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17",
+          "retrievedAt": "2026-10-14T23:52:26.981790+00:00",
+          "publisher": "Alabama Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-f9632767de76faa0/sha256-31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17.pdf",
+            "byteLength": 146066,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+          "sourceHash": "bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383",
+          "retrievedAt": "2026-10-14T23:52:27.109369+00:00",
+          "publisher": "Alabama Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-8af5d23085169891/sha256-bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383.pdf",
+            "byteLength": 137969,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+          "sourceHash": "b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c",
+          "retrievedAt": "2026-10-14T23:52:27.162772+00:00",
+          "publisher": "Alabama Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-6d2a4682dcccbda3/sha256-b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c.pdf",
+            "byteLength": 89268,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+          "sourceHash": "4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304",
+          "retrievedAt": "2026-10-14T23:52:26.884644+00:00",
+          "publisher": "Alabama Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-31677ea030c5f9a5/sha256-4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304.pdf",
+            "byteLength": 115012,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
+          "sourceHash": "875d37e5c7d9db56086f533741f8f185cec66d3ce430f401c0461dab9e0a4995",
+          "retrievedAt": "2026-10-14T23:57:11.919987+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-55a894706b161992/sha256-875d37e5c7d9db56086f533741f8f185cec66d3ce430f401c0461dab9e0a4995.pdf",
+            "byteLength": 88606,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
+          "sourceHash": "df97387cb8c466b8358042b03573dfc762654f40916994b47238f3374aed4a0b",
+          "retrievedAt": "2026-10-14T23:57:11.908668+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-431a9d5290c42fe0/sha256-df97387cb8c466b8358042b03573dfc762654f40916994b47238f3374aed4a0b.pdf",
+            "byteLength": 83229,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
+          "sourceHash": "6da243c5dce4625abcb7c484bc8b590dd163789ac0ca175e1ffef832f60eeb45",
+          "retrievedAt": "2026-10-14T23:57:11.824280+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-8b28efaded972f66/sha256-6da243c5dce4625abcb7c484bc8b590dd163789ac0ca175e1ffef832f60eeb45.pdf",
+            "byteLength": 86106,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
+          "sourceHash": "1fd88b3cbc195dbc42caba1297e6302eeb03d142cda7b1454b8fc9a1f4e536e2",
+          "retrievedAt": "2026-10-14T23:57:11.873666+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-34ee9648e190a665/sha256-1fd88b3cbc195dbc42caba1297e6302eeb03d142cda7b1454b8fc9a1f4e536e2.pdf",
+            "byteLength": 82096,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-1.pdf",
+          "sourceHash": "e2bd5886c549f86266a2ade6c2ed766e90c691edf92c2886403502309dcc443e",
+          "retrievedAt": "2026-10-14T23:56:40.834122+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-54aabcbfb88ffaa2/sha256-e2bd5886c549f86266a2ade6c2ed766e90c691edf92c2886403502309dcc443e.pdf",
+            "byteLength": 149636,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+          "sourceHash": "f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1",
+          "retrievedAt": "2026-10-14T23:56:40.918132+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-bdedd332027c0b08/sha256-f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1.pdf",
+            "byteLength": 151319,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+          "sourceHash": "2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e",
+          "retrievedAt": "2026-10-14T23:56:40.752684+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-cbdbb5bbee5f6870/sha256-2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e.pdf",
+            "byteLength": 150843,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+          "sourceHash": "f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277",
+          "retrievedAt": "2026-10-14T23:56:40.748299+00:00",
+          "publisher": "Alabama Legislature and Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-7b243a78651eee4a/sha256-f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277.pdf",
+            "byteLength": 148049,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.alabama.gov/alabama-votes",
+          "sourceHash": "08fe2d72eae485bf8334a4dcb64d4b40d3f8f5275cdd35beee847b5c4c73d2c3",
+          "retrievedAt": "2026-10-15T00:06:28.044258+00:00",
+          "publisher": "Alabama Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/15/ms-01-ffb4cae50e05c412/sha256-08fe2d72eae485bf8334a4dcb64d4b40d3f8f5275cdd35beee847b5c4c73d2c3.html",
+            "byteLength": 40617,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:05:50+00:00",
+    "reviewedBy": "Codex MS-01 official-source acquisition",
+    "reviewedAt": "2026-10-15T04:14:40.005137+00:00",
     "sources": [
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T05:02:23+00:00",
-        "rawHash": "31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T05:02:22+00:00",
-        "rawHash": "bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T05:02:22+00:00",
-        "rawHash": "b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T05:02:23+00:00",
-        "rawHash": "4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
-        "reviewOutcome": "SUPPORTED"
-      },
       {
         "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
         "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
@@ -7941,6 +8404,158 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:26.981790+00:00",
+        "rawHash": "31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.109369+00:00",
+        "rawHash": "bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:27.162772+00:00",
+        "rawHash": "b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:52:26.884644+00:00",
+        "rawHash": "4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
+        "finalUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:57:11.919987+00:00",
+        "rawHash": "875d37e5c7d9db56086f533741f8f185cec66d3ce430f401c0461dab9e0a4995",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
+        "finalUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:57:11.908668+00:00",
+        "rawHash": "df97387cb8c466b8358042b03573dfc762654f40916994b47238f3374aed4a0b",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
+        "finalUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:57:11.824280+00:00",
+        "rawHash": "6da243c5dce4625abcb7c484bc8b590dd163789ac0ca175e1ffef832f60eeb45",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
+        "finalUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:57:11.873666+00:00",
+        "rawHash": "1fd88b3cbc195dbc42caba1297e6302eeb03d142cda7b1454b8fc9a1f4e536e2",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-1.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:56:40.834122+00:00",
+        "rawHash": "e2bd5886c549f86266a2ade6c2ed766e90c691edf92c2886403502309dcc443e",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:56:40.918132+00:00",
+        "rawHash": "f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:56:40.752684+00:00",
+        "rawHash": "2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T23:56:40.748299+00:00",
+        "rawHash": "f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277",
+        "publisher": "Alabama Legislature and Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/alabama-votes",
+        "finalUrl": "https://www.sos.alabama.gov/alabama-votes",
+        "httpStatus": 200,
+        "rawHash": "08fe2d72eae485bf8334a4dcb64d4b40d3f8f5275cdd35beee847b5c4c73d2c3",
+        "retrievedAt": "2026-10-15T00:06:28.044258+00:00",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

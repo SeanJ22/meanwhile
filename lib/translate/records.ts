@@ -1,4 +1,6 @@
 import { createHash } from "node:crypto";
+import type { MeasureSourceReference } from "../ballot/types.ts";
+import { measureSourceReferenceValid } from "../ballot/measure-source-contract.ts";
 import type { MeasureRecord } from "../ballot/measure-record-contract.ts";
 import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
@@ -20,14 +22,12 @@ export interface TranslationSentence {
   readonly quote: string;
 }
 
-/** The source and the two model results travel with the published text. */
 export interface TranslationEvidence {
   readonly id: string;
   readonly subjectId: string;
   readonly ocdId: string;
   readonly sourceUrl: string;
   readonly sourceHash: string;
-  readonly sourceText: string;
   readonly sourceTextHash: string;
   readonly retrievedAt: string;
   readonly writtenAt: string;
@@ -40,10 +40,10 @@ export interface TranslationEvidence {
 
 export interface MeasureTranslation extends TranslationEvidence {
   readonly kind: "MEASURE";
+  readonly sourceReference: MeasureSourceReference;
   readonly measure: MeasureRecord;
+  readonly ballotQuestionHash?: string;
 }
-/** Original content/citation stay intact; the model calls annotate its source
- * passages and independently check them, rather than author replacement text. */
 export interface CuratedTranslationOrigin {
   readonly kind: "CURATED_MIGRATION";
   readonly file: string; readonly fileHash: string; readonly recordKey: string; readonly textHash: string;
@@ -51,6 +51,7 @@ export interface CuratedTranslationOrigin {
 }
 export interface PreservedCuratedText { readonly text: string; readonly origin: CuratedTranslationOrigin }
 export interface TextTranslation extends TranslationEvidence {
+  readonly sourceText: string;
   readonly kind: "BODY_CLASS" | "BODY" | "OFFICE" | "AGENDA" | "MINUTES";
   /** BODY_CLASS names the class, BODY names one body, OFFICE names the state-defined office. */
   readonly curatedOrigin?: CuratedTranslationOrigin;
@@ -66,15 +67,21 @@ const outputFields = (measure: MeasureRecord) => [
 ].filter((row): row is [string, string] => typeof row[1] === "string" && Boolean(row[1]));
 
 /** Every written sentence has its own source passage and independent check. */
-export function translationRecordIssue(row: TranslationRecord): string | null {
+export function translationRecordIssue(row: TranslationRecord, heldSourceText?: string): string | null {
   if (!row || !["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES"].includes(row.kind) || !row.subjectId || row.id !== `translation:${row.subjectId}` ||
       !jurisdictionFromOcdId(row.ocdId ?? "") || !/^https:\/\//.test(row.sourceUrl) ||
-      !/^[a-f0-9]{64}$/.test(row.sourceHash) || !row.sourceText?.trim() || translationHash(row.sourceText) !== row.sourceTextHash ||
+      !/^[a-f0-9]{64}$/.test(row.sourceHash) || !/^[a-f0-9]{64}$/.test(row.sourceTextHash) ||
       !Number.isFinite(Date.parse(row.retrievedAt)) || !Number.isFinite(Date.parse(row.writtenAt)) ||
       !row.writerModel || !row.checkerModel || row.writerModel === row.checkerModel ||
       !/^[a-f0-9]{64}$/.test(row.playbookVersion) || !Array.isArray(row.sentences) || !Array.isArray(row.checked)) return "Translation lacks its exact source, subject identity or independent checker.";
+  const sourceText = row.kind === "MEASURE" ? heldSourceText : row.sourceText;
+  if (row.kind === "MEASURE" && ("sourceText" in row || !measureSourceReferenceValid(row.sourceReference) ||
+      row.sourceReference.sourceUrl !== row.sourceUrl || row.sourceReference.sourceHash !== row.sourceTextHash || row.sourceReference.sourceHash !== row.sourceHash)) return "Translation lacks its vaulted official source reference.";
+  if (sourceText !== undefined && (!sourceText.trim() || translationHash(sourceText) !== row.sourceTextHash) ||
+      row.kind !== "MEASURE" && sourceText === undefined) return "Translation differs from its exact source text.";
   if (row.kind === "MEASURE" && (measureRecordIssue(row.measure) || row.measure.contestId !== row.subjectId || row.measure.sourceHash !== row.sourceHash ||
       row.measure.sourceUrl !== row.sourceUrl || row.measure.writtenAt !== row.writtenAt || !row.measure.yesMeans || !row.measure.noMeans)) return "Translation lacks its exact measure identity or vote meanings.";
+  if (row.kind === "MEASURE" && row.ballotQuestionHash !== undefined && !/^[a-f0-9]{64}$/.test(row.ballotQuestionHash)) return "Translation lacks its official ballot question identity.";
   if (row.kind !== "MEASURE" && (typeof row.label !== "string" || !row.label.trim() || !row.sourceText.includes(row.label) ||
       typeof row.text !== "string" || !row.text.trim())) return "Translation lacks its source-named subject or text.";
   if (row.kind !== "MEASURE" && row.curatedOrigin) {
@@ -91,7 +98,7 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
   for (const [field, value] of fieldsAndValues) {
     const sentences = row.sentences.filter(sentence => sentence.field === field);
     if (!sentences.length || sentences.map(sentence => sentence.text).join(" ") !== value ||
-        sentences.some(sentence => typeof sentence.text !== "string" || !sentence.text.trim() || /[.!?]\s+[A-Z]/.test(sentence.text) || typeof sentence.quote !== "string" || !sentence.quote.trim() || !row.sourceText.includes(sentence.quote) ||
+        sentences.some(sentence => typeof sentence.text !== "string" || !sentence.text.trim() || /[.!?]\s+[A-Z]/.test(sentence.text) || typeof sentence.quote !== "string" || !sentence.quote.trim() || sourceText !== undefined && !sourceText.includes(sentence.quote) ||
           row.checked.filter(check => check.field === field && check.text === sentence.text && check.supported === true).length !== 1)) {
       return "A translated sentence lacks a confirmed source passage or independent support.";
     }
@@ -100,7 +107,7 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
   if (row.sentences.some(sentence => !fields.has(sentence.field)) || row.checked.length !== row.sentences.length) return "Translation contains an unaccounted sentence or check.";
   const numbers = new Set<string>();
   for (const part of row.kind === "MEASURE" ? row.measure.parts : []) {
-    if (!part.number || numbers.has(part.number) || !new RegExp(`(?:^|\\n)\\s*${part.number.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[.)\\s]|\\b(?:section|part|paragraph)\\s+${part.number.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(row.sourceText)) return "A measure part lacks unique numbering in the official text.";
+    if (!part.number || numbers.has(part.number) || sourceText !== undefined && !new RegExp(`(?:^|\\n)\\s*${part.number.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[.)\\s]|\\b(?:section|part|paragraph)\\s+${part.number.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(sourceText)) return "A measure part lacks unique numbering in the official text.";
     numbers.add(part.number);
   }
   return null;

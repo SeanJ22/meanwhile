@@ -876,7 +876,7 @@
           "divisionVintage": "2022",
           "title": "QUESTION #1: Increasing the Timeframe for the Hawaii Senate to Consider and Act on Judicial Appointments.",
           "type": "MEASURE",
-          "measureTextUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
+          "measureTextUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -896,7 +896,7 @@
           "divisionVintage": "2022",
           "title": "QUESTION #2: Directing the Hawaii State Legislature to Establish Procedures for Counties to Issue RISE Bonds, Exempt from County Debt Limits.",
           "type": "MEASURE",
-          "measureTextUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
+          "measureTextUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2618,6 +2618,55 @@
             "verifiedAt": "2026-10-14T05:03:16.991898+00:00",
             "doorId": "fec-hi-chief",
             "quote": "Shall the Constitution of the State of Hawaii be amended to allow the Senate more time to consider and act on the appointments of justices and judges, by increasing the timeframe from thirty days to sixty days for appointments made between April 1 and December 31 when the senate is not in regular session or is about to adjourn the regular session?"
+          },
+          "officialText": {
+            "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
+            "sourceHash": "18c2e2f3d37c3ca1f33cf808c35b59dd37169354cd1a6756b18b1f2f6878f83b",
+            "retrievedAt": "2026-10-15T00:09:49.051203+00:00",
+            "publisher": "Hawaii Legislature",
+            "vault": {
+              "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-afc2489d1c4bbff4/sha256-18c2e2f3d37c3ca1f33cf808c35b59dd37169354cd1a6756b18b1f2f6878f83b.txt",
+              "byteLength": 6737,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
+                "sourceHash": "6c951a033a893652ab2ec0a2a29eb9dad292a55b6e6b6d3ba8f37aad2ab8f7bf",
+                "retrievedAt": "2026-10-15T00:09:49.051203+00:00",
+                "publisher": "Hawaii Legislature",
+                "vault": {
+                  "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-afc2489d1c4bbff4/sha256-6c951a033a893652ab2ec0a2a29eb9dad292a55b6e6b6d3ba8f37aad2ab8f7bf.html",
+                  "byteLength": 75096,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+            "sourceHash": "6ee064baa995ad3e645b84837ac1e8b11331b36f828369ed0791318e055873ac",
+            "retrievedAt": "2026-10-14T23:52:28.162262+00:00",
+            "publisher": "Hawaii Office of Elections",
+            "passageThreshold": "The question is approved if both qualifications are met:\n\nTest 1: Yes votes receive a majority of votes tallied, excluding blank and over votes\n\nTest 2: Yes votes receive at least fifty percent of the total votes cast, including blank and over votes",
+            "vault": {
+              "key": "project/freshness/source/elections.hawaii.gov/2026/10/14/ms-01-4646fe39893bba59/sha256-6ee064baa995ad3e645b84837ac1e8b11331b36f828369ed0791318e055873ac.txt",
+              "byteLength": 769,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+                "sourceHash": "b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50",
+                "retrievedAt": "2026-10-14T23:52:28.162262+00:00",
+                "publisher": "Hawaii Office of Elections",
+                "vault": {
+                  "key": "project/freshness/source/elections.hawaii.gov/2026/10/14/ms-01-4646fe39893bba59/sha256-b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50.html",
+                  "byteLength": 126736,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -2633,6 +2682,55 @@
             "verifiedAt": "2026-10-14T05:03:16.991898+00:00",
             "doorId": "fec-hi-chief",
             "quote": "Shall the Hawaii State Constitution be amended to direct the legislature to authorize the counties to issue resilient infrastructure for shelter and equity bonds to fund public improvements in designated districts, repaid solely by future growth in property tax revenues within those districts, not by increasing real property tax rates, where such bonds are excluded from the counties’ debt limit and are subject to accountability and oversight requirements as may be provided by law?"
+          },
+          "officialText": {
+            "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
+            "sourceHash": "b357caa2fd96cbd8641dcc251cd390c61ddd3d3a2653567deebe50e029e5d708",
+            "retrievedAt": "2026-10-15T00:09:49.404777+00:00",
+            "publisher": "Hawaii Legislature",
+            "vault": {
+              "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-4aa36708a6f54a9e/sha256-b357caa2fd96cbd8641dcc251cd390c61ddd3d3a2653567deebe50e029e5d708.txt",
+              "byteLength": 22996,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
+                "sourceHash": "8ac2282da1b21a818207526076cba14178733bd652b42635a7fa77490c2c63d1",
+                "retrievedAt": "2026-10-15T00:09:49.404777+00:00",
+                "publisher": "Hawaii Legislature",
+                "vault": {
+                  "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-4aa36708a6f54a9e/sha256-8ac2282da1b21a818207526076cba14178733bd652b42635a7fa77490c2c63d1.html",
+                  "byteLength": 93472,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+            "sourceHash": "10075d23bd41c992a55fb61eaba41e430cc94731cc253275dee9aa30c137a11c",
+            "retrievedAt": "2026-10-14T23:52:28.162262+00:00",
+            "publisher": "Hawaii Office of Elections",
+            "passageThreshold": "The question is approved if both qualifications are met:\n\nTest 1: Yes votes receive a majority of votes tallied, excluding blank and over votes\n\nTest 2: Yes votes receive at least fifty percent of the total votes cast, including blank and over votes",
+            "vault": {
+              "key": "project/freshness/source/elections.hawaii.gov/2026/10/14/ms-01-4646fe39893bba59/sha256-10075d23bd41c992a55fb61eaba41e430cc94731cc253275dee9aa30c137a11c.txt",
+              "byteLength": 953,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+                "sourceHash": "b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50",
+                "retrievedAt": "2026-10-14T23:52:28.162262+00:00",
+                "publisher": "Hawaii Office of Elections",
+                "vault": {
+                  "key": "project/freshness/source/elections.hawaii.gov/2026/10/14/ms-01-4646fe39893bba59/sha256-b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50.html",
+                  "byteLength": 126736,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         }
       ],
@@ -3032,13 +3130,188 @@
         "The complete official Candidate Report CSV contains 415 filing records. Only candidates with status In General are included. 29 state legislative contests were decided at the primary and are recorded as absences.",
         "The Governor and Lieutenant Governor form 2 joint ticket choices on the official general-election sample ballot. Both printed names are retained in each ticket; all 96 people listed In General remain represented.",
         "The two statewide constitutional questions are taken verbatim from the Office of Elections. Both official full texts were acquired from the Legislature. Its reports link the enrolled bill PDFs and match the bill identifiers and original links on the election-office question page; each printed PDF question matches the held question after typography and whitespace normalization."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "hi-2026-general-question-1",
+          "whatItDoes": "SECTION 1. The legislature finds that the Hawaii State Constitution requires the senate to act within thirty days upon receipt of a judicial appointment.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "hi-2026-general-question-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. The legislature finds that the Hawaii State Constitution requires the senate to act within thirty days upon receipt of a judicial appointment."
+            },
+            {
+              "id": "hi-2026-general-question-1#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2. Article VI, section 3, of the Constitution of the State of Hawaii is amended to read as follows:\n\n\"APPOINTMENT OF JUSTICES AND JUDGES\n\nSection 3."
+            },
+            {
+              "id": "hi-2026-general-question-1#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "SECTION 3. The question to be printed on the ballot shall be as follows:\n\n\"Shall the Constitution of the State of Hawaii be amended to allow the Senate more time to consider and act on the appointments of justices and judges, by increasing the timeframe from thirty days to sixty days for appointments made between"
+            },
+            {
+              "id": "hi-2026-general-question-1#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "SECTION 4. New constitutional material is underscored."
+            },
+            {
+              "id": "hi-2026-general-question-1#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "SECTION 5. This amendment shall take effect upon compliance with article XVII, section 3, of the Constitution of the State of Hawaii.\n\nINTRODUCED BY:\n\n_____________________________"
+            }
+          ],
+          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
+          "sourceHash": "18c2e2f3d37c3ca1f33cf808c35b59dd37169354cd1a6756b18b1f2f6878f83b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "hi-2026-general-question-2",
+          "whatItDoes": "SECTION 1. The legislature finds that Hawaii faces a severe and ongoing shortage of housing for local residents and that this crisis cannot be solved without large, sustained investments in the infrastructure needed to produce new homes.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "hi-2026-general-question-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. The legislature finds that Hawaii faces a severe and ongoing shortage of housing for local residents and that this crisis cannot be solved without large, sustained investments in the infrastructure needed to produce new homes."
+            },
+            {
+              "id": "hi-2026-general-question-2#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2.  Article VII, section 12, of the Constitution of the State of Hawaii is amended to read as follows:\n\n\"DEFINITIONS; ISSUANCE OF INDEBTEDNESS\n\nSection 12. For the purposes of this article:\n\n1. The term \"bonds\" shall include bonds, notes and other instruments of indebtedness.\n\n<u>2."
+            },
+            {
+              "id": "hi-2026-general-question-2#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "SECTION 3. Article VII, section 13, of the Constitution of the State of Hawaii is amended to read as follows:\n\n\"DEBT LIMIT; EXCLUSIONS\n\nSection 13. General obligation bonds may be issued by the State;"
+            },
+            {
+              "id": "hi-2026-general-question-2#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "SECTION 4. The question to be printed on the ballot shall be as follows:\n\n\"Shall the Hawaii State Constitution be amended to direct the legislature to authorize the counties to issue resilient infrastructure for shelter and equity bonds to fund public improvements in designated districts, repaid solely by future"
+            },
+            {
+              "id": "hi-2026-general-question-2#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "SECTION 5. Constitutional material to be repealed is bracketed and stricken. New constitutional material is underscored."
+            },
+            {
+              "id": "hi-2026-general-question-2#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "SECTION 6. This Act shall take effect upon compliance with article XVII, section 3, of the Constitution of the State of Hawaii."
+            }
+          ],
+          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
+          "sourceHash": "b357caa2fd96cbd8641dcc251cd390c61ddd3d3a2653567deebe50e029e5d708",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
+          "sourceHash": "b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50",
+          "retrievedAt": "2026-10-14T23:52:28.162262+00:00",
+          "publisher": "Hawaii Office of Elections",
+          "vault": {
+            "key": "project/freshness/source/elections.hawaii.gov/2026/10/14/ms-01-4646fe39893bba59/sha256-b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50.html",
+            "byteLength": 126736,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
+          "sourceHash": "6c951a033a893652ab2ec0a2a29eb9dad292a55b6e6b6d3ba8f37aad2ab8f7bf",
+          "retrievedAt": "2026-10-15T00:09:49.051203+00:00",
+          "publisher": "Hawaii Legislature",
+          "vault": {
+            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-afc2489d1c4bbff4/sha256-6c951a033a893652ab2ec0a2a29eb9dad292a55b6e6b6d3ba8f37aad2ab8f7bf.html",
+            "byteLength": 75096,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
+          "sourceHash": "b81e37db4ad97593497ab0a8b6cb26cd6cb45cefae6ba141bb43e349446df3ec",
+          "retrievedAt": "2026-10-14T23:52:28.446208+00:00",
+          "publisher": "Hawaii Legislature",
+          "vault": {
+            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/14/ms-01-a24751d71e9598ac/sha256-b81e37db4ad97593497ab0a8b6cb26cd6cb45cefae6ba141bb43e349446df3ec.pdf",
+            "byteLength": 128464,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
+          "sourceHash": "8ac2282da1b21a818207526076cba14178733bd652b42635a7fa77490c2c63d1",
+          "retrievedAt": "2026-10-15T00:09:49.404777+00:00",
+          "publisher": "Hawaii Legislature",
+          "vault": {
+            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-4aa36708a6f54a9e/sha256-8ac2282da1b21a818207526076cba14178733bd652b42635a7fa77490c2c63d1.html",
+            "byteLength": 93472,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
+          "sourceHash": "2107c3ca9b5e88e2e66b9c0484eb2951bd079a6b185a6ed1fab062eaa68e3067",
+          "retrievedAt": "2026-10-14T23:52:28.983792+00:00",
+          "publisher": "Hawaii Legislature",
+          "vault": {
+            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/14/ms-01-45c26c4d106ef886/sha256-2107c3ca9b5e88e2e66b9c0484eb2951bd079a6b185a6ed1fab062eaa68e3067.pdf",
+            "byteLength": 534298,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:12:56.334557+00:00",
-    "reviewedBy": "BL-12 official-source script conversion",
+    "reviewedAt": "2026-10-15T04:14:40.053356+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
@@ -3077,11 +3350,11 @@
         "requestedUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
         "finalUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
         "httpStatus": 200,
-        "rawHash": "5cf1c07c1b4d5e5c6c1572dbee348a0b7c9e8ac91a7e3b94763f1e2614ff4e55",
-        "retrievedAt": "2026-10-14T05:03:16.991898+00:00",
+        "rawHash": "b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50",
+        "retrievedAt": "2026-10-14T23:52:28.162262+00:00",
         "publisher": "Hawaii Office of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official statewide constitutional-amendment page supplies both question titles, verbatim ballot questions, and linked full-text measures.",
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
         "reviewOutcome": "SUPPORTED"
       },
       {
@@ -3133,10 +3406,10 @@
         "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
         "httpStatus": 200,
         "rawHash": "b81e37db4ad97593497ab0a8b6cb26cd6cb45cefae6ba141bb43e349446df3ec",
-        "retrievedAt": "2026-10-14T06:29:15.718066+00:00",
-        "publisher": "Hawaii State Legislature",
+        "retrievedAt": "2026-10-14T23:52:28.446208+00:00",
+        "publisher": "Hawaii Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official full text of SB121, linked from the Legislature report whose measure status link exactly matches the election-office full-text link. The printed ballot question matches the election-office question after whitespace and typographic quote normalization.",
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
         "reviewOutcome": "SUPPORTED"
       },
       {
@@ -3155,10 +3428,10 @@
         "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
         "httpStatus": 200,
         "rawHash": "2107c3ca9b5e88e2e66b9c0484eb2951bd079a6b185a6ed1fab062eaa68e3067",
-        "retrievedAt": "2026-10-14T06:29:16.382743+00:00",
-        "publisher": "Hawaii State Legislature",
+        "retrievedAt": "2026-10-14T23:52:28.983792+00:00",
+        "publisher": "Hawaii Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official full text of SB3219 HD3 CD1, linked from the Legislature report whose measure status link exactly matches the election-office full-text link. The printed ballot question matches the election-office question after whitespace and typographic quote normalization.",
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
         "reviewOutcome": "SUPPORTED"
       },
       {
@@ -3171,6 +3444,38 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official Legislature report identifies the final measure label, links its full-text PDF, and records Enrolled to Governor: SB3219 HD3 CD1 Constitutional Amendments; Counties; Resilient Infrastructure for Shelter and Equity Bonds (ConAm) PROPOSING AMENDMENTS TO ARTICLE VII, SECTIONS 12 AND 13, OF THE HAWAII STATE CONSTITUTION. Proposes constitutional amendments to expressly provide that the Legislature may authorize political subdivisions, such as the counties, to issue resilient infrastructure for shelter and equity bonds for specified public works, public improvements, or other actions necessary for housing and community development, and exclude these bonds from determinations of the funded debt of the political subdivisions. (CD1) (S) 5/8/2026- Enrolled to Governor. HASHIMOTO, CHANG, KEOHOKALOLE, McKelvey HSG, JHA, FIN HB2476",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
+        "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
+        "httpStatus": 200,
+        "rawHash": "6c951a033a893652ab2ec0a2a29eb9dad292a55b6e6b6d3ba8f37aad2ab8f7bf",
+        "retrievedAt": "2026-10-15T00:09:49.051203+00:00",
+        "publisher": "Hawaii Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal bill HTML preserves underlining and strikeout in the source text; corresponding PDF retained.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
+        "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
+        "httpStatus": 200,
+        "rawHash": "8ac2282da1b21a818207526076cba14178733bd652b42635a7fa77490c2c63d1",
+        "retrievedAt": "2026-10-15T00:09:49.404777+00:00",
+        "publisher": "Hawaii Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official legal bill HTML preserves underlining and strikeout in the source text; corresponding PDF retained.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

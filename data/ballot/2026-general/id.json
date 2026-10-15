@@ -6564,6 +6564,86 @@
             "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
             "doorId": "fec-id-chief",
             "quote": "“Shall Section 26, Article III of the Constitution of the State of Idaho be amended to provide that only the Idaho Legislature shall have power and authority to legalize the growing, producing, manufacturing, transporting, selling, delivering, dispensing, administering, prescribing, distributing, possessing, or using of marijuana, narcotics, or other psychoactive substances?”"
+          },
+          "officialText": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "7a4fab0a742f59b19e424d80f719846efa2a57936ab178268b4a1d31bf39667d",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-7a4fab0a742f59b19e424d80f719846efa2a57936ab178268b4a1d31bf39667d.txt",
+              "byteLength": 787,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "592d34fd52fddd8e544ea68af72168a6c732b6097e43019a52b6b6aab94ea9e0",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "summary": "This proposed constitutional amendment would give the Legislature exclusive authority to legalize marijuana, narcotics, or other\npsychoactive substances in the State of Idaho.",
+            "argumentsFor": [
+              "Statement For The Proposed Amendment\n\nDrugs destroy lives, tear apart families, and threaten the safety\nof our communities. Decisions about legalizing marijuana,\nnarcotics, and other psychoactive substances are too important\nto be made lightly. The proposed amendment would ensure that\nany proposal to legalize these dangerous substances would go\nthrough the legislative process. Public hearings would be held\non the proposal, where law enforcement and people whose\nlives have been damaged by drugs would be able to testify.\nLegislators would carefully consider each proposal and would be\npublicly accountable for their votes."
+            ],
+            "argumentsAgainst": [
+              "Statement Against The Proposed Amendment\nThe Idaho Constitution says that all political power\nbelongs to the people. But the proposed amendment\nwould take power away from the people by getting rid\nof their ability to pass drug legalization laws on their own\nthrough ballot initiatives. The people are as capable of\nmaking good, careful decisions about drug policy as\nlegislators are. The amendment is also unnecessary\nbecause if the people did ever pass a poorly considered\nlaw legalizing drugs, the Legislature would have the\npower to amend or repeal it."
+            ],
+            "passageThreshold": "Said publication shall provide the arguments proposing and opposing said amendment or amendments as provided by law, and if a majority of the electors shall ratify the same, such amendment or amendments shall become a part of this Constitution.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
+              "sourceHash": "64a6f19f07fb9b4b5b2f9b088b2d815aec841bc063aff4b015e9af02dfea2602",
+              "retrievedAt": "2026-10-15T00:00:18.950618+00:00",
+              "publisher": "Idaho Legislature",
+              "vault": {
+                "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-e3e0193460a4a265/sha256-64a6f19f07fb9b4b5b2f9b088b2d815aec841bc063aff4b015e9af02dfea2602.txt",
+                "byteLength": 244,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
+                  "sourceHash": "ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c",
+                  "retrievedAt": "2026-10-15T00:00:18.950618+00:00",
+                  "publisher": "Idaho Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-e3e0193460a4a265/sha256-ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c.html",
+                    "byteLength": 90834,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-592d34fd52fddd8e544ea68af72168a6c732b6097e43019a52b6b6aab94ea9e0.txt",
+              "byteLength": 3255,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -6579,6 +6659,86 @@
             "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
             "doorId": "fec-id-chief",
             "quote": "“Shall Article X of the Constitution of the State of Idaho be amended by the addition of a new Section 8, to provide that the English language shall be the official language for the state of Idaho, and to further provide that, except as required by federal law, English shall be used in all public proceedings, public documents, public instruction, and any other public acts of any public institution in the state of Idaho?”"
+          },
+          "officialText": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "9f8ef455b40597d7c19d446f32966099c1a12845f921e6d5e9c3005d904bdde4",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-9f8ef455b40597d7c19d446f32966099c1a12845f921e6d5e9c3005d904bdde4.txt",
+              "byteLength": 320,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "8ed1b2e328036ce53cf3c57c45f66a396e0c98e2bd0d53c9c544b1247929817d",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "summary": "This proposed constitutional amendment would designate English as the official state language. All official speeches,\nmeetings, and other proceedings of state and local governments, such as city council meetings and jury trials, would\nbe conducted in English, and instruction in public schools would be provided in English. All documents of state and local\ngovernment entities would be published in English. However, the amendment would allow languages other than English to\nbe used when required by federal law.",
+            "argumentsFor": [
+              "Statements For The Proposed Amendment\n\nThe amendment could encourage non-English speakers\nto learn English to be able to better participate in public\nlife. This could promote unity and create a stronger sense\nof community and shared identity. Non-English speakers\nwould still have language assistance for critical government\nservices, because that is required by federal law. The\namendment could promote social cohesion without\nendangering anyone.\nThe amendment could promote cost-efficient government by\nlimiting the resources spent on communications in languages\nother than English."
+            ],
+            "argumentsAgainst": [
+              "Statement Against The Proposed Amendment\n\nThe amendment is unnecessary because state law\nalready makes English the official state language. The\nexisting law is better than the amendment because the\nexisting law is much more detailed. For example, the\nlaw allows public schools to teach foreign languages to\ninterested students. The amendment, by requiring that\nall public instruction be conducted in English, might not\nallow this.\nThe amendment could create social division by signaling\nto non-English speakers that they are unwelcome in the\nstate and their communities."
+            ],
+            "passageThreshold": "Said publication shall provide the arguments proposing and opposing said amendment or amendments as provided by law, and if a majority of the electors shall ratify the same, such amendment or amendments shall become a part of this Constitution.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
+              "sourceHash": "64a6f19f07fb9b4b5b2f9b088b2d815aec841bc063aff4b015e9af02dfea2602",
+              "retrievedAt": "2026-10-15T00:00:18.950618+00:00",
+              "publisher": "Idaho Legislature",
+              "vault": {
+                "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-e3e0193460a4a265/sha256-64a6f19f07fb9b4b5b2f9b088b2d815aec841bc063aff4b015e9af02dfea2602.txt",
+                "byteLength": 244,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
+                  "sourceHash": "ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c",
+                  "retrievedAt": "2026-10-15T00:00:18.950618+00:00",
+                  "publisher": "Idaho Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-e3e0193460a4a265/sha256-ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c.html",
+                    "byteLength": 90834,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-8ed1b2e328036ce53cf3c57c45f66a396e0c98e2bd0d53c9c544b1247929817d.txt",
+              "byteLength": 3100,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -6594,6 +6754,89 @@
             "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
             "doorId": "fec-id-chief",
             "quote": "Measure creating right to abortion before fetus viability, and post-viability to protect health; right to privacy; healthcare provider liability protections."
+          },
+          "officialText": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "a5deeb870603854c6da862d7d2beba4366891a4458a76aedd387d53f415ba2f5",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-a5deeb870603854c6da862d7d2beba4366891a4458a76aedd387d53f415ba2f5.txt",
+              "byteLength": 8560,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "7588b8e55a259b0d5df5ca8b44f9cb49cfd4c95084e46b35221a8438e656f49d",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "summary": "The measure seeks to change Idaho’s laws by introducing a right to reproductive freedom and privacy including a right to abortion up\nto the point of the fetus’s ability to survive outside the womb. After fetal viability, there would be no general right to abortion except in\ncases of “medical emergency.” The “medical emergency” exception would expand Idaho’s current life exception and allow abortions\nwhen pregnant women face complicating physical conditions that threaten their life or health, “including serious impairment to a\nbodily function” or “serious dysfunction of any bodily organ or part.”\nThe proposed measure codifies a right to make reproductive decisions, including contraception, fertility treatment, and prenatal and\npostpartum care. This includes a “right of privacy” in making these decisions. The measure seeks to prevent the state from enforcing\ncertain abortion laws protecting the life of the unborn child. It would also impose a requirement that any restrictions on reproductive\ndecisions, including abortion prior to fetus viability, must be “narrowly tailored to improve or maintain the health of the person seeking\nreproductive health care.” The measure would also prevent the state from penalizing patients, healthcare providers, or anyone who\nassists in exercising the proposed right.",
+            "fiscalImpact": "PROPOSITION ONE: REPRODUCTIVE FREEDOM & PRIVACY ACT\n\nFISCAL IMPACT STATEMENT\nProvided by the Idaho Division of Fiscal Management\n\nSummary of Fiscal Impact\n\nThe State estimates the initiative would increase state expenditures between $3,100 and\n$7,800 annually, less than 0.001% of the state share of Idaho’s Medicaid budget. This impact\nis derived from the costs of treating chemical abortion complications for women enrolled in\nIdaho’s Medicaid program. Medicaid covers medically necessary services to treat complications\nfrom all abortions. It is anticipated that as legal abortions increase, the complications will also\nincrease. This will likely result in an increase in Medicaid covered services and expenditures to treat\ncomplications from chemical abortions, which the State has reliable and readily available data to support.\n\nDetailed Statement of Fiscal Impact Including Assumptions\n\nBased on the amount of reliable data gathered by the Division [sic] Financial Management (DFM) and the\noutcome of the initiative (if passed), DFM limited its assumptions about any increase in costs to the state to\nthose costs arising from the treatment of Medicaid recipients for chemical abortion complications. DFM does\nnot have reliable and readily accessible data to reasonably calculate the fiscal impact attributable to the\ncomplications for surgical abortions.\nBased on data provided by Department of Health and Welfare (DHW), DFM considered the number of\nchildbearing women on Medicaid in 2021 which was 97,055. This represents about 25% of the total Idaho\npopulation for women in this same age group. DFM assumed that, as a result of this initiative, the number\nof chemical abortions conducted annually would increase to the levels prior to 2022, the year of the U.S.\nSupreme Court’s decision returning the regulation of abortion to the States. Based on the number of\nchemical abortions performed in Idaho using the 2021 data from the vital records report (approximately\n1,180), DFM assumed 25% (approximately 300) of those individuals were Medicaid recipients.\nTaking the number of Medicaid recipients who would receive a chemical abortion, DFM assumed that 2%\n- 5% of those chemical abortions would result in complications. DFM assumed this based on information\nprovided in (1) the United State’s [sic] Food and Drug Administration’s warning label for the Mifeprex and\n(2) studies related to abortion complications that were published on the National Library of Medicine\nwebsite, which DHW provided to DFM.\nBased on the claims for complications from chemical abortions provided by DHW for 2019 and 2022\nclaims data, DFM applied an average per person claim cost and added a 4% medical inflation year\nover year to account for current medical costs in FY2026. Based on that calculation, DFM assumes that\nabout 300 individuals on Medicaid in Idaho could receive a chemical abortion and of those, 6 to 15\nindividuals could have complications from that chemical abortion with an average claim cost of\nabout $531 (state portion of the cost). Based on the process utilized, evidence readily available and\ngathered, and assumptions used to create the fiscal impact statement, total expenditures for\nthe state would range from $3,100 to $7,800 per year.\nWhile the specific fiscal impact to the state’s expenditures is difficult to quantify, DFM\ncannot in good faith conclude that the proposed initiative will have no fiscal impact on\nstate expenditures.\n\n2026 General Election\n\n•\n\nNovember 3, 2026",
+            "argumentsFor": [
+              "PROPOSITION ONE: REPRODUCTIVE FREEDOM & PRIVACY ACT\n\nPRO - ARGUMENTS FOR PROPOSITION ONE\nProvided by Idahoans United for Women & Families\n\nThis Proposition creates needed exceptions to Idaho’s extreme abortion ban, ensuring that sensitive, urgent\ndecisions in medical emergencies are made by patients and their doctors — not by the government.\nWhen a pregnancy becomes dangerous, when a diagnosis is fatal, or when a mother’s health is at risk,\ndecisions about the best course of care and action should be made at her bedside, by her, her doctor, and\nher family. Her care should not be dictated by politicians who will never know her name.\nHere is what too many Idahoans don’t yet realize: Idaho’s abortion ban is one of the most severe in the\nnation, and it took effect only recently. The impacts of that ban have been swift and dangerous.\nThe current law provides no health or emergency exception, leaving doctors unable to act until a crisis\nbecomes critical. Doctors face prison time for using their best medical judgment. Pregnant women have\nbeen airlifted to Utah to receive health-saving interventions, or forced to wait until they are near death\nbefore receiving care.\n• Voting YES would restore the standard Idaho operated under for nearly 50 years, with health and life\nexceptions to the abortion ban, including cases of fatal fetal diagnosis.\n• Voting YES would protect doctors and nurses from criminal prosecution for providing standard medical\ncare, at a time when Idaho is already losing OB-GYNs, family doctors, and emergency physicians.\n• Voting YES also protects the care Idaho families count on every day: birth control, contraception, and\nfertility treatments like IVF.\n• Voting YES does NOT create public funding for abortion, nor does it force any provider to violate their\nconscience.\n• Voting YES does NOT change Idaho’s current parental consent laws: all healthcare for minors would still\nrequire the permission of a parent or guardian.\nAs the titles and language of the Act plainly state, voting YES decriminalizes abortion, while maintaining\nreasonable restrictions, to ensure that the government isn’t involved in personal family medical decisions.\nThis is not a new idea: it is the same commonsense standard Idaho doctors practiced under for two\ngenerations.\nThe signers of this Act — thousands of people from all walks of life in every corner of our state who put\nthis question on the ballot for your vote — agree on one thing even when they may agree on little else:\npoliticians are the wrong people to be making sensitive, private, complex decisions about our families,\nhealth, and futures.\nThere is one question every voter should ask themselves: who do you trust with your family’s most private\nmedical decisions? Is it you and your doctor, or politicians?\nThe only way to ensure there are exceptions to Idaho’s ban is by voting YES on Proposition One.\n\nIdaho Voter Pamphlet\n\n•\n\nPresented by Idaho Secretary of State Phil McGrane",
+              "Rebuttal to Con Arguments\nProvided by Idahoans United for Women & Families\n\nFor a true picture of what Proposition One does (and doesn’t\ndo), you can read the official ballot summary — written by\nIdaho’s conservative Attorney General and reviewed by Idaho’s\nSupreme Court for accuracy. The language plainly shows that\nProposition One is a reasonable way to stop Idaho’s dangerous\nabortion ban from putting women and families at needless risk.\nProposition One Restores Exceptions to Idaho’s Extreme Ban.\nCountless things can go wrong in pregnancy, and doctors must\nbe able to offer critical, health-and-lifesaving care to women\nwithout the risk of prison. That was Idaho’s standard of care for\ndecades, and Proposition One restores it.\nProposition One Includes Common-Sense Restrictions\non Abortions.\nAbortion remains illegal after viability under Proposition One,\nexcept when a doctor determines it is medically necessary to\nprotect the woman’s life or health. That’s the restriction that we\nfollowed for 50 years, the one most Idahoans want, and it’s the\nsame doctor-determined standard used in states like Utah.\nProposition One Leaves Parental Rights Protected\nand Unchanged.\nParents’ rights are and will remain among the most strongly\nprotected constitutional rights, and no doctor in Idaho delivers\nhealthcare to minors without the express permission of their\nparent or guardian.\nProposition One Keeps the Same Definition for Physicians.\nProp One’s definition of “physician” comes directly from\nexisting Idaho Code and, like current law, recognizes that\nnurse practitioners and physician assistants legally provide\nreproductive care all the time. That’s standard medicine.\nRead it for yourself: Proposition One restores common-sense\nhealthcare to Idaho.\n\nEverything you need to know to vote is at\n\noter Pamphlet\n\n•\n\nPresented by Idaho Secretary of State Phil McGrane"
+            ],
+            "argumentsAgainst": [
+              "PROPOSITION ONE: REPRODUCTIVE FREEDOM & PRIVACY ACT\n\nCON - ARGUMENTS AGAINST PROPOSITION ONE\nProvided by the Idaho Family Policy Center, Idaho Chooses Life, Right to Life Idaho, Too Extreme for Idaho, and\nthe Roman Catholic Diocese of Boise\n\nProposition 1 is a backdoor attempt to legalize late-term abortions, long past the point in pregnancy at which\nbabies can feel pain. Most people don’t support elective abortion at seven or even eight months of pregnancy.\nMost people want parents involved when their teenage daughter is seeking an abortion. And most people\nbelieve that abortions should only be performed by doctors. Prop 1 erases all of these protections and goes too\nfar for most Idahoans.\nWhen it comes to writing laws, words matter—and the lawyers who wrote Prop 1 deliberately used tricky\nlanguage to mislead voters. It’s deceptive by design. And voters must examine the fine print.\nProp 1 claims to allow abortions only to the point of “viability” but throws out the longstanding definition of\nthat term. Idaho law has always defined “fetal viability” as the point at which a baby could “potentially live\noutside the mother’s womb, albeit with artificial aid.” But Prop 1 redefines viability as the point when a baby has\na “significant likelihood of sustained survival without extraordinary medical measures.” Notice the bait-andswitch: the word “potentially” has been replaced by “significant likelihood,” and the phrase “albeit with artificial\naid” has been replaced by “without extraordinary medical measures.”\nThis radical approach isn’t based in law or medicine. Many premature babies can survive with the assistance\nof oxygen, nutrition, or other extraordinary measures. But under Prop 1, some of these babies would no longer\nbe protected. Prop 1 would permit abortion on demand until seven or eight months of pregnancy—far beyond\nwhat was allowed even under Roe v. Wade.\nAlmost everyone agrees that there comes a time in a pregnancy when it’s just too late for an abortion. Good\npeople may disagree over when to draw that line. But most Idahoans believe unrestricted late-term abortion is\ntoo extreme for Idaho.\nAnd it doesn’t stop there. Prop 1 also eliminates the longstanding safety requirement that only doctors can\nperform abortions. It replaces “physician” with the vague term “health care provider,” which it defines as any\n“licensed person or entity that provides health care or medical treatment.” This even includes people who\naren’t doctors—such as abortion clinic employees. By stripping women’s health protections, Prop 1 endangers\nthe women it is supposed to help.\nBut perhaps the most shocking of all? Prop 1 authorizes “health care providers” to perform abortions on teenage\ngirls behind the backs of their parents, overturning parental consent requirements. That’s because Prop 1\ncreates a right to abortion for “every person” regardless of age, making abortion the only procedure that could\nbe performed on a child without parental involvement.\nProp 1 organizers want to bring California-style abortion laws to Idaho. They are determined to legalize lateterm abortions. And they won’t stop until they’ve gutted patient protections and eliminated parental rights.\nThat’s what they won’t tell you—but it’s the truth. And it’s right there in black and white.\nProp 1 is too extreme for Idaho. Vote NO.\n\n2026 General Election\n\n•\n\nNovember 3, 2026",
+              "Rebuttal to Pro Arguments\nProvided by the Idaho Family Policy Center, Idaho Chooses\nLife, Right to Life Idaho, Too Extreme for Idaho, and the Roman\nCatholic Diocese of Boise\nAbortion advocates want you to believe that Prop 1 simply\ntakes us back to Roe v. Wade. But in reality, Prop 1 is far more\nextreme—authorizing late-term abortions well beyond what\nwas allowed under Roe v. Wade. And that’s just the beginning.\n\nProp 1 organizers claim that it doesn’t eliminate current parental\nconsent laws. But the proposition language says otherwise.\nProp 1 creates a “right” to abortion for “every person” regardless\nof age—making abortion the only procedure that children can\nget without parental involvement.\nProp 1 also contains a provision that would override other state\nlaws, including parental consent requirements and another\nstate law that protects your tax dollars from funding abortion.\nTheir lawyers didn’t have to write it that way. But they did—and\nthey’re lying to you about it.\nAnd their claim that Prop 1 is necessary to protect birth control\nand IVF? Also untrue. These services are already legal in Idaho—\nand Prop 1 isn’t needed to protect access.\nAre Idaho laws dangerous for mothers? No. Idaho laws allow\nabortions to save the life of the mother and in cases of rape\nand incest—and provide ample latitude for physicians to\nperform medically necessary care in accordance with their\ngood faith medical judgment.\nAs for the doctor shortage? More deception. Actively licensed\nOB/GYNs in Idaho have actually increased by over 20%,\naccording to the Idaho Board of Medicine.\nVoters deserve to know the truth: Prop 1 is just too extreme for\nIdaho. Vote NO.\n\nor check your\nregistration\n\nwhat’s on\nyour ballot\n\nyour polling\nplace\n\nan absentee\nballot\n\nIdaho Vo"
+            ],
+            "passageThreshold": "The manner of voting upon measures submitted to the people shall be the same as is now or may be required and provided by law; no measure shall be adopted unless it shall receive an affirmative majority of the aggregate number of votes cast on such measure.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH18/SECT34-1811/",
+              "sourceHash": "dbe4b73bc551d01c301fabc1216d49889cf3b306fe45b3afe06afe2f3f5e20e9",
+              "retrievedAt": "2026-10-15T00:00:44.289021+00:00",
+              "publisher": "Idaho Legislature",
+              "vault": {
+                "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-fe6cff558072ae83/sha256-dbe4b73bc551d01c301fabc1216d49889cf3b306fe45b3afe06afe2f3f5e20e9.txt",
+                "byteLength": 257,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH18/SECT34-1811/",
+                  "sourceHash": "50c1217f3ea0e1f0982fcb3295aaed6c85b17fe195e6021af73c4c0c62e094d3",
+                  "retrievedAt": "2026-10-15T00:00:44.289021+00:00",
+                  "publisher": "Idaho Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-fe6cff558072ae83/sha256-50c1217f3ea0e1f0982fcb3295aaed6c85b17fe195e6021af73c4c0c62e094d3.html",
+                    "byteLength": 91789,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-7588b8e55a259b0d5df5ca8b44f9cb49cfd4c95084e46b35221a8438e656f49d.txt",
+              "byteLength": 25208,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -6609,17 +6852,183 @@
             "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
             "doorId": "fec-id-chief",
             "quote": "Which of the following guns should be designated as the state gun of Idaho? Please choose only one answer.\n(a) Winchester Model 1894 (.30-30);\n(b) Winchester Model 1873 “Gun that Won the West” (.44-40);\n(c) 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt);\n(d) M1 Garand rifle (.30-06);\n(e) Colt M1911 .45 automatic Colt pistol (.45 ACP); or\n(f) Remington Model 700 bolt-action rifle (.30-06)"
+          },
+          "officialText": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "09b28ed8cc743528668cd8a73a45adc45a0379cfbf614c1b5ff79b36e04d72bf",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-09b28ed8cc743528668cd8a73a45adc45a0379cfbf614c1b5ff79b36e04d72bf.txt",
+              "byteLength": 452,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "sourceHash": "bb188372ae04b81301451c9214aef7f34899664c362cb541bffc755ccc5053bb",
+            "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+            "publisher": "Idaho Secretary of State",
+            "summary": "This advisory question asks Idahoans to designate which gun they would like to have as the official Idaho State Gun. This is a\nnon-binding measure, and the Legislature would have to take action during a future legislative session to officially designate a\ngun as the Idaho State Gun.",
+            "passageThreshold": "This advisory question asks Idahoans to designate which gun they would like to have as the official Idaho State Gun. This is a\nnon-binding measure, and the Legislature would have to take action during a future legislative session to officially designate a\ngun as the Idaho State Gun.",
+            "vault": {
+              "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-bb188372ae04b81301451c9214aef7f34899664c362cb541bffc755ccc5053bb.txt",
+              "byteLength": 2787,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+                "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+                "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+                "publisher": "Idaho Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+                  "byteLength": 27494593,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [
+        {
+          "contestId": "id-2026-11-03-measure-hjr-4",
+          "whatItDoes": "Section 26. POWER AND AUTHORITY OVER INTOXICATING LIQUORS <u>AND PSYCHOACTIVE SUBSTANCES. (1)</u> From and after\nthe thirty-first day of December in the year 1934, the legislature of the state of Idaho shall have full power and",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "id-2026-11-03-measure-hjr-4#section-26",
+              "number": "26",
+              "kind": "PROGRAM",
+              "label": "Section 26",
+              "what": "Section 26. POWER AND AUTHORITY OVER INTOXICATING LIQUORS <u>AND PSYCHOACTIVE SUBSTANCES. (1)</u> From and after\nthe thirty-first day of December in the year 1934, the legislature of the state of Idaho shall have full power and"
+            }
+          ],
+          "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "sourceHash": "7a4fab0a742f59b19e424d80f719846efa2a57936ab178268b4a1d31bf39667d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "id-2026-11-03-measure-hjr-6",
+          "whatItDoes": "Section 8. ENGLISH THE OFFICIAL STATE LANGUAGE. The English language shall be the official language for the state of Idaho.\nExcept as required by federal law, English shall be used in all public proceedings, public documents, public instruction, and\nany other public acts of any public institution in the state of Idaho.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "id-2026-11-03-measure-hjr-6#section-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "Section 8",
+              "what": "Section 8. ENGLISH THE OFFICIAL STATE LANGUAGE. The English language shall be the official language for the state of Idaho.\nExcept as required by federal law, English shall be used in all public proceedings, public documents, public instruction, and\nany other public acts of any public institution in the state of Idaho."
+            }
+          ],
+          "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "sourceHash": "9f8ef455b40597d7c19d446f32966099c1a12845f921e6d5e9c3005d904bdde4",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "id-2026-11-03-measure-proposition-one",
+          "whatItDoes": "Be it enacted by the People of the State of Idaho:\nSECTION 1. That Title 39, Idaho Code, be, and the same is hereby amended by the addition thereto of a NEW CHAPTER, to be\nknown and designated as Chapter 8, Title 39, Idaho Code, and to read as follows:\n39-801. SHORT TITLE.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "id-2026-11-03-measure-proposition-one#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. That Title 39, Idaho Code, be, and the same is hereby amended by the addition thereto of a NEW CHAPTER, to be\nknown and designated as Chapter 8, Title 39, Idaho Code, and to read as follows:\n39-801. SHORT TITLE. This act shall be known and may be cited as the “Reproductive Freedom and Privacy Act.”\n39-802."
+            },
+            {
+              "id": "id-2026-11-03-measure-proposition-one#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2. This act shall be in full force and effect on and after January 1, 2027.\n\nABSENTEE VOTING\n\nRequest an\n\nABSENTEE BALLOT\n\nFinding yourself away\non Election Day?\nRequest an absentee\nballot by 5:00 p.m. local\ntime on the deadline of\nFriday, October 23.\nYou must be registered\nto request a ballot."
+            }
+          ],
+          "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "sourceHash": "a5deeb870603854c6da862d7d2beba4366891a4458a76aedd387d53f415ba2f5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "id-2026-11-03-measure-hb-932",
+          "whatItDoes": "Advisory Question - House Bill 932\nWhich of the following guns should be designated as the state gun of Idaho? Please choose only one answer.\n(a) Winchester Model 1894 (.30-30);",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "sourceHash": "09b28ed8cc743528668cd8a73a45adc45a0379cfbf614c1b5ff79b36e04d72bf",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+          "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
+          "publisher": "Idaho Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
+            "byteLength": 27494593,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
+          "sourceHash": "ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c",
+          "retrievedAt": "2026-10-15T00:00:18.950618+00:00",
+          "publisher": "Idaho Legislature",
+          "vault": {
+            "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-e3e0193460a4a265/sha256-ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c.html",
+            "byteLength": 90834,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH18/SECT34-1811/",
+          "sourceHash": "50c1217f3ea0e1f0982fcb3295aaed6c85b17fe195e6021af73c4c0c62e094d3",
+          "retrievedAt": "2026-10-15T00:00:44.289021+00:00",
+          "publisher": "Idaho Legislature",
+          "vault": {
+            "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-fe6cff558072ae83/sha256-50c1217f3ea0e1f0982fcb3295aaed6c85b17fe195e6021af73c4c0c62e094d3.html",
+            "byteLength": 91789,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:07:11.760255+00:00",
-    "reviewedBy": "BL-12 official-source script conversion",
+    "reviewedAt": "2026-10-15T04:14:40.047736+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://sos.idaho.gov/elections-division/",
@@ -6686,10 +7095,33 @@
         "finalUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
         "httpStatus": 200,
         "rawHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
-        "retrievedAt": "2026-10-14T05:03:44.102287+00:00",
+        "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
         "publisher": "Idaho Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 Voter Pamphlet: HJR 4 and HJR 6 questions and full text on pages 4–5; Proposition One short and long ballot titles on page 6 and full proposed law on pages 11–13; HB 932 advisory question and choices on page 14."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
+        "finalUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
+        "httpStatus": 200,
+        "rawHash": "234c4e295d8bae85cfbab15f5e6fe0d30f1e50800eefdbad63f772f27e004a4e",
+        "retrievedAt": "2026-10-15T00:00:18.950618+00:00",
+        "publisher": "Idaho Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH18/SECT34-1811/",
+        "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH18/SECT34-1811/",
+        "httpStatus": 200,
+        "rawHash": "8d26a2237738fac884cd63aba665b4d790b158e1399e6e976558a3525b85dbc9",
+        "retrievedAt": "2026-10-15T00:00:44.289021+00:00",
+        "publisher": "Idaho Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

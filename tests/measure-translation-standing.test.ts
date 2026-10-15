@@ -1,3 +1,4 @@
+import { measureReference } from "./helpers/measure-reference.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
@@ -10,9 +11,10 @@ import { runHeldMeasureTranslations, type TranslationAttempt } from "../lib/tran
 
 const now = "2026-10-05T18:00:00Z", division = "ocd-division/country:us/state:oh/county:alder";
 const text = "Proposition 12. The levy funds library services. A YES vote adopts the levy. A NO vote keeps the current levy.";
-const capture: WorkerPublicationCapture = { evidence: { artifactId: "official", acquiredByAttemptId: "held", sourceId: "Fixture election authority",
+const rawCapture: WorkerPublicationCapture = { evidence: { artifactId: "official", acquiredByAttemptId: "held", sourceId: "Fixture election authority",
   methodRouteId: "official-text", canonicalUrl: "https://elections.example.gov/proposition12", text,
   contentHash: `sha256-${translationHash(text)}`, retrievedAt: now }, observedAt: now, partial: false, httpStatus: 200, transport: "REACHABLE" };
+const capture: WorkerPublicationCapture = { ...rawCapture, sourceReference: measureReference(rawCapture.evidence) };
 const measure = { contestId: "measure:12", whatItDoes: "The levy funds library services.", yesMeans: "A YES vote adopts the levy.",
   noMeans: "A NO vote keeps the current levy.", parts: [], sourceUrl: capture.evidence.canonicalUrl, sourceHash: translationHash(text), writtenAt: now };
 const ballot = { measureRecords: [measure], contests: [{ id: measure.contestId, title: "Proposition 12", type: "MEASURE", ocdId: division }] } as unknown as BallotSet;
@@ -51,10 +53,28 @@ test("standing admission writes and independently checks held measures, reuses u
   const changed = `${text} The election office published this revision.`;
   f.input.captures = [{ ...capture, observedAt: f.input.now, evidence: { ...capture.evidence, text: changed,
     contentHash: `sha256-${translationHash(changed)}`, retrievedAt: f.input.now } }];
+  f.input.captures[0] = { ...f.input.captures[0], sourceReference: measureReference(f.input.captures[0].evidence) };
   const rewritten = await runHeldMeasureTranslations({ ...f.input, attempts: first.outcomes });
   assert.equal(rewritten.outcomes[0].status, "PUBLISHED");
   assert.notEqual(rewritten.outcomes[0].versionId, first.outcomes[0].versionId);
   assert.equal(f.requests.length, 4);
+});
+
+test("a vaulted PDF transcription keeps the held text hash from admission through checked publication", async () => {
+  const f = fixture();
+  const originalHash = translationHash("%PDF original publisher document");
+  const primary: WorkerPublicationCapture = { ...capture, evidence: { ...capture.evidence,
+    sourceDocument: { artifactId: "original-pdf", contentHash: `sha256-${originalHash}`, kind: "PDF_TEXT" } } };
+  f.input.captures = [primary];
+  f.input.ballots = [{ ...ballot, measures: [{ id: measure.contestId, contestId: measure.contestId,
+    questionText: "Shall the levy be adopted?", officialStatement: null, officialText: primary.sourceReference,
+    provenance: { sourceUrl: capture.evidence.canonicalUrl } as BallotSet["measures"][number]["provenance"] }] }];
+  const result = await runHeldMeasureTranslations(f.input);
+  assert.deepEqual(result.deferred, []);
+  assert.equal(result.outcomes[0].status, "PUBLISHED", result.outcomes[0].detail);
+  assert.equal(result.outcomes[0].sourceHash, measure.sourceHash);
+  assert.notEqual(result.outcomes[0].sourceHash, originalHash);
+  assert.equal(f.requests.length, 2);
 });
 
 test("failed checks retain both calls' usage and wait for the existing retry before spending again", async () => {

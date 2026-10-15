@@ -4402,6 +4402,86 @@
             "sourceOrg": "Charles Mix County Auditor",
             "collectedAt": "2026-10-14T05:24:31.208593+00:00",
             "verifiedAt": "2026-10-14T05:24:31.208593+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
+            "sourceHash": "1d210f190a96f612f103508f8107867dc0c985698c5f1387db8543c8ba2f435f",
+            "retrievedAt": "2026-10-14T23:52:30.665569+00:00",
+            "publisher": "South Dakota Legislature",
+            "vault": {
+              "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-812fd183a4b7545f/sha256-1d210f190a96f612f103508f8107867dc0c985698c5f1387db8543c8ba2f435f.txt",
+              "byteLength": 4895,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
+                "sourceHash": "45bf5d97f6c6035b287b3926e0ac9be718151210a84a04297261ad91c5136dec",
+                "retrievedAt": "2026-10-14T23:52:30.665569+00:00",
+                "publisher": "South Dakota Legislature",
+                "vault": {
+                  "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-812fd183a4b7545f/sha256-45bf5d97f6c6035b287b3926e0ac9be718151210a84a04297261ad91c5136dec.pdf",
+                  "byteLength": 100105,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+            "sourceHash": "507edf21d29820d67ab0b19e96915bb8512eed4713fb90ff212dfab9d84595c9",
+            "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+            "publisher": "South Dakota Secretary of State",
+            "summary": "Medicaid is a program, funded by the State and the federal government, to provide\nmedical coverage for low-income children, pregnant women, disabled individuals, and the elderly. In the 2022 General\nElection the voters approved Constitutional Amendment D, which expanded Medicaid eligibility in South Dakota.\nAmendment D requires the State to also provide Medicaid benefits to anyone over the age of 18 and under 65 whose\nincome is at or below 133% of the federal property level, plus 5% of the federal poverty level for the applicable family size.\nCurrently, federal law requires the federal government to fund 90% of South Dakota’s Medicaid expansion.\nThis proposed Constitutional Amendment ends the expanded Medicaid coverage if the federal funding for expansion drops\nbelow 90%. If federal funding drops below that 90% threshold, Medicaid coverage will once again only apply to lowincome children, pregnant women, disabled individuals, and the elderly.",
+            "argumentsFor": [
+              "Pro – Constitutional Amendment I\nAmendment I is about making sure that South Dakotans get to make their\nown decisions about how to spend state money. It would NOT\nautomatically end Medicaid expansion. It would let South Dakotans make\nthat decision.\nIn 2022, voters approved Medicaid expansion. The state has honored that\nvote, and today about 30,000 South Dakotans receive coverage through the\nprogram.\nA major reason voters supported expansion was a promise from the federal\ngovernment: Washington would pay 90% of the cost, while South Dakota\nwould pay 10%. Amendment I says that as long as Washington keeps that\npromise, nothing changes.\nBut what if Washington changes the deal? Think about any service you\nbuy at a set price. If the company raises the price, you get to decide\nwhether the service is still worth the cost. South Dakota deserves the same\nchoice.\nFor every 10% of Medicaid expansion costs shifted from Washington to\nSouth Dakota, our state would have to find about $36 million more each\nyear. That could mean higher taxes or cuts elsewhere.\nOur state has many important needs. We fund schools, law enforcement,\nnursing homes, and services for people with disabilities. Medicaid\nexpansion for able-bodied, working-age adults should not have a\nguaranteed place at the front of the line if Washington stops paying its\npromised share.\nAmendment I does not prevent South Dakota from continuing Medicaid\nexpansion. It simply ends the constitutional requirement if federal funding\nfalls below 90%. Legislators and voters could then decide whether\nexpansion is still worth the new cost. Our state has participated in\nMedicaid programs for more than fifty years, without having it in the\nconstitution.\nSouth Dakotans made the decision to expand Medicaid. If Washington\nchanges the deal, South Dakotans should make the next decision too.\n\nVote YES on Amendment I.\nLt. Governor Tony Venhuizen; Sen. Casey Crabtree, Madison;\nand Rep. Will Mortenson, Ft. Pierre"
+            ],
+            "argumentsAgainst": [
+              "Con – Constitutional Amendment I\n\nA vote NO would keep the South Dakota Constitution\nunchanged and preserve Medicaid expansion as approved\nby South Dakota voters in 2022.\nMedicaid expansion provides health insurance to adults\nwith incomes up to $1,835 per month (about $22,00 per\nyear) for a single individual or $3,142 per month ($37,700\nper year) for a family of three. Before expansion, many\nlow-income South Dakotans had no affordable way to see\na doctor or fill prescriptions.\nA vote NO would allow approximately 30,000 South\nDakotans who receive insurance through Medicaid\nexpansion to keep their insurance and access the care\nneeded to stay healthy, support their families, work, and\ncontribute to their communities.\nA vote NO would ensure that changes in federal funding\ndo not automatically take health coverage from South\nDakotans.\nStatement from Deb Fischer-Clemens, RN, BSN, MHA"
+            ],
+            "passageThreshold": "Any constitutional amendment or revision must be submitted to the voters and shall become a part of the Constitution only when approved by a majority of the votes cast thereon.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+              "sourceHash": "f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8",
+              "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+              "publisher": "South Dakota Legislature",
+              "vault": {
+                "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8.txt",
+                "byteLength": 176,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+                  "sourceHash": "91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0",
+                  "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+                  "publisher": "South Dakota Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0.html",
+                    "byteLength": 3039,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-507edf21d29820d67ab0b19e96915bb8512eed4713fb90ff212dfab9d84595c9.txt",
+              "byteLength": 4192,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+                "sourceHash": "25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c",
+                "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+                "publisher": "Charles Mix County Auditor",
+                "vault": {
+                  "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c.pdf",
+                  "byteLength": 613690,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4415,6 +4495,86 @@
             "sourceOrg": "Charles Mix County Auditor",
             "collectedAt": "2026-10-14T05:24:31.208593+00:00",
             "verifiedAt": "2026-10-14T05:24:31.208593+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
+            "sourceHash": "deb2b8f8e7b8cebba746ef947d83a0f56f61e0aed33dab506bc466d05e4a7906",
+            "retrievedAt": "2026-10-14T23:52:30.511128+00:00",
+            "publisher": "South Dakota Legislature",
+            "vault": {
+              "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d4a00d0485b906ab/sha256-deb2b8f8e7b8cebba746ef947d83a0f56f61e0aed33dab506bc466d05e4a7906.txt",
+              "byteLength": 3364,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
+                "sourceHash": "7c69905d8cc0d6b4489cce7b4d830bfedfea7f6e396bf594b6d480c0d20d2f02",
+                "retrievedAt": "2026-10-14T23:52:30.511128+00:00",
+                "publisher": "South Dakota Legislature",
+                "vault": {
+                  "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d4a00d0485b906ab/sha256-7c69905d8cc0d6b4489cce7b4d830bfedfea7f6e396bf594b6d480c0d20d2f02.pdf",
+                  "byteLength": 95761,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+            "sourceHash": "4f8640155038ef23a3f1658a30bddea61d4b1916bfbb4b906c9fbf579447bd30",
+            "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+            "publisher": "South Dakota Secretary of State",
+            "summary": "Article VII, § 2 of the South Dakota Constitution defines who is qualified to vote in state\nelections. Among these qualifications are age, residency, and United States citizenship requirements. Article VII, § 2 also\nestablishes that individuals may be disqualified from voting because of mental incompetence or a felony conviction.\nThis constitutional amendment adds people who are not United States citizens to the list of individuals disqualified from\nvoting, clarifying the existing requirement that only citizens may vote in state elections.",
+            "argumentsFor": [
+              "Pro – Constitutional Amendment J\nAmendment G protects the integrity of South Dakota elections by\nmaking it clear that only United States citizens may vote in\nelections in South Dakota. Vote YES if you agree.\nThe South Dakota Constitution currently states that every United\nStates citizen who is eighteen years of age or older and has met all\nresidency requirements is entitled to vote in all elections, unless\ndisqualified by law for mental incompetence or conviction of a\nfelony.\nHowever, our Constitution does not explicitly state that\nindividuals who are not United States citizens are prohibited from\nvoting. As long as United States citizens who meet the\nrequirements are allowed to vote, nothing currently prohibits noncitizens also being allowed to vote. Amendment G closes that\nconstitutional loophole.\nCurrently, the South Dakota Constitution recognizes only two\nreasons a person may be disqualified from voting: mental\nincompetence and conviction of a felony. Amendment G adds a\nthird disqualification: not being a citizen of the United States.\nVote YES to make it unmistakably clear that only United States\ncitizens may vote in South Dakota elections.\nThis amendment does not change the voting rights of any eligible\nUnited States citizen. It does not change voter registration\nrequirements, residency requirements, or election procedures. It\nsimply adds clear language to our Constitution stating that noncitizens are not eligible to vote.\nIf approved by a majority of voters at the general election, this\namendment will become part of the South Dakota Constitution. If\nrejected, the current constitutional loophole would remain in\nplace.\nSouth Dakotans deserve confidence that our Constitution clearly\nprotects the integrity of our elections.\nVote YES on Amendment G.\nTaffy Howard, State Senator, District 34"
+            ],
+            "argumentsAgainst": [
+              "Con – Constitutional Amendment J\nToday, under South Dakota's Constitution, only United States\ncitizens can vote. Non-citizens cannot.\nAmendment J does not solve any problems. Instead, it creates\none: you, a citizen, could be denied the right to vote over a\nchallenge to your citizenship.\nThe first line of Amendment J restates what our state's\nConstitution already says: \"Every individual who is a citizen of\nthe United States\" is entitled to vote.\nThe problem is what Amendment J adds—\"an individual who is\nnot a citizen of the United States is disqualified from voting\"—\npaired with a recently enacted law. Effective July 1, 2026, any\nregistered voter may challenge your registration by claiming you\nare not a citizen.\nThere is no simple document to prove a person is not a citizen.\nWhen a challenge is filed, the burden shifts to you to prove that\nyou are a citizen, with no clear timeline for when your\ncitizenship is recognized. In practice, this means a challenge\nfrom anyone could keep you from casting a timely absentee or\nElection Day ballot.\nAmendment J was sold in the Legislature as stopping noncitizens from voting. Instead, it makes ordinary citizens prove\ntheir status—most often naturalized citizens or citizens\nquestioned over their name or background.\nAmendment J does not solve anything. In 2024, the state found\nand removed 273 non-citizens from its rolls. Those people had\nmarked \"no\" to citizenship on their driver's license applications,\nand the Department of Public Safety registered them as a result\nof human error. There has been no attempt to commit mass\nelection fraud by noncitizens in South Dakota.\nOnly citizens can vote in South Dakota. Amendment J does not\nchange that, but it gives bad actors a tool to deny your vote\nthrough an unclear citizenship challenge process.\nVote No on Amendment J.\nRepresentative Erik Muckey, District 15"
+            ],
+            "passageThreshold": "Any constitutional amendment or revision must be submitted to the voters and shall become a part of the Constitution only when approved by a majority of the votes cast thereon.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+              "sourceHash": "f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8",
+              "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+              "publisher": "South Dakota Legislature",
+              "vault": {
+                "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8.txt",
+                "byteLength": 176,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+                  "sourceHash": "91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0",
+                  "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+                  "publisher": "South Dakota Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0.html",
+                    "byteLength": 3039,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-4f8640155038ef23a3f1658a30bddea61d4b1916bfbb4b906c9fbf579447bd30.txt",
+              "byteLength": 4617,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+                "sourceHash": "25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c",
+                "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+                "publisher": "Charles Mix County Auditor",
+                "vault": {
+                  "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c.pdf",
+                  "byteLength": 613690,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4428,6 +4588,83 @@
             "sourceOrg": "Charles Mix County Auditor",
             "collectedAt": "2026-10-14T05:24:31.208593+00:00",
             "verifiedAt": "2026-10-14T05:24:31.208593+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
+            "sourceHash": "25640169b736d68ab6fffbbcf7c14bd363d7261108677f622a3725d009be0736",
+            "retrievedAt": "2026-10-14T23:52:30.870238+00:00",
+            "publisher": "South Dakota Legislature",
+            "vault": {
+              "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-71a1ce0e902a1f13/sha256-25640169b736d68ab6fffbbcf7c14bd363d7261108677f622a3725d009be0736.txt",
+              "byteLength": 3961,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
+                "sourceHash": "28f74802bf9fb5773623c61f15c1b8cb507dbc9b71cce615f8596938a18370a5",
+                "retrievedAt": "2026-10-14T23:52:30.870238+00:00",
+                "publisher": "South Dakota Legislature",
+                "vault": {
+                  "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-71a1ce0e902a1f13/sha256-28f74802bf9fb5773623c61f15c1b8cb507dbc9b71cce615f8596938a18370a5.pdf",
+                  "byteLength": 96940,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+            "sourceHash": "ce3fdd58a2854f7864201e627381e8d798ff60272b2b5cf23e8c823d52959108",
+            "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+            "publisher": "South Dakota Secretary of State",
+            "summary": "Under South Dakota statute, intangible property is presumed to be abandoned if it remains\nunclaimed by the owner for more than three years after it became payable or distributable. Examples of intangible property\nare traveler’s checks, money orders, bank deposits, refunds, stocks, funds owed under a life insurance policy, and property\nheld in a safe deposit box. Abandoned intangible property is transferred to the State Treasurer to hold while waiting for the\nowner to claim it. The State Treasurer must provide public notice of the abandoned property.\nThis proposed constitutional amendment establishes a trust fund where unclaimed abandoned property will be deposited.\nPortions of the interest and income from this fund will be distributed into the general fund for the benefit of the state. This\nproposed amendment requires the Legislature to determine the amount to be distributed that promotes the growth of the trust\nfund and the distributed amount.",
+            "argumentsFor": [
+              "Pro – Constitutional Amendment K\nVote YES on Amendment K\nAmendment K is a win-win for all South Dakotans. If voters\napprove it, unclaimed property dollars will be held in a permanent\ntrust fund. The interest those dollars earn becomes a new\npermanent source of state revenue for roads, schools, and other\npublic services without raising taxes. Unclaimed funds like\nforgotten bank accounts, refunds, and insurance proceeds stay\nprotected for their rightful owners.\nAmendment K also delivers stronger returns. Today, those dollars\nsit in a temporary fund earning only 3 to 4 %. Our other state trust\nfunds, managed by the South Dakota Investment Council are doing\nconsiderably better; School and Public Lands at 8.3 % and\nEducation Enhancement at 7.9 %. Voting yes puts unclaimed\nproperty dollars in the same hands.\nUnreturned dollars go into the permanent trust fund and stay there,\nso when a rightful owner comes forward, the money is still there to\npay the claim in full. Only interest earned each year goes to the\nLegislature, which gives the state a steady source of revenue\nwithout costing claimants or taxpayers a thing.\nFor anyone claiming property through the State Treasurer's\nUnclaimed Property Program, nothing changes. It keeps returning\nmoney to rightful owners just as it always has. What changes is the\nprotection behind those dollars. Pass Amendment K, and that\nprotection is permanent. Vote it down, and the Legislature can\nchange the law whenever it likes and spend whatever isn't claimed,\njust as it could under the old system.\nAmendment K follows the proven model of South Dakota's other\npermanent trusts managed by the Investment Council, and it asks\nnothing of anyone. Vote YES to protect unclaimed property dollars\npermanently, put them to work for stronger returns, and give the\nstate a stable source of revenue without a single new tax.\nJosh Haeder\nState Treasurer"
+            ],
+            "passageThreshold": "Any constitutional amendment or revision must be submitted to the voters and shall become a part of the Constitution only when approved by a majority of the votes cast thereon.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+              "sourceHash": "f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8",
+              "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+              "publisher": "South Dakota Legislature",
+              "vault": {
+                "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8.txt",
+                "byteLength": 176,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+                  "sourceHash": "91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0",
+                  "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+                  "publisher": "South Dakota Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0.html",
+                    "byteLength": 3039,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-ce3fdd58a2854f7864201e627381e8d798ff60272b2b5cf23e8c823d52959108.txt",
+              "byteLength": 3253,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+                "sourceHash": "25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c",
+                "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+                "publisher": "Charles Mix County Auditor",
+                "vault": {
+                  "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c.pdf",
+                  "byteLength": 613690,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4441,6 +4678,86 @@
             "sourceOrg": "Charles Mix County Auditor",
             "collectedAt": "2026-10-14T05:24:31.208593+00:00",
             "verifiedAt": "2026-10-14T05:24:31.208593+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf",
+            "sourceHash": "755dda7bc6d188a2bc093b2d024e6110865e208a3c992deebf7b99258d0fd6bc",
+            "retrievedAt": "2026-10-14T23:52:30.484995+00:00",
+            "publisher": "South Dakota Legislature",
+            "vault": {
+              "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d7c83e26397b4152/sha256-755dda7bc6d188a2bc093b2d024e6110865e208a3c992deebf7b99258d0fd6bc.txt",
+              "byteLength": 2923,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf",
+                "sourceHash": "48ec7a7740ba92be22c64ac090f44eebc9bf7a57fba7ab9841ff43e2f85d1d07",
+                "retrievedAt": "2026-10-14T23:52:30.484995+00:00",
+                "publisher": "South Dakota Legislature",
+                "vault": {
+                  "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d7c83e26397b4152/sha256-48ec7a7740ba92be22c64ac090f44eebc9bf7a57fba7ab9841ff43e2f85d1d07.pdf",
+                  "byteLength": 96143,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+            "sourceHash": "4e8d2b1a15b9e6ca7f7892471217783c6b541915e05ec7d85475fe222008cae5",
+            "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+            "publisher": "South Dakota Secretary of State",
+            "summary": "The State Constitution provides that any proposed constitutional amendment or revision\nmust be submitted to the voters for approval. Currently, a proposed constitutional amendment or revision becomes part of the\nConstitution if approved by a majority of the votes cast.\nThis proposed Constitutional Amendment increases the number of votes required for a proposed constitutional amendment\nor revision to become part of the Constitution. If passed, further constitutional amendments must receive an affirmative vote\nof sixty percent of the votes cast to be implemented.",
+            "argumentsFor": [
+              "Pro – Constitutional Amendment L\nWe encourage you to VOTE YES on AMENDMENT L to\nProtect Our Constitution.\nIn recent years, political activists have tried to change South\nDakota’s Constitution by inserting policy changes into our\nstate’s founding document.\nCurrently, South Dakota’s Constitution can be changed by a\nsimple majority of votes cast. Amendment L raises that\nthreshold to sixty percent. By contrast, the U.S.\nConstitution is much harder to amend. Changes to the U.S.\nConstitution require a 2/3 vote of the U.S. House and\nSenate, followed by ratification of 3/4 of the states.\nOur state Constitution provides a framework of governance,\nwhile laws passed by the Legislature or by voter initiative\noutline policy within the framework. A simple majority\nworks well for ordinary laws, but a higher threshold is\nneeded for changing our Constitution, which is meant to\nprotect core rights.\nWith Amendment L, only changes with broad, strong\nsupport from South Dakotans become part of our framework\nof governance. This doesn’t mean we can’t make changes;\nit simply means that our foundational document should not\nbe subject to the political whims of a given election cycle.\nLet’s keep our Constitution secure for future generations.\nVOTE YES on AMENDMENT L.\nJohn Hughes, State Representative\nDale Bartscher, South Dakota Right to Life\nNathan Sanderson, South Dakota Retailers"
+            ],
+            "argumentsAgainst": [
+              "Con – Constitutional Amendment L\nAt its core, Amendment L seeks to establish minority rule in\nSouth Dakota. It removes important checks and balances,\nmaking it easier for insiders in Pierre to make backroom deals\nand listen to out-of-state donors instead of the people who live\nhere.\nVoters have already rejected this idea twice in recent years. In\n2018, they defeated Amendment X, which proposed a 55%\nthreshold. In 2022, they overwhelmingly rejected Amendment\nC, which would have required 60% approval for constitutional\namendments with fiscal impacts. Amendment L goes even\nfurther by applying the 60% requirement to every future\nconstitutional amendment. At some point, supporters of these\nproposals need to just listen to voters as they have spoken.\nSouth Dakota was the first state to give citizens the power to\npropose and vote on laws directly. That tradition exists so\nordinary people, not just politicians or powerful interests, can\nshape their government when needed. That power has been an\nimportant part of our political tradition for decades.\nWithin that power lies a simple principle: the majority decides.\nIf Amendment L passes, a small minority could block our state\nfrom holding politicians accountable.\nOur state motto says, \"Under God, the People Rule.\"\nAmendment L would make it much harder for the people to\nhave their say, even when a clear majority agrees. Protect\nmajority rule. Don’t give away your power. Vote NO on\nAmendment L.\nChase Jensen, Dakota Rural Action\nRyan Rolfs, South Dakota Education Association"
+            ],
+            "passageThreshold": "Any constitutional amendment or revision must be submitted to the voters and shall become a part of the Constitution only when approved by a majority of the votes cast thereon.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+              "sourceHash": "f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8",
+              "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+              "publisher": "South Dakota Legislature",
+              "vault": {
+                "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-f6589517fce82340bf1bdc9a455377b14379e9fc6d9ee0428fca145f8153d0c8.txt",
+                "byteLength": 176,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+                  "sourceHash": "91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0",
+                  "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+                  "publisher": "South Dakota Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0.html",
+                    "byteLength": 3039,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-4e8d2b1a15b9e6ca7f7892471217783c6b541915e05ec7d85475fe222008cae5.txt",
+              "byteLength": 3912,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+                "sourceHash": "25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c",
+                "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+                "publisher": "Charles Mix County Auditor",
+                "vault": {
+                  "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c.pdf",
+                  "byteLength": 613690,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -4448,13 +4765,215 @@
       "coverageNotes": [
         "The Secretary of State’s full public 2026 General Election Candidate List export covers all 81 federal, statewide and legislative contests and their whole territories. All 178 active candidacies are retained; three expressly withdrawn rows are excluded. The page carries a general notice that a missing candidate means the office is waiting for filing documentation; it identifies no missing candidate or contest in this export.",
         "Supreme Court retention coverage was checked against the official statewide roster: Steven R. Jensen (2028), Mark E. Salter (2030), Scott P. Myren (2032), Robert Gusinsky (2030), Patricia DeVaney (2030). UJS records Janine M. Kern retiring and Robert Gusinsky being sworn in on December 8, 2025. SDCL 16-1-2 requires first retention at the general election following three years from appointment, then every eighth year. The official November 3, 2026 Charles Mix County sample ballot contains no Supreme Court retention contest; that specimen directly covers Charles Mix County. No published statewide no-retention statement was located."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "sd-sos-2026-general-amendment-i",
+          "whatItDoes": "25.329.12                            100th Legislative Session                         HJR5001",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "sd-sos-2026-general-amendment-i#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. That at the next general election held in the state, the following amendment to\nArticle XXI of the Constitution of the State of South Dakota, as set forth in section 2 of this\nJoint Resolution, which is hereby agreed to, be submitted to the electors of the state for\napproval."
+            },
+            {
+              "id": "sd-sos-2026-general-amendment-i#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Section 2. That Article XXI, § 10 of the Constitution of the State of South Dakota, be\nAMENDED:\n\n            § 10. For the period beginning July 1, 2023, and ending on the day that the federal\n   medical assistance percentage, described in 42 U.S.C. § 1396d(y) (January 1, 2025), is"
+            }
+          ],
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
+          "sourceHash": "1d210f190a96f612f103508f8107867dc0c985698c5f1387db8543c8ba2f435f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:58:15.526908+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "sd-sos-2026-general-amendment-j",
+          "whatItDoes": "25.502.14                             100th Legislative Session                           SJR503",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "sd-sos-2026-general-amendment-j#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. That at the next general election held in the state, the following amendment to\nArticle VII of the Constitution of the State of South Dakota, as set forth in section 2 of this\nJoint Resolution, which is hereby agreed to, be submitted to the electors of the state for\napproval."
+            },
+            {
+              "id": "sd-sos-2026-general-amendment-j#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Section 2. That Article VII, § 2 of the Constitution of the State of South Dakota, be\nAMENDED:\n\n            § 2. Every individual who is a citizen of the United States, is eighteen years of age\n   or older, and has met all residency and registration requirements is entitled to vote in all"
+            }
+          ],
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
+          "sourceHash": "deb2b8f8e7b8cebba746ef947d83a0f56f61e0aed33dab506bc466d05e4a7906",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:58:15.526908+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "sd-sos-2026-general-amendment-k",
+          "whatItDoes": "25.126.53                            100th Legislative Session                           SJR505",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "sd-sos-2026-general-amendment-k#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. That at the next general election held in the state, the following amendment to\nArticle XII of the Constitution of the State of South Dakota, as set forth in section 2 of this\nJoint Resolution, which is hereby agreed to, be submitted to the electors of the state for\napproval."
+            },
+            {
+              "id": "sd-sos-2026-general-amendment-k#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Section 2. That a NEW SECTION be added to Article XII of the Constitution of the\nState of South Dakota:\n\n            There is created in the state treasury a trust fund named the trust for unclaimed\n   property fund. Upon passage of this Act and after each receipt of any unclaimed property"
+            }
+          ],
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
+          "sourceHash": "25640169b736d68ab6fffbbcf7c14bd363d7261108677f622a3725d009be0736",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:58:15.526908+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "sd-sos-2026-general-amendment-l",
+          "whatItDoes": "25.309.14                            100th Legislative Session                           HJR5003",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "sd-sos-2026-general-amendment-l#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. That at the next general election held in the state, the following amendment to\nArticle XXIII of the Constitution of the State of South Dakota, as set forth in section 2 of this\nJoint Resolution, which is hereby agreed to, be submitted to the electors of the state for\napproval."
+            },
+            {
+              "id": "sd-sos-2026-general-amendment-l#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "Section 2. That Article XXIII, § 3 of the Constitution of the State of South Dakota,\nbe AMENDED:\n\n            § 3. A constitutional amendment or revision must be submitted to the voters and\n   becomes a part of the Constitution only if approved by an affirmative vote of sixty percent"
+            }
+          ],
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf",
+          "sourceHash": "755dda7bc6d188a2bc093b2d024e6110865e208a3c992deebf7b99258d0fd6bc",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:58:15.526908+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+          "sourceHash": "91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0",
+          "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+          "publisher": "South Dakota Legislature",
+          "vault": {
+            "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0.html",
+            "byteLength": 3039,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
+          "sourceHash": "25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c",
+          "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+          "publisher": "Charles Mix County Auditor",
+          "vault": {
+            "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c.pdf",
+            "byteLength": 613690,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
+          "sourceHash": "45bf5d97f6c6035b287b3926e0ac9be718151210a84a04297261ad91c5136dec",
+          "retrievedAt": "2026-10-14T23:52:30.665569+00:00",
+          "publisher": "South Dakota Legislature",
+          "vault": {
+            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-812fd183a4b7545f/sha256-45bf5d97f6c6035b287b3926e0ac9be718151210a84a04297261ad91c5136dec.pdf",
+            "byteLength": 100105,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
+          "sourceHash": "28f74802bf9fb5773623c61f15c1b8cb507dbc9b71cce615f8596938a18370a5",
+          "retrievedAt": "2026-10-14T23:52:30.870238+00:00",
+          "publisher": "South Dakota Legislature",
+          "vault": {
+            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-71a1ce0e902a1f13/sha256-28f74802bf9fb5773623c61f15c1b8cb507dbc9b71cce615f8596938a18370a5.pdf",
+            "byteLength": 96940,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
+          "sourceHash": "7c69905d8cc0d6b4489cce7b4d830bfedfea7f6e396bf594b6d480c0d20d2f02",
+          "retrievedAt": "2026-10-14T23:52:30.511128+00:00",
+          "publisher": "South Dakota Legislature",
+          "vault": {
+            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d4a00d0485b906ab/sha256-7c69905d8cc0d6b4489cce7b4d830bfedfea7f6e396bf594b6d480c0d20d2f02.pdf",
+            "byteLength": 95761,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf",
+          "sourceHash": "48ec7a7740ba92be22c64ac090f44eebc9bf7a57fba7ab9841ff43e2f85d1d07",
+          "retrievedAt": "2026-10-14T23:52:30.484995+00:00",
+          "publisher": "South Dakota Legislature",
+          "vault": {
+            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d7c83e26397b4152/sha256-48ec7a7740ba92be22c64ac090f44eebc9bf7a57fba7ab9841ff43e2f85d1d07.pdf",
+            "byteLength": 96143,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://charlesmixcounty.gov/files/2026/10/GE-General.pdf",
+          "sourceHash": "303d94e8dc83a6d0f08de8639b6d94eacd2d9c10ba7b6430aad33ecfe0d21915",
+          "retrievedAt": "2026-10-14T05:24:31.208593+00:00",
+          "publisher": "Charles Mix County Auditor",
+          "vault": {
+            "key": "project/freshness/source/charlesmixcounty.gov/2026/10/14/ms-01-2f340164fc6d8372/sha256-303d94e8dc83a6d0f08de8639b6d94eacd2d9c10ba7b6430aad33ecfe0d21915.pdf",
+            "byteLength": 117056,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:13:26.470330+00:00",
-    "reviewedBy": "BL-15 official-source script conversion",
+    "reviewedAt": "2026-10-15T04:14:40.028290+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
@@ -4491,10 +5010,11 @@
         "finalUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
         "httpStatus": 200,
         "rawHash": "25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c",
-        "retrievedAt": "2026-10-14T05:06:30.689915+00:00",
-        "publisher": "South Dakota Secretary of State",
+        "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
+        "publisher": "Charles Mix County Auditor",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official SOS 2026 Ballot Question Pro/Con Pamphlet identifying the four statewide questions and their Attorney General titles and explanations."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://charlesmixcounty.gov/files/2026/10/GE-General.pdf",
@@ -4520,11 +5040,12 @@
         "requestedUrl": "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
         "finalUrl": "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
         "httpStatus": 200,
-        "rawHash": "33c643d8b521e4b517fd4bac8c05289ea58343eba62571515cd31b118a400eb4",
-        "retrievedAt": "2026-10-14T05:39:43.746366+00:00",
+        "rawHash": "45bf5d97f6c6035b287b3926e0ac9be718151210a84a04297261ad91c5136dec",
+        "retrievedAt": "2026-10-14T23:52:30.665569+00:00",
         "publisher": "South Dakota Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Full Enrolled resolution text linked by the official bill page for Constitutional Amendment I. Document 283708."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://sdlegislature.gov/api/Bills/Versions/25856",
@@ -4540,11 +5061,12 @@
         "requestedUrl": "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
         "finalUrl": "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
         "httpStatus": 200,
-        "rawHash": "dfef0a8d1e975c8c9d5d751dc22a1c1b01ec9b952b353967f6f084d7d178ee00",
-        "retrievedAt": "2026-10-14T05:39:43.746683+00:00",
+        "rawHash": "7c69905d8cc0d6b4489cce7b4d830bfedfea7f6e396bf594b6d480c0d20d2f02",
+        "retrievedAt": "2026-10-14T23:52:30.511128+00:00",
         "publisher": "South Dakota Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Full Enrolled resolution text linked by the official bill page for Constitutional Amendment J. Document 284225."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://sdlegislature.gov/api/Bills/Versions/25479",
@@ -4560,11 +5082,12 @@
         "requestedUrl": "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
         "finalUrl": "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
         "httpStatus": 200,
-        "rawHash": "16796ce2f83c4f68b2a6f8079d474a35b34144383e8f35795d0bc35eddf7beab",
-        "retrievedAt": "2026-10-14T05:39:43.798550+00:00",
+        "rawHash": "28f74802bf9fb5773623c61f15c1b8cb507dbc9b71cce615f8596938a18370a5",
+        "retrievedAt": "2026-10-14T23:52:30.870238+00:00",
         "publisher": "South Dakota Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Full Enrolled resolution text linked by the official bill page for Constitutional Amendment K. Document 284191."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://sdlegislature.gov/api/Bills/Versions/25663",
@@ -4580,11 +5103,12 @@
         "requestedUrl": "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf",
         "finalUrl": "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf",
         "httpStatus": 200,
-        "rawHash": "7408db66dbf347e9f4c106cb70eaa34b59509fb0a82ea252c1ab721552062fc1",
-        "retrievedAt": "2026-10-14T05:39:43.802756+00:00",
+        "rawHash": "48ec7a7740ba92be22c64ac090f44eebc9bf7a57fba7ab9841ff43e2f85d1d07",
+        "retrievedAt": "2026-10-14T23:52:30.484995+00:00",
         "publisher": "South Dakota Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Full Enrolled resolution text linked by the official bill page for Constitutional Amendment L. Document 284377."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://sdsos.gov/elections-voting/election-resources/current-elected-officials.aspx",
@@ -4625,6 +5149,27 @@
         "publisher": "South Dakota Unified Judicial System",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official UJS announcement states that Janine M. Kern retired December 8, 2025."
+      },
+      {
+        "requestedUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+        "finalUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
+        "httpStatus": 200,
+        "rawHash": "91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0",
+        "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
+        "publisher": "South Dakota Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

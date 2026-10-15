@@ -36,7 +36,11 @@ import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
 import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../outcomes/data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { readPromotedEdgeFamilies, promotedEdgePointers } from "./promoted-edge-publication.ts";
+import { readPromotedEdgeFamilies, promotedEdgePointers, promotedPointerVersion } from "./promoted-edge-publication.ts";
+import { promotedEdgeEntryOf, readPromotedCivicData } from "./read-model.ts";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
+import { isTranslationScope, TRANSLATION_SCOPE, translationScope } from "../translate/records.ts";
+import { readTranslationProjection } from "../translate/projection-reader.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { censusEdgePublication } from "../../scripts/lib/census-edge-publication.ts";
 
@@ -50,7 +54,6 @@ function safeFailure(value: string): string {
     .join(" | ")
     .slice(0, 4_000) || "Reader repair failed without a diagnostic.";
 }
-
 
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 /** The registry partition a registry-runtime edge version was composed on; the rest names the facts read beside it. */
@@ -70,7 +73,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   let supersededMeetingFields: number | undefined;
   let status = "FAILED";
   let detail: string | null = null;
-  const owns = (recordClass: RoutineRecordClass, scope: string) => selected === null || selected.some(pointer => pointer.recordClass === recordClass && pointer.scope === scope);
+  const owns = (recordClass: RoutineRecordClass, scope: string) => selected === null || selected.some(pointer => pointer.recordClass === recordClass &&
+    (pointer.scope === scope || recordClass === "CURATED_READER_RECORD" && pointer.scope === TRANSLATION_SCOPE && isTranslationScope(scope)));
   const manual = (id: string) => MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === id)!;
   const specialPointers = {
     "census-districts": [{ recordClass: CENSUS_GEO_RECORD_CLASS, scope: CENSUS_GEO_SCOPE }],
@@ -96,6 +100,11 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       // A failed read cannot establish that no serving copy exists. Let the
       // outer publication error handler retain it and report a retryable error.
       const servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
+      const translationScopes = [...new Set([
+        ...US_JURISDICTIONS.map(state => translationScope(`ocd-division/country:us/${state.prefix}:${state.slug}`)),
+        ...Object.keys(servedManifest?.translations ?? {}).map(translationScope),
+        ...(selected ?? []).filter(pointer => pointer.recordClass === "CURATED_READER_RECORD" && isTranslationScope(pointer.scope)).map(pointer => pointer.scope),
+      ])].filter(scope => owns("CURATED_READER_RECORD", scope));
       sequence = servedManifest?.sequence ?? null;
       if (options.requireLiveStore && artifactStore.kind === "local-file") {
         throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");
@@ -103,7 +112,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const grouped = new Map<RoutineRecordClass, Set<string>>();
       for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(),
         ...[manual("everyday-routing")].filter(pointer => owns(pointer.recordClass, pointer.scope)),
-        ...(selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION") ? REGISTRATION_SCOPES.map(scope => ({ recordClass: "REGISTRATION" as const, scope })) : [])]) {
+        ...(selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION") ? REGISTRATION_SCOPES.map(scope => ({ recordClass: "REGISTRATION" as const, scope })) : []),
+        ...translationScopes.map(scope => ({ recordClass: "CURATED_READER_RECORD" as const, scope }))]) {
         const scopes = grouped.get(pointer.recordClass) ?? new Set<string>();
         scopes.add(pointer.scope); grouped.set(pointer.recordClass, scopes);
       }
@@ -329,6 +339,24 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: promoted pointers ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
+      const translations: Record<string, PublishAuthorityValue | PublishAuthorityCarried> = Object.fromEntries(
+        Object.entries(servedManifest?.translations ?? {}).map(([division, ref]) => [division, { versionId: ref.version, carried: true }]));
+      for (const scope of translationScopes) try {
+        const pointer = await store.readPromotionIdentity("CURATED_READER_RECORD", scope);
+        if (!pointer) continue;
+        const division = scope.slice(TRANSLATION_SCOPE.length + 1);
+        const versionId = promotedPointerVersion("CURATED_READER_RECORD", scope, pointer);
+        if (servedManifest?.translations?.[division]?.version === versionId) continue;
+        const read = await readPromotedCivicData("CURATED_READER_RECORD", scope, { store, now: observedAt });
+        const entry = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", scope, store);
+        if (entry?.kind !== "PROMOTED") throw new Error(`Translation ${scope} read ${read.kind}`);
+        const accepted = await readTranslationProjection({ edge: entry, scope, now: observedAt });
+        if (accepted.kind !== "PROMOTED" || accepted.metadata.versionId !== pointer.versionId) throw new Error(`Translation ${scope} failed its typed Reader`);
+        translations[division] = { value: entry, versionId };
+      } catch (error) {
+        failed = true;
+        process.stderr.write(`READER_EDGE_TRANSLATIONS_SKIPPED: ${scope} ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
       let registrations: PublishRegistrations | undefined = servedManifest?.registrations === undefined ? undefined : Object.fromEntries(Object.entries(servedManifest.registrations).map(([state, ref]) => [state, { versionId: ref.version, carried: true }]));
       if (selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION")) try {
         const plan = registrationEdgePlan(await store.readPromotionIdentities("REGISTRATION", REGISTRATION_SCOPES), servedManifest?.registrations);
@@ -392,7 +420,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
-        { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
+        { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, translations, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
       status = edge.status;
       if ("sequence" in edge) sequence = edge.sequence;
       if (edge.status === "FAILED") throw new Error(edge.error);

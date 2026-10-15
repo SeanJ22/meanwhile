@@ -2639,7 +2639,7 @@
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
-          "measureTextUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-132(3a70e31b2fe58baa619ffb1d9b23c8ff).pdf",
+          "measureTextUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
           "provenance": {
             "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-132(3a70e31b2fe58baa619ffb1d9b23c8ff).pdf",
             "sourceOrg": "Montana Secretary of State",
@@ -2659,7 +2659,7 @@
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
-          "measureTextUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-133(ba9d97da675a9f26f24b5f9e333b35b7).pdf",
+          "measureTextUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
           "provenance": {
             "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-133(ba9d97da675a9f26f24b5f9e333b35b7).pdf",
             "sourceOrg": "Montana Secretary of State",
@@ -2679,7 +2679,7 @@
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
-          "measureTextUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/I-194(d4249530242056d948420c5212f6f750).pdf",
+          "measureTextUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
           "provenance": {
             "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/I-194(d4249530242056d948420c5212f6f750).pdf",
             "sourceOrg": "Montana Secretary of State",
@@ -7314,6 +7314,88 @@
             "verifiedAt": "2026-10-14T05:05:21.256Z",
             "doorId": "fec-mt-chief",
             "quote": "CI-132 amends the Montana Constitution to require that judicial elections remain nonpartisan.\n\n[] YES on Constitutional Amendment CI-132\n\n[] NO on Constitutional Amendment CI-132"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
+            "sourceHash": "add1308c5214bb878d0d5c6ff900d0e5483f1223c4b9ac3176c270e83f2b8b15",
+            "retrievedAt": "2026-10-15T00:02:54.469703+00:00",
+            "publisher": "Montana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-5977db60f1d004eb/sha256-add1308c5214bb878d0d5c6ff900d0e5483f1223c4b9ac3176c270e83f2b8b15.txt",
+              "byteLength": 287,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
+                "sourceHash": "3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92",
+                "retrievedAt": "2026-10-15T00:02:54.469703+00:00",
+                "publisher": "Montana Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-5977db60f1d004eb/sha256-3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92.pdf",
+                  "byteLength": 119246,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+            "sourceHash": "7ba816c6faa1e899c2219d9f67b34e6e896f301e5acd4654c8cee9f92a6b76ba",
+            "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+            "publisher": "Montana Secretary of State",
+            "argumentsFor": [
+              "Judges should be elected based on their record and qualifications, not politics.\nConstitutional Initiative 132 protects the high value we as Montanans place on impartial\njudges free from political influence. CI-132 is a one-sentence initiative that simply\nensures that judicial elections in Montana remain nonpartisan.\nCI-132 helps everyday Montanans.\nMost Montanans interact with judges in family, traffic, civil, and criminal courts, which\ndecide everything from child custody to employment and property disputes. There is no\nRepublican or Democratic way to handle these cases – there’s only the law. Mixing politics\nwith these everyday cases will hurt Montanans who just want an unbiased, fair hearing\nwithout worrying about politics influencing the judge’s decision.\nCI-132 protects the impartiality of our judges and our courts.\nPoliticians in Helena recently passed House Bill 39, a law allowing political parties to\ncontribute up to nearly $90,000 to Montana judicial candidates. That’s a dangerous step\ntoward making judges cater to political parties. Politics today runs on money, and we need\nto protect our courtrooms. We need independent courts with judges who remain\nimpartial and accountable to the constitution, not politics.\nCI-132 has broad support.\nNine retired members of the Montana Supreme Court are backing this proposal alongside\nMontana legal experts, retired sheriffs, and criminal prosecutors. More than 100,000\nMontanans from every county signed the petition to get this issue on the ballot. Montanans\nknow that we must keep the power over our courts in the hands of Montana citizens and\nensure our judges are fair, unbiased, and accountable to us.\nCI-132 keeps judges accountable to Montanans.\nMontanans began electing judges in nonpartisan elections in 1935 in response to the\npowerful Copper Kings who were buying judges to rule in their favor. This simple measure\nprotects that longstanding tradition so we can keep judges accountable to the people’s\ninterests, not deep-pocketed political interests.\nVote YES on CI-132 to ensure our judicial elections remain nonpartisan, keep our\njudges impartial, and make sure politics stays out of our courts.\n\nApproval Committee: Jeffrey Sherlock, Craig J. Anderson, Katherine “Kitty” Curtis",
+              "Montanans have selected fair and impartial judges in nonpartisan elections for over 90\nyears. That’s because we believe that judges should be elected based on their record\nand qualifications, not politics.\nVoting “yes” on CI-132 means Montana citizens can hold judges accountable to “we the\npeople” instead of politics. Our country's founders knew that an independent judiciary was\nessential for a free republic. CI-132 helps keep our courts independent of the politics that\ndominate the other branches of government.\nCourts should be fair to everyone who stands before them, no matter what they're worth or\nwho they know. But politics today runs on money, and we can't let that into our\ncourtrooms. Justice shouldn't be for sale, and CI-132 helps keep money-driven politics out\nof our courts.\nAs two retired District Court judges and a retired Dawson County Sheriff, we know Montana\nvoters aren’t fools. There is no Republican or Democratic way to handle cases like child\ncustody, employment, or property disputes - there’s only the law and the Constitution.\nMontana provides voters with an independent judicial performance report about every\njudicial candidate’s experience, courtroom conduct, and decisions. For generations,\nMontanans have cast their vote based on a judge's record and qualifications – why do\nopponents want to bring politics into our courts?\nVote YES on CI-132 to:\n• Ensure judges are elected based on their record and qualifications.\n• Keep money-driven politics out of our courts.\n• Ensure Montanans can get a fair and impartial trial without worrying about\npolitics.\n\nApproval Committee: Jeffrey Sherlock, Craig J. Anderson, Katherine “Kitty” Curtis"
+            ],
+            "argumentsAgainst": [
+              "CI-132 is not what it seems. It has nothing to do with keeping courts impartial. Actually, it is\nan anti-transparency measure.\nHave you ever been frustrated by the lack of information about the candidates for judge?\nThat’s because the current system—which CI-132 would make permanent—isn’t\ntransparent. It forces Montanans to vote with a blindfold on. It prevents us from learning\ncrucial facts about the candidates.\nWhy would anyone want to do this? According to the authoritative website Ballotpedia, CI132 is largely funded from out-of-state special interests based in places like New York City\nand Washington, D.C. They’ve already spent over $2 million to sell us this bill of goods,\nand apparently plan to spend a lot more.\nDon’t let them fool you.\nWe all want impartial courts, and most judges do try to be impartial. But let’s face it: Like\nmost other people, judicial candidates usually have political party preferences. So before\nwe vote, we are entitled to know what those preferences are.\nBut CI-132 would deny us that information—forever.\nThomas Jefferson said, “Whenever the people are well-informed, they can be trusted with\ntheir own government.” By contrast, CI-132 enshrines ignorance in the Montana\nconstitution. That's bad for Montana, bad for the justice system, and bad for democracy.\nThe proponents of CI-132 don’t trust you with your own government.\nTell the rich out-of-state special interests to pick up their cash and go home. Montanans\ndecide what happens in Montana!\nVote “NO” on CI-132 and let the sun shine in!\n\nRejection Committee: Robert “Rob” Natelson, David Knobel, Derek Oestreicher,\nRepresentative Greg Overstreet, Duncan Scott",
+              "If you are reading this rebuttal, you are precisely the type of voter that CI-132 seeks to\nblindfold—an informed voter. The out-of-state special interests pushing CI-132 have spent\nover $2 million to lock you into a broken system. What are they trying to hide?\nThey want to hide how these same special interest groups pour money into judicial\ncampaigns.The false “non partisan” label hides this dark money from voters.\nThe truth is that judges have political leanings. They are human after all. Judges don’t\ntranscend ordinary existence and become blind to politics once they put on a black robe. If\nthe out-of-state special interests truly want judges elected based on their record,\nthey would want voters informed about a candidate’s entire record—which necessarily\nincludes political leanings. Why do these out-of-state special interests want you to have\nless information?\nThe “non partisan” label has not made our state supreme court more impartial. On the\ncontrary, the Montana Supreme Court, among other defects, has been repeatedly\nidentified as biased. Nor is it surprising that former judges and certain attorneys—who\nhave perhaps benefitted from this broken system—would prefer that voters remain\nuninformed.\nVoters like you—who take the time to read about the candidates and issues—should think\ntwice about supporting CI-132. Would you vote while wearing a blindfold? Or, would you\nprefer to make informed choices about judicial candidates?\nVote “no” on CI-132 and let the sun shine in!\n\nRejection Committee: Robert “Rob” Natelson, David Knobel, Derek Oestreicher,\nRepresentative Greg Overstreet, Duncan Scott\n\nWhat Your Vote Will Do\nYES\nNO\n\nA YES vote would APPROVE amending the Montana Constitution as\nproposed.\nA NO vote would make NO CHANGE to the current Montana\nConstitution."
+            ],
+            "summary": "CI-132 amends the Montana Constitution to require that judicial elections remain\nnonpartisan.",
+            "passageThreshold": "If approved by a majority voting thereon, it shall become a part of the constitution effective the first day of July following its approval, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
+              "sourceHash": "048b0cdcaf24cc378552e06fd7577a207b7e93a0b0024f70f1e88b3d1c54aae6",
+              "retrievedAt": "2026-10-15T00:04:25.214156+00:00",
+              "publisher": "Montana Legislature",
+              "vault": {
+                "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-2c6b31965a6f8930/sha256-048b0cdcaf24cc378552e06fd7577a207b7e93a0b0024f70f1e88b3d1c54aae6.txt",
+                "byteLength": 181,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
+                  "sourceHash": "a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3",
+                  "retrievedAt": "2026-10-15T00:04:25.214156+00:00",
+                  "publisher": "Montana Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-2c6b31965a6f8930/sha256-a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3.html",
+                    "byteLength": 10780,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-7ba816c6faa1e899c2219d9f67b34e6e896f301e5acd4654c8cee9f92a6b76ba.txt",
+              "byteLength": 8264,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+                "sourceHash": "f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb",
+                "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+                "publisher": "Montana Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb.pdf",
+                  "byteLength": 3321336,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7329,6 +7411,88 @@
             "verifiedAt": "2026-10-14T05:05:21.268Z",
             "doorId": "fec-mt-chief",
             "quote": "The Montana constitution reserves to the people the powers of initiative and referendum. CI-133\namends the constitution to secure this fundamental right from interference by the government.\nSpeciﬁcally, CI-133 requires impartial, predictable, open, and timely processes for ballot issues.\nPetitions and ballot statements must be approved within 90 days of the initial submission, and legal\nchallenges to ballot qualiﬁcation must be resolved before the deadline for ﬁnalizing ballots. CI-133\nrequires the state to allow ample time for signature gathering, prohibits disqualiﬁcation of petitions\nbecause of minor or technical issues, allows voters to withdraw their signatures if they so choose,\nand prohibits the use of government resources to support or oppose a ballot measure.\n\n[] YES on Constitutional Amendment CI-133\n\n[] NO on Constitutional Amendment CI-133"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
+            "sourceHash": "1fa5c22be6f339a2ee359adb23bd73dbdcbc614c194f79f904100b37b3118e91",
+            "retrievedAt": "2026-10-15T00:02:54.529449+00:00",
+            "publisher": "Montana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-7af52dd0f74da9cc/sha256-1fa5c22be6f339a2ee359adb23bd73dbdcbc614c194f79f904100b37b3118e91.txt",
+              "byteLength": 2713,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
+                "sourceHash": "fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169",
+                "retrievedAt": "2026-10-15T00:02:54.529449+00:00",
+                "publisher": "Montana Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-7af52dd0f74da9cc/sha256-fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169.pdf",
+                  "byteLength": 88424,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+            "sourceHash": "1b97b57ef60233d4ca58afffcbc8afdea3a483aaf984d964b5e7ee19fb16842b",
+            "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+            "publisher": "Montana Secretary of State",
+            "argumentsFor": [
+              "Vote yes on CI-133 to protect your right to propose and vote on laws that affect your life\nwithout government interference. CI-133 guarantees a fair, transparent, and timely ballot\nmeasure process.\nWhat it means to vote YES on CI-133:\n•\n\n•\n•\n\nYES on CI-133 protects the ballot measure process and safeguards your\nfundamental right to propose, vote on, and veto laws without government\ninterference.\nYES on CI-133 bans the government from taking sides on ballot measures and using\ntaxpayer money to sway your vote.\nYES on CI-133 requires impartial, predictable, open, and timely processes for\napproving petitions and ballot statements, resolving legal challenges, gathering\nsignatures, and verifying signatures.\n\nLobbyists and outside interests have too much inﬂuence in Helena. That’s why we\nneed CI-133. It protects citizens’ right to pass laws without interference from a government\nthat caters to special interests and their money. Ballot measures give voters the power to\nkeep the government accountable to us, not lobbyists.\nBallot measures are how citizens come together to protect and preserve what makes\nMontana great. Montana citizens across the political spectrum have passed ballot\nmeasures to protect our right to hunt and ﬁsh, cap taxes, protect public lands, restrict\nlobbying, expand access to healthcare for kids, raise the minimum wage, and keep the\ngovernment out of our private, family medical decisions. By voting YES on CI-133, we\nprotect the mechanism Montana citizens use to pass laws that protect and preserve\nMontana values.\nBallot measures give Montanans the voice we need to act as a check on government\noverreach. Ballot measures aren’t just for passing laws, they allow citizens to veto bad\nlaws when the government goes too far. We all deserve the chance to veto government\noverreach into our lives. CI-133 protects the right of \"Citizens Veto\" from government\ninterference so we can have the ﬁnal say without government putting its ﬁngers on the\nscales.\nVote YES on CI-133 to protect our citizen initiative process and preserve Montana for\nourselves and future generations.\nApproval Committee: Raphael Graybill, Jason Small, Tara Veazey",
+              "CI-133 keeps government accountable to us.\nThe same outside interests buying up our land, housing, and water have armies of\nlobbyists, lawyers, and political consultants working for them in Helena. The average\nMontanan’s voice doesn’t stand a chance of being heard against those odds.\nWe need CI-133 to protect our right to vote on laws that affect our lives and reject bad laws\nwhen the government oversteps, without interference from a government that caters to\nspecial interests and their money. Ballot measures are the citizen's voice and the citizen's\nveto.\nCI-133 holds government accountable by:\nProtecting your right to vote on laws that affect your life without government\ninterference. CI-133 bans the government from taking sides on ballot measures or\nusing taxpayer dollars to sway your vote.\n2. Ensuring a fair, transparent, and timely ballot measure process so the ideas\ncitizens want to put on the ballot get a fair shake from the government.\n1.\n\nCI-133 does NOT do away with ﬁnancial or legal reviews of ballot measures. It simply\nrequires they be done impartially and efficiently – you’re expected to do your job in a timely\nmanner; why shouldn't the government?\nThe opponents say nothing is broken but also note ballot measures can cost $1M just to\nqualify for the ballot. That’s because of government bureaucracy and red tape. When\nMontanans must spend millions just to exercise their rights, that’s the deﬁnition of broken.\nVote yes on CI-133 to ensure a fair, transparent, and timely process for holding\ngovernment accountable.\n\nApproval Committee: Raphael Graybill, Jason Small, Tara Veazey"
+            ],
+            "argumentsAgainst": [
+              "Vote NO on Constitutional Initiative No. 133.\nIf it ain’t broke, don’t fix it.\nMontanans cherish our constitutional right to initiative and referendum, but CI-133\ncomplicates our rights with a wordy and unnecessary amendment. It undermines\nrepresentative government and invites abuse of the ballot process. CI-133 is a trojan horse\nfor billionaires and out-of-state special interests to simply purchase the laws they want.\nThe fact that CI-133 is on the ballot, along with numerous other initiatives, is pretty\ngood evidence that Montana has a healthy initiative process. Why would we “fix” a system\nthat isn’t broken? Why complicate a process that works for Montanans? Just vote no.\nCI-133 restricts the ability of elected officials and courts to protect voters from flawed or\ndeceptive measures. It handcuffs the Attorney General, Secretary of State, and Montana\nSupreme Court from doing basic due diligence.\nPassing laws and constitutional amendments should not be taken lightly. When an\ninitiative passes, it becomes binding law for a minimum of two years before it can be\nchanged or undone.\nMontana’s current process – including financial and legal reviews – ensures initiatives are\nconstitutional, transparent, and won’t bankrupt the state. CI-133 scraps these\ncommonsense protections, making it easier for well-funded special interests and paid\nsignature gatherers to place poorly-drafted measures on the ballot.\nThe ballot initiative constitutional right was originally designed so Montana citizens can\ndirectly vote on popular ideas when elected officials aren’t responsive to voters’\ndesires. Today, though, special interests have discovered the process also allows them to\nsimply purchase the laws that they want, if they spend enough money.\nBallot initiatives are becoming a “cottage industry,” according to the Helena Independent\nRecord. It’s so common nowadays that it even has a standard price tag: $1 million.\n“That’s why in at least the last four election seasons, nearly every proposal that has\nmade it onto the ticket has done so with the added manpower of paid signature\ngatherers, most of whom are working for companies that collect north of $1 million\nfor their work on a single initiative in Montana…a run-of-the-mill price these\ndays,” reports the Helena IR.\n\nCI-133 follows the same pattern. Out-of-state special interests spent $1 million to get CI133 on your ballot, as the Helena IR also reported.\nOne of us writing this argument against CI-133 – Sen. Wylie Galt – went through the\ninitiative petition process earlier this year myself.\nWhile I ultimately decided not to pursue my initiative all the way to finish line, I can\npersonally vouch that the process was not overly difficult. As a rancher, I fix broken\nthings all the time. Montana’s ballot initiative process is not broken. Our system\nworks. CI-133 is unnecessary.\nCI-133 would remove all reasonable checks and balances on the ballot initiative\nprocess. That’s a winning proposal for groups with $1 million or more to spend buying the\nlaws they want, but it’s a loser for Montanans who have to live under those laws.\nVote NO on CI-133.\n\nRejection Committee: Senator Wylie Galt, Randy Brodehl, Representative Greg\nOverstreet, Charles Robison",
+              "Supporters claim CI-133 protects people from lobbyists and government interference.\nThere are solid reasons to vote no.\n1. It mostly helps well-funded groups, not everyday citizens. Ballot initiatives sound\ndemocratic, but organized and wealthy interests—sometimes from out of state—\noften drive them. Collecting signatures is expensive and usually needs paid workers.\nMuch of the money for CI-133 came from nonproﬁts that hide their donors. Past\ninitiatives have passed popular ideas, but CI-133 would make it harder for elected\nlawmakers (who answer to voters) to ﬁx problems or update laws.\n2. “No government interference” is unrealistic and risky. Government must check\nsignatures, review legality, stop fraud, and run elections smoothly. Strict new rules\ncould cause rushed reviews, endless lawsuits over vague phrases like “minor\nmistakes” or “ample time,” and confusion for election workers.\n3. It weakens representative democracy. Montana is a republic with checks and\nbalances. Initiatives are a helpful backup tool, not the main way to govern.\nLawmakers face regular elections and must balance budgets and priorities. CI-133\nwould make future improvements to the initiative process much harder.\nBottom line: Voting no on CI-133 does not end the initiative process. It keeps the current\nsystem and avoids rigid new rules, more lawsuits, and less ﬂexibility. The initiative tool\nis useful, but turning it into a super-protected right with unclear standards could favor wellfunded campaigns over balanced government. Montanans should be careful about\nchanging the Constitution to shield one process from normal oversight.\nRejection Committee: Senator Wylie Galt, Randy Brodehl, Representative Greg\nOverstreet, Charles Robison\n\nWhat Your Vote Will Do\nYES\nNO\n\nA YES vote would APPROVE amending the Montana Constitution as\nproposed.\nA NO vote would make NO CHANGE to the current Montana\nConstitution."
+            ],
+            "summary": "The Montana constitution reserves to the people the powers of initiative and referendum.\nCI-133 amends the constitution to secure this fundamental right from interference by the\ngovernment. Speciﬁcally, CI-133 requires impartial, predictable, open, and timely\nprocesses for ballot issues. Petitions and ballot statements must be approved within 90\ndays of the initial submission, and legal challenges to ballot qualiﬁcation must be resolved\nbefore the deadline for ﬁnalizing ballots. CI-133 requires the state to allow ample time for\nsignature gathering, prohibits disqualiﬁcation of petitions because of minor or technical\nissues, allows voters to withdraw their signatures if they so choose, and prohibits the use of\ngovernment resources to support or oppose a ballot measure.",
+            "passageThreshold": "If approved by a majority voting thereon, it shall become a part of the constitution effective the first day of July following its approval, unless the amendment provides otherwise.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
+              "sourceHash": "048b0cdcaf24cc378552e06fd7577a207b7e93a0b0024f70f1e88b3d1c54aae6",
+              "retrievedAt": "2026-10-15T00:04:25.214156+00:00",
+              "publisher": "Montana Legislature",
+              "vault": {
+                "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-2c6b31965a6f8930/sha256-048b0cdcaf24cc378552e06fd7577a207b7e93a0b0024f70f1e88b3d1c54aae6.txt",
+                "byteLength": 181,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
+                  "sourceHash": "a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3",
+                  "retrievedAt": "2026-10-15T00:04:25.214156+00:00",
+                  "publisher": "Montana Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-2c6b31965a6f8930/sha256-a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3.html",
+                    "byteLength": 10780,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-1b97b57ef60233d4ca58afffcbc8afdea3a483aaf984d964b5e7ee19fb16842b.txt",
+              "byteLength": 12791,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+                "sourceHash": "f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb",
+                "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+                "publisher": "Montana Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb.pdf",
+                  "byteLength": 3321336,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -7344,16 +7508,366 @@
             "verifiedAt": "2026-10-14T05:05:21.231Z",
             "doorId": "fec-mt-chief",
             "quote": "I-194, if passed, limits the powers of artificial persons to those powers necessary or convenient as\nprovided by law. These powers must exclude contributing anything of value to candidate elections,\nsupporting or opposing political parties, or supporting or opposing state or local ballot issues.\nArtificial persons include non-profits, trusts, partnerships, corporations, trade associations, or\nunincorporated associations and includes all such entities doing business in Montana. Any\nviolation of I-194 is punished by forfeiting all privileges to do business in Montana. Those\nprivileges may be, but are not automatically, restored upon disgorgement and certification of\ncompliance with I-194. I-194 does not apply to the distribution of news, commentary, or editorial\ncontent. I-194 also does not apply to the state of Montana, political subdivisions, individuals,\npolitical committees, or public corporations.\n\n[] YES on Initiative I-194\n[] NO on Initiative I-194"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
+            "sourceHash": "24472a0b32676d8883b2ec133aaace160f2bdddf72f04e3fea8a34856b31c7ba",
+            "retrievedAt": "2026-10-15T00:02:54.474626+00:00",
+            "publisher": "Montana Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-1bed27d3208786d2/sha256-24472a0b32676d8883b2ec133aaace160f2bdddf72f04e3fea8a34856b31c7ba.txt",
+              "byteLength": 12253,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
+                "sourceHash": "ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197",
+                "retrievedAt": "2026-10-15T00:02:54.474626+00:00",
+                "publisher": "Montana Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-1bed27d3208786d2/sha256-ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197.pdf",
+                  "byteLength": 146576,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+            "sourceHash": "0ae568499f0d3524be926d67de8fa45038ff0091b6bf7a759464fc0e8953c754",
+            "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+            "publisher": "Montana Secretary of State",
+            "argumentsFor": [
+              "The Montana Plan, I-194, will end the ability of artificial persons (such as corporations,\nassociations, unions) to spend to support or oppose candidates and ballot issues in\nMontana.\nThe 2024 presidential election year saw a total of $14.8 billion spent on federal campaigns:\n$9.5 billion on congressional races and $5.3 billion on the presidential race. In contrast,\nthe entire general fund budget for the state of Montana in 2026 was $3.5 billion, less than a\nquarter of the amount of money spent on federal campaigns.\nThat amount of money alone makes it critically important to understand where that money\nis coming from and who is bankrolling campaigns.\nMoney spent to influence the decision of a voter without being required to disclose the\noriginal donor is referred to as “dark money.” The source is often concealed from the\npublic - but not the politicians.\nAnonymous “dark money” is typically used to pay for incessant digital ads, mailers and\ntelevision that are intended, on the one hand, to negatively attack and “carpet bomb” an\nopposing candidate with grainy photographs and insinuations of corruption or\nincompetence; or, on the other hand, to elevate the opposing candidate whose alleged\nattributes and competencies are inflated but alleged to be indispensable to the existence\nof the country. Neither representation is completely accurate nor helpful for voters trying in\ngood faith to determine the best candidate to serve the public good.\nIn the 2024 Montana Senate race, outside groups, including super PACs, spent $162.7\nmillion on independent expenditures, including mailers, TV ads, and digital and socialmedia advertising. Just one “dark money” group alone, The Last Best Place PAC,\nsponsored approximately 39,000 ad airings in Montana, and neither Montana voters or\ncandidates had any idea where its money came from. It had been intentionally shrouded in\na tangled web to generate confusion and disarray among Montana voters.\nBusiness corporations can transfer money directly to super PACs and other outside\ngroups. In 2024, Koch Industries, for example, spent $49 million, $40 million of which went\nto Americans for Prosperity Action, which, in turn, spent money on Montana elections.\nArtificial persons (such as business corporations, nonprofits, and unions) are neither\nconstitutional nor human creatures. They are pure creations of state law. Montana grants\nthem every power they have. And Montana has reserved the authority to modify those\npowers at any time, for any reason.\n\nIf I-194 is passed by the people, Montana will no longer grant artificial persons the power to\nspend in Montana's politics. It's that simple. No longer would anonymous \"dark money\" be\nallowed in Montana campaigns - every dollar would be from a human person, would be\ndisclosed, and would be voluntary. If corporate officers and the great titans of business\nand industry decide to spend money to support a candidate or an issue, they’ll have to do it\nthe same way the rest of us do. They’ll have to use their own money, observe contribution\nlimits, comply with reporting requirements, and disclose their name.\nApproval Committee: Gary Buchanan, Marc Racicot, Raymond Jon Tester",
+              "Read the opposition statement and notice what it leaves out: Montana’s experience with\nelections ﬂooded and distorted by outside secret money with no regard for the truth nor\nissues Montanans face every day: healthcare, housing, taxes, schools, utility bills, and\npublic lands. Instead, they resort to scare tactics in a twisted attempt to portray the\ndefenders of unlimited “dark” money political spending as the underdogs and Montanans\nreclaiming their elections as the threat. It’s the same old bait and switch Montanans have\nseen before.\nElections should be decided by the votes of Montanans, not the dark money spent by\nanonymous donors and corporations.\nThe opposition falsely claims that dark-money groups could continue spending as they do\nnow. Another bait and switch. I-194 eliminates the power of all artiﬁcial persons—including\n501(c)(4) dark-money groups—to spend money supporting or opposing candidates and\nballot issues.\nThey also falsely suggest businesses and community groups could not even publish a\nwebsite. That is absurd. They may speak, organize, publish, and advocate on any issue they\nchoose. But, when they spend to support or oppose a candidate or ballot issue, they must\ndo so through a transparent political committee so voters can see who funds the message.\nSmall-business owners, church members, union members, employees, and nonproﬁt\nsupporters keep their individual voices.\nRuggedly independent Montanans once stood up to the Copper Kings . . . and we can do so\nagain by ending anonymous and corporate money in our elections.\nI-194 serves the people of Montana.\n\nApproval Committee: Gary Buchanan, Marc Racicot, Raymond Jon Tester"
+            ],
+            "argumentsAgainst": [
+              "I-194 has nothing to do with protecting elections, removing money from politics, getting rid\nof the inﬂuence of money in politics, or addressing undisclosed dark money spending.\nInstead, it’s a misguided, poorly drafted, authoritarian attempt to unconstitutionally restrict\nMontanans’ free speech rights under the guise of targeting spending in elections—even\nthough there isn’t a single example provided of corporate election spending but examples\nabound of PAC and dark money spending that would continue to be allowed under I-194.\nI-194 allows individuals to continue to spend unlimited amounts on elections and PAC and\nmany dark money groups to operate just as they do now. But it would target small Montana\nbusinesses, churches, and community groups, and similar groups—referred to as “artiﬁcial\npersons” in the measure—even though these entities are just groups of individual\nMontanans. If such a group voices an opinion—whether by printing a pamphlet, running an\nadvertisement, creating a ﬁlm, or even maintaining a website—I-194 threatens extreme\npenalties, including the loss of legal protections that could expose Montanans to personal\nliability and put their personal assets at risk\nFederal courts have already struck down twice similar laws as unconstitutional restrictions\non free speech, and the result would be the same here. If I-194 passes, it will accomplish\nlittle beyond wasting Montana taxpayer dollars while it is tied up in court and ultimately\nstruck down.\nThe United States Supreme Court has already decided that the government cannot directly\nban a group of Montanans from engaging in political speech. In a famous case, a group of\nindividuals wanted to show a documentary about a presidential candidate during a\ncampaign, but federal law barred them because they acted through an organization rather\nthan as a single individual. The group sued under the First Amendment. The Supreme Court\ndecided that political speech during a campaign for public office is the core type of speech\nprotected by the First Amendment and determined that the government banning a\ndocumentary about a candidate was a violation of free speech whether the documentary\nwas made by an individual or a group of individuals. I-194 seeks to accomplish the same\nresult of banning political speech during elections, not by directly banning it, but instead by\nimposing extreme penalties on any group of Montanans who choose to engage in free\nspeech. The government cannot, and should not, be allowed to impose bans on free\nspeech during elections, directly or indirectly, and for that reason Montanans should reject\nI-194 and vote no.\n\nRejection Committee: David Knobel, Matthew Dolphay, Todd O’Hair, Representative Greg\nOverstreet, Dale Schowengerdt",
+              "“The Montana Plan” claims to end dark money and corporate inﬂuence in Montana\nelections. It does neither. It imposes sweeping, unconstitutional restrictions on the freespeech rights of Montana small businesses, churches, and community groups, while\nleaving untouched the out-of-state PACs and dark money that dominate Montana\ncampaigns. I-194 is a sham.\nProponents have not identiﬁed a single Montana corporation that has spent money to\ninﬂuence a Montana election. Instead they point to Koch Industries and national super\nPACs — entities Montana has no power to regulate. Their \"creature of state law\" theory only\nworks, by their own logic, for corporations Montana itself charters. The only entities I194 actually restricts are Montana’s own small businesses, ranches, churches, and\ncommunity groups, exposed to steep penalties for speaking up.\nCourts, including the U.S. Supreme Court, have already rejected this theory. In First\nNational Bank of Boston v. Bellotti, the Court struck down a nearly identical Massachusetts\nlaw, holding the First Amendment protects political speech regardless of corporate\nsource; Citizens United v. FEC reaffirmed it. I-194 asks voters to relitigate a settled question\n— and pay the legal bills when it loses again.\nThe irony: I-194’s own campaign is bankrolled by dark money, much of it from out of state,\nfunneled through the Transparent Election Initiative, a nonproﬁt that need not disclose its\ndonors, with help from a Washington, D.C. advocacy group.\nMontanans deserve real transparency, not a doomed measure that punishes local\nbusinesses while true outside spending goes untouched. Vote no on I-194.\nRejection Committee: David Knobel, Matthew Dolphay, Todd O’Hair, Representative Greg\nOverstreet, Dale Schowengerdt\n\nWhat Your Vote Will Do\nYES\n\nA YES vote would APPROVE adding language to Montana law.\n\nNO\n\nA NO vote would make NO CHANGE to Montana law."
+            ],
+            "summary": "I-194, if passed, limits the powers of artiﬁcial persons to those powers necessary or\nconvenient as provided by law. These powers must exclude contributing anything of value\nto candidate elections, supporting or opposing political parties, or supporting or opposing\nstate or local ballot issues. Artiﬁcial persons include non-proﬁts, trusts, partnerships,\ncorporations, trade associations, or unincorporated associations and includes all such\nentities doing business in Montana. Any violation of I-194 is punished by forfeiting all\nprivileges to do business in Montana. Those privileges may be, but are not automatically,\nrestored upon disgorgement and certiﬁcation of compliance with I-194. I-194 does not\napply to the distribution of news, commentary, or editorial content. I-194 also does not\napply to the state of Montana, political subdivisions, individuals, political committees, or\npublic corporations.",
+            "passageThreshold": "If a majority of voters vote for this initiative at that election, it will become law.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0270/part_0020/section_0380/0130-0270-0020-0380.html",
+              "sourceHash": "0791937082d114cd8f487cb588ca80180ce83650012fc4057befaea9070884b4",
+              "retrievedAt": "2026-10-15T00:07:19.161083+00:00",
+              "publisher": "Montana Legislature",
+              "vault": {
+                "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-62568c3e01140e40/sha256-0791937082d114cd8f487cb588ca80180ce83650012fc4057befaea9070884b4.txt",
+                "byteLength": 86,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0270/part_0020/section_0380/0130-0270-0020-0380.html",
+                  "sourceHash": "fbd641a486d557075b2d3fbe3770d4b2d5347447bcc3db8c361ba135fbf83be4",
+                  "retrievedAt": "2026-10-15T00:07:19.161083+00:00",
+                  "publisher": "Montana Legislature",
+                  "vault": {
+                    "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-62568c3e01140e40/sha256-fbd641a486d557075b2d3fbe3770d4b2d5347447bcc3db8c361ba135fbf83be4.html",
+                    "byteLength": 14709,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-0ae568499f0d3524be926d67de8fa45038ff0091b6bf7a759464fc0e8953c754.txt",
+              "byteLength": 22688,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+                "sourceHash": "f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb",
+                "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+                "publisher": "Montana Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb.pdf",
+                  "byteLength": 3321336,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "measureRecords": [
+        {
+          "contestId": "ballot-mt-2026:ci-132",
+          "whatItDoes": "BE IT ENACTED BY THE PEOPLE OF THE STATE OF MONTANA:",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ballot-mt-2026:ci-132#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "NEW SECTION. Section 1. Article VII of The Constitution of the State of Montana is amended by adding\na new section 12 that reads:\n\n       Section 12. Nonpartisan Judicial Elections. Judicial elections shall remain nonpartisan."
+            }
+          ],
+          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
+          "sourceHash": "add1308c5214bb878d0d5c6ff900d0e5483f1223c4b9ac3176c270e83f2b8b15",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:04:12.149966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ballot-mt-2026:ci-133",
+          "whatItDoes": "BE IT ENACTED BY THE PEOPLE OF THE STATE OF MONTANA:",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ballot-mt-2026:ci-133#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "NEW SECTION. Section 1. Article II of The Constitution of the State of Montana is amended by adding a new\nsection 37 that reads:\n\n       Section 37. Right to initiative and referendum. (1) The people have a fundamental right to exercise\ntheir powers of initiative and referendum under Article III and Article XIV."
+            },
+            {
+              "id": "ballot-mt-2026:ci-133#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "NEW SECTION. Section 2. Self-executing. [This act] is self-executing."
+            },
+            {
+              "id": "ballot-mt-2026:ci-133#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "NEW SECTION. Section 3. Effective date. [This act] is effective on approval by the electorate."
+            }
+          ],
+          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
+          "sourceHash": "1fa5c22be6f339a2ee359adb23bd73dbdcbc614c194f79f904100b37b3118e91",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:04:12.149966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ballot-mt-2026:i-194",
+          "whatItDoes": "BE IT ENACTED BY THE PEOPLE OF THE STATE OF MONTANA:",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ballot-mt-2026:i-194#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "NEW SECTION. Section 1. Short title. [Sections 1 through 10] may be cited as “The Montana\nPlan Act.”"
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "NEW SECTION. Section 2. Findings and purpose. (1) The people of the state of Montana find\nthat all political power is inherent in the people and that corporations and other artificial persons\nare creations of statute that exist only by virtue of powers affirmatively extended by the state."
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "NEW SECTION. Section 3. Definitions. As used in [sections 1 through 10], and solely for the\npurposes of defining the scope of artificial-person powers and the consequences that attach to\nacts outside that scope, the following definitions apply:"
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "NEW SECTION. Section 4. General rule -- political spending power not extended. (1)\nExcept as expressly provided by law for political committees, the state of Montana does not\nextend political spending power to an artificial person, and an artificial person subject to"
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "NEW SECTION. Section 5. Applicability. (1) [Sections 1 through 10] apply to all artificial\npersons formed, organized, or existing under the laws of the state of Montana.\n\n       (2) [Sections 1 through 10] apply to an artificial person organized or existing under the"
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "NEW SECTION. Section 6. Exercise of political spending power beyond the scope of\nauthority -- voidness -- nonratification. (1) An act by an artificial person that constitutes an\nexercise of political spending power not extended by the state under [sections 1 through 10] is\nbeyond the scope of authority and void."
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "Section 7",
+              "what": "NEW SECTION. Section 7. Forfeiture of charter privileges -- reinstatement. (1) An artificial\nperson that exercises political spending power not extended by the state under [sections 1\nthrough 10] forfeits all charter privileges as a matter of law."
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "Section 8",
+              "what": "NEW SECTION. Section 8. Administration and enforcement. (1) The secretary of state shall\nadopt rules and procedures necessary to implement and enforce [sections 1 through 10],\nincluding procedures governing forfeiture, reinstatement, disgorgement, certification of"
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "Section 9",
+              "what": "NEW SECTION. Section 9. Supersession of inconsistent law. (1) The powers of an artificial\nperson under Montana law are limited to artificial-person powers as defined in [section 3].\n\n        (2) A provision of Title 35, or any other law of this state may not be construed to extend"
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "Section 10",
+              "what": "NEW SECTION. Section 10. Effect on organizational documents. A provision of articles of\nincorporation, articles of organization, partnership agreements, operating agreements, bylaws,\ntrust instruments, or other organizational documents purporting to grant or confer political\nspending power is void."
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-11",
+              "number": "11",
+              "kind": "PROGRAM",
+              "label": "Section 11",
+              "what": "NEW SECTION. Section 11. Savings Clause. (1) [This act] does not invalidate, impair, or\nmodify any contract, debt instrument, security, or other legal obligation lawfully entered into\nbefore [the effective date of [this act]."
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-12",
+              "number": "12",
+              "kind": "PROGRAM",
+              "label": "Section 12",
+              "what": "NEW SECTION. Section 12. Severability -- nonrevival. (1) If a part of [this act] is invalid, all\nvalid parts that are severable from the invalid part remain in effect. If a part of [this act] is invalid\nin one or more of its applications, the part remains in effect in all valid applications that are"
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-13",
+              "number": "13",
+              "kind": "PROGRAM",
+              "label": "Section 13",
+              "what": "NEW SECTION. Section 13. Codification instruction. [Sections 1 through 10] are intended to\nbe codified as a new chapter in Title 35, and the provisions of Title 35 apply to [sections 1\nthrough 10]."
+            },
+            {
+              "id": "ballot-mt-2026:i-194#section-14",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "Section 14",
+              "what": "NEW SECTION. Section 14. Effective date. If approved by the electorate, [this act] is effective\nJanuary 1, 2027."
+            }
+          ],
+          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
+          "sourceHash": "24472a0b32676d8883b2ec133aaace160f2bdddf72f04e3fea8a34856b31c7ba",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:04:12.149966+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
+          "sourceHash": "a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3",
+          "retrievedAt": "2026-10-15T00:04:25.214156+00:00",
+          "publisher": "Montana Legislature",
+          "vault": {
+            "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-2c6b31965a6f8930/sha256-a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3.html",
+            "byteLength": 10780,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0270/part_0020/section_0380/0130-0270-0020-0380.html",
+          "sourceHash": "fbd641a486d557075b2d3fbe3770d4b2d5347447bcc3db8c361ba135fbf83be4",
+          "retrievedAt": "2026-10-15T00:07:19.161083+00:00",
+          "publisher": "Montana Legislature",
+          "vault": {
+            "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-62568c3e01140e40/sha256-fbd641a486d557075b2d3fbe3770d4b2d5347447bcc3db8c361ba135fbf83be4.html",
+            "byteLength": 14709,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+          "sourceHash": "f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb",
+          "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+          "publisher": "Montana Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb.pdf",
+            "byteLength": 3321336,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-132(3a70e31b2fe58baa619ffb1d9b23c8ff).pdf",
+          "sourceHash": "3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92",
+          "retrievedAt": "2026-10-14T05:05:21.256Z",
+          "publisher": "Montana Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sosmt.gov/2026/10/14/ms-01-9c355e7abae64912/sha256-3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92.pdf",
+            "byteLength": 119246,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
+          "sourceHash": "3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92",
+          "retrievedAt": "2026-10-15T00:02:54.469703+00:00",
+          "publisher": "Montana Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-5977db60f1d004eb/sha256-3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92.pdf",
+            "byteLength": 119246,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-133(ba9d97da675a9f26f24b5f9e333b35b7).pdf",
+          "sourceHash": "fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169",
+          "retrievedAt": "2026-10-14T05:05:21.268Z",
+          "publisher": "Montana Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sosmt.gov/2026/10/14/ms-01-587597e93c9a5b48/sha256-fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169.pdf",
+            "byteLength": 88424,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
+          "sourceHash": "fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169",
+          "retrievedAt": "2026-10-15T00:02:54.529449+00:00",
+          "publisher": "Montana Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-7af52dd0f74da9cc/sha256-fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169.pdf",
+            "byteLength": 88424,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/I-194(d4249530242056d948420c5212f6f750).pdf",
+          "sourceHash": "ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197",
+          "retrievedAt": "2026-10-14T05:05:21.231Z",
+          "publisher": "Montana Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sosmt.gov/2026/10/14/ms-01-4600e2dbd291093f/sha256-ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197.pdf",
+            "byteLength": 146576,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
+          "sourceHash": "ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197",
+          "retrievedAt": "2026-10-15T00:02:54.474626+00:00",
+          "publisher": "Montana Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-1bed27d3208786d2/sha256-ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197.pdf",
+            "byteLength": 146576,
+            "contentType": "application/pdf"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:46.571Z",
-    "reviewedBy": "BL-14 scripted source conversion",
+    "reviewedAt": "2026-10-15T04:14:39.865449+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
@@ -7424,6 +7938,72 @@
         "publisher": "Montana Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Saved official source confirming election certification or the three qualified statewide measures and their verbatim ballot language/full text."
+      },
+      {
+        "requestedUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
+        "finalUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
+        "httpStatus": 200,
+        "rawHash": "3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92",
+        "retrievedAt": "2026-10-15T00:02:54.469703+00:00",
+        "publisher": "Montana Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Secretary of State legal measure PDF published by Cascade County; bytes exactly match the previously verified state-source hash.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
+        "finalUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
+        "httpStatus": 200,
+        "rawHash": "fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169",
+        "retrievedAt": "2026-10-15T00:02:54.529449+00:00",
+        "publisher": "Montana Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Secretary of State legal measure PDF published by Cascade County; bytes exactly match the previously verified state-source hash.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
+        "finalUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
+        "httpStatus": 200,
+        "rawHash": "ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197",
+        "retrievedAt": "2026-10-15T00:02:54.474626+00:00",
+        "publisher": "Montana Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Secretary of State legal measure PDF published by Cascade County; bytes exactly match the previously verified state-source hash.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+        "finalUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
+        "httpStatus": 200,
+        "rawHash": "f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb",
+        "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
+        "publisher": "Montana Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Montana Secretary of State 2026 Voter Information Pamphlet preserved by the University of Montana Mansfield Library state constitution collection; individual measure entries and published arguments extracted by page.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
+        "finalUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
+        "httpStatus": 200,
+        "rawHash": "a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3",
+        "retrievedAt": "2026-10-15T00:04:25.214156+00:00",
+        "publisher": "Montana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0270/part_0020/section_0380/0130-0270-0020-0380.html",
+        "finalUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0270/part_0020/section_0380/0130-0270-0020-0380.html",
+        "httpStatus": 200,
+        "rawHash": "fbd641a486d557075b2d3fbe3770d4b2d5347447bcc3db8c361ba135fbf83be4",
+        "retrievedAt": "2026-10-15T00:07:19.161083+00:00",
+        "publisher": "Montana Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

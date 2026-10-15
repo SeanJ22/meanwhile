@@ -11,7 +11,7 @@ import { build } from "esbuild";
 import sharp from "sharp";
 
 import { launchGuarded } from "../scripts/browser.mts";
-import type { BallotSet } from "../lib/ballot/types.ts";
+import type { BallotSet, MeasureSourceReference } from "../lib/ballot/types.ts";
 import { ballotElectionKey, genericBallotProblems } from "../lib/ballot/generic-projection.ts";
 import { reconcileOfficialCandidacies } from "../lib/registry/runtime-data-plane.ts";
 import { normalizePortrait } from "../lib/photos/decode.ts";
@@ -34,6 +34,8 @@ import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, DERI
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import type { CandidateBattlecard } from "../components/ballot/candidate-battlecard.tsx";
 import type { CardSource } from "../lib/officials/card-sources.ts";
+import type { Card } from "../components/ui/card.tsx";
+import type { CardGap } from "../lib/design/card-gaps.ts";
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
@@ -47,14 +49,33 @@ function nationalBallot(item: typeof cases[number]): BallotSet {
   const contestId = `national-election:${item.state}:senator`;
   const election = { id: `fixture-${item.state}-2026-general`, date: "2026-11-03", name: "Synthetic general election", state: item.state };
   const provenance = { sourceUrl: `https://${item.state.toLowerCase()}-elections.example.gov/certified-candidates`, sourceOrg: `${item.state} election authority fixture`, collectedAt: checkedAt, verifiedAt: checkedAt };
+  const measureContestId = `national-election:${item.state}:measure-1`;
+  const source = (text: string, path: string, publisher = `${item.state} election authority fixture`): MeasureSourceReference => {
+    const sourceHash = createHash("sha256").update(text).digest("hex");
+    return { sourceUrl: `https://${item.state.toLowerCase()}-elections.example.gov/${path}`, sourceHash, retrievedAt: checkedAt, publisher,
+      vault: { key: `project/freshness/source/${item.state.toLowerCase()}-elections.example.gov/2026/10/12/ms-01/sha256-${sourceHash}.txt`,
+        byteLength: Buffer.byteLength(text), contentType: "text/plain; charset=utf-8" } };
+  };
+  const officialText = source(`SECTION 1. The ${item.state} watershed restoration fund is established.\nSECTION 2. The fund expires on December 31, 2032, and all remaining money returns to the state treasury.`, "measure-1-law.pdf");
+  const summary = `The ${item.state} proposal establishes a watershed restoration fund that expires in 2032.`;
+  const fiscalImpact = `The ${item.state} fiscal office estimates annual administrative costs of $240,000.`;
+  const passageThreshold = "Approval requires a majority of votes cast on this question.";
+  const argumentsFor = [`The ${item.state} guide publishes this argument from the Watershed Committee: “A dedicated fund will support stream repairs.”`];
+  const argumentsAgainst = [`The ${item.state} guide publishes this argument from the Taxpayer Committee: “Existing programs should handle these repairs.”`];
+  const voterGuide = { ...source([summary, ...argumentsFor, ...argumentsAgainst].join("\n\n"), "measure-1-guide.pdf"), summary, fiscalImpact,
+    fiscalImpactSource: source(fiscalImpact, "measure-1-fiscal.pdf", `${item.state} fiscal office fixture`), passageThreshold,
+    passageThresholdSource: source(passageThreshold, "measure-vote-rule", `${item.state} legislature fixture`), argumentsFor, argumentsAgainst };
   return {
     election,
     contests: [{ id: contestId, electionId: election.id, title: item.title, ocdId: `ocd-division/country:us/state:${item.state.toLowerCase()}`,
-      divisionVintage: "2026", type: "CANDIDACY", voteFor: item.voteFor, termYears: 6, scopeNote: null, candidateListComplete: true, provenance }],
+      divisionVintage: "2026", type: "CANDIDACY", voteFor: item.voteFor, termYears: 6, scopeNote: null, candidateListComplete: true, provenance },
+    { id: measureContestId, electionId: election.id, title: `${item.state} Question 1 — Watershed restoration`, ocdId: `ocd-division/country:us/state:${item.state.toLowerCase()}`,
+      divisionVintage: "2026", type: "MEASURE", voteFor: 1, termYears: null, scopeNote: null, measureTextUrl: officialText.sourceUrl, provenance }],
     candidacies: [item.name, item.challenger].map((name, index) => ({ id: `${contestId}:candidate-${index}`, contestId,
       givenName: name.split(" ")[0]!, familyName: name.split(" ").slice(1).join(" "), partyLabel: null,
       slogan: null, incumbent: null, websiteUrl: index ? `https://casey-${item.state.toLowerCase()}.example.org/` : null, provenance })),
-    measures: [], absences: [],
+    measures: [{ id: `${measureContestId}:question`, contestId: measureContestId, officialNumber: "Question 1",
+      questionText: `Shall the ${item.state} watershed restoration fund be established?`, officialStatement: null, officialText, voterGuide, provenance }], absences: [],
   };
 }
 
@@ -63,12 +84,14 @@ interface RenderedBallot {
   cards: Map<string, BattlecardProps>;
   names: Map<string, SeatHolder>;
   sources: Map<string, CardSource[]>;
+  measures: Map<string, React.ComponentProps<typeof Card>>;
+  gaps: Map<string, CardGap[]>;
   text: string;
 }
 
 async function renderBallot(zip: string): Promise<RenderedBallot> {
   const { default: BallotPage } = await import("../app/ballot/page.tsx");
-  const result: RenderedBallot = { cards: new Map(), names: new Map(), sources: new Map(), text: "" };
+  const result: RenderedBallot = { cards: new Map(), names: new Map(), sources: new Map(), measures: new Map(), gaps: new Map(), text: "" };
   let elementNumber = 0;
   const resolve = async (node: unknown, subject?: string): Promise<unknown> => {
     if (typeof node === "string") { result.text += ` ${node}`; return node; }
@@ -81,20 +104,23 @@ async function renderBallot(zip: string): Promise<RenderedBallot> {
     const name = typeof node.type === "function" ? node.type.name : "";
     if (name === "IncumbentNameLink") result.names.set(String(node.props.name), node.props.holder as SeatHolder);
     if (name === "CardSourcesContribution" && subject) result.sources.set(subject, [...(result.sources.get(subject) ?? []), ...(node.props.sources as CardSource[])]);
+    if (name === "CardGapContribution" && subject) result.gaps.set(subject, [...(result.gaps.get(subject) ?? []), node.props as unknown as CardGap]);
     if (typeof node.type === "function" && (node.type.constructor.name === "AsyncFunction" || ["CandidateSources", "CandidateContactSources", "FundingDisplay", "CandidatePositions", "CandidatePortraitSources"].includes(name))) {
       return resolve(await (node.type as (props: unknown) => unknown)(node.props), subject);
     }
-    const cardId = name === "CandidateBattlecard" ? String(node.props.subjectId) : subject;
+    const measureId = name === "Card" ? (node.props.attrs as Record<string, string> | undefined)?.["data-contest-id"] : undefined;
+    const cardId = name === "CandidateBattlecard" ? String(node.props.subjectId) : measureId ?? subject;
     const props = Object.fromEntries(await Promise.all(Object.entries(node.props).map(async ([key, value]) => [key, await resolve(value, cardId)])));
     if (Array.isArray(props.children)) props.children = React.Children.toArray(props.children as React.ReactNode[]);
     if (name === "CandidateBattlecard") result.cards.set(cardId!, props as unknown as BattlecardProps);
+    if (measureId) result.measures.set(measureId, props as React.ComponentProps<typeof Card>);
     return React.cloneElement(node, { ...props, key: node.key ?? elementNumber++ });
   };
   await resolve(await BallotPage({ searchParams: Promise.resolve({ zip }) }));
   return result;
 }
 
-test("BL-20: Ohio and Michigan national ballots render the same incumbent record and challenger portrait as Arizona", async () => {
+test("BL-20/MS-01: national ballots retain incumbent parity and publish attributed official measure sources", async () => {
   const encoded = await sharp({ create: { width: 128, height: 144, channels: 3, background: "#456789" } }).png().toBuffer();
   const portrait = await normalizePortrait(encoded);
   assert.ok("bytes" in portrait && portrait.verdict.ok);
@@ -179,6 +205,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const manifest = (await store.readManifest())!.manifest;
   const edge = await ensureReaderAuthorityEdge(manifest, store);
   const browserCards: Record<string, unknown>[] = [];
+  const browserMeasures: Record<string, unknown>[] = [];
   for (const [index, item] of cases.entries()) {
     const rendered = await renderBallot(item.zip);
     const ballot = ballots[index]!;
@@ -198,6 +225,10 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     for (const card of [incumbent, challenger]) browserCards.push({ subjectId: card.subjectId, name: card.name, photoUrl: card.photoUrl, incumbency: card.incumbency,
       contactHolder: card.contactHolder, tier: card.tier, sections: { office: renderToStaticMarkup(card.sections?.office), positions: renderToStaticMarkup(card.sections?.positions),
         money: renderToStaticMarkup(card.sections?.money) }, sources: rendered.sources.get(card.subjectId) ?? [] });
+    const measure = ballot.measures[0]!;
+    const measureCard = rendered.measures.get(measure.contestId);
+    assert.ok(measureCard, `${item.state} statewide measure reaches the ballot page`);
+    browserMeasures.push({ title: measureCard.title, attrs: measureCard.attrs, html: renderToStaticMarkup(measureCard.children), sources: rendered.sources.get(measure.contestId) ?? [], gaps: rendered.gaps.get(measure.contestId) ?? [] });
   }
   const arizona = await renderBallot("85701");
   for (const title of ["State Senator, District 20", "State Representative, District 20", "U.S. Representative, District 7"]) assert.ok(arizona.text.includes(title), `85701 retains ${title}`);
@@ -224,12 +255,17 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     import {CandidateBattlecard} from "./components/ballot/candidate-battlecard.tsx";
     import {RecentVotes} from "./components/map/popup/official-popup.tsx";
     import {CardSourcesContribution} from "./components/ui/card-sources-contribution.tsx";
+    import {Card} from "./components/ui/card.tsx";
     const cards=${JSON.stringify(browserCards)};
-    createRoot(document.getElementById("root")).render(cards.map(card=><section key={card.subjectId} data-fixture-candidate={card.subjectId}>
+    const measures=${JSON.stringify(browserMeasures)};
+    createRoot(document.getElementById("root")).render(<>{cards.map(card=><section key={card.subjectId} data-fixture-candidate={card.subjectId}>
       <h2>{card.name}</h2><CandidateBattlecard {...card} sections={{office:<div dangerouslySetInnerHTML={{__html:card.sections.office}}/>,
       positions:<div dangerouslySetInnerHTML={{__html:card.sections.positions}}/>,money:<div dangerouslySetInnerHTML={{__html:card.sections.money}}/>,
       record:card.contactHolder?<RecentVotes holder={card.contactHolder} reactionContext={null} contentOnly/>:null,
-      sources:<CardSourcesContribution id={card.subjectId} sources={card.sources}/>}}/></section>));`, resolveDir: process.cwd(), sourcefile: "ballot-parity-fixture.tsx", loader: "tsx" },
+      sources:<CardSourcesContribution id={card.subjectId} sources={card.sources}/>}}/></section>)}
+      {measures.map(measure=><Card key={measure.attrs["data-contest-id"]} title={measure.title} attrs={measure.attrs} sources={measure.sources} gaps={measure.gaps}>
+        <div dangerouslySetInnerHTML={{__html:measure.html}}/>
+      </Card>)}</>);`, resolveDir: process.cwd(), sourcefile: "ballot-parity-fixture.tsx", loader: "tsx" },
     bundle: true, write: false, outfile: ".scratch/ci/ballot-parity-fixture.js", platform: "browser", format: "iife", jsx: "automatic", define: { "process.env.NODE_ENV": '"production"' }, logLevel: "silent" });
   const javascript = output.outputFiles.find(file => file.path.endsWith(".js"))!.text;
   const stylesheet = readFileSync("app/globals.css", "utf8") + readFileSync("app/reader.css", "utf8") + (output.outputFiles.find(file => file.path.endsWith(".css"))?.text ?? "");
@@ -294,6 +330,42 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
       assert.ok(requests.includes(`/api/positions/${encodeURIComponent(item.incumbent)}/water`));
       assert.ok(requests.includes(`/api/official-actions/${encodeURIComponent(item.incumbent)}`));
     }
+    for (const [index, item] of cases.entries()) {
+      const measure = ballots[index]!.measures[0]!;
+      const card = page.locator(`[data-contest-id="${measure.contestId}"]`);
+      assert.equal(await card.locator("[data-measure-summary]").count(), 0, "official source text is not labeled as a checked summary");
+      assert.equal(await card.locator("[data-card-gap]").innerText(), "Still gathering: a plain-language summary.");
+      await card.locator("[data-measure-official-text] > summary").click();
+      assert.equal(await card.locator("[data-measure-question]").innerText(), measure.questionText);
+      assert.equal(await card.locator("[data-measure-official-text] a").count(), 0, "official document links belong in Sources");
+      assert.equal(await card.locator("[data-measure-full-text]").count(), 0);
+      assert.doesNotMatch(await card.innerText(), /all remaining money returns to the state treasury/);
+      const guide = card.locator("[data-measure-voter-guide]");
+      await guide.locator(":scope > summary").click();
+      for (const [label, expected] of [["Official analysis", measure.voterGuide!.summary], ["Fiscal impact", measure.voterGuide!.fiscalImpact],
+        ["Passage threshold", measure.voterGuide!.passageThreshold], ["Argument for", measure.voterGuide!.argumentsFor![0]], ["Argument against", measure.voterGuide!.argumentsAgainst![0]]] as const) {
+        const section = guide.locator("section").filter({ has: page.getByRole("heading", { name: label, exact: true }) });
+        assert.equal(await section.locator("p").innerText(), expected, `${item.state} ${label} retains the state's wording`);
+      }
+      assert.equal(await guide.locator("a").count(), 0, "the guide body does not duplicate Sources links");
+      assert.equal((await guide.locator(":scope > summary").textContent())?.trim(), `Official voter guide — ${measure.voterGuide!.publisher}`);
+      assert.equal(await guide.locator("details").count(), 0);
+      await card.getByRole("button", { name: /^Sources/ }).click();
+      const sourceList = card.locator("[data-source-list]");
+      for (const [label, held] of [["Full proposed law", measure.officialText!], ["Complete guide entry", measure.voterGuide!],
+        ["Passage threshold", measure.voterGuide!.passageThresholdSource!], ["Fiscal impact", measure.voterGuide!.fiscalImpactSource!]] as const) {
+        const link = card.locator(`a[href="${held.sourceUrl}"]`);
+        assert.equal(await link.count(), 1, `${item.state} ${label} has one link`);
+        await link.waitFor({ state: "visible" });
+        const entry = sourceList.locator(".account-modal-person").filter({ has: page.locator(`a[href="${held.sourceUrl}"]`) });
+        assert.equal(await entry.locator(":scope > p").first().innerText(), label);
+        assert.ok((await entry.innerText()).includes(held.publisher), `${item.state} source identifies ${held.publisher}`);
+      }
+      assert.doesNotMatch(await card.innerText(), /Still gathering:.*official statement/);
+      assert.ok(!(await card.innerHTML()).includes(measure.officialText!.vault.key), "vault references stay out of the reader markup");
+      await card.screenshot({ path: `.scratch/ci/MS-01-${item.state.toLowerCase()}-measure-sources.png` });
+    }
+    assert.ok(requests.every(path => !path.includes("project/freshness/source/")), "reader interactions do not request source vault objects");
     assert.deepEqual(errors, []);
     await context.close();
   } finally {

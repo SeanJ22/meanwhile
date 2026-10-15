@@ -3996,17 +3996,151 @@
             "collectedAt": "2026-10-14T05:05:14.825330+00:00",
             "verifiedAt": "2026-10-14T05:05:14.825330+00:00",
             "doorId": "fec-wy-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+            "sourceHash": "7a0468bd3e42d76f232e1f8c413f8dfb772b29d2474a00cea72c5d759b852713",
+            "retrievedAt": "2026-10-14T23:52:31.552337+00:00",
+            "publisher": "Wyoming Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/sos.wyo.gov/2026/10/14/ms-01-f7f3277548c3c7c1/sha256-7a0468bd3e42d76f232e1f8c413f8dfb772b29d2474a00cea72c5d759b852713.txt",
+              "byteLength": 3774,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+                "sourceHash": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
+                "retrievedAt": "2026-10-14T23:52:31.552337+00:00",
+                "publisher": "Wyoming Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.wyo.gov/2026/10/14/ms-01-f7f3277548c3c7c1/sha256-d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f.pdf",
+                  "byteLength": 411937,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+            "sourceHash": "fd7f8735439f3825bbe74dad4b7df20820ef5a94173ef80ee62e6b9b882fb8c6",
+            "retrievedAt": "2026-10-14T23:52:31.552337+00:00",
+            "publisher": "Wyoming Secretary of State",
+            "summary": "2026 GENERAL ELECTION STATEWIDE BALLOT PROPOSITIONS\nPROPOSED INITIATIVE PROPOSITION NUMBER ONE\nFollowing is the ballot language of Proposed Initiative Proposition Number One as it will appear on the\n2026 General Election ballot:\n        Shall a law be enacted:\n        Establishing a property tax exemption for qualified homeowners’ primary residence in the\n        amount of fifty percent (50%) of the assessed value of the dwelling; AND\n        Defining “homeowner” and “primary residence”; providing that no more than one exemption\n        shall apply to a single property or be claimed by a single owner per year; requiring a homeowner\n        to be a resident of Wyoming for at least one year and to have occupied the primary residence for\n        at least six months of the previous tax year to qualify; requiring an initial sworn claim to be filed\n        with the county assessor by the fourth Monday in May; providing for continuing the exemption in\n        subsequent years through annually confirming eligibility; providing a penalty for false claims;\n        clarifying that the exemption applies to the residential structure; and specifying applicability?",
+            "fiscalImpact": "Anticipated Revenue / (decrease)\n        Fiscal Year 2028 ($92,614,266)\n        Fiscal Year 2029 ($95,855,766)\n        The above estimate is based on residential property assessed value and property tax data from the\n        Computer Assisted Mass Appraisal (CAMA) system provided by the Department of Revenue in\n        2023. The future fiscal impact estimates are derived by using the January 2023 Consensus\n        Revenue Estimating Group (CREG) report, estimating annual growth of 3.5% for properties in\n        the future years. This is an estimate of fiscal impact to the State of Wyoming only and does not\n        include an estimate of any impact upon political subdivisions. The proposition references a\n        beginning in 2025, but if passed in 2026 the earliest applicable tax year would be 2027, with\n        impact to the state beginning in 2028. Fiscal impact will apply to each year so long as the\n        exemption is in place. Future impacts depend on unpredictable economic conditions.\n              FOR\n              AGAINST\nA complete copy of the text of the People’s Initiative to Limit Property Tax in Wyoming through a\nHomeowner’s Property Exemption is attached.",
+            "passageThreshold": "In order to pass, a constitutional amendment and statewide ballot issue must receive a majority of the total ballots cast in the election. The same provision applies to statewide initiatives and referendums.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://sos.wyo.gov/faqs.aspx?root=ELEC",
+              "sourceHash": "2c927e69be3bc10d74d968e3c853e75cc968c6bceca4772d64a9a463a62b649b",
+              "retrievedAt": "2026-10-15T00:00:17.817371+00:00",
+              "publisher": "Wyoming Secretary of State",
+              "vault": {
+                "key": "project/freshness/source/sos.wyo.gov/2026/10/15/ms-01-144f37fb36e97173/sha256-2c927e69be3bc10d74d968e3c853e75cc968c6bceca4772d64a9a463a62b649b.txt",
+                "byteLength": 207,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://sos.wyo.gov/faqs.aspx?root=ELEC",
+                  "sourceHash": "956b32f58a696a707c565a51681ff0da65b765b7fcd1f4f93c64f3390864684a",
+                  "retrievedAt": "2026-10-15T00:00:17.817371+00:00",
+                  "publisher": "Wyoming Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/sos.wyo.gov/2026/10/15/ms-01-144f37fb36e97173/sha256-956b32f58a696a707c565a51681ff0da65b765b7fcd1f4f93c64f3390864684a.html",
+                    "byteLength": 162059,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/sos.wyo.gov/2026/10/14/ms-01-f7f3277548c3c7c1/sha256-fd7f8735439f3825bbe74dad4b7df20820ef5a94173ef80ee62e6b9b882fb8c6.txt",
+              "byteLength": 2412,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+                "sourceHash": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
+                "retrievedAt": "2026-10-14T23:52:31.552337+00:00",
+                "publisher": "Wyoming Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/sos.wyo.gov/2026/10/14/ms-01-f7f3277548c3c7c1/sha256-d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f.pdf",
+                  "byteLength": 411937,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "measureRecords": [
+        {
+          "contestId": "wy-sos-2026-general-initiative-proposition-one",
+          "whatItDoes": "People’s Initiative to Limit Property Tax in",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wy-sos-2026-general-initiative-proposition-one#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "Section 1. W.S. 39-11-105(a) by creating a new\n\nparagraph (xliii) is amended to read:\n\n     39-11-105. Exemptions.\n\n     (a) The following property is exempt from property\n\ntaxation:\n\n            <u>(xliii) A portion of property used as a primary</u>\n\n<u>residence as a homeowner’s exemption. The following shall</u>"
+            }
+          ],
+          "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+          "sourceHash": "7a0468bd3e42d76f232e1f8c413f8dfb772b29d2474a00cea72c5d759b852713",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:36.891158+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+          "sourceHash": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
+          "retrievedAt": "2026-10-14T23:52:31.552337+00:00",
+          "publisher": "Wyoming Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sos.wyo.gov/2026/10/14/ms-01-f7f3277548c3c7c1/sha256-d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f.pdf",
+            "byteLength": 411937,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://sos.wyo.gov/faqs.aspx?root=ELEC",
+          "sourceHash": "956b32f58a696a707c565a51681ff0da65b765b7fcd1f4f93c64f3390864684a",
+          "retrievedAt": "2026-10-15T00:00:17.817371+00:00",
+          "publisher": "Wyoming Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/sos.wyo.gov/2026/10/15/ms-01-144f37fb36e97173/sha256-956b32f58a696a707c565a51681ff0da65b765b7fcd1f4f93c64f3390864684a.html",
+            "byteLength": 162059,
+            "contentType": "text/html"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:05:15.144850+00:00",
-    "reviewedBy": "Codex BL-16",
+    "reviewedAt": "2026-10-15T04:14:40.012257+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
@@ -4023,10 +4157,11 @@
         "finalUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
         "httpStatus": 200,
         "rawHash": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
-        "retrievedAt": "2026-10-14T05:05:14.825330+00:00",
+        "retrievedAt": "2026-10-14T23:52:31.552337+00:00",
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Wyoming Secretary of State",
-        "reviewedEvidence": "Official statewide ballot propositions file for the 2026 general election: Proposed Initiative Proposition Number One ballot language, estimated fiscal impact and attached full initiative text."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Offices_Up_for_Election.pdf",
@@ -4037,6 +4172,27 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Wyoming Secretary of State",
         "reviewedEvidence": "Official offices on the 2026 general ballot, including all House districts, odd-numbered Senate districts, Senate District 6 unexpired-term election and statewide judicial retention offices."
+      },
+      {
+        "requestedUrl": "https://sos.wyo.gov/faqs.aspx?root=ELEC",
+        "finalUrl": "https://sos.wyo.gov/faqs.aspx?root=ELEC",
+        "httpStatus": 200,
+        "rawHash": "956b32f58a696a707c565a51681ff0da65b765b7fcd1f4f93c64f3390864684a",
+        "retrievedAt": "2026-10-15T00:00:17.817371+00:00",
+        "publisher": "Wyoming Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

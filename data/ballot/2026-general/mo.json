@@ -3463,7 +3463,7 @@
             "collectedAt": "2026-10-14T05:04:26.708Z",
             "verifiedAt": "2026-10-14T05:04:26.708Z"
           },
-          "measureTextUrl": "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026-106.pdf"
+          "measureTextUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658"
         },
         {
           "id": "mo-sos-2026-amendment-7",
@@ -3517,7 +3517,7 @@
             "collectedAt": "2026-10-14T05:04:26.708Z",
             "verifiedAt": "2026-10-14T05:04:26.708Z"
           },
-          "measureTextUrl": "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026Referendums/2026-R004.pdf"
+          "measureTextUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf"
         }
       ],
       "candidacies": [
@@ -9400,12 +9400,62 @@
           "contestId": "mo-sos-2026-amendment-3",
           "officialNumber": "Amendment 3",
           "questionText": "Shall the Missouri Constitution be amended to:\nRepeal the 2024 voter-approved Amendment providing reproductive healthcare rights, including abortion through fetal viability;\nAllow abortions for rape and incest (under twelve-weeks’ gestation), emergencies, and fetal anomalies;\nAllow legislation regulating abortion;\nEnsure parental consent for minors’ abortions;\nProhibit gender transition procedures for minors?\nState governmental entities estimate no costs or savings. Greene County estimates it may experience an unknown increase in tax revenue. Other local governmental entities estimate no costs or savings.",
-          "officialStatement": "A “yes” vote will repeal Article I, Section 36, of the Missouri Constitution approved by the voters in 2024 which provided reproductive healthcare rights, including abortion through fetal viability; continue to ensure women’s ability to access medical care for medical emergencies, ectopic pregnancies, and miscarriages; allow legislation to regulate abortion providers and facilities to ensure health and safety; require informed and voluntary consent for an abortion, including parental or judicial consent for minors; allow restriction of abortions to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies; prohibit public funding of abortions except in limited circumstances; and prohibit gender transition procedures for minors including gender transition surgeries, cross-sex hormones or puberty-blocking drugs, with exceptions for specific medical conditions.\nA “no” vote will leave Article I, Section 36, of the Missouri Constitution approved by voters in 2024 in place; will not limit abortion to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies, but leave access to abortion available through fetal viability; will not prohibit gender transition procedures for minors.\nIf passed, this measure will not increase or decrease taxes.",
+          "officialStatement": "A “yes” vote will repeal Article I, Section 36, of the Missouri Constitution approved by the voters in 2024 which provided reproductive healthcare rights, including abortion through fetal viability; continue to ensure women’s ability to access medical care for medical emergencies, ectopic pregnancies, and miscarriages; allow legislation to regulate abortion providers and facilities to ensure health and safety; require informed and voluntary consent for an abortion, including parental or judicial consent for minors; allow restriction of abortions to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies; prohibit public funding of abortions except in limited circumstances; and prohibit gender transition procedures for minors including gender transition surgeries, cross-sex hormones or puberty-blocking drugs, with exceptions for specific medical conditions. A “no” vote will leave Article I, Section 36, of the Missouri Constitution approved by voters in 2024 in place; will not limit abortion to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies, but leave access to abortion available through fetal viability; will not prohibit gender transition procedures for minors. If passed, this measure will not increase or decrease taxes.",
           "provenance": {
             "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
             "sourceOrg": "Missouri Secretary of State",
             "collectedAt": "2026-10-14T05:04:26.708Z",
             "verifiedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+            "sourceHash": "c73c20172dc58e8692bd5f8818a312e61b2ac73a61f037350b474e905cbf298f",
+            "retrievedAt": "2026-10-14T23:52:37.233209+00:00",
+            "publisher": "Missouri General Assembly",
+            "vault": {
+              "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-e42a42a05ded416e/sha256-c73c20172dc58e8692bd5f8818a312e61b2ac73a61f037350b474e905cbf298f.txt",
+              "byteLength": 11321,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+                "sourceHash": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
+                "retrievedAt": "2026-10-14T23:52:37.233209+00:00",
+                "publisher": "Missouri General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-e42a42a05ded416e/sha256-bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d.pdf",
+                  "byteLength": 111311,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+            "sourceHash": "cae62a59497bf371a78ac5df0fc5b464503b958a1f8061165e63457573993846",
+            "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+            "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+            "summary": "A “yes” vote will repeal Article I, Section 36, of the Missouri Constitution approved by the voters in 2024 which provided reproductive healthcare rights, including abortion through fetal viability; continue to ensure women’s ability to access medical care for medical emergencies, ectopic pregnancies, and miscarriages; allow legislation to regulate abortion providers and facilities to ensure health and safety; require informed and voluntary consent for an abortion, including parental or judicial consent for minors; allow restriction of abortions to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies; prohibit public funding of abortions except in limited circumstances; and prohibit gender transition procedures for minors including gender transition surgeries, cross-sex hormones or puberty-blocking drugs, with exceptions for specific medical conditions. A “no” vote will leave Article I, Section 36, of the Missouri Constitution approved by voters in 2024 in place; will not limit abortion to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies, but leave access to abortion available through fetal viability; will not prohibit gender transition procedures for minors. If passed, this measure will not increase or decrease taxes.",
+            "fiscalImpact": "State governmental entities estimate no costs or savings. Greene County estimates it may experience an unknown increase in tax revenue. Other local governmental entities estimate no costs or savings.",
+            "vault": {
+              "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-cae62a59497bf371a78ac5df0fc5b464503b958a1f8061165e63457573993846.txt",
+              "byteLength": 2047,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+                "sourceHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
+                "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+                "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+                "vault": {
+                  "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2.html",
+                  "byteLength": 293258,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -9413,12 +9463,62 @@
           "contestId": "mo-sos-2026-amendment-6",
           "officialNumber": "Amendment 6",
           "questionText": "Shall the Missouri Constitution be amended to:\nexpand the initiative and referendum petition process by making it a fundamental right;\nallow courts to revise ballot summaries through lawsuits;\nprohibit the legislature from weakening initiative or referendum powers;\nprohibit the legislature from changing or repealing laws enacted through the initiative process, or passing laws similar to those rejected by referendum, without approval from at least 80% of both chambers; and\npreserve existing majority vote and signature requirements for initiative and referendum petitions?\nState and local governmental entities estimate no costs or savings.",
-          "officialStatement": "A “yes” vote will prohibit the people’s elected representatives from directly amending or changing any law enacted through the initiative process; require that any modifications to laws enacted through the initiative process be referred to the people by a vote of at least 80% of each chamber of the General Assembly; restrict the legislature from passing laws that limit the ability to pursue initiatives and referenda; maintain the current signature requirements of five percent of the individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a law; maintain the current signature requirement of eight percent of individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a constitutional amendment; and maintain the current requirement that a simple statewide majority of votes cast on a measure by individual legal voters is sufficient to enact any law or constitutional amendment.\nA “no” vote will not change the current constitutional provisions, which already give citizens the right to propose initiatives and referenda.\nIf passed, this measure will not increase or decrease taxes.",
+          "officialStatement": "A “yes” vote will prohibit the people’s elected representatives from directly amending or changing any law enacted through the initiative process; require that any modifications to laws enacted through the initiative process be referred to the people by a vote of at least 80% of each chamber of the General Assembly; restrict the legislature from passing laws that limit the ability to pursue initiatives and referenda; maintain the current signature requirements of five percent of the individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a law; maintain the current signature requirement of eight percent of individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a constitutional amendment; and maintain the current requirement that a simple statewide majority of votes cast on a measure by individual legal voters is sufficient to enact any law or constitutional amendment. A “no” vote will not change the current constitutional provisions, which already give citizens the right to propose initiatives and referenda. If passed, this measure will not increase or decrease taxes.",
           "provenance": {
             "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
             "sourceOrg": "Missouri Secretary of State",
             "collectedAt": "2026-10-14T05:04:26.708Z",
             "verifiedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658",
+            "sourceHash": "7eb8b08f5528c7e998ff04613c2f7de09406ebce6027734eb8ddda0c24d7bd62",
+            "retrievedAt": "2026-10-14T23:56:08.534472+00:00",
+            "publisher": "Missouri Secretary of State, published by the Missouri State Auditor",
+            "vault": {
+              "key": "project/freshness/source/auditor.mo.gov/2026/10/14/ms-01-585719ab662c7aca/sha256-7eb8b08f5528c7e998ff04613c2f7de09406ebce6027734eb8ddda0c24d7bd62.txt",
+              "byteLength": 7618,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658",
+                "sourceHash": "2146882da7b764a71129d208064edb820ce52654e4b6fada3ed8cc4dade030d3",
+                "retrievedAt": "2026-10-14T23:56:08.534472+00:00",
+                "publisher": "Missouri Secretary of State, published by the Missouri State Auditor",
+                "vault": {
+                  "key": "project/freshness/source/auditor.mo.gov/2026/10/14/ms-01-585719ab662c7aca/sha256-2146882da7b764a71129d208064edb820ce52654e4b6fada3ed8cc4dade030d3.pdf",
+                  "byteLength": 1722459,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+            "sourceHash": "054fa2adb74dccb6984e36f2a5ac195210bb8de731fbbb2f89716d4aff66c8a8",
+            "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+            "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+            "summary": "A “yes” vote will prohibit the people’s elected representatives from directly amending or changing any law enacted through the initiative process; require that any modifications to laws enacted through the initiative process be referred to the people by a vote of at least 80% of each chamber of the General Assembly; restrict the legislature from passing laws that limit the ability to pursue initiatives and referenda; maintain the current signature requirements of five percent of the individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a law; maintain the current signature requirement of eight percent of individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a constitutional amendment; and maintain the current requirement that a simple statewide majority of votes cast on a measure by individual legal voters is sufficient to enact any law or constitutional amendment. A “no” vote will not change the current constitutional provisions, which already give citizens the right to propose initiatives and referenda. If passed, this measure will not increase or decrease taxes.",
+            "fiscalImpact": "State and local governmental entities estimate no costs or savings.",
+            "vault": {
+              "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-054fa2adb74dccb6984e36f2a5ac195210bb8de731fbbb2f89716d4aff66c8a8.txt",
+              "byteLength": 1924,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+                "sourceHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
+                "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+                "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+                "vault": {
+                  "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2.html",
+                  "byteLength": 293258,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -9426,12 +9526,62 @@
           "contestId": "mo-sos-2026-amendment-7",
           "officialNumber": "Amendment 7",
           "questionText": "Shall the Missouri Constitution be amended to establish a permanent public endowment fund to support state government instead of taxing Missouri residents, prohibit the General Assembly from appropriating or diverting the fund, and eliminate state-imposed taxes once the fund generates sufficient revenue to replace them?\nState and local governmental entities estimate no costs or savings.",
-          "officialStatement": "A “yes” vote will amend the Missouri Constitution to establish the “Show-Me Prosperity Fund,” a permanent public endowment fund to support state government with the goal of eliminating state-imposed taxes without impairing the real value of the fund’s principal; prohibit the General Assembly from appropriating or diverting monies from the fund until notification is given by the State Treasurer that the net investment earnings of the fund are sufficient to eliminate state-imposed taxes; cap the total amount of moneys that may be appropriated from the fund in a fiscal year to three percent of the average market value of the fund over the preceding five fiscal years; and prohibit the General Assembly from enacting the eliminated state-imposed taxes, provided, however, that in the event the fund is unable to meet its obligations due to insolvency, revenue shortfall, or program failure, the General Assembly shall retain full authority to appropriate funds from any lawful source and to enact legislation establishing or increasing taxes or other revenues as necessary.\nA “no” vote will not amend the Missouri Constitution to establish a permanent public endowment fund to support state government with the goal of eliminating state-imposed taxes.\nIf passed, this measure will have no immediate impact on taxes but could lead to the elimination of state-imposed taxes if the net investment earnings of the fund become sufficient to support that outcome.",
+          "officialStatement": "A “yes” vote will amend the Missouri Constitution to establish the “Show-Me Prosperity Fund,” a permanent public endowment fund to support state government with the goal of eliminating state-imposed taxes without impairing the real value of the fund’s principal; prohibit the General Assembly from appropriating or diverting monies from the fund until notification is given by the State Treasurer that the net investment earnings of the fund are sufficient to eliminate state-imposed taxes; cap the total amount of moneys that may be appropriated from the fund in a fiscal year to three percent of the average market value of the fund over the preceding five fiscal years; and prohibit the General Assembly from enacting the eliminated state-imposed taxes, provided, however, that in the event the fund is unable to meet its obligations due to insolvency, revenue shortfall, or program failure, the General Assembly shall retain full authority to appropriate funds from any lawful source and to enact legislation establishing or increasing taxes or other revenues as necessary. A “no” vote will not amend the Missouri Constitution to establish a permanent public endowment fund to support state government with the goal of eliminating state-imposed taxes. If passed, this measure will have no immediate impact on taxes but could lead to the elimination of state-imposed taxes if the net investment earnings of the fund become sufficient to support that outcome.",
           "provenance": {
             "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
             "sourceOrg": "Missouri Secretary of State",
             "collectedAt": "2026-10-14T05:04:26.708Z",
             "verifiedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
+            "sourceHash": "2202e9906ccd2249c28025397451fc38f71c3e024917e3511d75bf2be6a82157",
+            "retrievedAt": "2026-10-14T23:52:37.421796+00:00",
+            "publisher": "Missouri General Assembly",
+            "vault": {
+              "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-3add71ec9566bca3/sha256-2202e9906ccd2249c28025397451fc38f71c3e024917e3511d75bf2be6a82157.txt",
+              "byteLength": 5027,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
+                "sourceHash": "cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261",
+                "retrievedAt": "2026-10-14T23:52:37.421796+00:00",
+                "publisher": "Missouri General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-3add71ec9566bca3/sha256-cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261.pdf",
+                  "byteLength": 233139,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+            "sourceHash": "fc9e329d3e9bb177031c731ff6506473896c7f6f6b3f1f7e41c5a4c15e6dd698",
+            "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+            "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+            "summary": "A “yes” vote will amend the Missouri Constitution to establish the “Show-Me Prosperity Fund,” a permanent public endowment fund to support state government with the goal of eliminating state-imposed taxes without impairing the real value of the fund’s principal; prohibit the General Assembly from appropriating or diverting monies from the fund until notification is given by the State Treasurer that the net investment earnings of the fund are sufficient to eliminate state-imposed taxes; cap the total amount of moneys that may be appropriated from the fund in a fiscal year to three percent of the average market value of the fund over the preceding five fiscal years; and prohibit the General Assembly from enacting the eliminated state-imposed taxes, provided, however, that in the event the fund is unable to meet its obligations due to insolvency, revenue shortfall, or program failure, the General Assembly shall retain full authority to appropriate funds from any lawful source and to enact legislation establishing or increasing taxes or other revenues as necessary. A “no” vote will not amend the Missouri Constitution to establish a permanent public endowment fund to support state government with the goal of eliminating state-imposed taxes. If passed, this measure will have no immediate impact on taxes but could lead to the elimination of state-imposed taxes if the net investment earnings of the fund become sufficient to support that outcome.",
+            "fiscalImpact": "State and local governmental entities estimate no costs or savings.",
+            "vault": {
+              "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-fc9e329d3e9bb177031c731ff6506473896c7f6f6b3f1f7e41c5a4c15e6dd698.txt",
+              "byteLength": 1961,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+                "sourceHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
+                "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+                "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+                "vault": {
+                  "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2.html",
+                  "byteLength": 293258,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -9439,12 +9589,62 @@
           "contestId": "mo-sos-2026-amendment-8",
           "officialNumber": "Amendment 8",
           "questionText": "Shall the Missouri Constitution be amended to support law enforcement by preserving the right of citizens to elect a county sheriff, prohibiting the removal of a county sheriff except by a writ of quo warranto, and recognizing the office of sheriff as part of the administration of justice?\nState and local governmental entities estimate no costs or savings.",
-          "officialStatement": "A “yes” vote will amend the Missouri Constitution to require counties to: elect a sheriff every four years, which is currently required by statute; place in the Constitution provisions regarding sheriffs’ duties that are currently provided by statute; and provide that an elected sheriff may be removed from office only through a writ of quo warranto initiated by the Attorney General.\nA “no” vote will not amend the Missouri Constitution.  Current Missouri statutes providing for the election of county sheriffs to four-year terms and governing their duties and removal will remain in effect unless changed by law.\nIf passed, this measure will not increase or decrease taxes.",
+          "officialStatement": "A “yes” vote will amend the Missouri Constitution to require counties to: elect a sheriff every four years, which is currently required by statute; place in the Constitution provisions regarding sheriffs’ duties that are currently provided by statute; and provide that an elected sheriff may be removed from office only through a writ of quo warranto initiated by the Attorney General. A “no” vote will not amend the Missouri Constitution. Current Missouri statutes providing for the election of county sheriffs to four-year terms and governing their duties and removal will remain in effect unless changed by law. If passed, this measure will not increase or decrease taxes.",
           "provenance": {
             "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
             "sourceOrg": "Missouri Secretary of State",
             "collectedAt": "2026-10-14T05:04:26.708Z",
             "verifiedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
+            "sourceHash": "959a69ccb86e93438c28834037a83c119fe7f9df56513d097d05289cd9d45d4d",
+            "retrievedAt": "2026-10-14T23:52:37.386323+00:00",
+            "publisher": "Missouri General Assembly",
+            "vault": {
+              "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-587bf156c9590985/sha256-959a69ccb86e93438c28834037a83c119fe7f9df56513d097d05289cd9d45d4d.txt",
+              "byteLength": 3709,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
+                "sourceHash": "7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf",
+                "retrievedAt": "2026-10-14T23:52:37.386323+00:00",
+                "publisher": "Missouri General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-587bf156c9590985/sha256-7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf.pdf",
+                  "byteLength": 219114,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+            "sourceHash": "3dea2d6580a6040df8a11d7c1328dce26d673fcfaebb19253f56789600e8a3a0",
+            "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+            "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+            "summary": "A “yes” vote will amend the Missouri Constitution to require counties to: elect a sheriff every four years, which is currently required by statute; place in the Constitution provisions regarding sheriffs’ duties that are currently provided by statute; and provide that an elected sheriff may be removed from office only through a writ of quo warranto initiated by the Attorney General. A “no” vote will not amend the Missouri Constitution. Current Missouri statutes providing for the election of county sheriffs to four-year terms and governing their duties and removal will remain in effect unless changed by law. If passed, this measure will not increase or decrease taxes.",
+            "fiscalImpact": "State and local governmental entities estimate no costs or savings.",
+            "vault": {
+              "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-3dea2d6580a6040df8a11d7c1328dce26d673fcfaebb19253f56789600e8a3a0.txt",
+              "byteLength": 1140,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+                "sourceHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
+                "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+                "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+                "vault": {
+                  "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2.html",
+                  "byteLength": 293258,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         },
         {
@@ -9452,25 +9652,370 @@
           "contestId": "mo-sos-2026-proposition-a",
           "officialNumber": "Proposition A",
           "questionText": "Do the people of the state of Missouri approve the act of the General Assembly entitled “House Bill No. 1 (2025 Second Extraordinary Session),” which repeals Missouri’s existing congressional plan, and replaces it with new congressional boundaries that keep more counties intact?\nState and local governmental entities estimate no costs or savings.",
-          "officialStatement": "A “yes” vote will approve the act of the General Assembly entitled “House Bill No. 1 (2025 Extraordinary Session),” which redraws the congressional district boundaries.\nA “no” vote will leave in place the congressional district boundaries enacted in 2022.\nIf passed, this measure will have no impact on taxes.",
+          "officialStatement": "A “yes” vote will approve the act of the General Assembly entitled “House Bill No. 1 (2025 Extraordinary Session),” which redraws the congressional district boundaries. A “no” vote will leave in place the congressional district boundaries enacted in 2022. If passed, this measure will have no impact on taxes.",
           "provenance": {
             "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
             "sourceOrg": "Missouri Secretary of State",
             "collectedAt": "2026-10-14T05:04:26.708Z",
             "verifiedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf",
+            "sourceHash": "0dde9806e7e3264d99ba41b4c5dd77700467cefa4774373e3f4ab7e10083960f",
+            "retrievedAt": "2026-10-14T23:55:10.709738+00:00",
+            "publisher": "Missouri General Assembly",
+            "vault": {
+              "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-89ba10bec0629ba3/sha256-0dde9806e7e3264d99ba41b4c5dd77700467cefa4774373e3f4ab7e10083960f.txt",
+              "byteLength": 84929,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf",
+                "sourceHash": "c9a293bc153ec9fb66292a3de18287623fe9574e650279e93249db93161aef68",
+                "retrievedAt": "2026-10-14T23:55:10.709738+00:00",
+                "publisher": "Missouri General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-89ba10bec0629ba3/sha256-c9a293bc153ec9fb66292a3de18287623fe9574e650279e93249db93161aef68.pdf",
+                  "byteLength": 195397,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+            "sourceHash": "3b53b4eb3efc215eb74d4f85545b4bfe8c8b9fcc815f2a374a45570e1eb7f04d",
+            "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+            "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+            "summary": "A “yes” vote will approve the act of the General Assembly entitled “House Bill No. 1 (2025 Extraordinary Session),” which redraws the congressional district boundaries. A “no” vote will leave in place the congressional district boundaries enacted in 2022. If passed, this measure will have no impact on taxes.",
+            "fiscalImpact": "State and local governmental entities estimate no costs or savings.",
+            "vault": {
+              "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-3b53b4eb3efc215eb74d4f85545b4bfe8c8b9fcc815f2a374a45570e1eb7f04d.txt",
+              "byteLength": 758,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+                "sourceHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
+                "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+                "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+                "vault": {
+                  "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2.html",
+                  "byteLength": 293258,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         }
       ],
       "absences": [],
       "coverageNotes": [
         "The Secretary of State certified the November 3, 2026 candidate list on August 25, 2026. It lists State Auditor, U.S. Representative, State Senator and State Representative contests, plus judicial candidates; it lists no U.S. Senate contest. This statewide and legislative projection includes Missouri Supreme Court retention. Court of Appeals, Circuit Judge and Associate Circuit Judge contests require their judicial divisions and remain outside this projection."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mo-sos-2026-amendment-3",
+          "whatItDoes": "Be it resolved by the House of Representatives, the Senate concurring therein: That at the next general election to be held in the state of Missouri, on Tuesday next following the first Monday in November, 2026, or at a special election to be called by the governor for that purpose, there is hereby submitted to the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "mo-sos-2026-amendment-3#1",
+              "number": "36(a)",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 36(a)",
+              "what": "Section 36(a). 1. The state's duty to protect public health and welfare includes protecting the integrity and ethics of the medical profession."
+            }
+          ],
+          "sourceUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+          "sourceHash": "c73c20172dc58e8692bd5f8818a312e61b2ac73a61f037350b474e905cbf298f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-sos-2026-amendment-6",
+          "whatItDoes": "Be it resolved by the people of the state of Missouri that the Constitution be amended: Article III of the Constitution is revised by adding six new sections to be known as Article III, Sections 54, 55, 56, 57, 58, and 59 to read as follows: Section 54.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "mo-sos-2026-amendment-6#1",
+              "number": "54",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 54",
+              "what": "Section 54. Ballot summaries, including summary statements and fiscal note summaries, shall be clear, unbiased, fair, accurate, and easy to understand. Ballot summaries shall not seek to mislead voters."
+            },
+            {
+              "id": "mo-sos-2026-amendment-6#2",
+              "number": "55",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 55",
+              "what": "Section 55. 1. The legislature shall be prohibited from weakening citizens’ initiative or referendum powers: no law passed by the legislature and no legislatively-referred law or constitutional amendment shall weaken citizens’ initiative or referendum powers, notwithstanding Sections 2(a) and 2(b) of Article XII of"
+            },
+            {
+              "id": "mo-sos-2026-amendment-6#3",
+              "number": "56",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 56",
+              "what": "Section 56. 1. As of the effective date of this section, the legislature shall be prohibited from changing any citizen-initiated law, changing any citizen-initiated amendment, or passing, proposing, or referring any law or constitutional amendment similar in effect to a law rejected by referendum petition, unless"
+            },
+            {
+              "id": "mo-sos-2026-amendment-6#4",
+              "number": "57",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 57",
+              "what": "Section 57. Notwithstanding any other provision of law or of this Constitution to the contrary, pre-existing signature and vote requirements shall be maintained, as follows: a simple statewide majority of votes cast on the measure by individual legal voters shall be sufficient to enact any law or constitutional"
+            },
+            {
+              "id": "mo-sos-2026-amendment-6#5",
+              "number": "58",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 58",
+              "what": "Section 58. Sections 54, 55, 56, and 57 are self-executing and shall be construed to strongly protect the citizens’ powers of initiative and referendum, all political power being vested in the people and founded upon their will only."
+            },
+            {
+              "id": "mo-sos-2026-amendment-6#6",
+              "number": "59",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 59",
+              "what": "Section 59. If any provision of Sections 54, 55, 56, 57, or 58, or the application thereof to anyone or to any circumstance is held invalid, the remainder of those provisions and the application of such provisions to others or other circumstances shall not be affected thereby."
+            }
+          ],
+          "sourceUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658",
+          "sourceHash": "7eb8b08f5528c7e998ff04613c2f7de09406ebce6027734eb8ddda0c24d7bd62",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-sos-2026-amendment-7",
+          "whatItDoes": "Be it resolved by the Senate, the House of Representatives concurring therein: That at the next general election to be held in the state of Missouri, on Tuesday next following the first Monday in November, 2026, or at a special election to be called by the governor for that purpose, there is hereby submitted to the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "mo-sos-2026-amendment-7#1",
+              "number": "15(a)",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 15(a)",
+              "what": "Section 15(a). 1. There is hereby established within the state treasury a fund to be known as the \"Show-Me Prosperity Fund\", which shall be established as a permanent public endowment to provide long-term fiscal stability with the goal of eliminating state-imposed taxes without impairing the real value of the fund's"
+            }
+          ],
+          "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
+          "sourceHash": "2202e9906ccd2249c28025397451fc38f71c3e024917e3511d75bf2be6a82157",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-sos-2026-amendment-8",
+          "whatItDoes": "Be it resolved by the Senate, the House of Representatives concurring therein: That at the next general election to be held in the state of Missouri, on Tuesday next following the first Monday in November, 2026, or at a special election to be called by the governor for that purpose, there is hereby submitted to the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "mo-sos-2026-amendment-8#1",
+              "number": "15",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 15",
+              "what": "Section 15. 1. Except as provided in subsection 2 of this section, each county shall elect a sheriff for a term of four years by a majority of the qualified voters of the county voting thereon at the time of voting designated for such office provided by law as of the effective date of this section and every four years"
+            }
+          ],
+          "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
+          "sourceHash": "959a69ccb86e93438c28834037a83c119fe7f9df56513d097d05289cd9d45d4d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-sos-2026-proposition-a",
+          "whatItDoes": "Be it enacted by the General Assembly of the state of Missouri, as follows: Section A.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "mo-sos-2026-proposition-a#1",
+              "number": "128.345",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.345",
+              "what": "128.345. 1. All references in sections 128.451 to 128.458 to counties, voting districts (VTD), and tract-blocks (Block) mean those counties, voting districts (VTD), and tract-blocks (Block) as reported to the state by the United States Bureau of the Census for the 2010 census. 2."
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#2",
+              "number": "128.346",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.346",
+              "what": "128.346. 1. The districts established by the provisions of sections 128.400 to 128.440 for the election of representatives to the Congress of the United States shall be effective beginning with election to the 108th Congress and through the election of the 112th Congress. 2."
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#3",
+              "number": "128.348",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.348",
+              "what": "128.348. 1. Effective with the election for the 113th Congress and through the election of the 117th Congress, the state of Missouri shall consist of eight congressional districts. 2. Effective with the election of the 118th Congress, the state of Missouri shall consist of eight congressional districts. 3."
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#4",
+              "number": "128.471",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.471",
+              "what": "128.471. The first congressional district shall be composed of the following: County: St. Louis City MO County: St."
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#5",
+              "number": "128.472",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.472",
+              "what": "128.472. The second congressional district shall be composed of the following: County: Crawford MO County: Franklin MO County: Gasconade MO County: Jefferson MO VTD: Brennan Block: 290997002111020 Block: 290997002111021 Block: 290997003032017 Block: 290997003051001 Block: 290997003051003 Block: 290997003052001 Block:"
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#6",
+              "number": "128.473",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.473",
+              "what": "128.473. The third congressional district shall be composed of the following: District 3 County: Audrain MO County: Boone MO VTD: 17 Block: 290190015062014 Block: 290190015062023 Block: 290190015062031 VTD 17 Subtotal VTD: 1A VTD: 1B VTD: 1C VTD: 1D VTD: 1E VTD: 1F VTD: 1G VTD: 1I VTD: 1J VTD: 1K VTD: 1L VTD: 1M VTD:"
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#7",
+              "number": "128.474",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.474",
+              "what": "128.474. The fourth congressional district shall be composed of the following: County: Barton MO County: Bates MO County: Benton MO County: Camden MO County: Cass MO County: Cedar MO County: Dade MO County: Dallas MO County: Henry MO County: Hickory MO County: Jackson MO VTD: 412 VTD: 413 VTD: 414 VTD: 415 VTD: 616"
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#8",
+              "number": "128.475",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.475",
+              "what": "128.475. The fifth congressional district shall be composed of the following: County: Boone MO VTD: 07 VTD: 08 VTD: 09 VTD: 10 VTD: 11 VTD: 12 VTD: 15 VTD: 16 VTD: 17 Block: 290190015031004 Block: 290190015031013 Block: 290190015062000 Block: 290190015062001 Block: 290190015062002 Block: 290190015062003 Block:"
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#9",
+              "number": "128.476",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.476",
+              "what": "128.476. The sixth congressional district shall be composed of the following: County: Adair MO County: Andrew MO County: Atchison MO County: Buchanan MO County: Caldwell MO County: Carroll MO County: Chariton MO County: Clark MO County: Clay MO County: Clinton MO County: Daviess MO County: DeKalb MO County: Gentry MO"
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#10",
+              "number": "128.477",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.477",
+              "what": "128.477. The seventh congressional district shall be composed of the following: County: Barry MO County: Christian MO County: Greene MO County: Jasper MO County: Lawrence MO County: McDonald MO County: Newton MO County: Stone MO County: Taney MO County: Webster MO VTD: Benton VTD: Diggins VTD: Finley VTD: Fordland"
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#11",
+              "number": "128.478",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.478",
+              "what": "128.478. The eighth congressional district shall be composed of the following: County: Bollinger MO County: Butler MO County: Cape Girardeau MO County: Carter MO County: Dent MO County: Douglas MO County: Dunklin MO County: Howell MO County: Iron MO County: Jefferson MO VTD: Airport VTD: American Legion VTD: Antonia"
+            },
+            {
+              "id": "mo-sos-2026-proposition-a#12",
+              "number": "128.479",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 128.479",
+              "what": "128.479. Upon the passage and enactment of sections 128.471 to 128.478, and as provided to the revisor of statutes, the revisor of statutes shall publish the graphical map representation of the official congressional district boundaries as an appendix of the Revised Statutes of Missouri. ✔"
+            }
+          ],
+          "sourceUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf",
+          "sourceHash": "0dde9806e7e3264d99ba41b4c5dd77700467cefa4774373e3f4ab7e10083960f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
+          "sourceHash": "cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261",
+          "retrievedAt": "2026-10-14T23:52:37.421796+00:00",
+          "publisher": "Missouri General Assembly",
+          "vault": {
+            "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-3add71ec9566bca3/sha256-cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261.pdf",
+            "byteLength": 233139,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658",
+          "sourceHash": "2146882da7b764a71129d208064edb820ce52654e4b6fada3ed8cc4dade030d3",
+          "retrievedAt": "2026-10-14T23:56:08.534472+00:00",
+          "publisher": "Missouri Secretary of State, published by the Missouri State Auditor",
+          "vault": {
+            "key": "project/freshness/source/auditor.mo.gov/2026/10/14/ms-01-585719ab662c7aca/sha256-2146882da7b764a71129d208064edb820ce52654e4b6fada3ed8cc4dade030d3.pdf",
+            "byteLength": 1722459,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
+          "sourceHash": "7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf",
+          "retrievedAt": "2026-10-14T23:52:37.386323+00:00",
+          "publisher": "Missouri General Assembly",
+          "vault": {
+            "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-587bf156c9590985/sha256-7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf.pdf",
+            "byteLength": 219114,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf",
+          "sourceHash": "c9a293bc153ec9fb66292a3de18287623fe9574e650279e93249db93161aef68",
+          "retrievedAt": "2026-10-14T23:55:10.709738+00:00",
+          "publisher": "Missouri General Assembly",
+          "vault": {
+            "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-89ba10bec0629ba3/sha256-c9a293bc153ec9fb66292a3de18287623fe9574e650279e93249db93161aef68.pdf",
+            "byteLength": 195397,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+          "sourceHash": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
+          "retrievedAt": "2026-10-14T23:52:37.233209+00:00",
+          "publisher": "Missouri General Assembly",
+          "vault": {
+            "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-e42a42a05ded416e/sha256-bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d.pdf",
+            "byteLength": 111311,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+          "sourceHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
+          "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+          "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+          "vault": {
+            "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2.html",
+            "byteLength": 293258,
+            "contentType": "text/html"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.stcharlescitymo.gov/359/Voting-Elections",
+          "sourceHash": "50294681a9963e3f094ea4c3e1747e91c05bf2ab558285589be9768d97326820",
+          "retrievedAt": "2026-10-15T04:05:58.849662+00:00",
+          "publisher": "City of Saint Charles, Missouri",
+          "vault": {
+            "key": "project/freshness/source/www.stcharlescitymo.gov/2026/10/15/ms-01-d22d5bc5999453b8/sha256-50294681a9963e3f094ea4c3e1747e91c05bf2ab558285589be9768d97326820.html",
+            "byteLength": 119369,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:07:28.982Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-15T04:14:39.858958+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -9494,41 +10039,11 @@
       },
       {
         "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
-        "finalUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
-        "httpStatus": 200,
-        "rawHash": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
-        "retrievedAt": "2026-10-14T05:06:45.357Z",
-        "publisher": "Missouri Secretary of State",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
         "requestedUrl": "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026-106.pdf",
         "finalUrl": "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026-106.pdf",
         "httpStatus": 200,
         "rawHash": "3c0c07092ed012a8d74c54c184f1aee3a9e0d9c2c6993dd84667bbf9ba37ca15",
         "retrievedAt": "2026-10-14T05:06:45.649Z",
-        "publisher": "Missouri Secretary of State",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
-        "finalUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
-        "httpStatus": 200,
-        "rawHash": "cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261",
-        "retrievedAt": "2026-10-14T05:06:45.922Z",
-        "publisher": "Missouri Secretary of State",
-        "reviewedEvidence": "Official election publication converted from the captured response bytes."
-      },
-      {
-        "sourceClass": "ELECTION_AUTHORITY",
-        "requestedUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
-        "finalUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
-        "httpStatus": 200,
-        "rawHash": "7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf",
-        "retrievedAt": "2026-10-14T05:07:28.638Z",
         "publisher": "Missouri Secretary of State",
         "reviewedEvidence": "Official election publication converted from the captured response bytes."
       },
@@ -9541,6 +10056,76 @@
         "retrievedAt": "2026-10-14T05:07:28.982Z",
         "publisher": "Missouri Secretary of State",
         "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+        "finalUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+        "httpStatus": 200,
+        "rawHash": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
+        "retrievedAt": "2026-10-14T23:52:37.233209+00:00",
+        "publisher": "Missouri General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658",
+        "finalUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658",
+        "httpStatus": 200,
+        "rawHash": "2146882da7b764a71129d208064edb820ce52654e4b6fada3ed8cc4dade030d3",
+        "retrievedAt": "2026-10-14T23:56:08.534472+00:00",
+        "publisher": "Missouri Secretary of State, published by the Missouri State Auditor",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
+        "finalUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
+        "httpStatus": 200,
+        "rawHash": "cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261",
+        "retrievedAt": "2026-10-14T23:52:37.421796+00:00",
+        "publisher": "Missouri General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
+        "finalUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
+        "httpStatus": 200,
+        "rawHash": "7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf",
+        "retrievedAt": "2026-10-14T23:52:37.386323+00:00",
+        "publisher": "Missouri General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf",
+        "finalUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf",
+        "httpStatus": 200,
+        "rawHash": "c9a293bc153ec9fb66292a3de18287623fe9574e650279e93249db93161aef68",
+        "retrievedAt": "2026-10-14T23:55:10.709738+00:00",
+        "publisher": "Missouri General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+        "finalUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
+        "httpStatus": 200,
+        "rawHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
+        "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
+        "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
+        "reviewedEvidence": "Original county election-authority HTML response saved and hashed; all five state official ballot titles, fiscal statements, and fair-ballot explanations match their complete measure entries."
+      },
+      {
+        "requestedUrl": "https://www.stcharlescitymo.gov/359/Voting-Elections",
+        "finalUrl": "https://www.stcharlescitymo.gov/359/Voting-Elections",
+        "httpStatus": 200,
+        "rawHash": "50294681a9963e3f094ea4c3e1747e91c05bf2ab558285589be9768d97326820",
+        "retrievedAt": "2026-10-15T04:05:58.849662+00:00",
+        "publisher": "City of Saint Charles, Missouri",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

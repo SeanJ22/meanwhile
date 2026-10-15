@@ -4862,12 +4862,87 @@
           "contestId": "ri-sos-2026-general-question-1",
           "officialNumber": "1",
           "questionText": "1. HIGHER EDUCATION FACILITIES - $275,000,000\nFor capital improvements to higher education facilities, to be allocated as \nfollows:\na. University of Rhode Island Integrated Health Building - $165,000,000\nb. Rhode Island College Adams Library Renovations - $50,000,000\nc. Community College of Rhode Island Workforce Innovation Center - \n$60,000,000",
-          "officialStatement": null,
+          "officialStatement": "Explanation and purpose of Question 1: a) University of Rhode Island - Integrated Health Building - $165,000,000 Approval of this bond will provide one hundred and sixty-five million dollars ($165,000,000) to design and construct a new facility and associated infrastructure at the University of Rhode Island’s Kingston Campus, which will significantly advance health education, clinical training, and workforce development. The Integrated Health Building will meet the growing demand for highly trained healthcare professionals and facilitate greater interdisciplinary collaboration across URI’s health-related disciplines. It aligns with URI’s commitment to health innovation, workforce development, and economic growth and will strengthen the state’s healthcare workforce pipeline. b) Rhode Island College - Adams Library Renovations - $50,000,000 Approval of this bond will provide fifty million dollars ($50,000,000) to finance the construction of a student success and career readiness center and renovations to the Adams Library. This project will reimagine the role of the college’s central library into a modern hub for career readiness and academic achievement, helping to improve student outcomes, increase retention and completion rates, and accelerate pathways to employment. c) Community College of Rhode Island - Workforce Innovation Center - $60,000,000 Approval of this bond will provide sixty million dollars ($60,000,000) to construct the Community College of Rhode Island Workforce Innovation Center at the Knight Campus in Warwick. The Workforce Innovation Center will serve as a centralized hub for workforce education and training, increasing Rhode Island’s capacity to prepare students and workers for high-demand careers in advanced manufacturing, construction and the skilled trades, healthcare, information technology and cybersecurity, clean energy, transportation and logistics, and other growing industries. The facility will provide modern classrooms, specialized laboratories, and hands-on training spaces developed in partnership with employers to help address workforce shortages, expand career education opportunities, and strengthen Rhode Island’s economy.",
           "provenance": {
             "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
             "sourceOrg": "Rhode Island Department of State, Elections Division",
             "collectedAt": "2026-10-14T05:05:50.103662+00:00",
             "verifiedAt": "2026-10-14T05:05:50.103662+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+            "sourceHash": "b2d321bd021ea490a1afb578915a0be46c145c023f48baf74923ac9b5c57a8d7",
+            "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+            "publisher": "Rhode Island General Assembly",
+            "vault": {
+              "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-b2d321bd021ea490a1afb578915a0be46c145c023f48baf74923ac9b5c57a8d7.txt",
+              "byteLength": 22007,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                "publisher": "Rhode Island General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                  "byteLength": 3424834,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+            "sourceHash": "18c72073fafcf3ca5197cb0fa42a6be80eb3f605ed34774d8be2184f4fa3d098",
+            "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+            "publisher": "Rhode Island Department of State, Elections Division",
+            "summary": "Explanation and purpose of Question 1: a) University of Rhode Island - Integrated Health Building - $165,000,000 Approval of this bond will provide one hundred and sixty-five million dollars ($165,000,000) to design and construct a new facility and associated infrastructure at the University of Rhode Island’s Kingston Campus, which will significantly advance health education, clinical training, and workforce development. The Integrated Health Building will meet the growing demand for highly trained healthcare professionals and facilitate greater interdisciplinary collaboration across URI’s health-related disciplines. It aligns with URI’s commitment to health innovation, workforce development, and economic growth and will strengthen the state’s healthcare workforce pipeline. b) Rhode Island College - Adams Library Renovations - $50,000,000 Approval of this bond will provide fifty million dollars ($50,000,000) to finance the construction of a student success and career readiness center and renovations to the Adams Library. This project will reimagine the role of the college’s central library into a modern hub for career readiness and academic achievement, helping to improve student outcomes, increase retention and completion rates, and accelerate pathways to employment. c) Community College of Rhode Island - Workforce Innovation Center - $60,000,000 Approval of this bond will provide sixty million dollars ($60,000,000) to construct the Community College of Rhode Island Workforce Innovation Center at the Knight Campus in Warwick. The Workforce Innovation Center will serve as a centralized hub for workforce education and training, increasing Rhode Island’s capacity to prepare students and workers for high-demand careers in advanced manufacturing, construction and the skilled trades, healthcare, information technology and cybersecurity, clean energy, transportation and logistics, and other growing industries. The facility will provide modern classrooms, specialized laboratories, and hands-on training spaces developed in partnership with employers to help address workforce shortages, expand career education opportunities, and strengthen Rhode Island’s economy.",
+            "fiscalImpact": "TOTAL PROJECT AND ISSUANCE COSTS Principal Interest** Total Costs $275,000,000 $166,333,250 $441,333,250",
+            "passageThreshold": "If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+              "sourceHash": "b2d321bd021ea490a1afb578915a0be46c145c023f48baf74923ac9b5c57a8d7",
+              "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+              "publisher": "Rhode Island General Assembly",
+              "vault": {
+                "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-b2d321bd021ea490a1afb578915a0be46c145c023f48baf74923ac9b5c57a8d7.txt",
+                "byteLength": 22007,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                  "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                  "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                  "publisher": "Rhode Island General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                    "byteLength": 3424834,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-18c72073fafcf3ca5197cb0fa42a6be80eb3f605ed34774d8be2184f4fa3d098.txt",
+              "byteLength": 4239,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+                "sourceHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
+                "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+                "publisher": "Rhode Island Department of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499.pdf",
+                  "byteLength": 919700,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4875,12 +4950,87 @@
           "contestId": "ri-sos-2026-general-question-2",
           "officialNumber": "2",
           "questionText": "2. HOUSING AND HOMEOWNERSHIP - $120,000,000\nTo increase and preserve the availability of affordable and accessible \nhousing to meet the needs of all Rhode Islanders and support community \nrevitalization through the redevelopment of existing structures, new \nconstruction, property acquisition, and infrastructure improvements. \nOf this amount, at least twenty-five million dollars ($25,000,000) shall \nbe allocated towards increasing production of housing intended for \nhomeownership and up to ten million dollars ($10,000,000) may be used \nto support a program for public housing development.",
-          "officialStatement": null,
+          "officialStatement": "Explanation and purpose of Question 2: Approval of this bond will provide one hundred and twenty million dollars ($120,000,000) to increase housing availability and supply, revitalize communities, and promote affordable homeownership. New construction and renovation of existing buildings will increase and preserve housing affordability.",
           "provenance": {
             "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
             "sourceOrg": "Rhode Island Department of State, Elections Division",
             "collectedAt": "2026-10-14T05:05:50.103662+00:00",
             "verifiedAt": "2026-10-14T05:05:50.103662+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+            "sourceHash": "f4822ba4d2c7838a0912bb0a4f19994d09c70900bd02d4c6d8881109bc37b6be",
+            "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+            "publisher": "Rhode Island General Assembly",
+            "vault": {
+              "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-f4822ba4d2c7838a0912bb0a4f19994d09c70900bd02d4c6d8881109bc37b6be.txt",
+              "byteLength": 21470,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                "publisher": "Rhode Island General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                  "byteLength": 3424834,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+            "sourceHash": "a0a5350b96efaa5b95932f74d69e56e14e5cda22452c3d452c3f710724dc6dde",
+            "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+            "publisher": "Rhode Island Department of State, Elections Division",
+            "summary": "Explanation and purpose of Question 2: Approval of this bond will provide one hundred and twenty million dollars ($120,000,000) to increase housing availability and supply, revitalize communities, and promote affordable homeownership. New construction and renovation of existing buildings will increase and preserve housing affordability.",
+            "fiscalImpact": "TOTAL PROJECT AND ISSUANCE COSTS Principal Interest** Total Costs $120,000,000 $72,586,000 $192,586,000",
+            "passageThreshold": "If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+              "sourceHash": "f4822ba4d2c7838a0912bb0a4f19994d09c70900bd02d4c6d8881109bc37b6be",
+              "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+              "publisher": "Rhode Island General Assembly",
+              "vault": {
+                "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-f4822ba4d2c7838a0912bb0a4f19994d09c70900bd02d4c6d8881109bc37b6be.txt",
+                "byteLength": 21470,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                  "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                  "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                  "publisher": "Rhode Island General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                    "byteLength": 3424834,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-a0a5350b96efaa5b95932f74d69e56e14e5cda22452c3d452c3f710724dc6dde.txt",
+              "byteLength": 2013,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+                "sourceHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
+                "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+                "publisher": "Rhode Island Department of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499.pdf",
+                  "byteLength": 919700,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4888,12 +5038,87 @@
           "contestId": "ri-sos-2026-general-question-3",
           "officialNumber": "3",
           "questionText": "3. ECONOMIC DEVELOPMENT - $100,000,000\nTo fund site development and growth industry infrastructure for economic \ndevelopment purposes, to be allocated as follows:\na. Site Development - $55,000,000\nb. Growth Industry Infrastructure - $45,000,000",
-          "officialStatement": null,
+          "officialStatement": "Explanation and purpose of Question 3: a) Site Development - $55,000,000 Approval of this bond will provide fifty-five million dollars ($55,000,000) to support land acquisition or assembly, environmental remediation, infrastructure and utility installation, site preparation or development, and project investments. Eligible uses include, but are not limited to, large-scale industrial site development, improvements within the Quonset Business Park, and land acquisition, preparation, and project investments within the I-195 District. b) Growth Industry Infrastructure - $45,000,000 Approval of this bond will provide forty-five million dollars ($45,000,000) to support infrastructure, facilities, projects, and investments related to Rhode Island’s ocean, defense, life sciences, data analytics/cybersecurity, and related industries. Eligible uses include, but are not limited to, water-based test ranges, onshore ocean- or defense-related innovation and production facilities, and investments that advance businesses and job growth in the life sciences.",
           "provenance": {
             "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
             "sourceOrg": "Rhode Island Department of State, Elections Division",
             "collectedAt": "2026-10-14T05:05:50.103662+00:00",
             "verifiedAt": "2026-10-14T05:05:50.103662+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+            "sourceHash": "9b18057f5a56768cc45ef41be1f99db4f6ad220e0af5487f9b23f4c1b4e713c9",
+            "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+            "publisher": "Rhode Island General Assembly",
+            "vault": {
+              "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-9b18057f5a56768cc45ef41be1f99db4f6ad220e0af5487f9b23f4c1b4e713c9.txt",
+              "byteLength": 22140,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                "publisher": "Rhode Island General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                  "byteLength": 3424834,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+            "sourceHash": "5d04fa61b764c8498e39a7ced1da58ef2d5ad4c126ca28f42e679d8ce05d61e9",
+            "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+            "publisher": "Rhode Island Department of State, Elections Division",
+            "summary": "Explanation and purpose of Question 3: a) Site Development - $55,000,000 Approval of this bond will provide fifty-five million dollars ($55,000,000) to support land acquisition or assembly, environmental remediation, infrastructure and utility installation, site preparation or development, and project investments. Eligible uses include, but are not limited to, large-scale industrial site development, improvements within the Quonset Business Park, and land acquisition, preparation, and project investments within the I-195 District. b) Growth Industry Infrastructure - $45,000,000 Approval of this bond will provide forty-five million dollars ($45,000,000) to support infrastructure, facilities, projects, and investments related to Rhode Island’s ocean, defense, life sciences, data analytics/cybersecurity, and related industries. Eligible uses include, but are not limited to, water-based test ranges, onshore ocean- or defense-related innovation and production facilities, and investments that advance businesses and job growth in the life sciences.",
+            "fiscalImpact": "TOTAL PROJECT AND ISSUANCE COSTS Principal Interest** Total Costs $100,000,000 $60,483,750 $160,483,750",
+            "passageThreshold": "If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+              "sourceHash": "9b18057f5a56768cc45ef41be1f99db4f6ad220e0af5487f9b23f4c1b4e713c9",
+              "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+              "publisher": "Rhode Island General Assembly",
+              "vault": {
+                "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-9b18057f5a56768cc45ef41be1f99db4f6ad220e0af5487f9b23f4c1b4e713c9.txt",
+                "byteLength": 22140,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                  "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                  "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                  "publisher": "Rhode Island General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                    "byteLength": 3424834,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-5d04fa61b764c8498e39a7ced1da58ef2d5ad4c126ca28f42e679d8ce05d61e9.txt",
+              "byteLength": 2329,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+                "sourceHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
+                "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+                "publisher": "Rhode Island Department of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499.pdf",
+                  "byteLength": 919700,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4901,12 +5126,87 @@
           "contestId": "ri-sos-2026-general-question-4",
           "officialNumber": "4",
           "questionText": "4. CULTURAL ECONOMY - $50,000,000\nTo provide funding for cultural economy efforts, to be allocated as \nfollows:\na. State History Center - $45,000,000\nb. State Preservation Grants Program - $5,000,000",
-          "officialStatement": null,
+          "officialStatement": "Explanation and purpose of Question 4: a) State History Center - $45,000,000 Approval of this bond will provide forty-five million dollars ($45,000,000) to construct a cultural and educational destination within the State government complex in Providence. The State History Center will have exhibit space for some of Rhode Island’s most treasured historic documents, as well as a state-of-the-art space for storage of the most valuable documents and objects currently being held at the State Archives. To promote civic education and engagement, the State History Center will have a multi-purpose space ideal for interactive learning. b) State Preservation Grants Program - $5,000,000 Approval of this bond will provide five million dollars ($5,000,000) for the Rhode Island Historical Preservation and Heritage Commission to continue to administer multiple annual cycles of the State Preservation Grants Program. These grants provide funding to cities, towns, and nonprofit organizations to preserve, renovate, and improve public and nonprofit historic sites, museums, and cultural art centers located in historic structures and heritage museums throughout the state of Rhode Island.",
           "provenance": {
             "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
             "sourceOrg": "Rhode Island Department of State, Elections Division",
             "collectedAt": "2026-10-14T05:05:50.103662+00:00",
             "verifiedAt": "2026-10-14T05:05:50.103662+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+            "sourceHash": "6ee7ddde7d1a4f59c97332c87b72a095d4f4f39d130827ca77699c567390fe34",
+            "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+            "publisher": "Rhode Island General Assembly",
+            "vault": {
+              "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-6ee7ddde7d1a4f59c97332c87b72a095d4f4f39d130827ca77699c567390fe34.txt",
+              "byteLength": 21523,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                "publisher": "Rhode Island General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                  "byteLength": 3424834,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+            "sourceHash": "51ed64c0e3c3cae7d4bd09247954a0a75afac53e5c71ac90f7c3e29e6708d7e6",
+            "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+            "publisher": "Rhode Island Department of State, Elections Division",
+            "summary": "Explanation and purpose of Question 4: a) State History Center - $45,000,000 Approval of this bond will provide forty-five million dollars ($45,000,000) to construct a cultural and educational destination within the State government complex in Providence. The State History Center will have exhibit space for some of Rhode Island’s most treasured historic documents, as well as a state-of-the-art space for storage of the most valuable documents and objects currently being held at the State Archives. To promote civic education and engagement, the State History Center will have a multi-purpose space ideal for interactive learning. b) State Preservation Grants Program - $5,000,000 Approval of this bond will provide five million dollars ($5,000,000) for the Rhode Island Historical Preservation and Heritage Commission to continue to administer multiple annual cycles of the State Preservation Grants Program. These grants provide funding to cities, towns, and nonprofit organizations to preserve, renovate, and improve public and nonprofit historic sites, museums, and cultural art centers located in historic structures and heritage museums throughout the state of Rhode Island.",
+            "fiscalImpact": "TOTAL PROJECT AND ISSUANCE COSTS Principal Interest** Total Costs $50,000,000 $30,242,500 $80,242,500",
+            "passageThreshold": "If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+              "sourceHash": "6ee7ddde7d1a4f59c97332c87b72a095d4f4f39d130827ca77699c567390fe34",
+              "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+              "publisher": "Rhode Island General Assembly",
+              "vault": {
+                "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-6ee7ddde7d1a4f59c97332c87b72a095d4f4f39d130827ca77699c567390fe34.txt",
+                "byteLength": 21523,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                  "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                  "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                  "publisher": "Rhode Island General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                    "byteLength": 3424834,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-51ed64c0e3c3cae7d4bd09247954a0a75afac53e5c71ac90f7c3e29e6708d7e6.txt",
+              "byteLength": 2787,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+                "sourceHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
+                "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+                "publisher": "Rhode Island Department of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499.pdf",
+                  "byteLength": 919700,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4914,22 +5214,656 @@
           "contestId": "ri-sos-2026-general-question-5",
           "officialNumber": "5",
           "questionText": "5. GREEN ECONOMY BONDS - $55,000,000\nFor environmental and recreational purposes, to be allocated as follows:\na. Brownfields Remediation and Economic Development - $3,000,000\nb. Facility Improvements - $12,000,000\nc. Local Recreation Projects - $1,000,000\nd. Marine Infrastructure Development - $1,000,000\ne. Resilient Rhody Infrastructure Fund - $25,000,000\nf. Narragansett Bay Watershed Restoration - $7,000,000\ng. Agricultural Land Preservation Commission - $3,000,000\nh. Open Space Program - $3,000,000",
-          "officialStatement": null,
+          "officialStatement": "Explanation and purpose of Question 5: Approval of this bond will provide fifty-five million dollars ($55,000,000) to allow the State to invest in improving the environment and public recreation facilities. The $55,000,000 will be allocated as outlined below to remediate contaminated brownfield sites, improve facilities at State parks, beaches, and campgrounds, support local outdoor recreation projects, develop marine infrastructure such as public boat launches, improve the state’s resilience to extreme weather and natural disasters, improve water quality in Narragansett Bay and the state’s watersheds, protect working farmland, and conserve open space. Specifically, approval of this question will provide: a) Brownfields Remediation and Economic Development - $3,000,000 for the cleanup of former industrial or commercial “brownfield” sites that may be contaminated by hazardous waste or other environmental pollution. Funding is used to provide matching grants to public, private, and/or non-profit entities for brownfield remediation projects that bring sites back into productive use, return them to tax rolls, create jobs, and revitalize neighborhoods. b) Facility Improvements - $12,000,000 for major capital improvements to facilities at State parks, beaches, and campgrounds. Facility improvements include new and upgraded visitor centers and restrooms, campsite enhancements, and infrastructure improvements. c) Local Recreation Projects - $1,000,000 for the Outdoor Recreation Grant Program to award matching grants to municipalities to develop or rehabilitate local public outdoor recreational facilities such as parks, playgrounds, and athletic fields, and to acquire land for public recreational facilities.",
           "provenance": {
             "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
             "sourceOrg": "Rhode Island Department of State, Elections Division",
             "collectedAt": "2026-10-14T05:05:50.103662+00:00",
             "verifiedAt": "2026-10-14T05:05:50.103662+00:00"
+          },
+          "officialText": {
+            "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+            "sourceHash": "bc2c0037673986445f1fa9a10785a2b8ed8f21e90a16e10b28750c459ca9a385",
+            "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+            "publisher": "Rhode Island General Assembly",
+            "vault": {
+              "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-bc2c0037673986445f1fa9a10785a2b8ed8f21e90a16e10b28750c459ca9a385.txt",
+              "byteLength": 23405,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                "publisher": "Rhode Island General Assembly",
+                "vault": {
+                  "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                  "byteLength": 3424834,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+            "sourceHash": "3c833c650c8daaa57ca9d1e1be2b366daf8cb5835599bdb0ebf73f77d34b02c7",
+            "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+            "publisher": "Rhode Island Department of State, Elections Division",
+            "summary": "Explanation and purpose of Question 5: Approval of this bond will provide fifty-five million dollars ($55,000,000) to allow the State to invest in improving the environment and public recreation facilities. The $55,000,000 will be allocated as outlined below to remediate contaminated brownfield sites, improve facilities at State parks, beaches, and campgrounds, support local outdoor recreation projects, develop marine infrastructure such as public boat launches, improve the state’s resilience to extreme weather and natural disasters, improve water quality in Narragansett Bay and the state’s watersheds, protect working farmland, and conserve open space. Specifically, approval of this question will provide: a) Brownfields Remediation and Economic Development - $3,000,000 for the cleanup of former industrial or commercial “brownfield” sites that may be contaminated by hazardous waste or other environmental pollution. Funding is used to provide matching grants to public, private, and/or non-profit entities for brownfield remediation projects that bring sites back into productive use, return them to tax rolls, create jobs, and revitalize neighborhoods. b) Facility Improvements - $12,000,000 for major capital improvements to facilities at State parks, beaches, and campgrounds. Facility improvements include new and upgraded visitor centers and restrooms, campsite enhancements, and infrastructure improvements. c) Local Recreation Projects - $1,000,000 for the Outdoor Recreation Grant Program to award matching grants to municipalities to develop or rehabilitate local public outdoor recreational facilities such as parks, playgrounds, and athletic fields, and to acquire land for public recreational facilities.",
+            "fiscalImpact": "TOTAL PROJECT AND ISSUANCE COSTS Principal Interest** Total Costs $55,000,000 $33,267,500 $88,267,500",
+            "passageThreshold": "If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+              "sourceHash": "bc2c0037673986445f1fa9a10785a2b8ed8f21e90a16e10b28750c459ca9a385",
+              "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+              "publisher": "Rhode Island General Assembly",
+              "vault": {
+                "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-bc2c0037673986445f1fa9a10785a2b8ed8f21e90a16e10b28750c459ca9a385.txt",
+                "byteLength": 23405,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+                  "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+                  "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+                  "publisher": "Rhode Island General Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+                    "byteLength": 3424834,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-3c833c650c8daaa57ca9d1e1be2b366daf8cb5835599bdb0ebf73f77d34b02c7.txt",
+              "byteLength": 5556,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+                "sourceHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
+                "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+                "publisher": "Rhode Island Department of State, Elections Division",
+                "vault": {
+                  "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499.pdf",
+                  "byteLength": 919700,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "measureRecords": [
+        {
+          "contestId": "ri-sos-2026-general-question-1",
+          "whatItDoes": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ri-sos-2026-general-question-1#1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#2",
+              "number": "2",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 2",
+              "what": "SECTION 2. Ballot labels and applicability of general election laws. -- The Secretary of State shall prepare and deliver to the State Board of Elections ballot labels for each of the projects provided for in Section 1 hereof with the designations \"approve\" or \"reject\" provided next to the description of each such"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#3",
+              "number": "3",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 3",
+              "what": "SECTION 3. Approval of projects by the people. -- If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People."
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#4",
+              "number": "4",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4",
+              "what": "SECTION 4. Bonds for the capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act to issue capital development bonds in serial form, in the name of and on behalf of the State, in amounts as may be"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#5",
+              "number": "5",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 5",
+              "what": "SECTION 5. Refunding bonds for the 2026 capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act, to issue bonds to refund the 2026 capital development program bonds, in the name of and on behalf of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#6",
+              "number": "6",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 6",
+              "what": "SECTION 6. Proceeds of the capital development program. -- The General Treasurer is directed to deposit the proceeds from the sale of capital development bonds issued under this Act, exclusive of premiums and accrued interest and net the underwriters' cost, and cost of bond issuance, in one or more of the depositories"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#7",
+              "number": "7",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 7",
+              "what": "SECTION 7. Sale of bonds and notes. -- Any bonds or notes issued under the authority of this Act shall be sold at not less than the principal amount thereof, in such mode and on such terms and conditions as the General Treasurer, with the approval of the Governor, shall deem to be in the best interests of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#8",
+              "number": "8",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 8",
+              "what": "SECTION 8. Bonds and notes to be tax exempt and general obligations of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#9",
+              "number": "9",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 9",
+              "what": "SECTION 9. Investment of monies in fund. -- All monies in the capital development fund not immediately required for payment pursuant to the provisions of this Act may be invested by the investment commission, as established by Chapter 10 of Title 35, entitled \"State Investment Commission,\" pursuant to the provisions"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#10",
+              "number": "10",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 10",
+              "what": "SECTION 10. Appropriation. -- To the extent the debt service on these bonds is not otherwise provided, a sum sufficient to pay the interest and principal due each year on bonds and notes hereunder is hereby annually appropriated out of any money in the treasury not otherwise appropriated."
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#11",
+              "number": "11",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 11",
+              "what": "SECTION 11. Advances from general fund. -- The General Treasurer is authorized, with the approval of the Director and the Governor, in anticipation of the issue of notes or bonds under the authority of this Act, to advance to the capital development bond fund for the purposes specified in Section 6 hereof, any funds"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#12",
+              "number": "12",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 12",
+              "what": "SECTION 12. Federal assistance and private funds. -- In carrying out this act, the Director, or his or her designee, is authorized on behalf of the State, with the approval of the Governor, to apply for and accept any federal assistance which may become available for the purpose of this Act, whether in the form of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-1#13",
+              "number": "13",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 13",
+              "what": "SECTION 13. Effective Date. -- Sections 1, 2, 3, 11, 12 and this Section 13 of this article shall take effect upon passage."
+            }
+          ],
+          "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+          "sourceHash": "b2d321bd021ea490a1afb578915a0be46c145c023f48baf74923ac9b5c57a8d7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-sos-2026-general-question-2",
+          "whatItDoes": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ri-sos-2026-general-question-2#1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#2",
+              "number": "2",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 2",
+              "what": "SECTION 2. Ballot labels and applicability of general election laws. -- The Secretary of State shall prepare and deliver to the State Board of Elections ballot labels for each of the projects provided for in Section 1 hereof with the designations \"approve\" or \"reject\" provided next to the description of each such"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#3",
+              "number": "3",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 3",
+              "what": "SECTION 3. Approval of projects by the people. -- If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People."
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#4",
+              "number": "4",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4",
+              "what": "SECTION 4. Bonds for the capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act to issue capital development bonds in serial form, in the name of and on behalf of the State, in amounts as may be"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#5",
+              "number": "5",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 5",
+              "what": "SECTION 5. Refunding bonds for the 2026 capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act, to issue bonds to refund the 2026 capital development program bonds, in the name of and on behalf of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#6",
+              "number": "6",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 6",
+              "what": "SECTION 6. Proceeds of the capital development program. -- The General Treasurer is directed to deposit the proceeds from the sale of capital development bonds issued under this Act, exclusive of premiums and accrued interest and net the underwriters' cost, and cost of bond issuance, in one or more of the depositories"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#7",
+              "number": "7",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 7",
+              "what": "SECTION 7. Sale of bonds and notes. -- Any bonds or notes issued under the authority of this Act shall be sold at not less than the principal amount thereof, in such mode and on such terms and conditions as the General Treasurer, with the approval of the Governor, shall deem to be in the best interests of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#8",
+              "number": "8",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 8",
+              "what": "SECTION 8. Bonds and notes to be tax exempt and general obligations of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#9",
+              "number": "9",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 9",
+              "what": "SECTION 9. Investment of monies in fund. -- All monies in the capital development fund not immediately required for payment pursuant to the provisions of this Act may be invested by the investment commission, as established by Chapter 10 of Title 35, entitled \"State Investment Commission,\" pursuant to the provisions"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#10",
+              "number": "10",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 10",
+              "what": "SECTION 10. Appropriation. -- To the extent the debt service on these bonds is not otherwise provided, a sum sufficient to pay the interest and principal due each year on bonds and notes hereunder is hereby annually appropriated out of any money in the treasury not otherwise appropriated."
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#11",
+              "number": "11",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 11",
+              "what": "SECTION 11. Advances from general fund. -- The General Treasurer is authorized, with the approval of the Director and the Governor, in anticipation of the issue of notes or bonds under the authority of this Act, to advance to the capital development bond fund for the purposes specified in Section 6 hereof, any funds"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#12",
+              "number": "12",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 12",
+              "what": "SECTION 12. Federal assistance and private funds. -- In carrying out this act, the Director, or his or her designee, is authorized on behalf of the State, with the approval of the Governor, to apply for and accept any federal assistance which may become available for the purpose of this Act, whether in the form of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-2#13",
+              "number": "13",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 13",
+              "what": "SECTION 13. Effective Date. -- Sections 1, 2, 3, 11, 12 and this Section 13 of this article shall take effect upon passage."
+            }
+          ],
+          "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+          "sourceHash": "f4822ba4d2c7838a0912bb0a4f19994d09c70900bd02d4c6d8881109bc37b6be",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-sos-2026-general-question-3",
+          "whatItDoes": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ri-sos-2026-general-question-3#1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#2",
+              "number": "2",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 2",
+              "what": "SECTION 2. Ballot labels and applicability of general election laws. -- The Secretary of State shall prepare and deliver to the State Board of Elections ballot labels for each of the projects provided for in Section 1 hereof with the designations \"approve\" or \"reject\" provided next to the description of each such"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#3",
+              "number": "3",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 3",
+              "what": "SECTION 3. Approval of projects by the people. -- If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People."
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#4",
+              "number": "4",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4",
+              "what": "SECTION 4. Bonds for the capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act to issue capital development bonds in serial form, in the name of and on behalf of the State, in amounts as may be"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#5",
+              "number": "5",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 5",
+              "what": "SECTION 5. Refunding bonds for the 2026 capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act, to issue bonds to refund the 2026 capital development program bonds, in the name of and on behalf of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#6",
+              "number": "6",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 6",
+              "what": "SECTION 6. Proceeds of the capital development program. -- The General Treasurer is directed to deposit the proceeds from the sale of capital development bonds issued under this Act, exclusive of premiums and accrued interest and net the underwriters' cost, and cost of bond issuance, in one or more of the depositories"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#7",
+              "number": "7",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 7",
+              "what": "SECTION 7. Sale of bonds and notes. -- Any bonds or notes issued under the authority of this Act shall be sold at not less than the principal amount thereof, in such mode and on such terms and conditions as the General Treasurer, with the approval of the Governor, shall deem to be in the best interests of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#8",
+              "number": "8",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 8",
+              "what": "SECTION 8. Bonds and notes to be tax exempt and general obligations of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#9",
+              "number": "9",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 9",
+              "what": "SECTION 9. Investment of monies in fund. -- All monies in the capital development fund not immediately required for payment pursuant to the provisions of this Act may be invested by the investment commission, as established by Chapter 10 of Title 35, entitled \"State Investment Commission,\" pursuant to the provisions"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#10",
+              "number": "10",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 10",
+              "what": "SECTION 10. Appropriation. -- To the extent the debt service on these bonds is not otherwise provided, a sum sufficient to pay the interest and principal due each year on bonds and notes hereunder is hereby annually appropriated out of any money in the treasury not otherwise appropriated."
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#11",
+              "number": "11",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 11",
+              "what": "SECTION 11. Advances from general fund. -- The General Treasurer is authorized, with the approval of the Director and the Governor, in anticipation of the issue of notes or bonds under the authority of this Act, to advance to the capital development bond fund for the purposes specified in Section 6 hereof, any funds"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#12",
+              "number": "12",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 12",
+              "what": "SECTION 12. Federal assistance and private funds. -- In carrying out this act, the Director, or his or her designee, is authorized on behalf of the State, with the approval of the Governor, to apply for and accept any federal assistance which may become available for the purpose of this Act, whether in the form of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-3#13",
+              "number": "13",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 13",
+              "what": "SECTION 13. Effective Date. -- Sections 1, 2, 3, 11, 12 and this Section 13 of this article shall take effect upon passage."
+            }
+          ],
+          "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+          "sourceHash": "9b18057f5a56768cc45ef41be1f99db4f6ad220e0af5487f9b23f4c1b4e713c9",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-sos-2026-general-question-4",
+          "whatItDoes": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ri-sos-2026-general-question-4#1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#2",
+              "number": "2",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 2",
+              "what": "SECTION 2. Ballot labels and applicability of general election laws. -- The Secretary of State shall prepare and deliver to the State Board of Elections ballot labels for each of the projects provided for in Section 1 hereof with the designations \"approve\" or \"reject\" provided next to the description of each such"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#3",
+              "number": "3",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 3",
+              "what": "SECTION 3. Approval of projects by the people. -- If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People."
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#4",
+              "number": "4",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4",
+              "what": "SECTION 4. Bonds for the capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act to issue capital development bonds in serial form, in the name of and on behalf of the State, in amounts as may be"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#5",
+              "number": "5",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 5",
+              "what": "SECTION 5. Refunding bonds for the 2026 capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act, to issue bonds to refund the 2026 capital development program bonds, in the name of and on behalf of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#6",
+              "number": "6",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 6",
+              "what": "SECTION 6. Proceeds of the capital development program. -- The General Treasurer is directed to deposit the proceeds from the sale of capital development bonds issued under this Act, exclusive of premiums and accrued interest and net the underwriters' cost, and cost of bond issuance, in one or more of the depositories"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#7",
+              "number": "7",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 7",
+              "what": "SECTION 7. Sale of bonds and notes. -- Any bonds or notes issued under the authority of this Act shall be sold at not less than the principal amount thereof, in such mode and on such terms and conditions as the General Treasurer, with the approval of the Governor, shall deem to be in the best interests of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#8",
+              "number": "8",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 8",
+              "what": "SECTION 8. Bonds and notes to be tax exempt and general obligations of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#9",
+              "number": "9",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 9",
+              "what": "SECTION 9. Investment of monies in fund. -- All monies in the capital development fund not immediately required for payment pursuant to the provisions of this Act may be invested by the investment commission, as established by Chapter 10 of Title 35, entitled \"State Investment Commission,\" pursuant to the provisions"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#10",
+              "number": "10",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 10",
+              "what": "SECTION 10. Appropriation. -- To the extent the debt service on these bonds is not otherwise provided, a sum sufficient to pay the interest and principal due each year on bonds and notes hereunder is hereby annually appropriated out of any money in the treasury not otherwise appropriated."
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#11",
+              "number": "11",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 11",
+              "what": "SECTION 11. Advances from general fund. -- The General Treasurer is authorized, with the approval of the Director and the Governor, in anticipation of the issue of notes or bonds under the authority of this Act, to advance to the capital development bond fund for the purposes specified in Section 6 hereof, any funds"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#12",
+              "number": "12",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 12",
+              "what": "SECTION 12. Federal assistance and private funds. -- In carrying out this act, the Director, or his or her designee, is authorized on behalf of the State, with the approval of the Governor, to apply for and accept any federal assistance which may become available for the purpose of this Act, whether in the form of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-4#13",
+              "number": "13",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 13",
+              "what": "SECTION 13. Effective Date. -- Sections 1, 2, 3, 11, 12 and this Section 13 of this article shall take effect upon passage."
+            }
+          ],
+          "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+          "sourceHash": "6ee7ddde7d1a4f59c97332c87b72a095d4f4f39d130827ca77699c567390fe34",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-sos-2026-general-question-5",
+          "whatItDoes": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "ri-sos-2026-general-question-5#1",
+              "number": "1",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 1",
+              "what": "SECTION 1. Proposition to be submitted to the people. -- At the general election to be held on the Tuesday next after the first Monday in November 2026, there shall be submitted to the people (\"People\") of the State of Rhode Island (\"State\"), for their approval or rejection, the following proposition: \"Shall the"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#2",
+              "number": "2",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 2",
+              "what": "SECTION 2. Ballot labels and applicability of general election laws. -- The Secretary of State shall prepare and deliver to the State Board of Elections ballot labels for each of the projects provided for in Section 1 hereof with the designations \"approve\" or \"reject\" provided next to the description of each such"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#3",
+              "number": "3",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 3",
+              "what": "SECTION 3. Approval of projects by the people. -- If a majority of the People voting on the proposition in Section 1 hereof shall vote to approve any project stated therein, said project shall be deemed to be approved by the People."
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#4",
+              "number": "4",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 4",
+              "what": "SECTION 4. Bonds for the capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act to issue capital development bonds in serial form, in the name of and on behalf of the State, in amounts as may be"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#5",
+              "number": "5",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 5",
+              "what": "SECTION 5. Refunding bonds for the 2026 capital development program. -- The General Treasurer is hereby authorized and empowered, with the approval of the Governor, and in accordance with the provisions of this Act, to issue bonds to refund the 2026 capital development program bonds, in the name of and on behalf of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#6",
+              "number": "6",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 6",
+              "what": "SECTION 6. Proceeds of the capital development program. -- The General Treasurer is directed to deposit the proceeds from the sale of capital development bonds issued under this Act, exclusive of premiums and accrued interest and net the underwriters' cost, and cost of bond issuance, in one or more of the depositories"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#7",
+              "number": "7",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 7",
+              "what": "SECTION 7. Sale of bonds and notes. -- Any bonds or notes issued under the authority of this Act shall be sold at not less than the principal amount thereof, in such mode and on such terms and conditions as the General Treasurer, with the approval of the Governor, shall deem to be in the best interests of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#8",
+              "number": "8",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 8",
+              "what": "SECTION 8. Bonds and notes to be tax exempt and general obligations of the State."
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#9",
+              "number": "9",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 9",
+              "what": "SECTION 9. Investment of monies in fund. -- All monies in the capital development fund not immediately required for payment pursuant to the provisions of this Act may be invested by the investment commission, as established by Chapter 10 of Title 35, entitled \"State Investment Commission,\" pursuant to the provisions"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#10",
+              "number": "10",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 10",
+              "what": "SECTION 10. Appropriation. -- To the extent the debt service on these bonds is not otherwise provided, a sum sufficient to pay the interest and principal due each year on bonds and notes hereunder is hereby annually appropriated out of any money in the treasury not otherwise appropriated."
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#11",
+              "number": "11",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 11",
+              "what": "SECTION 11. Advances from general fund. -- The General Treasurer is authorized, with the approval of the Director and the Governor, in anticipation of the issue of notes or bonds under the authority of this Act, to advance to the capital development bond fund for the purposes specified in Section 6 hereof, any funds"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#12",
+              "number": "12",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 12",
+              "what": "SECTION 12. Federal assistance and private funds. -- In carrying out this act, the Director, or his or her designee, is authorized on behalf of the State, with the approval of the Governor, to apply for and accept any federal assistance which may become available for the purpose of this Act, whether in the form of"
+            },
+            {
+              "id": "ri-sos-2026-general-question-5#13",
+              "number": "13",
+              "kind": "OFFICIAL_TEXT",
+              "label": "Section 13",
+              "what": "SECTION 13. Effective Date. -- Sections 1, 2, 3, 11, 12 and this Section 13 of this article shall take effect upon passage."
+            }
+          ],
+          "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+          "sourceHash": "bc2c0037673986445f1fa9a10785a2b8ed8f21e90a16e10b28750c459ca9a385",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+          "sourceHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
+          "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
+          "publisher": "Rhode Island Department of State, Elections Division",
+          "vault": {
+            "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499.pdf",
+            "byteLength": 919700,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
+          "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
+          "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+          "publisher": "Rhode Island General Assembly",
+          "vault": {
+            "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
+            "byteLength": 3424834,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+          "sourceHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+          "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+          "publisher": "Federal Election Commission",
+          "vault": {
+            "key": "project/freshness/source/www.fec.gov/2026/10/15/ms-01-d3e6c259b040c5d5/sha256-d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2.html",
+            "byteLength": 166309,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:38.724006+00:00",
-    "reviewedBy": "BL-15 official-source script conversion",
+    "reviewedAt": "2026-10-15T04:14:39.900706+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=518&Election=18144",
@@ -5032,24 +5966,34 @@
         "reviewedEvidence": "Official November 3, 2026 election candidate summary. Included only records marked Y in On Election Ballot. The legend states that the Department of State certifies nomination papers for federal, statewide and state offices."
       },
       {
-        "requestedUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
-        "finalUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
-        "httpStatus": 200,
-        "rawHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
-        "retrievedAt": "2026-10-14T05:05:50.103662+00:00",
-        "publisher": "Rhode Island Department of State, Elections Division",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 Voter Information Handbook, pages 9 and 11–14: all five statewide bond referenda, including the exact text shown under What it will look like on the ballot."
-      },
-      {
         "requestedUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
         "finalUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
         "httpStatus": 200,
         "rawHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
-        "retrievedAt": "2026-10-14T05:09:38.724006+00:00",
+        "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
+        "publisher": "Rhode Island General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+        "finalUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
+        "httpStatus": 200,
+        "rawHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
+        "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
         "publisher": "Rhode Island Department of State, Elections Division",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Enacted 2026 H 7127 Substitute A as amended, Article 5: capital development proposition and full statutory text for all five statewide bond questions."
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+        "httpStatus": 200,
+        "rawHash": "d0115e60907fd18e6a10e716be63604e99673acbcbd3ae55cd7a1b495d10a2c2",
+        "retrievedAt": "2026-10-15T00:00:22.470315+00:00",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact saved source bytes establish the official publication or link its publishing authority."
       }
     ]
   }

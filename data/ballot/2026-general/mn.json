@@ -10846,22 +10846,134 @@
           "contestId": "mn-sos-2026-constitutional-amendment-1",
           "officialNumber": "CONSTITUTIONAL AMENDMENT 1",
           "questionText": "Shall the Minnesota Constitution be amended to increase the funding going to all school districts from the permanent school fund, which is a fund that supports school districts without raising individual income or property taxes, effective July 1, 2027?",
-          "officialStatement": null,
+          "officialStatement": "In May, the Minnesota Legislature enacted a proposal to amend Article XI, Section 8, of the state constitution, which addresses the state’s permanent school fund. 2026 Minn. Laws ch. 114, § 1. The constitution currently requires the fund to be invested to secure the maximum return consistent with maintaining the fund’s perpetuity. If adopted, the proposed constitutional amendment would (1) require the fund to be managed as a perpetual financial resource for the sole purpose of apportioning money to school districts, (2) require that management of the fund preserve its purchasing power over time while balancing the needs of current and future beneficiaries, (3) authorize payment from the fund of reasonable and necessary administrative costs associated with managing the fund or school trust lands in the manner prescribed by law, and (4) provide that the fund’s distribution policy be prescribed by law consistent with the above principles. Id.",
           "provenance": {
             "sourceOrg": "Minnesota Secretary of State",
             "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
             "collectedAt": "2026-10-14T05:04:22.766Z",
             "verifiedAt": "2026-10-14T05:04:22.766Z"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+            "sourceHash": "125dde3c9c5327a76fa063d56921cbdae96b149f8f4bc4a616ee0d8698e05f62",
+            "retrievedAt": "2026-10-15T03:59:32.527196+00:00",
+            "publisher": "Minnesota Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.mn.gov/2026/10/15/ms-01-39dff269ed55212f/sha256-125dde3c9c5327a76fa063d56921cbdae96b149f8f4bc4a616ee0d8698e05f62.txt",
+              "byteLength": 1489,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+                "sourceHash": "1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db",
+                "retrievedAt": "2026-10-15T03:59:32.527196+00:00",
+                "publisher": "Minnesota Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.mn.gov/2026/10/15/ms-01-39dff269ed55212f/sha256-1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db.html",
+                  "byteLength": 47960,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.mn.gov/media/xa4b2h3i/ag-letter-to-simon-explaining-proposed-2026-constitutional-amendment.pdf",
+            "sourceHash": "c5047e9923abc303ef00ecb2f9b1cf59dfd41425b7644c4d19cb60e02d2d0278",
+            "retrievedAt": "2026-10-14T23:54:27.964554+00:00",
+            "publisher": "Minnesota Office of the Attorney General",
+            "summary": "In May, the Minnesota Legislature enacted a proposal to amend Article XI, Section 8, of the state constitution, which addresses the state’s permanent school fund. 2026 Minn. Laws ch. 114, § 1. The constitution currently requires the fund to be invested to secure the maximum return consistent with maintaining the fund’s perpetuity. If adopted, the proposed constitutional amendment would (1) require the fund to be managed as a perpetual financial resource for the sole purpose of apportioning money to school districts, (2) require that management of the fund preserve its purchasing power over time while balancing the needs of current and future beneficiaries, (3) authorize payment from the fund of reasonable and necessary administrative costs associated with managing the fund or school trust lands in the manner prescribed by law, and (4) provide that the fund’s distribution policy be prescribed by law consistent with the above principles. Id.",
+            "passageThreshold": "Failure to vote on a constitutional amendment will have the same effect as voting no on the amendment.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+              "sourceHash": "63839259f2679dccfe399e0b7b43df13c4f799365039142449751219d6631d7f",
+              "retrievedAt": "2026-10-15T03:59:32.527196+00:00",
+              "publisher": "Minnesota Secretary of State",
+              "vault": {
+                "key": "project/freshness/source/www.sos.mn.gov/2026/10/15/ms-01-39dff269ed55212f/sha256-63839259f2679dccfe399e0b7b43df13c4f799365039142449751219d6631d7f.txt",
+                "byteLength": 103,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+                  "sourceHash": "1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db",
+                  "retrievedAt": "2026-10-15T03:59:32.527196+00:00",
+                  "publisher": "Minnesota Secretary of State",
+                  "vault": {
+                    "key": "project/freshness/source/www.sos.mn.gov/2026/10/15/ms-01-39dff269ed55212f/sha256-1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db.html",
+                    "byteLength": 47960,
+                    "contentType": "text/html"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.mn.gov/2026/10/14/ms-01-6046c5e607f483e4/sha256-c5047e9923abc303ef00ecb2f9b1cf59dfd41425b7644c4d19cb60e02d2d0278.txt",
+              "byteLength": 3922,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.mn.gov/media/xa4b2h3i/ag-letter-to-simon-explaining-proposed-2026-constitutional-amendment.pdf",
+                "sourceHash": "9006a56f044a7edebbc649ae37f3572c2815a3ef664bbd12bd75f5477fb56565",
+                "retrievedAt": "2026-10-14T23:54:27.964554+00:00",
+                "publisher": "Minnesota Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.mn.gov/2026/10/14/ms-01-6046c5e607f483e4/sha256-9006a56f044a7edebbc649ae37f3572c2815a3ef664bbd12bd75f5477fb56565.pdf",
+                  "byteLength": 212551,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "measureRecords": [
+        {
+          "contestId": "mn-sos-2026-constitutional-amendment-1",
+          "whatItDoes": "The permanent school fund of the state consists of (a) the proceeds of lands granted by the United States for the use of schools within each township, (b) the proceeds derived from swamp lands granted to the state, (c) all cash and investments credited to the permanent school fund and to the swamp land fund, and (d)",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+          "sourceHash": "125dde3c9c5327a76fa063d56921cbdae96b149f8f4bc4a616ee0d8698e05f62",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sos.mn.gov/media/xa4b2h3i/ag-letter-to-simon-explaining-proposed-2026-constitutional-amendment.pdf",
+          "sourceHash": "9006a56f044a7edebbc649ae37f3572c2815a3ef664bbd12bd75f5477fb56565",
+          "retrievedAt": "2026-10-14T23:54:27.964554+00:00",
+          "publisher": "Minnesota Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.mn.gov/2026/10/14/ms-01-6046c5e607f483e4/sha256-9006a56f044a7edebbc649ae37f3572c2815a3ef664bbd12bd75f5477fb56565.pdf",
+            "byteLength": 212551,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+          "sourceHash": "1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db",
+          "retrievedAt": "2026-10-15T03:59:32.527196+00:00",
+          "publisher": "Minnesota Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.mn.gov/2026/10/15/ms-01-39dff269ed55212f/sha256-1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db.html",
+            "byteLength": 47960,
+            "contentType": "text/html"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:12:30.398Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-15T04:14:39.850710+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -10892,6 +11004,26 @@
         "retrievedAt": "2026-10-14T05:04:22.408Z",
         "publisher": "Minnesota Secretary of State",
         "reviewedEvidence": "Official November 3, 2026 election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://www.sos.mn.gov/media/xa4b2h3i/ag-letter-to-simon-explaining-proposed-2026-constitutional-amendment.pdf",
+        "finalUrl": "https://www.sos.mn.gov/media/xa4b2h3i/ag-letter-to-simon-explaining-proposed-2026-constitutional-amendment.pdf",
+        "httpStatus": 200,
+        "rawHash": "9006a56f044a7edebbc649ae37f3572c2815a3ef664bbd12bd75f5477fb56565",
+        "retrievedAt": "2026-10-14T23:54:27.964554+00:00",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+        "finalUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+        "httpStatus": 200,
+        "rawHash": "1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db",
+        "retrievedAt": "2026-10-15T03:59:32.527196+00:00",
+        "publisher": "Minnesota Secretary of State",
+        "reviewedEvidence": "Original public HTML response saved and hashed; full legal text and passage-threshold excerpt match its visible text."
       }
     ]
   }

@@ -1,7 +1,8 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "./types.ts";
-import { measureRecordIssue } from "./measure-record-contract.ts";
+import { measureSourceReferenceValid } from "./measure-source-contract.ts";
+import { measureRecordIssue, type MeasureRecord } from "./measure-record-contract.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
 export interface GenericBallotProjection {
@@ -32,6 +33,24 @@ export function genericBallotProblems(value: GenericBallotProjection): string[] 
     if (ballot.measureRecords !== undefined && (!Array.isArray(ballot.measureRecords) ||
         new Set(ballot.measureRecords.map(row => row.contestId)).size !== ballot.measureRecords.length ||
         ballot.measureRecords.some(row => measureRecordIssue(row) || !measures.some(measure => measure.contestId === row.contestId)))) problems.push("A measure record lacks its stable source-bound identity.");
+    if ([...(ballot.sourceAuthorities ?? []), ...(ballot.sourceDocuments ?? [])].some(source => !measureSourceReferenceValid(source))) {
+      problems.push("A ballot source document lacks its saved vault identity.");
+    }
+    for (const measure of measures) {
+      const source = measure.officialText, guide = measure.voterGuide;
+      if (source && (!measureSourceReferenceValid(source) || ballot.contests.find(row => row.id === measure.contestId)?.measureTextUrl !== source.sourceUrl)) {
+        problems.push("A measure's full official text lacks its saved source identity.");
+      }
+      if (guide && (!measureSourceReferenceValid(guide) || [guide.passageThresholdSource, guide.fiscalImpactSource].some(source => source && !measureSourceReferenceValid(source)) ||
+        [guide.passageThreshold, guide.fiscalImpact, guide.summary, ...(guide.argumentsFor ?? []), ...(guide.argumentsAgainst ?? [])]
+          .some(text => text !== undefined && (typeof text !== "string" || !text.trim())))) {
+        problems.push("A voter-guide entry lacks its official source reference or wording.");
+      }
+      const record: MeasureRecord | undefined = ballot.measureRecords?.find(row => row.contestId === measure.contestId);
+      if (source && record && (record.sourceUrl !== source.sourceUrl || record.sourceHash !== source.sourceHash)) {
+        problems.push("A measure record disagrees with its full official source identity.");
+      }
+    }
   }
   return problems;
 }

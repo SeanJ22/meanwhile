@@ -2598,7 +2598,7 @@
           "electionId": "ia-2026-11-03",
           "ocdId": "ocd-division/country:us/state:ia",
           "divisionVintage": "TIGER_GENZ2025",
-          "title": "Court of Appeals Judge \u2014 Sharon Soorholtz Greer",
+          "title": "Court of Appeals Judge — Sharon Soorholtz Greer",
           "type": "RETENTION",
           "candidateListComplete": true,
           "voteFor": 1,
@@ -2617,7 +2617,7 @@
           "electionId": "ia-2026-11-03",
           "ocdId": "ocd-division/country:us/state:ia",
           "divisionVintage": "TIGER_GENZ2025",
-          "title": "Court of Appeals Judge \u2014 John M. Sandy",
+          "title": "Court of Appeals Judge — John M. Sandy",
           "type": "RETENTION",
           "candidateListComplete": true,
           "voteFor": 1,
@@ -2636,7 +2636,7 @@
           "electionId": "ia-2026-11-03",
           "ocdId": "ocd-division/country:us/state:ia",
           "divisionVintage": "TIGER_GENZ2025",
-          "title": "Court of Appeals Judge \u2014 Julie A. Schumacher",
+          "title": "Court of Appeals Judge — Julie A. Schumacher",
           "type": "RETENTION",
           "candidateListComplete": true,
           "voteFor": 1,
@@ -6867,6 +6867,55 @@
             "collectedAt": "2026-10-14T05:10:12Z",
             "verifiedAt": "2026-10-14T05:10:12Z",
             "quote": "Shall the following amendment to the Constitution be adopted?\nThe Constitution of the State of Iowa is amended by adding the following new section to new Article XIII:\n\nPassage of a bill that increases the individual income tax rate or the corporate income tax rate, or the rate of any other type of tax based upon income or legal and special reserves, shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. This requirement does not apply to taxes imposed at the option of a local government. Passage of a bill that establishes a new tax on any type of income or legal and special reserves imposed by the state shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. A lawsuit challenging the proper enactment of a bill under this section must be filed no later than one year following the enactment. If such a lawsuit is not filed within the one-year limit, the bill shall be considered properly enacted under this section. Each bill to which this section applies must include a separate provision describing the requirements for enactment prescribed by this section. The general assembly shall enact laws to implement this section."
+          },
+          "officialText": {
+            "sourceUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+            "sourceHash": "68e6f46f04c769e65737d6e6582e28a03ce270c00ed89782c8960be333f555a8",
+            "retrievedAt": "2026-10-14T23:52:37.394062+00:00",
+            "publisher": "Woodbury County Auditor and Commissioner of Elections",
+            "vault": {
+              "key": "project/freshness/source/elections.woodburycountyiowa.gov/2026/10/14/ms-01-4bb724c5037ac6cd/sha256-68e6f46f04c769e65737d6e6582e28a03ce270c00ed89782c8960be333f555a8.txt",
+              "byteLength": 1202,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+                "sourceHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+                "retrievedAt": "2026-10-14T23:52:37.394062+00:00",
+                "publisher": "Woodbury County Auditor and Commissioner of Elections",
+                "vault": {
+                  "key": "project/freshness/source/elections.woodburycountyiowa.gov/2026/10/14/ms-01-4bb724c5037ac6cd/sha256-e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8.html",
+                  "byteLength": 10444,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+            "sourceHash": "7dd6120d86911b6fb80c0e4cd970644c86a0063f4e570002300d1b0f038542b5",
+            "retrievedAt": "2026-10-14T23:52:37.394062+00:00",
+            "publisher": "Woodbury County Auditor and Commissioner of Elections",
+            "summary": "Provides that any bill to increase the individual income tax rate or the corporate income tax rate, or the rate of any other type of tax based upon income or legal and special reserves, shall require the affirmative votes of at least two-thirds of the members elected to each house of the legislature for passage. Further, the two-thirds majority vote requirement applies to the passage of a bill to establish a new tax on any type of income or legal and special reserves imposed by the state. The requirement excludes taxes imposed at the option of a local government. A lawsuit challenging the proper enactment of a bill under this section must be filed no later than one year following the enactment.",
+            "vault": {
+              "key": "project/freshness/source/elections.woodburycountyiowa.gov/2026/10/14/ms-01-4bb724c5037ac6cd/sha256-7dd6120d86911b6fb80c0e4cd970644c86a0063f4e570002300d1b0f038542b5.txt",
+              "byteLength": 816,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+                "sourceHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+                "retrievedAt": "2026-10-14T23:52:37.394062+00:00",
+                "publisher": "Woodbury County Auditor and Commissioner of Elections",
+                "vault": {
+                  "key": "project/freshness/source/elections.woodburycountyiowa.gov/2026/10/14/ms-01-4bb724c5037ac6cd/sha256-e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8.html",
+                  "byteLength": 10444,
+                  "contentType": "text/html"
+                }
+              }
+            ]
           }
         }
       ],
@@ -6875,13 +6924,40 @@
         "The Secretary of State publishes one reviewed and accepted November 3, 2026 federal and state candidate inventory for the whole territory of each listed contest: U.S. Senate, all four U.S. House districts, all statewide offices, odd-numbered state senate districts 1-49 and state house districts 1-100. All 245 printed individual candidate names are held; governor and lieutenant governor are paired into their two ballot teams. The published list was last updated August 19, 2026 at 1:36 PM.",
         "Governor and lieutenant governor are paired into the two teams printed on the official Des Moines County general-election sample ballot; both printed candidate names are retained in each ticket.",
         "Statewide Public Measure 1 and the three Court of Appeals retention questions were converted from official county election publications. County and district-specific measures and judicial retention contests are outside this statewide and state legislative package; the Secretary of State directs readers to county auditors for county candidates."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-sos:2026-general:public-measure:1",
+          "whatItDoes": "The Constitution of the State of Iowa is amended by adding the following new section to new Article XIII: Passage of a bill that increases the individual income tax rate or the corporate income tax rate, or the rate of any other type of tax based upon income or legal and special reserves, shall require the affirmative",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+          "sourceHash": "68e6f46f04c769e65737d6e6582e28a03ce270c00ed89782c8960be333f555a8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-15T00:01:42.923308+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+          "sourceHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+          "retrievedAt": "2026-10-14T23:52:37.394062+00:00",
+          "publisher": "Woodbury County Auditor and Commissioner of Elections",
+          "vault": {
+            "key": "project/freshness/source/elections.woodburycountyiowa.gov/2026/10/14/ms-01-4bb724c5037ac6cd/sha256-e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8.html",
+            "byteLength": 10444,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:16:36Z",
-    "reviewedBy": "BL-12 Iowa official candidate-inventory review",
+    "reviewedAt": "2026-10-15T04:14:39.807336+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://sos.iowa.gov/general-election",
@@ -6902,16 +6978,6 @@
         "publisher": "Iowa Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
-      },
-      {
-        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
-        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T05:10:12Z",
-        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
-        "publisher": "Woodbury County Auditor and Commissioner of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
       },
       {
         "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
@@ -6942,6 +7008,16 @@
         "publisher": "Iowa Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "retrievedAt": "2026-10-14T23:52:37.394062+00:00",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official measure text and official voter information captured and extracted; excerpts are bound to the saved source."
       }
     ]
   }

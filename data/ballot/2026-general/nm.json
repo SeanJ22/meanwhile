@@ -4180,6 +4180,62 @@
             "collectedAt": "2026-10-14T05:03:48.355503Z",
             "verifiedAt": "2026-10-14T05:03:48.355503Z",
             "quote": "Proposing an amendment to Article 4, Section 22 of the Constitution of New Mexico to require the governor to provide veto messages on all bills vetoed in whole or in part and to provide that all bills passed by the legislature and not acted on by the governor will become law."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "5a5e465fc626f5bb05e27ffee052aababe6867e30bad60c2233ff9d3f687a552",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-5a5e465fc626f5bb05e27ffee052aababe6867e30bad60c2233ff9d3f687a552.txt",
+              "byteLength": 3030,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "52813f31975d092c92ef772fceb8dcabfd532d43d829aac3b651b8050741afc2",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "summary": "In 2025, the New Mexico Legislature passed Constitutional\nAmendment 1, which, if adopted, would amend Article 4,\nSection 22 of the Constitution of New Mexico to remove\nwhat has been referred to as the \"pocket veto\". The\npocket veto occurs when, after the adjournment of the\nlegislature, the governor does not sign a bill that was\npresented to the governor during the last three days of\nsession. By not acting on the bill, the bill does not become\nlaw. Constitutional Amendment 1 proposes to flip this\ndynamic. If this proposed amendment is approved by\nvoters, a bill presented to the governor during the last\nthree days of the session would by default become law if\nthe governor does not issue a veto message within 20 days\nafter the legislature's adjournment. In order to veto a bill\npassed by the legislature, the governor would be required\nto provide a written, substantive explanation for the veto.",
+            "passageThreshold": "A\nproposed amendment becomes part of the state's\nconstitution if a majority of the votes cast in an election on\nthe proposition is cast in its favor, unless the proposed\namendment affects one of the sections for which a threefourths' majority is required. (This year's proposed\nconstitutional amendments do not affect one of those\nsections and, thus, need only a simple majority vote to be\napproved.) Proposed constitutional amendments become\neffective upon approval by the voters unless an effective\ndate is provided within the text of the proposed\namendment.",
+            "argumentsFor": [
+              "1. Provides greater transparency to the public and the\nlegislature regarding why a governor vetoed a bill.\nWith the ability to pocket veto a bill, the governor can veto\na bill passed by both chambers of the legislature without an\nexplanation. This can leave the public and the legislature in\nthe dark about what objections the governor had and does\nnot provide information on how the bill might be\nreintroduced in the future in a manner that the governor\nwould sign. By using the pocket veto, the governor is able\nto avoid explaining the governor's position on potentially\npolitically sensitive pieces of legislation. Eliminating the\npocket veto would ensure that a substantive explanation is\ngiven by the governor for the veto, the public knows the\nopinion of the governor on the legislation and the\nlegislature understands how to address the governor's\nconcerns.\n2. Potentially brings greater balance among the\nbranches of government.\nThe governor's ability to pocket veto a bill gives the\ngovernor great power over the enactment of laws passed\nby the legislature. With the elimination of the pocket veto,\nthe legislature would have an increased chance of passed\nbills becoming law, especially for a politically fraught bill,\nbecause to veto a bill, the governor would have to be\nintentional about the veto and provide a reason. The\nproposed amendment would also provide an avenue for the\njudicial branch to weigh in on whether the governor has\nprovided a \"substantive explanation\" for the veto if the\nexplanation is challenged."
+            ],
+            "argumentsAgainst": [
+              "1. This proposed amendment is unnecessary and\ncould be overly burdensome.\nThe proposed amendment is unnecessary because the\nlegislature currently can require the governor to provide a\nreason for vetoing a bill by presenting the bill to the\ngovernor before the last three days of a session. The\nlegislature also has the option to override a governor's veto,\nregardless of the governor's rationale for pocket vetoing a\nbill. Further, with only 20 days to act after the adjournment\nof the legislature, providing a written, substantive\nexplanation for every bill to be vetoed could be overly\nburdensome and create a logjam of work in the executive\nbranch in the short time after session that the governor has\nto consider legislation for signature or veto. This could\nresult in \"bad bills\" becoming law because the governor ran\nout of time before a veto message could be written.\n2. The requirement to provide a \"substantive\nexplanation\" is undefined.\nTo veto a bill, the governor would be required to provide a\n\"substantive explanation\" for the veto, but there is nothing\nin the proposed amendment to indicate what that would\nentail. This could lead to an increase in litigation between\nthe legislative and executive branches at a cost to the\ntaxpayers. Additionally, the litigation could delay the\nenactment of a bill, leaving the public in limbo as to whether\nor when the law will be in effect."
+            ],
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-52813f31975d092c92ef772fceb8dcabfd532d43d829aac3b651b8050741afc2.txt",
+              "byteLength": 7590,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4194,6 +4250,62 @@
             "collectedAt": "2026-10-14T05:03:48.355503Z",
             "verifiedAt": "2026-10-14T05:03:48.355503Z",
             "quote": "Proposing to amend Article 7, Section 1 of the Constitution of New Mexico to remove the requirement that school elections be separate from partisan elections."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "2b40caf517025924803c908a4eb6b66e67600e193f82e298b44bdb3c1e7058ec",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-2b40caf517025924803c908a4eb6b66e67600e193f82e298b44bdb3c1e7058ec.txt",
+              "byteLength": 1951,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "59ddba74e6c88c3ae4379bc90eca8a18aa56ae498510b1003e820b8dfc3158ab",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "summary": "Constitutional Amendment 2, passed by the legislature in\n2026, would amend Article 7, Section 1 of the Constitution\nof New Mexico to remove the requirement that school\nelections be held separately from partisan elections. If the\namendment is approved, school districts would have the\nopportunity to add bond and mill levy questions to ballots\nin a partisan election such as the regular general election. It\nwould also give the legislature the authority to allow local\nschool board elections to be held with partisan elections.",
+            "passageThreshold": "A\nproposed amendment becomes part of the state's\nconstitution if a majority of the votes cast in an election on\nthe proposition is cast in its favor, unless the proposed\namendment affects one of the sections for which a threefourths' majority is required. (This year's proposed\nconstitutional amendments do not affect one of those\nsections and, thus, need only a simple majority vote to be\napproved.) Proposed constitutional amendments become\neffective upon approval by the voters unless an effective\ndate is provided within the text of the proposed\namendment.",
+            "argumentsFor": [
+              "1. School districts will save the cost of expensive allmail ballots.\nThe only statewide election that a school district may\nparticipate in is the regular local election held in November\nof odd-numbered years at which nonpartisan local\ngoverning bodies, including many municipalities, hold their\nelections. That means that school districts must pay for a\nspecial mail ballot election if they need to get approval on a\nbond or mill levy question at any other time during the twoyear election cycle. School districts use school funding to\npay for the required, expensive all-mail ballots. A special\nelection can cost between $125,000 to $250,000,\ndepending on the size of the district and the number of\nissues. Constitutional Amendment 2 would allow school\ndistricts the option of placing a bond or mill levy question\non the general election ballot in November of evennumbered years, just as local governments are allowed to\ndo under current law, saving the cost of all-mail ballots.\n2. More participation in school elections.\nAllowing school districts to place a bond or mill levy\nquestion on a partisan general election ballot would\nincrease the number of voters who participate in school\nelections, given that participation rates for statewide\ngeneral elections tend to be much higher than participation\nrates for statewide local elections.\n3. The amendment may increase school districts'\nparticipation in the state's public school capital\noutlay system and result in more new or renovated\nschools for New Mexico students.\n\nThe public school capital outlay system was designed to\nensure the uniformity and sufficiency of all public school\nfacilities in the state. New school buildings, building\nrenovations and other capital projects that are authorized\nthrough this system are funded by the state and school\ndistricts through an equitable cost-sharing model. School\ndistricts generally cover their share of project costs through\nbonding and property taxes approved by voters; however,\nsome school districts are unable to get bonding or property\ntaxes approved and cannot afford their share of project\ncosts. Because partisan elections have higher and more\ndiverse voter turnout than nonpartisan or special elections,\nschool district ballot questions for bonding or property\ntaxes may be more likely to pass, potentially resulting in\nincreased school district participation in the public school\ncapital outlay system and more new or renovated school\nbuildings for New Mexico students.\n4. School districts maintain the choice of holding a\nspecial election.\nSchool districts are currently the only public bodies that are\nprohibited from holding elections at the same time as\npartisan elections. Constitutional Amendment 2 does not\nrequire that school elections occur simultaneously with\npartisan elections; rather, it provides the option and\nflexibility for school districts to decide the timing of their\nelections to better suit their needs. School districts may still\nchoose to hold special bond elections, but that will no\nlonger be their only option to have bond or mill levy\nquestions on the ballot outside of the biennial statewide\nlocal election.\n\n5. Dilutes the outsized influence of education interest\ngroups in deciding school governance.\nOff-cycle school board elections systematically give an\nadvantage to whichever group is best organized and most\nmotivated to turn out the vote. Education interest groups\nhave leveraged this advantage to elect school board\nmembers favorable to their priorities. Folding school\nelections into the November general election, where voter\nturnout routinely triples or quadruples that of standalone\nschool elections, would ensure that outcomes reflect the\npreferences of the full electorate, including parents,\ntaxpayers and other community members who often sit out\nlow-profile, off-cycle contests."
+            ],
+            "argumentsAgainst": [
+              "1. Adding school questions to the general election\nballot could create voter fatigue and increased\ncosts.\nAdding another ballot question to the general election\nballot or allowing the possibility of a future legislature\nadding school board elections to the general election\nballot may cause general election ballots in some counties\nto exceed two full pages, resulting in voter fatigue and\nincreased costs for producing general election ballots.\n2. The amendment may lead to politicizing school\ndistrict elections.\nVoters overwhelmingly approved the prohibition on\nholding school elections with partisan elections in 2008.\nThis prohibition was enshrined in the Constitution of New\nMexico, thus preventing the legislature or local public\n\nbodies from allowing school elections to be held with\npartisan elections. While Constitutional Amendment 2\nonly removes the prohibition and does not affirmatively\nrequire that school elections be held with partisan\nelections, it does not limit the legislature's ability to pass\nfuture legislation amending the Election Code to allow\nschool board elections to be held with partisan elections.\nBy remaining silent on that issue, Constitutional\nAmendment 2 may open up school elections to increased\npolitical influence. Alternatively, school district bond and\nmill levy elections could be held with general elections\nwhile maintaining the prohibition on holding actual school\nboard elections with partisan elections.\n3. Reduces the impact and voting power of experts\nmost familiar with education interests.\nCharacterizing interest group influence in off-cycle school\nboard elections as a problem to be solved through this\namendment fundamentally misunderstands what\ndemocratic participation looks like in specialized, interestspecific elections. Teachers, school staff and the education\nassociations that represent them are among the most\ndirectly affected stakeholders in school governance\ndecisions, and the higher rate of participation in school\nelections from these experts is not a distortion of\ndemocracy. Moving school issues onto the general\nelection ballot does not necessarily create a more\ninformed electorate but rather a larger one that may know\nless about school issues or the need for bonds or local mill\nlevies relative to the people with a day-to-day\nunderstanding of the operational, facilities and other\nneeds in local schools.\n\n4. School elections will be diminished in general\nelections.\nThe importance of school issues on a partisan general\nelection ballot may be diminished by the attention\nprovided to candidates for higher office such as the\ngovernor, state representative, state senator, the United\nStates presidency and Congress. More information is\nprovided by the media, advocates and opponents on such\nraces so voters may be less informed about local school\nissues and sometimes ignore down-ballot races and bond\nquestions."
+            ],
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-59ddba74e6c88c3ae4379bc90eca8a18aa56ae498510b1003e820b8dfc3158ab.txt",
+              "byteLength": 10027,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4208,6 +4320,62 @@
             "collectedAt": "2026-10-14T05:03:48.355503Z",
             "verifiedAt": "2026-10-14T05:03:48.355503Z",
             "quote": "Proposing an amendment to Article 12, Section 13 of the Constitution of New Mexico to establish nominating committees to provide lists of nominees to the governor for appointment of nonstudent members to the boards of regents of state educational institutions; providing that student members of boards of regents shall be appointed from a list provided by an elected student governing body of the institution; providing that, except for a student member, members of the boards of regents shall not have changed their political party registration in the twelve months preceding appointment."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "c232bb16cf602d91bb1d9fc0cc5804723d17db44cbedcb78cae2cf5590673e88",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-c232bb16cf602d91bb1d9fc0cc5804723d17db44cbedcb78cae2cf5590673e88.txt",
+              "byteLength": 6498,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "f96e47cce00228cf55e39a04343ca6b979cbe58f3f5a99016b382f7ab1d5f7f1",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "summary": "Constitutional Amendment 3 proposes to amend Article 12,\nSection 13 of the Constitution of New Mexico to limit the\ngovernor's discretion in appointing members to the boards\nof regents of the state educational institutions. Currently,\nregents are appointed by the governor and approved by the\nSenate, subject to only a few qualifications. Nonstudent\nregents must be \"qualified electors of the state of New\nMexico\", and no more than three of five or four of seven of\nthese members on a particular board may be registered\nwith the same political party at the time they are appointed.\n\nStudent regents must be students of their respective\ninstitutions and are appointed from a list provided by the\npresident of their respective institutions. The proposed\namendment would require the legislature to establish a\nbipartisan or nonpartisan regent nominating committee for\neach of the 10 state educational institutions and would limit\nthe governor's prospective appointments to the nominees\nselected by the regent nominating committees.\nAdditionally, the proposed amendment would require the\ngovernor to appoint student regents from lists provided by\nthe elected student governing bodies of their respective\ninstitutions instead of by the institutions' presidents.\nFinally, excepting the student regents, the proposed\namendment would disqualify a person from being\nappointed to a board of regents if the person changed\npolitical party registration in the 12 months preceding the\nperson's appointment.",
+            "passageThreshold": "A\nproposed amendment becomes part of the state's\nconstitution if a majority of the votes cast in an election on\nthe proposition is cast in its favor, unless the proposed\namendment affects one of the sections for which a threefourths' majority is required. (This year's proposed\nconstitutional amendments do not affect one of those\nsections and, thus, need only a simple majority vote to be\napproved.) Proposed constitutional amendments become\neffective upon approval by the voters unless an effective\ndate is provided within the text of the proposed\namendment.",
+            "argumentsFor": [
+              "1. Governance of the state educational institutions is\nan important and challenging task that requires\nspecialized knowledge in multiple fields.\nThe state educational institutions serve the wide range of\ncultural, economic and social configurations of New Mexico's\ncommunities and, for the specialized schools, meet the unique\nneeds of New Mexico students who are blind, visually impaired\nor deaf. Through establishing regent nominating committees by\nlaw, the legislature will ensure that a nominating committee\nprovides to the governor a list of nominees who would best\nserve the interests of the institution as a regent. Presuming that\nthe regent nominating committees will comprehensively vet the\nbest qualified prospective regents, there could be more\n\naccountability in the governance of the state educational\ninstitutions.\n2. Regent nominating committees may limit or\nremove the influence of politics from the\nappointment process.\nWithout requiring substantive qualifications for regents to guide\nthe governor's appointments to boards of regents, the current\nappointment process allows for outsized political influence on\nthe membership of the boards of regents. By requiring the\nestablishment of bipartisan or nonpartisan regent nominating\ncommittees, the amendment could insulate the appointment\nprocess from politics or other partisan considerations and\nensure that the people appointed to the boards of regents are\nqualified to serve. This could enhance the governance of the\nstate educational institutions."
+            ],
+            "argumentsAgainst": [
+              "1. The amendment would alter the checks and\nbalances between the legislature and the executive\nregarding the appointment of state officers.\nTraditionally, the executive has the power to appoint, and the\nSenate has the power to advise and consent to the governor's\nappointees or reject the governor's appointees. The existing\nlanguage of Article 12, Section 13 of the Constitution of New\nMexico reflects this distribution of powers and clearly assigns\nresponsibilities to the governor and the members of the Senate\nwho are accountable to the voters for poor appointment\ndecisions. Constitutional Amendment 3 obscures the\nresponsibility for appointment decisions by diluting the\ngovernor's authority. Additionally, in establishing the\nnominating committees, the legislature further obscures the\ngovernor's and Senate's appointment-related responsibilities as\ncurrently provided by the Constitution of New Mexico.\n\n2. The amendment may dilute the governor's or the\nSenate's accountability in appointing regents.\nThe Constitution of New Mexico currently places the\nresponsibility of appointment and confirmation on the governor\nand the Senate, respectively. By creating a nominating\ncommittee, the proposed amendment would remove some of\nthat responsibility from the governor and the Senate, which are\nboth accountable to the voters. A nominating committee, on\nthe other hand, is not accountable to the voters. The governor\ncan argue that he or she can only consider the nominees\nprovided by the nominating committee, thus lessening the\ngovernor's accountability for the selection. The governor, and to\nsome extent the Senate, is confined to the slate of nominees\nprovided by the nominating committee."
+            ],
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-f96e47cce00228cf55e39a04343ca6b979cbe58f3f5a99016b382f7ab1d5f7f1.txt",
+              "byteLength": 11872,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4222,6 +4390,62 @@
             "collectedAt": "2026-10-14T05:03:48.355503Z",
             "verifiedAt": "2026-10-14T05:03:48.355503Z",
             "quote": "Proposing to amend Article 4, Section 10 of the Constitution of New Mexico to allow legislative compensation that is limited to the median household income for New Mexico, to require legislative compensation to be reduced if the median household income for New Mexico falls, to allow legislative compensation to be increased only if the median household income for New Mexico rises and to provide for delayed implementation."
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "ad0c73d0c3efba20985241dd6e60d90f5ef9bf7529bf6492e947675990779974",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-ad0c73d0c3efba20985241dd6e60d90f5ef9bf7529bf6492e947675990779974.txt",
+              "byteLength": 2371,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "16e76313696ea19cefe5776ea7932fc3d7f2d0d24dde63ae9bbdeacfc80fc208",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "summary": "Constitutional Amendment 4 proposes to amend Article 4,\nSection 10 of the Constitution of New Mexico to entitle\neach member of the legislature to compensation for the\nmember's service in addition to the per diem and mileage\nreimbursement to which the member is currently entitled.\nThe proposed amendment would go into effect when the\nmembers of the Fifty-Ninth Legislature are sworn in and\nseated in 2029 and would allow the legislature to enact a\nlaw that provides compensation for each legislator in an\namount equal to the annual median household income for\nNew Mexico, which is approximately $68,000 in 2026. Also,\nthe proposed amendment would remove the prohibition on\nlegislators receiving other perquisites or allowances.",
+            "passageThreshold": "A\nproposed amendment becomes part of the state's\nconstitution if a majority of the votes cast in an election on\nthe proposition is cast in its favor, unless the proposed\namendment affects one of the sections for which a threefourths' majority is required. (This year's proposed\nconstitutional amendments do not affect one of those\nsections and, thus, need only a simple majority vote to be\napproved.) Proposed constitutional amendments become\neffective upon approval by the voters unless an effective\ndate is provided within the text of the proposed\namendment.",
+            "argumentsFor": [
+              "1. Legislative compensation could result in legislators\nspending more time on legislative work and less time\non outside employment.\nBecause legislators currently receive only per diem and mileage\nfor their legislative service, some may have to prioritize outside\nemployment and be less able to take time off for legislative\nwork during the interim. Paying each legislator a salary equal to\nthe median household income in New Mexico would give\nlegislators the financial ability to either take more time off from\ntheir outside employment or even forego outside employment\naltogether. This would allow legislators to devote more time to\nlegislative work and be more accessible to their constituents.\n2. Legislative compensation would diversify the pool of\npotential legislators.\nLegislators currently serve as volunteers, so many legislators\nhave to balance the demands of outside employment with the\nresponsibilities of elected office. Legislators who have outside\nemployment are required to take off either 30 or 60 days each\nyear, at minimum, to carry out their constitutional duties. Even\nwith the provision of per diem and mileage, not being able to\nfully engage in outside employment during session is a\nsignificant financial burden. In New Mexico, the per capita\nannual income in 2026 is approximately $36,000, meaning most\nNew Mexicans cannot consider running for the legislature\nbecause they do not have the financial ability to take one or two\nmonths off from work each year and still make ends meet.\nPaying legislators a salary could alleviate or eliminate the\ncurrent financial burden of legislative service and allow for\nmore New Mexicans to run for seats in the legislature.\n\n3. Legislative compensation could improve the balance in\nstate government.\nLike the government of the United States, New Mexico's\ngovernment is divided into three separate branches that are\nsupposed to be equal in exercising their constitutional duties:\nthe legislature makes the laws; the executive carries out the\nlaws; and the judiciary interprets the laws. From a practical\nsense, because New Mexico legislators are subject to financial\nburdens that officers of the other branches are not, the\nlegislature as a whole and its individual members are unable to\ndedicate the same amount of time necessary to be truly coequal\nwith the executive and judiciary. Paying each legislator a salary\nwould strengthen the legislature by allowing its members the\nfinancial flexibility to be more responsive to the issues of the\nday. Specifically, financial flexibility could allow legislators to be\nmore proactive in addressing policy issues and overseeing\nexecutive agencies in the interim and be better prepared for the\nsubsequent session. The financial flexibility could strike a better\nbalance among the co-equal branches of government by\nallowing the legislature to be more proactive year-round and\nnot just during session.\n4. Legislative compensation provides a second of three\nsteps in professionalizing the legislature.\nStudies have identified resources, compensation and length of\nsessions as the necessary elements of a professional legislature.\nState legislators now have district legislative aides as resources\nfor the legislative business of the respective districts. Legislative\ncompensation could provide legislators with the ability to spend\nmore time as active participants in state government through\ninterim committees and possibly longer sessions. The length of\nsessions continues to be discussed by the legislature, and\nlegislative compensation could provide the flexibility to allow\nlegislators to participate in longer sessions that may otherwise\naffect their loss of income."
+            ],
+            "argumentsAgainst": [
+              "1. Legislative salaries could provide legislators with\nincumbency advantages not available to other\ncandidates.\nLegislative compensation could create advantages in fundraising\nand campaigning for legislators who would continue receiving\ncompensation while other candidates in primary or general\nelections may have to forego income from regular employment\nto raise funds or campaign. Incumbent legislators could rely on\nlegislative campaign funds to pay for campaign expenses while\ncontinuing to receive legislative compensation and per diem\nand mileage reimbursement. Candidates for those positions\nwould be trying to raise funds to sustain a campaign while\npossibly having to forego income and other employment\nopportunities and benefits.\n2. The amendment would provide for a legislative salary\nthat is disproportionate when compared to other\nstates.\nTechnically, New Mexico is the only state that does not pay\nlegislators a \"salary\"; however, legislative salaries in some states\namount to much less than what New Mexico legislators receive\nin per diem and pension benefits. For example, New Hampshire\nlegislators receive an annual salary of $100, are not entitled to\nper diem and are not eligible for any kind of retirement benefit,\nso in addition to donating their time for legislative service, New\nHampshire legislators also have to donate their money to cover\ntheir expenses for traveling, lodging and meals during their\nlegislative service. In Wyoming and Utah, legislators receive a\nsalary of $150 and $301 per legislative day, respectfully, and\nboth states allow legislators to receive per diem. Wyoming does\nnot have a legislative retirement system, but Utah does;\nhowever, the Utah legislative retirement system is less\ngenerous than New Mexico's and has more restrictions.\n\nAccording to the National Conference of State Legislatures, the\naverage base salary for a state legislator in 2024 was $44,320.\nMore populated states with higher costs of living tend to pay\nhigher annual salaries. For example: New York legislators are\npaid $142,000; California legislators are paid $132,000; and\nMichigan legislators are paid $72,000. The New York legislature\nis part time, but its members are expected to maintain full-time\nconstituent offices in their districts and, although they are\nallowed to have outside employment, their earnings cannot\nexceed $35,000 per year. The California legislature is full time,\nand its members are essentially prohibited from having outside\nemployment and are subject to strict conditions on their\nlegislative salaries. The Michigan legislature is full time, but its\nmembers are allowed to have outside employment. In Arizona,\neach legislator receives an annual salary of $24,000 as well as\nper diem. Arizona legislative sessions are scheduled to last 100\ndays each year, but its constitution permits a session to extend\nbeyond 100 days. Massachusetts and Pennsylvania have fulltime legislatures, while Alabama and South Dakota have parttime legislatures, and each of these states pay legislative\nsalaries based on median household income and generally allow\ntheir legislators to have outside employment. Constitutional\nAmendment 4 would provide legislative salaries that may be\ndisproportionate to legislative salaries in most other states. The\namendment does not require additional legislative service\nbeyond the current minimum requirement of 30 or 60 days\neach year for regular sessions. Also, the amendment opens the\ndoor for additional employee-type benefits for legislative\nservice and imposes no restrictions on outside employment or\noutside earnings.\n3. Constitutional Amendment 4 does not address a\nnumber of issues that may have to be addressed by\nsubsequent legislation or constitutional amendment.\nIt may be necessary for the legislature to address issues such as\nthe following, which is not an exhaustive list:\n\n(1) a definition of \"legislative service\"; e.g., attendance\nat meetings of interim committees to which members\nhave been appointed;\n(2) whether the median household income is\ndetermined by the commonly accepted Current\nPopulation Survey Annual Social and Economic\nSupplement conducted by the United States Census\nBureau or some other source;\n(3) employee benefits or other perquisites or\nallowances that may be allowed for legislators;\n(4) whether the state and legislator contributions to the\nretirement fund will remain as they are now or whether\nthey will mirror the state employer and state employee\ncontribution levels, including any other changes to\nexisting law that may conflict with the proposed\nconstitutional amendment; and\n(5) whether legislators may receive per diem for\ninterim committee meetings held in the same city or\ntown where they reside."
+            ],
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-16e76313696ea19cefe5776ea7932fc3d7f2d0d24dde63ae9bbdeacfc80fc208.txt",
+              "byteLength": 12320,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4236,6 +4460,57 @@
             "collectedAt": "2026-10-14T05:03:48.355503Z",
             "verifiedAt": "2026-10-14T05:03:48.355503Z",
             "quote": "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of senior citizen facility improvement, construction and equipment acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed twenty-one million five hundred eighty-two thousand two hundred thirteen dollars ($21,582,213) to make capital expenditures for certain senior citizen facility improvement, construction and equipment acquisition projects and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+            "sourceHash": "b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563",
+            "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
+            "publisher": "New Mexico Legislature",
+            "vault": {
+              "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563.txt",
+              "byteLength": 43068,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+                "sourceHash": "7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34",
+                "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
+                "publisher": "New Mexico Legislature",
+                "vault": {
+                  "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34.pdf",
+                  "byteLength": 92874,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "f0393081357577cad651f8123a883922988451e0c7be0564d0ef543a76bfdaab",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "summary": "in an amount not to exceed $21,582,213 to\nmake capital expenditures for certain senior citizen facility\nimprovement, construction and equipment acquisition projects;",
+            "fiscalImpact": "Explanation of General Obligation\nBonds and Taxes\nA bond represents a debt for money borrowed by a government\nto finance capital improvement projects. The State of New\nMexico promises to repay the amount borrowed, plus interest,\nover a period of time for each series of General Obligation bonds\nthat are approved by voters. The bonds are called “General\nObligation” because payment of the debt service (principal plus\ninterest) is a general obligation of the State and its property\nowners through property taxation. According to the Board of\nFinance Division of the NM Department of Finance and\nAdministration, the specific amount of property taxes collected\nin a given year is attributable to a number of factors, including\nthe amount of debt service required for existing General\nObligation bonds, the projected debt service required for the\nnew bond issue, the latest assessed valuation of net taxable\nproperty, cash balances in bond debt service accounts, the date\nof issuance, and the actual interest rate obtained on the bond\nsale.\nA General Obligation (GO) bond represents a debt for money\nborrowed by the State of New Mexico to finance capital\nimprovement projects that benefit communities throughout the\nstate. If approved by voters, the State promises to repay the\namount borrowed, plus interest, over a period of time for each\nseries of General Obligation bonds issued.\nThese bonds are called \"General Obligation\" bonds because\nrepayment of the principal and interest is backed by the full faith\nand credit of the State of New Mexico. The debt service is paid\nthrough a statewide property tax levy on taxable property, as\nauthorized by the 2026 Capital Projects General Obligation Bond\nAct. The Act requires that an ad valorem property tax be levied\n\neach year in an amount sufficient to pay the principal, interest,\nand any authorized administrative costs associated with the\nbonds while they remain outstanding. The bonds may not be\nissued unless they are approved by a majority of voters at the\n2026 General Election. Once approved, the bonds are generally\nissued with maturities of up to eleven years.\nAccording to the Board of Finance Division of the New Mexico\nDepartment of Finance and Administration, the specific amount\nof property taxes collected in any year depends on several\nfactors, including the debt service required for existing General\nObligation bonds, the projected debt service for any newly\napproved bonds, the assessed valuation of taxable property\nstatewide, available cash balances in bond debt service accounts,\nthe timing of bond issuance, and the interest rates received when\nthe bonds are sold.\nThe State Board of Finance will determine the final property tax\nrate and estimated annual cost to property owners after the\n2026 General Election, based on voter approval, the timing of\nbond issuance, market interest rates, and statewide assessed\nproperty values. Those estimates will be published before the\nbonds are issued.\n\n2026 Capital Projects General Obligation Bond Act\nThe New Mexico Legislature passed the 2026 Capital Projects\nGeneral Obligation Bond Act detailing projects that would be\nfunded by these bonds. No bonds will be issued or sold under this\nact until the state’s registered voters have voted upon and\napproved the issuance and sale of these bonds. Each bond\nquestion is voted upon separately with a “For” or “Against”\nquestion.",
+            "passageThreshold": "The bonds may not be\nissued unless they are approved by a majority of voters at the\n2026 General Election.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-f0393081357577cad651f8123a883922988451e0c7be0564d0ef543a76bfdaab.txt",
+              "byteLength": 4377,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4250,6 +4525,57 @@
             "collectedAt": "2026-10-14T05:03:48.355503Z",
             "verifiedAt": "2026-10-14T05:03:48.355503Z",
             "quote": "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of library acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed nineteen million three hundred twenty-four thousand one hundred eighty-eight dollars ($19,324,188) to make capital expenditures for academic, public school, public and tribal library resource acquisitions and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+            "sourceHash": "b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563",
+            "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
+            "publisher": "New Mexico Legislature",
+            "vault": {
+              "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563.txt",
+              "byteLength": 43068,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+                "sourceHash": "7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34",
+                "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
+                "publisher": "New Mexico Legislature",
+                "vault": {
+                  "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34.pdf",
+                  "byteLength": 92874,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "d60a15046512619e4076b21fac2374690b78edfd00cff06fe82113bd405ea7a3",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "summary": "in an amount not to exceed $19,324,188 to\nmake capital expenditures for academic, public school, tribal, and\npublic library resource acquisitions; and",
+            "fiscalImpact": "Explanation of General Obligation\nBonds and Taxes\nA bond represents a debt for money borrowed by a government\nto finance capital improvement projects. The State of New\nMexico promises to repay the amount borrowed, plus interest,\nover a period of time for each series of General Obligation bonds\nthat are approved by voters. The bonds are called “General\nObligation” because payment of the debt service (principal plus\ninterest) is a general obligation of the State and its property\nowners through property taxation. According to the Board of\nFinance Division of the NM Department of Finance and\nAdministration, the specific amount of property taxes collected\nin a given year is attributable to a number of factors, including\nthe amount of debt service required for existing General\nObligation bonds, the projected debt service required for the\nnew bond issue, the latest assessed valuation of net taxable\nproperty, cash balances in bond debt service accounts, the date\nof issuance, and the actual interest rate obtained on the bond\nsale.\nA General Obligation (GO) bond represents a debt for money\nborrowed by the State of New Mexico to finance capital\nimprovement projects that benefit communities throughout the\nstate. If approved by voters, the State promises to repay the\namount borrowed, plus interest, over a period of time for each\nseries of General Obligation bonds issued.\nThese bonds are called \"General Obligation\" bonds because\nrepayment of the principal and interest is backed by the full faith\nand credit of the State of New Mexico. The debt service is paid\nthrough a statewide property tax levy on taxable property, as\nauthorized by the 2026 Capital Projects General Obligation Bond\nAct. The Act requires that an ad valorem property tax be levied\n\neach year in an amount sufficient to pay the principal, interest,\nand any authorized administrative costs associated with the\nbonds while they remain outstanding. The bonds may not be\nissued unless they are approved by a majority of voters at the\n2026 General Election. Once approved, the bonds are generally\nissued with maturities of up to eleven years.\nAccording to the Board of Finance Division of the New Mexico\nDepartment of Finance and Administration, the specific amount\nof property taxes collected in any year depends on several\nfactors, including the debt service required for existing General\nObligation bonds, the projected debt service for any newly\napproved bonds, the assessed valuation of taxable property\nstatewide, available cash balances in bond debt service accounts,\nthe timing of bond issuance, and the interest rates received when\nthe bonds are sold.\nThe State Board of Finance will determine the final property tax\nrate and estimated annual cost to property owners after the\n2026 General Election, based on voter approval, the timing of\nbond issuance, market interest rates, and statewide assessed\nproperty values. Those estimates will be published before the\nbonds are issued.\n\n2026 Capital Projects General Obligation Bond Act\nThe New Mexico Legislature passed the 2026 Capital Projects\nGeneral Obligation Bond Act detailing projects that would be\nfunded by these bonds. No bonds will be issued or sold under this\nact until the state’s registered voters have voted upon and\napproved the issuance and sale of these bonds. Each bond\nquestion is voted upon separately with a “For” or “Against”\nquestion.",
+            "passageThreshold": "The bonds may not be\nissued unless they are approved by a majority of voters at the\n2026 General Election.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-d60a15046512619e4076b21fac2374690b78edfd00cff06fe82113bd405ea7a3.txt",
+              "byteLength": 4247,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -4264,6 +4590,57 @@
             "collectedAt": "2026-10-14T05:03:48.355503Z",
             "verifiedAt": "2026-10-14T05:03:48.355503Z",
             "quote": "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of higher education, special schools and tribal schools capital improvement and acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed three hundred fifty-two million two hundred twenty five thousand three hundred seventy-nine dollars ($352,225,379) to make capital expenditures for certain higher education, special schools and tribal schools capital improvements and acquisitions and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+            "sourceHash": "b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563",
+            "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
+            "publisher": "New Mexico Legislature",
+            "vault": {
+              "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563.txt",
+              "byteLength": 43068,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+                "sourceHash": "7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34",
+                "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
+                "publisher": "New Mexico Legislature",
+                "vault": {
+                  "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34.pdf",
+                  "byteLength": 92874,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "sourceHash": "44258cca3b1033135c0e5fec78bf78945950259dd311779464ce1bbf99ce8d5a",
+            "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+            "publisher": "New Mexico Secretary of State",
+            "summary": "in an amount not to exceed $352,225,379 to\nmake capital expenditures for certain higher education, special\nschools, and tribal schools capital improvements and\nacquisitions.\nThe total for all three questions, including bond issuance costs, is\n$393,131,780. A complete breakdown of the designated projects\nunder each bond issue can be found on the New Mexico\nLegislature’s\nwebsite:\nhttps://www.nmlegis.gov/Publications/Capital_Outlay/HB248%\n20Chart%20Funded%20Projects%20by%20Agency%203A%20G\nOB.pdf\n\nSource: NM Department of Finance and Administration.\n\nAdditional Resources\nAdditional information on the proposed constitutional\namendments and general obligation bonds can be found at the\nfollowing sites:\nHouse Joint Resolution 2 - Constitutional Amendment 1:\nHJR02 (nmlegis.gov)\nSenate Joint Resolution 1 – Constitutional Amendment 2:\nSJR01 (nmlegis.gov)",
+            "fiscalImpact": "Explanation of General Obligation\nBonds and Taxes\nA bond represents a debt for money borrowed by a government\nto finance capital improvement projects. The State of New\nMexico promises to repay the amount borrowed, plus interest,\nover a period of time for each series of General Obligation bonds\nthat are approved by voters. The bonds are called “General\nObligation” because payment of the debt service (principal plus\ninterest) is a general obligation of the State and its property\nowners through property taxation. According to the Board of\nFinance Division of the NM Department of Finance and\nAdministration, the specific amount of property taxes collected\nin a given year is attributable to a number of factors, including\nthe amount of debt service required for existing General\nObligation bonds, the projected debt service required for the\nnew bond issue, the latest assessed valuation of net taxable\nproperty, cash balances in bond debt service accounts, the date\nof issuance, and the actual interest rate obtained on the bond\nsale.\nA General Obligation (GO) bond represents a debt for money\nborrowed by the State of New Mexico to finance capital\nimprovement projects that benefit communities throughout the\nstate. If approved by voters, the State promises to repay the\namount borrowed, plus interest, over a period of time for each\nseries of General Obligation bonds issued.\nThese bonds are called \"General Obligation\" bonds because\nrepayment of the principal and interest is backed by the full faith\nand credit of the State of New Mexico. The debt service is paid\nthrough a statewide property tax levy on taxable property, as\nauthorized by the 2026 Capital Projects General Obligation Bond\nAct. The Act requires that an ad valorem property tax be levied\n\neach year in an amount sufficient to pay the principal, interest,\nand any authorized administrative costs associated with the\nbonds while they remain outstanding. The bonds may not be\nissued unless they are approved by a majority of voters at the\n2026 General Election. Once approved, the bonds are generally\nissued with maturities of up to eleven years.\nAccording to the Board of Finance Division of the New Mexico\nDepartment of Finance and Administration, the specific amount\nof property taxes collected in any year depends on several\nfactors, including the debt service required for existing General\nObligation bonds, the projected debt service for any newly\napproved bonds, the assessed valuation of taxable property\nstatewide, available cash balances in bond debt service accounts,\nthe timing of bond issuance, and the interest rates received when\nthe bonds are sold.\nThe State Board of Finance will determine the final property tax\nrate and estimated annual cost to property owners after the\n2026 General Election, based on voter approval, the timing of\nbond issuance, market interest rates, and statewide assessed\nproperty values. Those estimates will be published before the\nbonds are issued.\n\n2026 Capital Projects General Obligation Bond Act\nThe New Mexico Legislature passed the 2026 Capital Projects\nGeneral Obligation Bond Act detailing projects that would be\nfunded by these bonds. No bonds will be issued or sold under this\nact until the state’s registered voters have voted upon and\napproved the issuance and sale of these bonds. Each bond\nquestion is voted upon separately with a “For” or “Against”\nquestion.",
+            "passageThreshold": "The bonds may not be\nissued unless they are approved by a majority of voters at the\n2026 General Election.",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-44258cca3b1033135c0e5fec78bf78945950259dd311779464ce1bbf99ce8d5a.txt",
+              "byteLength": 5061,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+                "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+                "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+                "publisher": "New Mexico Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+                  "byteLength": 379470,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -4271,13 +4648,512 @@
       "coverageNotes": [
         "The Secretary of State publishes this as the “2026 General Election Contest/Candidate List” and marks included candidates “Qualified”; its page also retains rows marked “Disqualified” or “Withdrawn,” which are excluded. Source: https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
         "The official 2026 election proclamation lists State Senate District 33 to fill the remaining two years of a four-year term, all State House Districts 1–70, and Public Education Commission Districts 2, 3, 5, 6, and 7. Source: https://www.sos.nm.gov/wp-content/uploads/2026/04/2026-General-Election-Proclamation-English.pdf"
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nm-sos:nm-2026-11-03:constitutional-amendment-1",
+          "whatItDoes": "Note:\n<u>Underscored material</u> = new language proposed for insertion\n[~~Bracketed material~~] = existing language proposed for deletion\nHOUSE JOINT RESOLUTION 2 – Proposing\nConstitutional Amendment 1\nPROPOSING AN AMENDMENT TO ARTICLE 4, SECTION 22 OF\nTHE  CONSTITUTION  OF  NEW  MEXICO  TO  REQUIRE  THE",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. It is proposed to amend Article 4, Section 22 of the\nconstitution of New Mexico to read:\n\"<u>A.</u> Every  bill  passed  by  the  legislature  shall,  before  it\nbecomes  a  law,  be  presented  to  the  governor  for\napproval.  If  ~~[he]~~ <u>the  governor</u> approves,  ~~[he]~~ <u>the</u>"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-1#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2. The amendment proposed by this resolution shall\nbe submitted to the people for their approval or rejection at the\nnext general election or at any special election prior to that date\nthat may be called for that purpose."
+            }
+          ],
+          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+          "sourceHash": "5a5e465fc626f5bb05e27ffee052aababe6867e30bad60c2233ff9d3f687a552",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nm-sos:nm-2026-11-03:constitutional-amendment-2",
+          "whatItDoes": "Note:\n<u>Underscored Material</u> = new language proposed for insertion\n[Bracketed material] = existing language proposed for deletion\nSENATE JOINT RESOLUTION 1 - Proposed\nConstitutional Amendment 2\nPROPOSING TO AMEND ARTICLE 7, SECTION 1 OF THE\nCONSTITUTION OF NEW MEXICO TO REMOVE THE",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. It is proposed to amend Article 7, Section 1 of the\nconstitution of New Mexico to read:\n\"A. Every person who is a qualified elector pursuant to\nthe constitution and laws of the United States and a\ncitizen thereof shall be qualified to vote in all elections"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-2#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2. The amendment proposed by this resolution shall\nbe submitted to the people for their approval or rejection at the\nnext general election or at any special election prior to that date\nthat may be called for that purpose."
+            }
+          ],
+          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+          "sourceHash": "2b40caf517025924803c908a4eb6b66e67600e193f82e298b44bdb3c1e7058ec",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nm-sos:nm-2026-11-03:constitutional-amendment-3",
+          "whatItDoes": "Note:\n<u>Underscored Material</u> = new language proposed for insertion\n[~~Bracketed material~~] = existing language proposed for deletion\nHOUSE JOINT RESOLUTION 1 - Proposed\nConstitutional Amendment 3\nPROPOSING AN AMENDMENT TO ARTICLE 12, SECTION 13\nOF  THE  CONSTITUTION  OF  NEW  MEXICO  TO  ESTABLISH",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-3#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. It is proposed to amend Article 12, Section 13 of\nthe constitution of New Mexico to read:\n\"A.  The  legislature  shall  provide  for  the  control  and\nmanagement  of  each  of  the  institutions,  except  the\nuniversity of New Mexico, by a board of regents for each"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-3#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2. The amendment proposed by this resolution shall\nbe submitted to the people for their approval or rejection at the\nnext general election or at any special election prior to that date\nthat may be called for that purpose."
+            }
+          ],
+          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+          "sourceHash": "c232bb16cf602d91bb1d9fc0cc5804723d17db44cbedcb78cae2cf5590673e88",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nm-sos:nm-2026-11-03:constitutional-amendment-4",
+          "whatItDoes": "Note:\n<u>Underscored Material</u> = new language proposed for insertion\n[~~Bracketed material~~] = existing language proposed for deletion\nHOUSE JOINT RESOLUTION 5 - Proposed\nConstitutional Amendment 4\nPROPOSING  TO  AMEND  ARTICLE  4,  SECTION  10  OF  THE\nCONSTITUTION  OF  NEW  MEXICO  TO  ALLOW  LEGISLATIVE",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-4#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. It is proposed to amend Article 4, Section 10 of the\nconstitution of New Mexico to read:\n\"<u>A.</u> Each  member  of  the  legislature  ~~[shall]~~ <u>is  entitled</u>\n<u>to</u> receive:\n~~[A.~~] <u>(1)</u> per diem at the internal revenue service\nper diem rate for the city of Santa Fe for each"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:constitutional-amendment-4#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2. The amendment proposed by this resolution shall be\nsubmitted to the people for their approval or rejection at the\n2028 general election."
+            }
+          ],
+          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+          "sourceHash": "ad0c73d0c3efba20985241dd6e60d90f5ef9bf7529bf6492e947675990779974",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nm-sos:nm-2026-11-03:bond-question-1",
+          "whatItDoes": "1                                  AN ACT",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "12        SECTION 1.    SHORT TITLE.--This act may be cited as the\n\n13   \"2026 Capital Projects General Obligation Bond Act\"."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "14        SECTION 2.    PURPOSE.--For the purpose of providing funds\n\n15   for capital expenditures as authorized in the 2026 Capital\n\n16   Projects General Obligation Bond Act, general obligation\n\n17   indebtedness of the state is authorized for the purposes and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "19        SECTION 3.    BOND TERMS.--\n\n20             A.   The state board of finance, except as limited\n\n21   by the 2026 Capital Projects General Obligation Bond Act,\n\n22   shall determine the terms, covenants and conditions of bonds\n\n23   issued pursuant to that act, including:"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "9         SECTION 4.   EXPENDITURES.--The proceeds from the sale of\n\n10   the bonds shall be expended solely for providing money to be\n\n11   distributed for the purposes and in amounts not to exceed the\n\n12   amounts set forth in Section 10 of the 2026 Capital Projects"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "18        SECTION 5.   SALE.--The bonds authorized under the 2026\n\n19   Capital Projects General Obligation Bond Act shall be sold by\n\n20   the state board of finance at such time and in such manner\n\n21   and amounts as the board may elect.   The bonds may be sold at"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "2         SECTION 6.   EXPENSES.--The expenses incurred by the\n\n3    state board of finance in or relating to the preparation and\n\n4    sale of the bonds shall be paid out of the proceeds from the\n\n5    sale of the bonds, and all rebate, penalty, interest and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "Section 7",
+              "what": "10        SECTION 7.   PROPERTY TAX LEVY.--To provide for the\n\n11   payment of the principal of and interest on the bonds issued\n\n12   and sold pursuant to the provisions of the 2026 Capital\n\n13   Projects General Obligation Bond Act, there shall be and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "Section 8",
+              "what": "3         SECTION 8.   TREASURER--DUTIES.--The state treasurer\n\n4    shall keep separate accounts of all money collected pursuant\n\n5    to the taxes imposed and levied pursuant to the provisions of\n\n6    the 2026 Capital Projects General Obligation Bond Act and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "Section 9",
+              "what": "10        SECTION 9.   IRREPEALABLE CONTRACT--AUTHORITY FOR\n\n11   ISSUANCE.--An owner of bonds issued pursuant to the\n\n12   provisions of the 2026 Capital Projects General Obligation\n\n13   Bond Act may, either at law or in equity, by suit, action or\n\n14   mandamus, enforce and compel the performance of the duties"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "Section 10",
+              "what": "7         SECTION 10.     PROJECTS.--The proceeds from the sale of\n\n8    bonds issued under the provisions of the 2026 Capital\n\n9    Projects General Obligation Bond Act shall be appropriated to\n\n10   the following state agencies and institutions as follows for\n\n11   the purposes and in the amounts specified:"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-11",
+              "number": "11",
+              "kind": "PROGRAM",
+              "label": "Section 11",
+              "what": "4         SECTION 11.   ELECTION.--\n\n5              A.   Bonds issued pursuant to the 2026 Capital\n\n6    Projects General Obligation Bond Act shall be submitted to\n\n7    the registered voters of the state at the general election to\n\n8    be held in November 2026, and, if they receive a majority of"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-12",
+              "number": "12",
+              "kind": "PROGRAM",
+              "label": "Section 12",
+              "what": "7         SECTION 12.    ART IN PUBLIC PLACES.--Pursuant to Section\n\n8    13-4A-4 NMSA 1978 and where applicable, the appropriations\n\n9    authorized in the 2026 Capital Projects General Obligation\n\n10   Bond Act include money for the art in public places fund."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-13",
+              "number": "13",
+              "kind": "PROGRAM",
+              "label": "Section 13",
+              "what": "11        SECTION 13.    PROJECT SCOPE--EXPENDITURES--REVERSION.--\n\n12             A.     If an appropriation for a project authorized in\n\n13   the 2026 Capital Projects General Obligation Bond Act is not\n\n14   sufficient to complete all the purposes specified, the"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-14",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "Section 14",
+              "what": "7         SECTION 14.   SEVERABILITY.--If any part or application\n\n8    of the 2026 Capital Projects General Obligation Bond Act is\n\n9    held invalid, the remainder or its application to other\n\n10   situations or persons shall not be affected."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-1#section-15",
+              "number": "15",
+              "kind": "PROGRAM",
+              "label": "Section 15",
+              "what": "11        SECTION 15.   EMERGENCY.--It is necessary for the public\n\n12   peace, health and safety that this act take effect\n\n13   immediately.<u>                                                  </u>                                                    HTRC/HB 248/ec"
+            }
+          ],
+          "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+          "sourceHash": "b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nm-sos:nm-2026-11-03:bond-question-2",
+          "whatItDoes": "1                                  AN ACT",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "12        SECTION 1.    SHORT TITLE.--This act may be cited as the\n\n13   \"2026 Capital Projects General Obligation Bond Act\"."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "14        SECTION 2.    PURPOSE.--For the purpose of providing funds\n\n15   for capital expenditures as authorized in the 2026 Capital\n\n16   Projects General Obligation Bond Act, general obligation\n\n17   indebtedness of the state is authorized for the purposes and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "19        SECTION 3.    BOND TERMS.--\n\n20             A.   The state board of finance, except as limited\n\n21   by the 2026 Capital Projects General Obligation Bond Act,\n\n22   shall determine the terms, covenants and conditions of bonds\n\n23   issued pursuant to that act, including:"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "9         SECTION 4.   EXPENDITURES.--The proceeds from the sale of\n\n10   the bonds shall be expended solely for providing money to be\n\n11   distributed for the purposes and in amounts not to exceed the\n\n12   amounts set forth in Section 10 of the 2026 Capital Projects"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "18        SECTION 5.   SALE.--The bonds authorized under the 2026\n\n19   Capital Projects General Obligation Bond Act shall be sold by\n\n20   the state board of finance at such time and in such manner\n\n21   and amounts as the board may elect.   The bonds may be sold at"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "2         SECTION 6.   EXPENSES.--The expenses incurred by the\n\n3    state board of finance in or relating to the preparation and\n\n4    sale of the bonds shall be paid out of the proceeds from the\n\n5    sale of the bonds, and all rebate, penalty, interest and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "Section 7",
+              "what": "10        SECTION 7.   PROPERTY TAX LEVY.--To provide for the\n\n11   payment of the principal of and interest on the bonds issued\n\n12   and sold pursuant to the provisions of the 2026 Capital\n\n13   Projects General Obligation Bond Act, there shall be and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "Section 8",
+              "what": "3         SECTION 8.   TREASURER--DUTIES.--The state treasurer\n\n4    shall keep separate accounts of all money collected pursuant\n\n5    to the taxes imposed and levied pursuant to the provisions of\n\n6    the 2026 Capital Projects General Obligation Bond Act and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "Section 9",
+              "what": "10        SECTION 9.   IRREPEALABLE CONTRACT--AUTHORITY FOR\n\n11   ISSUANCE.--An owner of bonds issued pursuant to the\n\n12   provisions of the 2026 Capital Projects General Obligation\n\n13   Bond Act may, either at law or in equity, by suit, action or\n\n14   mandamus, enforce and compel the performance of the duties"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "Section 10",
+              "what": "7         SECTION 10.     PROJECTS.--The proceeds from the sale of\n\n8    bonds issued under the provisions of the 2026 Capital\n\n9    Projects General Obligation Bond Act shall be appropriated to\n\n10   the following state agencies and institutions as follows for\n\n11   the purposes and in the amounts specified:"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-11",
+              "number": "11",
+              "kind": "PROGRAM",
+              "label": "Section 11",
+              "what": "4         SECTION 11.   ELECTION.--\n\n5              A.   Bonds issued pursuant to the 2026 Capital\n\n6    Projects General Obligation Bond Act shall be submitted to\n\n7    the registered voters of the state at the general election to\n\n8    be held in November 2026, and, if they receive a majority of"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-12",
+              "number": "12",
+              "kind": "PROGRAM",
+              "label": "Section 12",
+              "what": "7         SECTION 12.    ART IN PUBLIC PLACES.--Pursuant to Section\n\n8    13-4A-4 NMSA 1978 and where applicable, the appropriations\n\n9    authorized in the 2026 Capital Projects General Obligation\n\n10   Bond Act include money for the art in public places fund."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-13",
+              "number": "13",
+              "kind": "PROGRAM",
+              "label": "Section 13",
+              "what": "11        SECTION 13.    PROJECT SCOPE--EXPENDITURES--REVERSION.--\n\n12             A.     If an appropriation for a project authorized in\n\n13   the 2026 Capital Projects General Obligation Bond Act is not\n\n14   sufficient to complete all the purposes specified, the"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-14",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "Section 14",
+              "what": "7         SECTION 14.   SEVERABILITY.--If any part or application\n\n8    of the 2026 Capital Projects General Obligation Bond Act is\n\n9    held invalid, the remainder or its application to other\n\n10   situations or persons shall not be affected."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-2#section-15",
+              "number": "15",
+              "kind": "PROGRAM",
+              "label": "Section 15",
+              "what": "11        SECTION 15.   EMERGENCY.--It is necessary for the public\n\n12   peace, health and safety that this act take effect\n\n13   immediately.<u>                                                  </u>                                                    HTRC/HB 248/ec"
+            }
+          ],
+          "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+          "sourceHash": "b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nm-sos:nm-2026-11-03:bond-question-3",
+          "whatItDoes": "1                                  AN ACT",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "12        SECTION 1.    SHORT TITLE.--This act may be cited as the\n\n13   \"2026 Capital Projects General Obligation Bond Act\"."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "14        SECTION 2.    PURPOSE.--For the purpose of providing funds\n\n15   for capital expenditures as authorized in the 2026 Capital\n\n16   Projects General Obligation Bond Act, general obligation\n\n17   indebtedness of the state is authorized for the purposes and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-3",
+              "number": "3",
+              "kind": "PROGRAM",
+              "label": "Section 3",
+              "what": "19        SECTION 3.    BOND TERMS.--\n\n20             A.   The state board of finance, except as limited\n\n21   by the 2026 Capital Projects General Obligation Bond Act,\n\n22   shall determine the terms, covenants and conditions of bonds\n\n23   issued pursuant to that act, including:"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-4",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "Section 4",
+              "what": "9         SECTION 4.   EXPENDITURES.--The proceeds from the sale of\n\n10   the bonds shall be expended solely for providing money to be\n\n11   distributed for the purposes and in amounts not to exceed the\n\n12   amounts set forth in Section 10 of the 2026 Capital Projects"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-5",
+              "number": "5",
+              "kind": "PROGRAM",
+              "label": "Section 5",
+              "what": "18        SECTION 5.   SALE.--The bonds authorized under the 2026\n\n19   Capital Projects General Obligation Bond Act shall be sold by\n\n20   the state board of finance at such time and in such manner\n\n21   and amounts as the board may elect.   The bonds may be sold at"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-6",
+              "number": "6",
+              "kind": "PROGRAM",
+              "label": "Section 6",
+              "what": "2         SECTION 6.   EXPENSES.--The expenses incurred by the\n\n3    state board of finance in or relating to the preparation and\n\n4    sale of the bonds shall be paid out of the proceeds from the\n\n5    sale of the bonds, and all rebate, penalty, interest and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-7",
+              "number": "7",
+              "kind": "PROGRAM",
+              "label": "Section 7",
+              "what": "10        SECTION 7.   PROPERTY TAX LEVY.--To provide for the\n\n11   payment of the principal of and interest on the bonds issued\n\n12   and sold pursuant to the provisions of the 2026 Capital\n\n13   Projects General Obligation Bond Act, there shall be and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-8",
+              "number": "8",
+              "kind": "PROGRAM",
+              "label": "Section 8",
+              "what": "3         SECTION 8.   TREASURER--DUTIES.--The state treasurer\n\n4    shall keep separate accounts of all money collected pursuant\n\n5    to the taxes imposed and levied pursuant to the provisions of\n\n6    the 2026 Capital Projects General Obligation Bond Act and"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-9",
+              "number": "9",
+              "kind": "PROGRAM",
+              "label": "Section 9",
+              "what": "10        SECTION 9.   IRREPEALABLE CONTRACT--AUTHORITY FOR\n\n11   ISSUANCE.--An owner of bonds issued pursuant to the\n\n12   provisions of the 2026 Capital Projects General Obligation\n\n13   Bond Act may, either at law or in equity, by suit, action or\n\n14   mandamus, enforce and compel the performance of the duties"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-10",
+              "number": "10",
+              "kind": "PROGRAM",
+              "label": "Section 10",
+              "what": "7         SECTION 10.     PROJECTS.--The proceeds from the sale of\n\n8    bonds issued under the provisions of the 2026 Capital\n\n9    Projects General Obligation Bond Act shall be appropriated to\n\n10   the following state agencies and institutions as follows for\n\n11   the purposes and in the amounts specified:"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-11",
+              "number": "11",
+              "kind": "PROGRAM",
+              "label": "Section 11",
+              "what": "4         SECTION 11.   ELECTION.--\n\n5              A.   Bonds issued pursuant to the 2026 Capital\n\n6    Projects General Obligation Bond Act shall be submitted to\n\n7    the registered voters of the state at the general election to\n\n8    be held in November 2026, and, if they receive a majority of"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-12",
+              "number": "12",
+              "kind": "PROGRAM",
+              "label": "Section 12",
+              "what": "7         SECTION 12.    ART IN PUBLIC PLACES.--Pursuant to Section\n\n8    13-4A-4 NMSA 1978 and where applicable, the appropriations\n\n9    authorized in the 2026 Capital Projects General Obligation\n\n10   Bond Act include money for the art in public places fund."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-13",
+              "number": "13",
+              "kind": "PROGRAM",
+              "label": "Section 13",
+              "what": "11        SECTION 13.    PROJECT SCOPE--EXPENDITURES--REVERSION.--\n\n12             A.     If an appropriation for a project authorized in\n\n13   the 2026 Capital Projects General Obligation Bond Act is not\n\n14   sufficient to complete all the purposes specified, the"
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-14",
+              "number": "14",
+              "kind": "PROGRAM",
+              "label": "Section 14",
+              "what": "7         SECTION 14.   SEVERABILITY.--If any part or application\n\n8    of the 2026 Capital Projects General Obligation Bond Act is\n\n9    held invalid, the remainder or its application to other\n\n10   situations or persons shall not be affected."
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:bond-question-3#section-15",
+              "number": "15",
+              "kind": "PROGRAM",
+              "label": "Section 15",
+              "what": "11        SECTION 15.   EMERGENCY.--It is necessary for the public\n\n12   peace, health and safety that this act take effect\n\n13   immediately.<u>                                                  </u>                                                    HTRC/HB 248/ec"
+            }
+          ],
+          "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+          "sourceHash": "b0cd38469b089a7ebd3c36c3394b2f37b72dd2f892cf151130ba36e279d60563",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:56:12.827966+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+          "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+          "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
+          "publisher": "New Mexico Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
+            "byteLength": 379470,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+          "sourceHash": "7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34",
+          "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
+          "publisher": "New Mexico Legislature",
+          "vault": {
+            "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34.pdf",
+            "byteLength": 92874,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+          "sourceHash": "a38ab903e8f0c21bf4115a28f24bff764189cad322f1b9e19da954de3c133619",
+          "retrievedAt": "2026-10-14T05:03:48.355503Z",
+          "publisher": "New Mexico Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-9a68268e5ef3dc8c/sha256-a38ab903e8f0c21bf4115a28f24bff764189cad322f1b9e19da954de3c133619.pdf",
+            "byteLength": 236807,
+            "contentType": "application/pdf"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:45.385057Z",
-    "reviewedBy": "Codex BL-14 source conversion",
+    "reviewedAt": "2026-10-15T04:14:40.037049+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
@@ -4306,10 +5182,10 @@
         "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
         "httpStatus": 200,
         "rawHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
-        "retrievedAt": "2026-10-14T05:03:48.298147Z",
+        "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
         "publisher": "New Mexico Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official English voter guide identifies questions on all November 3, 2026 ballots and includes full legislation for constitutional amendments.",
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
         "reviewOutcome": "SUPPORTED"
       },
       {
@@ -4328,10 +5204,10 @@
         "finalUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
         "httpStatus": 200,
         "rawHash": "7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34",
-        "retrievedAt": "2026-10-14T05:09:45.385057Z",
+        "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
         "publisher": "New Mexico Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official full text of the 2026 Capital Projects General Obligation Bond Act authorizes the three statewide bond questions.",
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
         "reviewOutcome": "SUPPORTED"
       }
     ]

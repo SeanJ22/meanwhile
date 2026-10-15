@@ -11,6 +11,7 @@ import type { ManualProjectionPackage } from "./manual-projections.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { captureIntact, requirePublication, verifiedWorkerRecords, section3SourceReceipt } from "./worker-publication-evidence.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
+import { measureSourceReferenceValid } from "../ballot/measure-source-contract.ts";
 
 const text = (value: unknown) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -55,30 +56,39 @@ export function workerBallotMeasuresPackage(input: {
     ballot.election.date ||= text(fields.electionDate);
     ballot.contests.push({ id: contestId, electionId, ocdId: divisions[0].ocdId, divisionVintage: divisions[0].sourceDataset,
       title, type: "MEASURE", measureTextUrl: documentUrl, voteFor: null, termYears: null, scopeNote: text(fields.scopeNote) || null, provenance });
-    const fullText = questionText && source && !documents.some(row => Date.parse(row.observedAt) === Date.parse(document.observedAt) && row.evidence.contentHash !== source.contentHash) &&
+    const reference = document?.sourceReference;
+    const fullText = questionText && source && measureSourceReferenceValid(reference) && reference.sourceUrl === documentUrl &&
+      reference.publisher === source.sourceId &&
+      reference.sourceHash === source.contentHash.replace(/^sha256-/, "") && reference.retrievedAt === document.observedAt &&
+      reference.vault.byteLength === Buffer.byteLength(source.text) &&
+      !documents.some(row => Date.parse(row.observedAt) === Date.parse(document.observedAt) && row.evidence.contentHash !== source.contentHash) &&
       (!officialStatement || source.text.includes(officialStatement)) &&
       section3Page({ url: documentUrl, text: source.text, retrievedAt: document.observedAt,
         linkingPage: linkingPageFrom(documentUrl, pages.map(row => row.evidence)), sourcePolicy: document.sourcePolicy }, "BALLOT_MEASURE", input.now).ok;
-    if (!fullText || !document || !source) {
+    if (!fullText || !document || !source || !reference) {
       heldContests.push(`${electionName} / ${title} / full official text remains owed`);
       ballots[key] = ballot; continue;
     }
     acceptedCaptures.add(document);
     const measure: Measure = { id: `${contestId}#question`, contestId, ...(number ? { officialNumber: number } : {}), questionText, officialStatement,
+      officialText: reference,
       provenance: { ...provenance, sourceUrl: documentUrl, sourceOrg: source.sourceId, collectedAt: document.observedAt } };
     ballot.measures.push(measure);
-        // Only explicit publisher YES/NO sentences attach; null remains unknown.
     ballot.measureRecords = [...ballot.measureRecords ?? [], { contestId, whatItDoes: officialStatement || questionText,
       ...explicitVoteMeanings(`${questionText}\n${officialStatement ?? ""}`), parts: [], sourceUrl: documentUrl,
-      sourceHash: (source.sourceDocument?.contentHash ?? source.contentHash).replace(/^sha256-/, ""),
-      sourceHashKind: "CAPTURE_BYTES", writtenAt: document.observedAt }];
+      sourceHash: measure.officialText!.sourceHash, writtenAt: document.observedAt }];
     ballots[key] = ballot;
   }
   requirePublication(Object.keys(ballots).length > 0, "NO_SOURCE_BOUND_BALLOT_MEASURE");
+  const authorities = new Set<WorkerPublicationCapture>();
   for (const document of acceptedCaptures) {
     const linking = linkingPageFrom(document.evidence.canonicalUrl, pages.map(row => row.evidence));
-    if (linking) pages.filter(row => row.evidence.canonicalUrl === linking.url).forEach(row => acceptedCaptures.add(row));
+    if (linking) pages.filter(row => row.evidence.canonicalUrl === linking.url).forEach(row => { acceptedCaptures.add(row); authorities.add(row); });
   }
+  const sourceDocuments = [...new Set([checked.primary, ...acceptedCaptures])]
+    .flatMap(capture => capture.sourceReference ? [capture.sourceReference] : []);
+  const sourceAuthorities = [...authorities].flatMap(capture => capture.sourceReference ? [capture.sourceReference] : []);
+  for (const ballot of Object.values(ballots)) { ballot.sourceDocuments = sourceDocuments; ballot.sourceAuthorities = sourceAuthorities; }
   return { heldContests, package: { contractId: "ballot-contests", version: `worker:${input.parser.id}`,
     sourceThrough: new Date(Math.max(...[checked.primary, ...acceptedCaptures].map(row => Date.parse(row.observedAt)))).toISOString(), sourceReceipt: section3SourceReceipt([...new Set([checked.primary, ...acceptedCaptures])], input.now,
       "Official ballot measure reader", "Code replayed the exact registered election/jurisdiction/number and held official full text; no paraphrase or inferred vote meaning."),

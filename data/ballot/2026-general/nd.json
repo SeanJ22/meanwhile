@@ -3947,6 +3947,81 @@
             "collectedAt": "2026-10-14T05:05:04.328498+00:00",
             "verifiedAt": "2026-10-14T05:05:04.328498+00:00",
             "doorId": "fec-nd-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+            "sourceHash": "92923e8f6b42e7003b3955fdabc84f24ba5aad247855153a0f006d1aeb836e4a",
+            "retrievedAt": "2026-10-14T23:52:28.894714+00:00",
+            "publisher": "North Dakota Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-5d475bff818fccc3/sha256-92923e8f6b42e7003b3955fdabc84f24ba5aad247855153a0f006d1aeb836e4a.txt",
+              "byteLength": 2336,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+                "sourceHash": "0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca",
+                "retrievedAt": "2026-10-14T23:52:28.894714+00:00",
+                "publisher": "North Dakota Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-5d475bff818fccc3/sha256-0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca.pdf",
+                  "byteLength": 135118,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+            "sourceHash": "343c47cd292708d7f39b0bd5ed4176c3fc75a0d7027fd24039817ea9399166fa",
+            "retrievedAt": "2026-10-14T23:52:28.723602+00:00",
+            "publisher": "North Dakota Secretary of State",
+            "summary": "OFFICIAL BALLOT LANGUAGE\n                            FOR MEASURES APPEARING ON THE BALLOT\n                                      NOVEMBER 3, 2026\n\n Vote by darkening the oval next to the word “YES” or “NO” following the explanation of each measure.\n\n                                      Constitutional Measure No. 1\n                  (House Concurrent Resolution No. 3003, 2025 Session Laws, Ch. 614)\nThis constitutional measure would amend and reenact section 9 of article III and section 16 of article IV\nof the Constitution of North Dakota. The proposed amendment would require constitutional\namendments submitted to the electors, by resolution adopted by the legislative assembly proposing a\nconstitutional amendment and each initiative petition and measure proposing a constitutional\namendment, to receive an affirmative vote of at least sixty percent of those voting on the question for\nenactment.",
+            "fiscalImpact": "The estimated fiscal impact of this measure is none.",
+            "passageThreshold": "Section 16. Any amendment to this constitution may be proposed in either house of the legislative assembly. The proposed amendment may not embrace or be comprised of more than one subject. If agreed to upon a roll call by a majority of the members elected to each house, must be submitted to the electors and if a majority of the votes cast upon the question are in the affirmative, the amendment is a part of this constitution.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://ndlegis.gov/constit/a04.pdf",
+              "sourceHash": "bf115734f74c733e6eacd801fe1521960b96ba259cfade6336e99f65e9af94b6",
+              "retrievedAt": "2026-10-15T00:01:20.013886+00:00",
+              "publisher": "North Dakota Legislative Assembly",
+              "vault": {
+                "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-10b811d4a1581bbc/sha256-bf115734f74c733e6eacd801fe1521960b96ba259cfade6336e99f65e9af94b6.txt",
+                "byteLength": 428,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://ndlegis.gov/constit/a04.pdf",
+                  "sourceHash": "ba76a60dc8d8848398b3ee2d8182fc0043024779b842d8c0096882df81a0d8a0",
+                  "retrievedAt": "2026-10-15T00:01:20.013886+00:00",
+                  "publisher": "North Dakota Legislative Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-10b811d4a1581bbc/sha256-ba76a60dc8d8848398b3ee2d8182fc0043024779b842d8c0096882df81a0d8a0.pdf",
+                    "byteLength": 62958,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-1600ddd45d4d63e0/sha256-343c47cd292708d7f39b0bd5ed4176c3fc75a0d7027fd24039817ea9399166fa.txt",
+              "byteLength": 1082,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+                "sourceHash": "53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280",
+                "retrievedAt": "2026-10-14T23:52:28.723602+00:00",
+                "publisher": "North Dakota Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-1600ddd45d4d63e0/sha256-53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280.pdf",
+                  "byteLength": 224435,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -3961,16 +4036,208 @@
             "collectedAt": "2026-10-14T05:05:04.462169+00:00",
             "verifiedAt": "2026-10-14T05:05:04.462169+00:00",
             "doorId": "fec-nd-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
+            "sourceHash": "cac102df564aec6099d9bed7eb3e55b782cc9cd303fe0eb2f8e731d243173254",
+            "retrievedAt": "2026-10-14T23:52:29.105080+00:00",
+            "publisher": "North Dakota Secretary of State",
+            "vault": {
+              "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-b45bf383809935f9/sha256-cac102df564aec6099d9bed7eb3e55b782cc9cd303fe0eb2f8e731d243173254.txt",
+              "byteLength": 3494,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
+                "sourceHash": "5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689",
+                "retrievedAt": "2026-10-14T23:52:29.105080+00:00",
+                "publisher": "North Dakota Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-b45bf383809935f9/sha256-5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689.pdf",
+                  "byteLength": 177865,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+            "sourceHash": "3f40bd5f224cd856fa922f749fc7ce87b2681ea4d4d5b87163d5c8c3df55a70c",
+            "retrievedAt": "2026-10-14T23:52:28.819259+00:00",
+            "publisher": "North Dakota Secretary of State",
+            "summary": "OFFICIAL BALLOT LANGUAGE\n                            FOR MEASURES APPEARING ON THE BALLOT\n                                      NOVEMBER 3, 2026\n\n Vote by darkening the oval next to the word “YES” or “NO” following the explanation of each measure.\n\n                                          Initiated Constitutional\n                                               Measure No. 2\nThis initiated measure amendment would amend and add a new section to article VIII of the North\nDakota Constitution. It would mandate all public school districts, public schools, and public charter\nschools to provide one breakfast and one lunch each school day to enrolled students at no cost to the\nstudent, parent, or guardians. It would allow nonpublic schools, Bureau of Indian Education schools, and\nother tribal schools the option to provide the same. It would require the State of North Dakota to\nreimburse school districts and schools at one hundred percent of the current rates used by the state for\nfree meals, and the rate shall be adjusted annually for inflation. It would require the legislative assembly\nto identify a source of funds for reimbursement and if a source of funds is unable to be identified,\nreimbursement funds would be appropriated from the legacy earnings fund. This amendment would\nsupersede any other part of the constitution that conflicts with it.",
+            "fiscalImpact": "The estimated fiscal impact of this measure is a $124.3 million to $134.3 million increase in ongoing\nbiennial expenditures for the 2027–2029 biennium and will be adjusted for inflation every year after that.",
+            "passageThreshold": "Section 8. If a majority of votes cast upon an initiated or a referred measure are affirmative, it shall be deemed enacted.",
+            "passageThresholdSource": {
+              "sourceUrl": "https://ndlegis.gov/constit/a03.pdf",
+              "sourceHash": "55e5f48b91f84c491dd386bc445c5538f397b949bdd1da1093dd29b9769d1f7b",
+              "retrievedAt": "2026-10-15T00:00:43.512269+00:00",
+              "publisher": "North Dakota Legislative Assembly",
+              "vault": {
+                "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-379468f6a77d396b/sha256-55e5f48b91f84c491dd386bc445c5538f397b949bdd1da1093dd29b9769d1f7b.txt",
+                "byteLength": 123,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://ndlegis.gov/constit/a03.pdf",
+                  "sourceHash": "e522d9e2a02104b258228ea3bd1234bb078d60b8dfd57d3bf2d647a0fbffdd0c",
+                  "retrievedAt": "2026-10-15T00:00:43.512269+00:00",
+                  "publisher": "North Dakota Legislative Assembly",
+                  "vault": {
+                    "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-379468f6a77d396b/sha256-e522d9e2a02104b258228ea3bd1234bb078d60b8dfd57d3bf2d647a0fbffdd0c.pdf",
+                    "byteLength": 52103,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "vault": {
+              "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-112d6654a9cb224c/sha256-3f40bd5f224cd856fa922f749fc7ce87b2681ea4d4d5b87163d5c8c3df55a70c.txt",
+              "byteLength": 1695,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+                "sourceHash": "00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b",
+                "retrievedAt": "2026-10-14T23:52:28.819259+00:00",
+                "publisher": "North Dakota Secretary of State",
+                "vault": {
+                  "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-112d6654a9cb224c/sha256-00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b.pdf",
+                  "byteLength": 213177,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "measureRecords": [
+        {
+          "contestId": "nd-sos-2026-general:measure-1",
+          "whatItDoes": "Sixty-ninth Legislative Assembly of North Dakota\nIn Regular Session Commencing Tuesday, January 7, 2025",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nd-sos-2026-general:measure-1#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. AMENDMENT. Section 9 of article III of the Constitution of North Dakota is amended\nand reenacted as follows:\n\nSection 9. A constitutional amendment may be proposed by initiative petition. If signed by\nelectors equal in number to four percent of the resident population of the state at the last federal"
+            },
+            {
+              "id": "nd-sos-2026-general:measure-1#section-2",
+              "number": "2",
+              "kind": "PROGRAM",
+              "label": "Section 2",
+              "what": "SECTION 2. AMENDMENT. Section 16 of article IV of the Constitution of North Dakota is amended\nand reenacted as follows:\n\nSection 16. Any amendment to this constitution may be proposed in either house of the\nlegislative assembly~~, and if~~<u>."
+            }
+          ],
+          "sourceUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+          "sourceHash": "92923e8f6b42e7003b3955fdabc84f24ba5aad247855153a0f006d1aeb836e4a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:40.019415+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-sos-2026-general:measure-2",
+          "whatItDoes": "IF TEXT IS UNDERSCORED, IT IS NEW TEXT BEING ADDED. IF TEXT IS STRUCK THROUGH, IT IS TEXT BEING DELETED. IF TEXT IS NOT UNDERSCORED OR\nOVERSTRUCK, THE TEXT IS THE EXISTING LAW THAT IS NOT BEING CHANGED.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "nd-sos-2026-general:measure-2#section-1",
+              "number": "1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "SECTION 1. AMENDMENT. A new Section 7 is added to Article VIII, Education, of the Constitution of the State of North Dakota:\n   1. All public school districts, public schools, and public charter schools shall — while nonpublic schools, Bureau of Indian Education schools, and other tribal schools"
+            }
+          ],
+          "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
+          "sourceHash": "cac102df564aec6099d9bed7eb3e55b782cc9cd303fe0eb2f8e731d243173254",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:57:40.019415+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
+          "sourceHash": "0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca",
+          "retrievedAt": "2026-10-14T23:52:28.894714+00:00",
+          "publisher": "North Dakota Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-5d475bff818fccc3/sha256-0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca.pdf",
+            "byteLength": 135118,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://ndlegis.gov/constit/a03.pdf",
+          "sourceHash": "e522d9e2a02104b258228ea3bd1234bb078d60b8dfd57d3bf2d647a0fbffdd0c",
+          "retrievedAt": "2026-10-15T00:00:43.512269+00:00",
+          "publisher": "North Dakota Legislative Assembly",
+          "vault": {
+            "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-379468f6a77d396b/sha256-e522d9e2a02104b258228ea3bd1234bb078d60b8dfd57d3bf2d647a0fbffdd0c.pdf",
+            "byteLength": 52103,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://ndlegis.gov/constit/a04.pdf",
+          "sourceHash": "ba76a60dc8d8848398b3ee2d8182fc0043024779b842d8c0096882df81a0d8a0",
+          "retrievedAt": "2026-10-15T00:01:20.013886+00:00",
+          "publisher": "North Dakota Legislative Assembly",
+          "vault": {
+            "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-10b811d4a1581bbc/sha256-ba76a60dc8d8848398b3ee2d8182fc0043024779b842d8c0096882df81a0d8a0.pdf",
+            "byteLength": 62958,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+          "sourceHash": "53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280",
+          "retrievedAt": "2026-10-14T23:52:28.723602+00:00",
+          "publisher": "North Dakota Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-1600ddd45d4d63e0/sha256-53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280.pdf",
+            "byteLength": 224435,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+          "sourceHash": "00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b",
+          "retrievedAt": "2026-10-14T23:52:28.819259+00:00",
+          "publisher": "North Dakota Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-112d6654a9cb224c/sha256-00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b.pdf",
+            "byteLength": 213177,
+            "contentType": "application/pdf"
+          }
+        },
+        {
+          "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
+          "sourceHash": "5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689",
+          "retrievedAt": "2026-10-14T23:52:29.105080+00:00",
+          "publisher": "North Dakota Secretary of State",
+          "vault": {
+            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-b45bf383809935f9/sha256-5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689.pdf",
+            "byteLength": 177865,
+            "contentType": "application/pdf"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:08:02.203479+00:00",
-    "reviewedBy": "BL-14 official-source conversion",
+    "reviewedAt": "2026-10-15T04:14:40.044248+00:00",
+    "reviewedBy": "Codex MS-01",
     "sources": [
       {
         "requestedUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
@@ -4017,40 +4284,66 @@
         "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
         "httpStatus": 200,
         "rawHash": "53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280",
-        "retrievedAt": "2026-10-14T05:05:04.328498+00:00",
+        "retrievedAt": "2026-10-14T23:52:28.723602+00:00",
         "publisher": "North Dakota Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 ballot language for Constitutional Measure No. 1; question converted from these PDF bytes."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
         "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
         "httpStatus": 200,
         "rawHash": "00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b",
-        "retrievedAt": "2026-10-14T05:05:04.462169+00:00",
+        "retrievedAt": "2026-10-14T23:52:28.819259+00:00",
         "publisher": "North Dakota Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 ballot language for Initiated Constitutional Measure No. 2; question converted from these PDF bytes."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
         "finalUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
         "httpStatus": 200,
         "rawHash": "0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca",
-        "retrievedAt": "2026-10-14T05:06:30.665438+00:00",
+        "retrievedAt": "2026-10-14T23:52:28.894714+00:00",
         "publisher": "North Dakota Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official full text of Constitutional Measure No. 1, House Concurrent Resolution No. 3003."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
         "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
         "httpStatus": 200,
         "rawHash": "5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689",
-        "retrievedAt": "2026-10-14T05:06:31.030905+00:00",
+        "retrievedAt": "2026-10-14T23:52:29.105080+00:00",
         "publisher": "North Dakota Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official full text of Initiated Constitutional Measure No. 2."
+        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://ndlegis.gov/constit/a04.pdf",
+        "finalUrl": "https://ndlegis.gov/constit/a04.pdf",
+        "httpStatus": 200,
+        "rawHash": "ba76a60dc8d8848398b3ee2d8182fc0043024779b842d8c0096882df81a0d8a0",
+        "retrievedAt": "2026-10-15T00:01:20.013886+00:00",
+        "publisher": "North Dakota Legislative Assembly",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://ndlegis.gov/constit/a03.pdf",
+        "finalUrl": "https://ndlegis.gov/constit/a03.pdf",
+        "httpStatus": 200,
+        "rawHash": "e522d9e2a02104b258228ea3bd1234bb078d60b8dfd57d3bf2d647a0fbffdd0c",
+        "retrievedAt": "2026-10-15T00:00:43.512269+00:00",
+        "publisher": "North Dakota Legislative Assembly",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official passage rule quoted exactly and bound to the state publication.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

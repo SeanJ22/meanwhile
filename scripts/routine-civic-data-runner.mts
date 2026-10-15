@@ -116,7 +116,7 @@ import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { join } from "node:path";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import { readCompletedWorkerResultsOf } from "../lib/control-plane/repository/worker-completion.ts";
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
@@ -169,21 +169,16 @@ import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-
 
 readFromHeldCopies();
 
-// An uncaught error ends this process through one sanitized protocol line naming the step (lib/ops/fatal-line.ts).
 let step = "reading its task selection";
 installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
-// Admit the supervisor before opening hosts or changing durable source state.
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
 /* A publish-now pass launches no child after its budget, so the runner can hand off a release between passes; what was not started stays owed. */
 const PASS_LAUNCH_DEADLINE_MS = PUBLISH_NOW ? Date.now() + PUBLISH_NOW_PASS_BUDGET_MS : Number.POSITIVE_INFINITY;
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
-// The door registry is the only door list. Every routine pass first brings the doors the system holds into the
-// registry, publishes its meeting doors for every child to read, then builds its meeting work from the registry.
-// A registry that cannot be read leaves the pass without hand-wired meeting work, and the pass says so.
 if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
@@ -237,9 +232,7 @@ const RUNNING_CODE_SHA = TASK_SELECTION.ok
   ? ADMITTED_CODE_SHA
   : null;
 
-// Manual invocation and the standing pilot share this same atomic host-local
-// door. A second runner fails before opening the store or reading due clocks;
-// the kernel releases the lease if this process dies.
+// The singleton prevents manual and scheduled supervisors from racing the same source clocks.
 step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
@@ -384,6 +377,38 @@ function safeFailure(value: string): string {
     .slice(0, 4_000) || "The source process exited without a diagnostic.";
 }
 
+async function runMeasureTranslationPass(): Promise<SupervisorFailure | null> {
+  if (PUBLISH_NOW || ONLY !== null) return null;
+  const contract = requiredManualProductionContract("plain-english-translations");
+  try {
+    const [run] = await runBoundedChildPass([{
+      id: contract.id,
+      executable: process.execPath,
+      args: ["--experimental-strip-types", ...contract.command],
+      env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT",
+        contract: contract.id, parentPid: process.pid }),
+    }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+      maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
+    if (!run) throw new Error("The measure translation process returned no result.");
+    if (run.stdout.trim()) console.log(run.stdout.trim());
+    if (run.stderr.trim()) console.warn(safeFailure(run.stderr));
+    const failure = boundedExecutionFailure(run);
+    if (failure) return failure;
+    return run.status === 0 ? null : { taskId: contract.id, code: "TRANSLATION_CHILD_EXIT_NONZERO",
+      detail: childFatalLine(run.stdout) ?? safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`) };
+  } catch (error) {
+    return { taskId: contract.id, code: "TRANSLATION_PASS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) };
+  }
+}
+
+function waitForBallotSources(runs: readonly PendingRun[]): { ready: Promise<void>; settle: (id: string) => void } {
+  const pending = new Set(runs.filter(run => (run.task.registeredContractId ?? run.task.id) === "ballot-contests").map(run => run.id));
+  let finished!: () => void;
+  const ready = new Promise<void>(resolve => { finished = resolve; });
+  if (pending.size === 0) finished();
+  return { ready, settle: id => { pending.delete(id); if (pending.size === 0) finished(); } };
+}
+
 async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[], codeChangeRetryIds: ReadonlySet<string>): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
@@ -427,7 +452,6 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   return parseRoutineDueRequests(row?.value.routineDueRequests);
 }
 
-/** Box findings carried to facts each minute; a backlog drains over the next passes. */
 const BOX_FINDINGS_PER_PASS = 300;
 
 /** Resolve the actual Admin Send for hunt work. Publication of already-verified work needs no Send;
@@ -692,9 +716,7 @@ if (!PUBLISH_NOW) {
   }
 }
 
-// Resolve every due scope at one frozen instant before launching. The provider frontier below
-// admits one least-recently-considered partition per upstream, so a host with many partitions
-// cannot stretch one pass and keep a newly due unrelated source out of the next.
+// One frozen admission time keeps a large provider backlog from starving newly due sources.
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
 try {
@@ -743,9 +765,6 @@ const clockReads = FORCE
       selectedTasks,
       (task) => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
-// Meeting sources follow their bodies' sittings; the window is decided once, at the same frozen
-// instant. A sitting's publisher-stated end decides when it concluded; an unreadable end set falls
-// back to the day bound and is reported.
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
 if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
   try {
@@ -943,9 +962,7 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
-// Every meeting child proves the registry-runtime pointer before it acquires anything. With two or
-// more in a pass, prove it once here and hand each child the attestation; a child whose pointer no
-// longer matches runs its own full proof.
+// Share the registry proof across meeting children; a changed pointer requires its own proof.
 const meetingPartitionRuns = pendingRuns.filter((pending) => pending.kind === "MEETING_PARTITION").length;
 let meetingChildAttestations: Readonly<Record<string, string>> = {};
 if (meetingPartitionRuns >= 2) {
@@ -972,7 +989,6 @@ console.log(
     `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS} (meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS}); ` +
     `per-child timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms; per-stream output=${ROUTINE_CHILD_MAX_BUFFER_BYTES} bytes`,
 );
-/** One source child: its own narrowed authority, and the pass's registry attestation for a meeting read. */
 function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
   return {
     id: pending.id,
@@ -1014,7 +1030,8 @@ function recordSourceSettlementFailures(runs: readonly BoundedChildResult[]): vo
 step = "running the source pass";
 for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
 // Awaited below, with the catch-up reads that run beside it.
-const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChildPass(
+const ballotSources = waitForBallotSources(pendingRuns);
+const sourcePass = Promise.all([runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChildPass(
   runs.map(sourceChildCommand),
   {
     cwd: ROOT,
@@ -1034,11 +1051,15 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChild
     // Retaining only the small result summary bounds memory across the full portfolio.
     discardOutputAfterSettlement: true,
   },
-));
+)), ballotSources.ready.then(runMeasureTranslationPass).then(failure => {
+  if (failure === null) return;
+  supervisorFailures.push(failure);
+  console.error(`RCD_TASK ${failure.taskId}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${failure.detail}`);
+})]).then(([runs]) => runs);
 
 async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): Promise<void> {
   try { await settlePendingRunResult(pending, run); }
-  finally { releaseChildMemory(run.id); }
+  finally { releaseChildMemory(run.id); ballotSources.settle(pending.id); }
 }
 
 async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResult): Promise<void> {
@@ -1247,7 +1268,6 @@ const readerLaunch = [
   ...readerDomains.filter((domain) => !repairDomainRacesHotReads(domain, hotReadTaskIds)),
 ];
 
-/** Once the source reads have settled: launch the Reader readbacks, racing repairs first; the gate opens when those settle. */
 function startReaderRepair(
   sourceRuns: readonly BoundedChildResult[],
 ): { readonly repair: Promise<readonly BoundedChildResult[]>; readonly unblocked: Promise<void> } {
@@ -1306,7 +1326,6 @@ const hotReadLimitsMs = {
 } as const;
 const hotReadsPastLimit = new Set<string>();
 
-/** The catch-up reads to start now: the pass's own rules over its own clock reads. */
 function admitHotReads(phase: "SOURCE" | "REPAIR", nowMs: number, slots: number, runningLanes: ReadonlySet<string>) {
   const plan = hotReadCatchUpAdmission({
     nowMs,
@@ -1335,7 +1354,6 @@ function admitHotReads(phase: "SOURCE" | "REPAIR", nowMs: number, slots: number,
   return plan;
 }
 
-/** One catch-up read: launched and settled exactly as the pass's own. */
 async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> {
   const run: PendingRun = {
     kind: MEETING_PARTITION_TASK_IDS.has(task.id) ? "MEETING_PARTITION" : "SINGLE",

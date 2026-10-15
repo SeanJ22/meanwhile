@@ -506,6 +506,55 @@
             "collectedAt": "2026-10-14T05:09:19.431021+00:00",
             "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
             "doorId": "fec-wi-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceHash": "01d868fd79a417b3a7e510404e307e119c246c8a51065dd880e1a267fd30573e",
+            "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+            "publisher": "Green County Clerk, Wisconsin",
+            "vault": {
+              "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-01d868fd79a417b3a7e510404e307e119c246c8a51065dd880e1a267fd30573e.txt",
+              "byteLength": 366,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+                "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+                "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+                "publisher": "Green County Clerk, Wisconsin",
+                "vault": {
+                  "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
+                  "byteLength": 136710,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceHash": "171f5949de75414c292e396007c7f214f4c481c6f16644e85bff27c00137e12c",
+            "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+            "publisher": "Green County Clerk, Wisconsin",
+            "summary": "Under current law, the Governor may partially veto language in a spending bill passed by the\nLegislature. The veto may result in either more or fewer taxes or fees being imposed and may\nalso result in local government entities being authorized to increase or decrease local taxes or\nfees.\n\nThe proposed amendment would add a new clause to Article V, section 10(1)(c) of the\nWisconsin Constitution, providing that the Governor’s veto “may not create or increase or\nauthorize the creation or increase of any tax or fee.” This language would not only prevent a veto\nfrom increasing any state taxes or fees, but also prevent a veto from allowing local governments,\nsuch as school districts, to increase their own taxes or fees.\n\nA “yes” vote on Question 1 would vote to amend Wis. Const. art. V, § 10(1)(c) to prohibit the\nGovernor from partially vetoing a spending bill in a way that would create or increase or\nauthorize the creation or increase of any tax or fee.\n\nA “no” vote on Question 1 would vote not to amend Wis. Const. art. V § 10(1)(c) of the\nWisconsin Constitution.",
+            "vault": {
+              "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-171f5949de75414c292e396007c7f214f4c481c6f16644e85bff27c00137e12c.txt",
+              "byteLength": 1090,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+                "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+                "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+                "publisher": "Green County Clerk, Wisconsin",
+                "vault": {
+                  "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
+                  "byteLength": 136710,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -520,6 +569,55 @@
             "collectedAt": "2026-10-14T05:09:19.431021+00:00",
             "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
             "doorId": "fec-wi-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceHash": "de062d03c0689d139fb8048c50d295b6043554ac78d91204161e752b80068ed5",
+            "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+            "publisher": "Green County Clerk, Wisconsin",
+            "vault": {
+              "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-de062d03c0689d139fb8048c50d295b6043554ac78d91204161e752b80068ed5.txt",
+              "byteLength": 818,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+                "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+                "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+                "publisher": "Green County Clerk, Wisconsin",
+                "vault": {
+                  "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
+                  "byteLength": 136710,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceHash": "5e0ae57f3d8ed7ebdc3e4afd5de4f9474025f99f90edaa8e9431aee63075653f",
+            "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+            "publisher": "Green County Clerk, Wisconsin",
+            "summary": "Under current law, Article I, section 18 of the Wisconsin Constitution, like the First Amendment\nof the U.S. Constitution, protects religious rights. In a declared state of emergency, officials may\nlimit public gatherings, including religious gatherings, so long as religious and secular gatherings\nare treated equivalently.\n\nThe proposed amendment would add a new clause to the end of Article I, section 18, prohibiting\nthe state and local governments from ordering the closure or forbidding gatherings “in places of\nworship” when there is a state of emergency. That language would prevent officials from\nforbidding gatherings in places of worship even when other types of public gatherings have been\nclosed.\n\nA “yes” vote on Question 2 would vote to amend Wis. Const. art. I, § 18. The amendment would\nprohibit the state and local governments from closing or prohibiting gatherings in places of\nworship during a state of emergency.\n\nA “no” vote on Question 2 would vote not to amend Wis. Const. art. I, § 18 of the Wisconsin\nConstitution.",
+            "vault": {
+              "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-5e0ae57f3d8ed7ebdc3e4afd5de4f9474025f99f90edaa8e9431aee63075653f.txt",
+              "byteLength": 1054,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+                "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+                "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+                "publisher": "Green County Clerk, Wisconsin",
+                "vault": {
+                  "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
+                  "byteLength": 136710,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         },
         {
@@ -534,6 +632,55 @@
             "collectedAt": "2026-10-14T05:09:19.431021+00:00",
             "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
             "doorId": "fec-wi-chief"
+          },
+          "officialText": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceHash": "266c660dc4d117d2781b6d2455eb9b31f95d80faed4e05955f0944addd686667",
+            "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+            "publisher": "Green County Clerk, Wisconsin",
+            "vault": {
+              "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-266c660dc4d117d2781b6d2455eb9b31f95d80faed4e05955f0944addd686667.txt",
+              "byteLength": 1567,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+                "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+                "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+                "publisher": "Green County Clerk, Wisconsin",
+                "vault": {
+                  "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
+                  "byteLength": 136710,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
+          },
+          "voterGuide": {
+            "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+            "sourceHash": "08122af703abc32304cc3546b1445ac6c82b4e90a6edae93df904c3e7694e2b6",
+            "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+            "publisher": "Green County Clerk, Wisconsin",
+            "summary": "Under current law, both under Article I, section 1 of the Wisconsin Constitution and the Equal\nProtection Clause of the Fourteenth Amendment to the U.S. Constitution, states and local\ngovernments may not discriminate based on race, ethnicity, color, national origin, or sex except\nunder specific circumstances. For race, color, ethnicity, or national origin, discrimination in\nfavor of or against a group is permissible only if the government has a compelling interest and a\nnarrowly tailored remedy. For sex, discrimination is permissible if it serves an important\ngovernment interest and is substantially related to that interest. Current law also makes\ndistinctions depending on whether discrimination is overt and intentional, or merely a disparate\nimpact of a neutral policy.\n\nThe proposed amendment would create a new provision, Article I, section 27, which would\nprohibit state and local governmental entities from discriminating or granting preferential\ntreatment based on race, sex, color, ethnicity, or national origin in public employment, public\neducation, public contracting, or public administration.\n\nThis language appears to impose stricter standards against discrimination than the standards\nunder current state and federal law.\n\nThe amendment contains three exceptions. It does not apply if it would cause the governmental\nentity (1) to lose eligibility for a federal program or (2) to violate federal law. And the\namendment’s prohibition on treating people differently based on sex does not apply to measures\nthat are “reasonably necessary” to the “normal operation” of public employment, education,\ncontracting, or administration.\n\nA “yes” vote on Question 3 would vote to create a new provision of the Wisconsin\nConstitution—Wis. Const. art. I, § 18, which would prohibit any governmental entity from\n\ndiscriminating or granting preferential treatment based on race, sex, color, ethnicity, or national\norigin in public employment, public education, public contracting, or public administration.\n\nA “no” vote on Question 3 would vote not to add Wis. Const. art. I § 18 to the\nWisconsin Constitution.",
+            "vault": {
+              "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-08122af703abc32304cc3546b1445ac6c82b4e90a6edae93df904c3e7694e2b6.txt",
+              "byteLength": 2141,
+              "contentType": "text/plain"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+                "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+                "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+                "publisher": "Green County Clerk, Wisconsin",
+                "vault": {
+                  "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
+                  "byteLength": 136710,
+                  "contentType": "application/pdf"
+                }
+              }
+            ]
           }
         }
       ],
@@ -551,13 +698,140 @@
             ]
           }
         }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-green-county-2026-general-question-1",
+          "whatItDoes": "[Article V] Section 10 (1) (c) In approving an appropriation bill in part, the governor may\nnot create a new word by rejecting individual letters in the words of the enrolled bill, and may\nnot create a new sentence by combining parts of 2 or more sentences of the enrolled bill, and",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wi-green-county-2026-general-question-1#section-1",
+              "number": "Section 1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "[Article V] Section 10 (1) (c) In approving an appropriation bill in part, the governor may\nnot create a new word by rejecting individual letters in the words of the enrolled bill, and may\nnot create a new sentence by combining parts of 2 or more sentences of the enrolled bill, and"
+            }
+          ],
+          "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+          "sourceHash": "01d868fd79a417b3a7e510404e307e119c246c8a51065dd880e1a267fd30573e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:46.482097+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-green-county-2026-general-question-2",
+          "whatItDoes": "[Article I] Section 18. The right of every person to worship Almighty God according to the\ndictates of conscience shall never be infringed; nor shall any person be compelled to attend, erect\nor support any place of worship, or to maintain any ministry, without consent; nor shall any",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wi-green-county-2026-general-question-2#section-1",
+              "number": "Section 1",
+              "kind": "PROGRAM",
+              "label": "Section 1",
+              "what": "[Article I] Section 18. The right of every person to worship Almighty God according to the\ndictates of conscience shall never be infringed; nor shall any person be compelled to attend, erect\nor support any place of worship, or to maintain any ministry, without consent; nor shall any"
+            }
+          ],
+          "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+          "sourceHash": "de062d03c0689d139fb8048c50d295b6043554ac78d91204161e752b80068ed5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:46.482097+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-green-county-2026-general-question-3",
+          "whatItDoes": "[Article I] Section 27 (1) In this section, “governmental entity” means the state, its political\nsubdivisions including municipalities, the University of Wisconsin System, the Technical\nCollege System, any public college or university, any public school district, and any office,",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "wi-green-county-2026-general-question-3#27-1",
+              "number": "27 (1)",
+              "kind": "PROGRAM",
+              "label": "Section 27 (1)",
+              "what": "[Article I] Section 27 (1) In this section, “governmental entity” means the state, its political\nsubdivisions including municipalities, the University of Wisconsin System, the Technical\nCollege System, any public college or university, any public school district, and any office,"
+            },
+            {
+              "id": "wi-green-county-2026-general-question-3#27-2",
+              "number": "27 (2)",
+              "kind": "PROGRAM",
+              "label": "Section 27 (2)",
+              "what": "(2) A governmental entity may not discriminate against, or grant preferential treatment to,\nany individual or group on the basis of race, sex, color, ethnicity, or national origin in public\nemployment, public education, public contracting, or public administration."
+            },
+            {
+              "id": "wi-green-county-2026-general-question-3#27-3",
+              "number": "27 (3)",
+              "kind": "PROGRAM",
+              "label": "Section 27 (3)",
+              "what": "(3) This section does not prohibit action that must be taken to establish or maintain\neligibility for any federal program, if ineligibility would result in a loss of federal funds to the\ngovernmental entity."
+            },
+            {
+              "id": "wi-green-county-2026-general-question-3#27-4",
+              "number": "27 (4)",
+              "kind": "PROGRAM",
+              "label": "Section 27 (4)",
+              "what": "(4) Nothing in this section prohibits bona fide qualifications based on sex that are\nreasonably necessary to the normal operation of public employment, public education, public\ncontracting, or public administration."
+            },
+            {
+              "id": "wi-green-county-2026-general-question-3#27-5",
+              "number": "27 (5)",
+              "kind": "PROGRAM",
+              "label": "Section 27 (5)",
+              "what": "(5) If any part or parts of this section are found to be in conflict with the United States\nConstitution or federal law, the section shall be implemented to the maximum extent that the\nUnited States Constitution and federal law permit. Any provision of this section held invalid"
+            }
+          ],
+          "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+          "sourceHash": "266c660dc4d117d2781b6d2455eb9b31f95d80faed4e05955f0944addd686667",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-10-14T23:52:46.482097+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "sourceDocuments": [
+        {
+          "sourceUrl": "https://www.dhs.wisconsin.gov/lh-depts/counties/green.htm",
+          "sourceHash": "46eda5497ae4fc7f1bdd31a86c01998c34b0d884a80ca95fd168928c0d58d391",
+          "retrievedAt": "2026-10-15T00:02:39.864830+00:00",
+          "publisher": "Wisconsin Department of Health Services",
+          "vault": {
+            "key": "project/freshness/source/www.dhs.wisconsin.gov/2026/10/15/ms-01-c8c2100926026098/sha256-46eda5497ae4fc7f1bdd31a86c01998c34b0d884a80ca95fd168928c0d58d391.html",
+            "byteLength": 158990,
+            "contentType": "text/html"
+          }
+        },
+        {
+          "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
+          "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
+          "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+          "publisher": "Green County Clerk, Wisconsin",
+          "vault": {
+            "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
+            "byteLength": 136710,
+            "contentType": "application/pdf"
+          }
+        }
+      ],
+      "sourceAuthorities": [
+        {
+          "sourceUrl": "https://www.dhs.wisconsin.gov/lh-depts/counties/green.htm",
+          "sourceHash": "46eda5497ae4fc7f1bdd31a86c01998c34b0d884a80ca95fd168928c0d58d391",
+          "retrievedAt": "2026-10-15T00:02:39.864830+00:00",
+          "publisher": "Wisconsin Department of Health Services",
+          "vault": {
+            "key": "project/freshness/source/www.dhs.wisconsin.gov/2026/10/15/ms-01-c8c2100926026098/sha256-46eda5497ae4fc7f1bdd31a86c01998c34b0d884a80ca95fd168928c0d58d391.html",
+            "byteLength": 158990,
+            "contentType": "text/html"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:53.173299+00:00",
-    "reviewedBy": "Codex BL-16",
+    "reviewedAt": "2026-10-15T04:14:39.926827+00:00",
+    "reviewedBy": "Codex MS-01 official source comparison",
     "sources": [
       {
         "requestedUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
@@ -584,10 +858,22 @@
         "finalUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
         "httpStatus": 200,
         "rawHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
-        "retrievedAt": "2026-10-14T05:09:19.431021+00:00",
+        "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
+        "publisher": "Green County Clerk, Wisconsin",
         "sourceClass": "ELECTION_AUTHORITY",
-        "publisher": "Green County Clerk",
-        "reviewedEvidence": "Official statewide referendum notice for November 3, 2026: Questions 1, 2 and 3, full proposed constitutional texts and explanatory statements, printed September 30, 2026."
+        "reviewedEvidence": "September 30, 2026 statewide referendum notice prints all three proposed amendments in full and each official explanatory statement. The source itself cites section 18 in Question 3 explanation despite the legal amendment creating section 27; the source wording is preserved.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.dhs.wisconsin.gov/lh-depts/counties/green.htm",
+        "finalUrl": "https://www.dhs.wisconsin.gov/lh-depts/counties/green.htm",
+        "httpStatus": 200,
+        "rawHash": "46eda5497ae4fc7f1bdd31a86c01998c34b0d884a80ca95fd168928c0d58d391",
+        "retrievedAt": "2026-10-15T00:02:39.864830+00:00",
+        "publisher": "Wisconsin Department of Health Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official Wisconsin government page links Green County Public Health directly at https://www.greencountywi.org/192/Public-Health, establishing greencountywi.org as the county government website. The County Clerk publishes the statewide referendum notice on that government host."
       }
     ]
   }

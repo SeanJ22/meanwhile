@@ -56,11 +56,15 @@ test("a waiting packet is not due before its time, and only an order, a shut doo
   assert.equal(packetWoken(row, signals({ changedAt: new Map([[COCHISE, "2026-10-15T09:00:00.000Z"]]) })), null, "another place's change");
 });
 
-test("a cycle reads doors and Ask's gaps once for every packet, and held changes only since the oldest wait", async () => {
+test("a cycle reads shut doors and Ask's gaps once for every packet, and held changes only since the oldest wait", async () => {
   const repos = createMemoryRepositories();
   let doorLists = 0, gapLists = 0;
-  const doors = repos.doors.list.bind(repos.doors), gaps = repos.askGapObservations.list.bind(repos.askGapObservations);
-  repos.doors.list = async () => { doorLists++; return doors(); };
+  const doors = repos.doors.listWhereNarrowed.bind(repos.doors), gaps = repos.askGapObservations.list.bind(repos.askGapObservations);
+  repos.doors.listWhereNarrowed = async (path, value, projection) => {
+    doorLists++;
+    assert.deepEqual([path, value], [["status"], "SHUT"], "only shut doors are read");
+    return doors(path, value, projection);
+  };
   repos.askGapObservations.list = async () => { gapLists++; return gaps(); };
   const since: string[] = [];
   const read = await readPacketSignals(repos, NOW, "2026-10-12T00:00:00.000Z", async from => { since.push(from); return new Map([[PIMA, NOW]]); });

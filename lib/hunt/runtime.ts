@@ -18,7 +18,7 @@ import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../control-plane/cost.ts"
 import { readRolePlaybook } from "../control-plane/playbooks.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { ABSENCE_MAX_HOLD_DEFAULT_DAYS, ABSENCE_MAX_HOLD_SETTING } from "../control-plane/scheduler/absence-hold.ts";
-import { isDoorRecord, listDoors, type DoorRecord } from "../doors/registry.ts";
+import { isDoorRecord, type DoorRecord } from "../doors/registry.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
 import type { ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { huntBrief, type HuntRole } from "./brief.ts";
@@ -49,13 +49,18 @@ const lastJobOf = (result: LastJob | undefined): LastPacketJob | null =>
 const orderedAtOf = (assignments: readonly { readonly at: string }[] | undefined): string | null =>
   (assignments ?? []).reduce<string | null>((newest, mark) => newest === null || mark.at > newest ? mark.at : newest, null);
 
-const shutNote = (door: DoorRecord): ShutDoorNote => ({ doorId: door.doorId, shutSince: door.shutSince,
+const shutNote = (door: Pick<DoorRecord, "doorId" | "shutSince" | "shutReason" | "hosts">): ShutDoorNote => ({ doorId: door.doorId, shutSince: door.shutSince,
   evidence: `${door.shutReason ?? "no reason was recorded"}; it reads ${door.hosts.join(", ") || "no recorded host"}` });
 
-/** Every government's shut doors, from one read of the doors. */
+const SHUT_FIELDS: RecordProjection = { doorId: true, ocdId: true, shutSince: true, shutReason: true, hosts: true };
+
+/** Every government's shut doors, from one read of the shut doors only. */
 async function shutDoorsByGovernment(repos: Pick<ControlPlaneRepositories, "doors">): Promise<ReadonlyMap<string, ShutDoorNote[]>> {
   const out = new Map<string, ShutDoorNote[]>();
-  for (const door of (await listDoors(repos.doors)).doors) if (door.status === "SHUT" && door.ocdId) out.set(door.ocdId, [...out.get(door.ocdId) ?? [], shutNote(door)]);
+  for (const row of await repos.doors.listWhereNarrowed(["status"], "SHUT", SHUT_FIELDS)) {
+    const door = row.value as Pick<DoorRecord, "doorId" | "ocdId" | "shutSince" | "shutReason" | "hosts">;
+    if (door.ocdId) out.set(door.ocdId, [...out.get(door.ocdId) ?? [], shutNote(door)]);
+  }
   return out;
 }
 
@@ -144,20 +149,26 @@ export function packetWoken(row: Pick<StandingObligation, "subjectId" | "waiting
   return null;
 }
 
+/** Governments whose packets are read together, so one check holds a few places' data at a time, never the country's. */
+const DUE_BATCH = 100;
+
 /** Whether each government's packet is sent this round; one that is not waits until its dead end's limit unless something wakes it. */
 export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults">,
   rows: readonly { readonly governmentId: string; readonly assignments?: readonly { readonly at: string }[] }[], now: string, signals: PacketSignals,
   read: typeof readGovernmentPackets = readGovernmentPackets): Promise<Map<string, PacketDue & { readonly waitUntil?: string }>> {
-  const ids = rows.map(row => row.governmentId);
-  const [packets, last] = await Promise.all([read(ids, now, async () => signals.asked), lastJobs(repos, ids, DUE_FIELDS)]);
   const out = new Map<string, PacketDue & { readonly waitUntil?: string }>();
-  for (const row of rows) {
-    const packet = packets.get(row.governmentId);
-    if (packet === undefined) { out.set(row.governmentId, { due: false, why: "its owed list could not be read" }); continue; }
-    const job = lastJobOf(last.get(row.governmentId));
-    const due = packetDue({ packet, last: job, orderedAt: orderedAtOf(row.assignments), shutDoors: signals.doors.get(row.governmentId) ?? [], now, maxWaitMs: signals.maxWaitMs });
-    out.set(row.governmentId, due.due ? due
-      : { ...due, waitUntil: new Date(Date.parse(job?.recordedAt ?? now) + signals.maxWaitMs).toISOString() });
+  for (let at = 0; at < rows.length; at += DUE_BATCH) {
+    const batch = rows.slice(at, at + DUE_BATCH);
+    const ids = batch.map(row => row.governmentId);
+    const [packets, last] = await Promise.all([read(ids, now, async () => signals.asked), lastJobs(repos, ids, DUE_FIELDS)]);
+    for (const row of batch) {
+      const packet = packets.get(row.governmentId);
+      if (packet === undefined) { out.set(row.governmentId, { due: false, why: "its owed list could not be read" }); continue; }
+      const job = lastJobOf(last.get(row.governmentId));
+      const due = packetDue({ packet, last: job, orderedAt: orderedAtOf(row.assignments), shutDoors: signals.doors.get(row.governmentId) ?? [], now, maxWaitMs: signals.maxWaitMs });
+      out.set(row.governmentId, due.due ? due
+        : { ...due, waitUntil: new Date(Date.parse(job?.recordedAt ?? now) + signals.maxWaitMs).toISOString() });
+    }
   }
   return out;
 }

@@ -136,6 +136,7 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_artifacts_artifact_id", "cp_log_artifacts ((record #>> '{artifactId}'))"),
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
   onlineIndex("cp_doors_ocd_id", "cp_doors ((value #>> '{ocdId}'))"),
+  onlineIndex("cp_doors_status", "cp_doors ((value #>> '{status}'))"),
   onlineIndex("cp_ask_gap_observations_body", "cp_ask_gap_observations ((value #>> '{bodyId}'))"),
 ];
 

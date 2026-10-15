@@ -8,7 +8,7 @@ import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts } from "./payload-parts.ts";
-import { PLACE_ROW_CLASSES, placeRowsOf, placeRowStatements, UNBUILT_PLACE_ROWS_SQL, type PlaceRowStatement } from "./place-rows.ts";
+import { HELD_PLACE_ROWS_SQL, PLACE_ROW_CLASSES, placeRowsOf, placeRowStatements, UNBUILT_PLACE_ROWS_SQL, type PlaceRowStatement } from "./place-rows.ts";
 import {
   type CandidateEvent,
   type CandidateState,
@@ -2104,7 +2104,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       lastKnownGoodVersionId: candidateId,
     }).where(sql`${eligibility} and ${pointerOwnsCandidate}`).returning({ candidateId: civicDataCandidates.id });
     const placeRows = PLACE_ROW_CLASSES.has(candidate.recordClass) ? placeRowStatements({ recordClass: candidate.recordClass, scope: candidate.scope,
-      versionId: candidateId, replaces: prior?.currentVersionId ?? null, set: placeRowsOf(candidate.recordClass, candidate.scope, candidate.readModel), changedAt: at }) : [];
+      versionId: candidateId, set: placeRowsOf(candidate.recordClass, candidate.scope, candidate.readModel),
+      held: await this.heldPlaceRows(candidate.recordClass, candidate.scope), changedAt: at }) : [];
     const [, promotedRows, , updatedRows] = await this.db.batch([
       this.candidateEventLock(candidateId),
       promotionWrite,
@@ -2129,7 +2130,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     };
   }
 
-  /** Builds the per-division rows of any current pointer that has none, dated by its own promotion. */
+  private async heldPlaceRows(recordClass: string, scope: string): Promise<ReadonlyMap<string, string>> {
+    const rows = (await this.db.execute(rawStatement({ text: HELD_PLACE_ROWS_SQL, params: [recordClass, scope] }))).rows as { id: string; digest: string }[];
+    return new Map(rows.map(row => [row.id, row.digest]));
+  }
+
+  /** Brings the per-division rows of any current pointer that is not at its version, dated by its own promotion. */
   async buildPlaceRows(): Promise<number> {
     this.assertMutationAuthority();
     const pending = (await this.db.execute(rawStatement({ text: UNBUILT_PLACE_ROWS_SQL, params: [JSON.stringify([...PLACE_ROW_CLASSES])] }))).rows as
@@ -2141,7 +2147,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       if (!row) continue;
       const set = placeRowsOf(pointer.record_class, pointer.scope, await this.payloadParts.load(row.payload));
       const [first, ...rest] = placeRowStatements({ recordClass: pointer.record_class, scope: pointer.scope, versionId: pointer.current_version_id,
-        replaces: null, set, changedAt: new Date(pointer.promoted_at).toISOString() }).map(statement => this.db.execute(rawStatement(statement)));
+        set, held: await this.heldPlaceRows(pointer.record_class, pointer.scope), changedAt: new Date(pointer.promoted_at).toISOString() })
+        .map(statement => this.db.execute(rawStatement(statement)));
       await this.db.batch([first!, ...rest]);
     }
     return pending.length;

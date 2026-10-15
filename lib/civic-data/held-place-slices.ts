@@ -4,7 +4,7 @@ import { withFactRegistry } from "../facts/registry-overlay.ts";
 import type { RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
 import type { CivicDataReadResult, CivicDataReadMetadata } from "./read-model.ts";
 import { placeProjectionSourceSql, readPlacePayloadParts } from "./place-payload-slices.ts";
-import { placeValueOf } from "./place-rows.ts";
+import { placeValueOf, type PlaceRow } from "./place-rows.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 
 const accepted = new Map<string, { version: string; value: unknown }>();
@@ -46,19 +46,19 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${recordClass}:${scopes.join(",")}:STORE_UNCONFIGURED`);
   const keys = [...new Set([...ids.map(id => `d:${id}`), ...bodies.map(id => `b:${id}`), ...targets.map(id => `t:${id}`)])];
   const [rows] = await query([{ text: `WITH p AS (SELECT scope, current_version_id v FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])),
-      k AS (SELECT COALESCE(array_agg(p.v || '|' || x), '{}') keys FROM p CROSS JOIN unnest($3::text[]) x)
-    SELECT p.scope, p.v, r.collection, r.member_key, r.ordinal, r.member FROM p LEFT JOIN civic_data_place_rows r ON r.version_id=p.v AND r.collection=''
+      k AS (SELECT COALESCE(array_agg($1 || '|' || p.scope || '|' || x), '{}') keys FROM p CROSS JOIN unnest($3::text[]) x)
+    SELECT p.scope, p.v, r.version_id, r.collection, r.members FROM p
+      LEFT JOIN civic_data_place_rows r ON r.record_class=$1 AND r.scope=p.scope AND r.collection='' AND r.group_key=''
     UNION ALL
-    SELECT p.scope, p.v, r.collection, r.member_key, r.ordinal, r.member FROM p JOIN civic_data_place_rows r ON r.version_id=p.v
+    SELECT p.scope, p.v, r.version_id, r.collection, r.members FROM p JOIN civic_data_place_rows r ON r.record_class=$1 AND r.scope=p.scope
       WHERE r.keys && (SELECT keys FROM k)`, params: [recordClass, [...new Set(scopes)], keys] }]);
   const result = scopes.map((scope): PlaceCaptureRead<T> => {
     const own = rows.filter(row => row.scope === scope);
-    const base = own.find(row => row.collection === "");
     if (!own.length) return { kind: "NOT_RECORDED", value: null, metadata: { recordClass, scope } };
+    const base = own.find(row => row.collection === "" && row.version_id === row.v);
     if (!base) throw new Error(`HELD_PLACE_ROWS_NOT_BUILT:${recordClass}:${scope}:${String(own[0]!.v)}`);
-    const value = placeValueOf(base.member, own.filter(row => row.collection !== "" && row.collection !== null).map(row => ({
-      collection: JSON.parse(row.collection as string) as (string | number)[], memberKey: row.member_key as string | null,
-      ordinal: row.ordinal as number, member: row.member })));
+    const value = placeValueOf(base.members, own.filter(row => row.collection !== "" && row.collection !== null)
+      .map(row => ({ collection: row.collection as string, members: row.members as PlaceRow["members"] })));
     return { kind: "PROMOTED", value: value as T, metadata: { recordClass, scope, versionId: base.v as string } };
   });
   return recordClass === "REGISTRY_RUNTIME_BINDING" ? withRegistryFacts(result, injected) : result;

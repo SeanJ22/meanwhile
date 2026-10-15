@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 
 /** One element of a promoted payload, keyed by the divisions, bodies and targets that select it. */
-export interface PlaceRow {
+interface PlaceElement {
   /** The JSON path of the array or map the element sits in. */
   readonly collection: readonly (string | number)[];
   /** The element's key when the collection is a map. */
@@ -10,6 +10,15 @@ export interface PlaceRow {
   /** `d:<division>`, `b:<body>` and `t:<target>`. */
   readonly keys: readonly string[];
   readonly member: unknown;
+}
+
+/** The elements of one collection that answer to exactly the same divisions, bodies and targets: a body's meetings, a contest's candidacies. */
+export interface PlaceRow {
+  readonly collection: string;
+  readonly groupKey: string;
+  readonly keys: readonly string[];
+  readonly digest: string;
+  readonly members: readonly { readonly o: number; readonly k: string | null; readonly m: unknown }[];
 }
 
 export interface PlaceRowSet {
@@ -37,7 +46,7 @@ const divisionsOf = (x: Json) => [...text(x.ocdId), ...text(x.divisionId)];
 interface Matched { readonly divisions?: readonly string[]; readonly bodies?: readonly string[]; readonly targets?: readonly string[] }
 
 class Builder {
-  readonly rows: PlaceRow[] = [];
+  readonly rows: PlaceElement[] = [];
   private readonly ordinals = new Map<string, number>();
   add(collection: readonly (string | number)[], member: unknown, match: Matched, memberKey: string | null = null): void {
     const path = JSON.stringify(collection);
@@ -121,7 +130,22 @@ export function placeRowsOf(recordClass: string, scope: string, payload: unknown
     for (const x of array(p.records).map(object)) b.add(["records"], x, { divisions: [...divisionsOf(x), ...text(x.stateOcdId)] });
     base = { ...without(p, "records"), records: [] };
   }
-  return { base, rows: b.rows, digests: divisionDigests(b.rows) };
+  const rows = groupRows(b.rows);
+  return { base, rows, digests: divisionDigests(rows) };
+}
+
+const sha = (text: string) => createHash("sha256").update(text).digest("hex");
+
+function groupRows(elements: readonly PlaceElement[]): PlaceRow[] {
+  const groups = new Map<string, { collection: string; keys: string[]; members: PlaceRow["members"][number][] }>();
+  for (const element of elements) {
+    const collection = JSON.stringify(element.collection), keys = [...element.keys].sort();
+    const id = `${collection}\n${keys.join("\n")}`;
+    const group = groups.get(id) ?? { collection, keys, members: [] };
+    groups.set(id, group);
+    group.members.push({ o: element.ordinal, k: element.memberKey, m: element.member });
+  }
+  return [...groups.entries()].map(([id, group]) => ({ ...group, groupKey: sha(id).slice(0, 32), digest: sha(JSON.stringify(group.members)) }));
 }
 
 /** A body's division is its id before the `#`. */
@@ -132,58 +156,67 @@ function divisionsTouched(row: PlaceRow): string[] {
 function divisionDigests(rows: readonly PlaceRow[]): Map<string, string> {
   const hashes = new Map<string, ReturnType<typeof createHash>>();
   for (const row of rows) for (const division of new Set(divisionsTouched(row))) {
-    const hash = hashes.get(division) ?? createHash("sha256");
-    hashes.set(division, hash.update(JSON.stringify([row.collection, row.memberKey, row.member])).update("\n"));
+    hashes.set(division, (hashes.get(division) ?? createHash("sha256")).update(row.digest));
   }
   return new Map([...hashes].map(([division, hash]) => [division, hash.digest("hex")]));
 }
 
-/** The slice one place reads: the base with each selected row put back where it came from, in its original order. */
-export function placeValueOf(base: unknown, rows: readonly Pick<PlaceRow, "collection" | "memberKey" | "ordinal" | "member">[]): unknown {
+/** The slice one place reads: the base with each selected element put back where it came from, in its original order. */
+export function placeValueOf(base: unknown, rows: readonly Pick<PlaceRow, "collection" | "members">[]): unknown {
   const value = structuredClone(base) as Json;
-  const ordered = [...rows].sort((a, b) => JSON.stringify(a.collection).localeCompare(JSON.stringify(b.collection)) || a.ordinal - b.ordinal);
-  for (const row of ordered) {
+  const elements = rows.flatMap(row => row.members.map(member => ({ collection: row.collection, ...member })))
+    .sort((a, b) => a.collection.localeCompare(b.collection) || a.o - b.o);
+  for (const element of elements) {
     let container: unknown = value;
-    for (const step of row.collection) container = (container as Record<string | number, unknown>)[step];
-    if (Array.isArray(container)) container.push(row.member);
-    else if (row.memberKey !== null) (container as Json)[row.memberKey] = row.member;
+    for (const step of JSON.parse(element.collection) as (string | number)[]) container = (container as Record<string | number, unknown>)[step];
+    if (Array.isArray(container)) container.push(element.m);
+    else if (element.k !== null) (container as Json)[element.k] = element.m;
   }
   return value;
 }
 
 export interface PlaceRowStatement { readonly text: string; readonly params: readonly string[] }
 
+/** What a scope's rows already hold, so a promotion writes only the groups that changed. */
+export const HELD_PLACE_ROWS_SQL = `SELECT collection || '|' || group_key AS id, digest FROM civic_data_place_rows WHERE record_class=$1 AND scope=$2`;
+
 /**
- * Writes one version's rows and its divisions' digests, each statement a no-op unless that version is the scope's
- * current pointer, then drops the version it replaced. `changedAt` marks only divisions whose digest moved.
+ * Brings a scope's rows to one version: its base, the groups whose digest moved, and none of the groups it no longer has, each
+ * statement a no-op unless that version is the scope's current pointer. Divisions whose digest moved are marked changed at `changedAt`.
  */
 export function placeRowStatements(input: { readonly recordClass: string; readonly scope: string; readonly versionId: string;
-  readonly replaces: string | null; readonly set: PlaceRowSet; readonly changedAt: string }): PlaceRowStatement[] {
-  const current = (version: string, rc: string, scope: string) =>
-    `EXISTS (SELECT 1 FROM civic_data_promotions WHERE record_class=${rc} AND scope=${scope} AND current_version_id=${version})`;
-  const rows = JSON.stringify([{ collection: "", member_key: null, ordinal: 0, keys: [], member: input.set.base },
-    ...input.set.rows.map(row => ({ collection: JSON.stringify(row.collection), member_key: row.memberKey, ordinal: row.ordinal, keys: row.keys, member: row.member }))]);
+  readonly set: PlaceRowSet; readonly held: ReadonlyMap<string, string>; readonly changedAt: string }): PlaceRowStatement[] {
+  const current = (version: string) =>
+    `EXISTS (SELECT 1 FROM civic_data_promotions WHERE record_class=$1 AND scope=$2 AND current_version_id=${version})`;
+  const changed = input.set.rows.filter(row => input.held.get(`${row.collection}|${row.groupKey}`) !== row.digest);
+  const groups = JSON.stringify([{ collection: "", group_key: "", keys: [], digest: "", members: input.set.base },
+    ...changed.map(row => ({ collection: row.collection, group_key: row.groupKey, keys: row.keys, digest: row.digest, members: row.members }))]);
+  const ids = JSON.stringify(input.set.rows.map(row => `${row.collection}|${row.groupKey}`));
   const digests = JSON.stringify(Object.fromEntries(input.set.digests));
+  const scoped = [input.recordClass, input.scope];
   return [
-    { text: `INSERT INTO civic_data_place_rows (version_id, collection, member_key, ordinal, keys, member)
-      SELECT $1, r.collection, r.member_key, r.ordinal, ARRAY(SELECT $1 || '|' || k FROM jsonb_array_elements_text(r.keys) k), r.member
-      FROM jsonb_to_recordset($2::jsonb) AS r(collection text, member_key text, ordinal integer, keys jsonb, member jsonb)
-      WHERE ${current("$1", "$3", "$4")} ON CONFLICT DO NOTHING`, params: [input.versionId, rows, input.recordClass, input.scope] },
+    { text: `INSERT INTO civic_data_place_rows (record_class, scope, collection, group_key, version_id, keys, digest, members)
+      SELECT $1, $2, g.collection, g.group_key, $3, ARRAY(SELECT $1 || '|' || $2 || '|' || k FROM jsonb_array_elements_text(g.keys) k), g.digest, g.members
+      FROM jsonb_to_recordset($4::jsonb) AS g(collection text, group_key text, keys jsonb, digest text, members jsonb) WHERE ${current("$3")}
+      ON CONFLICT (record_class, scope, collection, group_key) DO UPDATE
+        SET version_id=excluded.version_id, keys=excluded.keys, digest=excluded.digest, members=excluded.members`,
+      params: [...scoped, input.versionId, groups] },
+    { text: `DELETE FROM civic_data_place_rows r WHERE r.record_class=$1 AND r.scope=$2 AND r.collection<>'' AND ${current("$3")}
+      AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements_text($4::jsonb) i WHERE i = r.collection || '|' || r.group_key)`,
+      params: [...scoped, input.versionId, ids] },
     { text: `INSERT INTO civic_data_place_changes (record_class, scope, division_id, digest, changed_at)
-      SELECT $1, $2, d.key, d.value, $3::timestamptz FROM jsonb_each_text($4::jsonb) d WHERE ${current("$5", "$1", "$2")}
+      SELECT $1, $2, d.key, d.value, $4::timestamptz FROM jsonb_each_text($5::jsonb) d WHERE ${current("$3")}
       ON CONFLICT (record_class, scope, division_id) DO UPDATE SET digest=excluded.digest, changed_at=excluded.changed_at
       WHERE civic_data_place_changes.digest IS DISTINCT FROM excluded.digest`,
-      params: [input.recordClass, input.scope, input.changedAt, digests, input.versionId] },
-    { text: `UPDATE civic_data_place_changes SET digest='', changed_at=$3::timestamptz
-      WHERE record_class=$1 AND scope=$2 AND digest<>'' AND NOT ($4::jsonb ? division_id) AND ${current("$5", "$1", "$2")}`,
-      params: [input.recordClass, input.scope, input.changedAt, digests, input.versionId] },
-    ...(input.replaces === null || input.replaces === input.versionId ? [] : [{
-      text: `DELETE FROM civic_data_place_rows WHERE version_id=$1 AND ${current("$2", "$3", "$4")}`,
-      params: [input.replaces, input.versionId, input.recordClass, input.scope] }]),
+      params: [...scoped, input.versionId, input.changedAt, digests] },
+    { text: `UPDATE civic_data_place_changes SET digest='', changed_at=$4::timestamptz
+      WHERE record_class=$1 AND scope=$2 AND digest<>'' AND NOT ($5::jsonb ? division_id) AND ${current("$3")}`,
+      params: [...scoped, input.versionId, input.changedAt, digests] },
   ];
 }
 
-/** Current pointers of place-sliced classes with no rows yet, oldest promotion first. */
+/** Current pointers of place-sliced classes whose rows are not at that version, oldest promotion first. */
 export const UNBUILT_PLACE_ROWS_SQL = `SELECT p.record_class, p.scope, p.current_version_id, p.promoted_at::text AS promoted_at FROM civic_data_promotions p
-  WHERE p.record_class IN (SELECT jsonb_array_elements_text($1::jsonb)) AND NOT EXISTS (SELECT 1 FROM civic_data_place_rows r WHERE r.version_id=p.current_version_id AND r.collection='')
+  WHERE p.record_class IN (SELECT jsonb_array_elements_text($1::jsonb)) AND NOT EXISTS (SELECT 1 FROM civic_data_place_rows r
+    WHERE r.record_class=p.record_class AND r.scope=p.scope AND r.collection='' AND r.group_key='' AND r.version_id=p.current_version_id)
   ORDER BY p.promoted_at`;

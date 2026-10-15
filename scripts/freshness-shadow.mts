@@ -788,6 +788,7 @@ if (publicationAnchors.anchored.length) {
   console.log(`  verified standing publications advanced ${publicationAnchors.anchored.length} source clock(s)`);
 }
 
+const PACKET_CHECKS_PER_ROUND = 500;
 /* Packets read their signals once a cycle; a waiting packet wakes only on an order, a shut door or a new blank. */
 const packetObligations = sync.all.filter(o => o.active && o.id.startsWith(HUNT_PACKET_NAMESPACE));
 let packetSignals: PacketSignals | null = null;
@@ -841,7 +842,11 @@ if (continuedStandingLineages.length) console.log(`  standing source periods con
 
 /* A packet is sent only while it has an open blank and something changed since its last job. */
 {
-  const packetRows = dueThisCycle.filter(row => row.obligation.id.startsWith(HUNT_PACKET_NAMESPACE));
+  const allPacketRows = dueThisCycle.filter(row => row.obligation.id.startsWith(HUNT_PACKET_NAMESPACE))
+    .sort((a, b) => a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0);
+  // A round checks the longest-due packets up to this many; the rest stay due and are checked in later rounds.
+  const packetRows = allPacketRows.slice(0, PACKET_CHECKS_PER_ROUND);
+  for (const row of allPacketRows.slice(PACKET_CHECKS_PER_ROUND)) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
   if (packetRows.length > 0) {
     try {
       if (packetSignals === null) throw new Error("its signals were not read");
@@ -860,7 +865,7 @@ if (continuedStandingLineages.length) console.log(`  standing source periods con
           runtimeConditions.push(`hunt packet ${row.obligation.subjectId} could not be set to wait (${error instanceof Error ? error.message : String(error)}); it is looked at again next round`);
         }
       }
-      console.log(`  hunt packets: ${packetRows.length - waiting.length} of ${packetRows.length} due to be sent; ${held} waiting for an order, a shut door or a new blank` +
+      console.log(`  hunt packets: ${packetRows.length - waiting.length} of ${packetRows.length} checked due to be sent${allPacketRows.length > packetRows.length ? ` (${allPacketRows.length - packetRows.length} more checked in later rounds)` : ""}; ${held} waiting for an order, a shut door or a new blank` +
         (wokenPackets.size ? `; woken: ${[...wokenPackets].slice(0, 3).map(([id, why]) => `${id} (${why})`).join("; ")}${wokenPackets.size > 3 ? " …" : ""}` : "") +
         (waiting.length ? `; waiting: ${waiting.slice(0, 3).map(row => `${row.obligation.subjectId} (${due.get(row.obligation.subjectId)?.why ?? "unread"})`).join("; ")}${waiting.length > 3 ? " …" : ""}` : ""));
     } catch (error) {

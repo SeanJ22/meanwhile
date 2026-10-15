@@ -45,7 +45,7 @@ function nextDue(o: FreshnessObligation): string {
   return row.nextDueAt;
 }
 
-/** Six due rows, none of which may reach a worker: each lane holds all three, under different codes. */
+/** Six due rows, none of which may reach a worker: each lane holds all three, under its own codes. */
 async function heldEverywhereCycle() {
   const obligations = [
     obligation("det-open", 90),
@@ -73,15 +73,6 @@ async function heldEverywhereCycle() {
       admitDispatch: () => ({ admit: false, code: "SCHEDULED_BLACKOUT", why: "fixture blackout" }),
       research: {
         decide: (row) => ({ kind: row.obligation.id.startsWith("det-") ? "DETERMINISTIC" : "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
-        admitScout: (row) =>
-          row.obligation.id === "m-ceiling"
-            ? { admit: false, code: "CEILING", why: "fixture ceiling" }
-            : row.obligation.id === "m-freewalk"
-              ? { admit: false, code: "FREE_WALK_FIRST", why: "fixture free walk" }
-              : { admit: true },
-        modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => { throw new Error("no Scout may start"); } },
-        workerCapacity: 2,
-        scoutLeaseTtlMs: 420_000,
       },
     }),
   };
@@ -94,7 +85,7 @@ test("MW-014: each lane accounts for every due row by reason — dispatched + re
   assert.equal(lanes.deterministic.dispatched, 0);
   assert.deepEqual(lanes.deterministic.deferredBy, { NO_OPEN_OCCURRENCE: 1, DISPATCH_CEILING: 2 }, "the plain-code lane names its reasons too");
   assert.equal(lanes.model.due, 3);
-  assert.deepEqual(lanes.model.deferredBy, { CEILING: 1, FREE_WALK_FIRST: 1, SCHEDULED_BLACKOUT: 1 }, "an aggregate refusal counts under its own code, not AGGREGATE");
+  assert.deepEqual(lanes.model.deferredBy, { HUNTED_IN_PACKET: 3 }, "model rows are hunted in their government's packet and counted under that code");
   for (const lane of [lanes.deterministic, lanes.model]) {
     const reasons = Object.values(lane.deferredBy).reduce((n, v) => n + v, 0);
     assert.equal(lane.dispatched + reasons + lane.recovered, lane.due);
@@ -173,6 +164,6 @@ test("MW-071: the pulse carries the lane gauges from the research state it alrea
   assert.deepEqual(pulse.lanes, pulseLanesOf({ queue: { lanes } }));
   const model = pulse.lanes!.gauges.find((g) => g.lane === "model")!;
   assert.equal(model.waiting, 3);
-  assert.match(model.blockedBy ?? "", /^1 held because /);
+  assert.match(model.blockedBy ?? "", /^3 held because /);
   assert.equal(queueLanesOf({ queue: { lanes: { at: NOW } } }), null, "a malformed reading is not read as lanes");
 });

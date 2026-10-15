@@ -1,45 +1,26 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_NOW, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { fairAutonomousWorkIds, nextAutonomousOperation, runAutonomousCoordinator, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
-import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/workers/runtime.ts";
+import { fairAutonomousWorkIds, nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { dispatchWorkerTask } from "../lib/control-plane/workers/runtime.ts";
 import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
-import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, validateScoutFinishWithCandidates, type ScoutResult, type ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
-import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
-import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
-import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
 import { mkdtemp, rm, mkdir, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { writeFieldManual, newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
+import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { methodFixture, knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
-
-
-
-async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
-  const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
-  const attempt=(await h.repos.attempts.mustRead(metadata.attemptId)).value;
-  const rungs:ScoutRung[]=[{index:0,rung:"primary-site-navigation",tool:"fetch_public",target:held.artifact.canonicalUrl,observed:"The held publisher observation links the exact previously unregistered fixture download.",artifactIds:[metadata.artifactId],note:null,at:held.artifact.retrievedAt,ok:true,permission:"ALLOWED",transport:"REACHABLE",returnedCount:null}];
-  const finish={outcome:"ROUTE_CANDIDATE",rungsWalked:[{index:0,note:"Exact link present in vaulted publisher HTML"}],candidates:[{routeId:"scout-discovered-roster",title:"Official fixture roster",url:FIXTURE_URL,procedure:"GET the observed publisher link",relevance:"The canonical publisher observation names the owed roster.",permission:"ALLOWED" as const,permissionReading:"The actual fixture capture was permitted.",evidenceArtifactIds:[metadata.artifactId],observedOn:held.artifact.retrievedAt.slice(0,10),recordClass:"OFFICIAL_ROSTER",deterministic:true,unverified:["The linked roster has not yet been acquired."]}],findings:[],nextRungs:[],unverified:[],narrative:"Fixture route discovered from held exact source bytes."};
-  const accepted=validateScoutFinishWithCandidates({finish,rungs,toolCalls:1,stoppedBy:"MODEL",vaulted:new Set([metadata.artifactId]),inherited:new Set(),machine:{recordClass:"OFFICIAL_ROSTER",provenance:new Map([[metadata.artifactId,{artifactId:metadata.artifactId,canonicalUrl:held.artifact.canonicalUrl,retrievedAt:held.artifact.retrievedAt,permission:held.artifact.permission,methodRouteId:held.artifact.methodRouteId,httpStatus:held.artifact.httpStatus}]])}});
-  assert.deepEqual(accepted.issues,[]);
-  const result:ScoutResult={formatVersion:1,attemptId:attempt.id,obligationId:attempt.routeTaskId,routeTaskId:attempt.routeTaskId,workItemId:h.item.id,subjectId:h.item.subject,routeId:"source-observation",recordClass:"OFFICIAL_ROSTER",providerId:null,reason:"Recorded fixture source discovery",outcome:"ROUTE_CANDIDATE",stoppedBy:"MODEL",rungs,distinctEvidenceRungs:1,candidates:accepted.candidates,findings:[],nextRungs:[],unverified:[],narrative:finish.narrative,worker:{provider:"recorded-fixture",model:"none",modelReported:null},usage:{inputTokens:0,outputTokens:0,cacheReadInputTokens:0,cacheCreationInputTokens:0,turns:0,toolCalls:1},usd:0,elapsedMs:0,artifactIds:[metadata.artifactId],methodCandidateIds:[],refusal:null,startedAt:attempt.startedAt,recordedAt:attempt.endedAt!};
-  await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,h.now());
-}
 
 test("PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source", async () => {
   const h = await autonomousHarness({
@@ -78,284 +59,6 @@ test("PDC: the production standing runtime refuses queued or newly due legacy me
   assert.deepEqual(h.calls, [], "even an already queued legacy task cannot cross the production dispatch boundary");
 });
 
-test("unknown source routes to existing Scout and restart deduplicates the durable task without asserting absence", async () => {
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  const before=(await h.repos.routeTasks.list()).length;
-  const priorDispositions=await h.repos.dispositions.readAll();
-  const first=await nextAutonomousOperation(h.runtime,h.item.id); const restart=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal(first.action,"SCOUT"); assert.equal(restart.task?.id,first.task?.id); assert.equal((await h.repos.routeTasks.list()).length,before+1);
-  assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state,"OPEN");
-  assert.deepEqual(await h.repos.dispositions.readAll(),priorDispositions);
-  assert.equal(h.calls.length,0);
-});
-
-test("coordinator resumes an installed adapter learned after the failed Scout narrative",async()=>{
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  const attempt=(await h.repos.attempts.list())[0].value;
-  const result={attemptId:attempt.id,obligationId:'adapter-wait',subjectId:h.item.subject,
-    recordClass:h.item.autonomousPlan!.contract.recordClass,workItemId:h.item.id,recordedAt:h.now(),
-    refusal:null,outcome:'NEEDS_ADAPTER',recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
-    narrative:'Saved source template needs extraction code',nextRungs:[],candidates:[],findings:[],rungs:[],artifactIds:[]} as unknown as ScoutResult;
-  await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,h.now());
-  const waiting=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal(waiting.action,'BLOCKED');assert.match(waiting.reason,/AWAITING_ADAPTER/);
-  await writeFieldManual(h.repos,[newFieldManualEntry('engineer-adapter','generated-platform',{
-    role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:'generated-platform',summary:'Adapter extracted from the saved source',outcome:'REFERENCE',
-    payload:{sourceAttemptId:result.attemptId,files:['lib/sources/platform-adapters/uncapped-source-links.ts']},
-  })],h.now());
-  const ready=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal(ready.action,'SCOUT');assert.equal(ready.task?.id,waiting.task?.id);
-  assert.deepEqual(h.calls,[],'resuming saved work makes no source or model request during selection');
-});
-
-test("cycle selection uses its already joined item and history instead of reopening every full store", async () => {
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  // A normal prior selection has already registered the canonical Scout task.
-  const first=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal(first.action,"SCOUT");
-  const routeTasks=(await h.repos.routeTasks.list()).map(row=>row.value);
-  const fail=async()=>{throw new Error("REDUNDANT_CYCLE_HISTORY_READ");};
-  const runtime:AutonomousCoordinatorRuntime={...h.runtime,repos:{...h.repos,
-    workItems:{...h.repos.workItems,mustRead:fail},
-    attempts:{...h.repos.attempts,list:fail},
-    scoutResults:{...h.repos.scoutResults,readAll:fail},
-    routeTasks:{...h.repos.routeTasks,list:fail},
-  }};
-  const selected=await nextAutonomousOperation(runtime,h.item.id,[h.item],{attempts:[],scouts:[],routeTasks});
-  assert.equal(selected.action,"SCOUT");
-  assert.equal(selected.task?.workItemId,h.item.id);
-  assert.deepEqual(h.calls,[],"selecting an owed Scout does not fetch source bytes or call a provider");
-});
-
-test("coordinator joins Scout and route history once before bounded selection", async () => {
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  await nextAutonomousOperation(h.runtime,h.item.id);
-  let scoutReads=0,routeLists=0,pointReads=0,workerResultReads=0,workerResultLists=0,attemptScopeLists=0;
-  const runtime:AutonomousCoordinatorRuntime={...h.runtime,repos:{...h.repos,
-    workItems:{...h.repos.workItems,mustRead:async (...args)=>{pointReads++;return h.repos.workItems.mustRead(...args);}},
-    scoutResults:{...h.repos.scoutResults,readAll:async()=>{scoutReads++;return h.repos.scoutResults.readAll();}},
-    routeTasks:{...h.repos.routeTasks,list:async()=>{routeLists++;return h.repos.routeTasks.list();}},
-    workerResults:{...h.repos.workerResults,
-      read:async (...args)=>{workerResultReads++;return h.repos.workerResults.read(...args);},
-      readAll:async()=>{workerResultLists++;return h.repos.workerResults.readAll();}},
-    attempts:{...h.repos.attempts,listWhere:async (...args)=>{attemptScopeLists++;return h.repos.attempts.listWhere(...args);}},
-  }};
-  const cycle=await runAutonomousCoordinator(runtime,{maximum:1,maxScoutDispatches:0,concurrency:1});
-  assert.equal(cycle.decisions[0]?.action,"SCOUT");
-  assert.equal(cycle.dispatches.length,0);
-  assert.equal(scoutReads,1,"all Scout results are joined once, not scanned per WorkItem");
-  assert.equal(routeLists,1,"route tasks are joined once, not scanned per WorkItem");
-  assert.equal(pointReads,0,"selection uses the already loaded WorkItem snapshot");
-  assert.equal(workerResultLists,2,"recovery reads history first; lineage and completion validation share the fresh selection snapshot");
-  assert.equal(workerResultReads,0,"selection does not reread results per item");
-  assert.equal(attemptScopeLists,0,"completion validation uses the already loaded exact Attempt rows");
-
-  await acceptRecordedScout(h);
-  const scout = (await h.repos.scoutResults.readAll())[0]!;
-  const missingId = "ar-fixture-missing-record";
-  const missingOnly = { ...scout, candidates: scout.candidates.map(candidate => ({ ...candidate, evidenceArtifactIds: [missingId] })) };
-  const goodIds: string[] = [];
-  const plan = h.item.autonomousPlan!;
-  assert(plan.contract.schemaVersion === 2);
-  for (let index = 0; index < 3; index++) {
-    const id = `wi-fixture-valid-${index}`;
-    const subject = `fixture:nh:county-${index}`;
-    await h.repos.workItems.put(id, { ...h.item, id, subject, autonomousPlan: { ...plan,
-      contract: { ...plan.contract, subjectId: subject, jurisdiction: { ...plan.contract.jurisdiction, canonicalId: subject } },
-      sources: [], acquisition: [] } }, h.now());
-    goodIds.push(id);
-  }
-  const isolated: AutonomousCoordinatorRuntime = { ...runtime,
-    readEvidence: workerVaultResolver(h.repos, h.store, h.item.project),
-    repos: { ...runtime.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [missingOnly] } } };
-  const named = new RegExp(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${missingId}`);
-  const remaining = await runAutonomousCoordinator(isolated, { planOnly: true, concurrency: 4 });
-  assert.equal(remaining.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3,
-    "one unavailable historical source cannot discard the other three planned tasks");
-  const unresolved = remaining.decisions.find(decision => decision.workItemId === h.item.id)!;
-  assert.equal(unresolved.action, "SCOUT", "missing evidence remains acquisition work, never a grounded source");
-  assert.match(unresolved.reason, named);
-  assert.deepEqual(remaining.deferred.map(row => [row.workItemId, row.reason]), [[h.item.id, "WORKER_ARTIFACT_MISSING_OR_PARTIAL"]]);
-  assert.match(remaining.deferred[0]!.detail, new RegExp(missingId));
-  assert.equal(remaining.dispatches.length, 0);
-  assert.equal(workerResultLists,4,"the next invocation performs recovery and takes a fresh selection snapshot for all four items");
-  assert.equal(workerResultReads,0);
-  assert.equal(attemptScopeLists,0);
-
-  const mixed = { ...scout, candidates: scout.candidates.map(candidate => ({ ...candidate,
-    evidenceArtifactIds: [missingId, ...candidate.evidenceArtifactIds] })) };
-  const usable: AutonomousCoordinatorRuntime = { ...isolated,
-    repos: { ...isolated.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [mixed] } } };
-  const continued = await runAutonomousCoordinator(usable, { planOnly: true, concurrency: 4 });
-  const sameWork = continued.decisions.find(decision => decision.workItemId === h.item.id)!;
-  assert.equal(sameWork.action, "WORKER", "other retained evidence for the same work item still grounds acquisition");
-  assert.equal(sameWork.task?.workerTask?.acquisition?.route.observation.artifactId, scout.candidates[0]!.evidenceArtifactIds[0]);
-  assert.match(sameWork.reason, named);
-  assert.equal(continued.deferred.length, 1);
-  assert.match(continued.deferred[0]!.detail, new RegExp(missingId));
-  assert.equal(continued.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
-  assert.equal((await h.repos.workerResults.readAll()).length, 0, "selection cannot assert parsed or verified facts");
-  assert.deepEqual(h.calls, [], "held planning makes no source or model request");
-  const absent = await runAutonomousCoordinator({ ...isolated,
-    readEvidence: workerVaultResolver(h.repos, new MemoryEvidenceStore(), h.item.project),
-    repos: { ...isolated.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [scout] } } },
-  { planOnly: true, concurrency: 4 });
-  assert.equal(absent.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
-  assert.equal(absent.decisions.find(decision => decision.workItemId === h.item.id)?.action, "SCOUT");
-  assert.deepEqual(absent.deferred.map(row => [row.workItemId,row.reason]), [[h.item.id,"WORKER_ARTIFACT_NOT_IN_VAULT"]]);
-  assert.match(absent.deferred[0]!.detail, new RegExp(scout.candidates[0]!.evidenceArtifactIds[0]!));
-  assert.equal(absent.dispatches.length, 0);
-  const mixedVault = await runAutonomousCoordinator({ ...usable, readEvidence: async id => {
-    if (id === missingId) throw new Error("WORKER_ARTIFACT_NOT_IN_VAULT");
-    return isolated.readEvidence(id);
-  } }, { planOnly: true, concurrency: 4 });
-  const vaultSameWork = mixedVault.decisions.find(decision => decision.workItemId === h.item.id)!;
-  assert.equal(vaultSameWork.action, "WORKER");
-  assert.equal(vaultSameWork.task?.workerTask?.acquisition?.route.observation.artifactId, scout.candidates[0]!.evidenceArtifactIds[0]);
-  assert.match(vaultSameWork.reason, new RegExp(`WORKER_ARTIFACT_NOT_IN_VAULT:${missingId}`));
-  assert.equal(mixedVault.deferred.length, 1);
-  assert.equal(mixedVault.deferred[0]!.reason, "WORKER_ARTIFACT_NOT_IN_VAULT");
-  assert.equal(mixedVault.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
-  assert.equal((await h.repos.workerResults.readAll()).length, 0);
-  assert.deepEqual(h.calls, []);
-  for (const message of ["CONTROL_PLANE_REQUEST_TIMEOUT: repository read", "MODEL_PROVIDER_FAILURE:503",
-    "WORKER_ARTIFACT_PROVENANCE_REFUSED", "WORKER_ARTIFACT_NOT_IN_VAULTISH", "EvidenceCorrupted"]) {
-    const failure = new Error(message);
-    await assert.rejects(runAutonomousCoordinator({ ...usable, readEvidence: async () => { throw failure; } },
-      { planOnly: true, concurrency: 4 }), error => error === failure,
-    "only named absent held evidence is isolated; repository, provider and invalid evidence failures still propagate");
-  }
-});
-
-test("a newly observed Scout route flows to Hunter without rewriting its extraction contract",async()=>{
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[],contract:plan.contract.schemaVersion===2?{...plan.contract,sourceScope:{...plan.contract.sourceScope,canonicalUrls:["https://fixture-clerk.example.gov/unknown-extraction-shape"]}}:plan.contract})});
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
-  const planBefore=JSON.stringify(h.item.autonomousPlan); await acceptRecordedScout(h);
-  const hunter=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(hunter.task?.workerTask?.role,"ACQUIRER"); assert.equal(hunter.task?.workerTask?.acquisition?.route.url,FIXTURE_URL);
-  const dispatched=await dispatchWorkerTask(h.runtime,hunter.task!); assert.equal(dispatched.outcome,"WORKED",dispatched.detail);
-  const next=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(next.action,"SCOUT"); assert.match(next.reason,/EXTRACTION_SCOPE_UNESTABLISHED/);
-  assert.equal(JSON.stringify((await h.repos.workItems.mustRead(h.item.id)).value.autonomousPlan),planBefore);
-  assert.ok(!(await h.repos.routeTasks.list()).some(task=>task.value.workerTask?.role==="PARSER"));
-});
-
-test("an exact URL quotation from a publisher outside canonical seed scope cannot ground acquisition",async()=>{
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[],seedUrls:["https://another-publisher.example.gov/"],contract:plan.contract.schemaVersion===2?{...plan.contract,sourceScope:{...plan.contract.sourceScope,canonicalUrls:["https://another-publisher.example.gov/records"]}}:plan.contract})});
-  await acceptRecordedScout(h); assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
-  assert.ok(!(await h.repos.routeTasks.list()).some(task=>task.value.workerTask?.role==="ACQUIRER")); assert.equal(h.calls.length,0);
-});
-
-test("missing Scout transport creates one attributable policy denial; retry requires both elapsed backoff and actual availability",async()=>{
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  const first=await runAutonomousCoordinator(h.runtime,{maximum:1,maxScoutDispatches:1}); assert.equal(first.dispatches[0].outcome,"FAILED");
-  const denied=(await h.repos.attempts.mustRead(first.dispatches[0].attemptId!)).value; assert.equal(denied.outcome,"DENIED_BY_POLICY"); assert.match(denied.abortReason!,/SCOUT_MODEL_TRANSPORT_UNAVAILABLE/); assert.equal(denied.cost.requestCount,0);
-  const attempts=(await h.repos.attempts.list()).length; await runAutonomousCoordinator(h.runtime,{maximum:1}); assert.equal((await h.repos.attempts.list()).length,attempts);
-  h.advanceTo(new Date(Date.parse(denied.endedAt!)+16*60_000).toISOString()); assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
-  let calls=0; const available={...h.runtime,rollingCeilingUsd:5,scoutFor:()=>({lane:"BOUNDED_MODEL_WORKER" as const,workerFor:({holder}:{holder:string})=>({role:"SCOUT" as const,provider:"offline-fixture",version:"1",instance:holder}),run:async()=>{calls++;return {kind:"ABORTED" as const,ranAs:"BOUNDED_MODEL_WORKER" as const,cost:ZERO_COST,endedAt:h.now(),detail:"Controlled offline Scout availability proof; no civic disposition."};}})};
-  const retry=await runAutonomousCoordinator(available,{maximum:1,maxScoutDispatches:1}); assert.equal(calls,1); assert.equal(retry.scoutsAdmitted,1);
-  assert.equal((await h.repos.routeTasks.mustRead(first.dispatches[0].routeTaskId!)).value.policyReauthorizations?.[0].denial.attemptId,denied.id);
-});
-
-test("completed Scout without a candidate continues after canonical backoff with durable rungs and immutable prior history",async()=>{
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  const metadata=(await h.repos.artifacts.readAll())[0];
-  const inheritedHistories:(readonly ScoutResult[])[]=[];
-  const runtime:AutonomousCoordinatorRuntime={...h.runtime,rollingCeilingUsd:5,scoutFor:(item,task,history)=>{
-    inheritedHistories.push(history??[]);
-    return {lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"recorded-fixture",version:"no-model",instance:holder}),run:async({attemptId})=>{
-      const evidence=await h.runtime.readEvidence(metadata.artifactId); const at=h.now();
-      const rungs:ScoutRung[]=[{index:0,rung:"primary-site-navigation",tool:"read_vault",target:metadata.artifactId,
-        observed:`Read ${evidenceProjection(evidence).text.length} held UTF16 code units; this bounded control has not selected a route.`,artifactIds:[metadata.artifactId],note:null,at,ok:true,permission:"ALLOWED",transport:"NOT_ATTEMPTED"}];
-      const finish={outcome:"BLOCKED",rungsWalked:[{index:0,note:"Bounded fixture ends before remaining source ladder"}],candidates:[],findings:[],nextRungs:["site-search-or-sitemap"],unverified:["Source route remains unknown"],narrative:"Recorded bounded control; no publisher absence asserted."};
-      const accepted=validateScoutFinishWithCandidates({finish,rungs,toolCalls:1,stoppedBy:"BOUND",vaulted:new Set(),inherited:new Set([metadata.artifactId])});
-      assert.deepEqual(accepted.issues,[]);
-      const attempt=(await h.repos.attempts.mustRead(attemptId)).value;
-      const result:ScoutResult={formatVersion:1,attemptId,obligationId:task.id,routeTaskId:task.id,workItemId:item.id,subjectId:item.subject,routeId:task.routeId,
-        recordClass:"OFFICIAL_ROSTER",providerId:null,reason:"Bounded continuation control",outcome:"BLOCKED",stoppedBy:"BOUND",rungs,distinctEvidenceRungs:1,
-        candidates:accepted.candidates,findings:[],nextRungs:finish.nextRungs,unverified:finish.unverified,narrative:finish.narrative,
-        worker:{provider:"recorded-fixture",model:"none",modelReported:null},usage:{inputTokens:0,outputTokens:0,cacheReadInputTokens:0,cacheCreationInputTokens:0,turns:0,toolCalls:1},
-        usd:0,elapsedMs:0,artifactIds:[],methodCandidateIds:[],refusal:null,startedAt:attempt.startedAt,recordedAt:at};
-      await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,at);
-      return {kind:"DISPOSED",ranAs:"BOUNDED_MODEL_WORKER",endedAt:at,cost:{...ZERO_COST,usd:0,requestCount:0,inputTokens:0,outputTokens:0},artifacts:[],
-        disposition:{disposition:"BLOCKED_CURRENTLY",observation:null,permission:"ALLOWED",transport:"OTHER_NAMED_FAILURE",note:"Controlled bound ended this fixture search; source ladder remains owed."},detail:finish.narrative};
-    }};
-  }};
-  const first=await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1}); assert.equal(first.dispatches[0].outcome,"WORKED",first.dispatches[0].detail);
-  const priorTask=await h.repos.routeTasks.mustRead(first.dispatches[0].routeTaskId!); const priorAttempt=await h.repos.attempts.mustRead(first.dispatches[0].attemptId!);
-  const priorResult=(await h.repos.scoutResults.readAll())[0]; const priorDispositions=await h.repos.dispositions.readAll();
-  assert.equal(priorTask.value.state,"DISPOSED"); assert.equal(priorAttempt.value.outcome,"COMPLETED");
-  assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"BLOCKED");
-  assert.equal((await runAutonomousCoordinator(runtime,{maximum:1})).dispatches.length,0);
-  const due=Date.parse(priorAttempt.value.endedAt!)+FIRST_BACKOFF_MINUTES*60_000;
-  h.advanceTo(new Date(due).toISOString()); const continuation=await nextAutonomousOperation(runtime,h.item.id);
-  assert.equal(continuation.action,"SCOUT"); assert.notEqual(continuation.task?.id,priorTask.id);
-  assert.ok(continuation.task?.routeId.endsWith(`:continue:${priorAttempt.id}`)); assert.match(continuation.task!.routeLabel,/site-search-or-sitemap/);
-  assert.equal((await nextAutonomousOperation(runtime,h.item.id)).task?.id,continuation.task?.id);
-  const continued=await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1}); assert.equal(continued.dispatches[0].routeTaskId,continuation.task?.id);
-  assert.equal(continued.dispatches[0].outcome,"WORKED",continued.dispatches[0].detail);
-  assert.deepEqual(inheritedHistories[1],[priorResult]);
-  assert.deepEqual(await h.repos.routeTasks.mustRead(priorTask.id),priorTask); assert.deepEqual(await h.repos.attempts.mustRead(priorAttempt.id),priorAttempt);
-  assert.deepEqual((await h.repos.scoutResults.readAll()).find(result=>result.attemptId===priorAttempt.id),priorResult);
-  const dispositions=await h.repos.dispositions.readAll();
-  for(const prior of priorDispositions) assert.deepEqual(dispositions.find(row=>row.attemptId===prior.attemptId),prior);
-  const secondAttempt=(await h.repos.attempts.mustRead(continued.dispatches[0].attemptId!)).value;
-  h.advanceTo(new Date(Date.parse(secondAttempt.endedAt!)+FIRST_BACKOFF_MINUTES*60_000).toISOString());
-  assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"BLOCKED","Repeated completed searches retain the existing doubled backoff.");
-  h.advanceTo(new Date(Date.parse(secondAttempt.endedAt!)+2*FIRST_BACKOFF_MINUTES*60_000).toISOString());
-  assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"SCOUT");
-});
-
-test("a brokered sibling capture admits one old-protocol Scout continuation before backoff, without repeating it", async () => {
-  const h = await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  const heldId = (await h.repos.artifacts.readAll())[0]!.artifactId;
-  let walks = 0;
-  const runtime: AutonomousCoordinatorRuntime = {...h.runtime, rollingCeilingUsd:100, scoutFor:(item,task)=>({
-    lane:"BOUNDED_MODEL_WORKER", workerFor:({holder})=>({role:"SCOUT",provider:"offline-fixture",version:"1",instance:holder}),
-    run:async({attemptId})=>{
-      walks++;
-      const at = h.now();
-      const attempt = (await h.repos.attempts.mustRead(attemptId)).value;
-      const result: ScoutResult = {formatVersion:1,attemptId,obligationId:task.id,routeTaskId:task.id,
-        workItemId:item.id,subjectId:item.subject,routeId:task.routeId,recordClass:"OFFICIAL_ROSTER",providerId:null,
-        reason:"Offline legacy held-protocol fixture",outcome:"BLOCKED",stoppedBy:"BOUND",rungs:[],distinctEvidenceRungs:0,
-        candidates:[],findings:[],nextRungs:["read handed saved representation"],unverified:["Source remains unresolved"],
-        narrative:"No civic facts established.",worker:{provider:"offline-fixture",model:"none",modelReported:null},
-        usage:{inputTokens:0,outputTokens:0,cacheReadInputTokens:0,cacheCreationInputTokens:0,turns:0,toolCalls:0},
-        usd:0,elapsedMs:0,artifactIds:[],methodCandidateIds:[],refusal:null,startedAt:attempt.startedAt,recordedAt:at,
-        ...(walks > 1 ? {recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION} : {})};
-      await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,at);
-      return {kind:"DISPOSED",ranAs:"BOUNDED_MODEL_WORKER",endedAt:at,cost:{...ZERO_COST,usd:0,requestCount:0,inputTokens:0,outputTokens:0},artifacts:[],
-        disposition:{disposition:"BLOCKED_CURRENTLY",observation:null,permission:"ALLOWED",transport:"OTHER_NAMED_FAILURE",
-          note:"Offline fixture keeps the obligation open."},detail:result.narrative};
-    },
-  })};
-  const first = await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1});
-  assert.equal(first.dispatches[0]?.outcome,"WORKED",first.dispatches[0]?.detail);
-  assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"BLOCKED",
-    "a sibling's capture must not bypass backoff unless the standing broker handed it to this root");
-  const brokered: AutonomousCoordinatorRuntime = {...runtime,lifetimeHuntSubject:subject=>subject===h.item.subject,
-    authorizedSiblingHeldArtifactIdsFor:item=>
-    item.id===h.item.id ? [heldId] : []};
-  const next = await nextAutonomousOperation(brokered,h.item.id);
-  assert.equal(next.action,"SCOUT");
-  assert.match(next.task!.routeId,/:continue:/);
-  assert.equal((await nextAutonomousOperation(brokered,h.item.id)).task?.id,next.task?.id,
-    "the same continuation is reused durably");
-  const second = await runAutonomousCoordinator(brokered,{maximum:1,concurrency:1});
-  assert.equal(second.dispatches[0]?.routeTaskId,next.task?.id);
-  assert.equal(walks,2);
-  assert.equal((await nextAutonomousOperation(brokered,h.item.id)).action,"BLOCKED",
-    "after a new-protocol Scout has run, ordinary debt applies to further investigation");
-});
-
-test("Scout admission does not wait for another hunt's legacy model lock",async()=>{
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
-  const before=(await h.repos.attempts.list()).length;
-  const deferred=await h.repos.locks.withLock("autonomous-model-admission",()=>runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:2}));
-  assert.equal(deferred.dispatches.length,1);
-  assert.equal(deferred.deferred.length,0);
-  assert.equal((await h.repos.attempts.list()).length,before+1);
-});
-
 test("50 hunts share admission before a larger priority hunt takes its second item", async () => {
   const h = await autonomousHarness();
   const items = Array.from({ length: 50 }, (_, i) => ({ ...h.item, id: `hunt-${i}:first`,
@@ -389,11 +92,6 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
     assert.equal(retried.outcome, "WORKED", retried.detail);
     latestFailure = (await h.repos.workerResults.readAll()).find(row => row.attemptId === retried.attemptId)!;
   }
-  const novelty=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal(novelty.action,"SCOUT"); assert.match(novelty.task!.routeId,/autonomous:novelty:/);
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).task?.id,novelty.task?.id,"restart reuses the same novelty task");
-  const scout=await runAutonomousCoordinator(h.runtime,{maximum:1,maxScoutDispatches:1});
-  assert.equal((await h.repos.attempts.mustRead(scout.dispatches[0].attemptId!)).value.outcome,"DENIED_BY_POLICY","offline fixture has no model transport; denial stays attributable");
   h.advanceTo(new Date(Date.parse(latestFailure.endedAt) + (4 * FIRST_BACKOFF_MINUTES + 1) * 60_000).toISOString());
   const retry=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(retry.task?.workerTask?.role,"ACQUIRER"); assert.notEqual(retry.task?.id,first.task?.id);
   const restart=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(restart.task?.id,retry.task?.id);
@@ -401,7 +99,7 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
   const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0]; assert.equal(activity.walk.state,"OPEN"); assert.ok(activity.timeline.some(event=>event.walk?.transport==="TIMEOUT"));
 });
 
-test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain retry, and a shut door goes to the investigation", async t => {
+test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain retry, with no paid walk", async () => {
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
   const failOnce=async()=>{
     const op=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(op.task?.workerTask?.role,"ACQUIRER",op.reason);
@@ -418,11 +116,7 @@ test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain ret
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
   h.advanceTo(new Date(Date.parse(second.endedAt)+(2*FIRST_BACKOFF_MINUTES+1)*60_000).toISOString());
   await failOnce();
-  // Three consecutive failures: the door is shut, so the investigation gets the turn before the next plain re-read is due.
-  const shut=await nextAutonomousOperation(h.runtime,h.item.id);
-  assert.equal(shut.action,"SCOUT",shut.reason); assert.match(shut.task!.routeId,/autonomous:novelty:/);
 });
-
 
 test("an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",async()=>{
   const h=await autonomousHarness(); const acquired=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
@@ -471,7 +165,7 @@ test("a judgment call (one person matched across sources) still gets an independ
   }};
   const run=await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1}); assert.equal(run.dispatches[0].outcome,"WORKED",run.dispatches[0].detail);
   const audit=(await h.repos.workerResults.readAll()).find(r=>r.result.role==="ADVERSARIAL_AUDITOR"); assert.equal(audit?.result.verdict,"BROKE");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state,"REOPENED");
 });
 
@@ -488,7 +182,7 @@ test("a stored plan that still demands verification with no authorities validate
 });
 
 test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
-  const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+  const h = await autonomousHarness();
   const legacy = { ...h.item, id: "work:legacy-held", autonomousPlan: undefined };
   await h.repos.workItems.put(legacy.id, legacy, h.now());
   const before = (await h.repos.attempts.list()).length;
@@ -504,7 +198,7 @@ test("coordinator selection hands out canonical tasks without running tools or o
   assert.equal(snapshotCalls, 1);
   assert.deepEqual(snapshot.map(item => item.id).sort(), [h.item.id, legacy.id].sort());
   assert.equal(snapshot.find(item => item.id === legacy.id)?.autonomousPlan, undefined, "held work without an autonomous plan is also available for ordering");
-  assert.equal(planned.decisions[0]?.action, "SCOUT");
+  assert.equal(planned.decisions[0]?.action, "WORKER");
   assert.equal(planned.decisions[0]?.task?.workItemId, h.item.id);
   assert.equal(planned.dispatches.length, 0);
   assert.equal((await h.repos.attempts.list()).length, before);
@@ -515,7 +209,7 @@ test("coordinator selection hands out canonical tasks without running tools or o
   const root = await mkdtemp(join(tmpdir(), "s7-lease-worker-"));
   try {
     const repos = await createFileRepositories(root);
-    const h = await autonomousHarness({ repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+    const h = await autonomousHarness({ repos });
     const method = methodFixture();
     await writeFieldManual(repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
     const selected = await nextAutonomousOperation(h.runtime, h.item.id);
@@ -535,7 +229,7 @@ test("coordinator selection hands out canonical tasks without running tools or o
     assert.ok(pids.every(pid => pid !== process.pid));
     const attempts = (await repos.attempts.list()).map(row => row.value).filter(row => row.routeTaskId === selected.task!.id);
     assert.equal(attempts.length, 1);
-    assert.equal(attempts[0]!.outcome, "DENIED_BY_POLICY");
+    assert.equal(attempts[0]!.outcome, "COMPLETED", "the selected task is a plain acquisition");
     assert.equal(results.filter(row => row.attemptId !== null).length, 2);
     assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
     // Model the late sibling arriving after a denial released its lease.
@@ -594,7 +288,8 @@ test("a worker kill timer defers unfinished work and ends only its owned process
 test("the autonomous wave loop stops at its dispatch slice even while waves keep working", async () => {
   const source = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   const start = source.indexOf("async function runAutonomousProcesses()");
-  const end = source.indexOf("let meetingsDiscovery", start);
+  const end = source.indexOf("let campaignSites", start);
+  assert.ok(start >= 0 && end > start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let calls = 0, now = 0;
   const wave = async () => { calls++; now += 20; return { dispatches: [{ outcome: calls <= 3 ? "WORKED" : "FAILED" }],
@@ -674,7 +369,7 @@ test("one work-item read failure costs one task and the same lease child reaches
   const root = await mkdtemp(join(tmpdir(), "s18-lease-read-"));
   try {
     const repos = await createFileRepositories(root);
-    const h = await autonomousHarness({ repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+    const h = await autonomousHarness({ repos });
     const method = methodFixture();
     await writeFieldManual(repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
     const selected = await nextAutonomousOperation(h.runtime, h.item.id);
@@ -698,15 +393,6 @@ test("one work-item read failure costs one task and the same lease child reaches
     assert.equal((await repos.routeTasks.mustRead(unreadable.id)).value.state, "PENDING");
     assert.equal(forks, 1);
   } finally { await rm(root, { recursive: true, force: true }); }
-});
-
- test("unchanged Scout request failures stay blocked while provider outages retain backoff", async () => {
-  const h = await autonomousHarness();
-  const base = (await h.repos.attempts.list())[0]!.value;
-  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: malformed schema" }), true);
-  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: invalid network tool schema" }), true);
-  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 429: rate limited" }), false);
-  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 503: provider unavailable" }), false);
 });
 
 test("ZIP process reports return after parent registry and election publication, with one shared pointer writer", async () => {

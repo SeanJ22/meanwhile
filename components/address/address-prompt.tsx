@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { GeographySelection } from "@/lib/census-geography/selection";
 
 import {
   houseNumberReason,
@@ -14,15 +15,9 @@ import {
   writeSessionAddress,
 } from "@/lib/geo/session-address";
 
-/**
- * The one address prompt. Asks for a street only; a house-number field appears
- * only when the street crosses a boundary or the street alone does not place.
- * Resolved division and contest ids are kept in `sessionStorage` only; the
- * house number is held in state for the request and then cleared.
- */
-
 export interface AddressPromptProps {
   zip: string;
+  selection?: GeographySelection;
   /** Fires whenever the jurisdiction picture changes; callers re-read the session scope. */
   onResolved?: (scope: { divisionIds: string[]; contestIds: string[]; splitLevels: LevelKey[] }) => void;
   /** Fires only on an unambiguous street; an ambiguous one has no single point. */
@@ -35,6 +30,8 @@ export interface AddressPromptProps {
   trigger?: string;
   /** Render expanded from the start — the who-governs pill opens straight in. */
   startOpen?: boolean;
+  /** Entry from a mail-only or unplaced ZIP accepts the reader's own city/state. */
+  postalEntry?: boolean;
   /** Class on the open form's wrapper. Never applied to the collapsed trigger. */
   className?: string;
   /** Class on the collapsed trigger's wrapper. */
@@ -45,12 +42,14 @@ type Phase = "IDLE" | "ASKING" | "WORKING" | "NEEDS_NUMBER" | "SETTLED" | "FAILE
 
 export function AddressPrompt({
   zip,
+  selection,
   onResolved,
   onPoint,
   onCleared,
   onSwitchZip,
   trigger = "Add your address",
   startOpen = false,
+  postalEntry = false,
   className,
   triggerClassName,
 }: AddressPromptProps) {
@@ -72,7 +71,7 @@ export function AddressPrompt({
 
   /* An address already given this session for this zip is reused, never asked again. */
   useEffect(() => {
-    const held = sessionAddressFor(zip);
+    const held = sessionAddressFor(zip, selection);
     if (!held) return;
     const id = window.setTimeout(() => {
       setStreet(held.streetLabel);
@@ -98,6 +97,8 @@ export function AddressPrompt({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           zip,
+          ...(selection ? { selection } : {}),
+          ...(postalEntry ? { postalEntry: true } : {}),
           street: street.trim(),
           ...(withNumber ? { houseNumber: withNumber } : {}),
         }),
@@ -123,12 +124,7 @@ export function AddressPrompt({
       setResolution(result);
 
       if (result.status === "FAILED") {
-        /*
-         * With no house number the resolver probes a fixed ladder of sample
-         * numbers; a street whose range excludes them all comes back FAILED.
-         * That is a miss on our guesses, so ask for the number. Only a supplied
-         * number that still fails is a real failure.
-         */
+
         if (!withNumber && !result.resolvesInZip) {
           setError(null);
           setPhase("NEEDS_NUMBER");
@@ -151,17 +147,14 @@ export function AddressPrompt({
       const divisionIds = result.levels.filter((l) => l.certain).flatMap((l) => l.divisionIds);
       const splitLevels = result.status === "AMBIGUOUS" ? result.split : [];
 
-      /*
-       * Partial ambiguity resolves partially: whatever IS confirmed is written
-       * and announced now, before the house-number question is asked. The
-       * caller drops the hedge on those rows immediately.
-       */
+
       writeSessionAddress({
         zip,
         contestIds,
         divisionIds,
         splitLevels,
         streetLabel: street.trim(),
+        ...(selection ? { selection } : {}),
       });
       onResolved?.({ divisionIds, contestIds, splitLevels });
       if (
@@ -314,14 +307,14 @@ export function AddressPrompt({
   /* ------------------------------------------------- the street ask --- */
   return (
     <div className={`address-prompt ${className ?? ""}`}>
-      <p className="address-prompt-ask">What street do you live on?</p>
+      <p className="address-prompt-ask">{postalEntry ? "Your street, city and state" : "What street do you live on?"}</p>
       <div className="address-prompt-fields">
         <input
           ref={streetRef}
           type="text"
           value={street}
-          placeholder="Street"
-          aria-label="Street"
+          placeholder={postalEntry ? "Street, city, state" : "Street"}
+          aria-label={postalEntry ? "Street address" : "Street"}
           onChange={(e) => {
             setStreet(e.target.value);
             setError(null);

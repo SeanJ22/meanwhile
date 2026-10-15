@@ -129,10 +129,14 @@ test("COCHISE WIRES: the Board of Supervisors' category feed becomes its whole-f
   assert.deepEqual(planDerivedVersion([], decisions).promoted, [derivedWiringKey("ICAL", `${OCD}#governing`, BOS_FEED)]);
 });
 
-test("STRICT: a category naming another body, a generic category, a partial name and a feed on another host never give a whole-feed row", async () => {
+test("generic and partial category names and another host's feed never give a whole-feed row", async () => {
   const walked = await walk(SITE());
   const indexStep = walked.attempt.steps.find((s) => s.url === INDEX_URL)!;
-  for (const category of ["Planning and Zoning Commission", "Meetings", "Main Calendar", "Board of Supervisors Meetings", "Supervisors"]) {
+  const named = INDEX.replace(">Board of Supervisors</a>", ">Planning and Zoning Commission</a>");
+  const subBody = review(walked.attempt, id => id === indexStep.artifactId ? { ...walked.bodies.get(id)!, text: named } : walked.bodies.get(id) ?? null);
+  assert.ok(subBody.accepted.some(a => a.row.bodyRole === "SUB_BODY" && a.row.bodyName === "Planning and Zoning Commission"));
+  assert.ok(!subBody.accepted.some(a => a.row.bodyId === `${OCD}#governing`));
+  for (const category of ["Meetings", "Main Calendar", "Board of Supervisors Meetings", "Supervisors"]) {
     const renamed = INDEX.replace(">Board of Supervisors</a>", `>${category}</a>`);
     const result = review(walked.attempt, (id) => (id === indexStep.artifactId ? { ...walked.bodies.get(id)!, text: renamed } : walked.bodies.get(id) ?? null));
     assert.ok(!result.accepted.some((a) => a.row.bodyId === `${OCD}#governing`), `${category}: no governing row`);

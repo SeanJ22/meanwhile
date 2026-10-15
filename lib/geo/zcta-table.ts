@@ -15,12 +15,15 @@ import {
   type ZctaCentroid,
   type ZipResolution,
 } from "./zcta-core.ts";
+import type { PostalTable } from "./postal-core.ts";
 
 export type { ZctaCentroid, ZipResolution };
 export { isWellFormedZip };
 
 interface Loaded {
   centroids: CentroidTable;
+  zctaCentroids: CentroidTable;
+  postal: PostalTable;
   coverageIsComplete: boolean;
   source: { url: string; org: string; vintage: string };
 }
@@ -32,7 +35,7 @@ let loading: Promise<Loaded> | null = null;
  * share one fetch.
  */
 export function loadZctaTable(): Promise<Loaded> {
-  loading ??= import("./zcta-centroids.json").then((module) => {
+  loading ??= Promise.all([import("./zcta-centroids.json"), import("./postal-zips.json")]).then(([module, postalModule]) => {
     const file = (module.default ?? module) as unknown as {
       centroids: Record<string, [number, number]>;
       complete?: boolean;
@@ -40,38 +43,45 @@ export function loadZctaTable(): Promise<Loaded> {
       sourceOrg: string;
       vintage: string;
     };
+    const postal = (postalModule.default ?? postalModule).zips as unknown as PostalTable;
+    const centroids: CentroidTable = { ...file.centroids };
+    for (const [zip, row] of Object.entries(postal)) {
+      if (!centroids[zip] && row[0] !== null && row[1] !== null) centroids[zip] = [row[0], row[1]];
+    }
     return {
-      centroids: file.centroids as CentroidTable,
+      centroids,
+      zctaCentroids: file.centroids,
+      postal,
       coverageIsComplete: file.complete === true,
       source: { url: file.source, org: file.sourceOrg, vintage: file.vintage },
     };
-  });
+  }).catch(error => { loading = null; throw error; });
   return loading;
 }
 
 /** Start the load and do not wait. */
 export function warmZctaTable(): void {
-  void loadZctaTable();
+  void loadZctaTable().catch(() => undefined);
 }
 
 export async function resolveZipAsync(input: string): Promise<ZipResolution> {
   // The malformed case never needs the table, so a reader who typed four
   // digits is told so immediately rather than after a download.
   if (!isWellFormedZip(input)) return { ok: false, reason: "malformed" };
-  const { centroids, coverageIsComplete } = await loadZctaTable();
-  return resolveIn(centroids, coverageIsComplete, input);
+  const { centroids, postal } = await loadZctaTable();
+  return resolveIn(centroids, input, postal);
 }
 
 export async function lookupZctaAsync(input: string): Promise<ZctaCentroid | null> {
   if (!isWellFormedZip(input)) return null;
-  const { centroids } = await loadZctaTable();
-  return lookupIn(centroids, input);
+  const { centroids, postal } = await loadZctaTable();
+  return lookupIn(centroids, input, postal);
 }
 
 export async function nearestZctaAsync(
   lat: number,
   lng: number,
 ): Promise<ZctaCentroid | null> {
-  const { centroids } = await loadZctaTable();
-  return nearestIn(centroids, lat, lng);
+  const { zctaCentroids } = await loadZctaTable();
+  return nearestIn(zctaCentroids, lat, lng);
 }

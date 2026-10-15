@@ -479,16 +479,15 @@ test("WIRING: the who-governs card NAMES the question it answers", () => {
 });
 
 test("WIRING: the browse surfaces name THEIR question, and it is a different one", () => {
-  const popup = codeOf("components", "map", "popup", "district-popup.tsx");
+  const popup = codeOf("components", "map", "popup", "browsing-subject-line.tsx");
   assert.match(popup, /browsingSubject\(home, ocdId\)/, "the popup constructs BROWSING");
-  assert.match(popup, /<BrowsingSubjectLine/, "and renders the line");
 
   const modal = codeOf("components", "map", "popup", "entity-modal.tsx");
-  assert.match(modal, /<BrowsingSubjectLine/, "the large card carries it too");
+  assert.match(modal, /<BrowsingSubjectLine/, "the card renders its browsing subject");
 
   // ONE implementation, shared. Two copies of "which question is this" is how
   // two surfaces come to answer it differently.
-  assert.match(modal, /import \{ BrowsingSubjectLine \} from "\.\/district-popup"/);
+  assert.match(modal, /import \{ BrowsingSubjectLine \} from "\.\/browsing-subject-line"/);
 });
 
 test("WIRING: no browse surface WRITES the home store", () => {
@@ -499,7 +498,7 @@ test("WIRING: no browse surface WRITES the home store", () => {
    * this time as an actual mutation rather than an apparent one.
    */
   for (const parts of [
-    ["components", "map", "popup", "district-popup.tsx"],
+    ["components", "map", "popup", "browsing-subject-line.tsx"],
     ["components", "map", "popup", "entity-modal.tsx"],
   ]) {
     const source = codeOf(...parts);
@@ -763,7 +762,7 @@ test("the contract is exactly the measured set, and nothing crept in", () => {
 
 test("WIRING: the browse copy has a branch for the weaker state", () => {
   // A standing no surface reads benefits no reader: the weak sentence must exist.
-  const popup = codeOf("components", "map", "popup", "district-popup.tsx");
+  const popup = codeOf("components", "map", "popup", "browsing-subject-line.tsx");
   assert.match(popup, /subject\.standing === "OVERLAP_NOT_RULED_OUT"/);
   // JSX wraps prose, so every copy assertion here is whitespace-tolerant: a
   // guard that a re-wrap can disarm is a guard that stops guarding silently.

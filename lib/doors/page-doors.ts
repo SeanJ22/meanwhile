@@ -1,14 +1,7 @@
-/**
- * Pages that feed live facts, and sources a Scout or detective found, become
- * doors. Each page gets a door record: its host, what it holds, how often it
- * is due (the fact class's freshness window), and who found it. A page that
- * fed a live fact is also marked as having just worked. A page that is not a
- * plain web address adds none.
- */
-
 import { createHash } from "node:crypto";
 import { FRESHNESS_WINDOW_HOURS } from "../control-plane/promotion/section3.ts";
-import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
+import { retireSourceDoors } from "./source-capture.ts";
+import { classifySourceContent, SOURCE_FAMILIES } from "./source-content.ts";
 import { MAX_CHECK_MINUTES, MIN_CHECK_MINUTES, normalizeHost, upsertDerivedDoor, isDoorRecord, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 export const PAGE_DOOR_KIND = "page";
@@ -24,7 +17,10 @@ export interface PublishedPage {
   readonly recordClass: string;
   /** The body the page serves, when the publication names one. */
   readonly bodyId?: string | null;
+  readonly ocdId?: string | null;
+  readonly workItemId?: string | null;
   readonly foundBy: PageFinder | null;
+  readonly content?: { readonly text: string; readonly contentType: string; readonly names: readonly string[]; readonly belongsToPlace?: boolean };
 }
 
 /** The registry's name for a record class, as door records hold them. */
@@ -45,24 +41,28 @@ export function pageAddress(raw: string): { readonly url: string; readonly host:
     return null;
   }
   if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return null;
+  if (parsed.username || parsed.password) return null;
   const host = normalizeHost(parsed.hostname);
   if (host === null) return null;
   parsed.hash = "";
   const path = parsed.pathname.replace(/\/+$/, "");
   const keep = [...parsed.searchParams.entries()].filter(([key]) => !/^(utm_|fbclid$|gclid$)/i.test(key)).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-  const query = keep.length === 0 ? "" : `?${keep.map(([k, v]) => `${k}=${v}`).join("&")}`;
+  const query = keep.length === 0 ? "" : `?${new URLSearchParams(keep).toString()}`;
   return { url: `${parsed.protocol}//${host}${parsed.port ? `:${parsed.port}` : ""}${path}${query}`, host };
 }
 
-/** A page door's id: the record class it holds, its host, and a short hash of the address. Stable across passes. */
-export function pageDoorId(recordClass: string, address: { readonly url: string; readonly host: string }): string {
-  return `page:${holdsOf(recordClass)}:${address.host}:${createHash("sha256").update(address.url).digest("hex").slice(0, 12)}`;
+export function pageDoorId(address: { readonly url: string; readonly host: string }): string {
+  return `page:${address.host}:${createHash("sha256").update(address.url).digest("hex").slice(0, 12)}`;
 }
 
 /** The id of the door a published page becomes, or null when the page cannot be one. Same answer as the door record's own id. */
 export function doorIdOfPage(recordClass: string, url: string): string | null {
   const address = pageAddress(url);
-  return address === null || address.url.length > 1900 || recordClass.trim() === "" ? null : pageDoorId(recordClass, address);
+  return address === null || address.url.length > 1900 || recordClass.trim() === "" ? null : pageDoorId(address);
+}
+
+export function divisionOfPage(id: string | null | undefined): string | null {
+  return id?.startsWith("ocd-division/") ? id.split("#")[0] : null;
 }
 
 const FOUND_BY_NOTE: Record<PageFinder, string> = { SCOUT: "Found by a Scout.", DETECTIVE: "Found by a detective." };
@@ -73,12 +73,12 @@ export function pageDoorDraft(page: PublishedPage, earlierFoundBy: PageFinder | 
   if (address === null || address.url.length > 1900 || page.recordClass.trim() === "") return null;
   const foundBy = earlierFoundBy ?? page.foundBy;
   return {
-    doorId: pageDoorId(page.recordClass, address),
+    doorId: pageDoorId(address),
     kind: PAGE_DOOR_KIND,
-    ocdId: null,
+    ocdId: divisionOfPage(page.ocdId ?? page.bodyId),
     bodyIds: page.bodyId ? [page.bodyId] : [],
     hosts: [address.host],
-    config: { url: address.url, recordClass: page.recordClass, ...(foundBy ? { foundBy } : {}) },
+    config: { url: address.url, recordClass: page.recordClass, ...(page.workItemId ? { workItemId: page.workItemId } : {}), ...(foundBy ? { foundBy } : {}) },
     holds: [holdsOf(page.recordClass)],
     checkEveryMinutes: checkEveryFor(page.recordClass),
     notes: foundBy ? FOUND_BY_NOTE[foundBy] : "",
@@ -94,43 +94,49 @@ export interface PageDoorsResult {
   readonly skipped: number;
 }
 
-/**
- * Upsert a page door for each published page and mark it as having just worked.
- * A hand edit newer than the page's reading stands. Never throws on a store
- * failure: a published fact stays published whether or not its door record
- * could be written, and the next publication writes it again.
- */
 export async function recordPublishedPages(repo: DoorRepository, pages: readonly PublishedPage[], now: string): Promise<PageDoorsResult> {
   return recordPages(repo, pages, now, true);
 }
 
-/** The sources a recorded Scout or detective result found: each candidate's page, with what it was found for. */
-export function foundPages(result: ScoutResult): PublishedPage[] {
-  if (result.refusal !== null || !Array.isArray(result.candidates)) return [];
-  const foundBy = finderOfRole(result.researchRole);
-  return result.candidates.flatMap((candidate) => typeof candidate?.url === "string"
-    ? [{ url: candidate.url, retrievedAt: result.recordedAt, recordClass: candidate.recordClass || result.recordClass, bodyId: null, foundBy }]
-    : []);
-}
-
-/** Found sources become doors at once; nothing marks one as working until a fact from it goes live. Never throws. */
-export async function recordFoundSources(repo: DoorRepository, results: readonly ScoutResult[], now: string): Promise<PageDoorsResult> {
-  return recordPages(repo, results.flatMap(foundPages), now, false);
+export function namesOfDivision(id: string | null | undefined): string[] {
+  return id?.split("/").slice(3).map(part => part.split(":").slice(1).join(":").split("#")[0]!.replace(/[_-]/g, " ")) ?? [];
 }
 
 async function recordPages(repo: DoorRepository, pages: readonly PublishedPage[], now: string, worked: boolean): Promise<PageDoorsResult> {
   let created = 0, updated = 0, unchanged = 0, skipped = 0;
+  const seen = new Set<string>();
   for (const page of pages) {
+    const url = pageAddress(page.url)?.url;
+    if (url && seen.has(url)) continue;
+    if (url) seen.add(url);
     try {
+      if (!page.content) { skipped++; continue; }
+      const disposition = classifySourceContent({ url: page.url, ...page.content, owed: SOURCE_FAMILIES });
+      if (disposition.kind !== "DOOR") {
+        await retireSourceDoors(repo, { url: page.url, ocdId: page.ocdId ?? page.bodyId ?? "", workItemId: page.workItemId ?? undefined,
+          disposition, capture: { bytes: new TextEncoder().encode(page.content.text), contentType: page.content.contentType } }, now);
+        skipped++; continue;
+      }
       const probe = pageDoorDraft(page);
       if (probe === null) { skipped += 1; continue; }
-      const existing = await repo.read(probe.doorId);
+      const matches = (await repo.listWhere(["config", "url"], url!)).filter(row => pageAddress(String(row.value.config.url))?.url === url);
+      const existing = matches.find(row => row.value.status !== "SUSPENDED") ?? matches[0] ?? null;
       const earlier = existing !== null && isDoorRecord(existing.value) ? (existing.value.config.foundBy as PageFinder | undefined) ?? null : null;
-      const draft = earlier === null ? probe : pageDoorDraft(page, earlier)!;
+      const proposed = earlier === null ? probe : pageDoorDraft(page, earlier)!;
+      const prior = existing !== null && isDoorRecord(existing.value) ? existing.value : null;
+      const shared = pages.filter(other => pageAddress(other.url)?.url === url);
+      const draft = { ...proposed, kind: prior?.kind ?? proposed.kind, doorId: existing?.id ?? proposed.doorId,
+        holds: [...new Set([...(prior?.holds ?? []), ...shared.map(other => holdsOf(other.recordClass))])], ocdId: prior?.ocdId ?? proposed.ocdId ?? null,
+        bodyIds: [...new Set([...(prior?.bodyIds ?? []), ...shared.flatMap(other => other.bodyId ? [other.bodyId] : [])])],
+        config: { ...prior?.config, ...proposed.config } };
       const verdict = await upsertDerivedDoor(repo, draft, page.retrievedAt, now);
       if (verdict === "created") created += 1;
       else if (verdict === "updated") updated += 1;
       else unchanged += 1;
+      for (const duplicate of matches.filter(row => row.id !== draft.doorId && row.value.origin === "DERIVED" && row.value.status !== "SUSPENDED")) {
+        await repo.compareAndSet(duplicate.id, duplicate.revision, { ...duplicate.value, status: "SUSPENDED", readNow: false,
+          notes: `Publishing source is read through ${draft.doorId}`, updatedAt: now }, now);
+      }
       if (worked) await stampSuccess(repo, draft.doorId, page.retrievedAt, now);
     } catch {
       skipped += 1;

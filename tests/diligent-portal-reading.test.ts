@@ -61,7 +61,7 @@ function render(documents: readonly AgendaDocument[], publication: ReturnType<ty
       retrievedAt: document.retrievedAt, contentType: document.contentType, extraction: document.extraction,
       extractionNote: document.extractionNote, text: document.text, sourceOrg: document.sourceOrg,
     })),
-    meetingId: documents[0]!.meetingId, agendaUrl: documents[0]!.documentUrl, agendaSentence: "", publication,
+    meetingId: documents[0]!.meetingId, agendaUrl: documents[0]!.documentUrl, publication,
   }));
 }
 

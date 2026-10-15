@@ -1,12 +1,3 @@
-/**
- * Persisted outcome shapes for a body's sittings: BODY -> MEETING -> AGENDA ITEM -> ACTION -> ROLL CALL,
- * joined by exact ids, never by name.
- *
- * Agenda items, actions and roll calls are separate arrays with separate record classes, and none may be
- * read off another: an agenda never proves an outcome, tally text is not a person-level vote, and a
- * zero-row extraction is persisted as `ZERO_ROWS_FAILED`, never as an empty agenda.
- */
-
 import type {
   LegistarAgendaRecord,
   LegistarOutcomeRecord,
@@ -15,10 +6,6 @@ import type {
 } from "../sources/legistar/outcomes.ts";
 import type { AgendaPublicationObservation } from "./publication.ts";
 
-/**
- * The publisher's own publication state for a sitting's documents, carried verbatim beside the instant
- * we observed it. A fact about documents, never about what the body decided.
- */
 export interface PersistedPublicationStatus {
   /** "Final", "Draft", null — the tenant's label, which a clerk may rename. */
   readonly agendaStatusName: string | null;
@@ -28,10 +15,7 @@ export interface PersistedPublicationStatus {
   readonly agendaFile: string | null;
   /** UTC, from `EventAgendaLastPublishedUTC`. Null when never published. */
   readonly agendaLastPublishedUtc: string | null;
-  /**
-   * The publisher's label, verbatim. Some tenants leave every sitting at "Draft", so it is not a signal
-   * that minutes are still coming.
-   */
+
   readonly minutesStatusName: string | null;
   readonly minutesStatusId: number | null;
   readonly minutesFile: string | null;
@@ -46,10 +30,6 @@ export interface PersistedPublicationStatus {
   readonly observedAt: string;
 }
 
-/**
- * How the items retrieval for one sitting went. Zero rows is ambiguous (nothing acted on, or a failed
- * retrieval), so this is a named state, never a row count alone.
- */
 export type OutcomeExtractionState =
   /** The items route returned rows and they were transformed. */
   | "RETRIEVED"
@@ -57,16 +37,9 @@ export type OutcomeExtractionState =
   | "ZERO_ROWS_FAILED"
   /** The request itself failed. Retryable, and it stays open — never absence. */
   | "REQUEST_FAILED"
-  /**
-   * The publisher has not published minutes for this concluded sitting yet. Only the minutes route
-   * writes it; nothing about the sitting's outcomes is claimed.
-   */
+
   | "NOT_YET_PUBLISHED";
 
-/**
- * Where a minutes document stands on its way to being the body's approved record. The publisher's own
- * minutes status cannot say.
- */
 export type MinutesApprovalState =
   | "DRAFT_ACTION_MINUTES"
   /** Published as the body's minutes; no later sitting we hold records approving them. */
@@ -97,18 +70,14 @@ export interface PersistedMinutesDocument {
   readonly approves: readonly { readonly kind: string; readonly date: string }[];
   readonly approvesQuote: string | null;
   readonly approvalCarried: boolean;
-  /**
-   * The minutes parser revision (`MINUTES_PARSER_REVISION`) that read this document. Absent reads as an
-   * older parser.
-   */
+
   readonly parserRevision?: string;
+  readonly contentType?: string | null;
+  readonly etag?: string | null;
+  readonly lastModified?: string | null;
+  readonly readAt?: string;
 }
 
-/**
- * A minutes document we fetched and could not extract from, keyed by the identity of its bytes. The
- * next pass asks the portal whether the document changed before downloading it again, and re-reads it
- * when it changed, when the parser revision changed, or after `FAILED_MINUTES_REVERIFY_DAYS`.
- */
 export interface PersistedFailedMinutesRead {
   /** The exact URL read, and the grid label it was linked under. The failure belongs to this link only. */
   readonly url: string;
@@ -171,19 +140,12 @@ export interface PersistedSittingOutcomes {
   /** Ids from `lib/sources/legistar/routes.ts` of the routes that succeeded for this sitting. */
   readonly routesWalked: readonly string[];
 
-  /**
-   * Every publisher surface reading held for this sitting's agenda. One succeeding never retires another;
-   * `reconcilePublicationObservations` names their relationship without picking a winner.
-   */
+
   readonly publicationObservations: readonly AgendaPublicationObservation[];
 
   /** The minutes document read, on sittings the InSite minutes route wrote. */
   readonly minutesDocument?: PersistedMinutesDocument;
-  /**
-   * The minutes document this sitting's current link serves, read and failed. On a `ZERO_ROWS_FAILED`
-   * sitting it is the held failure; on a `RETRIEVED` sitting it is a newer document that failed while the
-   * earlier verified reading stays held. Cleared by a successful read.
-   */
+
   readonly failedMinutesRead?: PersistedFailedMinutesRead;
 }
 

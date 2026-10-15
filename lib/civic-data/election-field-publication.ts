@@ -19,12 +19,12 @@ const MONTH = "January|February|March|April|May|June|July|August|September|Octob
 const writtenDate = new RegExp(`\\b(?:${MONTH})\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+20\\d{2})?\\b`, "gi");
 
 /** Deadline revisions replace the same contextual field rather than accumulating old dates. */
-function fieldId(field: ElectionFieldInput): string {
+export function electionFieldId(field: ElectionFieldInput): string {
   const context = field.quote.replace(writtenDate, "<date>").replace(/\b\d{4}-\d{2}-\d{2}\b/g, "<date>").replace(/\s+/g, " ").trim().toLowerCase();
   return `election-field:${hash(JSON.stringify([field.divisionId, field.kind, field.sourceUrl, context])).slice(0, 32)}`;
 }
 
-function datesInQuote(quote: string): Set<string> {
+export function datesInQuote(quote: string): Set<string> {
   const dates = new Set(quote.match(/\b\d{4}-\d{2}-\d{2}\b/g) ?? []);
   const year = /\b(20\d{2})\b/.exec(quote)?.[1];
   const months = MONTH.split("|");
@@ -71,7 +71,7 @@ export async function publishElectionFields(input: {
     if (field.dates.some(date => !sourcedElectionDate(date) || !dates.has(date)) || ["registration_deadline", "early_voting"].includes(field.kind) && field.dates.length === 0) {
       gap("Date is not supported by the quoted calendar context."); continue;
     }
-    const id = fieldId(field);
+    const id = electionFieldId(field);
     const previous = records.get(id);
     const sourceKind = section3Page(page, "BALLOT_CONTEST", input.now).kind;
     if (previous && (previous.value.text !== field.value || JSON.stringify(previous.value.dates) !== JSON.stringify(field.dates))) {

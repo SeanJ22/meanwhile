@@ -85,7 +85,7 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
   assert.deepEqual(swept.sort(), [...callers].sort(), "a new caller of the model gate means a new row in ROLE_COST_POLICY");
 
   const scout = codeOf("lib/control-plane/scheduler", "scout-executor.ts");
-  assert.match(scout, /role:\s*deps\.role\s*\?\?\s*"SCOUT",\s*provider:\s*"anthropic"/, "the shared research executor declares the Anthropic provider for its selected role");
+  assert.match(scout, /role:\s*workerRole,\s*provider:\s*"anthropic"/, "the shared research executor declares the Anthropic provider for its selected role");
 
   const runtime = codeOf("lib/control-plane/workers", "runtime.ts");
   assert.match(

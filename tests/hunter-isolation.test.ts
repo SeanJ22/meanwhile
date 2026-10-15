@@ -1,11 +1,6 @@
-/**
- * One job must never end the others. In the standing hunter lane each worker process has its own progress
- * clock; a stuck one is ended alone with what it held and what it was waiting on, and the others keep running.
- * A queue the round writes mid-wave joins the running workers. The runner's heartbeat carries the host's
- * memory and reservations.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
+import { ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -38,6 +33,43 @@ const TAKES_FIRST = `
   const done = (config, id) => { process.send({ kind: 'result', id: '', body: result(id) }); process.send({ kind: 'finished', id: '', body: config.taskIds }); process.disconnect(); };
 `;
 
+test("isolation: an EPIPE replying to an exiting worker preserves its results", async t => {
+  const root = await fixture("epipe", `${TAKES_FIRST}
+    process.once('message', config => {
+      const id = claim(config.taskIds);
+      process.send({ kind: 'task-start', id: '', taskId: id, body: id });
+      process.send({ kind: 'pending-order', id: 'exit-reply', taskId: id, body: [] });
+      setTimeout(() => done(config, id), 25);
+    });`);
+  try {
+    let pipeFailures = 0;
+    const exits: string[] = [];
+    const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 60_000,
+      config: config(root, ["finished"]), capacity: () => 1, transportFor: noModel,
+      standing: { quietMs: 10_000 }, onExited: (_pid, why) => exits.push(why),
+      onStarted: pid => {
+        // Inject the OS pipe race at the real child's send boundary, without relying on exit timing.
+        const handles = (process as unknown as { _getActiveHandles(): unknown[] })._getActiveHandles();
+        const child = handles.find(handle => handle instanceof ChildProcess && handle.pid === pid) as ChildProcess;
+        assert.ok(child);
+        const send = child.send;
+        t.mock.method(child, "send", (...args: unknown[]) => {
+          if ((args[0] as { id?: string }).id !== "exit-reply") return Reflect.apply(send, child, args);
+          pipeFailures += 1;
+          const error = Object.assign(new Error("write EPIPE"), { code: "EPIPE" });
+          const callback = args.find(value => typeof value === "function") as ((error: Error) => void) | undefined;
+          queueMicrotask(() => { if (callback) callback(error); else child.emit("error", error); });
+          return false;
+        });
+      } });
+    assert.equal(pipeFailures, 1, "the reply encountered the broken pipe");
+    assert.equal(results.length, 1);
+    assert.equal(results[0]!.routeTaskId, "finished");
+    assert.equal(results[0]!.outcome, "WORKED");
+    assert.deepEqual(exits, ["exit 0"], "the worker's own exit decides its result");
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
 test("isolation: a stuck worker is ended alone, its state recorded, and its sibling finishes", async () => {
   const root = await fixture("stuck", `${TAKES_FIRST}
     process.once('message', config => {
@@ -63,6 +95,31 @@ test("isolation: a stuck worker is ended alone, its state recorded, and its sibl
     assert.equal(results.length, 2, "one result per task: no second failure for the stuck task");
     assert.ok(exited.some(line => /WORKER_STUCK/.test(line)) && exited.some(line => /exit 0/.test(line)));
     assert.match(stuckWorkerLine(stuck[0]!), /^hunter lane: stuck worker ended alone: pid \d+; task stuck; waiting on .*; its task remains owed and the other workers keep running$/);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("isolation: a stuck task keeps its deferral when a sibling's finished list reached the lane before the task was announced", async () => {
+  /* A real worker reads its task before it announces it; a sibling that ends in that window lists every id as finished. */
+  const root = await fixture("late-start", `${TAKES_FIRST}
+    process.once('message', config => {
+      const id = claim(config.taskIds);
+      if (id === 'ok') { done(config, id); return; }
+      setTimeout(() => {
+        process.send({ kind: 'task-start', id: '', taskId: id, body: id });
+        process.send({ kind: 'model', id: 'q1', taskId: id, jurisdiction: { subjectId: 's', state: null }, body: {} });
+        setInterval(() => {}, 1000);
+      }, 300);
+    });`);
+  try {
+    const stuck: StuckWorker[] = [];
+    const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 60_000, config: config(root, ["stuck", "ok"]),
+      capacity: () => 2, transportFor: () => () => new Promise(() => {}), standing: { quietMs: 1_000, onStuck: worker => stuck.push(worker) } });
+    assert.equal(stuck.length, 1);
+    const byTask = new Map(results.map(r => [r.routeTaskId, r]));
+    assert.equal(byTask.get("ok")?.outcome, "WORKED");
+    assert.equal(byTask.get("stuck")?.outcome, "FAILED", "the ended worker's task is recorded as owed, not dropped");
+    assert.match(byTask.get("stuck")!.detail, /WORKER_STUCK:\d+: .*work remains owed/);
+    assert.equal(results.length, 2);
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
@@ -124,7 +181,7 @@ test("isolation: a queue written mid-wave joins the running workers instead of w
 
 test("isolation: a worker past its retirement age takes no further task, and a fresh worker takes its remaining ones", async () => {
   const root = await fixture("retire", `${TAKES_FIRST}
-    import { existsSync, writeFileSync } from 'node:fs';
+    import { appendFileSync, existsSync, writeFileSync } from 'node:fs';
     process.once('message', config => {
       const first = !existsSync('first');
       if (first) writeFileSync('first', '');
@@ -132,7 +189,8 @@ test("isolation: a worker past its retirement age takes no further task, and a f
         const replies = new Map();
         process.on('message', m => replies.get(m.id)?.(m.body));
         replies.set('o1', order => {
-          if (!order.length) { writeFileSync('retired', String(process.pid)); process.send({ kind: 'finished', id: '', body: config.taskIds }); process.disconnect(); return; }
+          if (!order.length) { appendFileSync('retired', String(process.pid) + '\\n'); process.send({ kind: 'finished', id: '', body: config.taskIds }); process.disconnect(); return; }
+          writeFileSync('worked', String(process.pid));
           process.send({ kind: 'task-start', id: '', taskId: order[0], body: order[0] });
           done(config, order[0]);
         });
@@ -144,9 +202,13 @@ test("isolation: a worker past its retirement age takes no further task, and a f
     const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 60_000, config: config(root, ["owed"]),
       capacity: () => 1, transportFor: noModel, standing: { quietMs: 10_000, retireAfterMs: 200 },
       onStarted: pid => started.push(pid) });
-    assert.equal(started.length, 2);
-    assert.equal(Number(await readFile(join(root, "retired"), "utf8")), started[0], "the old worker retired");
+    const retired = (await readFile(join(root, "retired"), "utf8")).trim().split("\n").map(Number);
+    assert.ok(started.length >= 2);
+    assert.equal(retired[0], started[0], "the old worker retired");
+    assert.deepEqual(retired, started.slice(0, -1), "every earlier worker retired without taking the task");
+    assert.equal(Number(await readFile(join(root, "worked"), "utf8")), started.at(-1), "the final worker accepted the task");
     assert.equal(results.length, 1);
+    assert.equal(results[0]!.routeTaskId, "owed");
     assert.equal(results[0]!.outcome, "WORKED", "the fresh worker did the task the retired one left");
   } finally { await rm(root, { recursive: true, force: true }); }
 });

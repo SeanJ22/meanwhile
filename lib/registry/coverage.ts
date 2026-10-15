@@ -35,6 +35,7 @@ import type { BodyFamilyAttempts } from "./attempt-families.ts";
 import type { Meeting } from "../sources/types.ts";
 import { historyGapFor, type HistoryGap } from "../meetings/history-gaps.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
+import type { StateOfficeContact } from "../reference/state-offices.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -96,11 +97,7 @@ export function stateLegislatorCoverageAuthority(
   };
 }
 
-/** Reader-facing distinction for the two empty-roster failure domains. */
-export {
-  stateLegislatorCoverageGapText,
-  WIRED_STATUSES,
-} from "./coverage-client.ts";
+export { WIRED_STATUSES } from "./coverage-client.ts";
 
 /**
  * A body covering the point. `divisionLabel` is the division's sourced name; the body's own name is
@@ -202,6 +199,8 @@ export interface CoverageSummary {
   governments?: RegistrationGovernmentListing[];
   governmentInventoryStates?: string[];
   governmentInventoryUnavailableStates?: string[];
+  /** National FEC directories selected for the states this place touches. */
+  stateOffices?: StateOfficeContact[];
   federalDirectoryUnavailable?: boolean;
   seats: Seat[];
   /**
@@ -345,7 +344,7 @@ export function summarizeCoverage(
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
         : null,
       ...(body.officeAddress || body.officePhone
-        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.provenance } }
+        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.fieldSources?.officeAddress ?? body.fieldSources?.officePhone ?? body.provenance } }
         : {}),
       lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       ...(historyGap ? { historyGap } : {}),
@@ -353,14 +352,16 @@ export function summarizeCoverage(
     };
   });
 
+  const rootLegislators = (d: Division) => stateOcdIdFrom(d.ocdId) === d.ocdId
+    ? holdersFor(officials, d.ocdId).filter(holder => holder.chamber === "upper" || holder.chamber === "lower") : [];
   const seats: Seat[] = divisions
-    .filter((d) => SEAT_TYPES.has(d.divisionType) || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
+    .filter((d) => SEAT_TYPES.has(d.divisionType) || rootLegislators(d).length > 0 || d.tier === "local" && holdersFor(officials, d.ocdId).length > 0)
     .map((d) => ({
       ocdId: d.ocdId,
       label: d.label,
       divisionType: d.divisionType,
       tier: d.tier,
-      representatives: d.tier === "local"
+      representatives: stateOcdIdFrom(d.ocdId) === d.ocdId ? rootLegislators(d) : d.tier === "local"
         ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))
         : holdersFor(officials, d.ocdId),
     }));

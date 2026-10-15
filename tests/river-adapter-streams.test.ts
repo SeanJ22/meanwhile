@@ -19,7 +19,7 @@ import {
 } from "../lib/control-plane/workers/engineering-adapter.ts";
 import { parseFixField, ADD_TO_QUEUE_OPTION } from "../lib/control-plane/fix-queue.ts";
 import { riverReturn, riverReturnMarkdown } from "../lib/control-plane/river-returns.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { MODELS } from "../lib/models.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -301,7 +301,8 @@ test("connects saved failure, adapter files and its own tests to a scoped engine
       paths: ['lib/sources/iqm2/index.ts', 'tests/iqm2.test.ts', 'tests/composite.test.ts'],
       readText: path => path.endsWith('iqm2.test.ts') ? 'import "../lib/sources/iqm2/index.ts"; /* existing behavior check */' : 'export const prior = true;' }),
     transportFor: () => async request => {
-      assert.match(String(request.system?.[0]?.text), /supplied repair scope governs allowed paths/);
+      assert.doesNotMatch(String(request.system?.[0]?.text), /supplied repair scope governs allowed paths/);
+      assert.match(String(request.messages.at(-1)?.content), /supplied repair scope governs allowed paths/);
       const brief = String(request.messages[0].content);
       assert.match(brief, /Saved failing calendar/);
       assert.match(brief, /lib\/sources\/iqm2\/index.ts/);

@@ -17,6 +17,14 @@ const MINUTE = 60_000;
 const KEY_REFS: ReadonlyArray<readonly [RegExp, string]> = [
   [/^federal-audit-clearinghouse$/, "DATA_GOV_API_KEY"],
   [/^sam-gov-entities$/, "SAM_GOV_API_KEY"],
+  [/census-acs-population|census-data-api/, "CENSUS_API_KEY"],
+  [/legiscan/i, "LEGISCAN_API_KEY"],
+  [/google-civic/i, "GOOGLE_CIVIC_API_KEY"],
+  [/legiscan-api/i, "LEGISCAN_API_KEY"],
+  [/govinfo/i, "DATA_GOV_API_KEY"],
+  [/socrata-discovery/i, "SOCRATA_APP_TOKEN"],
+  [/govinfo|regulations-gov/i, "DATA_GOV_API_KEY"],
+  [/senate-lda/i, "LDA_API_KEY"],
   [/fec/i, "FEC_API_KEY"],
   [/congress|federal-legislative/i, "CONGRESS_API_KEY"],
 ];

@@ -3,18 +3,26 @@
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
+import { acquireKnownRelease, KnownReleaseUnavailable, knownReleaseSourceCheck, type KnownReleaseOptions } from "../known-release.ts";
 import { openZipFile, type FileArchiveMember } from "../archive.ts";
-import { bulkUrl, indexDivisions, normalize, pluralRosterIssue, rowsToPeople, yamlToPeople, type PluralPerson, type RegistryDivisionLite } from "./index.ts";
-import { PLURAL_PARSER_VERSION, PLURAL_REVISION_URL, PLURAL_SOURCE_ID, PLURAL_STATES } from "./targets.ts";
-import { stateContainers, type ReadOnlyQuery } from "../../control-plane/admin-view/promoted-slices.ts";
+import { indexDivisions, normalize, yamlToPeople, type PluralPerson, type RegistryDivisionLite } from "./index.ts";
+import { PLURAL_REVISION_URL, PLURAL_SOURCE_ID, PLURAL_STATES } from "./targets.ts";
+import { stateContainers, type ReadOnlyQuery, type Slice } from "../../control-plane/admin-view/promoted-slices.ts";
+import { censusWorkDivision } from "../../census-geography/division-id.ts";
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
 import { selectGeographyVersion } from "../../census-geography/selection.ts";
 import type { StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
 import type { OfficeholderSet } from "../../officials/types.ts";
-import { RepositoryLockHeld } from "../../control-plane/repository/types.ts";
 
 const DAY = 24 * 60 * 60_000;
+
+async function acquirePeopleRelease(options: KnownReleaseOptions) {
+  try { return await acquireKnownRelease(options); }
+  catch (error) {
+    if (error instanceof KnownReleaseUnavailable) return error.held;
+    throw error;
+  }
+}
 const ARCHIVE_LIMITS = { maxEntries: 100_000, maxMemberBytes: 16 * 1024 * 1024, maxTotalBytes: 2 * 1024 * 1024 * 1024 };
 type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now">;
 export interface StatePeopleRelease {
@@ -44,21 +52,23 @@ function revision(bytes: Uint8Array): string {
   return sha;
 }
 /** No ZIP or Send needed to read an independently held state people source. */
-export async function statePeopleDivisions(state: string, asOf: string, query: ReadOnlyQuery | null = readerQuery()): Promise<RegistryDivisionLite[]> {
+export async function statePeopleDivisions(state: string, asOf: string, query: ReadOnlyQuery | null = readerQuery()): Promise<Slice<RegistryDivisionLite[]>> {
   const slice = await stateContainers(state, ["state_leg_upper", "state_leg_lower"], false, query);
-  if (slice.kind !== "HELD") return [];
+  if (slice.kind !== "HELD") return slice;
   const versions = slice.value.scopes.map(scope => ({ ...scope, key: scope.version }));
-  const upper = selectGeographyVersion(versions, "state_leg_upper", { purpose: "representation", asOf });
-  const lower = selectGeographyVersion(versions, "state_leg_lower", { purpose: "representation", asOf });
-  return slice.value.containers.flatMap(({ ref }) => ref.ocdId &&
-    (ref.type === "state_leg_upper" && ref.version === upper?.key || ref.type === "state_leg_lower" && ref.version === lower?.key)
-    ? [{ ocdId: ref.ocdId, label: ref.label, divisionType: ref.type === "state_leg_upper" ? "sldu" : "sldl" }] : []);
+  const upper = selectGeographyVersion(versions, "state_leg_upper", { purpose: "representation", asOf }, state);
+  const lower = selectGeographyVersion(versions, "state_leg_lower", { purpose: "representation", asOf }, state);
+  const divisions = slice.value.containers.flatMap(({ ref }) => {
+    if (!(ref.type === "state_leg_upper" && ref.version === upper?.key || ref.type === "state_leg_lower" && ref.version === lower?.key)) return [];
+    const ocdId = censusWorkDivision(ref);
+    return ocdId ? [{ ocdId, label: ref.label, divisionType: ref.type === "state_leg_upper" ? "sldu" : "sldl" }] : [];
+  });
+  return { kind: "HELD", versionId: slice.versionId, value: divisions };
 }
 export async function acquireStatePeople(input: SharedOptions & {
   readonly state: string; readonly signal: AbortSignal; readonly asOf?: string;
   readonly divisions?: readonly RegistryDivisionLite[];
-  /** Exact previously captured CSV bytes can seed the shared release without a new request. */
-  readonly readHeldCsv?: () => Promise<KnownRelease | null>;
+  readonly geographyQuery?: ReadOnlyQuery | null;
 }): Promise<StatePeopleRelease> {
   const state = input.state.toLowerCase();
   if (!PLURAL_STATES.includes(state)) throw new Error(`PLURAL_STATE_UNSUPPORTED:${state}`);
@@ -66,14 +76,16 @@ export async function acquireStatePeople(input: SharedOptions & {
   const shared: SharedOptions = { store: input.store, locks: input.locks, fetchImpl: input.fetchImpl, now: input.now };
   const gaps: { sourceUrl: string; detail: string }[] = [];
   let currentMembershipComplete = true;
-  let people: PluralPerson[] = [], acquisitions: StatePeopleAcquisition[] = [], releaseId = "";
-  try {
-    const current = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: "people-current-revision",
+  let people: PluralPerson[] = [], releaseId = "";
+  const acquisitions: StatePeopleAcquisition[] = [];
+  {
+    const current = await acquirePeopleRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: "people-current-revision",
       url: PLURAL_REVISION_URL, parserVersion: "openstates-revision/1", signal: input.signal, maxBytes: 1024 * 1024,
       checkAfterMs: DAY, validate: bytes => { revision(bytes); } });
     const sourceCheck = knownReleaseSourceCheck(current);
+    if (current.outage) gaps.push({ sourceUrl: current.requestedUrl, detail: current.outage });
     const sha = revision(current.bytes), url = `https://codeload.github.com/openstates/people/zip/${sha}`;
-    const release = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
+    const release = await acquirePeopleRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
       parserVersion: "openstates-archive/2", signal: input.signal, maxBytes: 96 * 1024 * 1024, checkAfterMs: Number.MAX_SAFE_INTEGER,
       // Central directory, every local header, member size and CRC are checked
       // before this immutable release can become a reuse candidate.
@@ -83,6 +95,7 @@ export async function acquireStatePeople(input: SharedOptions & {
         for (const entry of entries) { input.signal.throwIfAborted(); for await (const chunk of entry.stream()) void chunk; }
       }),
     });
+    if (release.outage) gaps.push({ sourceUrl: release.requestedUrl, detail: release.outage });
     releaseId = sha;
     await staged(release.bytes, async entries => {
       const selected = entries.filter(entry => new RegExp(`^people-[^/]+/data/${state}/(?:legislature|executive|municipal|municipalities)/.+\\.ya?ml$`).test(entry.name))
@@ -109,7 +122,6 @@ export async function acquireStatePeople(input: SharedOptions & {
         acquisitions.push({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus,
           body, retrievedAt: release.retrievedAt, rawHash: release.sha256,
           sourceCheck,
-          ...(release.vaultKey ? { vaultKey: release.vaultKey } : {}),
           extractedFrom: { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, sha256: release.sha256, member } });
       }
     });
@@ -137,27 +149,17 @@ export async function acquireStatePeople(input: SharedOptions & {
     // record is malformed and this refresh cannot claim a complete roster.
     people = [...byNativeId.values()];
     if (!people.some(person=>person.roles?.some(role=>role.current))) throw new Error(`PLURAL_STATE_HAS_NO_CURRENT_PEOPLE:${state}`);
-  } catch (error) {
-    input.signal.throwIfAborted();
-    if (error instanceof RepositoryLockHeld) throw error;
-    gaps.push({ sourceUrl: PLURAL_REVISION_URL, detail: error instanceof Error ? error.message : String(error) });
-    // The known reduced export remains a separately parsed fallback. Its
-    // missing fields never masquerade as fields from the richer YAML source.
-    const release = await acquireKnownRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people-current-csv:${state}`,
-      url: bulkUrl(state), parserVersion: PLURAL_PARSER_VERSION, signal: input.signal, maxBytes: 8 * 1024 * 1024,
-      checkAfterMs: DAY, readHeld: input.readHeldCsv,
-      validate: bytes => { const issue = pluralRosterIssue(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); if (issue) throw new Error(issue); } });
-    const body = new TextDecoder("utf-8", { fatal: true }).decode(release.bytes);
-    people = rowsToPeople(body, state); releaseId = `csv:${release.sha256}`;
-    // The current CSV enumerates legislative people only; it cannot retire
-    // previously captured executive/municipal memberships omitted by that export.
-    currentMembershipComplete = false;
-    acquisitions = [{ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, body,
-      retrievedAt: release.retrievedAt, rawHash: release.sha256, sourceCheck: knownReleaseSourceCheck(release),
-      ...(release.vaultKey ? { vaultKey: release.vaultKey } : {}) }];
   }
   if (new Set(people.map(person => person.id)).size !== people.length) throw new Error("PLURAL_DUPLICATE_NATIVE_PERSON");
-  const divisions = input.divisions ?? await statePeopleDivisions(state, asOf);
+  let divisions = input.divisions;
+  if (divisions === undefined) {
+    const geography = await statePeopleDivisions(state, asOf, input.geographyQuery);
+    divisions = geography.kind === "HELD" ? geography.value : [];
+    if (geography.kind !== "HELD") gaps.push({
+      sourceUrl: "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
+      detail: `CENSUS_GEOGRAPHY_${geography.kind}:${state.toUpperCase()}: ${geography.kind === "UNREAD" ? geography.detail : "The Census district file has not been published to the reader store."}`,
+    });
+  }
   const collectedAt = acquisitions.map(row => row.retrievedAt).sort().at(-1)!;
   const roster = normalize(people, indexDivisions([...divisions]), collectedAt, `US-${state.toUpperCase()}`);
   const currentPeople = people.filter(person=>!person.roles || person.roles.some(role=>role.current));

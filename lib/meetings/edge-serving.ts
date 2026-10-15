@@ -26,7 +26,6 @@ import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
 import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
-import { isFederalMoneyStateArtifact } from "../federal-money/edge.ts";
 import {
   resolveReaderArtifactStore,
   resolveReaderArtifactWriteStore,
@@ -157,7 +156,6 @@ export interface PublishAuthorityCarried {
 export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
 /** Complete: one entry per promoted registration pointer, since the reader reads an unnamed state as having none. */
 export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
-export type PublishFederalMoney = PublishRegistrations;
 
 interface RegistrationArtifactEnvelope {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
@@ -175,15 +173,6 @@ interface StateLegislatorsArtifactEnvelope {
   readonly versionId: string;
   readonly generatedAt: string;
   readonly value: OfficialStateLegislatorReadModel;
-}
-
-interface FederalMoneyArtifactEnvelope {
-  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
-  readonly family: "federal-money";
-  readonly state: string;
-  readonly versionId: string;
-  readonly generatedAt: string;
-  readonly value: PromotedFamilyArtifactValue;
 }
 
 export function servedAuthorityVersion(
@@ -239,6 +228,7 @@ export async function readReaderManifest(
 }
 
 export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  "government-domains",
   "census-districts",
   "registry-runtime",
   "federal-directory",
@@ -362,27 +352,6 @@ async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: Authorit
   return value === null ? null : { value, versionId: ref.version };
 }
 
-const federalMoneyEdgeCache = new Map<string, { version: string; value: Promise<PromotedFamilyArtifactValue | null> }>();
-
-export async function readFederalMoneyStateArtifact(
-  state: string,
-  ref: AuthorityArtifactRef | undefined,
-  store: ReaderArtifactStore,
-): Promise<PromotedFamilyArtifactValue | null> {
-  if (!ref?.key || !ref.version) return null;
-  return heldFetch(federalMoneyEdgeCache, state, `${ref.version}:${ref.key}`, async () => {
-    try {
-      const bytes = await store.readBytes(ref.key);
-      if (!bytes) return null;
-      const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as FederalMoneyArtifactEnvelope;
-      if (envelope.formatVersion !== READER_ARTIFACT_FORMAT_VERSION || envelope.family !== "federal-money" ||
-          envelope.state !== state || envelope.versionId !== ref.version || sha256OfJson(envelope.value) !== ref.sha ||
-          !isFederalMoneyStateArtifact(envelope.value, state)) return null;
-      return envelope.value;
-    } catch { return null; }
-  });
-}
-
 export function prefetchReaderEdgeStates(
   manifest: ReaderManifest | null,
   states: readonly string[],
@@ -398,37 +367,15 @@ export function prefetchReaderEdgeStates(
 }
 
 export async function ensureReaderAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "federalMoney">,
+  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
-): Promise<ReaderAuthorityEdgeBundle> {
-  // Every Reader route installs the published meeting doors here, beside its authority families: which partitions
-  // make up the meetings, which bodies a failed source serves, which publish no history.
-  const doors = import("../doors/meeting-doors.ts").then((module) => module.ensureMeetingDoors());
-  const bundle = await readerAuthorityEdge(manifest, store, families);
-  await doors;
-  return bundle;
-}
-
-async function readerAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "federalMoney">,
-  store: ReaderArtifactStore | null,
-  families: readonly AuthorityFamily[],
 ): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
   const registrationRefs = manifest.registrations;
   const registrations = registrationRefs && store
     ? { registrations: { states: new Set(Object.keys(registrationRefs)), load: (state: string) => fetchRegistrationArtifact(state, registrationRefs[state], store) } }
     : {};
-  const federalMoneyRefs = manifest.federalMoney;
-  const federalMoney: Pick<ReaderAuthorityEdgeBundle, "federalMoney"> = {
-    federalMoney: { states: new Set(Object.keys(federalMoneyRefs ?? {})), load: async state => {
-      if (!store) return null;
-      const artifact = await readFederalMoneyStateArtifact(state, federalMoneyRefs?.[state], store);
-      return artifact?.entries ?? null;
-    } },
-  };
-  const promoted = new Map<string, PromotedEdgeEntry>();
   const stateLegislatorRefs = manifest.stateLegislators;
   const stateLegislators: { stateLegislators?: ReaderAuthorityEdgeBundle["stateLegislators"] } = {};
   if (store && families.includes("state-legislators")) {
@@ -454,14 +401,14 @@ async function readerAuthorityEdge(
       }
     }
   }
-  if (!refs || !store) return { ...registrations, ...stateLegislators, ...federalMoney };
+  if (!refs || !store) return { ...registrations, ...stateLegislators };
   const bundle: {
     censusDistricts?: { value: CensusDistrictEdge; versionId: string };
     registryRuntime?: { value: RegistryRuntimeReadModel; versionId: string };
     federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
     campaignSites?: { value: CuratedReaderProjection; versionId: string };
     meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
-    commentAccess?: { value: CuratedReaderProjection; versionId: string };
+    commentAccess?: { value: import("../registry/comment-access.ts").CommentAccessProjection; versionId: string };
   } = {};
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
@@ -479,8 +426,9 @@ async function readerAuthorityEdge(
   if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
   if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
-  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
+  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as import("../registry/comment-access.ts").CommentAccessProjection, versionId: refs["comment-access"]!.version };
   if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };
+  const promoted = new Map<string, PromotedEdgeEntry>();
   const promotedFamilies = new Set<string>();
   const promotedValues = await promotedFetch;
   PROMOTED_AUTHORITY_FAMILIES.forEach((family, index) => {
@@ -492,7 +440,7 @@ async function readerAuthorityEdge(
       if (typeof pointer === "string") promoted.set(pointer, entry);
     }
   });
-  return { ...bundle, ...registrations, ...stateLegislators, ...federalMoney, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
+  return { ...bundle, ...registrations, ...stateLegislators, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {
@@ -509,7 +457,6 @@ export async function publishReaderEdgeArtifacts(
     readonly authority?: PublishAuthority;
     readonly registrations?: PublishRegistrations;
     readonly stateLegislators?: PublishRegistrations;
-    readonly federalMoney?: PublishFederalMoney;
     readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
     readonly meetingRegistryVersion?: string | null;
     readonly checks?: PublishReaderChecks;
@@ -538,7 +485,6 @@ export async function publishReaderEdgeArtifacts(
     options.registrations === undefined ? null : Object.entries(options.registrations).map(([state, entry]) => [state, entry.versionId] as const),
   );
   const newLegislatorVersions = registrationVersions(options.stateLegislators === undefined ? null : Object.entries(options.stateLegislators).map(([scope, entry]) => [scope, entry.versionId] as const));
-  const newFederalMoneyVersions = registrationVersions(options.federalMoney === undefined ? null : Object.entries(options.federalMoney).map(([state, entry]) => [state, entry.versionId] as const));
 
   let current;
   try {
@@ -563,8 +509,7 @@ export async function publishReaderEdgeArtifacts(
     const sameMeetingAreas = snapshot === null || options.meetingRegistryVersion === undefined ||
       current.manifest.meetingRegistryVersion === options.meetingRegistryVersion;
     const sameLegislators = options.stateLegislators === undefined || registrationVersions(current.manifest.stateLegislators === undefined ? null : Object.entries(current.manifest.stateLegislators).map(([scope, ref]) => [scope, ref.version] as const)) === newLegislatorVersions;
-    const sameFederalMoney = options.federalMoney === undefined || registrationVersions(current.manifest.federalMoney === undefined ? null : Object.entries(current.manifest.federalMoney).map(([state, ref]) => [state, ref.version] as const)) === newFederalMoneyVersions;
-    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameFederalMoney && sameMeetingAreas) {
+    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameMeetingAreas) {
       const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
       const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
         ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
@@ -592,7 +537,6 @@ export async function publishReaderEdgeArtifacts(
   const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = options.authority === undefined ? { ...current?.manifest.authorityArtifacts } : {};
   const registrations: Record<string, AuthorityArtifactRef> = options.registrations === undefined ? { ...current?.manifest.registrations } : {};
   const stateLegislators: Record<string, AuthorityArtifactRef> = options.stateLegislators === undefined ? { ...current?.manifest.stateLegislators } : {};
-  const federalMoney: Record<string, AuthorityArtifactRef> = options.federalMoney === undefined ? { ...current?.manifest.federalMoney } : {};
   try {
     for (const artifact of artifacts) {
       const unchanged = current?.manifest.scopes.find(scope => scope.scope === artifact.scope && scope.sha256 === shaByScope.get(artifact.scope));
@@ -661,18 +605,6 @@ export async function publishReaderEdgeArtifacts(
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
       stateLegislators[jurisdiction] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
     }
-    for (const [state, entry] of Object.entries(options.federalMoney ?? {})) {
-      if ("carried" in entry) {
-        const served = current?.manifest.federalMoney?.[state];
-        if (!served || served.version !== entry.versionId) return { status: "RACED", sequence };
-        federalMoney[state] = served;
-        continue;
-      }
-      if (!isFederalMoneyStateArtifact(entry.value, state)) throw new Error(`Federal money artifact does not answer each source for ${state}`);
-      const envelope: FederalMoneyArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "federal-money", state, versionId: entry.versionId, generatedAt: now, value: entry.value };
-      const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
-      federalMoney[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
-    }
   } catch (error) {
     // Complete immutable bytes precede CAS; partial writes cannot change a served artifact.
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
@@ -704,7 +636,6 @@ export async function publishReaderEdgeArtifacts(
     ...(Object.keys(authorityArtifacts).length > 0 ? { authorityArtifacts } : {}),
     ...(options.registrations !== undefined || current?.manifest.registrations !== undefined ? { registrations } : {}),
     ...(options.stateLegislators !== undefined || current?.manifest.stateLegislators !== undefined ? { stateLegislators } : {}),
-    ...(options.federalMoney !== undefined || current?.manifest.federalMoney !== undefined ? { federalMoney } : {}),
     ...((options.checks?.freshChecks ?? (snapshot === null ? current?.manifest.freshChecks : undefined)) !== undefined
       ? { freshChecks: options.checks?.freshChecks ?? current!.manifest.freshChecks } : {}),
     ...((options.checks?.composition ?? (snapshot === null ? current?.manifest.composition : undefined)) !== undefined
@@ -728,7 +659,9 @@ const areaReads = new Map<string, MeetingsProjectionReadResult>();
 export async function readReaderEdgeMeetings(
   options: ReaderEdgeMeetingsOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
-  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings()]);
+  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings(),
+    import("../doors/meeting-doors.ts").then(module => module.ensureMeetingDoors()),
+  ]);
   return applyServedWindow(read, options.window ?? "SHOWN", options.now, settings);
 }
 

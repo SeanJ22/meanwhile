@@ -1,15 +1,3 @@
-/**
- * Paid discovery search is the owner's switch, and the runner obeys it.
- *
- * - Off until turned on: a fresh control plane, a never-decided row, a malformed decision and a corrupt row all read
- *   OFF; only an explicit `true` reads ON.
- * - `config.setDiscoverySearch` is OWNER_DECISION_REQUIRED; turning it on without a confirmation writes nothing; the
- *   decision carries who, when and the receipt, and leaves the row's other decisions standing.
- * - At cycle start the runner reads the switch from the row it reads the ceiling from, builds no search step unless
- *   it is on, and names it in its record. Meetings discovery is on unless the kill switch says off.
- * - The switch sits on the search line of the Money screen, and turning it on posts the confirmation.
- */
-
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -116,16 +104,10 @@ test("A CORRUPT ROW NEVER TURNS PAID SEARCH ON, and turning it off over one writ
   assert.equal(stored?.value.discoverySearch?.enabled, false);
 });
 
-test("THE RUNNER OBEYS IT: the switch is read at cycle start, no search step is built unless it is on, and discovery is on unless killed", () => {
-  const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(runner, /discoverySearchOn = discoverySearchEnabled\(config\);/, "read from the config row");
-  const read = runner.indexOf("discoverySearchOn = discoverySearchEnabled(config);");
-  const phase = runner.indexOf("meetingsDiscovery = await runMeetingsDiscovery(repos, {");
-  assert.ok(read > 0 && phase > read, "the switch is read before the discovery phase");
-  assert.match(runner, /const searchBudget = !discoverySearchOn \? null : durableSearchBudget\(\{/, "no budget, and no ledger write, while off");
-  assert.match(runner, /const discoverySearch = searchBudget === null \? null : makeDiscoverySearch\(\{/, "no search step while off");
-  assert.match(runner, /ownerSwitch: discoverySearchDecision,/, "the record names the switch");
-  assert.match(runner, /const MEETINGS_DISCOVERY_ENABLED = process\.env\.WTP_MEETINGS_DISCOVERY !== "off";/, "on unless the kill switch says off");
+test("the census reads the owner's search switch before building a search caller", () => {
+  const runner = readFileSync(join(ROOT, "scripts/platform-census-runner.mts"), "utf8");
+  assert.match(runner, /config.discoverySearch\?\.enabled \? makeDiscoverySearch/);
+  assert.match(runner, /search \? \{ search \} : \{\}/);
 });
 
 test("THE CONSOLE POSTS IT: the switch rides the search line, and turning it on posts the confirmation", () => {
@@ -173,14 +155,13 @@ test("NO SILENT RESUME: only the owner's action writes the switch; no env var ca
   );
   assert.doesNotMatch(runner, /process\.env\.[A-Z_]*SEARCH_(ENABLED|ON)\b/, "never from the environment");
 
-  assert.deepEqual(files.filter((f) => read(f).includes("makeDiscoverySearch(") && !f.endsWith("search-runtime.ts")), ["scripts/freshness-shadow.mts"]);
-  assert.match(runner, /searchBudget === null \? null : makeDiscoverySearch\(\{/, "discovery search exists only while the switch is on");
-  /* The standing hunter lane builds the Scout tool too, from the same owner's row (armHunterLane reads the switch), only while it is on and paid work is open. */
-  assert.deepEqual(files.filter((f) => read(f).includes("makeScoutSearch(") && !f.endsWith("scout-search.ts")), ["scripts/freshness-shadow.mts", "scripts/hunter-lane.mts"]);
+  assert.deepEqual(files.filter((f) => read(f).includes("makeDiscoverySearch(") && !f.endsWith("search-runtime.ts")), ["scripts/platform-census-runner.mts"]);
+  assert.match(read("scripts/platform-census-runner.mts"), /config.discoverySearch\?\.enabled \? makeDiscoverySearch\(\{/, "discovery search exists only while the switch is on");
+  /* The standing hunter lane builds the hunters' search too, from the same owner's row (armHunterLane reads the switch), only while it is on and paid work is open. */
+  assert.deepEqual(files.filter((f) => read(f).includes("makeHuntSearch(") && !f.endsWith("hunt/search.ts")), ["scripts/freshness-shadow.mts", "scripts/hunter-lane.mts"]);
   assert.match(read("scripts/hunter-lane.mts"), /if \(!paidOpen \|\| !armed\.discoverySearchOn \|\| armed\.fleetSafety === null\) return null;/);
   assert.match(read("lib/control-plane/workers/hunter-lane-arming.ts"), /const discoverySearchOn = configHold === null && discoverySearchEnabled\(config\);/);
   assert.doesNotMatch(read("scripts/hunter-lane.mts"), /process\.env\.[A-Z_]*SEARCH_(ENABLED|ON)\b/, "never from the environment");
-  assert.match(runner, /const scoutFor = \(scheduled: ScheduledObligation\): DeclaredExecutor => modelLaneEnabled \|\| heldScoutFor\(scheduled\)!==null\s*\?/, "Only solved held reuse can enter the Scout executor while the paid research lane is closed");
 });
 
 test("THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it applied, its caps and its words; the console matches the receipt", () => {

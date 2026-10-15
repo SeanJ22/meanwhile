@@ -112,6 +112,8 @@ function candidateReadOnlyStore(
     transition: readOnly,
     promote: readOnly,
     appendEvidence: readOnly,
+    recordRecheck: readOnly,
+    latestCandidate: async () => null,
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,
@@ -147,36 +149,6 @@ function candidateReadOnlyStore(
     readPreparedReaderProjectionCoupling: async () => null,
     writePreparedReaderProjection: readOnly,
   };
-}
-
-function object(value: unknown): Record<string, unknown> | null {
-  return value !== null && typeof value === "object" && !Array.isArray(value)
-    ? value as Record<string, unknown>
-    : null;
-}
-
-function dotGovProjectionVerification(candidate: RoutineCandidate): RoutineReaderVerification {
-  const verifierId = "lib/civic-data/candidate-integrity.ts#dotGovProjectionVerification";
-  const root = object(candidate.readModel);
-  const source = object(root?.source);
-  const counts = object(root?.counts);
-  const rows = root?.electionDomains;
-  if (
-    root === null || source === null || counts === null || !Array.isArray(rows) ||
-    typeof source.sha !== "string" || source.sha.length === 0 ||
-    typeof source.url !== "string" || source.url.length === 0 ||
-    typeof source.readAt !== "string" || !Number.isFinite(Date.parse(source.readAt)) ||
-    !Number.isInteger(counts.domains) || !Number.isInteger(counts.electionDomains) ||
-    counts.domains as number < rows.length || counts.electionDomains !== rows.length ||
-    rows.some((value) => {
-      const row = object(value);
-      return row === null || typeof row.domain !== "string" || !/\.gov$/i.test(row.domain) ||
-        typeof row.type !== "string" || !/election/i.test(row.type);
-    })
-  ) {
-    return fail(verifierId, "The candidate does not satisfy the exact CISA dotgov operational projection shape and reconciled counts.");
-  }
-  return pass(verifierId, `The source-scoped CISA projection contains ${rows.length} structurally valid election-domain rows.`);
 }
 
 export async function verifySourceScopedCandidateProjection(
@@ -244,7 +216,7 @@ export async function verifySourceScopedCandidateProjection(
     );
   }
 
-  if (contract.readerProjection === null) return dotGovProjectionVerification(candidate);
+  if (contract.readerProjection === null) return fail("lib/civic-data/candidate-integrity.ts#readerProjection", "The source contract declares no typed Reader projection.");
 
   if (candidate.recordClass === "FEDERAL_MONEY") {
     const { FEDERAL_MONEY_SOURCES } = await import("../federal-money/model.ts");

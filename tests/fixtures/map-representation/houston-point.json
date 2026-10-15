@@ -1,0 +1,175 @@
+{
+  "point": {
+    "lng": -95.3904,
+    "lat": 29.7451
+  },
+  "samples": [
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/identify?f=json&geometry=-95.3904%2C29.7451&geometryType=esriGeometryPoint&sr=4326&layers=all%3A4%2C5%2C6&tolerance=0&mapExtent=-95.40%2C29.735%2C-95.38%2C29.755&imageDisplay=1000%2C1000%2C96&returnGeometry=false",
+      "response": {
+        "results": [
+          {
+            "layerId": 4,
+            "layerName": "119th Congressional Districts",
+            "displayFieldName": "BASENAME",
+            "value": "7",
+            "attributes": {
+              "OBJECTID": "388",
+              "STGEOMETRY": "Polygon",
+              "AREALAND": "338582469",
+              "AREAWATER": "5385653",
+              "CD119": "07",
+              "CDSESSN": "119",
+              "CDTYP": "O",
+              "FUNCSTAT": "N",
+              "GEOID": "4807",
+              "LSADC": "C2",
+              "MTFCC": "G5200",
+              "BASENAME": "7",
+              "NAME": "Congressional District 7",
+              "OID": "2116635951825372",
+              "STATE": "48",
+              "CENTLON": "-095.5982203",
+              "CENTLAT": "+29.6817320",
+              "INTPTLON": "-095.6795105",
+              "INTPTLAT": "+29.6061408",
+              "HU100": "Null",
+              "POP100": "Null"
+            }
+          },
+          {
+            "layerId": 5,
+            "layerName": "2024 State Legislative Districts - Upper",
+            "displayFieldName": "BASENAME",
+            "value": "15",
+            "attributes": {
+              "AREALAND": "652963897",
+              "AREAWATER": "20153365",
+              "BASENAME": "15",
+              "CENTLAT": "+29.8829461",
+              "CENTLON": "-095.3911362",
+              "FUNCSTAT": "N",
+              "GEOID": "48015",
+              "HU100": "Null",
+              "INTPTLAT": "+29.9314444",
+              "INTPTLON": "-095.4725906",
+              "LDTYP": "O",
+              "LSADC": "LU",
+              "LSY": "2024",
+              "MTFCC": "G5210",
+              "NAME": "State Senate District 15",
+              "OBJECTID": "1296",
+              "OID": "2126635951823312",
+              "POP100": "Null",
+              "SLDU": "015",
+              "STATE": "48",
+              "STGEOMETRY": "Polygon"
+            }
+          },
+          {
+            "layerId": 6,
+            "layerName": "2024 State Legislative Districts - Lower",
+            "displayFieldName": "BASENAME",
+            "value": "147",
+            "attributes": {
+              "AREALAND": "108968183",
+              "AREAWATER": "776983",
+              "BASENAME": "147",
+              "CENTLAT": "+29.6761392",
+              "CENTLON": "-095.3168236",
+              "FUNCSTAT": "N",
+              "GEOID": "48147",
+              "HU100": "Null",
+              "INTPTLAT": "+29.6731254",
+              "INTPTLON": "-095.3175920",
+              "LDTYP": "O",
+              "LSADC": "LL",
+              "LSY": "2024",
+              "MTFCC": "G5220",
+              "NAME": "State House District 147",
+              "OBJECTID": "2623",
+              "OID": "2136635951823412",
+              "POP100": "Null",
+              "SLDL": "147",
+              "STATE": "48",
+              "STGEOMETRY": "Polygon"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/identify?f=json&geometry=-95.3904%2C29.7451&geometryType=esriGeometryPoint&sr=4326&layers=all&tolerance=0&mapExtent=-95.40%2C29.735%2C-95.38%2C29.755&imageDisplay=1000%2C1000%2C96&returnGeometry=false",
+      "response": {
+        "results": [
+          {
+            "layerId": 1,
+            "layerName": "Counties",
+            "displayFieldName": "NAME",
+            "value": "Harris County",
+            "attributes": {
+              "MTFCC": "G4020",
+              "OID": "27590325947046",
+              "GEOID": "48201",
+              "STATE": "48",
+              "COUNTY": "201",
+              "COUNTYNS": "01383886",
+              "BASENAME": "Harris",
+              "NAME": "Harris County",
+              "LSADC": "06",
+              "FUNCSTAT": "A",
+              "COUNTYCC": "H1",
+              "AREALAND": "4422002774",
+              "AREAWATER": "180506183",
+              "OBJECTID": "2896",
+              "STGEOMETRY": "Polygon",
+              "CENTLAT": "+29.8573332",
+              "CENTLON": "-095.3920016",
+              "INTPTLAT": "+29.8572730",
+              "INTPTLON": "-095.3930371"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/identify?f=json&geometry=-95.3904%2C29.7451&geometryType=esriGeometryPoint&sr=4326&layers=all&tolerance=0&mapExtent=-95.40%2C29.735%2C-95.38%2C29.755&imageDisplay=1000%2C1000%2C96&returnGeometry=false",
+      "response": {
+        "results": [
+          {
+            "layerId": 4,
+            "layerName": "Incorporated Places",
+            "displayFieldName": "BASENAME",
+            "value": "Houston",
+            "attributes": {
+              "AREALAND": "1659718963",
+              "AREAWATER": "80857826",
+              "BASENAME": "Houston",
+              "CBSAPCI": "Y",
+              "CENTLAT": "+29.7859623",
+              "CENTLON": "-095.3886610",
+              "FUNCSTAT": "A",
+              "GEOID": "4835000",
+              "INTPTLAT": "+29.7857435",
+              "INTPTLON": "-095.3888059",
+              "LSADC": "25",
+              "MTFCC": "G4110",
+              "NAME": "Houston city",
+              "NECTAPCI": "N",
+              "OBJECTID": "31978",
+              "OID": "27890262361690",
+              "PLACE": "35000",
+              "PLACECC": "C1",
+              "PLACENS": "02410796",
+              "STATE": "48",
+              "STGEOMETRY": "Polygon",
+              "DISP_CLR": "3"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "retrievedAt": "2026-10-12T23:09:17.258654+00:00",
+  "selection": "First current-layer result per county and incorporated place; source attributes retained unchanged."
+}

@@ -20,9 +20,8 @@ import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts"
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { WORKER_CREDENTIAL_VAR } from "../lib/control-plane/scheduler/research-policy.ts";
 import { anthropicTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
+import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { durableSearchBudget } from "../lib/control-plane/discovery/search-runtime.ts";
-import { scoutEscalationReservation } from "../lib/control-plane/fleet-safety.ts";
 import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, hunterQueuePath, readHunterQueue,
   stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
@@ -97,8 +96,8 @@ const lane = hunterLane({
       };
       const budget = durableSearchBudget({ repos, perCycle: Number.MAX_SAFE_INTEGER, perDay: Number.MAX_SAFE_INTEGER, admit: admitted, admitLifetimeHunt: admitted, now: nowIso });
       const keys = { braveKey: process.env.BRAVE_SEARCH_API_KEY, exaKey: process.env.EXA_API_KEY };
-      const normal = makeScoutSearch({ ...keys, budget });
-      return normal === null ? null : { normal, lifetime: makeScoutSearch({ ...keys, budget: budget.lifetimeHunt }) ?? normal };
+      const normal = makeHuntSearch({ ...keys, budget });
+      return normal === null ? null : { budget, normal, lifetime: makeHuntSearch({ ...keys, budget: budget.lifetimeHunt }) ?? normal };
     })();
     const slots = reportingWorkerSlots(workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
       { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !drain && Date.now() < deadlineMs }));
@@ -132,11 +131,7 @@ const lane = hunterLane({
         return Math.min(taskIds.length, taskIds.filter(id => plain.has(id)).length + paid);
       },
       transportFor: laneWorkerTransport(lane.current, ownSpend, nowIso),
-      ...(search === null ? {} : { searchFor: (subject: string) => funded.has(subject) ? search.lifetime : search.normal }),
-      reserveEscalation: request => {
-        const fleet = lane.current().fleetSafety;
-        return fleet === null ? { admit: false, code: "MODEL_LANE_CLOSED", why: "the hunter lane is not armed" } as never : scoutEscalationReservation(fleet)(request);
-      },
+      ...(search === null ? {} : { searchFor: (subject: string) => funded.has(subject) ? search.lifetime : search.normal, searchBudget: search.budget }),
       /* While paid work is held, only plain-code tasks are handed out; the round's order otherwise. */
       orderPending: async ids => !handingOut() ? [] : ids.filter(id => lane.current().closed === null || plain.has(id))
         .sort((a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER)),
@@ -145,7 +140,7 @@ const lane = hunterLane({
         if (result.worker?.role !== "SCOUT") { say(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }
         const outcome = result.disposition === "INGESTED" ? "CAPTURED"
           : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";
-        say(`hunter lane: Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
+        say(`hunter lane: hunt done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
       },
       onStarted: pid => { progress.started(); say(`hunter lane: lease worker process: pid ${pid}; pulls queued RouteTasks`); },
       onExited: (pid, why) => { progress.ended(); say(`hunter lane: lease worker process ended: pid ${pid}; ${why}`); } })

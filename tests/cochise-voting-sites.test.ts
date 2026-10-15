@@ -1,19 +1,32 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { createHash } from "node:crypto";
 import test from "node:test";
 import { VOTING_SITES_CONTRACT, retainFailedVotingSiteScopes, votingSitesCandidate,
-  votingSitesScopedSuccessor, votingSitesStandardSuccessor } from "../lib/ballot/voting-sites-data-plane.ts";
+  votingSitesScopedSuccessor, votingSitesStandardSuccessor, type VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import { loadVotingSites, readVotingSitesProjection, resetVotingSitesCache } from "../lib/ballot/voting-sites-server.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { cochiseGeneralElectionLinkIssue, cochiseVotingJurisdiction, parseCochiseVoteCenterItems,
-  parseCochiseVoteCenters, type PositionedText } from "../lib/sources/cochise-vote-centers.ts";
+import { parseVotingCapture, votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
+import { mergeVotingSourceRead, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import type { VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
 
 const PDF = readFileSync(join(process.cwd(), "tests/fixtures/cochise-2026-vote-centers.pdf"));
-const ELECTIONS = `<h2>General Election</h2><h2>November 3, 2026</h2><a href="/DocumentCenter/View/4575/Vote-Center-Locations-PDF">Vote Center Locations</a>`;
-const VOTER = `<h3>Important Dates for General Election</h3><a href="/DocumentCenter/View/4575/Vote-Center-Locations-PDF">View Election Day Polling Locations</a>`;
+const DOOR = (JSON.parse(readFileSync(join(process.cwd(), "data/reference/voting-legacy-doors.json"), "utf8")) as VotingSourceDoor[])
+  .find(door => door.id === "legacy:cochise:vote-center-pdf")!;
+const CAPTURE = { url: DOOR.url, contentType: "application/pdf", bytes: PDF };
+async function capturedRead(): Promise<VotingSourceRead> {
+  const source = { publisher: DOOR.publisher, url: DOOR.url, checkedAt: T1 };
+  const parsed = votingRowsToSites(await parseVotingCapture(CAPTURE, DOOR), DOOR, source);
+  return { doorId: DOOR.id, sites: parsed.sites, office: parsed.office, rules: DOOR.rules ?? [], sources: [source],
+    blanks: [], attempts: [], rawBodies: [CAPTURE] };
+}
+async function capturedJurisdiction() {
+  return mergeVotingSourceRead(undefined, DOOR, await capturedRead(), T1);
+}
 const T0 = "2026-09-28T10:00:00.000Z";
 const T1 = "2026-09-28T10:30:00.000Z";
 const COCHISE = "ocd-division/country:us/state:az/county:cochise";
@@ -31,69 +44,53 @@ function priorFile(): VotingSitesFile {
   return { generatedAt: "2026-09-20", jurisdictions: [county(COUNTY_A, "WA", "Example A County", 1), county(COUNTY_B, "OR", "Example B County", 2)] };
 }
 
-async function positioned(): Promise<PositionedText[]> {
-  const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const doc = await getDocument({ data: new Uint8Array(PDF), useWorkerFetch: false }).promise;
-  try {
-    const content = await (await doc.getPage(1)).getTextContent();
-    return content.items.flatMap((item: unknown) => {
-      if (!item || typeof item !== "object" || !("str" in item) || !("transform" in item)) return [];
-      const part = item as { str: string; transform: number[] };
-      const text = part.str.replace(/\s+/g, " ").trim();
-      return text ? [{ text, x: part.transform[4]!, y: part.transform[5]! }] : [];
-    });
-  } finally { await doc.cleanup(); }
-}
-
-test("official 2026 Cochise PDF yields exactly 18 countywide vote centers with exact raw hash", async () => {
-  const centers = await parseCochiseVoteCenters(PDF);
-  assert.equal(centers.length, 18);
-  assert.deepEqual(centers.map(row => row.id), [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19].map(n => `az-cochise-vc-${n}`));
-  assert.equal(centers.find(row => row.id === "az-cochise-vc-8")?.address, "1519 Avenida Del Sol");
-  const jurisdiction = await cochiseVotingJurisdiction({ pdfBytes: PDF, electionsHtml: ELECTIONS,
-    voterHtml: VOTER, collectedAt: "2026-09-28" });
-  assert.equal(jurisdiction.model, "VOTE_CENTER");
-  assert.equal(jurisdiction.election, "2026 General Election");
-  assert.equal(jurisdiction.sourceRawSha256, "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c");
-  assert.ok(jurisdiction.sites.every(site => site.serves === null && site.election === "2026 General Election"));
+test("the generic PDF mapping reads all 18 official countywide vote centers, hours, phone and return rule", async () => {
+  const read = await capturedRead();
+  assert.equal(read.sites.length, 18);
+  assert.equal(new Set(read.sites.map(site => site.id)).size, 18);
+  assert.equal(read.sites.find(site => site.name === "Shiloh Christian Ministries")?.address, "1519 Avenida Del Sol");
+  assert.ok(read.sites.every(site => site.hours === "6:00 a.m. to 7:00 p.m." && site.days === "Election Day"));
+  assert.ok(read.sites.every(site => site.kind === "VOTE_CENTER" && site.sources?.[0]?.url === DOOR.url));
+  assert.equal(read.office?.phone, "520-432-8970");
+  assert.equal(read.rules[0]?.text, "Voters may vote at any of the Vote Centers listed below.");
+  assert.equal(createHash("sha256").update(PDF).digest("hex"), "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c");
+  assert.equal((await capturedJurisdiction()).model, "VOTE_CENTER");
+  const vault = new MemoryEvidenceStore(), evidence = await holdVotingRawEvidence(vault, read);
+  assert.deepEqual(Buffer.from((await vault.get(evidence[0]!.vaultKey))!.bytes), PDF);
 });
 
-test("wrong year, short or duplicate list, malformed address and missing general-election link refuse", async () => {
-  const items = await positioned();
-  const change = (predicate: (item: PositionedText) => boolean, text: string) =>
-    items.map(item => predicate(item) ? { ...item, text } : item);
-  assert.throws(() => parseCochiseVoteCenterItems(change(item => item.text.includes("ELECTIONS – 2026"), "COCHISE COUNTY ELECTIONS – 2025")), /YEAR_OR_AUTHORITY_CHANGED/);
-  assert.throws(() => parseCochiseVoteCenterItems(items.filter(item => item.text !== "VC19")), /ROW_COUNT_MISMATCH/);
-  assert.throws(() => parseCochiseVoteCenterItems(change(item => item.text === "VC19", "VC18")), /DUPLICATE_OR_BAD_ID/);
-  assert.throws(() => parseCochiseVoteCenterItems(change(item => item.text === "1519 Avenida Del Sol", "no street")), /ROW_SHAPE_8/);
-  assert.throws(() => parseCochiseVoteCenterItems(change(item => item.text.includes("Voters may vote at any"), "Assigned precincts only")), /COUNTYWIDE_ELIGIBILITY_UNPROVEN/);
-  assert.equal(cochiseGeneralElectionLinkIssue(ELECTIONS.replace("November 3, 2026", "July 21, 2026"), VOTER), "GENERAL_ELECTION_DATE_UNVERIFIED");
-  assert.equal(cochiseGeneralElectionLinkIssue(ELECTIONS, VOTER.replace("Vote-Center-Locations-PDF", "older-list.pdf")), "GENERAL_ELECTION_LINK_UNVERIFIED");
+test("an incomplete PDF fails without producing a replacement list", async () => {
+  await assert.rejects(parseVotingCapture({ ...CAPTURE, bytes: PDF.subarray(0, 100) }, DOOR));
 });
 
 test("a scoped county successor promotes through the existing pointer and leaves every other county exact", async () => {
   resetVotingSitesCache();
   const store = new MemoryRoutineDataStore();
   const prior = priorFile();
-  const base = votingSitesCandidate({ current: prior, prior: null, failures: [], rawBodies: ["original official bytes"],
+  const vault = new MemoryEvidenceStore();
+  const original = await holdVotingRawEvidence(vault, { rawBodies: [{ url: "https://elections.wa-example.gov/vote-centers",
+    contentType: "text/html", bytes: new TextEncoder().encode("original official bytes") }] });
+  const base = votingSitesCandidate({ current: prior, prior: null, failures: [], acquisition: original,
     successfulAuthorityReads: 1, requestedUrl: "https://elections.wa-example.gov/vote-centers", finalUrl: "https://elections.wa-example.gov/vote-centers", retrievedAt: T0 });
   assert.ok((await processRegisteredManualCandidate(store, "voting-sites", base, T0)).promoted);
-  const cochise = await cochiseVotingJurisdiction({ pdfBytes: PDF, electionsHtml: ELECTIONS,
-    voterHtml: VOTER, collectedAt: "2026-09-28" });
+  const cochise = await capturedJurisdiction();
   const successor = votingSitesScopedSuccessor(prior, cochise, "2026-09-28");
   assert.deepEqual(successor.jurisdictions.filter(row => row.ocdId !== COCHISE),
     [...prior.jurisdictions].sort((left, right) => left.ocdId.localeCompare(right.ocdId)));
-  const frame = `${cochise.sourceUrl}\n${cochise.sourceUrl}\nHTTP 200\nContent-Type: application/pdf\nContent-Transfer-Encoding: base64\nbytes ${PDF.length}\nsha256 ${cochise.sourceRawSha256}\n\n${PDF.toString("base64")}`;
-  const candidate = votingSitesCandidate({ current: successor, prior, failures: [], rawBodies: [ELECTIONS, VOTER, frame],
-    successfulAuthorityReads: 3, requestedUrl: cochise.sourceUrl, finalUrl: cochise.sourceUrl, retrievedAt: T1,
-    retainRawBodies: true, carriedFromVersionId: base.id });
-  const payload = candidate.normalizedPayload as { acquisition: string[]; carriedFromVersionId: string; projection: VotingSitesFile };
+  const acquisition = await holdVotingRawEvidence(vault, await capturedRead());
+  const candidate = votingSitesCandidate({ current: successor, prior, failures: [], acquisition,
+    successfulAuthorityReads: 1, requestedUrl: cochise.sourceUrl, finalUrl: cochise.sourceUrl, retrievedAt: T1,
+    carriedFromVersionId: base.id });
+  const payload = candidate.normalizedPayload as { acquisition: VotingRawCapture[]; carriedFromVersionId: string; projection: VotingSitesFile };
   assert.equal(payload.carriedFromVersionId, base.id);
   assert.deepEqual(payload.projection, successor);
-  assert.deepEqual(Buffer.from(payload.acquisition[2]!.split("\n\n")[1]!, "base64"), PDF);
+  assert.deepEqual(payload.acquisition, [{ url: DOOR.url, contentType: "application/pdf", vaultKey: payload.acquisition[0]!.vaultKey,
+    rawHash: "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c", byteLength: PDF.byteLength }]);
+  assert.ok(JSON.stringify(candidate).length < 64 * 1024, "the candidate holds refs, not the PDF");
+  assert.deepEqual(Buffer.from((await vault.get(payload.acquisition[0]!.vaultKey))!.bytes), PDF);
   const published = await processRegisteredManualCandidate(store, "voting-sites", candidate, T1);
   assert.ok(published.promoted);
-  assert.equal(published.readerReadback?.status, "PASS");
+  assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
   const read = await readVotingSitesProjection({ store, now: T1, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(loadVotingSites().jurisdictions.find(row => row.ocdId === COCHISE)?.sites.length, 18);
@@ -105,8 +102,7 @@ test("a scoped county successor promotes through the existing pointer and leaves
 
 test("the next standard refresh carries a scoped county unchanged while refreshing the others", async () => {
   const prior = priorFile();
-  const cochise = await cochiseVotingJurisdiction({ pdfBytes: PDF, electionsHtml: ELECTIONS,
-    voterHtml: VOTER, collectedAt: "2026-09-28" });
+  const cochise = await capturedJurisdiction();
   const withCochise = votingSitesScopedSuccessor(prior, cochise, "2026-09-28");
   const next = votingSitesStandardSuccessor(prior, withCochise);
   assert.deepEqual(next.jurisdictions.find(row => row.ocdId === COCHISE), cochise);
@@ -132,8 +128,7 @@ test("scoped refresh accepts any state, county, voting model and sourced site co
 });
 
 test("one county's source failure retains that county only", async () => {
-  const cochise = await cochiseVotingJurisdiction({ pdfBytes: PDF, electionsHtml: ELECTIONS,
-    voterHtml: VOTER, collectedAt: "2026-09-28" });
+  const cochise = await capturedJurisdiction();
   const prior = priorFile();
   const full = votingSitesScopedSuccessor(prior, cochise, "2026-09-28");
   const current = structuredClone(full);

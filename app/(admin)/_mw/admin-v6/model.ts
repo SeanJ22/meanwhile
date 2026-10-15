@@ -1,7 +1,7 @@
-import { EASTERN_ZONE } from "@/lib/control-plane/eastern-time.ts";
-import type { LookView } from "@/lib/frontend/look-pass.ts";
+import { EASTERN_ZONE } from "../../../../lib/control-plane/eastern-time.ts";
+import type { LookView } from "../../../../lib/frontend/look-pass.ts";
 
-export type { LookScreenView, LookView } from "@/lib/frontend/look-pass.ts";
+export type { LookScreenView, LookView } from "../../../../lib/frontend/look-pass.ts";
 
 export type SourceState = "live" | "sample" | "not-connected";
 export type LoadState = "loading" | "ready" | "partial" | "failed";
@@ -61,6 +61,8 @@ export interface Place {
 }
 
 export interface Hunt {
+  /** Actual allocated charges, rather than the allowance consumed by overlapping hunts. */
+  readonly reportedSpendUsd?: number | null;
   readonly id: string;
   readonly placeKey: string;
   readonly name: string;
@@ -80,6 +82,8 @@ export interface Hunt {
   readonly basis?: "lifetime";
   /** Left to spend as the backend computed it; null when an unpriced charge makes it unknown. Absent: limit − spent − set aside. */
   readonly availableUsd?: number | null;
+  /** Why a paused hunt is paused: all paid work, the runner, or its own $0 budget. Null or absent when not paused. */
+  readonly pause?: { readonly kind: "paid-work" | "runner" | "budget"; readonly since: string | null; readonly note: string | null } | null;
 }
 
 /** Left to spend, or null when unknown (never guessed from a lower-bound spend). */
@@ -92,6 +96,7 @@ export function huntLeftUsd(h: Hunt): number | null {
  * state, a ZIP at a district. Every figure is null when it is not known (never zero).
  */
 export interface StateRow {
+  readonly population?: import("@/lib/reference/population-facts.ts").PopulationFact | null;
   readonly placeKey: string;
   readonly code: string;
   readonly name: string;
@@ -162,6 +167,7 @@ export interface ReaderResult {
 export type Lane = "decision" | "auto" | "publisher" | "software";
 
 export interface StuckItem {
+  readonly technical?: readonly string[];
   readonly id: string;
   readonly title: string;
   readonly applies: readonly string[];
@@ -310,6 +316,9 @@ export interface WorkerStatus {
   readonly nextRoundDueAt: string | null;
   readonly runnerState: string | null;
   readonly lanes: readonly { readonly name: string; readonly active: number | null; readonly waiting: number; readonly blockedBy: string | null }[] | null;
+  /** Database bytes the runner read in its last full hour, largest callers first. */
+  readonly databaseReads?: { readonly hour: string; readonly controlPlaneBytes: number; readonly readerBytes: number;
+    readonly byCaller: readonly { readonly caller: string; readonly bytes: number }[] } | null;
   readonly unread: readonly string[];
 }
 
@@ -489,6 +498,12 @@ export interface MoneyView {
     readonly error: string | null; readonly detail: string; readonly credits: string | null; readonly accounts: readonly string[]; readonly limits: readonly string[];
     readonly units: readonly { readonly label: string; readonly value: number; readonly unit: string }[] }[];
   readonly otherServices: string;
+  /** Each billed provider's own days; a cell is null when that number is not held. */
+  readonly byDay: {
+    readonly providers: readonly { readonly provider: string; readonly note: string | null }[];
+    readonly days: readonly { readonly day: string; readonly cells: readonly ({ readonly usd: number | null; readonly usage: string | null } | null)[] }[];
+    readonly technical: readonly string[];
+  };
 }
 
 export interface SourceReliabilityRow {
@@ -511,6 +526,7 @@ export interface PublicationRow {
   readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
 }
 export interface PublicationView {
+  readonly ballotPublication?: import("@/lib/civic-data/ballot-publication").BallotPublicationResult | null;
   readonly total: number;
   readonly counts: readonly { readonly verdict: PublicationRow["verdict"]; readonly words: string; readonly count: number }[];
   readonly latestAttemptFailing: number;
@@ -551,6 +567,8 @@ export interface ReachedView {
 }
 
 export interface SpendView {
+  readonly modelSpend?: import("../../../../lib/control-plane/admin-view/model-spend.ts").ModelSpendView | null;
+  readonly huntCost?: import("../../../../lib/hunt/cost-per-fact.ts").HuntCostView | null;
   readonly windowDays: number;
   readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
   readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
@@ -752,13 +770,9 @@ export interface FixView {
 }
 
 export type ActionKind =
-  | "contain" | "uncontain" | "recheck" | "workfirst" | "fixfirst" | "stopmethod" | "scope-stop" | "stoprepeats"
-  | "decide" | "hunt-start" | "hunt-start-many" | "leads-send" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
-  | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
-  | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
-  | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "order-unschedule" | "owed-add" | "owed-decline" | "owed-undo" | "target-set" | "target-clear"
-  | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
+  "ballot-publish" |
+  "focus" |
+  "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -815,9 +829,12 @@ export interface UiReceipt {
   readonly gatewayReceiptId: string | null;
   readonly readBackAt: string | null;
   readonly notPickedUp?: boolean;
+  readonly finishBy?: string | null;
+  readonly scheduledParentId?: string;
+  /** BR-13: before and after, shown beside Done. */
   readonly change?: { readonly before: string; readonly after: string };
-  readonly plan?: import("@/lib/control-plane/gateway/confirmation.ts").OrderPlan;
-  readonly progress?: import("@/lib/control-plane/gateway/confirmation.ts").OrderProgress;
+  readonly plan?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderPlan;
+  readonly progress?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderProgress;
   readonly replayed: boolean;
   readonly sentAt: string;
   readonly words?: string;
@@ -844,7 +861,6 @@ export interface AdminV6Data {
   readonly money: Sourced<MoneyView>;
   readonly scoreboard: Sourced<ScoreboardView>;
   readonly fixes: Sourced<FixView>;
-  readonly decided: Sourced<readonly { readonly title: string; readonly state: string }[]>;
 }
 
 export function usd(n: number): string {

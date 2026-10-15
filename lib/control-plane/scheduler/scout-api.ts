@@ -1,4 +1,4 @@
-/** Credentialed, read-only government APIs shared by Scouts and Detectives.
+/** Credentialed, read-only government APIs shared by hunters and detectives.
  * Credentials stay in transport, never in source locators or model output. */
 import { readCompleteResponse } from "../../sources/source-bytes.ts";
 import { assertPublicUrl } from '../../hunt/egress.ts';
@@ -6,7 +6,7 @@ import type { ScoutToolSpec } from './scout-contract.ts';
 
 export const SOURCE_API_TOOLS = ['congress_api', 'census_api', 'fec_api', 'plural_api', 'legiscan_api', 'lda_api', 'data_gov_api', 'socrata_api', 'google_civic_api', 'sam_gov_api', 'legistar_api'] as const;
 export type SourceApiTool = typeof SOURCE_API_TOOLS[number];
-export interface SourceApiResult { sourceUrl: string; status: number; text: string; requests: number; bytes: number }
+export interface SourceApiResult { sourceUrl: string; status: number; text: string; requests: number; bytes: number; retryAfter?: string | null }
 export interface SourceApiOptions {
   env?: Readonly<Record<string, string | undefined>>;
   fetchImpl?: typeof fetch;
@@ -21,7 +21,7 @@ const descriptions: Record<SourceApiTool, string> = {
   plural_api: 'Plural/Open States v3 people, bills, votes and jurisdictions. path people or bills; params jurisdiction, page, per_page.',
   legiscan_api: 'LegiScan read API. params op=getMasterList and state=AZ, or op=getBill and id=<bill id>.',
   lda_api: 'Federal lobbying disclosures. path filings/, registrants/, clients/, lobbyists/ or contributions/; params filing_year, client_name, page.',
-  data_gov_api: 'Data.gov-powered College Scorecard data. path schools; params school.state, school.city, fields, page, per_page. National education holdings before web research.',
+  data_gov_api: 'Data.gov APIs. Default provider is College Scorecard: path schools; params school.state, fields, page, per_page. provider=govinfo reads the Congressional Directory: path collections/CDIR/<start>/<end>, packages/<id>/summary or packages/<id>/granules.',
   socrata_api: 'Socrata catalog and dataset rows. params q searches the catalog; domain plus dataset reads verified catalog datasets with SoQL params ($select, $where, $limit, $offset).',
   google_civic_api: 'Working Google Civic divisions lookup. params query=<place name or OCD division id>.',
   sam_gov_api: 'SAM.gov public contract opportunities. params postedFrom and postedTo (MM/DD/YYYY, maximum one year), state, title, limit, offset.',
@@ -29,7 +29,7 @@ const descriptions: Record<SourceApiTool, string> = {
 };
 export const SOURCE_API_SPECS: readonly ScoutToolSpec[] = SOURCE_API_TOOLS.map(name => ({ name,
   description: descriptions[name] + ' Returns captured data and its credential-free source link. Reuse held data first. Keys are supplied by the runtime; never pass a key.',
-  input_schema: { type: 'object', properties: { path: {type:'string'}, tenant: {type:'string'}, domain: {type:'string'}, dataset: {type:'string'}, params: {type:'object', additionalProperties:{type:'string'}}, rung: {type:'string'}, why: {type:'string'} }, required:['rung','why'] },
+  input_schema: { type: 'object', properties: { path: {type:'string'}, provider: {type:'string'}, tenant: {type:'string'}, domain: {type:'string'}, dataset: {type:'string'}, params: {type:'object', additionalProperties:{type:'string'}} } },
 }));
 const config: Partial<Record<SourceApiTool, { base: string; key: string; param?: string; header?: string; prefix?: string; path: string }>> = {
   congress_api: {base:'https://api.congress.gov/v3/', key:'CONGRESS_API_KEY', param:'api_key', path:'member'},
@@ -58,12 +58,14 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
     const timeout = AbortSignal.timeout(options.timeoutMs ?? 15000);
     const response = await fetcher(url.href, {method:'GET',headers:{accept:'application/json',...headers},redirect:'error',signal:options.signal ? AbortSignal.any([options.signal,timeout]) : timeout});
     const text = redact(new TextDecoder("utf-8", {fatal:true}).decode(await readCompleteResponse(response,16*1024*1024))); bytes += Buffer.byteLength(text);
-    return {status:response.status,text};
+    return {status:response.status,text,retryAfter:response.headers.get('retry-after')};
   };
   try {
     let url:URL;
     const headers:Record<string,string> = {};
-    const cfg = config[name];
+    if (name === 'data_gov_api' && input.provider !== undefined && !['govinfo','college-scorecard'].includes(String(input.provider))) throw new Error('Unknown Data.gov provider');
+    const cfg = name === 'data_gov_api' && input.provider === 'govinfo'
+      ? {base:'https://api.govinfo.gov/',key:'DATA_GOV_API_KEY',param:'api_key',path:'collections'} : config[name];
     if (name === 'legistar_api') {
       if (typeof input.tenant !== 'string' || !/^[a-z0-9-]+$/i.test(input.tenant)) throw new Error('Legistar tenant required');
       url = new URL(`https://webapi.legistar.com/v1/${input.tenant}/${typeof input.path === 'string' ? input.path : 'Events'}`);

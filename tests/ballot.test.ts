@@ -43,81 +43,43 @@ test("the NJ date strip is complete and cited", () => {
   assert.match(dates.sourceUrl, /^https:\/\/www\.nj\.gov\//);
 });
 
-test("item 6: every covered state points at its own official polling-place lookup", async () => {
+test("polling lookup routes come from the held projection, without a literal state list", async () => {
   const { POLLING_PLACE_LINKS, pollingPlaceLinkFor } = await import(
     "../lib/ballot/polling-place-links.ts"
   );
-  const { REGISTRATION_LINKS } = await import(
-    "../lib/ballot/registration-links.ts"
-  );
+  assert.deepEqual(POLLING_PLACE_LINKS, []);
+  assert.equal(pollingPlaceLinkFor("OH", []), null);
 
-  // Every state we can render a ballot for gets the pointer.
-  for (const reg of REGISTRATION_LINKS) {
-    const link = pollingPlaceLinkFor(reg.state);
-    assert.ok(link, `${reg.state} has a registration link but no polling-place link`);
-  }
+  for (const state of ["AZ", "NJ", "NH", "OH"]) assert.equal(pollingPlaceLinkFor(state), null);
 
-  const hosts = new Set<string>();
-  for (const link of POLLING_PLACE_LINKS) {
-    const url = new URL(link.url);
-    assert.equal(url.protocol, "https:", `${link.state} link is not https`);
-    // The authority's own host — never an aggregator, never a third party.
-    assert.match(
-      url.hostname,
-      /(\.gov|\.arizona\.vote)$/,
-      `${link.state} points at ${url.hostname}, which is not an election authority's host`,
-    );
-    // A cited URL must have been fetched and verified, and the sentence must say which rung answered.
-    assert.ok(link.verification.length > 40, `${link.state} verification is too thin`);
-    assert.match(link.verifiedAt, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(link.sourceOrg.length > 0);
-    // Plain words on the reader-facing line — no identifiers, no jargon.
-    assert.match(link.label, /^Find your polling place$/);
-    assert.ok(link.note.length > 0, `${link.state} must say what the tool asks for`);
-    hosts.add(`${link.state}|${url.href}`);
-  }
-  // Distinct states resolve to distinct URLs — the uniqueness invariant.
-  assert.equal(hosts.size, POLLING_PLACE_LINKS.length);
-  assert.equal(
-    new Set(POLLING_PLACE_LINKS.map((l) => l.url)).size,
-    POLLING_PLACE_LINKS.length,
-    "two states share one polling-place URL",
-  );
 });
 
-/** The pointer is required once per page, in the dates header: a reader must always find it, and a repeated identical control reads worse. */
-test("F21: the ballot page renders the polling-place pointer exactly once, in the dates header", async () => {
+/** VS-01 supersedes F21's outbound pointer: every reader gets the in-app answer, including places without a ballot or date strip. */
+test("VS-01: the ballot page always offers one in-app voting lookup without requiring dates or a ballot", async () => {
   const { readFileSync } = await import("node:fs");
   const { join } = await import("node:path");
+  const ts = await import("typescript");
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
-  assert.ok(page.includes("pollingPlaceLinkFor"), "the ballot page never asks for it");
-
-  const pointerCall = "pollingPlaceLinkFor(set.election.state, pollingPlaceLinks)";
-  const occurrences = page.split(pointerCall).length - 1;
-  assert.equal(
-    occurrences,
-    1,
-    `the pointer resolves ${occurrences} time(s); once per page, in the dates header (F21)`,
-  );
-
-  // Location, not just count. The dates header is the block that also
-  // resolves the registration deadline and early-voting steps.
-  const header = page.indexOf("const reg = registrationLinkFor(set.election.state, registrationLinks);");
-  const pointer = page.indexOf(pointerCall);
-  assert.ok(header >= 0 && pointer > header, "the pointer left the dates header");
-  /* The pointer sits inside the dates section, and the separate registration checker box stays gone. */
-  const sectionEnd = page.indexOf("</section>", pointer);
-  assert.ok(sectionEnd > pointer, "the pointer is not inside the dates section at all");
-  assert.ok(
-    page.indexOf("registration checker, prominent") === -1,
-    "the separate registration checker box is back — AZ-4 and AZ-5 deduplicated it to one pill",
-  );
-
-  /* The pointer is the in-app pill; the state's tool is not offered as a second route beside it. */
-  assert.ok(
-    !/own tool/.test(page),
-    "the state's polling-place tool is being offered as a second route again (BAL-2)",
-  );
+  const syntax = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const controls: import("typescript").JsxSelfClosingElement[] = [];
+  function visit(node: import("typescript").Node): void {
+    if (ts.isJsxSelfClosingElement(node) && node.tagName.getText(syntax) === "WhereToVote") controls.push(node);
+    ts.forEachChild(node, visit);
+  }
+  visit(syntax);
+  assert.equal(controls.length, 1, "one shared voting lookup must be present on the ballot page");
+  let ancestor: import("typescript").Node | undefined = controls[0].parent;
+  while (ancestor && !ts.isReturnStatement(ancestor)) {
+    assert.ok(!ts.isConditionalExpression(ancestor), "voting lookup is conditional on page data");
+    assert.ok(!ts.isBinaryExpression(ancestor) || ![ts.SyntaxKind.AmpersandAmpersandToken, ts.SyntaxKind.BarBarToken].includes(ancestor.operatorToken.kind),
+      "voting lookup is hidden behind a ballot, date, or ZIP condition");
+    ancestor = ancestor.parent;
+  }
+  assert.ok(ancestor && ts.isReturnStatement(ancestor), "voting lookup must render in the page return");
+  assert.ok(!page.includes("pollingPlaceLinkFor"), "the ballot page sends readers out for their voting answer");
+  const control = readFileSync(join(process.cwd(), "components", "ballot", "where-to-vote.tsx"), "utf8");
+  assert.match(control, /<VotingSitesPanel\b/, "the control must open the in-app voting answer");
+  assert.doesNotMatch(control, /<a\s|<Link\s/, "the voting control must not send readers to an external lookup");
 });
 
 /** The registration destination reaches the reader once: the Secretary of State is the only authoritative source for registration status, so the pill leaves the app and says so. */

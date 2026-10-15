@@ -6,16 +6,19 @@
  */
 import { switchOn } from "../data-business/switches.ts";
 import { readRecipe, type ReadDeps, type ReadResult } from "../data-business/read.ts";
-import { daysBefore, periodOf, stateOfDivision, todayUtc } from "../data-business/slice.ts";
+import { daysBefore, periodOf, stateOfDivision } from "../data-business/slice.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CaptureFailures } from "../data-business/live.ts";
 import type { TotalsEntry } from "../data-business/types.ts";
 
 export const CAPTURE_DAYS = 14;
 
-export const captureWindow = (now: Date = new Date()): { readonly from: string; readonly to: string } => ({ from: daysBefore(todayUtc(now), CAPTURE_DAYS - 1), to: todayUtc(now) });
+/** The fourteen Eastern calendar days ending today, including daylight saving time. */
+export const todayEastern = (now: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+export const captureWindow = (now: Date = new Date()): { readonly from: string; readonly to: string } => ({ from: daysBefore(todayEastern(now), CAPTURE_DAYS - 1), to: todayEastern(now) });
 
 export interface CaptureHeadline {
+  /** `recording`: events in the last two Eastern days. `quiet`: some, but not lately. `none`: nothing recorded in the window. `unknown`: the counts could not be read. */
   readonly state: "recording" | "quiet" | "none" | "unknown";
   readonly says: string;
   readonly latestDay: string | null;
@@ -23,7 +26,7 @@ export interface CaptureHeadline {
 export interface TypeRow { readonly type: string; readonly perDay: readonly number[]; readonly total: number }
 export interface TopicDay { readonly day: string; readonly inTopic: number; readonly freeForm: number; readonly percentInTopic: number | null }
 export interface ReaderDay { readonly day: string; readonly readers: number; readonly newReaders: number; readonly returning: number }
-export interface DistrictRow { readonly label: string; readonly state: string; readonly events: number; readonly readers: number | null; readonly percent: number | null }
+export interface DistrictRow { readonly label: string; readonly state: string; readonly events: number; readonly readers: number | null; readonly percent: number | null; readonly population?: import("../../reference/population-facts.ts").PopulationFact | null }
 
 /** One block of the view: its rows, or why it has none. Never an empty list standing in for "unknown". */
 export type Block<T> =
@@ -71,7 +74,7 @@ export function headlineOf(days: readonly string[], totalsByDay: ReadonlyMap<str
   const latest = [...totalsByDay].filter(([, n]) => n > 0).map(([d]) => d).sort().pop() ?? null;
   if (latest === null) return { state: "none", says: `No events were recorded from ${days[0]} to ${days[days.length - 1]}.`, latestDay: null };
   const n = totalsByDay.get(latest) ?? 0;
-  if (latest >= daysBefore(today, 1)) return { state: "recording", says: `Capture is recording: ${n.toLocaleString("en-US")} events on ${latest}${latest === today ? " so far today (UTC)" : ""}.`, latestDay: latest };
+  if (latest >= daysBefore(today, 1)) return { state: "recording", says: `Capture is recording: ${n.toLocaleString("en-US")} events on ${latest}${latest === today ? " so far today (Eastern time)" : ""}.`, latestDay: latest };
   return { state: "quiet", says: `The latest events were on ${latest}, ${Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${latest}T00:00:00Z`)) / 86_400_000)} days ago.`, latestDay: latest };
 }
 
@@ -113,7 +116,8 @@ export async function readCaptureHealth(deps: ReadDeps, config: AdminConfig | nu
         return { day, readers: n + back, newReaders: n, returning: back };
       }) },
     districts: districtRows === null || latestWeek === null ? (districtRows === null ? unavailable(districts) : { kind: "READ", rows: { week: periodOf(to, "week"), rows: [] } })
-      : { kind: "READ", rows: { week: latestWeek, rows: districtRows.filter((r) => r.period === latestWeek).map((r) => ({ label: r.label, state: (stateOfDivision(r.series) ?? "").toUpperCase(), events: r.value, readers: r.readers, percent: r.percent })) } },
+      : { kind: "READ", rows: { week: latestWeek, rows: districtRows.filter((r) => r.period === latestWeek).map((r) => ({ label: r.label, state: (stateOfDivision(r.series) ?? "").toUpperCase(), events: r.value, readers: r.readers, percent: r.percent,
+        ...(districts.kind === "READ" && districts.population ? { population: districts.population.find(denominator => denominator.place === r.series)?.fact ?? null } : {}) })) } },
     failures: failures === null ? { kind: "UNAVAILABLE", says: "—" } : failuresView(failures, from, to),
   };
 }

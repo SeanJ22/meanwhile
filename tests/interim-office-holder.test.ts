@@ -7,7 +7,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { topOfficesFor, rosterInReadingOrder } from "../lib/officials/top-offices.ts";
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 
 const seat = (id: string, name: string, officeTitle: string) =>
   ({ id, name, officeTitle }) as never;
@@ -187,7 +187,7 @@ test("OFF-7: no shipped roster puts a non-superintendent above a superintendent"
 test("OFF-7: the CLASS — every body in the registry, with its denominator", async () => {
   /* Verified against cases the fix was not derived from, reported as a three-way split. */
   const { auditTopOffices } = await import("../scripts/top-office-audit.mts");
-  const rows = auditTopOffices();
+  const rows = auditTopOffices(BODY_ROSTERS);
 
   // A floor: a registry that failed to load would report zero wrong slots.
   assert.ok(rows.length >= 20, `the audit read only ${rows.length} roster(s) — it did not reach the registry`);

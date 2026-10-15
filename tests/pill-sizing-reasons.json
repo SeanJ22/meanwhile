@@ -1,5 +1,5 @@
 {
-  "note": "BAL-12 (2026-08-25). Every pill rule whose sizing DELIBERATELY differs from the voting-pill reference, with the reason. A pill is either RENDERING UNIFORM, OUT OF SCOPE WITH A REASON, or DIFFERING WITH NO REASON — and only the third is a defect. A rule may leave this file only by becoming uniform; a rule may join it only with a reason somebody wrote.",
+  "note": "BAL-12 (2026-08-25). Every pill rule whose sizing DELIBERATELY differs from the voting-pill reference, with the reason. A pill is either RENDERING UNIFORM, OUT OF SCOPE WITH A REASON, or DIFFERING WITH NO REASON — and only the third is a defect. A reason is removed when its sizing difference or rule no longer exists.",
   "recordedOn": "2026-08-25",
   "reference": ".vote-pill",
   "reasons": [
@@ -17,11 +17,6 @@
       "selector": ".contact-pill",
       "props": ["padding", "font-size"],
       "reason": "An ACTION pill with a 44px tap target — a phone number a reader taps. Inset normalised to 14px."
-    },
-    {
-      "selector": ".contact-pill-row[data-compact] .contact-pill",
-      "props": ["padding", "font-size"],
-      "reason": "The compact variant of an action pill, for a card that carries several. It is deliberately tighter than its own base rule, which is a decision about density on one surface rather than a drift from the reference."
     },
     {
       "selector": ".ballot-pill-main",

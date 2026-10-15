@@ -1,6 +1,5 @@
 "use client";
 
-/** Ages and a late round are worked out from the clock on each draw; the pulse redraws the page about every 45 seconds. */
 import { Fragment, useState, useSyncExternalStore } from "react";
 
 import { useV6 } from "./context.tsx";
@@ -17,6 +16,7 @@ const STAGES: readonly WorkerStage[] = ["finding", "collecting", "extracting", "
 
 const when = (iso: string | null | undefined, withDay = true): string => (iso && Number.isFinite(Date.parse(iso)) ? mst(iso, withDay) : "—");
 
+const megabytes = (bytes: number): string => `${(bytes / 1e6).toLocaleString("en-US", { maximumFractionDigits: 1 })} MB`;
 const MINUTE = 60_000;
 const noSubscription = () => () => {};
 const minuteNow = () => Math.floor(Date.now() / MINUTE) * MINUTE;
@@ -58,7 +58,7 @@ export interface RoundReading {
 export function roundReading(st: WorkerStatus | null | undefined, now: number): RoundReading {
   const cycle = st?.cycle;
   if (cycle?.finishedAt) {
-    const exit = cycle.signal ? `signal ${cycle.signal}` : cycle.exitCode === null ? "exit not recorded" : `exit ${cycle.exitCode}`;
+    const exit = cycle.signal ? "it was stopped from outside" : cycle.exitCode === null ? "how it ended is not recorded" : cycle.exitCode === 0 ? "it ended normally" : `it ended with an error (code ${cycle.exitCode})`;
     return { headline: `Finished ${mst(cycle.finishedAt, false)}`,
       detail: `Started ${mst(cycle.startedAt)}; finished ${mst(cycle.finishedAt)}; ${exit}.`, overdue: false };
   }
@@ -102,11 +102,7 @@ export function laneTotals(lanes: WorkerStatus["lanes"]): { readonly running: nu
 
 export type WorkerCard = "progress" | "jobs" | "waiting" | "events" | "other";
 
-/**
- * Put each of the section's `missingParts` beside the card it affects. The
- * wording is the backend's (`v6-workers-read.ts`); a part this does not
- * recognise is still shown, under "other", never dropped.
- */
+/** Puts each missing part beside the card it affects; an unrecognised part still shows under "other". */
 export function missingByCard(parts: readonly string[] | undefined): Readonly<Record<WorkerCard, readonly string[]>> {
   const out: Record<WorkerCard, string[]> = { progress: [], jobs: [], waiting: [], events: [], other: [] };
   for (const m of parts ?? []) {
@@ -125,6 +121,38 @@ export function missingByCard(parts: readonly string[] | undefined): Readonly<Re
 /** False for the pulse-only stand-in: the Workers section itself hasn’t arrived. */
 export function workersSectionArrived(src: AdminV6Data["workers"]): boolean {
   return src.state === "sample" || src.state === "live" && !(src.missingParts ?? []).includes(SECTION_DEP.workers.need);
+}
+
+/** The Workers page in a few plain sentences, read before any tile or table; an unknown is said as not reported. */
+export function workersInWords(input: {
+  readonly update: { readonly status?: string; readonly title: string } | null | undefined;
+  readonly status: WorkerStatus | null | undefined;
+  readonly round: RoundReading;
+  readonly checkIn: string | null;
+  readonly progressAge: string | null;
+  readonly working: string;
+  readonly waiting: number | null;
+  readonly place: string | null;
+  readonly live: boolean;
+}): string[] {
+  const st = input.status;
+  const lines: string[] = [];
+  if (input.update) lines.push(input.update.status === "SUCCEEDED" ? "The latest update to the workers finished." : `${input.update.title} did not finish; the card below says who is fixing it.`);
+  if (!st?.lastCheckIn) lines.push("The workers have no check-in on record.");
+  else if (st.runnerState && st.runnerState !== "ALIVE") lines.push(`The workers last checked in ${input.checkIn ?? mst(st.lastCheckIn)} and are ${runnerStateWords(st.runnerState)} now.`);
+  else lines.push(`The workers last checked in ${input.checkIn ?? mst(st.lastCheckIn)}.`);
+  const failed = !!st?.cycle && (st.cycle.lastError !== null || (st.cycle.exitCode !== null && st.cycle.exitCode !== 0));
+  if (input.round.headline !== "Not reported") lines.push(input.round.overdue ? `${input.round.headline}. ${input.round.detail}`
+    : `Round of work: ${input.round.headline.charAt(0).toLowerCase()}${input.round.headline.slice(1)}${failed ? ", with an error; the details are on the Round of work tile" : ""}.`);
+  const where = input.place ? ` in ${input.place}` : "";
+  if (input.working !== "—" || input.waiting !== null) {
+    lines.push(`${input.working === "—" ? "An unreported number of" : input.working} ${input.working === "1" ? "job is" : "jobs are"} working now${where}${input.waiting === null ? "" : `, and ${count(input.waiting)} ${input.waiting === 1 ? "is" : "are"} waiting`}.`);
+  }
+  if (st?.lastUsefulProgress) lines.push(`The last useful progress${where} was ${input.progressAge ?? mst(st.lastUsefulProgress.at)}: ${st.lastUsefulProgress.what.charAt(0).toLowerCase()}${st.lastUsefulProgress.what.slice(1).replace(/\.$/, "")}.`);
+  else lines.push(`No useful progress${where} is on record yet.`);
+  if (st?.refused) lines.push(`${count(st.refused.count)} paid ${st.refused.count === 1 ? "job was" : "jobs were"} not sent to the AI because ${st.refused.why.replace(/\.$/, "")}.`);
+  if (!input.live) lines.push("This page is not getting live updates right now, so these may be out of date.");
+  return lines;
 }
 
 type AgentFilter = "all" | AgentRun["state"];
@@ -214,6 +242,27 @@ function Publication() {
     <Card title="Published versus reader-visible" aside={<span className={s.meta}>{p ? `${count(p.total)} routine contracts` : "—"}</span>}>
       {p && (
         <div className={s.stack}>
+          <div className={s.stack}>
+            <h3 className={s.h3}>State ballots</h3>
+            <Actions actions={[{ kind: "ballot-publish", target: "ballot-contests" }]} />
+            {p.ballotPublication ? <>
+              <p className={s.small}>{p.ballotPublication.status === "PUBLISHED" ? "Published" : "Held"} {when(p.ballotPublication.at)}</p>
+              <p className={s.small}>Merged: {p.ballotPublication.merged.map(file => file.slice(0, 2).toUpperCase()).join(", ") || "none"}</p>
+              {p.ballotPublication.reason && <p className={s.small}>{p.ballotPublication.reason}</p>}
+              {p.ballotPublication.skipped.length ? <ul className={s.stack}>
+                {p.ballotPublication.skipped.map(row => <li key={row.file} className={s.small}>Skipped {row.file.slice(0, 2).toUpperCase()}: {row.reason}</li>)}
+              </ul> : <p className={s.small}>Skipped: none</p>}
+              {p.ballotPublication.heldContests?.length ? <ul className={s.stack}>
+                {[...new Set(p.ballotPublication.heldContests.map(row => row.state))].sort().map(state => <li key={state} className={s.small}>
+                  <details>
+                    <summary>Held contests in {state} ({p.ballotPublication!.heldContests!.filter(row => row.state === state).length})</summary>
+                    <ul className={s.stack}>{p.ballotPublication!.heldContests!.filter(row => row.state === state).map(row =>
+                      <li key={row.contestId}>{row.title}: {row.reason}</li>)}</ul>
+                  </details>
+                </li>)}
+              </ul> : <p className={s.small}>Held contests: none</p>}
+            </> : <p className={s.small}>No ballot publication reported yet.</p>}
+          </div>
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {p.counts.map((c) => <li key={c.verdict} className={s.small}><strong>{count(c.count)} of {count(p.total)}</strong> {c.words.charAt(0).toLowerCase() + c.words.slice(1)}</li>)}
             <li className={s.small}><strong>{count(p.latestAttemptFailing)} of {count(p.total)}</strong> latest attempt failed</li>
@@ -250,7 +299,6 @@ function StageJobs(props: { readonly stage: WorkerStage; readonly list: readonly
             <dt>AI</dt><dd>{j.model}</dd>
             {([["Cost", j.cost], ["Latest", j.latest], ["Next", j.next]] as const).map(([label, value]) => (props.sample || value !== "—") && <Fragment key={label}><dt>{label}</dt><dd>{value}</dd></Fragment>)}
           </dl>
-          {props.sample && <Actions actions={[{ kind: "job-stop", target: j.id }]} />}
         </div>
       ))}
       {pager}
@@ -287,6 +335,15 @@ export function WorkersScreen() {
         {arrived && src.asOf && <p className={cx(s.p, s.meta)}>Read {mst(src.asOf)}</p>}
       </header>
 
+      <Card title="In plain words">
+        <div className={s.stack} style={{ gap: 6 }}>
+          {workersInWords({ update: w?.update, status: st, round, checkIn, progressAge,
+            working: jobs ? nowWorking : totals?.running != null ? count(totals.running) : "—",
+            waiting: jobs ? (waiting ? waiting.length : null) : totals ? totals.waiting : null,
+            place: isCountry ? null : v.place.name, live }).map((line) => <p key={line} className={s.p}>{line}</p>)}
+        </div>
+      </Card>
+
       {w?.update ? (
         <Card title={w.update.title} tone={w.update.status === "SUCCEEDED" ? undefined : "warn"} aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
           <p className={s.p}>{w.update.what}</p>
@@ -298,7 +355,6 @@ export function WorkersScreen() {
           </dl>
           {w.update.fixId && <div className={s.inline}>
             <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => v.open({ type: "fix", id: w.update!.fixId! })}>See the update and what’s blocking it</button>
-            <Actions actions={[{ kind: "focus", target: w.update.fixId }]} />
           </div>}
           <Technical lines={w.update.technical} />
         </Card>
@@ -316,7 +372,13 @@ export function WorkersScreen() {
           <strong>{when(st?.lastUsefulProgress?.at)}</strong>
           {st?.lastUsefulProgress && <span className={s.meta}>{progressAge ? `${progressAge}. ` : ""}{st.lastUsefulProgress.what}</span>}
         </div>
-        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <span className={cx(s.meta, s.textWarn)}>Last round error: {st.cycle.lastError}</span>}</>}</div>
+        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <><span className={cx(s.meta, s.textWarn)}>The last round ended with an error.</span><Technical lines={[st.cycle.lastError]} /></>}</>}</div>
+        <div className={s.row}>
+          <span className={s.eyebrow}>Database reads, last full hour</span>
+          <strong>{st?.databaseReads ? megabytes(st.databaseReads.controlPlaneBytes + st.databaseReads.readerBytes) : "—"}</strong>
+          {st?.databaseReads && <><span className={s.meta}>Work records {megabytes(st.databaseReads.controlPlaneBytes)} · reader data {megabytes(st.databaseReads.readerBytes)} · hour starting {mst(st.databaseReads.hour, false)}</span>
+            <Technical lines={st.databaseReads.byCaller.map(row => `${megabytes(row.bytes)} ← ${row.caller}`)} /></>}
+        </div>
         {st?.refused && <div className={cx(s.row, s.cardWarn)}><span className={s.eyebrow}>Refused before the AI</span><strong className={s.textWarn}>{count(st.refused.count)} paid jobs</strong><span className={s.meta}>Not sent to the AI because {st.refused.why}.</span></div>}
         <div className={s.row}>
           <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>
@@ -372,7 +434,7 @@ export function WorkersScreen() {
         </Card>
         <Card title="What happens next">
           {w?.next ? <ul className={s.stack} style={{ margin: 0, paddingLeft: 18 }}>{w.next.map((n) => <li key={n} className={s.small}>{n}</li>)}</ul> : <p className={cx(s.p, s.small)}>{st?.nextRoundDueAt ? `Next round ${round.overdue ? "was due" : "due"} ${when(st.nextRoundDueAt, false)}` : "—"}</p>}
-          <Actions actions={[{ kind: "scope-first", target: v.scopeKey }, { kind: "global-runner-pause", target: "runner" }]} />
+          <Actions actions={[{ kind: "global-runner-pause", target: "runner" }]} />
         </Card>
       </div>
 

@@ -10,27 +10,17 @@ import { officeIdentity } from "../../officials/office-identity.ts";
 import { PLURAL_STATES } from "./targets.ts";
 export { PLURAL_STATES } from "./targets.ts";
 
-/**
- * Known officeholders from Open States (Plural Open) native people YAML and
- * its separately parsed legislative CSV export. CC-0 attribution stays on each
- * person, membership and contact field.
- */
 
 const SOURCE_NAME = "plural";
 
 const SOURCE_ORG = "Plural Open States (CC-0)";
 
-/** Acquisition is national; a missing local boundary never suppresses a roster. */
 export type PluralState = (typeof PLURAL_STATES)[number];
 
 export function bulkUrl(state: string): string {
   return `https://data.openstates.org/people/current/${state.toLowerCase()}.csv`;
 }
 
-/**
- * What a chamber's members are called, per state. Not derivable: some lower
- * chambers' members are Assemblymembers, not Representatives.
- */
 const CHAMBER_TITLE: Record<string, { upper: string; lower: string }> = {
   az: { upper: "State Senator", lower: "State Representative" },
   nh: { upper: "State Senator", lower: "State Representative" },
@@ -47,11 +37,9 @@ for (const state of PLURAL_STATES) {
 }
 
 export interface PluralPerson {
-  /** An `ocd-person/<uuid>` identifier. Stable across runs. */
   id: string;
   name: string;
   current_party: string;
-  /** `"19"` in most states; `"<County> 8"` where districts are designated by county. */
   current_district: string;
   current_chamber: "upper" | "lower" | string;
   roles?: readonly PluralRole[];
@@ -61,15 +49,10 @@ export interface PluralPerson {
   offices?: readonly { name: string; address: string; voice: string; email?: string; sourceUrl?: string }[];
   email: string;
   image: string;
-  /** The capitol office address, as Open States publishes it ("…, City, ST 12345"). */
   capitol_address: string;
-  /** The capitol office phone, as the legislature publishes it. */
   capitol_voice: string;
-  /** The district office address, where one is published. */
   district_address: string;
-  /** The district office phone, where one is published. */
   district_voice: string;
-  /** Semicolon-separated. */
   links: string;
   sources: string;
   state: string;
@@ -83,7 +66,6 @@ export interface PluralRole {
   readonly start_date?: string;
   readonly end_date?: string;
   readonly current?: boolean;
-  /** A valid native end date is before the observation date; never inferred from a missing role. */
   readonly ended?: boolean;
   readonly sourceUrl?: string;
 }
@@ -102,7 +84,6 @@ const NATIVE_ROLE_TITLES: Readonly<Record<string, string>> = {
   mayor: "Mayor", councilmember: "Councilmember", council_member: "Councilmember",
 };
 
-/** The source's own jurisdiction establishes scope; no pre-existing registry membership is required. */
 export function nativeRoleBinding(role: PluralRole, state: string): {
   officeTitle: string; officeKey: string; divisionId?: string; level: "STATE" | "LOCAL"; gap?: string;
 } | { issue: string } {
@@ -132,7 +113,6 @@ export function nativeRoleBinding(role: PluralRole, state: string): {
   } : {divisionId:`ocd-division/${path}`}), level: local ? "LOCAL" : "STATE" };
 }
 
-/** The native YAML record keeps fields absent from the reduced held CSV export. */
 export function yamlToPeople(text: string, state: string, sourceUrl: string, asOf: string, unresolved: (detail: string) => void = () => {}, includeInactive = false): PluralPerson[] {
   const value: unknown = parseYaml(text, { maxAliasCount: 0, uniqueKeys: true });
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("PLURAL_YAML_RECORD_INVALID");
@@ -227,27 +207,23 @@ export function yamlToPeople(text: string, state: string, sourceUrl: string, asO
     capitol_address: capitol?.address ?? "", capitol_voice: capitol?.voice ?? "", district_address: district?.address ?? "", district_voice: district?.voice ?? "" }];
 }
 
-/**
- * Reduces a district designation to something two spellings agree on. Some
- * districts are designated by county and number ("<County> 8") and the two
- * sides zero-pad differently; everything else is a bare number.
- */
 export function designationKey(value: string): string {
   return value
     .trim()
     .toUpperCase()
     .replace(/\s+/g, " ")
     // Strip leading zeros so "<County> 08" meets "<County> 8".
-    .replace(/\b0+(\d)/g, "$1");
+    .replace(/\b0+(\d)/g, "$1")
+    .replace(/\bAND\b/g, "")
+    .replace(/[^A-Z0-9]/g, "");
 }
 
-const LABEL_PREFIX = /^(?:State (?:Senate|House)|State Legislative Districts?\s*-?\s*(?:Upper|Lower)|Senatorial|Representative) District\s*/i;
-const NJ_LABEL_PREFIX = /^(Assembly|Senate) District\s*/i;
+const LABEL_PREFIX = /^(?:State (?:Senate|House|Representative|Legislative(?: Sub)?) ?District|Assembly District|Senate District|Delegate District|Legislative \((?:House|Senate)\) District|Senatorial District|Representative District)\s*/i;
+const LABEL_SUFFIX = /(?: State House District| Senatorial District| District)$/i;
 
-/** The designation a registry division's Census-sourced label encodes. */
 export function designationFromLabel(label: string): string {
   return designationKey(
-    label.replace(LABEL_PREFIX, "").replace(NJ_LABEL_PREFIX, ""),
+    label.replace(/^[A-Z]{2} /, "").replace(/\s*\(\d{4} plan\)$/, "").replace(LABEL_PREFIX, "").replace(LABEL_SUFFIX, ""),
   );
 }
 
@@ -257,12 +233,6 @@ export interface RegistryDivisionLite {
   divisionType: string;
 }
 
-/**
- * Indexes the registry's legislative divisions by state, chamber and
- * designation. The registry ids are Census codes (`sldl:608`) and Plural uses
- * the statutory designation; the Census-sourced label bridges them. Matching
- * is exact within one state and chamber, and every miss is reported.
- */
 export function indexDivisions(
   divisions: RegistryDivisionLite[],
 ): Map<string, string> {
@@ -285,7 +255,6 @@ export function indexDivisions(
   return index;
 }
 
-/** Minimal CSV reader — quoted fields, embedded commas and newlines. */
 export function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
@@ -357,17 +326,10 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
     }));
 }
 
-/** The columns `rowsToPeople` reads to build a legislator; a header without them is not the roster. */
 export const PLURAL_REQUIRED_COLUMNS = ["id", "name", "current_chamber", "current_district"] as const;
 
-/** Refuse an empty response. */
 export const PLURAL_ROSTER_FLOOR = 1;
 
-/**
- * Is this 200 body actually a Plural roster, and the whole of it? Returns the
- * reason it is not, or null. An HTML error page passes the comma check and
- * parses to zero people, so the header and the floor are checked here.
- */
 export function pluralRosterIssue(csv: string): string | null {
   const rows = parseCsv(csv);
   const header = rows[0] ?? [];
@@ -389,11 +351,6 @@ export function pluralRosterIssue(csv: string): string | null {
   return null;
 }
 
-/**
- * Maps people onto officeholders and division links. Everything unattached
- * lands in `unmatched` with a reason that separates a missing boundary from an
- * identifier mismatch.
- */
 export function normalize(
   raw: PluralPerson[],
   divisionIndex: Map<string, string>,
@@ -405,6 +362,8 @@ export function normalize(
   const unmatched: OfficeholderSet["unmatched"] = [];
   const endedMemberships: NonNullable<OfficeholderSet["endedMemberships"]>[number][] = [];
   const chamberFor = (state: string, type: string) => type === "legislature" && ["ne", "dc"].includes(state) ? "upper" : type;
+  const letteredChambers = new Set([...divisionIndex.keys()].filter(key => /\|\d+[A-Z]$/.test(key)).map(key => key.slice(0, key.lastIndexOf("|"))));
+  const heldChambers = new Set([...divisionIndex.keys()].map(key => key.slice(0, key.lastIndexOf("|"))));
 
   for (const person of raw) {
     const uuid = person.id.replace("ocd-person/", "");
@@ -423,9 +382,18 @@ export function normalize(
           if (role.current) unmatched.push({officeholderId:id,reason:`PLURAL_LEGISLATIVE_ROLE_UNRESOLVED:${role.type}`});
           return [];
         }
-        const divisionId = divisionIndex.get(`${person.state}|${chamber}|${designationKey(role.district ?? "")}`);
+        const key = designationKey(role.district ?? "");
+        const chamberKey = `${person.state}|${chamber}`;
+        let divisionId = divisionIndex.get(`${chamberKey}|${key}`);
+        if (!divisionId && /^\d+[A-Z]$/.test(key) && !letteredChambers.has(chamberKey)) {
+          divisionId = divisionIndex.get(`${chamberKey}|${key.slice(0, -1)}`);
+        }
+        if (!divisionId && (key === "ATLARGE" || person.state === "dc" && key === "CHAIRMAN")) {
+          const jurisdiction = /^ocd-jurisdiction\/(country:us\/(?:state|district|territory):[a-z]{2})\/government$/.exec(role.jurisdiction ?? "");
+          if (jurisdiction) divisionId = `ocd-division/${jurisdiction[1]}`;
+        }
         return [{role, title, chamber, level:"STATE" as const, divisionId,
-          officeId:`openstates-office:${person.state}:${role.type}:${role.district ?? ""}`,
+          officeId:`openstates-office:${person.state}:${officeIdentity(title)}:${role.district ?? ""}`,
           membershipId:`${personId}:${person.state}:${role.type}:${role.district ?? ""}:${role.start_date ?? ""}`}];
       }
       const binding = nativeRoleBinding(role,person.state);
@@ -511,8 +479,10 @@ export function normalize(
       const district = item.role.district ?? "";
       const ocdId = item.divisionId;
       if (!ocdId) {
+        const areaOutsideCensus = item.chamber === "lower" && (
+          person.state === "nh" && heldChambers.has("nh|lower") || person.state === "me" && /\btribe\b/i.test(district));
         unmatched.push({ officeholderId: id,
-          reason: item.chamber ? `no ${item.chamber} division for ${person.state.toUpperCase()} "${district}" — missing boundary coverage or an unresolved designation`
+          reason: item.chamber ? `no ${item.chamber} division for ${person.state.toUpperCase()} "${district}" — ${areaOutsideCensus ? "area not in the Census district file" : "missing boundary coverage or an unresolved designation"}`
             : `PLURAL_ROLE_DISTRICT_DIVISION_UNRESOLVED:${item.role.type}:${district}:${item.role.jurisdiction}` });
       } else if (!seenDivisions.has(`${ocdId}|${item.membershipId}`)) {
         divisions.push({ officeholderId: id, ocdId, bodyId: null, membershipId:item.membershipId });

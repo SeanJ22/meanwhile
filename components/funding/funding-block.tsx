@@ -1,10 +1,9 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useEffect, useState } from "react";
 
 import type { CampaignMoneyApiResponse } from "@/lib/funding/campaign-money";
-import { fundingFreshnessNote } from "@/lib/funding/freshness";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 
@@ -61,10 +60,8 @@ function FundingBlockInner({
     return () => controller.abort();
   }, [holder.id]);
 
-  if (loadFailed) return <WorkingOnIt subject={{ type: "CANDIDATE", id: holder.id }} />;
+  if (loadFailed) return <CardGapContribution id={`funding:${holder.id}`} label="campaign money" subject={{ type: "CANDIDATE", id: holder.id }} />;
   if (!answer) return <p className="mw-loading-inline" role="status">Loading campaign money…</p>;
-  // Shared helper, so map and ballot render identical text.
-  const freshness = fundingFreshnessNote(answer);
   let content: React.ReactNode = null;
   if (answer.kind === "combined") content = <>
     {answer.federal.kind === "funding"
@@ -73,13 +70,12 @@ function FundingBlockInner({
     <StateMoneySection records={answer.state.records} bare={bare} context={reactionContext} />
   </>;
   else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} context={reactionContext} />;
-  else if (answer.kind === "identity-unresolved") content = <WorkingOnIt subject={{ type: "CANDIDATE", id: holder.id }} />;
-  else if (answer.kind === "none") content = <WorkingOnIt />;
+  else if (answer.kind === "identity-unresolved") content = <CardGapContribution id={`funding:${holder.id}`} label="campaign money" subject={{ type: "CANDIDATE", id: holder.id }} />;
+  else if (answer.kind === "none") content = <CardGapContribution id={`funding:${holder.id}`} label="campaign money" subject={{ type: "CANDIDATE", id: holder.id }} />;
   else if (answer.kind === "absence") content = <FundingAbsence data={answer.data} />;
   else content = <FundingDisplay data={answer.data} context={reactionContext} bare={bare} />;
-  if (!freshness && content === null) return <WorkingOnIt />;
   return <>
-    {freshness && <p className="funding-data-freshness">{freshness}</p>}
+    {answer.holdingStatus === "PARTIAL" && <CardGapContribution id={`funding-holdings:${holder.id}`} label="campaign money records" subject={{ type: "CANDIDATE", id: holder.id }} />}
     {content}
   </>;
 }

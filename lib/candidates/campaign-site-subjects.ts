@@ -20,6 +20,7 @@ export interface FilingChannels {
   readonly candidacyId: string;
   readonly websiteUrl?: string | null;
   readonly email?: string | null;
+  readonly sourceUrl?: string | null;
 }
 
 function contestOf(candidacyId: string): string {
@@ -63,7 +64,17 @@ export function campaignSiteSubjects(input: {
         }
       }
       const domains = new Set<string>();
-      for (const pilot of c.pilotIds) for (const row of filingsById.get(pilot) ?? []) for (const d of filingDomains(row)) domains.add(d);
+      const websites = new Map<string, { url: string; sourceUrl: string }>();
+      for (const pilot of c.pilotIds) for (const row of filingsById.get(pilot) ?? []) {
+        for (const domain of filingDomains(row)) domains.add(domain);
+        if (row.websiteUrl && row.sourceUrl) {
+          try {
+            const url = new URL(row.websiteUrl);
+            if (url.protocol === "http:") url.protocol = "https:";
+            if (url.protocol === "https:" && !url.username && !url.password) websites.set(url.href, { url: url.href, sourceUrl: row.sourceUrl });
+          } catch {}
+        }
+      }
       subjects.set(c.id, {
         candidacyId: c.id,
         givenName: c.givenName,
@@ -74,6 +85,7 @@ export function campaignSiteSubjects(input: {
         cycle: c.cycle,
         readerKeys: [...keys].sort(),
         filingDomains: [...domains].sort(),
+        filingWebsites: [...websites.values()].sort((a, b) => a.url.localeCompare(b.url)),
       });
     }
   }

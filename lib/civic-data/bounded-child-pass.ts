@@ -46,6 +46,8 @@ export interface BoundedChildCommand {
    * Omitting this field keeps the command independent by using its unique id.
    */
   readonly failureDomain?: string;
+  /** Commands sharing a serial lane run one at a time, back to back: no same-domain gap, which is a host's courtesy. */
+  readonly serialLane?: string;
   readonly executable: string;
   readonly args: readonly string[];
   readonly env?: NodeJS.ProcessEnv;
@@ -219,12 +221,14 @@ export async function runBoundedChildPass(
   if (!Number.isSafeInteger(gapMs) || gapMs < 0) throw new Error(`BOUNDED_CHILD_DOMAIN_GAP_INVALID:${gapMs}`);
   const started = new Set<number>();
   const activeDomains = new Set<string>();
+  const activeLanes = new Set<string>();
   const domainFreeAt = new Map<string, number>();
   const activeRuns = new Map<number, Promise<void>>();
   let completed = 0;
   const waiting = () => commands
     .map((_, index) => index)
-    .filter((index) => !started.has(index) && !activeDomains.has(failureDomains[index]!));
+    .filter((index) => !started.has(index) && !activeDomains.has(failureDomains[index]!) &&
+      (commands[index]!.serialLane === undefined || !activeLanes.has(commands[index]!.serialLane!)));
 
   while (completed < commands.length) {
     while (activeRuns.size < concurrency) {
@@ -233,10 +237,13 @@ export async function runBoundedChildPass(
       if (index === undefined) break;
 
       const failureDomain = failureDomains[index]!;
+      const lane = commands[index]!.serialLane;
       started.add(index);
       activeDomains.add(failureDomain);
+      if (lane !== undefined) activeLanes.add(lane);
       const activeRun = runAt(index).finally(() => {
         activeDomains.delete(failureDomain);
+        if (lane !== undefined) activeLanes.delete(lane);
         if (gapMs > 0) domainFreeAt.set(failureDomain, Date.now() + gapMs);
         activeRuns.delete(index);
         completed += 1;

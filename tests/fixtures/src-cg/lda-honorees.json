@@ -1,0 +1,4428 @@
+{
+  "samples": [
+    {
+      "requestedUrl": "https://lda.gov/api/v1/contributions/?page_size=25&ordering=-dt_posted&contribution_honoree=Sen.",
+      "retrievedAt": "2026-10-13T04:19:22.958Z",
+      "filing": {
+        "url": "https://lda.gov/api/v1/contributions/0a45696f-b69b-4e0e-8803-05796bac6f88/",
+        "filing_uuid": "0a45696f-b69b-4e0e-8803-05796bac6f88",
+        "filing_type": "MM",
+        "filing_type_display": "Mid-Year Report",
+        "filing_year": 2026,
+        "filing_period": "mid_year",
+        "filing_period_display": "Mid-Year (Jan 1 - Jun 30)",
+        "filing_document_url": "https://lda.gov/filings/public/contribution/0a45696f-b69b-4e0e-8803-05796bac6f88/print/",
+        "filing_document_content_type": "text/html",
+        "filer_type": "lobbyist",
+        "filer_type_display": "Lobbyist",
+        "dt_posted": "2026-10-11T20:44:13-04:00",
+        "contact_name": null,
+        "comments": null,
+        "address_1": "686 Fairview Avenue",
+        "address_2": null,
+        "city": "Annapolis",
+        "state": "MD",
+        "state_display": "Maryland",
+        "zip": "21403",
+        "country": "US",
+        "country_display": "United States of America",
+        "registrant": {
+          "id": 39245,
+          "url": "https://lda.gov/api/v1/registrants/39245/",
+          "house_registrant_id": 30713,
+          "name": "UNITED SERVICES AUTOMOBILE ASSOCIATION",
+          "description": null,
+          "address_1": "1 Constitution Avenue, NE",
+          "address_2": "Suite 200",
+          "address_3": null,
+          "address_4": null,
+          "city": "Washington",
+          "state": "DC",
+          "state_display": "District of Columbia",
+          "zip": "20002",
+          "country": "US",
+          "country_display": "United States of America",
+          "ppb_country": "US",
+          "ppb_country_display": "United States of America",
+          "contact_name": "ERIN MARTINKO",
+          "contact_telephone": "+1 210-425-8452",
+          "dt_updated": "2026-07-30T10:46:36.975262-04:00"
+        },
+        "lobbyist": {
+          "id": 90138,
+          "prefix": null,
+          "prefix_display": null,
+          "first_name": "LARICKE",
+          "nickname": null,
+          "middle_name": null,
+          "last_name": "BLANCHARD",
+          "suffix": null,
+          "suffix_display": null
+        },
+        "no_contributions": false,
+        "pacs": [],
+        "contribution_items": [
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "SELF",
+            "payee_name": "CORNYN LONESTAR VICTORY FUND",
+            "honoree_name": "Sen. John Cornyn (R-TX)",
+            "amount": "3500.00",
+            "date": "2026-02-17"
+          }
+        ]
+      }
+    },
+    {
+      "requestedUrl": "https://lda.gov/api/v1/contributions/?page_size=25&ordering=-dt_posted&contribution_honoree=Rep.",
+      "retrievedAt": "2026-10-13T04:19:22.959Z",
+      "filing": {
+        "url": "https://lda.gov/api/v1/contributions/1736813d-6940-414a-a1e0-d3362c4b62bb/",
+        "filing_uuid": "1736813d-6940-414a-a1e0-d3362c4b62bb",
+        "filing_type": "MM",
+        "filing_type_display": "Mid-Year Report",
+        "filing_year": 2026,
+        "filing_period": "mid_year",
+        "filing_period_display": "Mid-Year (Jan 1 - Jun 30)",
+        "filing_document_url": "https://lda.gov/filings/public/contribution/1736813d-6940-414a-a1e0-d3362c4b62bb/print/",
+        "filing_document_content_type": "text/html",
+        "filer_type": "lobbyist",
+        "filer_type_display": "Lobbyist",
+        "dt_posted": "2026-10-11T16:46:11-04:00",
+        "contact_name": null,
+        "comments": null,
+        "address_1": "140 Tennessee Ave NE",
+        "address_2": null,
+        "city": "Washington",
+        "state": "DC",
+        "state_display": "District of Columbia",
+        "zip": "20002",
+        "country": "US",
+        "country_display": "United States of America",
+        "registrant": {
+          "id": 401107472,
+          "url": "https://lda.gov/api/v1/registrants/401107472/",
+          "house_registrant_id": 56023,
+          "name": "LEAGUE OF SOUTHEASTERN CREDIT UNIONS",
+          "description": null,
+          "address_1": "1709HermitageBlvd",
+          "address_2": "Suite 200",
+          "address_3": null,
+          "address_4": null,
+          "city": "Tallahassee",
+          "state": "FL",
+          "state_display": "Florida",
+          "zip": "32308",
+          "country": "US",
+          "country_display": "United States of America",
+          "ppb_country": "US",
+          "ppb_country_display": "United States of America",
+          "contact_name": "IBBY DICKSON",
+          "contact_telephone": "+1 256-226-9526",
+          "dt_updated": "2026-10-11T16:27:35.699203-04:00"
+        },
+        "lobbyist": {
+          "id": 153189,
+          "prefix": null,
+          "prefix_display": null,
+          "first_name": "ELIZABETH",
+          "nickname": "IBBY",
+          "middle_name": null,
+          "last_name": "DICKSON",
+          "suffix": null,
+          "suffix_display": null
+        },
+        "no_contributions": false,
+        "pacs": [
+          "Team Hill"
+        ],
+        "contribution_items": [
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "SELF",
+            "payee_name": "TEAM HILL",
+            "honoree_name": "Rep. French Hill",
+            "amount": "500.00",
+            "date": "2026-03-24"
+          }
+        ]
+      }
+    },
+    {
+      "requestedUrl": "https://lda.gov/api/v1/contributions/?page_size=25&ordering=-dt_posted&contribution_honoree=Charles%20E.",
+      "retrievedAt": "2026-10-13T04:19:22.963Z",
+      "filing": {
+        "url": "https://lda.gov/api/v1/contributions/6f43d483-2fc5-475b-bf7f-7d714a362748/",
+        "filing_uuid": "6f43d483-2fc5-475b-bf7f-7d714a362748",
+        "filing_type": "YA",
+        "filing_type_display": "Year-End Amendment",
+        "filing_year": 2023,
+        "filing_period": "year_end",
+        "filing_period_display": "Year-End (July 1 - Dec 31)",
+        "filing_document_url": "https://lda.gov/filings/public/contribution/6f43d483-2fc5-475b-bf7f-7d714a362748/print/",
+        "filing_document_content_type": "text/html",
+        "filer_type": "organization",
+        "filer_type_display": "Registrant",
+        "dt_posted": "2026-03-16T12:05:10-04:00",
+        "contact_name": "JAMES FEBEO, JR.",
+        "comments": "This filing is made to the best of my knowledge, based on reasonable due diligence regarding FMR LLC's activities.",
+        "address_1": "245 Summer Street",
+        "address_2": "V9B",
+        "city": "BOSTON",
+        "state": "MA",
+        "state_display": "Massachusetts",
+        "zip": "02210",
+        "country": "US",
+        "country_display": "United States of America",
+        "registrant": {
+          "id": 48816,
+          "url": "https://lda.gov/api/v1/registrants/48816/",
+          "house_registrant_id": 34526,
+          "name": "FMR LLC",
+          "description": null,
+          "address_1": "245 Summer Street",
+          "address_2": "V9B",
+          "address_3": null,
+          "address_4": null,
+          "city": "BOSTON",
+          "state": "MA",
+          "state_display": "Massachusetts",
+          "zip": "02210",
+          "country": "US",
+          "country_display": "United States of America",
+          "ppb_country": "US",
+          "ppb_country_display": "United States of America",
+          "contact_name": "JAMES FEBEO, JR.",
+          "contact_telephone": "+1 617-563-6140",
+          "dt_updated": "2026-07-29T12:10:27.032612-04:00"
+        },
+        "lobbyist": null,
+        "no_contributions": false,
+        "pacs": [
+          "FMR LLC Political Action Committee - Federal (Fidelity PAC)",
+          "FMR LLC Political Action Committee State Federal (Fidelity PAC)"
+        ],
+        "contribution_items": [
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRIAN FITZPATRICK FOR ALL OF US",
+            "honoree_name": "Rep. Brian K. Fitzpatrick",
+            "amount": "1000.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BUILDING UP DEMOCRACY'S DREAM",
+            "honoree_name": "Sen. Theodore Paul Budd",
+            "amount": "5000.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "FIRST IN FREEDOM PAC",
+            "honoree_name": "Rep. Richard Lane Hudson, Jr.",
+            "amount": "2500.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "HIMES FOR CONGRESS",
+            "honoree_name": "Rep. James Andrew Himes",
+            "amount": "1000.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "IMPACT",
+            "honoree_name": "Sen. Charles E. Schumer",
+            "amount": "5000.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MR. SOUTHERN MISSOURIAN IN THE HOUSE PAC",
+            "honoree_name": "Rep. Jason Thomas Smith",
+            "amount": "2500.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "SCOTT FITZGERALD FOR CONGRESS",
+            "honoree_name": "Rep. Scott L. Fitzgerald",
+            "amount": "2500.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "UPPER HAND FUND",
+            "honoree_name": "Rep. William Patrick Huizenga",
+            "amount": "5000.00",
+            "date": "2023-12-20"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "AARON BEAN FOR CONGRESS",
+            "honoree_name": "Rep. Aaron P. Bean",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "ALL HANDS POLITICAL ACTION COMMITTEE",
+            "honoree_name": "Sen. Todd Christopher Young",
+            "amount": "5000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "ANN PAC",
+            "honoree_name": "Rep. Ann Louise Wagner",
+            "amount": "3000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BE VICTORIOUS OVER DEMOCRATS PAC",
+            "honoree_name": "Rep. Elizabeth Ann Van Duyne",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BERA FOR CONGRESS",
+            "honoree_name": "Rep. Amerish B. Bera",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BILL FOSTER FOR CONGRESS",
+            "honoree_name": "Rep. Bill Foster",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BLAINE FOR CONGRESS",
+            "honoree_name": "Rep. W. Blaine Luetkemeyer",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BOB CASEY FOR SENATE INC",
+            "honoree_name": "Sen. Robert P. Casey, Jr.",
+            "amount": "500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRIAN FITZPATRICK FOR ALL OF US",
+            "honoree_name": "Rep. Brian K. Fitzpatrick",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRITTANY PETTERSEN FOR COLORADO",
+            "honoree_name": "Rep. Brittany L. Pettersen",
+            "amount": "1500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRITTANY PETTERSEN FOR COLORADO",
+            "honoree_name": "Rep. Brittany L. Pettersen",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "CAREY FOR CONGRESS",
+            "honoree_name": "Rep. Mike Carey",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "CAROL FOR CONGRESS",
+            "honoree_name": "Rep. Carol Devine Miller",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "CATHY MCMORRIS RODGERS FOR CONGRESS",
+            "honoree_name": "Rep. Cathy McMorris Rodgers",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "CONSERVATIVE OPPORTUNITY LEADERSHIP AND ENTERPRISE PAC",
+            "honoree_name": "Rep. Thomas Jeffery Cole",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "DEBORAH ROSS FOR CONGRESS",
+            "honoree_name": "Rep. Deborah K. Ross",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "DONALD NORCROSS FOR CONGRESS",
+            "honoree_name": "Rep. Donald W. Norcross",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "FAIR SHOT PAC",
+            "honoree_name": "Rep. Katherine M. Clark",
+            "amount": "5000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS FOR GREGORY MEEKS",
+            "honoree_name": "Rep. Gregory Weldon Meeks",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF GLENN THOMPSON",
+            "honoree_name": "Rep. Glenn W. Thompson",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF SHERROD BROWN",
+            "honoree_name": "Sen. Sherrod Campbell Brown",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "GARBARINO FOR CONGRESS",
+            "honoree_name": "Rep. Andrew R. Garbarino",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "HOUCHIN FOR CONGRESS",
+            "honoree_name": "Rep. Erin Houchin",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "HOYER FOR CONGRESS",
+            "honoree_name": "Rep. Steny Hamilton Hoyer",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "HUDSON FOR CONGRESS",
+            "honoree_name": "Rep. Richard Lane Hudson, Jr.",
+            "amount": "1500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "I GOT YOUR BACK PAC",
+            "honoree_name": "Rep. Lisa Blunt Rochester",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "JOE MORELLE FOR CONGRESS",
+            "honoree_name": "Rep. Joseph D. Morelle",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "KUSTER FOR CONGRESS, INC",
+            "honoree_name": "Rep. Ann McLane Kuster",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "LEADERS IN LIFE ACTING COOPERATIVELY (LILAC) PAC",
+            "honoree_name": "Rep. Joseph D. Morelle",
+            "amount": "2000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MAGAZINER FOR CONGRESS",
+            "honoree_name": "Rep. Seth M. Magaziner",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MAGGIE FOR NH",
+            "honoree_name": "Sen. Margaret Wood Hassan",
+            "amount": "2000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MAKING INVESTMENTS TOWARD CONSERVATIVE HEROES PAC",
+            "honoree_name": "Sen. Mitch McConnell",
+            "amount": "5000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MARC FOR US INC.",
+            "honoree_name": "Rep. Marcus J. Molinaro",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MARTIN HEINRICH FOR SENATE",
+            "honoree_name": "Sen. Martin Heinrich",
+            "amount": "4000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MEUSER FOR CONGRESS",
+            "honoree_name": "Rep. Daniel P. Meuser",
+            "amount": "1500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MIKE FLOOD FOR CONGRESS",
+            "honoree_name": "Rep. Michael Flood",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "MRVAN FOR CONGRESS",
+            "honoree_name": "Rep. Frank J. Mrvan, Jr.",
+            "amount": "1000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "NARRAGANSETT BAY PAC",
+            "honoree_name": "Sen. Jack Francis Reed",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "NICOLE FOR NEW YORK",
+            "honoree_name": "Rep. Nicole Malliotakis",
+            "amount": "2000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "PETE AGUILAR FOR CONGRESS",
+            "honoree_name": "Rep. Peter Ray Aguilar",
+            "amount": "1500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "POINT ACTION PAC, INC.",
+            "honoree_name": "Rep. A. Drew Ferguson, IV",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "ROGER WILLIAMS FOR U S CONGRESS COMMITTEE",
+            "honoree_name": "Rep. Roger Williams",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "SCHNEIDER FOR CONGRESS",
+            "honoree_name": "Rep. Bradley Scott Schneider",
+            "amount": "2000.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "SHERMAN FOR CONGRESS",
+            "honoree_name": "Rep. Bradley James Sherman",
+            "amount": "1500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "STAND WITH SANCHEZ",
+            "honoree_name": "Rep. Linda T. Sanchez",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "STEIL FOR WISCONSIN, INC.",
+            "honoree_name": "Rep. Bryan G. Steil",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "TEAM HAGERTY",
+            "honoree_name": "Sen. Bill Hagerty",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "TEXANS FOR JODEY ARRINGTON",
+            "honoree_name": "Rep. Jodey Cook Arrington",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "VERN BUCHANAN FOR CONGRESS",
+            "honoree_name": "Rep. Vernon Gale Buchanan",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "YOUNG KIM FOR CONGRESS",
+            "honoree_name": "Rep. Young O. Kim",
+            "amount": "2500.00",
+            "date": "2023-12-18"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "TOGETHER EVERYONE REALIZES REAL IMPACT AKA TERRI PAC",
+            "honoree_name": "Rep. Terrycina Andrea Sewell",
+            "amount": "2500.00",
+            "date": "2023-10-05"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE - FEDERAL (FIDELITY PAC)",
+            "payee_name": "FINANCIAL SERVICES INSTITUTE PAC",
+            "honoree_name": "Financial Services Institute PAC",
+            "amount": "5000.00",
+            "date": "2023-07-17"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "TOGETHER EVERYONE REALIZES REAL IMPACT AKA TERRI PAC",
+            "honoree_name": "Rep. Terrycina Andrea Sewell",
+            "amount": "-2500.00",
+            "date": "2023-10-02"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BELIEVE IN AMERICA PAC",
+            "honoree_name": "Sen. Mitt Romney",
+            "amount": "5000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BOB CASEY FOR SENATE INC",
+            "honoree_name": "Sen. Robert P. Casey, Jr.",
+            "amount": "2000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRIAN FITZPATRICK FOR ALL OF US",
+            "honoree_name": "Rep. Brian K. Fitzpatrick",
+            "amount": "2500.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "CAREY FOR CONGRESS",
+            "honoree_name": "Rep. Mike Carey",
+            "amount": "2500.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FORWARD TOGETHER PAC",
+            "honoree_name": "Sen. Mark Robert Warner",
+            "amount": "5000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRENCH HILL FOR ARKANSAS",
+            "honoree_name": "Rep. J. French Hill",
+            "amount": "5000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF DAVID SCHWEIKERT",
+            "honoree_name": "Rep. David Schweikert",
+            "amount": "1000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF DUSTY JOHNSON",
+            "honoree_name": "Rep. Dusty Johnson",
+            "amount": "2500.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "GOLDFINCH PAC",
+            "honoree_name": "Sen. Charles E. Grassley",
+            "amount": "2500.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "HIMES FOR CONGRESS",
+            "honoree_name": "Rep. James Andrew Himes",
+            "amount": "1000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "JERSEY VALUES PAC",
+            "honoree_name": "Rep. Joshua S. Gottheimer",
+            "amount": "2500.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "JIMMY GOMEZ FOR CONGRESS",
+            "honoree_name": "Rep. Jimmy Gomez",
+            "amount": "1000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "KAY GRANGER CAMPAIGN FUND",
+            "honoree_name": "Rep. Kay Granger",
+            "amount": "2500.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MAKE IT WORK PAC",
+            "honoree_name": "Sen. Angus Stanley King, Jr.",
+            "amount": "1000.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "TOGETHER EVERYONE REALIZES REAL IMPACT AKA TERRI PAC",
+            "honoree_name": "Rep. Terrycina Andrea Sewell",
+            "amount": "2500.00",
+            "date": "2023-09-29"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "ANN PAC",
+            "honoree_name": "Rep. Ann Louise Wagner",
+            "amount": "2000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BEATTY FOR CONGRESS",
+            "honoree_name": "Rep. Joyce Beatty",
+            "amount": "2000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BLUE HEN FEDERAL PAC",
+            "honoree_name": "Sen. Christopher Andrew Coons",
+            "amount": "2000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRIAN HIGGINS FOR CONGRESS",
+            "honoree_name": "Rep. Brian M. Higgins",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRITTANY PETTERSEN FOR COLORADO",
+            "honoree_name": "Rep. Brittany L. Pettersen",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "CHC BOLD PAC",
+            "honoree_name": "CHC BOLD PAC",
+            "amount": "5000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "DON BACON FOR CONGRESS",
+            "honoree_name": "Rep. Donald John Bacon",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "EMMER FOR CONGRESS",
+            "honoree_name": "Rep. Thomas Earl Emmer, Jr.",
+            "amount": "5000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "EVERGREEN PAC",
+            "honoree_name": "Rep. Suzan Kay DelBene",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF DON BEYER",
+            "honoree_name": "Rep. Donald S. Beyer, Jr.",
+            "amount": "4000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF JIM CLYBURN",
+            "honoree_name": "Rep. James Enos Clyburn",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF SHERROD BROWN",
+            "honoree_name": "Sen. Sherrod Campbell Brown",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS TO ELECT DR. GREG MURPHY TO CONGRESS",
+            "honoree_name": "Rep. Gregory Francis Murphy, M.D.",
+            "amount": "3500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "HUDSON FOR CONGRESS",
+            "honoree_name": "Rep. Richard Lane Hudson, Jr.",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "HUIZENGA FOR CONGRESS",
+            "honoree_name": "Rep. William Patrick Huizenga",
+            "amount": "5000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "JOE MORELLE FOR CONGRESS",
+            "honoree_name": "Rep. Joseph D. Morelle",
+            "amount": "1500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "JOSH GOTTHEIMER FOR CONGRESS",
+            "honoree_name": "Rep. Joshua S. Gottheimer",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "KEVIN MCCARTHY FOR CONGRESS",
+            "honoree_name": "Kevin Owen McCarthy",
+            "amount": "5000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "KUSTOFF FOR CONGRESS",
+            "honoree_name": "Rep. David F. Kustoff",
+            "amount": "1500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "LAWLER FOR CONGRESS",
+            "honoree_name": "Rep. Michael V. Lawler",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "LISA BLUNT ROCHESTER FOR SENATE",
+            "honoree_name": "Rep. Lisa Blunt Rochester",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "LOUDERMILK FOR CONGRESS",
+            "honoree_name": "Rep. Barry Dean Loudermilk",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "LUMMIS FOR WYOMING INC.",
+            "honoree_name": "Sen. Cynthia Marie Lummis",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MAGAZINER FOR CONGRESS",
+            "honoree_name": "Rep. Seth M. Magaziner",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MARC VEASEY CONGRESSIONAL CAMPAIGN COMMITTEE",
+            "honoree_name": "Rep. Marc A. Veasey",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MCHENRY FOR CONGRESS",
+            "honoree_name": "Rep. Patrick Timothy McHenry",
+            "amount": "1500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MEUSER FOR CONGRESS",
+            "honoree_name": "Rep. Daniel P. Meuser",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MOULTON FOR CONGRESS",
+            "honoree_name": "Rep. Seth W. Moulton",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "NEVADANS FOR STEVEN HORSFORD",
+            "honoree_name": "Rep. Steven Alexzander Horsford",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "NEVADANS FOR STEVEN HORSFORD",
+            "honoree_name": "Rep. Steven Alexzander Horsford",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "NRCC",
+            "honoree_name": "NRCC",
+            "amount": "15000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "PASCRELL FOR CONGRESS",
+            "honoree_name": "Rep. William James Pascrell, Jr.",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "PEOPLE FOR DEREK KILMER",
+            "honoree_name": "Rep. Derek Kilmer",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "SCHNEIDER FOR CONGRESS",
+            "honoree_name": "Rep. Bradley Scott Schneider",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "SCHNEIDER FOR CONGRESS",
+            "honoree_name": "Rep. Bradley Scott Schneider",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "SOUTHERN CALIFORNIA FUND",
+            "honoree_name": "Rep. Bradley James Sherman",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "STEPHEN LYNCH FOR CONGRESS",
+            "honoree_name": "Rep. Stephen Francis Lynch",
+            "amount": "5000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "TED BUDD FOR SENATE",
+            "honoree_name": "Sen. Theodore Paul Budd",
+            "amount": "5000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "TEXANS FOR JODEY ARRINGTON",
+            "honoree_name": "Rep. Jodey Cook Arrington",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "TORRES FOR CONGRESS",
+            "honoree_name": "Rep. Ritchie J. Torres",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "TRUE NORTH PAC",
+            "honoree_name": "Sen. Daniel Scott Sullivan",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "VIRGINIA FOXX FOR CONGRESS",
+            "honoree_name": "Rep. Virginia Ann Foxx",
+            "amount": "4000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "WALBERG FOR CONGRESS",
+            "honoree_name": "Rep. Timothy L. Walberg",
+            "amount": "1000.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "WILLIAM TIMMONS FOR CONGRESS",
+            "honoree_name": "Rep. William R. Timmons, IV",
+            "amount": "2500.00",
+            "date": "2023-09-26"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "ABRAHAM LINCOLN PAC",
+            "honoree_name": "Rep. Darin M. LaHood",
+            "amount": "5000.00",
+            "date": "2023-07-21"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BUILDING AND RESTORING THE AMERICAN DREAM FUND",
+            "honoree_name": "Rep. Brad R. Wenstrup",
+            "amount": "5000.00",
+            "date": "2023-07-21"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "CRAMER FOR SENATE",
+            "honoree_name": "Sen. Kevin John Cramer",
+            "amount": "2500.00",
+            "date": "2023-07-21"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MORAN FOR KANSAS",
+            "honoree_name": "Sen. Jerry W. Moran",
+            "amount": "5000.00",
+            "date": "2023-07-21"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "TREASURE STATE PAC",
+            "honoree_name": "Sen. Jon Tester",
+            "amount": "5000.00",
+            "date": "2023-07-21"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "ABRAHAM LINCOLN PAC",
+            "honoree_name": "Rep. Darin M. LaHood",
+            "amount": "-5000.00",
+            "date": "2023-07-06"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "ABRAHAM LINCOLN PAC",
+            "honoree_name": "Rep. Darin M. LaHood",
+            "amount": "5000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "ADRIAN SMITH FOR CONGRESS",
+            "honoree_name": "Rep. Adrian Michael Smith",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "ANDY BARR FOR CONGRESS, INC.",
+            "honoree_name": "Rep. Andy H. Barr, IV",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "AUSTIN SCOTT FOR CONGRESS INC",
+            "honoree_name": "Rep. Austin Scott",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BILL FOSTER FOR CONGRESS",
+            "honoree_name": "Rep. Bill Foster",
+            "amount": "2000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "BRITT FOR ALABAMA INC",
+            "honoree_name": "Sen. Katie Boyd Britt",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "CHRISSY HOULAHAN FOR CONGRESS",
+            "honoree_name": "Rep. Christina J. Houlahan",
+            "amount": "1000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "DAVIDSON FOR CONGRESS",
+            "honoree_name": "Rep. Warren Davidson",
+            "amount": "1000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "DON BACON FOR CONGRESS",
+            "honoree_name": "Rep. Donald John Bacon",
+            "amount": "1500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FEENSTRA FOR CONGRESS",
+            "honoree_name": "Rep. Randy Feenstra",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF MARK WARNER",
+            "honoree_name": "Sen. Mark Robert Warner",
+            "amount": "1500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "FRIENDS OF MARK WARNER",
+            "honoree_name": "Sen. Mark Robert Warner",
+            "amount": "1000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "INVESTMENT ADVISER ASSOCIATION POLITICAL ACTION COMMITTEE (IAA-PAC)",
+            "honoree_name": "Investment Adviser Association Political Action Committee (IAA-PAC)",
+            "amount": "5000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "LA BAMBA PAC",
+            "honoree_name": "Rep. Ritchie J. Torres",
+            "amount": "5000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "LARSON FOR CONGRESS",
+            "honoree_name": "Rep. John Barry Larson",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MENENDEZ FOR CONGRESS",
+            "honoree_name": "Rep. Robert J. Menendez, Jr.",
+            "amount": "1000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MIKE FLOOD FOR CONGRESS",
+            "honoree_name": "Rep. Michael Flood",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "MIKE THOMPSON FOR CONGRESS",
+            "honoree_name": "Rep. Michael C. Thompson",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "M-PAC",
+            "honoree_name": "Sen. Patricia Lynn Murray",
+            "amount": "1000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "POINT ACTION PAC, INC.",
+            "honoree_name": "Rep. A. Drew Ferguson, IV",
+            "amount": "2500.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "STEIL FOR WISCONSIN, INC.",
+            "honoree_name": "Rep. Bryan G. Steil",
+            "amount": "1000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "THE BILL KEATING COMMITTEE",
+            "honoree_name": "Rep. William Richard Keating",
+            "amount": "1000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "FMR LLC POLITICAL ACTION COMMITTEE STATE FEDERAL (FIDELITY PAC)",
+            "payee_name": "WILEY NICKEL FOR NORTH CAROLINA",
+            "honoree_name": "Rep. Wiley Nickel, III",
+            "amount": "2000.00",
+            "date": "2023-07-03"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "SELF",
+            "payee_name": "CONGRESSIONAL BLACK CAUCUS FOUNDATION, INC.",
+            "honoree_name": "Congressional Black Caucus Foundation, Inc.",
+            "amount": "35000.00",
+            "date": "2023-12-21"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "SELF",
+            "payee_name": "JOHN F. KENNEDY LIBRARY FOUNDATION",
+            "honoree_name": "John F. Kennedy Library Foundation",
+            "amount": "15000.00",
+            "date": "2023-11-01"
+          }
+        ]
+      }
+    },
+    {
+      "requestedUrl": "https://lda.gov/api/v1/contributions/?page_size=25&ordering=-dt_posted&contribution_honoree=Bernie%20Sanders",
+      "retrievedAt": "2026-10-13T04:19:22.969Z",
+      "filing": {
+        "url": "https://lda.gov/api/v1/contributions/3b654701-43a7-4436-b5d3-506abab23ab5/",
+        "filing_uuid": "3b654701-43a7-4436-b5d3-506abab23ab5",
+        "filing_type": "MM",
+        "filing_type_display": "Mid-Year Report",
+        "filing_year": 2026,
+        "filing_period": "mid_year",
+        "filing_period_display": "Mid-Year (Jan 1 - Jun 30)",
+        "filing_document_url": "https://lda.gov/filings/public/contribution/3b654701-43a7-4436-b5d3-506abab23ab5/print/",
+        "filing_document_content_type": "text/html",
+        "filer_type": "organization",
+        "filer_type_display": "Registrant",
+        "dt_posted": "2026-07-30T16:18:16-04:00",
+        "contact_name": "GOVERNMENT AFFAIRS DEPARTMENT",
+        "comments": null,
+        "address_1": "7950 Jones Branch Drive",
+        "address_2": "Suite 400S",
+        "city": "McLean",
+        "state": "VA",
+        "state_display": "Virginia",
+        "zip": "22102",
+        "country": "US",
+        "country_display": "United States of America",
+        "registrant": {
+          "id": 580,
+          "url": "https://lda.gov/api/v1/registrants/580/",
+          "house_registrant_id": 30014,
+          "name": "AIR LINE PILOTS ASSOCIATION",
+          "description": null,
+          "address_1": "7950 Jones Branch Drive",
+          "address_2": "Suite 400S",
+          "address_3": null,
+          "address_4": null,
+          "city": "McLean",
+          "state": "VA",
+          "state_display": "Virginia",
+          "zip": "22102",
+          "country": "US",
+          "country_display": "United States of America",
+          "ppb_country": "US",
+          "ppb_country_display": "United States of America",
+          "contact_name": "GOVERNMENT AFFAIRS DEPARTMENT",
+          "contact_telephone": "+1 202-797-4033",
+          "dt_updated": "2026-07-30T16:19:39.605446-04:00"
+        },
+        "lobbyist": null,
+        "no_contributions": false,
+        "pacs": [
+          "Air Line Pilots Association PAC",
+          "Affiliated PAC"
+        ],
+        "contribution_items": [
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "MIKE MCGUIRE FOR CONGRESS",
+            "honoree_name": "Sen. Mike McGuire",
+            "amount": "5000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "MIKE MCGUIRE FOR CONGRESS",
+            "honoree_name": "Sen. Mike McGuire",
+            "amount": "5000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "MIKE MCGUIRE FOR CONGRESS",
+            "honoree_name": "Sen. Mike McGuire",
+            "amount": "5000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "MIKE MCGUIRE FOR CONGRESS",
+            "honoree_name": "Sen. Mike McGuire",
+            "amount": "5000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "SARA JACOBS FOR CONGRESS",
+            "honoree_name": "Rep. Sara Jacobs",
+            "amount": "1500.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "SARA JACOBS FOR CONGRESS",
+            "honoree_name": "Rep. Sara Jacobs",
+            "amount": "3500.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "MARK TAKANO FOR CONGRESS",
+            "honoree_name": "Rep. Mark Takano",
+            "amount": "5000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "BARRAGAN FOR CONGRESS",
+            "honoree_name": "Nanette Barragan",
+            "amount": "3000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "CISNEROS FOR CONGRESS",
+            "honoree_name": "Mr. Gilbert Cisneros Jr.",
+            "amount": "2000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ALME FOR SENATE",
+            "honoree_name": "Hon. Kurt Alme",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JOHN CAVANAUGH FOR CONGRESS",
+            "honoree_name": "Sen. John Cavanaugh",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "HELMER FOR CONGRESS",
+            "honoree_name": "Del. Dan Helmer",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JACQUI IRWIN FOR CONGRESS",
+            "honoree_name": "Hon. Jacqui Irwin",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ALEXANDRA DEL MORAL MEALER FOR CONGRESS",
+            "honoree_name": "Ms. Alexandra Mealer",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JULIANA FOR ILLINOIS",
+            "honoree_name": "Lt. Gov. Juliana Stratton",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FREEDOM FUND",
+            "honoree_name": "Sen. Mike Crapo",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ALL FOR OUR COUNTRY PAC",
+            "honoree_name": "Sen. Catherine Cortez Masto",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATIC MAJORITY FUND",
+            "honoree_name": "Rep. Suzan DelBene",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "YINZER PAC",
+            "honoree_name": "Rep. Chris Deluzio",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "TURQUOISE PAC",
+            "honoree_name": "Rep. Ben Lujan Jr.",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "M-PAC",
+            "honoree_name": "Patty Murray",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEFEND THE DREAM",
+            "honoree_name": "Sen. Alex Padilla",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "STORM PAC",
+            "honoree_name": "Rep. Eric Sorensen",
+            "amount": "5000.00",
+            "date": "2026-01-05"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DAN CRENSHAW FOR CONGRESS",
+            "honoree_name": "Rep. Dan Crenshaw",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "ELIZABETH PANNILL FLETCHER FOR CONGRESS",
+            "honoree_name": "Rep. Lizzie Fletcher",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "WEBER FOR CONGRESS",
+            "honoree_name": "Rep. Randy Weber",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DR. BRIAN BABIN FOR CONGRESS",
+            "honoree_name": "Rep. Brian Babin D.D.S.",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "CLOUD FOR CONGRESS",
+            "honoree_name": "Rep. Michael Cloud",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "JONATHAN JACKSON FOR CONGRESS",
+            "honoree_name": "Jonathan Jackson",
+            "amount": "1000.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "UNITED WITH DELIA FOR CONGRESS",
+            "honoree_name": "Delia Ramirez",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "LOU CORREA FOR CONGRESS",
+            "honoree_name": "Rep. Lou Correa",
+            "amount": "1000.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DEREK TRAN FOR CONGRESS",
+            "honoree_name": "Rep. Derek Tran",
+            "amount": "1000.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "SYDNEY KAMLAGER FOR CONGRESS",
+            "honoree_name": "Sydney Kamlager",
+            "amount": "2000.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "NORMA TORRES FOR CONGRESS",
+            "honoree_name": "Norma Torres",
+            "amount": "2500.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "JIMMY GOMEZ FOR CONGRESS",
+            "honoree_name": "Jimmy Gomez",
+            "amount": "2500.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "LAURA FRIEDMAN FOR CONGRESS",
+            "honoree_name": "Hon. Laura Friedman",
+            "amount": "2500.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DR. RAUL RUIZ FOR CONGRESS",
+            "honoree_name": "Rep. Raul Ruiz M.D.",
+            "amount": "2500.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "JAY OBERNOLTE FOR CONGRESS",
+            "honoree_name": "Jay Obernolte",
+            "amount": "2500.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DAN GOLDMAN FOR NEW YORK",
+            "honoree_name": "Rep. Dan Goldman",
+            "amount": "3000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JIMMY GOMEZ FOR CONGRESS",
+            "honoree_name": "Jimmy Gomez",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JIMMY GOMEZ FOR CONGRESS",
+            "honoree_name": "Jimmy Gomez",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "KEVIN MULLIN FOR CONGRESS",
+            "honoree_name": "Kevin Mullin",
+            "amount": "3000.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "ADAM GRAY FOR CONGRESS",
+            "honoree_name": "Adam Gray",
+            "amount": "1000.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "LATEEFAH FOR CONGRESS",
+            "honoree_name": "Ms. Lateefah Simon",
+            "amount": "1500.00",
+            "date": "2026-05-27"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "JOSH HARDER FOR CONGRESS",
+            "honoree_name": "Rep. Josh Harder",
+            "amount": "1500.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "BERA FOR CONGRESS",
+            "honoree_name": "Rep. Ami Bera M.D.",
+            "amount": "2500.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "MIKE THOMPSON FOR CONGRESS",
+            "honoree_name": "Rep. Mike Thompson",
+            "amount": "2500.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "HUFFMAN FOR CONGRESS",
+            "honoree_name": "Jared Huffman",
+            "amount": "2000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "BRITTANY PETTERSEN FOR COLORADO",
+            "honoree_name": "Brittany Pettersen Ms.",
+            "amount": "2500.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ELECTGABEEVANS.COM",
+            "honoree_name": "Rep. Gabe Evans",
+            "amount": "-1000.00",
+            "date": "2026-02-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ELECTGABEEVANS.COM",
+            "honoree_name": "Rep. Gabe Evans",
+            "amount": "1000.00",
+            "date": "2026-02-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ERIC SORENSEN FOR ILLINOIS",
+            "honoree_name": "Eric Sorensen",
+            "amount": "-1500.00",
+            "date": "2026-02-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ERIC SORENSEN FOR ILLINOIS",
+            "honoree_name": "Eric Sorensen",
+            "amount": "1500.00",
+            "date": "2026-02-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DESMOND FOR CONGRESS",
+            "honoree_name": "Mr. Jim Desmond",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GALLAGHER FOR CONGRESS",
+            "honoree_name": "James Gallagher",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MARK LAMB FOR CONGRESS",
+            "honoree_name": "Mr. Mark Lamb",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BELL FOR MISSOURI",
+            "honoree_name": "Rep. Wesley Bell",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MIKE BOST FOR CONGRESS COMMITTEE",
+            "honoree_name": "Michael Bost",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CITIZENS FOR BOYLE",
+            "honoree_name": "Brendan Boyle",
+            "amount": "1500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NIKKI FOR CONGRESS",
+            "honoree_name": "Nikki Budzinski",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SALUD CARBAJAL FOR CONGRESS",
+            "honoree_name": "Salud Carbajal",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GREG CASAR FOR CONGRESS",
+            "honoree_name": "Greg Casar",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CISNEROS FOR CONGRESS",
+            "honoree_name": "Mr. Gilbert Cisneros Jr.",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COLLINS FOR SENATOR",
+            "honoree_name": "Susan Collins",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JESSICA STEINMANN FOR CONGRESS",
+            "honoree_name": "Ms. Jessica Steinmann",
+            "amount": "2500.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MARK TEIXEIRA FOR CONGRESS",
+            "honoree_name": "Mr. Mark Teixeira",
+            "amount": "2500.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEFEND OUR MAJORITY",
+            "honoree_name": "Defend Our Majority",
+            "amount": "115000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE BUILDING FUND",
+            "honoree_name": "Democratic Congressional Campaign Committee Building Fund",
+            "amount": "45000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE LEGAL FUND",
+            "honoree_name": "Democratic Congressional Campaign Committee Legal Fund",
+            "amount": "45000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE",
+            "honoree_name": "Democratic Congressional Campaign Committee",
+            "amount": "15000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATIC SENATORIAL CAMPAIGN COMMITTEE",
+            "honoree_name": "Democratic Senatorial Campaign Committee",
+            "amount": "15000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATIC SENATORIAL CAMPAIGN COMMITTEE BUILDING FUND",
+            "honoree_name": "Democratic Senatorial Campaign Committee Building Fund",
+            "amount": "45000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATIC SENATORIAL CAMPAIGN COMMITTEE LEGAL FUND",
+            "honoree_name": "Democratic Senatorial Campaign Committee Legal Fund",
+            "amount": "45000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NATIONAL REPUBLICAN SENATORIAL COMMITTEE",
+            "honoree_name": "National Republican Senatorial Committee",
+            "amount": "15000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NATIONAL REPUBLICAN SENATORIAL COMMITTEE BUILDING FUND",
+            "honoree_name": "National Republican Senatorial Committee Building Fund",
+            "amount": "45000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NATIONAL REPUBLICAN SENATORIAL COMMITTEE LEGAL FUND",
+            "honoree_name": "National Republican Senatorial Committee Legal Fund",
+            "amount": "45000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CA LUV PAC (CALIFORNIA LEADERSHIP UNITED FOR VICTORY PAC)",
+            "honoree_name": "Pete Aguilar",
+            "amount": "5000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SHOW-ME PAC",
+            "honoree_name": "Rep. Samuel Graves Jr.",
+            "amount": "5000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FOREVER YOUTH ORGANIZATION UTILIZING A NEW GENERATION",
+            "honoree_name": "Rep. Young Kim",
+            "amount": "5000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ELECT MORE DEMOCRATS PAC",
+            "honoree_name": "Rep. Mike Levin",
+            "amount": "5000.00",
+            "date": "2026-01-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JUDY CHU FOR CONGRESS",
+            "honoree_name": "Rep. Judy Chu Dr.",
+            "amount": "5000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COLE FOR CONGRESS",
+            "honoree_name": "Tom Cole",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JASON CROW FOR CONGRESS",
+            "honoree_name": "Jason Crow",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEBBIE DINGELL FOR CONGRESS",
+            "honoree_name": "Rep. Debbie Dingell",
+            "amount": "1500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEBBIE DINGELL FOR CONGRESS",
+            "honoree_name": "Rep. Debbie Dingell",
+            "amount": "1000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MAGGIE FOR CONGRESS",
+            "honoree_name": "Rep. Maggie Goodlander",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ADAM GRAY FOR CONGRESS",
+            "honoree_name": "Adam Gray",
+            "amount": "3000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "KAPTUR FOR CONGRESS",
+            "honoree_name": "Rep. Marcy Kaptur",
+            "amount": "5000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "KENNEDY FOR CONGRESS",
+            "honoree_name": "Sen. Timothy Kennedy",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "KIGGANS FOR CONGRESS",
+            "honoree_name": "Rep. Jen Kiggans",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "KIGGANS FOR CONGRESS",
+            "honoree_name": "Rep. Jen Kiggans",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LANDSMAN FOR CONGRESS",
+            "honoree_name": "Rep. Greg Landsman",
+            "amount": "3500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DAVE MIN FOR CONGRESS",
+            "honoree_name": "Sen. Dave Min",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MRVAN FOR CONGRESS",
+            "honoree_name": "Rep. Frank J. Mrvan III",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JAY OBERNOLTE FOR CONGRESS",
+            "honoree_name": "Jay Obernolte",
+            "amount": "1000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JIMMY PANETTA FOR CONGRESS",
+            "honoree_name": "Rep. Jimmy Panetta",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JIMMY PANETTA FOR CONGRESS",
+            "honoree_name": "Rep. Jimmy Panetta",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "AUGUST PFLUGER FOR CONGRESS",
+            "honoree_name": "Rep. August Pfluger II",
+            "amount": "1000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SCANLON FOR CONGRESS",
+            "honoree_name": "Rep. Mary Gay Scanlon",
+            "amount": "2500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DR KIM SCHRIER FOR CONGRESS",
+            "honoree_name": "Rep. Kim Schrier M.D.",
+            "amount": "500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DR KIM SCHRIER FOR CONGRESS",
+            "honoree_name": "Rep. Kim Schrier M.D.",
+            "amount": "1500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GABE VASQUEZ FOR CONGRESS",
+            "honoree_name": "Rep. Gabe Vasquez",
+            "amount": "1500.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GABE VASQUEZ FOR CONGRESS",
+            "honoree_name": "Rep. Gabe Vasquez",
+            "amount": "2000.00",
+            "date": "2026-01-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF SHERROD BROWN",
+            "honoree_name": "Sen. Sherrod Brown",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COOPER FOR NORTH CAROLINA",
+            "honoree_name": "Gov. Roy Cooper III",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BURCHETT FOR CONGRESS",
+            "honoree_name": "Rep. Tim Burchett",
+            "amount": "1000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CONSERVATIVE OPPORTUNITY LEADERSHIP & ENTERPRISE PAC (COLE PAC)",
+            "honoree_name": "Rep. Tom Cole",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BLUE HEN PAC",
+            "honoree_name": "Sen. Chris Coons",
+            "amount": "2500.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "31 DAYS PAC",
+            "honoree_name": "Rep. Jake Ellzey",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ELECTING MAJORITY MAKING EFFECTIVE REPUBLICANS (EMMER PAC)",
+            "honoree_name": "Tom Emmer",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SENATE EAGLE PAC",
+            "honoree_name": "Sen. Bill Hagerty",
+            "amount": "1500.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "AMERICAN REVIVAL PAC",
+            "honoree_name": "Rep. Mike Johnson",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LEADERSHIP AND LOYALTY ONLY TO AMERICA PAC",
+            "honoree_name": "Rep. Nick LaLota",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "RVFPAC",
+            "honoree_name": "Rep. Guy Reschenthaler",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "VITORIA PAC",
+            "honoree_name": "Rep. David Valadao",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ALMA ADAMS FOR CONGRESS",
+            "honoree_name": "Alma Adams",
+            "amount": "2500.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "AARON BEAN FOR CONGRESS",
+            "honoree_name": "Rep. Aaron Bean",
+            "amount": "1000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ROB FOR PA",
+            "honoree_name": "Rep. Rob Bresnahan Jr.",
+            "amount": "5000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JOHN CARTER FOR CONGRESS",
+            "honoree_name": "John Carter",
+            "amount": "1500.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CHUCK EDWARDS FOR CONGRESS",
+            "honoree_name": "Rep. Chuck Edwards",
+            "amount": "1000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FOUSHEE FOR CONGRESS",
+            "honoree_name": "Valerie Foushee",
+            "amount": "1000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MIKE KENNEDY FOR UTAH",
+            "honoree_name": "Rep. Michael Kennedy",
+            "amount": "1000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GUY FOR CONGRESS",
+            "honoree_name": "Rep. Guy Reschenthaler",
+            "amount": "2500.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "VAN DREW FOR CONGRESS",
+            "honoree_name": "Rep. Jefferson Van Drew Dr.",
+            "amount": "1000.00",
+            "date": "2026-02-23"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CONSERVATIVE TOM SELL FOR CONGRESS",
+            "honoree_name": "Mr. Tom Sell",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BETH VAN DUYNE FOR CONGRESS",
+            "honoree_name": "Rep. Beth Van Duyne",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEBBIE WASSERMAN SCHULTZ FOR CONGRESS",
+            "honoree_name": "Rep. Debbie Wasserman Schultz",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEMOCRATS WIN SEATS PAC",
+            "honoree_name": "Rep. Debbie Wasserman-Schultz",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "EMMER MAJORITY BUILDERS",
+            "honoree_name": "Emmer Majority Builders",
+            "amount": "7500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEFEND OUR MAJORITY",
+            "honoree_name": "Defend Our Majority",
+            "amount": "27000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CFF",
+            "honoree_name": "Rep. Young Kim",
+            "amount": "50000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PEOPLE'S VOICE PAC",
+            "honoree_name": "Sen. Tammy Baldwin",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "I GOT YOUR BACK",
+            "honoree_name": "Rep. Lisa Blunt Rochester",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NEPA NEXT PAC",
+            "honoree_name": "Rep. Rob Bresnahan Jr.",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BUILDING UP DEMOCRACY'S DREAM",
+            "honoree_name": "Sen. Ted Budd",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SILICORN VALLEY PAC",
+            "honoree_name": "Rep. Nikki Budzinski",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SERVING OUR COUNTRY PAC",
+            "honoree_name": "Salud Carbajal",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "AMERICA NOW PAC",
+            "honoree_name": "Rep. Andre Carson",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FAIR SHOT PAC",
+            "honoree_name": "Rep. Katherine Clark",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SOCK IT TO 'EM PAC",
+            "honoree_name": "Sen. John Curtis",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COMMITTEE FOR A DEMOCRATIC FUTURE",
+            "honoree_name": "Rep. Rosa DeLauro",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "EVERY VOTE PAC",
+            "honoree_name": "Sen. John Fetterman",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JUNTOS PAC",
+            "honoree_name": "Sen. Ruben Gallego",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GIDDY UP PAC",
+            "honoree_name": "Sen. John Hickenlooper Jr.",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PINEAPPLE PAC",
+            "honoree_name": "Rep. Mazie Hirono",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MCKENZIE RIVER PAC",
+            "honoree_name": "Rep. Val Hoyle",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEFENDING AMERICAN VALUES EVERYWHERE PAC",
+            "honoree_name": "Rep. Dave Joyce",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "IN OUR HANDS",
+            "honoree_name": "Sen. Andy Kim",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CIRCLE THE WAGONS PAC",
+            "honoree_name": "Rep. Nick Langworthy",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MVL PAC",
+            "honoree_name": "Rep. Mike Lawler",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "EDUCATE AND INNOVATE PAC",
+            "honoree_name": "Sen. Edward Markey",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MAC PAC",
+            "honoree_name": "Rep. James McGovern",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DENALI LEADERSHIP PAC",
+            "honoree_name": "Sen. Lisa Murkowski",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NARRAGANSETT BAY PAC",
+            "honoree_name": "Jack Reed",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SMART SOLUTIONS PAC",
+            "honoree_name": "Jacklyn Rosen",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "HAWAII PAC",
+            "honoree_name": "Brian Schatz",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SUNSHINE ORGANIZATION FOR TREMENDOUS OPPORTUNITIES PAC",
+            "honoree_name": "Rep. Darren Soto",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "REV UP PAC",
+            "honoree_name": "Sen. Raphael Warnock PhD",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PETE AGUILAR FOR CONGRESS",
+            "honoree_name": "Pete Aguilar",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GABE AMO FOR CONGRESS",
+            "honoree_name": "Rep. Gabe Amo Jr.",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BECCA BALINT FOR VERMONT",
+            "honoree_name": "Rep. Becca Balint",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "AARON BEAN FOR CONGRESS",
+            "honoree_name": "Rep. Aaron Bean",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ALASKANS FOR NICK BEGICH",
+            "honoree_name": "Rep. Nick Begich III",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CHRIS COONS FOR DELAWARE",
+            "honoree_name": "Christopher Coons",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SHARICE FOR CONGRESS",
+            "honoree_name": "Rep. Sharice Davids",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DELBENE FOR CONGRESS",
+            "honoree_name": "Rep. Suzan DelBene",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CHRIS DELUZIO FOR CONGRESS",
+            "honoree_name": "Christopher Deluzio",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEBBIE DINGELL FOR CONGRESS",
+            "honoree_name": "Rep. Debbie Dingell",
+            "amount": "2000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ELFRETH FOR MARYLAND",
+            "honoree_name": "Rep. Sarah K. Elfreth",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "VERONICA ESCOBAR FOR CONGRESS",
+            "honoree_name": "Rep. Veronica Escobar",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ADRIANO ESPAILLAT FOR CONGRESS",
+            "honoree_name": "Rep. Adriano Espaillat",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ELECTGABEEVANS.COM",
+            "honoree_name": "Rep. Gabe Evans",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FEDORCHAK FOR ND",
+            "honoree_name": "Ms. Julie Fedorchak",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COMMITTEE TO ELECT SHOMARI FIGURES FOR CONGRESS",
+            "honoree_name": "Mr. Shomari Figures",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BRIAN FITZPATRICK FOR ALL OF US",
+            "honoree_name": "Rep. Brian Fitzpatrick",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LOIS FRANKEL FOR CONGRESS",
+            "honoree_name": "Rep. Lois Frankel",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "RUSS FULCHER FOR IDAHO",
+            "honoree_name": "Rep. Russ Fulcher",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GARAMENDI FOR CONGRESS",
+            "honoree_name": "Rep. John Garamendi",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GARAMENDI FOR CONGRESS",
+            "honoree_name": "Rep. John Garamendi",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "VICENTE GONZALEZ FOR CONGRESS",
+            "honoree_name": "Vicente Gonzalez",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COMMITTEE TO RE-ELECT HENRY HANK JOHNSON",
+            "honoree_name": "Rep. Hank Johnson Jr.",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LAWLER FOR CONGRESS, INC.",
+            "honoree_name": "Rep. Mike Lawler",
+            "amount": "3000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NICOLE FOR NEW YORK",
+            "honoree_name": "Rep. Nicole Malliotakis",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MCCOLLUM FOR CONGRESS",
+            "honoree_name": "Rep. Betty McCollum",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GRACE FOR NEW YORK",
+            "honoree_name": "Rep. Grace Meng",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JEFF MERKLEY FOR OREGON",
+            "honoree_name": "Sen. Jeff Merkley",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MOORE FOR CONGRESS",
+            "honoree_name": "Rep. Gwen Moore",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JOHNNY O FOR CONGRESS",
+            "honoree_name": "Rep. Johnny Olszewski Jr.",
+            "amount": "1500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "LATEEFAH FOR CONGRESS",
+            "honoree_name": "Ms. Lateefah Simon",
+            "amount": "1000.00",
+            "date": "2026-05-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JOHNNY O FOR CONGRESS",
+            "honoree_name": "Rep. Johnny Olszewski Jr.",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF JIMMY PATRONIS, INC.",
+            "honoree_name": "Rep. Jimmy Patronis Jr.",
+            "amount": "1500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MARK POCAN FOR CONGRESS",
+            "honoree_name": "Rep. Mark Pocan",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NELLIE POU FOR CONGRESS",
+            "honoree_name": "Rep. Nellie Pou",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JOSH RILEY FOR CONGRESS",
+            "honoree_name": "Rep. Joshua Riley",
+            "amount": "2000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JOSH RILEY FOR CONGRESS",
+            "honoree_name": "Rep. Joshua Riley",
+            "amount": "500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JIM RISCH FOR U.S. SENATE COMMITTEE",
+            "honoree_name": "Sen. James E. Risch",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LUZ RIVAS FOR CONGRESS",
+            "honoree_name": "Hon. Luz Rivas",
+            "amount": "1500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LUZ RIVAS FOR CONGRESS",
+            "honoree_name": "Hon. Luz Rivas",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PAT RYAN FOR CONGRESS",
+            "honoree_name": "Rep. Pat Ryan",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SCANLON FOR CONGRESS",
+            "honoree_name": "Rep. Mary Gay Scanlon",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SCHOLTEN FOR CONGRESS",
+            "honoree_name": "Hillary Scholten",
+            "amount": "1000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LATEEFAH FOR CONGRESS",
+            "honoree_name": "Ms. Lateefah Simon",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF CHRIS SMITH",
+            "honoree_name": "Rep. Chris Smith",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ERIC SORENSEN FOR ILLINOIS",
+            "honoree_name": "Eric Sorensen",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "STRICKLAND FOR WASHINGTON",
+            "honoree_name": "Rep. Marilyn Strickland",
+            "amount": "1500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF BENNIE THOMPSON",
+            "honoree_name": "Rep. Bennie G. Thompson",
+            "amount": "5000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "TITUS FOR CONGRESS",
+            "honoree_name": "Rep. Dina Titus Dr.",
+            "amount": "1500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LAUREN UNDERWOOD FOR CONGRESS",
+            "honoree_name": "Rep. Lauren Underwood",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "WALKINSHAW FOR CONGRESS",
+            "honoree_name": "Mr. James Walkinshaw",
+            "amount": "2500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF MARK WARNER",
+            "honoree_name": "Sen. Mark R. Warner",
+            "amount": "4000.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NIKEMA FOR CONGRESS, INC",
+            "honoree_name": "Rep. Nikema Williams",
+            "amount": "1500.00",
+            "date": "2026-03-24"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LATEEFAH FOR CONGRESS",
+            "honoree_name": "Ms. Lateefah Simon",
+            "amount": "2500.00",
+            "date": "2026-04-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEBBIE DINGELL FOR CONGRESS",
+            "honoree_name": "Rep. Debbie Dingell",
+            "amount": "2000.00",
+            "date": "2026-04-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NIKEMA FOR CONGRESS, INC",
+            "honoree_name": "Rep. Nikema Williams",
+            "amount": "1500.00",
+            "date": "2026-04-28"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ALLRED FOR TEXAS",
+            "honoree_name": "Rep. Colin Allred",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SHARIF STREET FOR US",
+            "honoree_name": "Sen. Sharif Street",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FIGHT ON PAC",
+            "honoree_name": "Rep. Ashley Hinson",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COMMON VALUES PAC",
+            "honoree_name": "John Barrasso",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SENATE EAGLE PAC",
+            "honoree_name": "Sen. Bill Hagerty",
+            "amount": "2000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SEND IN THE SEAL PAC",
+            "honoree_name": "Sen. Tim Sheehy",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "TRUE NORTH PAC",
+            "honoree_name": "Dan Sullivan",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CITIZENS FOR BOYLE",
+            "honoree_name": "Brendan Boyle",
+            "amount": "1000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CITIZENS FOR BOYLE",
+            "honoree_name": "Brendan Boyle",
+            "amount": "1500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JANELLE BYNUM FOR CONGRESS",
+            "honoree_name": "Rep. Janelle Bynum",
+            "amount": "1000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JIM CLYBURN CAMPAIGN COMMITTEE",
+            "honoree_name": "James Clyburn",
+            "amount": "1500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JASON CROW FOR CONGRESS",
+            "honoree_name": "Jason Crow",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GARAMENDI FOR CONGRESS",
+            "honoree_name": "Rep. John Garamendi",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GARBARINO FOR CONGRESS",
+            "honoree_name": "Rep. Andrew Garbarino",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SYLVIA GARCIA FOR CONGRESS",
+            "honoree_name": "Rep. Sylvia Garcia",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "HUFFMAN FOR CONGRESS",
+            "honoree_name": "Jared Huffman",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BRIAN JACK FOR CONGRESS",
+            "honoree_name": "Mr. Brian Jack",
+            "amount": "1500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF DAVE JOYCE",
+            "honoree_name": "Rep. Dave Joyce",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "TED LIEU FOR CONGRESS",
+            "honoree_name": "Ted Lieu",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF LUCY MCBATH",
+            "honoree_name": "Rep. Lucy McBath",
+            "amount": "1500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GRACE FOR NEW YORK",
+            "honoree_name": "Rep. Grace Meng",
+            "amount": "1500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JAY OBERNOLTE FOR CONGRESS",
+            "honoree_name": "Jay Obernolte",
+            "amount": "1000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PALLONE FOR CONGRESS",
+            "honoree_name": "Rep. Frank Pallone Jr.",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ROUNDS FOR SENATE",
+            "honoree_name": "Mike Rounds",
+            "amount": "5000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SUOZZI FOR CONGRESS",
+            "honoree_name": "Thomas Suozzi",
+            "amount": "2000.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NIKEMA FOR CONGRESS, INC",
+            "honoree_name": "Rep. Nikema Williams",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "WOMACK FOR CONGRESS COMMITTEE",
+            "honoree_name": "Rep. Steve Womack",
+            "amount": "2500.00",
+            "date": "2026-05-01"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CONNIE CHAN FOR CONGRESS",
+            "honoree_name": "Ms. Connie Chan",
+            "amount": "2500.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "FRIENDS OF BEN MCADAMS",
+            "honoree_name": "Rep. Ben McAdams",
+            "amount": "2500.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DR. AISHA WAHAB FOR CONGRESS",
+            "honoree_name": "Dr. Aisha Wahab",
+            "amount": "5000.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "STAR PAC",
+            "honoree_name": "Jack Bergman",
+            "amount": "5000.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DEFEND OUR CONSERVATIVE SENATE (DOC'S) PAC",
+            "honoree_name": "ROGER MARSHALL",
+            "amount": "5000.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "KANSANS FOR MARSHALL",
+            "honoree_name": "Rep. Roger Marshall",
+            "amount": "5000.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SCOTT PETERS FOR CONGRESS",
+            "honoree_name": "Rep. Scott Peters",
+            "amount": "1500.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DARREN SOTO FOR CONGRESS",
+            "honoree_name": "Rep. Darren Soto",
+            "amount": "2500.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DARREN SOTO FOR CONGRESS",
+            "honoree_name": "Rep. Darren Soto",
+            "amount": "5000.00",
+            "date": "2026-05-15"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ADRIAN BOAFO FOR CONGRESS",
+            "honoree_name": "Del. Adrian Boafo",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "AMANDA MCKINNEY FOR WASHINGTON",
+            "honoree_name": "Ms. Amanda McKinney",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "DONNA MILLER FOR CONGRESS",
+            "honoree_name": "Ms. Donna Miller",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "HUSKY PAC",
+            "honoree_name": "Rep. Joseph Courtney",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LAST FRONTIER PAC",
+            "honoree_name": "Sen. Dan Sullivan USMC",
+            "amount": "25000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BLUE LINE PAC",
+            "honoree_name": "Rep. Mike Quigley",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PAC FOR AMERICA",
+            "honoree_name": "Sen. James Risch",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PATRIOT PAC",
+            "honoree_name": "Rep. Pat Ryan",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PROGRESSIVE VOTERS OF AMERICA PAC",
+            "honoree_name": "Sen. Bernie Sanders",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "HMS SCRAP PAC",
+            "honoree_name": "Rep. Haley Stevens",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SPIKE PAC",
+            "honoree_name": "Rep. Lori Trahan",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "OORAH! PAC",
+            "honoree_name": "Sen. Todd Young",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BARRAGAN FOR CONGRESS",
+            "honoree_name": "Nanette Barragan",
+            "amount": "2000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NIKKI FOR CONGRESS",
+            "honoree_name": "Nikki Budzinski",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CASTEN FOR CONGRESS",
+            "honoree_name": "Rep. Sean Casten",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "CHRIS COONS FOR DELAWARE",
+            "honoree_name": "Christopher Coons",
+            "amount": "1500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LOU CORREA FOR CONGRESS",
+            "honoree_name": "Rep. Lou Correa",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "COURTNEY FOR CONGRESS",
+            "honoree_name": "Rep. Joe Courtney",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "TEXANS FOR HENRY CUELLAR CONGRESSIONAL CAMPAIGN",
+            "honoree_name": "Rep. Henry Cuellar",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JAKE ELLZEY FOR CONGRESS",
+            "honoree_name": "John Kevin Ellzey",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LOIS FRANKEL FOR CONGRESS",
+            "honoree_name": "Rep. Lois Frankel",
+            "amount": "1500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MAXWELL ALEJANDRO FROST FOR CONGRESS",
+            "honoree_name": "Rep. Maxwell Frost",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "NEVADANS FOR STEVEN HORSFORD",
+            "honoree_name": "Rep. Steven Horsford",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "GLENN IVEY FOR CONGRESS 2022",
+            "honoree_name": "Glenn Ivey",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BRIAN JACK FOR CONGRESS",
+            "honoree_name": "Mr. Brian Jack",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SARA JACOBS FOR CONGRESS",
+            "honoree_name": "Rep. Sara Jacobs",
+            "amount": "1500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "YOUNG KIM FOR CONGRESS",
+            "honoree_name": "Rep. Young Kim",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LANGWORTHY FOR CONGRESS",
+            "honoree_name": "Nick Langworthy",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "PEOPLE FOR BEN",
+            "honoree_name": "Rep. Ben Ray Lujan Jr.",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "KRISTEN FOR MICHIGAN",
+            "honoree_name": "Rep. Kristen McDonald Rivet",
+            "amount": "1500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JOE MORELLE FOR CONGRESS",
+            "honoree_name": "Rep. Joseph Morelle",
+            "amount": "2000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "JARED MOSKOWITZ FOR CONGRESS",
+            "honoree_name": "Rep. Jared Moskowitz",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "MRVAN FOR CONGRESS",
+            "honoree_name": "Rep. Frank J. Mrvan III",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "ROUNDS FOR SENATE",
+            "honoree_name": "Mike Rounds",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "STAND WITH SANCHEZ",
+            "honoree_name": "Rep. Linda S?nchez",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SCHNEIDER FOR CONGRESS",
+            "honoree_name": "Bradley Schneider",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SCHOLTEN FOR CONGRESS",
+            "honoree_name": "Hillary Scholten",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "SHERMAN FOR CONGRESS",
+            "honoree_name": "Rep. Brad Sherman",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "STANTON FOR CONGRESS",
+            "honoree_name": "Rep. Greg Stanton",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "STRICKLAND FOR WASHINGTON",
+            "honoree_name": "Rep. Marilyn Strickland",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "LAUREN UNDERWOOD FOR CONGRESS",
+            "honoree_name": "Rep. Lauren Underwood",
+            "amount": "2500.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AIR LINE PILOTS ASSOCIATION PAC",
+            "payee_name": "BERGMANFORCONGRESS",
+            "honoree_name": "Rep. Jack Bergman",
+            "amount": "5000.00",
+            "date": "2026-06-16"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DOING RIGHT - RESULTS ACTION UNITY LEADERSHIP PAC",
+            "honoree_name": "Rep. Raul Ruiz M.D.",
+            "amount": "5000.00",
+            "date": "2026-01-05"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "GETTING RESULTS BY ENGAGING THE GRASSROOTS PAC",
+            "honoree_name": "Rep. Greg Stanton",
+            "amount": "5000.00",
+            "date": "2026-01-05"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "TRUEDEM LEADERSHIP FUND",
+            "honoree_name": "Rep. Marcy Kaptur",
+            "amount": "5000.00",
+            "date": "2026-01-05"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "LAUREN UNDERWOOD FOR CONGRESS",
+            "honoree_name": "Rep. Lauren Underwood",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "LAHOOD FOR CONGRESS",
+            "honoree_name": "Darin McKay LaHood",
+            "amount": "2000.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "KEAN FOR CONGRESS INC",
+            "honoree_name": "Rep. Tom Kean Jr.",
+            "amount": "2000.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DAVE MIN FOR CONGRESS",
+            "honoree_name": "Sen. Dave Min",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "FRIENDS OF DON BEYER",
+            "honoree_name": "Donald Beyer Jr.",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "JEFF CRANK FOR CONGRESS",
+            "honoree_name": "Mr. Jeff Crank",
+            "amount": "1000.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "ELFRETH FOR MARYLAND",
+            "honoree_name": "Rep. Sarah K. Elfreth",
+            "amount": "1000.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "JEFF HURD FOR CONGRESS",
+            "honoree_name": "Rep. Jeff Hurd",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "MAX MILLER FOR CONGRESS",
+            "honoree_name": "Rep. Max Miller",
+            "amount": "2500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DAN GOLDMAN FOR NEW YORK",
+            "honoree_name": "Rep. Dan Goldman",
+            "amount": "1000.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DAN GOLDMAN FOR NEW YORK",
+            "honoree_name": "Rep. Dan Goldman",
+            "amount": "1500.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "LAMONICA MCIVER FOR CONGRESS",
+            "honoree_name": "Ms. LaMonica McIver",
+            "amount": "4000.00",
+            "date": "2026-02-12"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "DAVE MIN FOR CONGRESS",
+            "honoree_name": "Sen. Dave Min",
+            "amount": "2500.00",
+            "date": "2026-02-19"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "JOSH GOTTHEIMER FOR CONGRESS",
+            "honoree_name": "Josh Gottheimer",
+            "amount": "5000.00",
+            "date": "2026-02-19"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "FRIEDMAN FOR CONGRESS",
+            "honoree_name": "Mr. Jason Friedman",
+            "amount": "2500.00",
+            "date": "2026-02-19"
+          },
+          {
+            "contribution_type": "feca",
+            "contribution_type_display": "FECA",
+            "contributor_name": "AFFILIATED PAC",
+            "payee_name": "SCOTT PETERS FOR CONGRESS",
+            "honoree_name": "Rep. Scott Peters",
+            "amount": "2000.00",
+            "date": "2026-05-27"
+          }
+        ]
+      }
+    }
+  ]
+}

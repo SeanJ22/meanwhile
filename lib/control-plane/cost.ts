@@ -92,13 +92,14 @@ export function cacheMeteringOf(cost: AttemptCost): CacheMetering {
 }
 
 export interface CostEntry {
+  readonly costPolicy?: "R7";
   /** Absent only on older rows. Null is plain code or an unreported model. */
   readonly model?: string | null;
   readonly tier?: ModelTier | "none" | null;
   /** Requested identity stays separate from the provider's returned identity. */
   readonly requestedModel?: string | null;
   readonly servedModel?: string | null;
-  /** Maximum bill for this exact send, with no prompt or prompt hash retained.
+  /** The send limit of the one request whose usage never came back; `cost` holds every answered request.
    * These quantities are conservative limits, not measured provider usage. */
   readonly modelRequestBound?: ModelRequestBound;
   /** Exact durable budget job that covered this attempt; never inferred from geography. */
@@ -113,7 +114,7 @@ export interface CostEntry {
   /** OCD id or equivalent. Null when the work spans jurisdictions. */
   readonly jurisdiction: string | null;
   readonly project: string;
-  readonly role: WorkerRole | "ASK";
+  readonly role: WorkerRole | "ASK" | "TRANSLATOR" | "TRANSLATION_CHECKER";
   readonly cost: AttemptCost;
   /** Caller-supplied ISO stamp. This module never reads a clock. */
   readonly recordedAt: string;
@@ -171,15 +172,14 @@ export function modelRequestBoundFor(model: string, inputTokens: number, outputT
   return Number.isFinite(usd) ? { model, inputTokens, outputTokens, usd, basis: "REQUEST_UTF8_BYTES", measured: false } : null;
 }
 
-/** Scheduling bound, never an invented measured charge. Future rows carry an
- * exact send limit. Older Ask rows use reported aggregate usage, or the known
+/** Scheduling bound, never an invented measured charge: the unanswered request's
+ * send limit. Older Ask rows without one use reported aggregate usage, or the known
  * requested model's provider context/output maxima, at the dearest active
  * tier's prices. An unknown request with missing usage stays unbounded. */
 export function costEntryModelRequestBound(entry: CostEntry): number | null {
   const bound = entry.modelRequestBound;
   if (bound) {
-    if (entry.cost.requestCount !== 1 || (entry.byModel?.length ?? 0) > 1 ||
-      bound.basis !== "REQUEST_UTF8_BYTES" || bound.measured !== false ||
+    if (bound.basis !== "REQUEST_UTF8_BYTES" || bound.measured !== false ||
       !boundedTokenCount(bound.inputTokens) || !boundedTokenCount(bound.outputTokens) ||
       typeof bound.usd !== "number" || !Number.isFinite(bound.usd) || bound.usd < 0 ||
       typeof entry.requestedModel !== "string" || canonicalModelId(entry.requestedModel) !== canonicalModelId(bound.model)) return null;
@@ -208,9 +208,10 @@ export function costEntryModelRequestBound(entry: CostEntry): number | null {
 
 /** What an unpriced model charge is counted at when nothing tighter bounds it:
  * the row's token counts (or the dearest model's context and output limits per
- * request, at least one), all at the dearest listed price. Never a measured charge. */
+ * request, one when the count is unknown), all at the dearest listed price. Never a measured charge. */
 export function costEntryWorstCaseUsd(entry: CostEntry): number {
-  const requests = boundedTokenCount(entry.cost.requestCount) && entry.cost.requestCount > 0 ? entry.cost.requestCount : 1;
+  if (entry.cost.requestCount === 0) return 0;
+  const requests = boundedTokenCount(entry.cost.requestCount) ? entry.cost.requestCount : 1;
   const summed = [entry.cost.uncachedInputTokens, entry.cost.cacheReadInputTokens, entry.cost.cacheCreationInputTokens];
   const input = boundedTokenCount(entry.cost.inputTokens) ? entry.cost.inputTokens
     : summed.every(boundedTokenCount) ? summed.reduce<number>((n, part) => n + part!, 0)
@@ -222,6 +223,10 @@ export function costEntryWorstCaseUsd(entry: CostEntry): number {
 
 /** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */
 export interface CostModelShare {
+  readonly listPriceUsd?: number | null;
+  readonly batch?: boolean;
+  readonly batchEligibleRequestCount?: number | null;
+  readonly batchRequestCount?: number | null;
   readonly model: string;
   readonly tier?: ModelTier | null;
   /** Model requests (provider turns) sent to this model. */
@@ -275,7 +280,10 @@ export function spendByTier(entries: readonly CostEntry[], range: { readonly sin
  * first share. A split that does not sum to the row's dollars is not trusted:
  * the row is read whole under `attemptModel`.
  */
-export function costPortionsByModel(entry: CostEntry, attemptModel: string): readonly { readonly model: string; readonly entry: CostEntry }[] {
+/** The fields of a model charge the cache and capacity readings use; the spend window keeps them with each charge. */
+export type MeteredCharge = Pick<CostEntry, "attemptId" | "role" | "routeId" | "model" | "tier" | "byModel" | "cost" | "recordedAt">;
+
+export function costPortionsByModel<E extends Pick<CostEntry, "byModel" | "cost" | "model">>(entry: E, attemptModel: string): readonly { readonly model: string; readonly entry: E }[] {
   const shares = entry.byModel;
   if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: entry.model ?? attemptModel, entry }];
   const otherRequests = shares.slice(1).reduce((n, s) => n + s.requestCount, 0);
@@ -285,6 +293,11 @@ export function costPortionsByModel(entry: CostEntry, attemptModel: string): rea
       ...entry,
       cost: {
         ...entry.cost,
+        ...(s.batch === undefined ? {} : { batch: s.batch }),
+        modelRequestCount: s.requestCount,
+        listPriceUsd: s.listPriceUsd ?? null,
+        batchEligibleRequestCount: s.batchEligibleRequestCount ?? null,
+        batchRequestCount: s.batchRequestCount ?? (s.batch === undefined ? null : s.batch ? s.requestCount : 0),
         usd: s.usd,
         inputTokens: s.inputTokens,
         outputTokens: s.outputTokens,

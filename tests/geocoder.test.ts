@@ -6,6 +6,7 @@ import test from "node:test";
 import {
   CENSUS_BENCHMARK,
   CENSUS_GEOCODER_URL,
+  CENSUS_GEOGRAPHIES_URL,
   MAX_SPREAD_KM,
   SAMPLE_HOUSE_NUMBERS,
   censusGeocodeUrl,
@@ -18,12 +19,6 @@ import {
   parseCensusPoint,
   streetOnly,
 } from "../lib/geo/census-geocoder.ts";
-
-/**
- * The Census geocoder does not geocode street names, only addresses, so a street is placed from a few
- * sampled house numbers that must agree, or nothing. No reader house number is ever sent, and every
- * failure lands on `null`. The recorded payloads below are real Census responses.
- */
 
 test("D53: a house number the reader types anyway is stripped before sending", () => {
   assert.equal(streetOnly("808 Green Pond Road"), "Green Pond Road");
@@ -506,7 +501,7 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
   assert.ok(point);
   assert.equal(calls.length, 1);
   assert.ok(
-    calls[0].startsWith(CENSUS_GEOCODER_URL),
+    calls[0].startsWith(CENSUS_GEOGRAPHIES_URL),
     `server-side call went to ${calls[0]}`,
   );
 });
@@ -543,7 +538,6 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
     );
   }
 });
-
 
 test("Census geocoding preserves ambiguity, rejects another ZIP, and supports US territories", async () => {
   assert.equal(parseCensusPoint({ result: { addressMatches: [...REAL_MATCH.result.addressMatches, ...REAL_MATCH.result.addressMatches] } }), null);

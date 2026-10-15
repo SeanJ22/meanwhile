@@ -8,10 +8,10 @@ import type { AdminConfig } from "./gateway/admin-config.ts";
 export type SettingValue = null | boolean | number | string | readonly SettingValue[] | { readonly [key: string]: SettingValue };
 
 /** How Admin offers a new value: a number box, On/Off, a line of text, or structured data. */
-export type SettingControl = "number" | "boolean" | "text" | "json";
+export type SettingControl = "number" | "boolean" | "text" | "json" | "choice";
 
 export interface SettingDefinition<T extends SettingValue = SettingValue> {
-  /** Stable machine key, e.g. `detective.shutThreshold`. Never shown in Admin. */
+  /** Stable machine key, e.g. `hunting.exaAgent`. Never shown in Admin. */
   readonly key: string;
   /** What Admin calls it, in plain words. */
   readonly label: string;
@@ -23,6 +23,7 @@ export interface SettingDefinition<T extends SettingValue = SettingValue> {
   readonly unit?: string;
   /** How Admin offers a new value. Defaults from the code default's type. */
   readonly control?: SettingControl;
+  readonly choices?: readonly { readonly value: string; readonly label: string }[];
 }
 
 export interface SettingChange {
@@ -57,14 +58,6 @@ export function registerSetting<T extends SettingValue>(definition: SettingDefin
 }
 
 
-/** Consecutive failures before a door goes to a detective. The code default stays 3. */
-export const DETECTIVE_SHUT_THRESHOLD_SETTING = "detective.shutThreshold";
-registerSetting({
-  key: DETECTIVE_SHUT_THRESHOLD_SETTING, label: "Failures before a detective is sent", defaultValue: 3, unit: "failures in a row",
-  readerFacing: false, control: "number",
-  validate: (value): value is number => typeof value === "number" && Number.isSafeInteger(value) && value > 0 && value <= 100,
-});
-
 /** The checklist items a county's residents most need, whose arrival the Scoreboard times from a mission's start. Changing it changes what the "time to core information live" figure waits for. */
 export const CORE_ITEMS_SETTING = "scorecard.coreItems";
 export const CORE_ITEMS_DEFAULT: readonly string[] = ["GOV-01", "GOV-02", "OFF-04", "MTG-06"];
@@ -79,6 +72,10 @@ registerSetting({
  * and log into the same history so the Settings view shows their changes and undo.
  */
 export const SPEND_CEILING_LOG_KEY = "fleet.spendCeilingUsd";
+export const ALERTS_ON_SETTING = "alerts.on";
+export const BRIEF_TIME_SETTING = "brief.time";
+registerSetting({key:ALERTS_ON_SETTING,label:"Show alerts",defaultValue:false,readerFacing:false,control:"boolean",validate:(v):v is boolean=>typeof v==="boolean"});
+registerSetting({key:BRIEF_TIME_SETTING,label:"Daily brief time (Eastern, HH:mm; blank for off)",defaultValue:"",readerFacing:false,control:"text",validate:(v):v is string=>typeof v==="string"&&(v===""||/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(v))});
 
 
 export function settingDefinition(key: string): SettingDefinition | null { return definitions.get(key) ?? null; }
@@ -161,7 +158,9 @@ export function runnerSettingsEcho(config: AdminConfig | null, appliedAt: string
 
 
 /** A value in plain words for Admin. */
-export function settingValueWords(value: SettingValue, unit?: string): string {
+export function settingValueWords(value: SettingValue, unit?: string, choices?: SettingDefinition["choices"]): string {
+  const choice = choices?.find(choice => choice.value === value);
+  if (choice) return choice.label;
   if (value === null) return "—";
   if (typeof value === "boolean") return value ? "On" : "Off";
   if (typeof value === "number") return `${value.toLocaleString("en-US")}${unit ? ` ${unit}` : ""}`;

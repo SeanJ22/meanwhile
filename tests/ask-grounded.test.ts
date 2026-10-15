@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { packHasEvidence, packSourceUrls } from "../lib/ask/evidence.ts";

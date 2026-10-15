@@ -7,6 +7,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { tsImport } from "tsx/esm/api";
 
 import {
   hasPhysicalLocation,
@@ -107,14 +110,17 @@ test("MTG-14: the shared files are in ONE of the two honest states, never half-w
   );
 });
 
-test("MTG-14: both discovery surfaces this session owns render the online mark", () => {
+test("MTG-14: discovery surfaces show the held online label without a missing join-link placeholder", async () => {
   for (const file of ["components/map/list-overlay.tsx", "components/map/door-overlay.tsx"]) {
     const src = read(file);
     assert.match(src, /<MeetingRow/, `${file} must mount the shared row`);
-    const shared = read("components/ui/meeting-row.tsx");
-    assert.match(shared, /MeetingStatusPill/);
-    assert.match(shared, /status="online"/);
-    assert.match(shared, /onlineAccessFor\(meeting\)/);
+  }
+  const { MeetingRow } = await tsImport("../components/ui/meeting-row.tsx", import.meta.url) as typeof import("../components/ui/meeting-row.tsx");
+  for (const meeting of [NAMED, CONTROL]) {
+    const markup = renderToStaticMarkup(createElement(MeetingRow, { meeting }));
+    const label = renderToStaticMarkup(createElement("span", null, meeting.online!.label)).slice(6, -7);
+    assert.ok(markup.includes(`data-meeting-where="online">Online · ${label}</div>`), meeting.id);
+    assert.doesNotMatch(markup, /data-working-on-it|working on getting this info|Want us|Join online/);
   }
 });
 

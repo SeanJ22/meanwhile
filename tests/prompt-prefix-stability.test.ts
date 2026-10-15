@@ -1,25 +1,28 @@
+import { rolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { playbookRows } from "./helpers/playbooks.ts";
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /**
  * For every model call site, two requests built from the same inputs produce byte-identical prefix bytes up to the
  * last static breakpoint, and per-request values (attempt id, obligation id, the reader's question) never appear in
  * that prefix. The hash is over the JSON the transport would send, which is what the cache keys on.
  *
- *   Scout                tools + system            (`scoutStaticPrefix`)
+ *   Hunter               tools + system            (`scoutStaticPrefix`)
  *   Adversarial audit    tools + system            (`model-audit.ts`)
  *   Grounded Ask         system + evidence block   (`synthesisRequestBody`)
- *   Ask interpret        system                    (unmarked: under the 512-token minimum)
- *   Ask classify         system                    (unmarked)
- *   Unsourced fallback   system                    (unmarked)
+ *   Ask interpret        system                    (one-hour instructions; inventory follows)
+ *   Ask classify         system                    (one-hour instructions)
+ *   Unsourced fallback   system                    (one-hour instructions)
  */
 
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
-import { scoutExecutor, scoutStaticPrefix, type ModelRequest, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { SCOUT_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
-import { MIN_DISTINCT_RUNGS } from "../lib/control-plane/scheduler/scout-result.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
+import { cacheTtlOrderProblems, hunterExecutor, scoutStaticPrefix, type ModelRequest, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { HUNTER_SPECS } from "./helpers/hunter-tool-specs.ts";
+import { SCOUT_CACHE_POLICY } from "../lib/control-plane/scheduler/model-routing.ts";
+import { MODELS } from "../lib/models.ts";
 import type { ScoutToolContext, ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { auditReasoningContext, modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
@@ -33,16 +36,16 @@ import { askUnsourced } from "../lib/routing/unsourced-fallback.ts";
 const sha = (value: unknown): string => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const NOW = "2026-09-06T12:00:00.000Z";
 
-/* ------------------------------------------------------------------ Scout */
+/* ----------------------------------------------------------------- Hunter */
 
-function scoutRequestFor(attemptId: string, obligationId: string): Promise<ModelRequest> {
+function hunterRequestFor(attemptId: string, obligationId: string): Promise<ModelRequest> {
   return new Promise((resolve) => {
     const capture: ModelTransport = async (request) => { resolve(request); throw new Error("captured"); };
-    const toolkit: ScoutToolkit = { specs: SCOUT_TOOL_SPECS, vaultedArtifactIds: new Set(), requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } };
-    const exec = scoutExecutor({
+    const toolkit: ScoutToolkit = { specs: HUNTER_SPECS, vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } };
+    const exec = hunterExecutor({ role: "HUNTER", playbookFor: fixtureRolePlaybook,
       transport: capture,
       toolkitFor: (_ctx: ScoutToolContext) => toolkit,
-      contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
+      contextFor: async () => ({ brief: "Place: az:county:pima", reason: "r", blanks: 1, handed: { artifactIds: [] }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
       now: () => NOW,
     });
     void exec.run({
@@ -52,19 +55,53 @@ function scoutRequestFor(attemptId: string, obligationId: string): Promise<Model
   });
 }
 
-test("PC-3 Scout: tools + system are byte-identical across Attempts and carry no Attempt id, obligation id or timestamp; the brief follows them", async () => {
-  const a = await scoutRequestFor("at-aaaaaaaa", "freshness:meetings:az:county:pima#one");
-  const b = await scoutRequestFor("at-bbbbbbbb", "freshness:meetings:az:county:pima#two");
+test("PC-3 Hunter: tools + system are byte-identical across Attempts and carry no Attempt id, obligation id or timestamp; the brief follows them", async () => {
+  const a = await hunterRequestFor("at-aaaaaaaa", "freshness:meetings:az:county:pima#one");
+  const b = await hunterRequestFor("at-bbbbbbbb", "freshness:meetings:az:county:pima#two");
   const prefixA = { tools: a.tools, system: a.system };
   const prefixB = { tools: b.tools, system: b.system };
   assert.equal(sha(prefixA), sha(prefixB), "the static prefix hash is identical across Attempts");
-  const built = scoutStaticPrefix({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
-  assert.equal(sha(prefixA), sha({ tools: built.tools, system: built.system }), "the executor sends exactly what scoutStaticPrefix builds — the pre-warm's bytes");
+  const built = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_SPECS, role: "HUNTER" });
+  assert.equal(sha(prefixA), sha({ tools: built.tools, system: built.system }), "the executor sends exactly what scoutStaticPrefix builds");
   const text = JSON.stringify(prefixA);
   for (const volatile of ["at-aaaaaaaa", "#one", NOW, "2026-09", "warmup"]) assert.ok(!text.includes(volatile), `${volatile} must not appear before the static breakpoint`);
-  assert.match(JSON.stringify(a.messages[0]), /#one/, "the obligation lives in the brief, after the static prefix");
+  assert.match(JSON.stringify(a.messages[0]), /Place: az:county:pima/, "the place lives in the brief, after the static prefix");
   assert.equal(a.tools.at(-1)?.cache_control?.type, "ephemeral");
   assert.equal(a.system.at(-1)?.cache_control?.type, "ephemeral");
+});
+
+/** The API's answer to a 1h marker after a 5m one. */
+const API_MESSAGE =
+  "system.0.cache_control.ttl: a ttl='1h' cache_control block must not come after a ttl='5m' cache_control block. " +
+  "Note that blocks are processed in the following order: `tools`, `system`, `messages`.";
+
+test("PC-6: the moving breakpoint is 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule", () => {
+  assert.equal(SCOUT_CACHE_POLICY.ttl, "5m");
+  assert.match(String(SCOUT_CACHE_POLICY.movingBreakpoint), /TOP_LEVEL|LAST_BLOCK/);
+  const prefix = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_SPECS, role: "HUNTER" });
+  const good: ModelRequest = { model: MODELS.opus.model, max_tokens: 0, tool_choice: { type: "auto" }, tools: prefix.tools, system: prefix.system,
+    messages: [{ role: "user", content: [{ type: "text", text: "warmup" }] }] };
+  assert.deepEqual(cacheTtlOrderProblems(good), []);
+  /* A 1h system marker with a 5m tool marker before it: exactly the planted request the API refused. */
+  const planted: ModelRequest = { ...good, tools: good.tools.map(t => t.cache_control ? { ...t, cache_control: { type: "ephemeral" } } : t), system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };
+  const problems = cacheTtlOrderProblems(planted);
+  assert.equal(problems.length, 1);
+  assert.match(problems[0], /system\[0\]: a ttl='1h' cache_control block must not come after the ttl='5m' block at tools\[\d+\]/);
+  assert.match(API_MESSAGE, /must not come after a ttl='5m' cache_control block/, "the rule this validator restates, in the API's words");
+  /* The lawful 1h shape: every 1h marker before every 5m marker. */
+  const lawful: ModelRequest = {
+    ...good,
+    tools: good.tools.map((t, i) => (i === good.tools.length - 1 ? { ...t, cache_control: { type: "ephemeral", ttl: "1h" } } : t)),
+    system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })),
+    messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral" } }] }],
+  };
+  assert.deepEqual(cacheTtlOrderProblems(lawful), []);
+  /* A 1h marker in the messages after a 5m system marker is refused too. */
+  const late: ModelRequest = { ...good, system: good.system.map(s => ({ ...s, cache_control: { type: "ephemeral" } })), messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral", ttl: "1h" } }] }] };
+  assert.match(cacheTtlOrderProblems(late)[0], /messages\[0\]\.content\[0\]/);
+  /* The provider's limit of four markers is refused by name. */
+  const five: ModelRequest = { ...lawful, cache_control: { type: "ephemeral" }, messages: [{ role: "user", content: [{ type: "text", text: "a", cache_control: { type: "ephemeral" } }, { type: "text", text: "b", cache_control: { type: "ephemeral" } }] }] };
+  assert.match(cacheTtlOrderProblems(five).join(" "), /5 cache_control markers exceed the provider's limit of 4/);
 });
 
 /* ------------------------------------------------------------------ audit */
@@ -147,32 +184,40 @@ test("PC-3 Ask interpret: the ZIP's context is the marked prefix, identical for 
   const b = await captureBody((f) => interpretQuestion("who is on the board", { ...context, priorTurns: [{ question: "did the council vote on the pothole budget", resolvedSubject: null }] }, { fetchImpl: f, apiKey: "sk-test" }));
   const blocks = (body: Record<string, unknown>) => body.system as { type: string; text: string; cache_control?: unknown }[];
   assert.equal(sha(a.system), sha(b.system));
-  assert.deepEqual(blocks(a).map((block) => block.text), [interpretSystem(context).stable, interpretSystem(context).volatile]);
+  assert.deepEqual(blocks(a).map((block) => block.text), [interpretSystem(context).stable]);
   assert.ok(!JSON.stringify(a.system).includes("what is on the agenda"), "the question is not in the system prompt");
   assert.ok(!JSON.stringify(b.system).includes("pothole budget"), "the prior turn is not in the system prompt");
   assert.match(JSON.stringify(b.messages), /pothole budget/, "the conversation rides as messages");
-  assert.ok(blocks(a)[0].cache_control !== undefined, "the ZIP's context is the breakpoint (it caches once it is over the model's minimum: 4,096 tokens on Haiku 4.5)");
-  assert.equal(blocks(a)[1].cache_control, undefined, "the volatile block is after it");
+  assert.deepEqual(blocks(a)[0].cache_control, { type: "ephemeral", ttl: "1h" }, "the shared reading instructions are cached for an hour");
+  const packet = (a.messages as { content: { text: string; cache_control?: unknown }[] }[])[0].content;
+  assert.deepEqual(packet.map(block => block.text), [interpretSystem(context).inventory, interpretSystem(context).volatile]);
+  assert.deepEqual(packet[0].cache_control, { type: "ephemeral" });
+  assert.equal(packet[1].cache_control, undefined, "the volatile block follows the inventory breakpoint");
   /* The date is after the breakpoint: a new day never invalidates the ZIP's cached context. */
   assert.ok(!blocks(a)[0].text.includes("2026-09-06") && !blocks(a)[0].text.includes("Vail, Arizona"), "no per-day or per-reader value in the cached block");
-  assert.match(blocks(a)[1].text, /Today is 2026-09-06\./);
+  assert.match(packet[1].text, /Today is 2026-09-06\./);
+  assert.ok(!JSON.stringify(a.system).includes("Vail Unified District"), "the place inventory follows the shared prefix");
   const nextDay = await captureBody((f) => interpretQuestion("what is on the agenda", { ...context, today: "2026-09-07" }, { fetchImpl: f, apiKey: "sk-test" }));
   assert.equal(sha(blocks(a)[0]), sha(blocks(nextDay)[0]), "a new day changes only the volatile block");
+  const otherPlace = await captureBody(f => interpretQuestion("when does the board meet", { ...context, inventory: [{ name: "Newbury Planning Board" }] }, { fetchImpl: f, apiKey: "sk-test" }));
+  assert.equal(sha(a.system), sha(otherPlace.system), "different place packets reuse the same one-hour role prefix");
+  assert.deepEqual(a.cache_control, { type: "ephemeral" }, "the moving breakpoint retains the five-minute TTL");
 });
 
-test("PC-3 Ask classify and the unsourced fallback: the system prompt is static and the question is the message (both unmarked, under the minimum)", async () => {
+test("PC-3 Ask classify and the unsourced fallback: static instructions have an hour-long breakpoint and the question follows", async () => {
   const previous = process.env.ANTHROPIC_API_KEY;
   process.env.ANTHROPIC_API_KEY = "sk-test";
   try {
     const a = await captureBody((f) => classifyQuestion(`who fixes potholes ${Date.now()}`, { fetchImpl: f }));
     const b = await captureBody((f) => classifyQuestion(`who plows my street ${Date.now()}`, { fetchImpl: f }));
-    assert.equal(a.system, classifierPrompt());
+    assert.deepEqual(a.system, [{ type: "text", text: classifierPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }]);
     assert.equal(sha(a.system), sha(b.system));
-    assert.ok(!String(a.system).includes("potholes"));
+    assert.ok(!JSON.stringify(a.system).includes("who fixes potholes"));
     const c = await captureBody((f) => askUnsourced("how does a bill become law", { fetchImpl: f }));
     const d = await captureBody((f) => askUnsourced("what is a mill levy", { fetchImpl: f }));
     assert.equal(sha(c.system), sha(d.system));
-    assert.ok(!String(c.system).includes("mill levy"));
+    assert.ok(!JSON.stringify(c.system).includes("mill levy"));
+    assert.deepEqual((c.system as { cache_control: unknown }[])[0].cache_control, { type: "ephemeral", ttl: "1h" });
   } finally {
     if (previous === undefined) delete process.env.ANTHROPIC_API_KEY;
     else process.env.ANTHROPIC_API_KEY = previous;

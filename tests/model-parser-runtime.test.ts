@@ -8,9 +8,10 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import {
   beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem,
 } from "../lib/control-plane/repository/coordinator.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { readFieldManual, newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
+import { readSpendWindow } from "../lib/control-plane/spend-window.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
 import type { ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { modelParseReasoner } from "../lib/control-plane/workers/model-parser.ts";
@@ -98,7 +99,7 @@ test("a record type with no parsing rule runs through the real fleet: Haiku quot
   assert.ok(parser.cost.usd !== null && parser.cost.usd > 0);
 
   // The spend is on the ledger the rolling ceiling reads.
-  const spend = researchSpendInWindow(await repos.costs.readAll(), now());
+  const spend = researchSpendInWindow(await readSpendWindow(repos, now()), now());
   assert.ok(spend.windowUsd !== null && spend.windowUsd > 0, "parser model spend counts toward the ceiling");
 
   // The Validator replays the quotes against the immutable artifact with no rule for this record type.

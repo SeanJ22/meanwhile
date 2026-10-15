@@ -33,6 +33,7 @@ export interface ReceiptDraft {
   readonly readBackAt: string | null;
   readonly undo: string | null;
   readonly change?: { readonly before: string; readonly after: string };
+  readonly huntScores?: ActionReceipt["huntScores"];
   readonly codeSha: string | null;
 }
 
@@ -40,6 +41,7 @@ export function buildReceipt(draft: ReceiptDraft): ActionReceipt {
   const { request } = draft;
   return {
     formatVersion: RECEIPT_FORMAT_VERSION,
+    ...(request.scheduleOrigin ? { scheduleOrigin: request.scheduleOrigin } : {}),
     receiptId: receiptIdFor(request.type, request.idempotencyKey),
     idempotencyKey: request.idempotencyKey,
     type: request.type,
@@ -62,6 +64,7 @@ export function buildReceipt(draft: ReceiptDraft): ActionReceipt {
     readBackAt: draft.readBackAt,
     undo: draft.undo,
     ...(draft.change ? { change: draft.change } : {}),
+    ...(draft.huntScores ? { huntScores: draft.huntScores } : {}),
   };
 }
 
@@ -75,7 +78,7 @@ export async function findReceipt(
   repos: ControlPlaneRepositories,
   receiptId: string,
 ): Promise<ActionReceipt | null> {
-  const rows = await readReceipts(repos);
+  const rows = await repos.adminReceipts.readWhere(ADMIN_RECEIPT_LOG_KEY, ["receiptId"], receiptId);
   for (const row of rows) if (row.receiptId === receiptId) return row;
   return null;
 }
@@ -99,4 +102,12 @@ export async function appendReceipt(
     // The error name, never its message: a driver message can carry the connection string.
     return { ok: false, detail: `the receipt could not be written (${(error as Error)?.name ?? "error"})` };
   }
+}
+
+/** One scheduled occurrence's newest child, bounded and filtered in the store. */
+export async function findScheduledChild(repos:ControlPlaneRepositories,id:string):Promise<ActionReceipt|null>{
+  const fields=["formatVersion","receiptId","idempotencyKey","type","label","authority","subjectKind","subject","requestedSubject","inputDigest","caller","actorRef","stateVersion","codeSha","startedAt","completedAt","outcome","says","refusal","openedWork","readBackAt","undo","change","huntScores","scheduleOrigin"];
+  const projection=Object.fromEntries(fields.map(k=>[k,true as const]));
+  const rows=await repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY,["scheduleOrigin","id"],id,1,projection);
+  return (rows[0] as ActionReceipt|undefined)??null;
 }

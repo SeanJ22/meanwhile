@@ -16,6 +16,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { CardFooter } from "../components/ui/card-footer.tsx";
+import { CardSubjectContext } from "../components/ui/card-subject-context.tsx";
 
 import {
   DEMAND_SIGNALS,
@@ -119,26 +123,30 @@ test("NO GET on the route, so a reader cannot fetch results either", () => {
 });
 
 test("the confirmation reports the ASK and never a total", () => {
-  assert.match(PILL, /we&apos;ve noted it|we've noted it/);
+  assert.match(PILL, />\s*Noted\.\s*</);
   assert.ok(
     !/\{count\}|\{total\}|others|so far|\bN\b people/.test(PILL),
     "the pill renders no count, rank or aggregate of anyone's taps",
   );
 });
 
-test("SYMMETRY: the pill is on the candidate card and the body card, same component", () => {
-  /* A pill that appeared only where coverage is good would itself be a coverage claim. */
+test("body and candidate cards request missing facts once through their shared footer", () => {
+  for (const type of DEMAND_SUBJECT_TYPES) {
+    const subject = { type, id: `${type.toLowerCase()}:one` };
+    const html = renderToStaticMarkup(createElement(CardSubjectContext.Provider, { value: subject },
+      createElement(CardFooter, { gaps: [{ id: "contact", label: "contact details" }], sources: [] })));
+    assert.equal((html.match(/data-demand-pill=/g) ?? []).length, 1);
+    assert.ok(html.includes(`data-demand-pill="${type}"`));
+    assert.ok(html.includes(`data-demand-subject="${subject.id}"`));
+    assert.match(html, /Ask us to find this/);
+    assert.ok(html.indexOf("data-card-gap") < html.indexOf("data-demand-pill"));
+    assert.ok(html.indexOf("data-demand-pill") < html.indexOf("data-card-sources"));
+  }
   const candidate = readFileSync("components/ballot/candidate-battlecard.tsx", "utf8");
   const body = readFileSync("components/map/popup/entity-modal.tsx", "utf8");
-  assert.match(candidate, /<DemandPill\s+subjectType="CANDIDATE"/);
-  assert.match(body, /<DemandPill\s+subjectType="BODY"/);
-  for (const source of [candidate, body]) {
-    assert.match(
-      source,
-      /from "@\/components\/demand\/demand-pill"/,
-      "both surfaces import the SAME component, so they cannot drift",
-    );
-  }
+  assert.match(candidate, /subject=\{\{ type: "CANDIDATE", id: subjectId \}\}/);
+  assert.match(body, /CardSubjectContext\.Provider value=\{subject\.subjectKind === "BODY" \? \{ type: "BODY", id: subject\.subjectId \}/);
+  assert.doesNotMatch(candidate + body, /<DemandPill/);
 });
 
 test("the write REFUSES an undeclared row before it looks for a database", async () => {

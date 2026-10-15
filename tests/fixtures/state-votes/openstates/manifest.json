@@ -1,0 +1,613 @@
+{
+  "capturedAt": "2026-10-13T15:10:59.299449+00:00",
+  "source": "Open States public session CSV archives. Archive bodies are public and retrieved without a key; archive URL discovery via API v3 jurisdiction metadata used PLURAL_API_KEY because the anonymous public catalog hides download links. API responses and selected CSV rows are unmodified source bytes. Fixture ZIP containers are newly constructed from those exact excerpts; fixture and original archive hashes are distinct.",
+  "publisherSchemaUrl": "https://raw.githubusercontent.com/openstates/openstates.org/04402706d59971a8dde395cd674e4b954be53848/bulk/management/commands/bulk_export.py",
+  "states": [
+    {
+      "state": "AZ",
+      "session": "57th-2nd-regular",
+      "sourceUrl": "https://data.openstates.org/csv/latest/AZ_57th-2nd-regular_csv_4i6qmMeOcBg7IK8YPvNNtZ.zip",
+      "sourceUpdatedAt": "2026-09-08T23:02:47.454414+00:00",
+      "sourceArchiveSha256": "37a0bbcf43ff64fc6337bc4451fbe237430ad3ae8750590d5031edbf42f24476",
+      "sourceArchiveBytes": 23431707,
+      "fixtureArchive": "az/session.zip",
+      "fixtureArchiveSha256": "e50845e58b9f16e04c83cebe5adf90b8d2539d6eafa6c2cb95b949ccf00f0a5b",
+      "metadataSourceUrl": "https://v3.openstates.org/jurisdictions/az?include=legislative_sessions",
+      "metadataFixture": "az/jurisdiction.json",
+      "metadataSha256": "de65db5d2d583f7173a2fe00ea3cdda732e6fe55558abd5e9ee5bd6391231411",
+      "rollCallCount": 3463,
+      "positionCount": 75720,
+      "samples": [
+        {
+          "path": "az/bills.csv",
+          "sourceMember": "AZ/57th-2nd-regular/AZ_57th-2nd-regular_bills.csv",
+          "sha256": "c8a6699f19dc8d5d8a3c96f05401c2b374aab86e87cf460dd77605f6c4bbbc7c",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "az/votes.csv",
+          "sourceMember": "AZ/57th-2nd-regular/AZ_57th-2nd-regular_votes.csv",
+          "sha256": "fee0941affca9a685f0174b0be9d00b1cfa08ae7b9f0fccc9a8c6c1a001e6efe",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "az/vote_people.csv",
+          "sourceMember": "AZ/57th-2nd-regular/AZ_57th-2nd-regular_vote_people.csv",
+          "sha256": "17a674e7cbaf73b3411c8959ca9c58b88343593fc0723bedf91e7ee2da98f309",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "az/vote_counts.csv",
+          "sourceMember": "AZ/57th-2nd-regular/AZ_57th-2nd-regular_vote_counts.csv",
+          "sha256": "46c16fd591ea3755bbe741f0d7a11a99a0154d001ec3afa4f0da75d0559ffd32",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "az/vote_sources.csv",
+          "sourceMember": "AZ/57th-2nd-regular/AZ_57th-2nd-regular_vote_sources.csv",
+          "sha256": "0fbb6d9066407b99beab1088e706fd90e36be80addb386b5722eb7cbdd86b244",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "az/organizations.csv",
+          "sourceMember": "AZ/57th-2nd-regular/AZ_57th-2nd-regular_organizations.csv",
+          "sha256": "96c0badd0d0d4e4dac62ee7bc07f76d73c5a757b816c22a04235b5eb8b7ddd06",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        }
+      ],
+      "selectedVotes": [
+        {
+          "id": "ocd-vote/415a59a3-00df-43ae-a669-8a025dad1dcd",
+          "identifier": "",
+          "motion_text": "Passed",
+          "motion_classification": "['passage']",
+          "start_date": "2026-06-13",
+          "result": "pass",
+          "organization_id": "ocd-organization/c3d4c85b-888e-4188-b903-a251b957c162",
+          "bill_id": "ocd-bill/f41cf9d1-6f70-4a7f-82a0-9ad192545bb5",
+          "bill_action_id": "",
+          "jurisdiction": "Arizona",
+          "session_identifier": "57th-2nd-regular"
+        }
+      ],
+      "readerExample": {
+        "personId": "ocd-person/030638cb-5fcd-4637-8c59-c129e28db988",
+        "voterName": "Lela Alston",
+        "position": "yes",
+        "billNumber": "SB 1290",
+        "billTitle": "agricultural property; inspections; notice.",
+        "date": "2026-06-13",
+        "voteId": "ocd-vote/415a59a3-00df-43ae-a669-8a025dad1dcd",
+        "personName": "Lela Alston",
+        "district": "5",
+        "chamber": "upper"
+      },
+      "personSource": {
+        "sourceUrl": "https://data.openstates.org/people/current/az.csv",
+        "fixture": "az/person.csv",
+        "sha256": "f6fec117410f2728e77e6e71c3e16680e568be78830a82daf22407e6c562a48e",
+        "selection": "Original header and exact original row for the selected voter; all bytes unchanged.",
+        "retrievedAt": "2026-10-13T15:15:30.097465+00:00"
+      }
+    },
+    {
+      "state": "WA",
+      "session": "2025-2026",
+      "sourceUrl": "https://data.openstates.org/csv/latest/WA_2025-2026_csv_3M5zMeHyZR6EJAy1iONMVB.zip",
+      "sourceUpdatedAt": "2026-07-21T23:21:21.833866+00:00",
+      "sourceArchiveSha256": "8fbcf32e35cbfe2a5446015d856c9993a9e60fd86cbceaeade1147ffe7aac6c9",
+      "sourceArchiveBytes": 44944642,
+      "fixtureArchive": "wa/session.zip",
+      "fixtureArchiveSha256": "e702a1faecabb61e7ade9295c107df4ea8fe1747e52deeaf9ae8df7ca0de7449",
+      "metadataSourceUrl": "https://v3.openstates.org/jurisdictions/wa?include=legislative_sessions",
+      "metadataFixture": "wa/jurisdiction.json",
+      "metadataSha256": "26a319813d0b373483e02a60fdac21b871fc73e66ff9f8975711dc9723b40fb9",
+      "rollCallCount": 2306,
+      "positionCount": 171876,
+      "samples": [
+        {
+          "path": "wa/bills.csv",
+          "sourceMember": "WA/2025-2026/WA_2025-2026_bills.csv",
+          "sha256": "cca817e711f39bc923880954e5a465c9c61cc503c03c1bf458577ff0df481274",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "wa/votes.csv",
+          "sourceMember": "WA/2025-2026/WA_2025-2026_votes.csv",
+          "sha256": "af950459bd5b4357179e867b2fd2658eec5d56a39bc83e6cb508633c46d24a70",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "wa/vote_people.csv",
+          "sourceMember": "WA/2025-2026/WA_2025-2026_vote_people.csv",
+          "sha256": "9622b4463ab90aae9ac7ade2ffebd79bda99ff90dfda04dae5dab76262e4f622",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "wa/vote_counts.csv",
+          "sourceMember": "WA/2025-2026/WA_2025-2026_vote_counts.csv",
+          "sha256": "acc56a652a35463a951d6e08f4db058bd7a652c5736be17f2138f051115b77c5",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "wa/vote_sources.csv",
+          "sourceMember": "WA/2025-2026/WA_2025-2026_vote_sources.csv",
+          "sha256": "80724dca982cee203ae0561f59b66fe8164e4d0e03c5b1fe7ccbcba503d07987",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "wa/organizations.csv",
+          "sourceMember": "WA/2025-2026/WA_2025-2026_organizations.csv",
+          "sha256": "a2c1c90baf8caf27f74b6b0161469298c11318436ddf4e7553ff3fff93174d99",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        }
+      ],
+      "selectedVotes": [
+        {
+          "id": "ocd-vote/e538c0db-6b66-4f7f-a182-ec9e89850fdb",
+          "identifier": "",
+          "motion_text": "Final Passage as Amended by the House (#6)",
+          "motion_classification": "[]",
+          "start_date": "2026-03-12",
+          "result": "pass",
+          "organization_id": "ocd-organization/ddae63d3-9f3e-4c46-a00f-703fe21b54d1",
+          "bill_id": "ocd-bill/b6bb38ad-6f79-42f0-83d1-bfffa4019cc2",
+          "bill_action_id": "",
+          "jurisdiction": "Washington",
+          "session_identifier": "2025-2026"
+        }
+      ],
+      "readerExample": {
+        "personId": "ocd-person/950b27fd-99cb-43a2-b594-9f721e1b1844",
+        "voterName": "Alvarado",
+        "position": "yes",
+        "billNumber": "SB 6260",
+        "billTitle": "Implementing efficiencies and programming changes in public education.",
+        "date": "2026-03-12",
+        "voteId": "ocd-vote/e538c0db-6b66-4f7f-a182-ec9e89850fdb",
+        "personName": "Emily Alvarado",
+        "district": "34",
+        "chamber": "upper"
+      },
+      "personSource": {
+        "sourceUrl": "https://data.openstates.org/people/current/wa.csv",
+        "fixture": "wa/person.csv",
+        "sha256": "dc3560ab8fe5c3e3fa65d8586629da3da8f20da210a5ea0504fac392ba1edd68",
+        "selection": "Original header and exact original row for the selected voter; all bytes unchanged.",
+        "retrievedAt": "2026-10-13T15:15:30.098275+00:00"
+      }
+    },
+    {
+      "state": "IL",
+      "session": "104th",
+      "sourceUrl": "https://data.openstates.org/csv/latest/IL_104th_csv_33oaM3fGjCADqKK6twmHni.zip",
+      "sourceUpdatedAt": "2026-10-12T23:07:33.583291+00:00",
+      "sourceArchiveSha256": "b4486b29858be30f67687244849b8f5ee61f0e3861c77d44eefaae7cb1026f48",
+      "sourceArchiveBytes": 113356033,
+      "fixtureArchive": "il/session.zip",
+      "fixtureArchiveSha256": "c34a060384852d121eab4d2268df18f5a366887c150d4ce49be7a7d308f2a1c3",
+      "metadataSourceUrl": "https://v3.openstates.org/jurisdictions/il?include=legislative_sessions",
+      "metadataFixture": "il/jurisdiction.json",
+      "metadataSha256": "87f789c8ec8a55587c013f5db26fded91686540f162ae4a3a86ce5f9f211a6b0",
+      "rollCallCount": 10095,
+      "positionCount": 349463,
+      "samples": [
+        {
+          "path": "il/bills.csv",
+          "sourceMember": "IL/104th/IL_104th_bills.csv",
+          "sha256": "9ca252ed1ba5dea527ff2fb796244e4856141b64196afe64bcd1773c6694c124",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "il/votes.csv",
+          "sourceMember": "IL/104th/IL_104th_votes.csv",
+          "sha256": "565c04779514be6c2cce3b1cdaacfe7d349d9fb13f579cde9089bfdfaf8fd1f4",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "il/vote_people.csv",
+          "sourceMember": "IL/104th/IL_104th_vote_people.csv",
+          "sha256": "04c89e9ae0fbac1a5bdc34e60190cc39c9e8e6b5d1bb7ff85152ad97c8c03bc1",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "il/vote_counts.csv",
+          "sourceMember": "IL/104th/IL_104th_vote_counts.csv",
+          "sha256": "d1bcd81ed9a80b690e23816970a6a9e567293df4026fe20a925e3ab68536fd20",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "il/vote_sources.csv",
+          "sourceMember": "IL/104th/IL_104th_vote_sources.csv",
+          "sha256": "d98650db57b51948f3f5c00b10e099dbfcb4abfad16919073e0d1b34ca1dca9f",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "il/organizations.csv",
+          "sourceMember": "IL/104th/IL_104th_organizations.csv",
+          "sha256": "70c25389aa92b0bafbda2578843356c30f990164ff59cce16044251093f0da75",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        }
+      ],
+      "selectedVotes": [
+        {
+          "id": "ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd",
+          "identifier": "",
+          "motion_text": "Third Reading",
+          "motion_classification": "[]",
+          "start_date": "2026-05-31",
+          "result": "pass",
+          "organization_id": "ocd-organization/20782ae5-cc22-4470-846b-fd9788ad3db7",
+          "bill_id": "ocd-bill/23b57d66-485c-4a74-8848-fae5aeef79bc",
+          "bill_action_id": "",
+          "jurisdiction": "Illinois",
+          "session_identifier": "104th"
+        }
+      ],
+      "readerExample": {
+        "personId": "ocd-person/1ae7c123-b1a4-4c6e-b4d3-dc22db461e44",
+        "voterName": "Joyce",
+        "position": "yes",
+        "billNumber": "HB 5090",
+        "billTitle": "PROCUREMENT-CONSTRUCTION",
+        "date": "2026-05-31",
+        "voteId": "ocd-vote/019df0d2-e892-49e6-b212-09ef27c05cfd",
+        "personName": "Patrick Joyce",
+        "district": "40",
+        "chamber": "upper"
+      },
+      "personSource": {
+        "sourceUrl": "https://data.openstates.org/people/current/il.csv",
+        "fixture": "il/person.csv",
+        "sha256": "6c7e3b04fc7c1756d712055c0864a875078b89e02d4f2a00d5276e9c65b1fc95",
+        "selection": "Original header and exact original row for the selected voter; all bytes unchanged.",
+        "retrievedAt": "2026-10-13T15:15:30.100457+00:00"
+      }
+    },
+    {
+      "state": "NH",
+      "session": "2026",
+      "sourceUrl": "https://data.openstates.org/csv/latest/NH_2026_csv_1ivKWKnKBiNVgoVc6Tse4G.zip",
+      "sourceUpdatedAt": "2026-10-12T23:14:27.141792+00:00",
+      "sourceArchiveSha256": "a3c2971acf9d88f2395003252a1e78dfc050ab333ffe4abcd1cb527ea024676d",
+      "sourceArchiveBytes": 22670697,
+      "fixtureArchive": "nh/session.zip",
+      "fixtureArchiveSha256": "cf3278651a9d3879e128f905b739d90dba157ebac45db4c00abfc6c45e675c46",
+      "metadataSourceUrl": "https://v3.openstates.org/jurisdictions/nh?include=legislative_sessions",
+      "metadataFixture": "nh/jurisdiction.json",
+      "metadataSha256": "b41420d6253514d339778134fad1460b34b4bd75003598da25f95b5003a18b3b",
+      "rollCallCount": 403,
+      "positionCount": 121519,
+      "samples": [
+        {
+          "path": "nh/bills.csv",
+          "sourceMember": "NH/2026/NH_2026_bills.csv",
+          "sha256": "c9d036892ebd09a2594f32fb2f382374372cead78cc2da8a2edaab448ac8a469",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "nh/votes.csv",
+          "sourceMember": "NH/2026/NH_2026_votes.csv",
+          "sha256": "646c18f923d3f36f59df4c65ddfab17c3335d6e8f920886b9de69f66325653b5",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "nh/vote_people.csv",
+          "sourceMember": "NH/2026/NH_2026_vote_people.csv",
+          "sha256": "e624a429ea47fc6c2cd10d0f69815dee1318b886507afd8e1148ffa2188f0833",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "nh/vote_counts.csv",
+          "sourceMember": "NH/2026/NH_2026_vote_counts.csv",
+          "sha256": "f42391688a6891cb73c32d68772cf0f68a611900baad6b3e195d7aca73204389",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "nh/vote_sources.csv",
+          "sourceMember": "NH/2026/NH_2026_vote_sources.csv",
+          "sha256": "7834c006de3c4229a43d5b739636bfb3c0d5fb8bc904fe275e8a8ad0fd74a183",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "nh/organizations.csv",
+          "sourceMember": "NH/2026/NH_2026_organizations.csv",
+          "sha256": "b384efa046867b75766fdbefab917965669bc3ba14d15df3b5317513c5b3af7a",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        }
+      ],
+      "selectedVotes": [
+        {
+          "id": "ocd-vote/31af17a0-3be8-4251-8890-f83dce1580f2",
+          "identifier": "",
+          "motion_text": "VETO MESSAGE - Roll Call Required",
+          "motion_classification": "['passage']",
+          "start_date": "2026-08-19T00:00:00-04:00",
+          "result": "fail",
+          "organization_id": "ocd-organization/c95932a0-2ac1-4f14-a0c4-ade8568daac6",
+          "bill_id": "ocd-bill/308e8ea2-2d0d-4cc7-97c5-d6bc16f86f4b",
+          "bill_action_id": "",
+          "jurisdiction": "New Hampshire",
+          "session_identifier": "2026"
+        }
+      ],
+      "readerExample": {
+        "personId": "ocd-person/00964fc0-dd57-44c3-87bf-b6d5bbc34560",
+        "voterName": "Sharon M. Carson",
+        "position": "no",
+        "billNumber": "SB 627",
+        "billTitle": "relative to toll rate adjustments for the New Hampshire turnpike system to support the 2027-2036 ten-year transportation plan",
+        "date": "2026-08-19",
+        "voteId": "ocd-vote/31af17a0-3be8-4251-8890-f83dce1580f2",
+        "personName": "Sharon Carson",
+        "district": "14",
+        "chamber": "upper"
+      },
+      "personSource": {
+        "sourceUrl": "https://data.openstates.org/people/current/nh.csv",
+        "fixture": "nh/person.csv",
+        "sha256": "2a00c2e13ae2af4c5f4073eb6abdb00bb528f644d0b654a96aac2309a0cb100a",
+        "selection": "Original header and exact original row for the selected voter; all bytes unchanged.",
+        "retrievedAt": "2026-10-13T15:15:30.104689+00:00"
+      }
+    },
+    {
+      "state": "GA",
+      "session": "2025_26",
+      "sourceUrl": "https://data.openstates.org/csv/latest/GA_2025_26_csv_3M5mGgcY0kBxBjgAF8UlD9.zip",
+      "sourceUpdatedAt": "2026-06-21T23:07:30.336202+00:00",
+      "sourceArchiveSha256": "a106bb47fab40604a99d007a7de97276755ac81421abd7d0443a300d57dfc1d9",
+      "sourceArchiveBytes": 61248850,
+      "fixtureArchive": "ga/session.zip",
+      "fixtureArchiveSha256": "bb535ed943910449294a215cac6d0a129272b84cb80d9fa2c5cd4d1ceaf142af",
+      "metadataSourceUrl": "https://v3.openstates.org/jurisdictions/ga?include=legislative_sessions",
+      "metadataFixture": "ga/jurisdiction.json",
+      "metadataSha256": "1644cbd874b69d2aca6503209dcb1bb08fdcc52df5e9e2896539efc8c9af3153",
+      "rollCallCount": 2517,
+      "positionCount": 279904,
+      "samples": [
+        {
+          "path": "ga/bills.csv",
+          "sourceMember": "GA/2025_26/GA_2025_26_bills.csv",
+          "sha256": "4554d3d034e6cbc2c5c6e36b0a53f72415ca85d305279a46990ae1881e4d3a30",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ga/votes.csv",
+          "sourceMember": "GA/2025_26/GA_2025_26_votes.csv",
+          "sha256": "e9b7b4d89ef785321b49862ee9904982cbb2738ef6a70f5b7c7ceb3176b39360",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ga/vote_people.csv",
+          "sourceMember": "GA/2025_26/GA_2025_26_vote_people.csv",
+          "sha256": "70e49d35ed11df23856a65a422962836e12de1610864f4abc95fd0455f27ad73",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ga/vote_counts.csv",
+          "sourceMember": "GA/2025_26/GA_2025_26_vote_counts.csv",
+          "sha256": "1c1b181f5c98f96251225209c00be7731764e4037a3814999af06f17313cfe36",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ga/vote_sources.csv",
+          "sourceMember": "GA/2025_26/GA_2025_26_vote_sources.csv",
+          "sha256": "ceb078e9793d9cd1324ad389943e6c61e7f61ea272be3f845fbf6b590fb4ccf3",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ga/organizations.csv",
+          "sourceMember": "GA/2025_26/GA_2025_26_organizations.csv",
+          "sha256": "bf2075fe3f19499f00b2b887940e51981d88bb65b5aeb0cd0a6217212b2b622f",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        }
+      ],
+      "selectedVotes": [
+        {
+          "id": "ocd-vote/edcc5446-ada6-4d3c-8834-a0e464776eda",
+          "identifier": "",
+          "motion_text": "Senate Vote #987 - 2025-2026 Regular Session",
+          "motion_classification": "['passage']",
+          "start_date": "2026-04-03",
+          "result": "pass",
+          "organization_id": "ocd-organization/3b9777f2-c2fb-48e1-83bf-66fc7a17492e",
+          "bill_id": "ocd-bill/6ab827d0-0d65-46f5-9a0e-5fb31b399f47",
+          "bill_action_id": "",
+          "jurisdiction": "Georgia",
+          "session_identifier": "2025_26"
+        }
+      ],
+      "readerExample": {
+        "personId": "ocd-person/ac1cac30-3fec-4c56-b172-b483db465a6b",
+        "voterName": "ALBERS",
+        "position": "yes",
+        "billNumber": "HB 295",
+        "billTitle": "Local government; procedures for real property owners to make claims for compensation for loss of property value or expenses incurred; provisions",
+        "date": "2026-04-03",
+        "voteId": "ocd-vote/edcc5446-ada6-4d3c-8834-a0e464776eda",
+        "personName": "John Albers",
+        "district": "56",
+        "chamber": "upper"
+      },
+      "personSource": {
+        "sourceUrl": "https://data.openstates.org/people/current/ga.csv",
+        "fixture": "ga/person.csv",
+        "sha256": "5d7b50ed0d32641ca9747be766c23ad2945676794096bce13cd714c2f4124846",
+        "selection": "Original header and exact original row for the selected voter; all bytes unchanged.",
+        "retrievedAt": "2026-10-13T15:15:30.106279+00:00"
+      }
+    },
+    {
+      "state": "NJ",
+      "session": "222",
+      "sourceUrl": "https://data.openstates.org/csv/latest/NJ_222_csv_5P0FirrMy3yGvPXMaXLwdB.zip",
+      "sourceUpdatedAt": "2026-10-12T23:14:52.401665+00:00",
+      "sourceArchiveSha256": "b1f936a62ddfccf4d637b40c69fd709611fb1fa956bdb922799040e70348ce00",
+      "sourceArchiveBytes": 20355400,
+      "fixtureArchive": "nj/session.zip",
+      "fixtureArchiveSha256": "451361899a975a88a2476a150b78a21b5bd4102531c0a57a7666d8e0332bd106",
+      "metadataSourceUrl": "https://v3.openstates.org/jurisdictions/nj?include=legislative_sessions",
+      "metadataFixture": "nj/jurisdiction.json",
+      "metadataSha256": "f976184317eeec8902b5c5cb7aefd6bef33d0d32724e04d85ab4fce919414015",
+      "rollCallCount": 0,
+      "positionCount": 0,
+      "samples": [
+        {
+          "path": "nj/bills.csv",
+          "sourceMember": "NJ/222/NJ_222_bills.csv",
+          "sha256": "44ee262388cfe167eef44b87b40acee1f268bc7fd4c9240472a9cbe975961f31",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "nj/organizations.csv",
+          "sourceMember": "NJ/222/NJ_222_organizations.csv",
+          "sha256": "95223943576cb5b793d3110e2e007ada022923eecc14f91adf7dc2ff970136dc",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        }
+      ],
+      "selectedVotes": []
+    },
+    {
+      "state": "NE",
+      "session": "109",
+      "sourceUrl": "https://data.openstates.org/csv/latest/NE_109_csv_6dAi26r9SZLlsD45I4ZLEb.zip",
+      "sourceUpdatedAt": "2026-10-12T23:13:45.501967+00:00",
+      "sourceArchiveSha256": "3c37b9830dbf5719756b3481ab99536834548c792d08383d4a149b463644b756",
+      "sourceArchiveBytes": 21208503,
+      "fixtureArchive": "ne/session.zip",
+      "fixtureArchiveSha256": "4e47bcbb71c39f9a3b6be47e9566552098ba99bb838f3ce4f0a6e96dc862d07a",
+      "metadataSourceUrl": "https://v3.openstates.org/jurisdictions/ne?include=legislative_sessions",
+      "metadataFixture": "ne/jurisdiction.json",
+      "metadataSha256": "8aa2b53e547f2caa6a56598c5c93e16f2eec8944a9a8cd6f13ceb53289aa14e2",
+      "rollCallCount": 1772,
+      "positionCount": 86723,
+      "samples": [
+        {
+          "path": "ne/bills.csv",
+          "sourceMember": "NE/109/NE_109_bills.csv",
+          "sha256": "c673b23613213ea8b5b6113174e8155bcdf7e71e2e5a453c8a343ce8d8ad1288",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ne/votes.csv",
+          "sourceMember": "NE/109/NE_109_votes.csv",
+          "sha256": "52ab2251029aa339ee72cb089b95ea26696c424676e1433fcee544a17cdf1a4e",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ne/vote_people.csv",
+          "sourceMember": "NE/109/NE_109_vote_people.csv",
+          "sha256": "ffc3e347888c4bb042ba3862d2c197099423792e982f4fb5870236bec5fd72d0",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ne/vote_counts.csv",
+          "sourceMember": "NE/109/NE_109_vote_counts.csv",
+          "sha256": "35a742f6591c057397773b27411a5d13a237cd50cde56a483e8a30079c91109d",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ne/vote_sources.csv",
+          "sourceMember": "NE/109/NE_109_vote_sources.csv",
+          "sha256": "db4a8d9eb8b6aebf2942ef6b95c2461c7d35d2babdc73adc16bf63ee2dd6e08a",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        },
+        {
+          "path": "ne/organizations.csv",
+          "sourceMember": "NE/109/NE_109_organizations.csv",
+          "sha256": "641009fb63304c3dec1be0868bcff46961dc51cb1d86ac72f9ee5d0f3151cb8e",
+          "selection": "Original header and every original row for selected roll call, linked bill or organization; bytes unchanged."
+        }
+      ],
+      "selectedVotes": [
+        {
+          "id": "ocd-vote/2897d899-f51e-4bc5-9797-ff2959645b8f",
+          "identifier": "",
+          "motion_text": "Guereca MO587 failed",
+          "motion_classification": "['passage']",
+          "start_date": "2026-04-17T05:00:00+00:00",
+          "result": "fail",
+          "organization_id": "ocd-organization/a0563aa3-1ab5-4e1e-afd1-643aca03b3b8",
+          "bill_id": "ocd-bill/d98d8f2f-1cd0-431a-b6aa-68efdfd8f843",
+          "bill_action_id": "",
+          "jurisdiction": "Nebraska",
+          "session_identifier": "109"
+        }
+      ],
+      "readerExample": {
+        "personId": "ocd-person/37ed5b35-3aea-40a2-95ed-ecc5120fbe82",
+        "voterName": "Brandt",
+        "position": "yes",
+        "billNumber": "LB 878",
+        "billTitle": "Require paid parental leave for state employees",
+        "date": "2026-04-17",
+        "voteId": "ocd-vote/2897d899-f51e-4bc5-9797-ff2959645b8f",
+        "personName": "Tom Brandt",
+        "district": "32",
+        "chamber": "legislature"
+      },
+      "personSource": {
+        "sourceUrl": "https://data.openstates.org/people/current/ne.csv",
+        "fixture": "ne/person.csv",
+        "sha256": "41221d69bf0079877133e5a2d8217e2ef69faed14b17ac2f78fefd5cd8789210",
+        "selection": "Original header and exact original row for the selected voter; all bytes unchanged.",
+        "retrievedAt": "2026-10-13T16:11:52.609427+00:00"
+      }
+    }
+  ],
+  "blockedSources": [
+    {
+      "url": "https://openstates.org/data/session-csv/",
+      "status": 200,
+      "detail": "Anonymous page returns session labels and update dates but every download href points to login; no public archive discovery links."
+    },
+    {
+      "url": "https://v3.openstates.org/jurisdictions/az?include=legislative_sessions",
+      "status": 403,
+      "detail": "Metadata discovery requires API key; keyed request succeeded."
+    },
+    {
+      "url": "https://data.openstates.org/?list-type=2&prefix=csv/latest/az_&max-keys=10",
+      "status": 403,
+      "detail": "Public bucket listing is denied; exact public archive URLs succeeded."
+    }
+  ],
+  "apiBillSamples": [
+    {
+      "path": "wa/api-bill.json",
+      "sourceUrl": "https://v3.openstates.org/bills/ocd-bill/df2f433e-dbf1-44f0-9512-95ede5670e41?include=votes",
+      "sha256": "1623680c28dff215716d6dc5ea5ee1968db97c16467f86dded8105b3aa8c9b70",
+      "billId": "ocd-bill/df2f433e-dbf1-44f0-9512-95ede5670e41",
+      "session": "2025-2026",
+      "rollCallCount": 3,
+      "memberPositions": 245,
+      "selection": "Complete unmodified API v3 bill response; acquired with PLURAL_API_KEY."
+    },
+    {
+      "path": "az/api-counts-only-bill.json",
+      "sourceUrl": "https://v3.openstates.org/bills/ocd-bill/f5590516-6587-4478-b838-f1cc8695e48b?include=votes",
+      "sha256": "3292a56c3d8659978c5d2a6d7379647fd73e7b8cd9d1f83b92f7af987a6e5643",
+      "billId": "ocd-bill/f5590516-6587-4478-b838-f1cc8695e48b",
+      "session": "57th-2nd-regular",
+      "rollCallCount": 4,
+      "memberPositions": 0,
+      "selection": "Complete unmodified API v3 bill response; acquired with PLURAL_API_KEY."
+    }
+  ],
+  "sourceContradictions": [
+    {
+      "state": "GA",
+      "session": "2025_26",
+      "voteId": "ocd-vote/edcc5446-ada6-4d3c-8834-a0e464776eda",
+      "personId": "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43",
+      "voterName": "ANDERSON",
+      "options": [
+        "yes",
+        "no"
+      ],
+      "sourceFixture": "ga/vote_people.csv",
+      "detail": "The publisher associates two opposite positions with one native person ID in the same vote. Hold this person only and retain all other exact positions."
+    }
+  ]
+}

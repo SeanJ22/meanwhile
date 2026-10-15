@@ -17,6 +17,7 @@
  * compare-and-set the row (retried once on a concurrent write).
  */
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
+import { RESEARCH_INTENT_LOG_KEY } from "./scheduler/research-policy.ts";
 import { fixSubjectId } from "./fix-queue.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 
@@ -25,6 +26,7 @@ export type FixState = "OPEN" | "FIXING" | "FIXED" | "CAME_BACK";
 export interface FixItem {
   /** Stable: the same gap reported twice is one item. */
   readonly id: string;
+  readonly technical?: readonly string[];
   readonly where: string;
   readonly says: string;
   /** "owner" for Admin, or the plain-words part of the factory that found it ("The shut-door check"). */
@@ -32,6 +34,7 @@ export interface FixItem {
   readonly addedAt: string;
   readonly state: FixState;
   readonly startedAt?: string;
+  readonly dispatch?: { readonly intentId: string; readonly note: string; readonly at: string; readonly honoredAt?: string; readonly honoredDetail?: string };
   readonly fixedAt?: string;
   /** What changed, in a sentence. */
   readonly whatChanged?: string;
@@ -63,15 +66,15 @@ function put(config: AdminConfig, items: readonly FixItem[], at: string): AdminC
 }
 
 /** Add an item. A gap already on the list that is not finished is left alone; a FIXED one that is reported again CAME_BACK. */
-export function withFixAdded(config: AdminConfig, add: { where: string; says: string; addedBy: string; at: string }): AdminConfig {
-  const id = fixSubjectId(add.where, add.says);
+export function withFixAdded(config: AdminConfig, add: { where: string; says: string; addedBy: string; at: string; sourceKey?: string; technical?: readonly string[] }): AdminConfig {
+  const id = fixSubjectId(add.where, add.sourceKey ?? add.says);
   const items = fixItems(config);
   const held = items.find((i) => i.id === id);
   if (held) {
     if (held.state !== "FIXED") return config;
-    return put(config, items.map((i) => (i.id === id ? { ...i, state: "CAME_BACK" as const, cameBackAt: add.at } : i)), add.at);
+    return put(config, items.map((i) => (i.id === id ? { ...i, state: "CAME_BACK" as const, cameBackAt: add.at, dispatch: undefined } : i)), add.at);
   }
-  return put(config, [...items, { id, where: add.where.trim(), says: add.says.trim(), addedBy: add.addedBy, addedAt: add.at, state: "OPEN" }], add.at);
+  return put(config, [...items, { id, where: add.where.trim(), says: add.says.trim(), addedBy: add.addedBy, addedAt: add.at, state: "OPEN", ...(add.technical ? { technical: add.technical } : {}) }], add.at);
 }
 
 export function withFixStarted(config: AdminConfig, id: string, at: string): AdminConfig {
@@ -119,10 +122,11 @@ async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => Admi
  * The one way code adds a broken thing to the fix list. `by` names the part of
  * the factory in plain words. Returns the item id.
  */
-export async function addFixItem(repos: Repos, add: { where: string; says: string; by: string; at: string }): Promise<string> {
-  await mutate(repos, add.at, (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at }));
-  return fixSubjectId(add.where, add.says);
+export async function addFixItem(repos: Repos, add: { where: string; says: string; by: string; at: string; sourceKey?: string; technical?: readonly string[] }): Promise<string> {
+  await mutate(repos, add.at, (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at, sourceKey: add.sourceKey, technical: add.technical }));
+  return fixSubjectId(add.where, add.sourceKey ?? add.says);
 }
+
 
 export async function startFixItem(repos: Repos, id: string, at: string): Promise<void> {
   await mutate(repos, at, (c) => withFixStarted(c, id, at));
@@ -130,4 +134,41 @@ export async function startFixItem(repos: Repos, id: string, at: string): Promis
 
 export async function completeFixItem(repos: Repos, id: string, done: FixCompletion, at: string): Promise<void> {
   await mutate(repos, at, (c) => withFixCompleted(c, id, done, at));
+}
+
+/** Attach the fleet's durable dispatch to a data repair; engineering stays owned by the team. */
+export async function recordFixDispatch(repos: Repos, id: string, dispatch: NonNullable<FixItem["dispatch"]>): Promise<void> {
+  await mutate(repos, dispatch.at, c => put(c, fixItems(c).map(item => item.id === id
+    ? { ...item, state: "FIXING" as const, startedAt: dispatch.at, dispatch } : item), dispatch.at));
+}
+
+export function fixDispatchNote(where: string, says: string, kind?: unknown, place?: unknown): string | null {
+  if (kind === "engineering" || /layout|wording|button|font|colour|color|software|code|slow|spend|budget|hosting/i.test(says)) return null;
+  const target = typeof place === "string" && place.trim() ? place.trim() : where.trim();
+  if (!target || /^(?:the control cent(?:re|er)|pages?|admin)$/i.test(target)) return null;
+  if (kind !== "data" && !/missing|not (?:found|covered|shown|captured|available)|haven.t (?:found|captured)|no (?:agenda|minutes|meeting|official|candidate|contact|funding)|gap/i.test(says)) return null;
+  const key = /^(?:geo|st):([a-z]{2})(?:\.[a-z_]+\.(\d+))?$/.exec(target);
+  return key ? [key[1].toUpperCase(), key[2]].filter(Boolean).join(" ") : target;
+}
+
+export async function markFixQueueImported(repos: Repos, at: string): Promise<void> {
+  await mutate(repos, at, c => ({ ...c, legacyFixQueueImportedAt: at, updatedAt: at }));
+}
+
+let honorCursor = 0;
+/** BR-04: the standing timer reads a bounded part of pending dispatches on each tick. */
+export async function refreshFixDispatchHonors(repos: Pick<ControlPlaneRepositories,"adminConfig"|"researchIntents">, at: string): Promise<void> {
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const pending = held && isAdminConfig(held.value) ? fixItems(held.value).filter(i=>i.dispatch && !i.dispatch.honoredAt) : [];
+  if (!pending.length) { honorCursor=0; return; }
+  const changes = new Map<string, { intentId:string; honoredAt:string; honoredDetail:string }>();
+  for (let n=0;n<Math.min(16,pending.length);n++) {
+    const item=pending[(honorCursor+n)%pending.length];
+    const rows=await repos.researchIntents.readRecentWhere(RESEARCH_INTENT_LOG_KEY,["honors"],item.dispatch!.intentId,1,{kind:true,honoredAt:true,detail:true});
+    const honored=rows[0] as {kind?:unknown;honoredAt?:unknown;detail?:unknown}|undefined;
+    if (honored?.kind === "HONORED" && typeof honored.honoredAt === "string") changes.set(item.id,{intentId:item.dispatch!.intentId,honoredAt:honored.honoredAt,honoredDetail:typeof honored.detail === "string" ? honored.detail : ""});
+  }
+  honorCursor=(honorCursor+16)%pending.length;
+  if (changes.size) await mutate(repos,at,c=>put(c,fixItems(c).map(item=>item.dispatch && changes.get(item.id)?.intentId === item.dispatch.intentId
+    ? {...item,dispatch:{...item.dispatch,...changes.get(item.id)!}} : item),at));
 }

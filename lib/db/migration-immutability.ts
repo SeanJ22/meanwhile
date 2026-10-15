@@ -104,6 +104,41 @@ export const MIGRATION_SNAPSHOT_PATH = /^lib\/db\/migrations\/meta\/([0-9]{4})_s
 /** The journal itself. Appending to it is the ONLY sanctioned edit. */
 export const JOURNAL_PATH = "lib/db/migrations/meta/_journal.json";
 
+/**
+ * A migration that reached main and was never applied anywhere, retracted by name. This is a reviewed list in code,
+ * not a switch: it excuses exactly one `.sql` deletion and one journal entry (idx, tag AND `when` must all match) per row,
+ * and nothing else — a modified or renamed file, or any other tag, is still refused. Each row states why it was never applied.
+ * If a database ever reports applying one, `checksumViolations` refuses it as `retracted-migration-applied`. The
+ * applied row is the retracted migration only when its `when` AND the sha256 of the retracted file both match, because
+ * River numbers the next migration into a freed slot and may hand it the same `when`.
+ */
+export interface RetractedMigration {
+  readonly idx: number;
+  readonly tag: string;
+  readonly when: number;
+  /** sha256 of the retracted file's raw bytes, as `scripts/apply-migrations.mts` would have recorded it. */
+  readonly sha256: string;
+  readonly retractedOn: string;
+  readonly why: string;
+}
+
+export const RETRACTED_MIGRATIONS: readonly RetractedMigration[] = [
+  {
+    idx: 35, tag: "0035_pb01_retire_playbooks", when: 1790889600001,
+    sha256: "3c4435d5ea036b578fd8bafbdb8c6331c70a9f87ccdea373ebf71adc09cfd8ad", retractedOn: "2026-10-13",
+    why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0035 alters " +
+      "cp_field_manual_entries, a control-plane table the reader database does not have, so the production build failed before applying it. " +
+      "The retirement now runs through the control-plane repository (lib/control-plane/playbook-seed.ts).",
+  },
+  {
+    idx: 36, tag: "0036_pb01_role_playbooks", when: 1790889600002,
+    sha256: "32d72554c769aa3f6711b5071b53a7486ecfea86900b5b25dc37424fb7e63ea3", retractedOn: "2026-10-13",
+    why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0036 inserts into cp_field_manual_entries, which the reader " +
+      "database does not have. The same rows are now seeded through the control-plane repository (lib/control-plane/playbook-seed.ts).",
+  },
+];
+const retractedTag = (tag: string | null): RetractedMigration | undefined => RETRACTED_MIGRATIONS.find((r) => r.tag === tag);
+
 
 export type ImmutabilityRule =
   | "migration-modified"
@@ -116,7 +151,8 @@ export type ImmutabilityRule =
   | "journal-entry-dropped"
   | "journal-entry-without-file"
   | "file-without-journal-entry"
-  | "applied-sql-rewritten";
+  | "applied-sql-rewritten"
+  | "retracted-migration-applied";
 
 export interface ImmutabilityViolation {
   /** Stable id, so a failure message can be grepped for. */
@@ -208,6 +244,8 @@ export function evaluateMigrationImmutability(
               "nothing has applied appears under a new name.",
             remedy: CORRECTION_IS_A_NEW_MIGRATION,
           });
+        } else if (change.status === "deleted" && change.from === null && retractedTag(tag) !== undefined) {
+          checked.push(`${tag} was deleted as a retracted, never-applied migration (RETRACTED_MIGRATIONS)`);
         } else if (change.status === "deleted") {
           violations.push({
             rule: "migration-deleted",
@@ -283,6 +321,8 @@ export function evaluateMigrationImmutability(
         `${input.headJournal.length}, for append-only`,
     );
     for (const base of input.baseJournal) {
+      const retracted = retractedTag(base.tag);
+      if (retracted !== undefined && retracted.idx === base.idx && Number(retracted.when) === Number(base.when)) continue;
       const here = input.headJournal.find((e) => e.idx === base.idx);
       if (!here) {
         violations.push({
@@ -407,6 +447,18 @@ export function checksumViolations(
 ): ImmutabilityViolation[] {
   const byWhen = new Map(appliedHashes.map((a) => [Number(a.when), a.hash]));
   const violations: ImmutabilityViolation[] = [];
+  for (const retracted of RETRACTED_MIGRATIONS) {
+    if (byWhen.get(Number(retracted.when)) !== retracted.sha256) continue;
+    violations.push({
+      rule: "retracted-migration-applied",
+      path: `lib/db/migrations/${retracted.tag}.sql`,
+      tag: retracted.tag,
+      what:
+        `${retracted.tag} is on the retraction list as never applied, and the database records it as APPLIED (when=${retracted.when}). ` +
+        "The retraction's premise is false: removing the file would leave an applied migration with no source.",
+      remedy: "Restore the file exactly as the merge base has it and take it off RETRACTED_MIGRATIONS.",
+    });
+  }
   for (const entry of journal) {
     const recorded = byWhen.get(Number(entry.when));
     if (recorded === undefined) continue;

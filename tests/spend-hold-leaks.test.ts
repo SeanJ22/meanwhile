@@ -92,11 +92,11 @@ test("a settled hold leaves the row once its cost is older than any history a re
 test("the round wires the release (and the sweep) on its normal end and on its crash path, and readers use live holds from the table", async () => {
   const { readFileSync } = await import("node:fs");
   const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
-  assert.match(round, /releaseRoundHolds = async \(\) => \{[\s\S]*?releaseOpenJobs\(spendHolds, open, nowIso\(\)\);[\s\S]*?await spendHolds\.sweep\(\);/);
+  assert.match(round, /releaseRoundHolds = async \(\) => \{[\s\S]*?await spendHolds\.sweep\(\);/);
   assert.match(round, /new DurableSpendHolds\(\{ budget: repos\.budget, table: repos\.spendHolds,/, "the round's holds are the table's");
   assert.match(round, /async function recordCrash[\s\S]*?releaseRoundHolds[\s\S]*?crash:record/);
   assert.match(round, /const notReleased = await releaseRoundHolds!\(\);[\s\S]*?const runRecord = \{/);
-  assert.match(round, /readLiveSpendHolds\(repos, NOW\)/);
+  assert.match(round, /readSpendWindow\(repos, NOW\)/, "the round's rolling spend is the running counter, never re-read ledger rows");
   assert.doesNotMatch(round, /value\.spendHolds/, "the round never reads holds off the ledger row");
   const snapshot = readFileSync(new URL("../scripts/publish-owner-snapshot.mts", import.meta.url), "utf8");
   assert.match(snapshot, /readLiveSpendHolds\(repos, /);

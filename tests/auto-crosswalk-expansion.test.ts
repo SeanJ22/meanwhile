@@ -1,3 +1,4 @@
+import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
 /** A Send to a county in a state no one has worked before reaches readers with no person and no code change: every step is the production path on in-memory stores, with no network and no model. */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -37,13 +38,12 @@ import { deriveWiringDecisions, wiringRowFor } from "../lib/control-plane/discov
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
-import { discoveryNeedsToWalk, runMeetingsDiscovery, walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { applyDispatchWork, dispatchWorkTarget, planDispatchWork } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   materializedDiscoveryNeeds,
-  paidDiscoveryHold,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
@@ -175,10 +175,10 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   const azRegistry = azRegistryFixture();
   const mission = meetingsDiscoveryNeeds([azRegistry]);
   assert.equal(mission.some((n) => n.stateCode.toUpperCase() === "OH"), false, "the other mission holds no Ohio government");
-  const needs = discoveryNeedsToWalk(mission, dispatched);
+  const needs = dispatched;
   const subjects = dispatched.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
   const before = await readFreeDiscoveryWalks(repos, subjects);
-  for (const id of ids) assert.equal(paidDiscoveryHold(id, before), null, "an unattempted free walk is no paid-admission prerequisite");
+  for (const s of subjects) assert.equal(before.latestFor(s.jurisdictionId), "NOT_WALKED");
 
   const site: Record<string, RecordedReply> = {
     [`https://${COUNTY_HOST}/robots.txt`]: ALLOW,
@@ -190,11 +190,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   };
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
-  const pass = await runMeetingsDiscovery(repos, {
-    needs,
-    cycleIndex: 0,
-    maxWalks: 2,
-    firstIds: new Set(dispatched.map((n) => n.jurisdictionId)),
+  await runCensusState({
+    repos, state: "OH", needs,
     runtime: {
       open: recordedDiscoveryOpen(site),
       spaceOut: async () => {},
@@ -209,10 +206,11 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
       budget: { spent: () => false },
     },
   });
-  assert.deepEqual(pass.walked.map((a) => a.jurisdictionId).sort(), [CITY, COUNTY], "the free walk took the Send's governments, not the ledger's rotation");
-  assert.ok(pass.walked.every((a) => a.outcome === "FOUND"));
+  const walked = (await Promise.all(needs.map(need => repos.discoveryAttempts.read(need.jurisdictionId)))).flat();
+  assert.deepEqual(walked.map((a) => a.jurisdictionId).sort(), [CITY, COUNTY], "the free walk took the Send's governments, not the ledger's rotation");
+  assert.ok(walked.every((a) => a.outcome === "FOUND"));
   const after = await readFreeDiscoveryWalks(repos, subjects);
-  for (const id of ids) assert.match(paidDiscoveryHold(id, after)?.why ?? "", /already found/, "and the paid lane never re-walks what it read");
+  for (const s of subjects) assert.equal(after.latestFor(s.jurisdictionId), "FOUND");
 
   /* 3. Registration: which body each government is (the Census, through its own routine door). */
   const store = new MemoryRoutineDataStore();

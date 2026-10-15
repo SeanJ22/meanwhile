@@ -1,154 +1,67 @@
-/**
- * Build lib/geo/zcta-centroids.json from Census ZCTA Gazetteer data.
- *
- *   pnpm zcta:fetch
- *
- * The Gazetteer file gives an internal point (INTPTLAT/INTPTLONG) for every
- * ZCTA in the country — a point guaranteed to fall inside the polygon, unlike a
- * bare centroid, which for a C-shaped ZCTA can land outside it. That point is
- * what the map flies to.
- *
- * These are orientation coordinates and nothing else. A ZCTA is a statistical
- * shape built from mail delivery routes; it crosses city, county, school
- * district, and legislative lines. It can never resolve a ballot.
- *
- * The file this writes is committed. Rerun it when Census publishes a new
- * vintage — it rewrites in place and the diff shows what moved.
- */
-
-import { createWriteStream } from "node:fs";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { Readable } from "node:stream";
-import { pipeline } from "node:stream/promises";
-import { fileURLToPath } from "node:url";
+/** Rebuild ZIP orientation from national sources. `pnpm zcta:fetch [--from DIRECTORY]` uses saved downloads. */
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { readZipEntries } from "../lib/sources/archive.ts";
+import { readBoundaryZip } from "../lib/geo/shapefile.ts";
+import { buildPostalTable } from "../lib/geo/build-postal-table.ts";
+import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
 
-const VINTAGE = "2020";
-const SOURCE_URL = `https://www2.census.gov/geo/docs/maps-data/data/gazetteer/${VINTAGE}_Gazetteer/${VINTAGE}_Gaz_zcta_national.zip`;
-const SOURCE_ORG = "U.S. Census Bureau";
+const ROOT = process.cwd();
+const SOURCES = {
+  "zcta.zip": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2021_Gazetteer/2021_Gaz_zcta_national.zip",
+  "US.zip": "https://download.geonames.org/export/zip/US.zip",
+  "types-alt.csv": "https://raw.githubusercontent.com/seanpianka/Zipcodes/master/scripts/data/zip_code_database.csv",
+  "zcta-polygons.zip": "https://www2.census.gov/geo/tiger/GENZ2020/shp/cb_2020_us_zcta520_500k.zip",
+  "place-polygons.zip": "https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_place_500k.zip",
+  "county-polygons.zip": "https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_county_500k.zip",
+};
 
-const here = dirname(fileURLToPath(import.meta.url));
-const OUT_PATH = join(here, "..", "lib", "geo", "zcta-centroids.json");
-const TMP_ZIP = join(here, "..", ".zcta-download.zip");
-
-interface CentroidFile {
-  source: string;
-  sourceOrg: string;
-  vintage: string;
-  generatedAt: string;
-  /** False while this is the checked-in stub subset. */
-  complete: boolean;
-  note: string;
-  /** Zip code to [latitude, longitude]. */
-  centroids: Record<string, [number, number]>;
-}
-
-/** The Gazetteer release must contain exactly one complete text member. */
-function extractSingleFile(zip: Buffer): string {
-  const entries = readZipEntries(zip, { maxEntries: 1, maxMemberBytes: 32 * 1024 * 1024, maxTotalBytes: 32 * 1024 * 1024 });
-  if (entries.length !== 1) throw new Error("Gazetteer ZIP must contain exactly one member.");
-  return entries[0].data.toString("latin1");
-}
-
-/**
- * Parse the tab-delimited Gazetteer table by header name. Census has moved
- * column order between vintages; position-based parsing silently swaps
- * latitude and longitude when it does.
- */
-function parseGazetteer(text: string): Record<string, [number, number]> {
-  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
-  if (lines.length < 2) throw new Error("Gazetteer file has no data rows.");
-
-  const header = lines[0].split("\t").map((h) => h.trim().toUpperCase());
-  const geoidCol = header.indexOf("GEOID");
-  const latCol = header.indexOf("INTPTLAT");
-  const lngCol = header.findIndex((h) => h === "INTPTLONG" || h === "INTPTLON");
-
-  if (geoidCol === -1 || latCol === -1 || lngCol === -1) {
-    throw new Error(
-      `Gazetteer header missing expected columns. Saw: ${header.join(", ")}`,
-    );
-  }
-
-  const centroids: Record<string, [number, number]> = {};
-  let skipped = 0;
-
-  for (const line of lines.slice(1)) {
-    const cells = line.split("\t");
-    const zip = cells[geoidCol]?.trim();
-    const lat = Number(cells[latCol]?.trim());
-    const lng = Number(cells[lngCol]?.trim());
-
-    if (!/^\d{5}$/.test(zip ?? "") || !Number.isFinite(lat) || !Number.isFinite(lng)) {
-      skipped++;
-      continue;
-    }
-
-    // Five decimals is roughly a meter. More than that is noise for a map fly-to
-    // and costs a megabyte across 33,000 rows.
-    centroids[zip] = [
-      Number(lat.toFixed(5)),
-      Number(lng.toFixed(5)),
-    ];
-  }
-
-  if (skipped > 0) console.warn(`  skipped ${skipped} unparseable row(s)`);
-  return centroids;
+function member(buffer: Buffer, name: string): string {
+  const entries = readZipEntries(buffer, { maxMemberBytes: 32 * 1024 * 1024, maxTotalBytes: 64 * 1024 * 1024 });
+  const entry = entries.find(entry => entry.name === name);
+  if (!entry) throw new Error(`Source archive is missing ${name}`);
+  return entry.data.toString("utf8");
 }
 
 async function main() {
-  console.log(`Fetching ${SOURCE_URL}`);
-
-  const response = await fetch(SOURCE_URL);
-  if (!response.ok || !response.body) {
-    throw new Error(
-      `Census returned ${response.status} ${response.statusText}. ` +
-        `Check the vintage in this script — Census moves these paths between releases.`,
-    );
-  }
-
-  await mkdir(dirname(TMP_ZIP), { recursive: true });
-  await pipeline(
-    Readable.fromWeb(response.body as Parameters<typeof Readable.fromWeb>[0]),
-    createWriteStream(TMP_ZIP),
-  );
-
-  try {
-    const zip = await readFile(TMP_ZIP);
-    console.log(`  ${(zip.length / 1_048_576).toFixed(1)} MB downloaded`);
-
-    const centroids = parseGazetteer(extractSingleFile(zip));
-    const count = Object.keys(centroids).length;
-
-    if (count < 30_000) {
-      throw new Error(
-        `Only parsed ${count} ZCTAs; expected roughly 33,000. Refusing to ` +
-          `overwrite the committed file with a partial result.`,
-      );
+  const arg = process.argv.indexOf("--from");
+  const from = arg >= 0 ? process.argv[arg + 1] : null;
+  if (arg >= 0 && !from) throw new Error("--from needs a directory of saved source downloads");
+  const cache = from ?? join(ROOT, ".cache", "zip-entry");
+  await mkdir(cache, { recursive: true });
+  if (!from) {
+    for (const [name, url] of Object.entries(SOURCES)) {
+      console.log(`Reading ${url}`);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`${url}: HTTP ${response.status}; committed tables remain intact`);
+      await writeFile(join(cache, name), Buffer.from(await response.arrayBuffer()));
     }
-
-    const out: CentroidFile = {
-      source: SOURCE_URL,
-      sourceOrg: SOURCE_ORG,
-      vintage: VINTAGE,
-      generatedAt: new Date().toISOString(),
-      complete: true,
-      note:
-        "ZCTA internal points, for map orientation only. A ZCTA crosses city, " +
-        "county, school district, and legislative boundaries and can never " +
-        "resolve a ballot. Regenerate with `pnpm zcta:fetch`.",
-      centroids,
-    };
-
-    await writeFile(OUT_PATH, `${JSON.stringify(out, null, 0)}\n`);
-    console.log(`Wrote ${count.toLocaleString()} ZCTA centroids to ${OUT_PATH}`);
-  } finally {
-    await rm(TMP_ZIP, { force: true });
   }
+  const read = (name: string) => readFile(join(cache, name));
+  const centroids = parseGazetteer(member(await read("zcta.zip"), "2021_Gaz_zcta_national.txt"));
+  const governments = JSON.parse(await readFile(join(ROOT, "data", "derived", "zip-governments.json"), "utf8")) as { zips: Record<string, unknown> };
+  assertGovernmentZipCoverage(centroids, Object.keys(governments.zips));
+  if (Object.keys(centroids).length < 33791) throw new Error("Incomplete 2020 ZCTA Gazetteer");
+  const geoNames = parseGeoNames(member(await read("US.zip"), "US.txt"));
+  const types = parsePostalTypes((await read("types-alt.csv")).toString("utf8"));
+  if (Object.keys(geoNames).length < 41000 || Object.keys(types).length < 41000) throw new Error("Incomplete national postal source");
+  const boundaries = {
+    zcta: readBoundaryZip(await read("zcta-polygons.zip")).features,
+    place: readBoundaryZip(await read("place-polygons.zip")).features,
+    county: readBoundaryZip(await read("county-polygons.zip")).features,
+  };
+  const zips = buildPostalTable(centroids, geoNames, types, boundaries);
+  const generatedAt = new Date().toISOString();
+  const centroidFile = { source: SOURCES["zcta.zip"], sourceOrg: "U.S. Census Bureau", vintage: "2020", release: "2021", generatedAt,
+    complete: true, note: "Complete 2020 ZCTA internal points, released in the 2021 Gazetteer. Map orientation only; districts require a residential address. Regenerate with pnpm zcta:fetch.", centroids };
+  const postalFile = { generatedAt, source: SOURCES["US.zip"], sourceOrg: "GeoNames", license: "CC BY 4.0", attribution: "https://www.geonames.org/",
+    typeSource: SOURCES["types-alt.csv"], typeSourceOrg: "Zipcodes / unitedstateszipcodes.org", boundarySources: [SOURCES["zcta-polygons.zip"], SOURCES["place-polygons.zip"], SOURCES["county-polygons.zip"]],
+    note: "Census coordinates take precedence for ZCTAs; other ZIPs use GeoNames coordinates, or the postal-type source when GeoNames has no row. Spatial containment maps ZCTA, place and county; null means no containing shape. No ZIP alone proves residential districts.",
+    columns: ["lat", "lng", "type", "zcta", "place", "state", "county", "countyFips", "placeGeoid"], zips };
+  // Every input and the full join validate before either committed table is replaced.
+  await writeFile(join(ROOT, "lib", "geo", "zcta-centroids.json"), JSON.stringify(centroidFile) + "\n");
+  await writeFile(join(ROOT, "lib", "geo", "postal-zips.json"), JSON.stringify(postalFile) + "\n");
+  console.log(`Wrote ${Object.keys(centroids).length} ZCTAs and ${Object.keys(zips).length} postal ZIPs`);
 }
 
-main().catch((error) => {
-  console.error(`\nzcta:fetch failed — ${error.message}`);
-  process.exitCode = 1;
-});
+main().catch(error => { console.error(error); process.exitCode = 1; });

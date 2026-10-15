@@ -5,7 +5,8 @@ import { PLURAL_REVISION_URL, PLURAL_STATES } from "../lib/sources/plural/target
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { publishStatePeople, refreshStatePeoplePortraits } from "../lib/civic-data/state-people-publication.ts";
+import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -31,13 +32,7 @@ async function main() {
     const failed = await recordRegisteredSourceAcquisitionFailure({ store, contractId, requestedUrl: PLURAL_REVISION_URL, failure });
     console.log(failed.line); process.exitCode = 2; return;
   }
-  let publication = await publishStatePeople({ store, ...acquired, now: new Date().toISOString() });
-  // Optional portrait work follows core publication. Its continuation never
-  // withholds a sourced person or converts a source failure into an absence.
-  if (publication.outcome.promoted || publication.outcome.confirmed) {
-    try { publication = await refreshStatePeoplePortraits({ state, store, signal: AbortSignal.timeout(5 * 60_000) }) ?? publication; }
-    catch (error) { console.warn(`OPENSTATES_PORTRAIT_GAP=${error instanceof Error ? error.message : String(error)}`); }
-  }
+  const publication = await publishStatePeople({ store, vault: rawCaptureVault(), ...acquired, now: new Date().toISOString() });
   if (acquired.gaps.length) console.log(`OPENSTATES_SOURCE_GAPS=${JSON.stringify(acquired.gaps)}`);
   printSourceRunnerReceipt(contractId, publication.candidate, publication.outcome);
   if (!publication.outcome.promoted && !publication.outcome.confirmed) process.exitCode = 2;

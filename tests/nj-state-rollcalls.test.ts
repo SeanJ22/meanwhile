@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { RecentVoteRecords, type MemberRollCall } from "../components/map/popup/official-popup.tsx";
 
 import { officialStateRollCallsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
@@ -361,17 +364,20 @@ test("NJ partial member acquisition and any API/archive disagreement fail closed
 
 test("ready Arizona native votes replace the retired landing-page probe", () => {
   const nj = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "nj-state-rollcalls");
-  const az = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "az-openstates-votes");
+  const az = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "openstates-votes-az");
   assert.ok(nj);
   assert.ok(az);
   assert.equal(az.sourceId, "plural-openstates-votes");
   assert.equal(az.scope, "US-AZ:openstates-votes:v1");
-  assert.deepEqual(az.acquisitionAdapter.command, ["scripts/az-votes-refresh.mts", "--promote"]);
+  assert.deepEqual(az.acquisitionAdapter.command, ["scripts/openstates-votes-refresh.mts", "--promote", "--state=az"]);
   assert.equal(ROUTINE_SOURCE_CONTRACTS.some(({ id }) => id === "az-state-rollcalls"), false);
 });
 
 test("ABSTAIN remains its own exact Reader disposition in rendered and census paths", () => {
-  const popup = readFileSync(new URL("../components/map/popup/official-popup.tsx", import.meta.url), "utf8");
-  assert.match(popup, /ABSTAIN:\s*\{\s*label:\s*"Abstained",\s*tone:\s*"neutral"\s*\}/);
-  assert.match(popup, /\{POSITION_STYLE\[vote\.position\]\.label\}/);
+  const vote: MemberRollCall = { id: "synthetic:abstain", title: "Synthetic abstention rendering case", titleSource: "BILL_TITLE",
+    question: "Third reading", result: "Passed", date: "2026-09-01", position: "ABSTAIN", legisNum: "S 1",
+    billUrl: null, rollCallUrl: "https://example.gov/roll", retrievedAt: T0, partyBreakdown: null, billSummary: null, billSummaryPending: false };
+  const html = renderToStaticMarkup(createElement(RecentVoteRecords, { votes: [vote], attribution: null, failed: false, reactionContext: null }));
+  assert.match(html, /vote-pill--neutral[^>]*>Abstained</);
+  assert.doesNotMatch(html, /Did not vote/);
 });

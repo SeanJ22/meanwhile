@@ -1,17 +1,9 @@
-/**
- * A saved method finds a body's own events page and the runner reuses it in another state, on recorded pages only.
- * An event verifies only on the body's own host, named in its title by the body's recorded name, the name without
- * class words, its initials, or the words the body's own homepage used to link the page, and dated in the body's
- * state's zone; a state that spans zones is never guessed. An Arizona page never verifies for a New Mexico body,
- * nor the reverse.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
-  runMeetingsDiscovery,
+
   walkMeetingsDiscoveryNeed,
   type DiscoveryOpen,
   type DiscoveryRuntime,
@@ -19,13 +11,12 @@ import {
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import {
   OFFICIAL_PAGE_EVENTS_VERSION,
-  STATE_TIME_ZONES,
   anchorLinks,
   identityNameTerms,
   verifyEndpointBody,
 } from "../lib/hunt/meetings-site-discovery.ts";
 import { SEED_RECIPES, knownRecipes, recipeCandidates } from "../lib/hunt/meetings-recipes.ts";
-import { eachStore } from "./control-plane-fixtures.ts";
+import { COUNTY_TIME_ZONES, governmentTimeZone } from "../lib/time/county-time-zones.ts";
 
 const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
 const TUSD_HOME = readFileSync(new URL("tusd-home.html", FIXTURES), "utf8");
@@ -44,6 +35,7 @@ const ALLOW = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "te
 const TUSD: MeetingsDiscoveryNeed = {
   jurisdictionId: "az:school:tucson-unified-school-district-1",
   stateCode: "AZ",
+  countyFips: "04019",
   name: "TUCSON UNIFIED SCHOOL DISTRICT 1",
   govClass: "SCHOOL_DISTRICT",
   ownWebAddress: "https://www.tusd1.org/",
@@ -107,13 +99,9 @@ test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a 
   assert.deepEqual(identityNameTerms("CITY OF CHANDLER"), ["City of Chandler", "Chandler"], "two letters of initials name nothing");
   assert.deepEqual(identityNameTerms("CITY OF TUCSON"), ["City of Tucson", "Tucson"]);
   assert.notDeepEqual(identityNameTerms("TUCSON UNIFIED SCHOOL DISTRICT 1")[1], "Tucson", "a district's core name keeps Unified, so the city's events never verify for it");
-  /* Every one-zone state and territory, never a state a zone line crosses or one whose towns keep a neighbour's time. */
-  assert.deepEqual(Object.keys(STATE_TIME_ZONES).sort(), [
-    "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "GA", "GU", "HI", "IA", "IL", "LA", "MA", "MD", "ME", "MN", "MO", "MP", "MS", "MT",
-    "NC", "NH", "NJ", "NM", "NY", "OH", "OK", "PA", "PR", "RI", "SC", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY",
-  ]);
-  assert.deepEqual([STATE_TIME_ZONES.AZ, STATE_TIME_ZONES.NH, STATE_TIME_ZONES.NJ, STATE_TIME_ZONES.NM, STATE_TIME_ZONES.OH], ["America/Phoenix", "America/New_York", "America/New_York", "America/Denver", "America/New_York"]);
-  for (const split of ["AK", "AL", "FL", "ID", "IN", "KS", "KY", "MI", "ND", "NE", "NV", "OR", "SD", "TN", "TX"]) assert.equal(STATE_TIME_ZONES[split], undefined, `${split} is never guessed`);
+  assert.equal(new Set([...COUNTY_TIME_ZONES.values()].map(row => row.stateCode)).size, 56);
+  assert.deepEqual([governmentTimeZone("AZ", "04019"), governmentTimeZone("NH"), governmentTimeZone("NJ"), governmentTimeZone("NM"), governmentTimeZone("OH")], ["America/Phoenix", "America/New_York", "America/New_York", "America/Denver", "America/New_York"]);
+  for (const split of ["AK", "AL", "AZ", "FL", "ID", "IN", "KS", "KY", "MI", "ND", "NE", "NV", "OR", "SD", "TN", "TX"]) assert.equal(governmentTimeZone(split), null, `${split} needs its county, never a statewide guess`);
   /* A government's own events page in a one-zone state is confirmed by the free walk. */
   const ohio = verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
@@ -255,67 +243,4 @@ test("LAZY VAULT: walks share the linking index, reload selected original pages,
   assert.ok(reads.every(n => n === 1), "each unrelated capture is ingested once across both walks");
   assert.ok(directoryReads > 1, "the selected endorsement is read again from its original capture");
   assert.ok(captureReads > 0, "fresh captures are loaded through the vault reader");
-});
-
-test("LAZY VAULT DEADLINE: an expired body read leaves the walk and remaining needs owed", async () => {
-  for (const [label, repos] of await eachStore("wtp-lazy-discovery-")) {
-    let left = 60_000;
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [TUSD, SFPS], cycleIndex: 0, maxWalks: 5,
-      runtime: {
-        ...runtime(fakeOpen({ ...TUSD_SITE, ...SFPS_SITE }).open),
-        budget: { spent: () => left <= 0, remainingMs: () => left },
-        readOfficialPages: async () => [{ canonicalUrl: DIRECTORY.url, readText: async () => { left = 0; throw new Error("vault read deadline"); } }],
-      },
-    });
-    assert.deepEqual(pass.walked, [], label);
-    assert.equal(pass.cutShort.length, 1, label);
-    assert.deepEqual(new Set(pass.deferred), new Set([TUSD.jurisdictionId, SFPS.jurisdictionId]), label);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent(pass.cutShort[0].jurisdictionId, 5), [], label);
-  }
-});
-
-test("VAULT INDEX DEADLINE: expiry before page metadata loads records no discovery reading", async () => {
-  for (const [label, repos] of await eachStore("wtp-index-discovery-")) {
-    let expired = false;
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [TUSD], cycleIndex: 0, maxWalks: 5,
-      runtime: {
-        ...runtime(fakeOpen(TUSD_SITE).open),
-        budget: { spent: () => expired, remainingMs: () => expired ? 0 : 60_000 },
-        readOfficialPages: async () => { expired = true; throw new Error("vault index deadline"); },
-      },
-    });
-    assert.deepEqual(pass.walked, [], label);
-    assert.deepEqual(pass.cutShort, [{ jurisdictionId: TUSD.jurisdictionId, requests: 0, search: [] }], label);
-    assert.deepEqual(pass.deferred, [TUSD.jurisdictionId], label);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent(TUSD.jurisdictionId, 5), [], label);
-  }
-});
-
-test("THE RUNNER USES WHAT IT SAVED: cycle 1 credits the method for TUSD; cycle 2, a later process in New Mexico, reads it from the store and applies it", async () => {
-  for (const [label, repos] of await eachStore("wtp-official-page-")) {
-    const first = await runMeetingsDiscovery(repos, {
-      needs: [TUSD],
-      runtime: runtime(fakeOpen(TUSD_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(first.walked[0].outcome, "FOUND", label);
-    assert.ok(first.recipesUpdated.includes(METHOD), label);
-    const saved = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
-    assert.equal(saved.successes, 1, `${label}: the success is written to the field manual, which outlives the process`);
-    assert.equal(saved.lastSuccess?.jurisdictionId, TUSD.jurisdictionId);
-
-    const second = await runMeetingsDiscovery(repos, {
-      needs: [SFPS],
-      runtime: runtime(fakeOpen(SFPS_SITE).open, knownRecipes((await repos.fieldManual.list()).map((row) => row.value)), "2026-09-23T23:59:00.000Z"),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(second.walked[0].outcome, "FOUND", label);
-    const after = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === METHOD)!;
-    assert.equal(after.successes, 2, `${label}: the New Mexico walk used the saved method and added to it`);
-    assert.equal(after.lastSuccess?.jurisdictionId, SFPS.jurisdictionId);
-  }
 });

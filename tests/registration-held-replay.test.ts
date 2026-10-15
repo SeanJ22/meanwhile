@@ -67,7 +67,7 @@ async function legacyRegistration() {
   return { store, target, reference, prior, candidate, body, baseline };
 }
 
-test("registration/5 replays original held listings after the real later /3 304 date, preserving prior facts and source clocks", async () => {
+test("the current registration parser replays original held listings after the real later /3 304 date, preserving prior facts and source clocks", async () => {
   const { store, target, reference, prior, candidate, body, baseline } = await legacyRegistration();
   assert.equal(prior.candidate.retrieval.rawHash, "2f6130d4781a90e2dd1b0e735965378584b3b70386bdc5a41602c1e7051fdf9d", "matches the production NH source/reference proof");
   assert.equal(registrationHeldReplayIsExact(candidate, prior), true);
@@ -100,7 +100,7 @@ test("registration/5 replays original held listings after the real later /3 304 
   assert.equal((await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion)).lastSucceededObservedAt, recheckedAt);
 });
 
-test("registration/5 is due after an immutable /4 temporal refusal without changing the six-hour retry", async () => {
+test("the current registration parser is due after an immutable /4 temporal refusal without changing the six-hour retry", async () => {
   const { store, target, prior, baseline } = await legacyRegistration();
   const failedAt = "2026-10-10T00:24:00.000Z";
   const failed = { ...baseline, id: `${baseline.id}:failed-v4`, normalization: { ...baseline.normalization, parserVersion: "registration/4" } };

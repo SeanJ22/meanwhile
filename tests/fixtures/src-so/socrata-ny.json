@@ -1,0 +1,332 @@
+{
+  "results" :
+    [
+      {
+        "resource" :
+          {
+            "name" : "Lottery Cash 4 Life Winning Numbers: 2014 - 2026 (Retired Game)",
+            "id" : "kwxv-fwze",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "Go to http://on.ny.gov/1xRIvPz on the New York Lottery website for past Cash 4 Life results and payouts.",
+            "attribution" : "New York State Gaming Commission",
+            "attribution_link" : "http://nylottery.ny.gov/wps/portal/Home/Lottery/home/your+lottery/drawing+results/drawingresults_cash4life",
+            "contact_email" : null,
+            "type" : "dataset",
+            "updatedAt" : "2026-09-30T18:26:31.000Z",
+            "createdAt" : "2014-06-17T19:47:54.000Z",
+            "metadata_updated_at" : "2026-09-30T18:26:30.000Z",
+            "data_updated_at" : "2026-09-30T18:26:31.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 610,
+                "page_views_last_month" : 1755,
+                "page_views_total" : 6005066,
+                "page_views_last_week_log" : 9.25502856981873,
+                "page_views_last_month_log" : 10.77807712953536,
+                "page_views_total_log" : 22.51774891184601
+              },
+            "columns_name" : [ "Draw Date", "Cash Ball", "Winning Numbers" ],
+            "columns_field_name" :
+              [ "draw_date", "cash_ball", "winning_numbers" ],
+            "columns_datatype" : [ "Calendar date", "Text", "Text" ],
+            "columns_description" :
+              [ "Draw date", "Cash ball", "Winning numbers" ],
+            "columns_format" :
+              [
+                { "view" : "date", "align" : "center" },
+                { "align" : "center" },
+                { "align" : "center" }
+              ],
+            "download_count" : 281598,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "table",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2021-04-27T14:13:45.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "Government & Finance",
+            "domain_tags" :
+              [ "cash 4 life", "results", "new york lottery", "winning" ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Notes_Notes",
+                  "value" : "The information contained on these pages is believed to be accurate. In the event of a discrepancy between the information displayed on this Web site concerning winning numbers and payouts and the information contained in the official and certified files maintained by the New York Lottery's Drawing Unit, those maintained by the Drawing Unit shall prevail."
+                },
+                {
+                  "key" : "Dataset-Summary_Dataset-Owner",
+                  "value" : "New York State Gaming Commission"
+                },
+                {
+                  "key" : "Dataset-Summary_Contact-Information",
+                  "value" : "Info@gaming.ny.gov"
+                },
+                { "key" : "Dataset-Summary_Granularity", "value" : "By draw" },
+                { "key" : "Dataset-Summary_Coverage", "value" : "Statewide" },
+                {
+                  "key" : "Dataset-Summary_Posting-Frequency",
+                  "value" : "Static - Not updated"
+                },
+                {
+                  "key" : "Dataset-Summary_Organization",
+                  "value" : "The New York Lottery"
+                },
+                {
+                  "key" : "Dataset-Summary_Time-Period",
+                  "value" : "6/16/2014 - 2/21/2026"
+                },
+                {
+                  "key" : "Dataset-Information_Agency",
+                  "value" : "Gaming Commission, New York State"
+                },
+                {
+                  "key" : "Additional-Resources_See-Also",
+                  "value" : "http://www.gaming.ny.gov/"
+                }
+              ]
+          },
+        "metadata" : { "domain" : "data.ny.gov" },
+        "permalink" : "https://data.ny.gov/d/kwxv-fwze",
+        "link" : "https://data.ny.gov/Government-Finance/Lottery-Cash-4-Life-Winning-Numbers-2014-2026-Reti/kwxv-fwze",
+        "owner" :
+          {
+            "id" : "xzik-pf59",
+            "user_type" : "interactive",
+            "display_name" : "NY Open Data"
+          },
+        "creator" :
+          {
+            "id" : "xzik-pf59",
+            "user_type" : "interactive",
+            "display_name" : "NY Open Data"
+          }
+      },
+      {
+        "resource" :
+          {
+            "name" : "Lottery Daily Numbers/Win-4 Winning Numbers: Beginning 1980",
+            "id" : "hsys-3def",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "Go to http://on.ny.gov/1Cx6zvs or http://on.ny.gov/1KYjE6X on the New York Lottery website for past Daily Numbers/Win-4 results and payouts.",
+            "attribution" : "New York State Gaming Commission",
+            "attribution_link" : "http://nylottery.ny.gov/wps/portal/Home/Lottery/Home/YOUR+LOTTERY/Drawing+Results/drawing+results/",
+            "contact_email" : null,
+            "type" : "dataset",
+            "updatedAt" : "2026-10-12T09:01:24.000Z",
+            "createdAt" : "2013-02-26T20:21:34.000Z",
+            "metadata_updated_at" : "2026-10-12T09:01:23.000Z",
+            "data_updated_at" : "2026-10-12T09:01:24.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 2107,
+                "page_views_last_month" : 8156,
+                "page_views_total" : 1955002,
+                "page_views_last_week_log" : 11.041659151637216,
+                "page_views_last_month_log" : 12.993822936745916,
+                "page_views_total_log" : 20.898739390709384
+              },
+            "columns_name" :
+              [
+                "Midday Win 4 Booster",
+                "Midday Win 4 Sum",
+                "Midday Daily Sum",
+                "Draw Date",
+                "Evening Daily Booster",
+                "Evening Daily #",
+                "Evening Win 4 Sum",
+                "Midday Win 4 #",
+                "Evening Daily Sum",
+                "Midday Daily Booster",
+                "Evening Win 4 #",
+                "Evening Win 4 Booster",
+                "Midday Daily #"
+              ],
+            "columns_field_name" :
+              [
+                "midday_win_4_booster",
+                "midday_win_4_sum",
+                "midday_daily_sum",
+                "draw_date",
+                "evening_daily_booster",
+                "evening_daily",
+                "evening_win_4_sum",
+                "midday_win_4",
+                "evening_daily_sum",
+                "midday_daily_booster",
+                "evening_win_4",
+                "evening_win_4_booster",
+                "midday_daily"
+              ],
+            "columns_datatype" :
+              [
+                "Text",
+                "Number",
+                "Number",
+                "Calendar date",
+                "Text",
+                "Text",
+                "Number",
+                "Text",
+                "Number",
+                "Text",
+                "Text",
+                "Text",
+                "Text"
+              ],
+            "columns_description" :
+              [
+                "Booster percentage for Midday Win4 number",
+                "Midday Win 4 Lucky Sum",
+                "Winning Midday Daily Lucky Sum",
+                "Draw date",
+                "Booster percentage for Evening  Daily number",
+                "Evening Daily Numbers",
+                "Evening Win 4 Lucky Sum",
+                "Midday Win 4 Numbers",
+                "Evening Daily Lucky Sum",
+                " Booster percentage for Midday Daily number",
+                "Evening Win 4 Numbers",
+                "Booster percentage for Evening Win4 number",
+                "Midday Daily Numbers"
+              ],
+            "columns_format" :
+              [
+                {},
+                {
+                  "precisionStyle" : "standard",
+                  "noCommas" : "false",
+                  "align" : "center"
+                },
+                {
+                  "precisionStyle" : "standard",
+                  "noCommas" : "false",
+                  "align" : "center"
+                },
+                { "view" : "date", "align" : "center" },
+                {},
+                {
+                  "precisionStyle" : "standard",
+                  "noCommas" : "false",
+                  "align" : "center"
+                },
+                { "align" : "center" },
+                {
+                  "precisionStyle" : "standard",
+                  "noCommas" : "true",
+                  "align" : "center"
+                },
+                {
+                  "precisionStyle" : "standard",
+                  "noCommas" : "false",
+                  "align" : "center"
+                },
+                {},
+                {
+                  "precisionStyle" : "standard",
+                  "noCommas" : "true",
+                  "align" : "center"
+                },
+                {},
+                {
+                  "precisionStyle" : "standard",
+                  "noCommas" : "false",
+                  "align" : "center"
+                }
+              ],
+            "download_count" : 271901,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "table",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2026-09-24T15:58:08.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "Government & Finance",
+            "domain_tags" :
+              [ "new york lottery", "numbers", "results", "win-4", "winning" ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Notes_Notes",
+                  "value" : "The information contained on these pages is believed to be accurate. In the event of a discrepancy between the information displayed on this Web site concerning winning numbers and payouts and the information contained in the official and certified files maintained by the New York Lottery's Drawing Unit, those maintained by the Drawing Unit shall prevail."
+                },
+                {
+                  "key" : "Dataset-Summary_Dataset-Owner",
+                  "value" : "New York State Gaming Commission"
+                },
+                { "key" : "Dataset-Summary_Units", "value" : "Drawings Unit" },
+                {
+                  "key" : "Dataset-Summary_Contact-Information",
+                  "value" : "Info@gaming.ny.gov"
+                },
+                {
+                  "key" : "Dataset-Summary_Granularity",
+                  "value" : "Draw Date"
+                },
+                { "key" : "Dataset-Summary_Coverage", "value" : "Statewide" },
+                {
+                  "key" : "Dataset-Summary_Posting-Frequency",
+                  "value" : "Daily"
+                },
+                {
+                  "key" : "Dataset-Summary_Organization",
+                  "value" : "The New York Lottery"
+                },
+                {
+                  "key" : "Dataset-Summary_Time-Period",
+                  "value" : "09/02/1980 to present"
+                },
+                {
+                  "key" : "Dataset-Information_Agency",
+                  "value" : "Gaming Commission, New York State"
+                },
+                {
+                  "key" : "Additional-Resources_See-Also",
+                  "value" : "http://www.gaming.ny.gov/"
+                },
+                {
+                  "key" : "Additional-Resources_See-Also-",
+                  "value" : "http://nylottery.ny.gov/wps/portal/Home/Lottery/home/your+lottery/drawing+results/drawingresults_numbers"
+                },
+                {
+                  "key" : "Additional-Resources_See-Also-",
+                  "value" : "http://nylottery.ny.gov/wps/portal/Home/Lottery/home/your+lottery/drawing+results/drawingresults_win4"
+                }
+              ]
+          },
+        "metadata" : { "domain" : "data.ny.gov" },
+        "permalink" : "https://data.ny.gov/d/hsys-3def",
+        "link" : "https://data.ny.gov/Government-Finance/Lottery-Daily-Numbers-Win-4-Winning-Numbers-Beginn/hsys-3def",
+        "owner" :
+          {
+            "id" : "xzik-pf59",
+            "user_type" : "interactive",
+            "display_name" : "NY Open Data"
+          },
+        "creator" :
+          {
+            "id" : "xzik-pf59",
+            "user_type" : "interactive",
+            "display_name" : "NY Open Data"
+          }
+      }
+    ],
+  "resultSetSize" : 1636,
+  "timings" : { "serviceMillis" : 17, "searchMillis" : [ 1, 4 ] },
+  "warnings" : []
+}

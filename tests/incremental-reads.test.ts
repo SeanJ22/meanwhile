@@ -44,7 +44,7 @@ function processCopies(dir: string, log: (line: string) => void = line => assert
 const heldAggregateList = <T>(table: string, changedSince: (since: string | null) => Promise<ChangedRows<T>>, copies: HeldCopies) =>
   <O>(out: (row: Persisted<T>) => O) => copies.aggregateList(table, changedSince, out);
 const heldLogReadAll = <T>(table: string, changedSince: (since: string | null) => Promise<ChangedRecords<T>>, copies: HeldCopies) =>
-  () => copies.logReadAll(table, changedSince);
+  () => copies.logReadAll(table, changedSince, (record: T) => record);
 
 /** Counts the rows each changed-since read hands back. */
 function counted<T>(repo: AggregateRepository<T>) {
@@ -232,13 +232,14 @@ test("(h) every Postgres whole-table read goes through the held copies, and no s
   assert.equal(store.split('from "./incremental-reads.ts"').length - 1, 1);
   assert.match(store, /list: \(\) => held\(row => row\)/);
   assert.match(store, /listNarrowed: projection => held\(row => \(\{ \.\.\.row, value: projectAggregate\(row\.value, projection\) \}\)\)/);
-  assert.match(store, /readAll: \(\) => heldAll\(\)/);
+  assert.match(store, /readAll: \(\) => heldAll\(record => record\)/);
+  assert.match(store, /readAllNarrowed: projection => heldAll\(record => projectRecord\(record, projection\)\)/);
   assert.doesNotMatch(store, /async readAll\(\)|"readAll",/, "the whole-log read is gone");
   assert.doesNotMatch(store, /operation = projection === undefined \? "list"/, "the whole-table read is gone");
   const runner = await readFile(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
   assert.match(runner, /process\.env\[CONTROL_PLANE_READS_DIR_ENV\] = join\(ROOT, "\.runtime", "control-plane", "reads"\);\nreadFromHeldCopies\(\);/);
   for (const entry of ["scripts/freshness-shadow.mts", "scripts/hunter-lane.mts", "scripts/publish-owner-snapshot.mts", "scripts/routine-civic-data-runner.mts",
-    "lib/control-plane/workers/lease-worker.ts", "lib/control-plane/workers/route-worker.ts", "lib/control-plane/workers/scout-worker.ts",
+    "lib/control-plane/workers/lease-worker.ts", "lib/control-plane/workers/route-worker.ts",
     "lib/control-plane/workers/national-worker.ts"]) {
     assert.match(await readFile(new URL(`../${entry}`, import.meta.url), "utf8"), /^readFromHeldCopies\(\);$/m, `${entry} reads whole tables from the held copies`);
   }

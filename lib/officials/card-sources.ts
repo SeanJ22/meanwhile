@@ -13,8 +13,10 @@ export interface CardSource {
   /** Which facts on this card this source is behind. */
   what: string;
   provenance: Provenance;
-  /** A status line about the listing (e.g. when a carried row was last reached), not a source: shown without a source-kind label. */
+  /** A listing status (for example, when a carried sitting was last reached). */
   status?: true;
+  /** Captured facts and native identities sharing this publisher page. */
+  details?: readonly Omit<CardSource, "details">[];
 }
 
 /** Where district and place boundaries come from: the endpoint and vintage the boundary fetch pins. */
@@ -25,28 +27,58 @@ export const BOUNDARY_PROVENANCE: Provenance = {
   verifiedAt: null,
 };
 
-/** Merge key: two rows from the same publisher and page are one source. */
+/** A held page is one source even when its publisher label is missing or varies. */
 function keyOf(provenance: Provenance): string {
-  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}|${provenance.quote ?? ""}`;
+  return provenance.sourceUrl?.trim()
+    ? JSON.stringify(["url", provenance.sourceUrl])
+    : JSON.stringify(["publisher", provenance.sourceOrg.trim()]);
 }
 
-/** Merge same-source entries, keeping the earliest `what` and stating the count and what is counted. */
+/** One publisher page, with every covered fact and captured identity retained. */
 export function mergeSources(entries: CardSource[]): CardSource[] {
-  const byKey = new Map<string, { entry: CardSource; extra: number }>();
+  const byKey = new Map<string, Map<string, Omit<CardSource, "details">>>();
 
   for (const entry of entries) {
-    // Captured versions and carried sittings retain their native identity.
-    const key = keyOf(entry.provenance) + (entry.dataAttrs ? `|${JSON.stringify(entry.dataAttrs)}` : "");
-    const existing = byKey.get(key);
-    if (existing) existing.extra += 1;
-    else byKey.set(key, { entry, extra: 0 });
+    for (const detail of entry.details ?? [entry]) {
+      const key = keyOf(detail.provenance);
+      const source = byKey.get(key) ?? new Map<string, Omit<CardSource, "details">>();
+      source.set(JSON.stringify(detail), detail);
+      byKey.set(key, source);
+    }
   }
 
-  return [...byKey.values()].map(({ entry, extra }) =>
-    extra === 0
-      ? entry
-      : { ...entry, what: `${entry.what}, and ${extra} more from this source` },
-  );
+  return [...byKey.values()].map(source => {
+    const details = [...source.values()];
+    if (details.length === 1) return details[0];
+    const coverages = details.filter(detail => !detail.status);
+    return {
+      what: [...new Set((coverages.length ? coverages : details).map(detail => detail.what))].join("; "),
+      provenance: {
+        ...details[0].provenance,
+        sourceOrg: [...new Set(details.map(detail => detail.provenance.sourceOrg.trim()).filter(Boolean))].join("; "),
+        collectedAt: details.map(detail => detail.provenance.collectedAt).filter(Boolean).sort().at(-1) ?? "",
+        verifiedAt: details.map(detail => detail.provenance.verifiedAt).filter(Boolean).sort().at(-1) ?? null,
+      },
+      details,
+    };
+  });
+}
+
+export const FIELD_SOURCE_LABELS: Readonly<Record<string, string>> = {
+  name: "Name", officeTitle: "Office", partyLabel: "Party", birthDate: "Birth date",
+  termNote: "Term wording", termStart: "Term start date", termEnd: "Term end date",
+  email: "Office email", phone: "Office phone", websiteUrl: "Official page", contactFormUrl: "Contact form",
+  campaignUrl: "Campaign website", photoUrl: "Portrait", social: "Social accounts",
+  districtOffices: "District offices", committees: "Committees", memberships: "Offices held",
+  title: "Meeting title", bodyName: "Public body", startsAt: "Meeting date and time", endsAt: "Meeting end time",
+  timeZone: "Time zone", status: "Meeting status", location: "Meeting place", online: "Online attendance",
+  agendaUrl: "Agenda", videoUrl: "Meeting recording", minutesUrl: "Meeting minutes",
+  commentPeriod: "Public comment", commentPeriodDetail: "Public comment details", signup: "How to sign up",
+  writtenComment: "Written comments", attend: "How to attend", timeLimit: "Speaking time limit",
+};
+
+export function fieldSourceLabel(field: string): string {
+  return FIELD_SOURCE_LABELS[field] ?? field.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_-]/g, " ").replace(/^./, letter => letter.toUpperCase());
 }
 
 /** A person row's own record, when the row carries one. */
@@ -58,7 +90,7 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
       what,
       provenance: {
         sourceUrl: holder.sourceUrl,
-        sourceOrg: "the publishing body",
+        sourceOrg: "",
         collectedAt: "",
         verifiedAt: null,
       },
@@ -67,13 +99,8 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
   return null;
 }
 
-function retainedHolderSources(holder: SeatHolder): CardSource[] {
-  return [...Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${field}`, provenance })), ...Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
-    if (!source) return [];
-    const label = { termNote: "term wording", termStart: "term start date", termEnd: "term end date", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
-    return [{ what: `${holder.name}'s previously verified ${label}, retained after an incomplete update`,
-      provenance: { ...source, verifiedAt: null } }];
-  })];
+function fieldHolderSources(holder: SeatHolder): CardSource[] {
+  return Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${fieldSourceLabel(field)}`, provenance }));
 }
 
 /** Every record behind a district or division battlecard: the boundary, the representatives and the sittings. */
@@ -91,7 +118,7 @@ export function districtCardSources(
   for (const holder of representation) {
     const source = holderSource(holder, `Who represents it — ${holder.name}`);
     if (source) entries.push(source);
-    entries.push(...retainedHolderSources(holder));
+    entries.push(...fieldHolderSources(holder));
   }
 
   for (const meeting of meetings) {
@@ -110,7 +137,7 @@ export function meetingCardSources(
   const entries: CardSource[] = [
     { what: `This sitting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
   ];
-  for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${field}`, provenance });
+  for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${fieldSourceLabel(field)}`, provenance });
   if (meeting.carried) {
     const clause = carriedRowClause(meeting.carried);
     entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
@@ -125,7 +152,7 @@ export function meetingCardSources(
   for (const holder of representation) {
     const source = holderSource(holder, `Who sits on this body — ${holder.name}`);
     if (source) entries.push(source);
-    entries.push(...retainedHolderSources(holder));
+    entries.push(...fieldHolderSources(holder));
   }
 
   return mergeSources(entries);
@@ -139,15 +166,10 @@ export function personCardSources(
 ): CardSource[] {
   const entries: CardSource[] = [];
 
-  const spine = holderSource(
-    holder,
-    holder.retainedFieldSources && Object.keys(holder.retainedFieldSources).length
-      ? `Who they are and their current office; newly verified contact details`
-      : `Who they are, their office and how to reach them`,
-  );
+  const spine = holderSource(holder, `Who they are, their office and how to reach them`);
   if (spine) entries.push(spine);
 
-  entries.push(...retainedHolderSources(holder));
+  entries.push(...fieldHolderSources(holder));
 
   entries.push(...extra, ...moneyCardSources(sections.money ?? []), ...voteCardSources(sections.votes ?? []),
     ...actionCardSources(sections.actions ?? []));
@@ -167,13 +189,6 @@ export function prlCardSource(profile: { attribution: { text: string; url: strin
     },
   };
 }
-
-/** What the Sources tab states beside its name, computed from the array the tab renders. */
-export function sourceCountLabel(sources: CardSource[]): string | null {
-  if (sources.length === 0) return null;
-  return String(sources.length);
-}
-
 
 const MEETING_SOURCE_LABELS = { agendas: "Agenda contents", minutes: "Meeting minutes", records: "Meeting decisions and records",
   commentAccess: "How to take part", cadence: "The regular meeting schedule" } as const;

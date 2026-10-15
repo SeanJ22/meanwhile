@@ -1,65 +1,7 @@
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
-import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from './scout-adapters.ts';
-
-/** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
-export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
-  const fresh=(at:string)=>{
-    const age=Date.parse(context.now())-Date.parse(at);
-    return Number.isFinite(age) && age>=0 && age<=(options.maxAgeMs??Infinity);
-  };
-  const parseable=(type:string)=>/^(?:text\/|application\/(?:json|[\w.+-]+\+json|xml|[\w.+-]+\+xml|csv|javascript))(?:[^;]*)(?:;|$)/i.test(type);
-  const captured=new Map<string,{artifact:Artifact;text:string}>();
-  const requestedArtifacts=new Map<string,string>();
-  const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
-    const saved=await context.vault(artifact,text);
-    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
-      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,{artifact,text});
-    return saved;
-  }});
-  return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
-    for(const saved of captured.values()) {
-      if((requestedArtifacts.get(url)===saved.artifact.id || saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
-        parseable(saved.artifact.contentType) && fresh(saved.artifact.retrievedAt))
-        return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
-    }
-    for(const provenance of context.inherited.provenance??[]) {
-      if((provenance.canonicalUrl!==url && provenance.retrievalUrl!==url) || provenance.httpStatus!==200 ||
-        (url.startsWith('http:') && (provenance.retrievalUrl??provenance.canonicalUrl).startsWith('http:')) ||
-        provenance.methodRouteId.endsWith(':network-observation') ||
-        !fresh(provenance.retrievedAt) || (provenance.contentType && !parseable(provenance.contentType)) || !context.readHeldArtifact)continue;
-      try {
-        const held=await context.readHeldArtifact(provenance.artifactId);
-        if(held.canonicalUrl===provenance.canonicalUrl && fresh(held.retrievedAt))return {url:provenance.retrievalUrl??held.canonicalUrl,
-          text:held.text,contentType:provenance.contentType??null,collectedAt:held.retrievedAt,artifactId:held.artifactId,artifacts:[]};
-      } catch { /* The same source remains owed when its prior bytes cannot be read. */ }
-    }
-    const artifacts:WorkArtifact[]=[];
-    const failures:string[]=[];
-    for(const tool of context.browse?['fetch_public','browse']:['fetch_public']) {
-      const result=await toolkit.call(tool,{url,why:'Read the official source for the collector, retaining its exact bytes.'},'other:collector-source');
-      artifacts.push(...result.artifacts);
-      if(result.ok) {
-        for(const row of [...result.artifacts].reverse()) {
-          const saved=captured.get(row.artifactId);
-          if(saved && saved.artifact.httpStatus===200 && parseable(saved.artifact.contentType)) {
-            requestedArtifacts.set(url,saved.artifact.id);
-            return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
-              collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts};
-          }
-        }
-      }
-      failures.push(result.rung?.observed??result.forModel);
-    }
-    throw new Error('SOURCE_PAGE_UNREADABLE: '+failures.join('; '));
-  };
-}
 import { readClientSource, type ClientTool } from './scout-clients.ts';
-/**
- * The Scout's research tools (implements `scout-contract.ts`). Order: public URL guard, per-host request cap,
- * robots.txt read and recorded (never a refusal), spaced identified GET, vault first, then `forModel` derived
- * from the vaulted body and wrapped as untrusted data. An access control is a wall: vaulted as DIAGNOSTIC,
- * never defeated. Every failure is a named refusal in `forModel`, never a throw.
- */
+/** The hunter's research tools. robots.txt is read and recorded, never a refusal;
+ * an access control is a wall, saved as diagnostic and never defeated. */
 
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { runOcr } from "../../extract/ocr.ts";
@@ -85,176 +27,146 @@ import {
   UNTRUSTED_CONTENT_HEADER,
   type ArtifactProvenance,
   type BytesOutcome,
+  type HuntStep,
   type OpenBytes,
-  type ScoutResearchTool,
+  type ReportedFinding,
   type ScoutToolCallResult,
   type ScoutToolContext,
   type ScoutToolSpec,
   type ScoutToolkit,
 } from "./scout-contract.ts";
-import { SCOUT_LADDER } from "./scout-result.ts";
+import { decodeEntities, visibleText } from "../../extract/visible-text.ts";
 
+/** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
+export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
+  const fresh=(at:string)=>{
+    const age=Date.parse(context.now())-Date.parse(at);
+    return Number.isFinite(age) && age>=0 && age<=(options.maxAgeMs??Infinity);
+  };
+  const parseable=(type:string)=>/^(?:text\/|application\/(?:json|[\w.+-]+\+json|xml|[\w.+-]+\+xml|csv|javascript))(?:[^;]*)(?:;|$)/i.test(type);
+  const captured=new Map<string,{artifact:Artifact;text:string}>();
+  const requestedArtifacts=new Map<string,string>();
+  const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
+    const saved=await context.vault(artifact,text);
+    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
+      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,{artifact,text});
+    return saved;
+  }});
+  return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
+    for(const saved of captured.values()) {
+      if((requestedArtifacts.get(url)===saved.artifact.id || saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
+        parseable(saved.artifact.contentType) && fresh(saved.artifact.retrievedAt))
+        return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
+    }
+    for(const provenance of context.handed.provenance??[]) {
+      if((provenance.canonicalUrl!==url && provenance.retrievalUrl!==url) || provenance.httpStatus!==200 ||
+        (url.startsWith('http:') && (provenance.retrievalUrl??provenance.canonicalUrl).startsWith('http:')) ||
+        provenance.methodRouteId.endsWith(':network-observation') ||
+        !fresh(provenance.retrievedAt) || (provenance.contentType && !parseable(provenance.contentType)) || !context.readHeldArtifact)continue;
+      try {
+        const held=await context.readHeldArtifact(provenance.artifactId);
+        if(held.canonicalUrl===provenance.canonicalUrl && fresh(held.retrievedAt))return {url:provenance.retrievalUrl??held.canonicalUrl,
+          text:held.text,contentType:provenance.contentType??null,collectedAt:held.retrievedAt,artifactId:held.artifactId,artifacts:[]};
+      } catch { /* The same source remains owed when its prior bytes cannot be read. */ }
+    }
+    const artifacts:WorkArtifact[]=[];
+    const failures:string[]=[];
+    for(const tool of context.browse?['fetch_public','browse']:['fetch_public']) {
+      const result=await toolkit.call(tool,{url});
+      artifacts.push(...result.artifacts);
+      if(result.ok) {
+        for(const row of [...result.artifacts].reverse()) {
+          const saved=captured.get(row.artifactId);
+          if(saved && saved.artifact.httpStatus===200 && parseable(saved.artifact.contentType)) {
+            requestedArtifacts.set(url,saved.artifact.id);
+            return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
+              collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts};
+          }
+        }
+      }
+      failures.push(result.step?.observed??result.forModel);
+    }
+    throw new Error('SOURCE_PAGE_UNREADABLE: '+failures.join('; '));
+  };
+}
 
-export const TEXT_CAP_CHARS = 12_000;
-export const LINK_CAP = 60;
-export const REQUEST_LIST_CAP = 80;
+/** Page text the model is shown: compact by default, the passages that match `look_for` when given. */
+export const TEXT_CAP_CHARS = 5_000;
+export const LINK_CAP = 40;
+export const REQUEST_LIST_CAP = 40;
+const SOURCE_API_CHARS = 8_000;
+const READ_PASSAGE_CHARS = 4_000;
 
 const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calendar,application/pdf,*/*";
 const ACCEPT_ROBOTS = "text/plain,*/*";
 
-const RUNG_SCHEMA = {
-  type: "string",
-  description:
-    `The ladder rung this call walks: one of ${SCOUT_LADDER.join(", ")}, or "other:<name>". ` +
-    "Required; it is how the walk is accounted for.",
-};
-const WHY_SCHEMA = {
-  type: "string",
-  description: "One sentence: what owed question this call is expected to advance. Required.",
-};
 const URL_SCHEMA = { type: "string", description: "An absolute public http(s) URL." };
+const LOOK_FOR_SCHEMA = { type: "string", description: "Optional: the words you are looking for on the page (names, \"agenda\", \"phone\"). The passages that contain them are shown instead of the page's start." };
 
 export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
-  {name:'legistar_events',description:'Read a Legistar tenant calendar through the shared paged client within a date window of up to 97 days. Returns event data and raw source responses with links.',input_schema:{type:'object',properties:{tenant:{type:'string'},from:{type:'string'},to:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['tenant','from','to','rung','why']}},
   {
-    name: 'run_adapter', description: 'Run installed platform adapters over saved sanitized bytes from this walk or inherited evidence, with no network. Omit adapter to list installed names; supply adapter and artifactId to extract source-attributed data. offset pages long results.',
-    input_schema: {type:'object', properties:{adapter:{type:'string'},artifactId:{type:'string'},offset:{type:'integer'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['rung','why']},
-  },
-  {
-    name: "read_permission",
-    description:
-      "Read https://<host>/robots.txt for the URL's host and report the verdict for that URL: ALLOWED, " +
-      "DISALLOWED (the rules name the path), NO_ROBOTS (no document) or CANNOT_TELL (the document could not " +
-      "be read as robots). The verdict is RECORDED as evidence and never refuses a public page: the owner " +
-      "decided that robots.txt alone does not block acquisition. The robots document is " +
-      "vaulted and the operative lines are returned. fetch_public and browse read and record it " +
-      "automatically; call this to see the rules themselves.",
-    input_schema: {
-      type: "object",
-      properties: { url: URL_SCHEMA, rung: RUNG_SCHEMA, why: WHY_SCHEMA },
-      required: ["url", "rung", "why"],
-    },
+    name: "read_held",
+    description: "What we already hold for this government, and the pages already saved. With no input: every held value with its source and the saved pages. With query only: the held values that mention it. With artifactId: a passage of that saved page (offset to page through it, or query to find a phrase). No network, no cost.",
+    input_schema: { type: "object", properties: {
+      artifactId: { type: "string" }, offset: { type: "integer" }, query: { type: "string" },
+    } },
   },
   {
     name: "fetch_public",
-    description:
-      "GET one public http(s) URL with identified headers, vault the body, and return a representation " +
-      "derived from the vaulted bytes with its artifact id: HTML -> title, visible text and absolute links; " +
-      "JSON -> pretty-printed; PDF -> extracted text. Refuses private hosts and requests past the per-host " +
-      "cap. robots.txt is read and recorded with the artifact, never a refusal. An access control (401, 403, " +
-      "429, a login or a bot challenge) is reported as a wall, never as absence, and is never bypassed: walk " +
-      "another public route instead.",
-    input_schema: {
-      type: "object",
-      properties: { url: URL_SCHEMA, rung: RUNG_SCHEMA, why: WHY_SCHEMA },
-      required: ["url", "rung", "why"],
-    },
+    description: "Open one public http(s) page and save it. HTML gives its title, text and links; JSON is shown as data; a PDF's text is extracted. robots.txt is read and recorded, never a refusal. A login, 403, 429 or bot challenge is a wall: it is never bypassed, so try another route.",
+    input_schema: { type: "object", properties: { url: URL_SCHEMA, look_for: LOOK_FOR_SCHEMA }, required: ["url"] },
   },
   {
     name: "browse",
-    description:
-      "Open one public URL in a real browser (when the runtime has one), vault the rendered HTML and the " +
-      "page's own network requests, and return the visible text plus the observed request list — the " +
-      "real API behind a page. Same guards as fetch_public.",
-    input_schema: {
-      type: "object",
-      properties: { url: URL_SCHEMA, rung: RUNG_SCHEMA, why: WHY_SCHEMA },
-      required: ["url", "rung", "why"],
-    },
+    description: "Open one public page in a real browser when a page needs scripts to show its content. Saves the rendered page and the page's own network requests (the real API behind it). Same rules as fetch_public.",
+    input_schema: { type: "object", properties: { url: URL_SCHEMA, look_for: LOOK_FOR_SCHEMA }, required: ["url"] },
   },
   {
-    name: "read_inherited",
-    description:
-      "Prior project evidence for this obligation: earlier route outcomes, prior Scout results, known " +
-      "routes for the hosts, and the inherited artifact ids you may cite. No network.",
-    input_schema: {
-      type: "object",
-      properties: { rung: RUNG_SCHEMA, why: WHY_SCHEMA },
-      required: ["rung", "why"],
-    },
-  },
-  {
-    name: "find_manual",
-    description: "Search the complete role/jurisdiction-applicable field-manual catalog handed to this walk. Returns bounded matching entry IDs, titles and method summaries; use read_manual to inspect full content. No network or paid source call.",
-    input_schema: { type: "object", properties: {
-      query: { type: "string" }, rung: RUNG_SCHEMA, why: WHY_SCHEMA,
-    }, required: ["query", "rung", "why"] },
-  },
-  {
-    name: "read_manual",
-    description: "Open a bounded passage of one relevant field-manual entry handed to this walk. Its full stored method or referenced document is returned with a content hash and offset; no network or paid call.",
-    input_schema: { type: "object", properties: {
-      entryId: { type: "string" }, offset: { type: "integer" }, rung: RUNG_SCHEMA, why: WHY_SCHEMA,
-    }, required: ["entryId", "offset", "rung", "why"] },
-  },
-  {
-    name: "read_held",
-    description: "Open a bounded passage of a saved sanitized artifact by exact id and offset, or locate a literal phrase with query. Reuses bytes from this walk or inherited evidence with no network or paid source call; other walks' unhanded ids are refused.",
-    input_schema: { type: "object", properties: {
-      artifactId: { type: "string" }, offset: { type: "integer" }, query: { type: "string" }, rung: RUNG_SCHEMA, why: WHY_SCHEMA,
-    }, required: ["artifactId", "rung", "why"] },
+    name: "legistar_events",
+    description: "Read a Legistar tenant's meeting calendar for a date window of up to 97 days.",
+    input_schema: { type: "object", properties: { tenant: { type: "string" }, from: { type: "string" }, to: { type: "string" } }, required: ["tenant", "from", "to"] },
   },
 ];
 
-/**
- * The `search` spec, APPENDED to the toolkit's specs only when a search seam is
- * configured (a provider key is present). A runtime with no key never offers it,
- * so the tool is fully inert without configuration.
- */
 export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
   name: "search",
   description:
-    "Look up a query in the compliant paid search indexes (Brave and Exa) and return sourced search data — a " +
-    "ranked list of source URLs, titles and source excerpts. Use it when direct routes are walled, or to " +
-    "discover a candidate's own publication: the \"<name> for <office>\" committee phrasing surfaces campaign " +
-    "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read and " +
-    "record robots.txt (never a refusal of a public page) and vault the evidence; an access control there is a " +
-    "wall, never bypassed. A hit is a lead, never proof, and may be a prior cycle's site.",
+    "Search the web. Results come back with the text of each page that answers the query, so read them here; you rarely need to open a result. " +
+    "Set fresh for things that change (meeting dates, agendas, current officeholders, filings). Set deep only when ordinary searches have not found it. " +
+    "When a result states a blank's value, report it with report_finding, citing that result's URL.",
   input_schema: {
     type: "object",
     properties: {
-      query: { type: "string", description: "The search query. A specific candidate / office / place phrase works best." },
-      rung: RUNG_SCHEMA,
-      why: WHY_SCHEMA,
-      includeDomains: {
-        type: "array",
-        items: { type: "string" },
-        description:
-          "Optional: restrict results to these domains (e.g. [\"*.gov\",\"*.us\"]) when the target is an " +
-          "official publisher rather than a candidate's own site.",
-      },
+      query: { type: "string", description: "A specific phrase: a person, office, body and place." },
+      fresh: { type: "boolean" },
+      deep: { type: "boolean" },
+      includeDomains: { type: "array", items: { type: "string" }, description: "Optional: only these domains, e.g. [\"santacruzcountyaz.gov\"]." },
     },
-    required: ["query", "rung", "why"],
+    required: ["query"],
   },
 };
 
-/** The `report_finding` spec, appended only when the runtime can write the Box. The quote must already be in a page this walk saved. */
 export const REPORT_FINDING_TOOL_SPEC: ScoutToolSpec = {
   name: "report_finding",
   description:
-    "Drop a finding into the Box now, for your own target or for any subject named in the MISSION lines of your brief, " +
-    "when a page you already saved in this walk answers it. The builders pick it up from the Box; you keep working your own target. " +
-    "The exact quote must appear word for word in that saved page. No network call, no cost.",
+    "Put one fact into the Box the moment a page states it: the subject id in [brackets] from your brief, the field (the blank's checklist id), " +
+    "the value as the page states it, the page's URL and the exact sentence on that page that states it. The page is saved for checking; you do not need to open it first. " +
+    "Report each fact as you find it; never save them for the end.",
   input_schema: {
     type: "object",
     properties: {
-      subjectId: { type: "string", description: "The subject id in [brackets] on a MISSION line, or your own target's." },
-      subjectHint: { type: "string", description: "Who or what the finding is about, in a few words (e.g. the person's name and office)." },
-      field: { type: "string", description: "The fact's field name, e.g. name, office, email, phone, meetingDate." },
-      value: { type: ["string", "number", "boolean"], description: "The fact's value, as the page states it." },
-      exactQuote: { type: "string", description: "The words on the saved page that state it, copied exactly." },
-      sourceUrl: { type: "string", description: "The saved page's address." },
-      artifactId: { type: "string", description: "Optional: the saved page's artifact id, when you have it." },
+      subjectId: { type: "string" },
+      field: { type: "string" },
+      value: { type: ["string", "number", "boolean"] },
+      sourceUrl: { type: "string" },
+      sentence: { type: "string", description: "Copied exactly from the page." },
     },
-    required: ["subjectId", "field", "value", "exactQuote", "sourceUrl"],
+    required: ["subjectId", "field", "value", "sourceUrl", "sentence"],
   },
 };
 
-/** The research tool list for one setting of the search switch, the one answer the toolkit and the pre-warm both read (it is the cached prefix). */
-export function scoutToolSpecsFor(search: boolean, reportFinding = false): readonly ScoutToolSpec[] {
-  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : []), ...(reportFinding ? [REPORT_FINDING_TOOL_SPEC] : [])];
-}
-
+/** One byte-identical tool list across jobs, so it caches as a prefix. */
+const HUNTER_TOOL_SPECS: readonly ScoutToolSpec[] = [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, SEARCH_TOOL_SPEC, REPORT_FINDING_TOOL_SPEC];
 
 /** The runtime's bytes opener. One request; text is decoded by the toolkit. */
 export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
@@ -330,45 +242,11 @@ function decodeText(bytes: Uint8Array, contentType: string): string {
 }
 
 
-const ENTITIES: Readonly<Record<string, string>> = {
-  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", hellip: "…",
-  rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", copy: "©", reg: "®", times: "×",
-};
-
-export function decodeEntities(text: string): string {
-  return text
-    .replace(/&#x([0-9a-f]+);/gi, (_, hex: string) => safeCodePoint(parseInt(hex, 16)))
-    .replace(/&#(\d+);/g, (_, dec: string) => safeCodePoint(Number(dec)))
-    .replace(/&([a-z]+);/gi, (whole, name: string) => ENTITIES[name.toLowerCase()] ?? whole);
-}
-
-function safeCodePoint(n: number): string {
-  try {
-    return Number.isFinite(n) && n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : "";
-  } catch {
-    return "";
-  }
-}
-
 export function htmlTitle(html: string): string | null {
   const m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html);
   if (!m) return null;
   const title = decodeEntities(m[1]).replace(/\s+/g, " ").trim();
   return title === "" ? null : title;
-}
-
-/** Visible text: scripts, styles, noscript, templates and comments removed; block ends become newlines. */
-export function visibleText(html: string): string {
-  const stripped = html
-    .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<(script|style|noscript|template|svg)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ")
-    .replace(/<\s*(br|\/p|\/div|\/li|\/tr|\/h[1-6]|\/section|\/article|\/table|\/ul|\/ol|\/header|\/footer|\/nav|\/dd|\/dt|\/blockquote|\/pre)\b[^>]*>/gi, "\n")
-    .replace(/<[^>]+>/g, " ");
-  return decodeEntities(stripped)
-    .split(/\n/)
-    .map((line) => line.replace(/[ \t\r\f\v ]+/g, " ").trim())
-    .filter((line) => line !== "")
-    .join("\n");
 }
 
 export interface DerivedLink {
@@ -458,7 +336,6 @@ export async function extractPdf(bytes: Uint8Array, ocr: typeof runOcr = runOcr)
 }
 
 
-type Rung = NonNullable<ScoutToolCallResult["rung"]>;
 
 interface CallAccount {
   readonly artifacts: WorkArtifact[];
@@ -480,37 +357,49 @@ interface HostRobots {
 
 interface ParsedInput {
   readonly url: string | null;
-  readonly rung: string;
-  readonly why: string;
+  readonly lookFor: string | null;
 }
 
-function isRungLabel(label: unknown): label is string {
-  if (typeof label !== "string" || label.trim() === "") return false;
-  return (SCOUT_LADDER as readonly string[]).includes(label) || /^other:\S/.test(label);
+interface SavedPage {
+  readonly artifactId: string;
+  readonly contentHash: string;
+  readonly text: string;
+  readonly canonicalUrl: string;
+  readonly retrievalUrl: string;
+  readonly retrievedAt: string;
+  readonly methodRouteId: string;
 }
 
-function parseInput(
-  input: unknown,
-  rungLabel: string | null,
-  needsUrl: boolean,
-): { readonly ok: true; readonly value: ParsedInput } | { readonly ok: false; readonly why: string } {
+function parseInput(input: unknown): ParsedInput {
   const o = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
-  const rung = rungLabel ?? o.rung;
-  if (!isRungLabel(rung)) {
-    return {
-      ok: false,
-      why:
-        `input.rung must be one of ${SCOUT_LADDER.join(", ")} or "other:<name>"; got ` +
-        `${JSON.stringify(rung ?? null)}. Every call is accounted to a rung.`,
-    };
+  const lookFor = typeof o.look_for === "string" && o.look_for.trim() ? o.look_for.trim().slice(0, 200) : null;
+  return { url: typeof o.url === "string" && o.url.trim() ? o.url.trim() : null, lookFor };
+}
+
+/** The passages of `text` that contain any of the words looked for, each with a line of context; the start otherwise. */
+function focusedText(text: string, lookFor: string | null, cap: number = TEXT_CAP_CHARS): { readonly text: string; readonly note: string } {
+  const words = (lookFor ?? "").toLowerCase().split(/[^\p{L}\p{N}@.]+/u).filter(word => word.length >= 3);
+  if (words.length === 0 || text.length <= cap) return capText(text, cap);
+  const lines = text.split("\n");
+  const keep = new Set<number>();
+  lines.forEach((line, i) => {
+    const lower = line.toLowerCase();
+    if (words.some(word => lower.includes(word))) for (let j = Math.max(0, i - 1); j <= Math.min(lines.length - 1, i + 1); j++) keep.add(j);
+  });
+  if (keep.size === 0) {
+    const start = capText(text, cap);
+    return { text: start.text, note: `none of "${lookFor}" appears; ${start.note}` };
   }
-  if (typeof o.why !== "string" || o.why.trim() === "") {
-    return { ok: false, why: "input.why is required: one sentence naming the owed question this call advances." };
+  const out: string[] = [];
+  let size = 0, last = -2;
+  for (const i of [...keep].sort((x, y) => x - y)) {
+    const line = (i === last + 1 ? "" : "…\n") + lines[i]!;
+    if (size + line.length > cap) break;
+    out.push(line);
+    size += line.length + 1;
+    last = i;
   }
-  if (needsUrl && (typeof o.url !== "string" || o.url.trim() === "")) {
-    return { ok: false, why: "input.url is required: an absolute public http(s) URL." };
-  }
-  return { ok: true, value: { url: needsUrl ? (o.url as string).trim() : null, rung, why: o.why } };
+  return { text: out.join("\n"), note: `passages matching "${lookFor}" from ${text.length} chars; read_held with this page's artifact id shows the rest` };
 }
 
 function workArtifact(artifact: Artifact, recordedAt: string): WorkArtifact {
@@ -565,8 +454,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const robotsByHost = new Map<string, HostRobots>();
   const hostCounts = new Map<string, number>();
   const vaulted = new Set<string>();
-  const factEvidence = new Map<string, import('./scout-contract.ts').ScoutFactEvidence>();
-  const currentEvidence = new Map<string, Awaited<ReturnType<NonNullable<ScoutToolContext["readHeldArtifact"]>>>>();
+  /** Pages this job saved, by artifact id: what read_held and report_finding reuse without fetching again. */
+  const savedPages = new Map<string, SavedPage>();
   let requestCount = 0;
   let bytesFetched = 0;
   let toolCalls = 0;
@@ -688,11 +577,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const held=saved.artifact;
     if(saved.stored && held.tier!=='RESTRICTED_RAW' && held.retentionPolicy!=='DIAGNOSTIC' &&
       held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation')) {
-      factEvidence.set(held.id,{sourceUrl:held.canonicalUrl,retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,text,
-        visibleText:held.contentType.includes('html')?visibleText(text):text});
-      currentEvidence.set(held.id,{artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
-        retrievedAt:held.retrievedAt,acquiredByAttemptId:held.attemptId,sourceId:held.sourceId,methodRouteId:held.methodRouteId,
-        provenance:acc.provenance.find(p=>p.artifactId===held.id)});
+      savedPages.set(held.id,{artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
+        retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,methodRouteId:held.methodRouteId});
     }
     return {...saved,text:saved.stored && held.tier!=='RESTRICTED_RAW'?text:''};
   }
@@ -810,49 +696,20 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     );
   }
 
-  function permissionText(url: URL, robots: HostRobots, reading: PermissionReading, cached: boolean): string {
-    const lines = [
-      `PERMISSION for ${url.host}${cached ? " (robots document read earlier this Attempt)" : ""}: ${reading.verdict}`,
-      `robots.txt ${robots.robotsUrl}: ${robots.transportError !== null ? `transport failure — ${robots.transportError}` : `HTTP ${robots.status ?? "none"}`}` +
-        (robots.artifactIds.length > 0 ? ` | vaulted as ${robots.artifactIds.join(", ")}` : " | nothing vaulted"),
-      `Reading for ${url.pathname}${url.search}: ${reading.detail}.`,
-    ];
-    if (reading.matchedRule !== null) lines.push(`Matched rule: ${reading.matchedRule}`);
-    if (reading.crawlDelayMs !== null) lines.push(`Crawl-delay: ${reading.crawlDelayMs} ms (requests are spaced per host).`);
-    if (reading.verdict === "DISALLOWED") {
-      lines.push(
-        "The rules name this path. That is RECORDED with the artifact and does not refuse it: the owner decided on " +
-          "2026-09-25 that robots.txt alone never blocks reading a public page. fetch_public and browse will open it.",
-      );
-    } else if (reading.verdict === "CANNOT_TELL") {
-      lines.push(
-        "The robots document could not be read as robots; that is recorded as unread, never as 'no robots file', and " +
-          "it does not refuse the page. The page's own answer decides: an access control there is a wall, never bypassed.",
-      );
-    } else if (reading.verdict === "NO_ROBOTS") {
-      lines.push("No robots document: recorded as absent.");
-    }
-    if (reading.operativeLines.length > 0) {
-      lines.push(UNTRUSTED_CONTENT_HEADER, DATA_BEGIN, ...reading.operativeLines, DATA_END);
-    }
-    return lines.join("\n");
-  }
-
-
   function refusal(text: string, extra: Partial<ScoutToolCallResult> = {}): ScoutToolCallResult {
-    return { ok: false, forModel: `REFUSED: ${text}`, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0, ...extra };
+    return { ok: false, forModel: `REFUSED: ${text}`, artifacts: [], provenance: [], step: null, requestCount: 0, bytesFetched: 0, ...extra };
   }
 
-  /** The rung carries the machine's `ok` and, when the call ran under a verdict, its permission. */
+  /** The step carries the machine's `ok` and, when the call ran under a verdict, its permission. */
   function result(
     ok: boolean,
     forModel: string,
-    rung: Rung | null,
+    step: HuntStep | null,
     acc: CallAccount,
     permission?: PermissionState,
   ): ScoutToolCallResult {
-    const stamped: Rung | null = rung === null ? null : { ...rung, ok, ...(permission !== undefined ? { permission } : {}) };
-    return { ok, forModel, artifacts: acc.artifacts, provenance: acc.provenance, rung: stamped, requestCount: acc.requests, bytesFetched: acc.bytes };
+    const stamped: HuntStep | null = step === null ? null : { ...step, ok, ...(permission !== undefined ? { permission } : {}) };
+    return { ok, forModel, artifacts: acc.artifacts, provenance: acc.provenance, step: stamped, requestCount: acc.requests, bytesFetched: acc.bytes };
   }
 
   function publicUrl(raw: string): URL | string {
@@ -861,34 +718,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } catch (error) {
       return `${raw} is not a public http(s) URL: ${error instanceof Error ? error.message : String(error)}`;
     }
-  }
-
-  async function readPermission(input: ParsedInput): Promise<ScoutToolCallResult> {
-    const url = publicUrl(input.url ?? "");
-    if (typeof url === "string") return refusal(url);
-    const host = hostOf(url);
-    const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
-    const cached = robotsByHost.has(host);
-    if (!cached) {
-      const cap = overCap(url);
-      if (cap !== null) return refusal(cap);
-    }
-    const robots = await readRobots(url, acc);
-    const reading = evaluate(robots, url);
-    const rung: Rung = {
-      rung: input.rung,
-      tool: "read_permission",
-      target: url.toString(),
-      observed:
-        robots.transportError !== null
-          ? `robots.txt transport failure: ${robots.transportError}; permission ${reading.verdict}`
-          : `robots.txt HTTP ${robots.status ?? "none"}; permission ${reading.verdict}` + (cached ? " (cached)" : ""),
-      artifactIds: cached ? [...robots.artifactIds] : acc.artifacts.map((a) => a.artifactId),
-      transport: cached ? "NOT_ATTEMPTED" : transportOf(robots.status, robots.transportError),
-      httpStatus: robots.status, returnedCount: null, applicableBecause: input.why,
-      nextHopUrls: [...(robots.text ?? "").matchAll(/^Sitemap:\s*(https?:\/\/\S+)/gim)].map(match => match[1]),
-    };
-    return result(true, permissionText(url, robots, reading, cached), rung, acc, permissionState(reading.verdict));
   }
 
   /** The shared front half of fetch_public and browse. A string is a refusal. */
@@ -933,16 +762,15 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const permLine = permissionLine(url, reading, robots);
     let nextHopUrls: string[] = [];
     let returnedCount: number | null = null;
-    /* A challenge served at 2xx is CHALLENGED on the rung as on the artifact, never REACHABLE. */
+    /* A challenge served at 2xx is CHALLENGED on the step as on the artifact, never REACHABLE. */
     let challenged = false;
-    const rung = (observed: string): Rung => ({
-      rung: input.rung,
+    const step = (observed: string): HuntStep => ({
       tool: "fetch_public",
       target: url.toString(),
       observed,
       artifactIds: acc.artifacts.map((a) => a.artifactId),
       transport: challenged ? "CHALLENGED" : transportOf(got.status, got.transportError), httpStatus: got.status,
-      nextHopUrls, returnedCount, applicableBecause: input.why,
+      nextHopUrls, returnedCount, 
     });
 
     const got = await preferHttps(url, target => retrieve(target, ACCEPT_PAGE, acc));
@@ -950,7 +778,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return result(
         false,
         `nothing was reached at ${url.host}: ${got.transportError}. A transport failure is a fact about this client and this moment, never about the record.\n${permLine}`,
-        rung(`transport failure: ${got.transportError}`), acc, permission
+        step(`transport failure: ${got.transportError}`), acc, permission
       );
     }
     const status = got.status ?? 0;
@@ -961,11 +789,11 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return result(
           false,
           `${url} answered HTTP ${status} and ZERO BYTES. A zero-byte read is a FAILED read, never an empty document; the record is still owed.\n${permLine}`,
-          rung(`HTTP ${status} (0 bytes)`), acc, permission
+          step(`HTTP ${status} (0 bytes)`), acc, permission
         );
       }
       if (isBinary(got.contentType, got.bytes)) {
-        return await binaryRepresentation({ url, finalUrl, status, got, permission, permLine, acc, rung });
+        return await binaryRepresentation({ url, finalUrl, status, got, permission, permLine, acc, step, lookFor: input.lookFor });
       }
       const text = decodeText(got.bytes, got.contentType);
       /* A challenge served at 2xx is an access control: vaulted as DIAGNOSTIC, never shown as the page, never solved. */
@@ -983,7 +811,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return result(
           false,
           `${control.detail} at ${url.host}: a WALL, named. It is never bypassed and is not a fact about the record. ${where}. Walk another public branch: the API behind the page, an official mirror, a feed, an archive.\n${permLine}`,
-          rung(`HTTP ${status} (${control.kind})`), acc, permission
+          step(`HTTP ${status} (${control.kind})`), acc, permission
         );
       }
       const report = await vaultText(
@@ -995,14 +823,14 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return result(
           false,
           `${head}\nVAULT REFUSED: ${report.why}. Nothing of the body is shown: a body the vault does not hold cannot be cited, and a finding grounded in it would be grounded in memory. Try another representation of the record.`,
-          rung(`HTTP ${status}, ${got.byteLength} bytes, NOT VAULTED`), acc, permission
+          step(`HTTP ${status}, ${got.byteLength} bytes, NOT VAULTED`), acc, permission
         );
       }
       if (report.artifact.tier === "RESTRICTED_RAW") {
         return result(
           true,
           `${head}\nQUARANTINED: the body carries a confirmed third-party credential and is stored RESTRICTED_RAW. Nothing of it is shown to you. Cite the artifact id; a sanitized derivative is the acquirer's to make.`,
-          rung(`HTTP ${status}, ${got.byteLength} bytes, RESTRICTED_RAW`), acc, permission
+          step(`HTTP ${status}, ${got.byteLength} bytes, RESTRICTED_RAW`), acc, permission
         );
       }
       const readable=report.text??'';
@@ -1010,10 +838,10 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       if (/json/i.test(got.contentType)) {
         try { const rows: unknown = JSON.parse(readable); if (Array.isArray(rows)) returnedCount = rows.length; } catch { /* Saved bytes remain evidence; parsing is another worker's burden. */ }
       }
-      return result(true, textRepresentation(head, readable, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}${report.artifact.tier==='SANITIZED_DERIVED'?'; '+report.why:''}`), acc, permission);
+      return result(true, textRepresentation(head, readable, got.contentType, url, input.lookFor), step(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}${report.artifact.tier==='SANITIZED_DERIVED'?'; '+report.why:''}`), acc, permission);
     }
 
-    /* Non-2xx: the answer is DIAGNOSTIC evidence that the rung was walked; the body is never shown. */
+    /* Non-2xx: the answer is DIAGNOSTIC evidence that the step was walked; the body is never shown. */
     const wall = WALL_STATUSES.includes(status);
     const text = decodeText(got.bytes, got.contentType);
     let diagnostic = "nothing vaulted (empty body)";
@@ -1033,44 +861,43 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return result(
         false,
         `HTTP ${status} from ${url.host} to this client: a WALL, named — an access control, never bypassed. It is not a fact about whether the record exists. ${diagnostic}. Walk another public branch: another representation of the same record, the API behind the page, an official mirror, an archive.\n${permLine}`,
-        rung(`HTTP ${status} (wall)`), acc, permission
+        step(`HTTP ${status} (wall)`), acc, permission
       );
     }
     if (status >= 400 && status < 500) {
       return result(
         false,
         `HTTP ${status} at ${url}: a fact about this URL, not about the record; another representation of it is owed. ${diagnostic}.\n${permLine}`,
-        rung(`HTTP ${status}`), acc, permission
+        step(`HTTP ${status}`), acc, permission
       );
     }
     return result(
       false,
       `${url.host} answered HTTP ${status}: their side broke. ${diagnostic}. This may be retried later; it is not evidence about the record.\n${permLine}`,
-      rung(`HTTP ${status}`), acc, permission
+      step(`HTTP ${status}`), acc, permission
     );
   }
 
-  function textRepresentation(head: string, text: string, contentType: string, url: URL): string {
+  function textRepresentation(head: string, text: string, contentType: string, url: URL, lookFor: string | null): string {
     const ct = contentType.toLowerCase();
     const parts: string[] = [UNTRUSTED_CONTENT_HEADER, head, DATA_BEGIN];
     const htmlShaped = ct.includes("html") || /^\s*<(!doctype|html)/i.test(text);
     if (htmlShaped) {
-      const title = htmlTitle(text);
-      const body = capText(visibleText(text));
-      parts.push(`TITLE: ${title ?? "(none)"}`, `TEXT (${body.note}):`, body.text);
+      const body = focusedText(visibleText(text), lookFor);
+      parts.push(`TITLE: ${htmlTitle(text) ?? "(none)"}`, `TEXT (${body.note}):`, body.text);
       const links = extractLinks(text, url);
       parts.push(`LINKS (${links.length}, same-host first):`, ...links.map((l) => `- ${l.url}${l.text ? ` — ${l.text}` : ""}`));
     } else if (ct.includes("json") || /^\s*[[{]/.test(text)) {
       let pretty: string;
       try {
-        pretty = JSON.stringify(JSON.parse(text), null, 2);
+        pretty = JSON.stringify(JSON.parse(text), null, 1);
       } catch {
         pretty = text;
       }
-      const body = capText(pretty);
+      const body = focusedText(pretty, lookFor);
       parts.push(`JSON (${body.note}):`, body.text);
     } else {
-      const body = capText(text);
+      const body = focusedText(text, lookFor);
       parts.push(`TEXT (${body.note}):`, body.text);
     }
     parts.push(DATA_END);
@@ -1085,23 +912,24 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     readonly permission: PermissionState;
     readonly permLine: string;
     readonly acc: CallAccount;
-    readonly rung: (observed: string) => Rung;
+    readonly step: (observed: string) => HuntStep;
+    readonly lookFor: string | null;
   }): Promise<ScoutToolCallResult> {
     const { url, finalUrl, status, got, acc } = input;
     const report = await vaultBinary({ url, finalUrl, status, contentType: got.contentType, bytes: got.bytes, permission: input.permission }, acc);
     const head = `${envelope(report.artifact, url.toString(), finalUrl, status, got.byteLength)}\n${input.permLine}`;
     if (!report.stored) {
-      return result(false, `${head}\nNOT VAULTED: ${report.why}. Nothing of the body is shown.`, input.rung(`HTTP ${status}, ${got.byteLength} bytes binary, NOT VAULTED`), acc, input.permission);
+      return result(false, `${head}\nNOT VAULTED: ${report.why}. Nothing of the body is shown.`, input.step(`HTTP ${status}, ${got.byteLength} bytes binary, NOT VAULTED`), acc, input.permission);
     }
     if (!isPdf(got.contentType, got.bytes)) {
-      return result(true, `${head}\nBINARY body vaulted (${got.contentType}); no text representation is derived for this type.`, input.rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc, input.permission);
+      return result(true, `${head}\nBINARY body vaulted (${got.contentType}); no text representation is derived for this type.`, input.step(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc, input.permission);
     }
     const extracted = await extractPdf(got.bytes);
     if (extracted.kind !== "TEXT") {
       return result(
         true,
         `${head}\nPDF vaulted; ${extracted.kind}: ${extracted.why}. Only the artifact id and byte length are available; cite the id.`,
-        input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.kind}`), acc, input.permission
+        input.step(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.kind}`), acc, input.permission
       );
     }
     // Retain the exact transcription shown to Scout so ordinary workers can
@@ -1117,18 +945,19 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         retrievedAt: parent.retrievedAt, httpStatus: parent.httpStatus, contentType: kind === "PDF_TEXT" ? "text/plain" : "application/json",
         sourceId: parent.sourceId, methodRouteId: "scout:pdf-transcription/1", workItemId: parent.workItemId, attemptId: parent.attemptId,
         permission: parent.permission, transport: parent.transport }, text).artifact;
-      if (captured.tier === "RESTRICTED_RAW") return result(false, `${head}\nPDF transcription contains restricted material; no text is shown.`, input.rung("PDF transcription restricted"), acc, input.permission);
+      if (captured.tier === "RESTRICTED_RAW") return result(false, `${head}\nPDF transcription contains restricted material; no text is shown.`, input.step("PDF transcription restricted"), acc, input.permission);
       const artifact: Artifact = { ...captured, id: artifactId("EXTRACTED_DERIVED", captured.contentHash), tier: "EXTRACTED_DERIVED",
         retentionPolicy: extracted.complete ? "EVIDENCE_PERMANENT" : "DIAGNOSTIC",
         extraction: { kind: kind as "PDF_TEXT" | "PDF_TABLES", version: "pdf-transcription/1", complete: extracted.complete, pages: extracted.pages, parent } };
       const saved = await put(artifact, () => ctx.vault(artifact, text), ctx.now(), acc);
-      if (!saved.stored) return result(false, `${head}\nPDF transcription NOT VAULTED: ${saved.why}`, input.rung("PDF transcription storage failed"), acc, input.permission);
-      transcriptions.push(`${kind} artifact ${artifact.id}; ${capText(text).note}\n${capText(text).text}`);
+      if (!saved.stored) return result(false, `${head}\nPDF transcription NOT VAULTED: ${saved.why}`, input.step("PDF transcription storage failed"), acc, input.permission);
+      const shown = focusedText(text, input.lookFor);
+      transcriptions.push(`${kind} artifact ${artifact.id}; ${shown.note}\n${shown.text}`);
     }
     return result(
       true,
       [UNTRUSTED_CONTENT_HEADER, head, extracted.extractionNote, DATA_BEGIN, ...transcriptions, DATA_END].join("\n"),
-      input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.pages} page(s)`), acc, input.permission
+      input.step(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.pages} page(s)`), acc, input.permission
     );
   }
 
@@ -1144,14 +973,13 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     let browserTransport: TransportState | "NOT_ATTEMPTED" = "NOT_ATTEMPTED";
     let browserHttpStatus: number | null = null;
     let browserNextHopUrls: string[] = [];
-    const rung = (observed: string): Rung => ({
-      rung: input.rung,
+    const step = (observed: string): HuntStep => ({
       tool: "browse",
       target: url.toString(),
       observed,
       artifactIds: acc.artifacts.map((a) => a.artifactId),
       transport: browserTransport, httpStatus: browserHttpStatus, returnedCount: null,
-      nextHopUrls: browserNextHopUrls, applicableBecause: input.why,
+      nextHopUrls: browserNextHopUrls, 
     });
 
     let obs: Awaited<ReturnType<typeof browseFn>>;
@@ -1171,7 +999,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } catch (error) {
       const why = error instanceof Error ? error.message : String(error);
       browserTransport = transportOf(null, why);
-      return result(false, `the browser failed on ${url}: ${why}. A browser failure is a fact about this client, not about the record.`, rung(`browser failure: ${why}`), acc, permission);
+      return result(false, `the browser failed on ${url}: ${why}. A browser failure is a fact about this client, not about the record.`, step(`browser failure: ${why}`), acc, permission);
     }
     const htmlBytes = Buffer.byteLength(obs.html, "utf8");
     browserTransport = transportOf(obs.status, obs.transportError);
@@ -1181,7 +1009,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return result(
         false,
         `the browser rendered nothing at ${url}${obs.transportError ? `: ${obs.transportError}` : ""} (HTTP ${obs.status ?? "none"}). Nothing is vaulted and nothing is shown; a blank render is a failed read, never an empty page.`,
-        rung(`browser HTTP ${obs.status ?? "none"}, empty render${obs.transportError ? `: ${obs.transportError}` : ""}`), acc, permission
+        step(`browser HTTP ${obs.status ?? "none"}, empty render${obs.transportError ? `: ${obs.transportError}` : ""}`), acc, permission
       );
     }
 
@@ -1205,7 +1033,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return result(
         false,
         `${control.detail} at ${url.host}: a WALL, named. The browser does not get past an access control. ${where}. Walk another public branch.\n${permLine}`,
-        rung(`browser HTTP ${obs.status ?? "none"} (${control.kind})`), acc, permission
+        step(`browser HTTP ${obs.status ?? "none"} (${control.kind})`), acc, permission
       );
     }
     const page = await vaultText(
@@ -1237,7 +1065,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } else {
       const readable=page.text??'';
       browserNextHopUrls = extractLinks(readable, new URL(finalUrl), 200).map(link => link.url);
-      const body = capText(visibleText(readable));
+      const body = focusedText(visibleText(readable), input.lookFor);
       parts.push(UNTRUSTED_CONTENT_HEADER, head, ...(page.artifact.tier==='SANITIZED_DERIVED'?[page.why]:[]), DATA_BEGIN, `TITLE: ${htmlTitle(readable) ?? "(none)"}`, `TEXT (${body.note}):`, body.text, DATA_END);
     }
     if (!network.stored) {
@@ -1260,7 +1088,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return result(
       page.stored,
       parts.join("\n"),
-      rung(`browser HTTP ${obs.status ?? "none"}, ${htmlBytes} bytes rendered, ${obs.requests.length} request(s) observed`), acc, permission
+      step(`browser HTTP ${obs.status ?? "none"}, ${htmlBytes} bytes rendered, ${obs.requests.length} request(s) observed`), acc, permission
     );
   }
 
@@ -1275,138 +1103,77 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return (sameHost ? 0 : 2) + (api ? 0 : 1);
   }
 
-  function readInherited(): ScoutToolCallResult {
-    const ids = ctx.inherited.artifactIds;
-    const text =
-      `INHERITED EVIDENCE — citable artifact ids (${ids.length}): ${ids.length > 0 ? ids.join(", ") : "(none)"}\n` +
-      (ctx.inherited.summary.trim() === "" ? "(no inherited summary for this obligation)" : ctx.inherited.summary);
-    return { ok: true, forModel: text, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
+  const sameUrl = (a: string, b: string): boolean => a.replace(/#.*$/, "").replace(/\/$/, "") === b.replace(/#.*$/, "").replace(/\/$/, "");
+
+  function passage(page: Pick<SavedPage, "artifactId" | "text" | "canonicalUrl" | "retrievedAt">, offset: number, match: string | null): ScoutToolCallResult {
+    if (offset > page.text.length) return refusal(`offset ${offset} is past the end of this page (${page.text.length} characters).`);
+    const end = Math.min(page.text.length, offset + READ_PASSAGE_CHARS);
+    return { ok: true, step: null, artifacts: [], provenance: [], requestCount: 0, bytesFetched: 0,
+      forModel: `SAVED PAGE ${page.artifactId} | ${page.canonicalUrl} | retrieved ${page.retrievedAt}${match ? ` | ${match}` : ""} | characters ${offset}..${end} of ${page.text.length}${end < page.text.length ? `; continue at offset ${end}` : ""}\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${page.text.slice(offset, end)}\n${DATA_END}` };
   }
 
-  const READ_PASSAGE_CHARS = 6_000;
-  function readOffset(input: unknown): number | null {
-    const offset = (input !== null && typeof input === "object" ? (input as Record<string, unknown>).offset : null);
-    return typeof offset === "number" && Number.isSafeInteger(offset) && offset >= 0 ? offset : null;
-  }
-  function knowledgePassage(kind: "MANUAL_ENTRY" | "HELD_ARTIFACT", id: string, text: string, hash: string, offset: number): ScoutToolCallResult {
-    if (offset > text.length) return refusal(`READ_OFFSET_OUT_OF_RANGE: ${offset} exceeds ${text.length} UTF-16 characters.`);
-    const end = Math.min(text.length, offset + READ_PASSAGE_CHARS);
-    return { ok: true, forModel: `${kind} ${id}; ${hash}; UTF-16 passage ${offset}..${end} of ${text.length}; ${end < text.length ? `continue at offset ${end}` : "end of document"}\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${text.slice(offset, end)}\n${DATA_END}`,
-      artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0,
-      knowledgeRead: { kind, id, contentHash: hash, offset, length: end - offset } };
-  }
-  function findManual(input: unknown): ScoutToolCallResult {
-    const raw = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
-    const query = typeof raw.query === "string" ? raw.query.trim().toLowerCase() : "";
-    if (!query || query.length > 160) return refusal("FIND_MANUAL_QUERY_INVALID: provide a 1–160 character method, publisher, place or field phrase.");
-    const words = query.split(/\s+/).filter(Boolean);
-    const entries = ctx.inherited.manualEntries ?? [];
-    const matches = entries.filter(entry => {
-      const haystack = [entry.title, entry.summary, entry.kind, entry.source, entry.url ?? "", ...entry.recordClasses, ...entry.platforms, ...entry.states]
-        .join(" ").toLowerCase();
-      return words.every(word => haystack.includes(word));
-    }).slice(0, 25);
-    return { ok: true, forModel: `FIELD_MANUAL_CATALOG ${matches.length} matching entries of ${entries.length} applicable entries; at most 25 shown. Open a listed ID with read_manual.\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${matches.map(entry => `${entry.id} | ${entry.outcome} | ${entry.title} | ${entry.summary} | ${entry.url ?? "no URL"}`).join("\n")}\n${DATA_END}`,
-      artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
-  }
-  async function readManual(input: unknown): Promise<ScoutToolCallResult> {
-    const raw = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
-    const offset = readOffset(input);
-    if (typeof raw.entryId !== "string" || offset === null) return refusal("READ_MANUAL_INPUT_INVALID: entryId and nonnegative integer offset are required.");
-    const entry = ctx.inherited.manualEntries?.find(row => row.id === raw.entryId);
-    if (!entry) return refusal("READ_MANUAL_NOT_HANDED: only entries projected into this walk may be opened.");
-    const payload = entry.payload as { path?: unknown; body?: unknown } | null;
-    let full: string;
-    try {
-      if (typeof payload?.body === "string") full = payload.body;
-      else if (typeof payload?.path === "string") {
-        if (!ctx.readManualDocument) return refusal("READ_MANUAL_DOCUMENT_UNAVAILABLE: no scoped document reader is configured.");
-        full = await ctx.readManualDocument(payload.path);
-      } else full = JSON.stringify(entry.payload) ?? "null";
-    } catch (error) { return refusal(`READ_MANUAL_FAILED: ${error instanceof Error ? error.message : String(error)}`); }
-    return knowledgePassage("MANUAL_ENTRY", entry.id, full, contentHash(full), offset);
-  }
   async function readHeld(input: unknown): Promise<ScoutToolCallResult> {
     const raw = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
-    const query = typeof raw.query === "string" ? raw.query.trim() : null;
-    const suppliedOffset = readOffset(input);
-    if (typeof raw.artifactId !== "string" || (suppliedOffset === null && query === null) ||
-      (query !== null && (query.length < 2 || query.length > 160 || /[\r\n]/.test(query)))) {
-      return refusal("READ_HELD_INPUT_INVALID: artifactId and either nonnegative integer offset or bounded literal query are required.");
+    const query = typeof raw.query === "string" && raw.query.trim() ? raw.query.trim().slice(0, 160) : null;
+    const offset = typeof raw.offset === "number" && Number.isSafeInteger(raw.offset) && raw.offset >= 0 ? raw.offset : 0;
+    if (typeof raw.artifactId !== "string") {
+      const held = (ctx.held ?? []).filter(fact => query === null ||
+        [fact.value, fact.subjectLabel, fact.requirement, fact.checklistId].some(text => text.toLowerCase().includes(query.toLowerCase())));
+      const pages = [...new Set([...ctx.handed.artifactIds, ...savedPages.keys()])].map(id =>
+        `- ${id}: ${savedPages.get(id)?.canonicalUrl ?? ctx.handed.provenance?.find(p => p.artifactId === id)?.canonicalUrl ?? "saved page"}`);
+      return { ok: true, step: null, artifacts: [], provenance: [], requestCount: 0, bytesFetched: 0,
+        forModel: [`HELD VALUES (${held.length}${query ? ` mentioning "${query}"` : ""}) — never look for these again:`,
+          ...held.map(fact => `- ${fact.subjectLabel} [${fact.subjectId}] ${fact.checklistId}: ${fact.value || "(held)"} <${fact.sourceUrl}> checked ${fact.checkedAt.slice(0, 10)}`),
+          `SAVED PAGES (${pages.length}); open one with read_held and its artifactId:`, ...pages].join("\n") };
     }
-    const current = currentEvidence.get(raw.artifactId);
-    if (!current && !ctx.inherited.artifactIds.includes(raw.artifactId)) return refusal("READ_HELD_NOT_HANDED: this artifact was neither saved nor inherited by this walk.");
-    if (!current && !ctx.readHeldArtifact) return refusal("READ_HELD_UNAVAILABLE: no sanitized vault reader is configured.");
-    try {
-      const evidence = current ?? await ctx.readHeldArtifact!(raw.artifactId);
-      if (evidence.artifactId !== raw.artifactId || contentHash(evidence.text) !== evidence.contentHash) return refusal("READ_HELD_HASH_MISMATCH: the vault read did not verify.");
-      const provenance = evidence.provenance;
-      if (provenance && (provenance.artifactId !== evidence.artifactId || provenance.canonicalUrl !== evidence.canonicalUrl ||
-        provenance.retrievedAt !== evidence.retrievedAt || provenance.methodRouteId !== evidence.methodRouteId)) {
-        return refusal("READ_HELD_PROVENANCE_MISMATCH: the vault envelope disagrees with the saved bytes.");
-      }
-      const withProvenance = (passage: ScoutToolCallResult): ScoutToolCallResult => provenance
-        ? { ...passage, provenance: [provenance], forModel: `HELD_VAULT_ENVELOPE ${provenance.artifactId}; retrieved ${provenance.retrievedAt}; permission ${provenance.permission}; HTTP ${provenance.httpStatus ?? "none"}; URL ${provenance.canonicalUrl}.\n${passage.forModel}` }
-        : passage;
-      if(evidence.methodRouteId!=='scout:read_permission' && !evidence.methodRouteId.endsWith(':network-observation'))factEvidence.set(evidence.artifactId,{sourceUrl:evidence.canonicalUrl,retrievalUrl:provenance?.retrievalUrl,retrievedAt:evidence.retrievedAt,
-        text:evidence.text,visibleText:visibleText(evidence.text)});
-      if (query !== null) {
-        const lower = evidence.text.toLowerCase(), needle = query.toLowerCase();
-        const positions: number[] = [];
-        for (let at = lower.indexOf(needle); at !== -1 && positions.length < 20; at = lower.indexOf(needle, at + needle.length)) positions.push(at);
-        if (!positions.length) return refusal(`READ_HELD_QUERY_NOT_FOUND: ${JSON.stringify(query)} has no literal match in this handed artifact.`);
-        const offset = Math.max(0, positions[0]! - 500);
-        const passage = knowledgePassage("HELD_ARTIFACT", evidence.artifactId, evidence.text, evidence.contentHash, offset);
-        return withProvenance({ ...passage, forModel: `HELD_LITERAL_MATCH ${JSON.stringify(query)} at UTF-16 offsets ${positions.join(", ")}${positions.length === 20 ? " (first 20)" : ""}.\n${passage.forModel}` });
-      }
-      return withProvenance(knowledgePassage("HELD_ARTIFACT", evidence.artifactId, evidence.text, evidence.contentHash, suppliedOffset!));
-    } catch (error) { return refusal(`READ_HELD_FAILED: ${error instanceof Error ? error.message : String(error)}`); }
+    let page: SavedPage | undefined = savedPages.get(raw.artifactId);
+    if (!page) {
+      if (!ctx.handed.artifactIds.includes(raw.artifactId)) return refusal("that page was not saved by this job or handed to it; read_held with no input lists the ones you can open.");
+      if (!ctx.readHeldArtifact) return refusal("saved pages cannot be read in this runtime.");
+      try {
+        const held = await ctx.readHeldArtifact(raw.artifactId);
+        if (held.artifactId !== raw.artifactId || contentHash(held.text) !== held.contentHash) return refusal("the saved copy did not match its fingerprint.");
+        page = { artifactId: held.artifactId, contentHash: held.contentHash, text: held.text, canonicalUrl: held.canonicalUrl,
+          retrievalUrl: held.provenance?.retrievalUrl ?? held.canonicalUrl, retrievedAt: held.retrievedAt, methodRouteId: held.methodRouteId };
+        savedPages.set(page.artifactId, page);
+      } catch (error) { return refusal(`the saved page could not be read: ${error instanceof Error ? error.message : String(error)}`); }
+    }
+    const text = page.text;
+    const readable = /^\s*<(!doctype|html)/i.test(text) ? { ...page, text: visibleText(text) } : page;
+    if (query === null) return passage(readable, offset, null);
+    const at = readable.text.toLowerCase().indexOf(query.toLowerCase());
+    if (at < 0) return refusal(`"${query}" does not appear on saved page ${page.artifactId}.`);
+    return passage(readable, Math.max(0, at - 500), `"${query}" found at character ${at}`);
   }
 
-  async function search(
-    input: ParsedInput,
-    query: string,
-    includeDomains: readonly string[] | undefined,
-  ): Promise<ScoutToolCallResult> {
+  async function search(raw: unknown): Promise<ScoutToolCallResult> {
     if (ctx.search === undefined) return refusal("search is not available in this runtime (no provider key, or the owner's paid-search switch is off).");
-    const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
-    let res;
+    const o = (raw !== null && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+    const query = typeof o.query === "string" ? o.query.trim() : "";
+    if (query === "") return refusal("query is required.");
+    const includeDomains = Array.isArray(o.includeDomains) ? o.includeDomains.filter((d): d is string => typeof d === "string") : undefined;
+    let res: Awaited<ReturnType<NonNullable<ScoutToolContext["search"]>>>;
     try {
-      res = await ctx.search({ query, includeDomains });
+      res = await ctx.search({ query, fresh: o.fresh === true, deep: o.deep === true, ...(includeDomains?.length ? { includeDomains } : {}) });
     } catch (error) {
-      return refusal(`search failed at transport: ${error instanceof Error ? error.message : String(error)}`);
+      return refusal(`search failed: ${error instanceof Error ? error.message : String(error)}`);
     }
-    acc.requests = res.requestCount;
-    acc.bytes = res.bytesFetched;
-    requestCount += res.requestCount;
-    bytesFetched += res.bytesFetched;
-    const answered = res.providersUsed.length > 0;
-    const errNote = res.errors.length > 0 ? ` [providers erroring: ${res.errors.join("; ")}]` : "";
-    const header = !answered
-      ? `SEARCH "${query}" reached no provider${errNote}`
-      : res.hits.length === 0
-        ? `SEARCH "${query}" — no pointers from ${res.providersUsed.join(", ")}. A search index finding nothing is a real (not failed) negative for this query.${errNote}`
-        : `SEARCH "${query}" — ${res.hits.length} pointer(s) from ${res.providersUsed.join(", ")}. LEADS, not evidence: open a promising one with fetch_public or browse (which read and record robots.txt and vault). A hit may be a prior cycle's site.${errNote}`;
-    const forModel =
-      res.hits.length === 0
-        ? header
-        : `${header}\n${DATA_BEGIN}\n${res.hits.map((h, i) => `${i + 1}. ${h.url}  [${h.provider}]  ${h.title}\n${h.text ?? ""}`).join("\n")}\n${DATA_END}`;
-    const rung: Rung = {
-      rung: input.rung,
-      tool: "search",
-      target: query,
-      observed: `${res.hits.length} pointer(s) from ${res.providersUsed.join("+") || "none"}${res.errors.length > 0 ? `; ${res.errors.join('; ')}` : ""}`,
-      artifactIds: [],
-      transport: answered ? "REACHABLE" : "OTHER_NAMED_FAILURE",
-      httpStatus: null,
-      returnedCount: res.hits.length,
-      applicableBecause: input.why,
-      nextHopUrls: res.hits.map((h) => h.url),
-    };
-    return result(answered, forModel, rung, acc);
+    const bytes = res.charges.reduce((n, charge) => n + charge.bytes, 0);
+    requestCount += res.charges.length;
+    bytesFetched += bytes;
+    for (const charge of res.charges) await ctx.chargeSearch?.(charge);
+    const acc: CallAccount = { artifacts: [], provenance: [], requests: res.charges.length, bytes };
+    const errors = res.errors.length ? ` [${res.errors.join("; ")}]` : "";
+    const forModel = res.provider === null ? `SEARCH "${query}" reached no provider${errors}`
+      : res.hits.length === 0 ? `SEARCH "${query}" — nothing found by ${res.provider}.${errors}`
+      : [`SEARCH "${query}" — ${res.hits.length} result(s) from ${res.provider}.${errors}`, UNTRUSTED_CONTENT_HEADER, DATA_BEGIN,
+        ...res.hits.map((hit, i) => `${i + 1}. ${hit.url} — ${hit.title}\n${hit.text ?? ""}`), DATA_END].join("\n");
+    const step: HuntStep = { tool: "search", target: query, observed: `${res.hits.length} result(s) from ${res.provider ?? "no provider"}${errors}`.slice(0, 400),
+      artifactIds: [], transport: res.provider ? "REACHABLE" : "OTHER_NAMED_FAILURE", httpStatus: null, returnedCount: res.hits.length };
+    return result(res.provider !== null, forModel, step, acc);
   }
 
-  async function sourceApi(name: SourceApiTool | ClientTool, raw: unknown, input: ParsedInput): Promise<ScoutToolCallResult> {
+    async function sourceApi(name: SourceApiTool | ClientTool, raw: unknown): Promise<ScoutToolCallResult> {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     try {
       const options = { ...ctx.sourceApi, timeoutMs,
@@ -1422,118 +1189,91 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       const saved = await vaultText({url:new URL(response.sourceUrl),finalUrl:response.sourceUrl,status:response.status,
         contentType:'application/json',text:response.text,methodRouteId:'scout:'+name,permission:'NOT_APPLICABLE',
         transport:ok?'REACHABLE':'FAILED_AT_RUNG',...(ok?{}:{retention:'DIAGNOSTIC' as const})},acc);
-      const rung: Rung = {rung:input.rung,tool:name,target:response.sourceUrl,observed:'HTTP '+response.status,
+      const step: HuntStep = {tool:name,target:response.sourceUrl,observed:'HTTP '+response.status,
         artifactIds:acc.artifacts.map(a=>a.artifactId),transport:ok?'REACHABLE':'FAILED_AT_RUNG',httpStatus:response.status,
-        returnedCount:null,applicableBecause:input.why,nextHopUrls:[]};
-      if (!saved.stored) return result(false, saved.why, rung, acc);
-      return result(ok, 'SOURCE '+response.sourceUrl+' | artifact '+saved.artifact.id+' | retrieved '+saved.artifact.retrievedAt+' | permission NOT_APPLICABLE\n'+DATA_BEGIN+'\n'+capText(saved.text??'').text+'\n'+DATA_END,rung,acc);
+        returnedCount:null,nextHopUrls:[]};
+      if (!saved.stored) return result(false, saved.why, step, acc);
+      return result(ok, 'SOURCE '+response.sourceUrl+' | artifact '+saved.artifact.id+' | retrieved '+saved.artifact.retrievedAt+' | permission NOT_APPLICABLE\n'+DATA_BEGIN+'\n'+capText(saved.text??'', SOURCE_API_CHARS).text+'\n'+DATA_END,step,acc);
     } catch(error) { return refusal(name+': '+(error instanceof Error ? error.message : String(error))); }
   }
 
+  /** Facts put into the Box this job, and the page code saved for each cited URL. */
+  const reported: ReportedFinding[] = [];
+  const reportedKeys = new Map<string, string>();
+  const savedForReport = new Map<string, { readonly artifactId: string | null; readonly why: string }>();
 
-  /** One finding into the Box, proved by a page this walk saved. Never throws; a refusal says why. */
-  const reported = new Map<string, string>();
+  /** The cited page, from this job's saved pages or fetched once by code, with any capture the fetch made. The model never re-fetches it. */
+  async function citedPage(sourceUrl: string): Promise<{ readonly artifactId: string | null; readonly why: string; readonly fetched: ScoutToolCallResult | null }> {
+    for (const page of savedPages.values()) {
+      if (sameUrl(page.canonicalUrl, sourceUrl) || sameUrl(page.retrievalUrl, sourceUrl)) return { artifactId: page.artifactId, why: "saved", fetched: null };
+    }
+    const prior = savedForReport.get(sourceUrl);
+    if (prior) return { ...prior, fetched: null };
+    const fetched = await fetchPublic({ url: sourceUrl, lookFor: null });
+    const page = fetched.ok ? fetched.artifacts.find(artifact => savedPages.has(artifact.artifactId)) : undefined;
+    const saved = page ? { artifactId: page.artifactId, why: "saved" } : { artifactId: null, why: fetched.step?.observed ?? fetched.forModel.slice(0, 200) };
+    savedForReport.set(sourceUrl, saved);
+    return { ...saved, fetched };
+  }
+
   async function reportFinding(raw: unknown): Promise<ScoutToolCallResult> {
     const report = ctx.reportFinding;
-    if (!report) return refusal("report_finding is not available in this walk; put the finding in finish.");
+    if (!report) return refusal("report_finding is not available in this job.");
     const o = (raw !== null && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
     const text = (key: string, max: number) => typeof o[key] === "string" && o[key].trim() !== "" && o[key].length <= max ? o[key].trim() : null;
-    const subjectId = text("subjectId", 300), field = text("field", 80), exactQuote = typeof o.exactQuote === "string" && o.exactQuote.trim() !== "" && o.exactQuote.length <= 1000 ? o.exactQuote : null;
-    const sourceUrl = text("sourceUrl", 2000), artifactId = text("artifactId", 200), subjectHint = text("subjectHint", 200);
+    const subjectId = text("subjectId", 300), field = text("field", 80), sourceUrl = text("sourceUrl", 2000);
+    const sentence = typeof o.sentence === "string" && o.sentence.trim() !== "" && o.sentence.length <= 2000 ? o.sentence : null;
     const value = typeof o.value === "number" && Number.isFinite(o.value) || typeof o.value === "boolean" ? o.value
-      : typeof o.value === "string" && o.value.trim() !== "" && o.value.length <= 500 ? o.value.trim() : null;
-    if (!subjectId || !field || value === null || !exactQuote || !sourceUrl) {
-      return refusal("report_finding needs subjectId, field, value, exactQuote (at most 1000 characters) and sourceUrl.");
-    }
-    if (!report.subjects.has(subjectId)) {
-      return refusal(`REPORT_SUBJECT_NOT_IN_MISSION: ${JSON.stringify(subjectId)} is not your target or a subject on a MISSION line; use the id in [brackets].`);
-    }
-    const page = [...factEvidence.entries()].find(([id, evidence]) =>
-      (artifactId ? id === artifactId : evidence.sourceUrl === sourceUrl || evidence.retrievalUrl === sourceUrl) &&
-      (evidence.text.includes(exactQuote) || evidence.visibleText.includes(exactQuote)));
-    if (!page) {
-      return refusal("REPORT_QUOTE_NOT_IN_SAVED_PAGE: the exact quote must appear word for word in a page you saved in this walk at that address. Open the page first, then report.");
-    }
-    const [savedId, evidence] = page;
-    const key = JSON.stringify([subjectId, field, exactQuote, evidence.sourceUrl]);
-    const already = reported.get(key);
-    if (already) return { ok: true, forModel: `ALREADY IN THE BOX: ${already}. Keep working your own target.`, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
+      : typeof o.value === "string" && o.value.trim() !== "" && o.value.length <= 1000 ? o.value.trim() : null;
+    if (!subjectId || !field || value === null || !sentence || !sourceUrl) return refusal("report_finding needs subjectId, field, value, sourceUrl and sentence.");
+    if (!report.subjects.has(subjectId)) return refusal(`${JSON.stringify(subjectId)} is not a subject in this brief; use the id in [brackets].`);
+    const url = publicUrl(sourceUrl);
+    if (typeof url === "string") return refusal(url);
+    const key = JSON.stringify([subjectId, field, String(value), sourceUrl]);
+    const already = reportedKeys.get(key);
+    if (already) return { ok: true, step: null, artifacts: [], provenance: [], requestCount: 0, bytesFetched: 0, forModel: `ALREADY IN THE BOX (${already}).` };
+    const page = await citedPage(url.toString());
+    const finding: ReportedFinding = { subjectId, field, value, exactQuote: sentence, sourceUrl: url.toString(),
+      artifactIds: page.artifactId ? [page.artifactId] : [], subjectHint: null, index: reported.length };
     try {
-      const written = await report.write({ subjectId, field, value, exactQuote, sourceUrl: evidence.sourceUrl, artifactIds: [savedId], subjectHint, index: reported.size });
-      reported.set(key, written.boxId);
-      return { ok: true, forModel: `IN THE BOX: ${field} = ${JSON.stringify(value)} for ${subjectId}, from ${evidence.sourceUrl} (saved page ${savedId}). Builders take it from here; keep working your own target.`,
-        artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
+      const written = await report.write(finding);
+      reported.push(finding);
+      reportedKeys.set(key, written.boxId);
+      return { ok: true, step: page.fetched?.step ?? null, artifacts: page.fetched?.artifacts ?? [], provenance: page.fetched?.provenance ?? [],
+        requestCount: page.fetched?.requestCount ?? 0, bytesFetched: page.fetched?.bytesFetched ?? 0,
+        forModel: `IN THE BOX: ${field} = ${JSON.stringify(value)} for ${subjectId}. ` +
+          (page.artifactId ? `The page is saved as ${page.artifactId} for checking.` : `The page could not be saved (${page.why}); if another page states it, report that one too.`) };
     } catch (error) {
-      return refusal(`REPORT_NOT_SAVED: ${error instanceof Error ? error.message : String(error)}. Put the finding in finish instead.`);
+      return refusal(`the finding was not saved: ${error instanceof Error ? error.message : String(error)}. Report it again.`);
     }
   }
 
-
-  async function call(name: string, input: unknown, rungLabel: string | null): Promise<ScoutToolCallResult> {
+  async function call(name: string, input: unknown): Promise<ScoutToolCallResult> {
     if (!(SCOUT_RESEARCH_TOOLS as readonly string[]).includes(name)) {
-      return refusal(`${JSON.stringify(name)} is not a research tool; the research tools are ${SCOUT_RESEARCH_TOOLS.join(", ")}.`);
+      return refusal(`${JSON.stringify(name)} is not a tool; the tools are ${SCOUT_RESEARCH_TOOLS.join(", ")} and finish.`);
     }
-    if (name === "report_finding") return await reportFinding(input);
     toolCalls += 1;
-    const tool = name as ScoutResearchTool;
-    const needsUrl = tool === "read_permission" || tool === "fetch_public" || tool === "browse";
-    const parsed = parseInput(input, rungLabel, needsUrl);
-    if (!parsed.ok) return refusal(parsed.why);
-    if ((SOURCE_API_TOOLS as readonly string[]).includes(tool)) return sourceApi(tool as SourceApiTool, input, parsed.value);
-    if (tool === 'legistar_events') return sourceApi(tool,input,parsed.value);
-    switch (tool) {
-      case "read_permission":
-        return await readPermission(parsed.value);
-      case "fetch_public":
-        return await fetchPublic(parsed.value);
-      case "browse":
-        return await browse(parsed.value);
-      case "read_inherited":
-        return readInherited();
-      case "find_manual":
-        return findManual(input);
-      case "read_manual":
-        return await readManual(input);
+    if (name === "report_finding") return await reportFinding(input);
+    if ((SOURCE_API_TOOLS as readonly string[]).includes(name) || name === "legistar_events") return sourceApi(name as SourceApiTool | ClientTool, input);
+    switch (name) {
       case "read_held":
         return await readHeld(input);
-      case "run_adapter": {
-        const raw = input as Record<string, unknown>;
-        if (typeof raw.adapter !== 'string') return {ok:true,forModel:JSON.stringify(await installedAdapters()),artifacts:[],provenance:[],rung:null,requestCount:0,bytesFetched:0};
-        if (typeof raw.artifactId !== 'string') return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
-        const current = currentEvidence.get(raw.artifactId);
-        if (!current && (!ctx.inherited.artifactIds.includes(raw.artifactId) || !ctx.readHeldArtifact)) return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
-        const adapterIdentity=raw.adapter+'@'+installedAdapterVersion(raw.adapter);
-        try {
-          const held = current ?? await ctx.readHeldArtifact!(raw.artifactId);
-          if (held.artifactId !== raw.artifactId || held.contentHash !== contentHash(held.text) || !held.provenance) return refusal('ADAPTER_ARTIFACT_IDENTITY_MISMATCH');
-          const data = await runInstalledAdapter(raw.adapter, held.text, held.canonicalUrl);
-          const serialized=JSON.stringify({sourceUrl:held.canonicalUrl,data}), offset=readOffset(input) ?? 0;
-          if (offset>serialized.length) return refusal('ADAPTER_OUTPUT_OFFSET_OUT_OF_RANGE');
-          const end=Math.min(serialized.length,offset+READ_PASSAGE_CHARS);
-          return {ok:true,forModel:`ADAPTER ${raw.adapter} read held artifact ${held.artifactId}; source ${held.canonicalUrl}. Derived result ${offset}..${end} of ${serialized.length}${end<serialized.length?`; continue at offset ${end}`:''}. Exact fact quotes must still occur in the held source.\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${serialized.slice(offset,end)}\n${DATA_END}`,
-            artifacts:[],requestCount:0,bytesFetched:0,knowledgeRead:{kind:'HELD_ARTIFACT',id:held.artifactId,contentHash:held.contentHash,offset:0,length:held.text.length},
-            provenance:[held.provenance],rung:{rung:parsed.value.rung,tool:'run_adapter',target:held.canonicalUrl,observed:'Installed adapter '+adapterIdentity,artifactIds:[held.artifactId]}};
-        } catch(error) { const detail='ADAPTER_FAILED: '+(error instanceof Error?error.message:String(error));
-          return {...refusal(detail),rung:{rung:parsed.value.rung,tool:'run_adapter',target:raw.artifactId,observed:'Installed adapter '+adapterIdentity+'; '+detail,artifactIds:[],ok:false}}; }
-      }
-      case "search": {
-        const o = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
-        const query = typeof o.query === "string" ? o.query.trim() : "";
-        if (query === "") return refusal("input.query is required: a search phrase (a candidate / office / place).");
-        const includeDomains = Array.isArray(o.includeDomains)
-          ? o.includeDomains.filter((d): d is string => typeof d === "string")
-          : undefined;
-        return await search(parsed.value, query, includeDomains);
+      case "search":
+        return await search(input);
+      case "fetch_public":
+      case "browse": {
+        const parsed = parseInput(input);
+        if (parsed.url === null) return refusal("url is required: an absolute public http(s) URL.");
+        return name === "fetch_public" ? await fetchPublic(parsed) : await browse(parsed);
       }
     }
-    return refusal(`RESEARCH_TOOL_UNHANDLED: ${name}`);
+    return refusal(`${name} is not handled in this runtime.`);
   }
 
   return {
-    specs: scoutToolSpecsFor(Boolean(ctx.search), Boolean(ctx.reportFinding)),
-    factEvidence,
-    heldEvidenceProtocolAvailable: Boolean(ctx.readHeldArtifact),
+    specs: HUNTER_TOOL_SPECS,
     call,
+    reported,
     get vaultedArtifactIds(): ReadonlySet<string> {
       return vaulted;
     },

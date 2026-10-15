@@ -1,0 +1,431 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "1000 Bank Street",
+    "addressLine": [
+      "1000 Bank Street"
+    ],
+    "city": "Richmond",
+    "state": "VA",
+    "zip": "23219"
+  },
+  "pollingLocations": [
+    {
+      "address": {
+        "locationName": "MAIN LIBRARY",
+        "line1": "101 East Franklin Street",
+        "addressLine": [
+          "101 East Franklin Street"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23219"
+      },
+      "pollingHours": "Tue, Nov 3: 6 am - 7 pm",
+      "latitude": 37.542857922819451,
+      "longitude": -77.442461639005316,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "earlyVoteSites": [
+    {
+      "address": {
+        "locationName": "City Hall",
+        "line1": "900 East Broad Street",
+        "addressLine": [
+          "900 East Broad Street"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23221"
+      },
+      "pollingHours": "Sun, Oct 18: 12 pm - 5 pm\nMon, Oct 19: 8:30 am - 5:00 pm\nTue, Oct 20: 8:30 am - 5:00 pm\nWed, Oct 21: 8:30 am - 5:00 pm\nThu, Oct 22: 8:30 am - 5:00 pm\nFri, Oct 23: 8:30 am - 5:00 pm\nSat, Oct 24: 9 am - 5 pm\nSun, Oct 25: 12 pm - 5 pm\nMon, Oct 26: 8:30 am - 5:00 pm\nTue, Oct 27: 8:30 am - 5:00 pm\nWed, Oct 28: 8:30 am - 5:00 pm\nThu, Oct 29: 8:30 am - 5:00 pm\nFri, Oct 30: 8:30 am - 5:00 pm\nSat, Oct 31: 9 am - 5 pm",
+      "latitude": 37.541279312716782,
+      "longitude": -77.432727579640982,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Richmond City Registrar",
+        "line1": "2134 West Laburnum Avenue",
+        "addressLine": [
+          "2134 West Laburnum Avenue"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23227"
+      },
+      "pollingHours": "Fri, Sep 18: 8:30 am - 5:00 pm\nMon, Sep 21: 8:30 am - 5:00 pm\nTue, Sep 22: 8:30 am - 5:00 pm\nWed, Sep 23: 8:30 am - 5:00 pm\nThu, Sep 24: 8:30 am - 5:00 pm\nFri, Sep 25: 8:30 am - 5:00 pm\nMon, Sep 28: 8:30 am - 5:00 pm\nTue, Sep 29: 8:30 am - 5:00 pm\nWed, Sep 30: 8:30 am - 5:00 pm\nThu, Oct 1: 8:30 am - 5:00 pm\nFri, Oct 2: 8:30 am - 5:00 pm\nMon, Oct 5: 8:30 am - 5:00 pm\nTue, Oct 6: 8:30 am - 5:00 pm\nWed, Oct 7: 8:30 am - 5:00 pm\nThu, Oct 8: 8:30 am - 5:00 pm\nFri, Oct 9: 8:30 am - 5:00 pm\nTue, Oct 13: 8:30 am - 5:00 pm\nWed, Oct 14: 8:30 am - 5:00 pm\nThu, Oct 15: 8:30 am - 5:00 pm\nFri, Oct 16: 8:30 am - 5:00 pm\nSun, Oct 18: 12 pm - 5 pm\nMon, Oct 19: 8:30 am - 5:00 pm\nTue, Oct 20: 8:30 am - 5:00 pm\nWed, Oct 21: 8:30 am - 5:00 pm\nThu, Oct 22: 8:30 am - 5:00 pm\nFri, Oct 23: 8:30 am - 5:00 pm\nSat, Oct 24: 9 am - 5 pm\nSun, Oct 25: 12 pm - 5 pm\nMon, Oct 26: 8:30 am - 5:00 pm\nTue, Oct 27: 8:30 am - 5:00 pm\nWed, Oct 28: 8:30 am - 5:00 pm\nThu, Oct 29: 8:30 am - 5:00 pm\nFri, Oct 30: 8:30 am - 5:00 pm\nSat, Oct 31: 9 am - 5 pm",
+      "latitude": 37.5853464,
+      "longitude": -77.475883299999992,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Hickory Hill Community Center",
+        "line1": "3000 East Belt Boulevard",
+        "addressLine": [
+          "3000 East Belt Boulevard"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23234"
+      },
+      "pollingHours": "Sun, Oct 18: 12 pm - 5 pm\nMon, Oct 19: 8:30 am - 5:00 pm\nTue, Oct 20: 8:30 am - 5:00 pm\nWed, Oct 21: 8:30 am - 5:00 pm\nThu, Oct 22: 8:30 am - 5:00 pm\nFri, Oct 23: 8:30 am - 5:00 pm\nSat, Oct 24: 9 am - 5 pm\nSun, Oct 25: 12 pm - 5 pm\nMon, Oct 26: 8:30 am - 5:00 pm\nTue, Oct 27: 8:30 am - 5:00 pm\nWed, Oct 28: 8:30 am - 5:00 pm\nThu, Oct 29: 8:30 am - 5:00 pm\nFri, Oct 30: 8:30 am - 5:00 pm\nSat, Oct 31: 9 am - 5 pm",
+      "latitude": 37.479487004460438,
+      "longitude": -77.46127487691362,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "dropOffLocations": [
+    {
+      "address": {
+        "locationName": "City Hall",
+        "line1": "900 East Broad Street",
+        "addressLine": [
+          "900 East Broad Street"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23221"
+      },
+      "pollingHours": "Sun, Oct 18: 12 pm - 5 pm\nMon, Oct 19: 8:30 am - 5:00 pm\nTue, Oct 20: 8:30 am - 5:00 pm\nWed, Oct 21: 8:30 am - 5:00 pm\nThu, Oct 22: 8:30 am - 5:00 pm\nFri, Oct 23: 8:30 am - 5:00 pm\nSat, Oct 24: 9 am - 5 pm\nSun, Oct 25: 12 pm - 5 pm\nMon, Oct 26: 8:30 am - 5:00 pm\nTue, Oct 27: 8:30 am - 5:00 pm\nWed, Oct 28: 8:30 am - 5:00 pm\nThu, Oct 29: 8:30 am - 5:00 pm\nFri, Oct 30: 8:30 am - 5:00 pm\nSat, Oct 31: 9 am - 5 pm",
+      "latitude": 37.541279312716782,
+      "longitude": -77.432727579640982,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "MAIN LIBRARY",
+        "line1": "101 East Franklin Street",
+        "addressLine": [
+          "101 East Franklin Street"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23219"
+      },
+      "pollingHours": "Tue, Nov 3: 6 am - 7 pm",
+      "latitude": 37.542857922819451,
+      "longitude": -77.442461639005316,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Richmond City Registrar",
+        "line1": "2134 West Laburnum Avenue",
+        "addressLine": [
+          "2134 West Laburnum Avenue"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23227"
+      },
+      "pollingHours": "Fri, Sep 18: 8:30 am - 5:00 pm\nMon, Sep 21: 8:30 am - 5:00 pm\nTue, Sep 22: 8:30 am - 5:00 pm\nWed, Sep 23: 8:30 am - 5:00 pm\nThu, Sep 24: 8:30 am - 5:00 pm\nFri, Sep 25: 8:30 am - 5:00 pm\nMon, Sep 28: 8:30 am - 5:00 pm\nTue, Sep 29: 8:30 am - 5:00 pm\nWed, Sep 30: 8:30 am - 5:00 pm\nThu, Oct 1: 8:30 am - 5:00 pm\nFri, Oct 2: 8:30 am - 5:00 pm\nMon, Oct 5: 8:30 am - 5:00 pm\nTue, Oct 6: 8:30 am - 5:00 pm\nWed, Oct 7: 8:30 am - 5:00 pm\nThu, Oct 8: 8:30 am - 5:00 pm\nFri, Oct 9: 8:30 am - 5:00 pm\nTue, Oct 13: 8:30 am - 5:00 pm\nWed, Oct 14: 8:30 am - 5:00 pm\nThu, Oct 15: 8:30 am - 5:00 pm\nFri, Oct 16: 8:30 am - 5:00 pm\nSun, Oct 18: 12 pm - 5 pm\nMon, Oct 19: 8:30 am - 5:00 pm\nTue, Oct 20: 8:30 am - 5:00 pm\nWed, Oct 21: 8:30 am - 5:00 pm\nThu, Oct 22: 8:30 am - 5:00 pm\nFri, Oct 23: 8:30 am - 5:00 pm\nSat, Oct 24: 9 am - 5 pm\nSun, Oct 25: 12 pm - 5 pm\nMon, Oct 26: 8:30 am - 5:00 pm\nTue, Oct 27: 8:30 am - 5:00 pm\nWed, Oct 28: 8:30 am - 5:00 pm\nThu, Oct 29: 8:30 am - 5:00 pm\nFri, Oct 30: 8:30 am - 5:00 pm\nSat, Oct 31: 9 am - 5 pm\nMon, Nov 2: 8:30 am - 5:00 pm\nTue, Nov 3: 8:30 am - 7:00 pm",
+      "latitude": 37.5853464,
+      "longitude": -77.475883299999992,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Hickory Hill Community Center",
+        "line1": "3000 East Belt Boulevard",
+        "addressLine": [
+          "3000 East Belt Boulevard"
+        ],
+        "city": "Richmond",
+        "state": "VA",
+        "zip": "23234"
+      },
+      "pollingHours": "Sun, Oct 18: 12 pm - 5 pm\nMon, Oct 19: 8:30 am - 5:00 pm\nTue, Oct 20: 8:30 am - 5:00 pm\nWed, Oct 21: 8:30 am - 5:00 pm\nThu, Oct 22: 8:30 am - 5:00 pm\nFri, Oct 23: 8:30 am - 5:00 pm\nSat, Oct 24: 9 am - 5 pm\nSun, Oct 25: 12 pm - 5 pm\nMon, Oct 26: 8:30 am - 5:00 pm\nTue, Oct 27: 8:30 am - 5:00 pm\nWed, Oct 28: 8:30 am - 5:00 pm\nThu, Oct 29: 8:30 am - 5:00 pm\nFri, Oct 30: 8:30 am - 5:00 pm\nSat, Oct 31: 9 am - 5 pm",
+      "latitude": 37.479487004460438,
+      "longitude": -77.46127487691362,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "contests": [
+    {
+      "type": "General",
+      "ballotTitle": "Member, United States Senate",
+      "office": "Member, United States Senate",
+      "district": {
+        "name": "United States Of America",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "numberVotingFor": "1",
+      "ballotPlacement": "2",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Mark R. Warner",
+          "party": "Democratic"
+        },
+        {
+          "name": "Bert Mizusawa",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Member, House of Representatives (4th District)",
+      "office": "Member, House of Representatives (4th District)",
+      "district": {
+        "name": "04",
+        "scope": "congressional"
+      },
+      "numberElected": "1",
+      "numberVotingFor": "1",
+      "ballotPlacement": "3",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Jennifer L. McClellan",
+          "party": "Democratic"
+        },
+        {
+          "name": "Robert P. \"Family Man\" Murray, Jr.",
+          "party": "Republican"
+        },
+        {
+          "name": "Joan E. \"Andrews\" Bell",
+          "party": "Independent"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Member School Board (District 6)",
+      "office": "Member School Board (District 6)",
+      "district": {
+        "name": "DISTRICT 6",
+        "scope": "cityCouncil"
+      },
+      "numberElected": "1",
+      "numberVotingFor": "1",
+      "ballotPlacement": "20",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Anne B. Holton"
+        },
+        {
+          "name": "Jacqueline T. \"Jackie\" McDonnough"
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Proposed Constitutional Amendment Question 1",
+      "district": {
+        "name": "Virginia",
+        "scope": "statewide"
+      },
+      "ballotPlacement": "27",
+      "referendumTitle": "Proposed Constitutional Amendment Question 1",
+      "referendumText": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Proposed Constitutional Amendment Question 2",
+      "district": {
+        "name": "Virginia",
+        "scope": "statewide"
+      },
+      "ballotPlacement": "28",
+      "referendumTitle": "Proposed Constitutional Amendment Question 2",
+      "referendumText": "Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Proposed Constitutional Amendment Question 3",
+      "district": {
+        "name": "Virginia",
+        "scope": "statewide"
+      },
+      "ballotPlacement": "29",
+      "referendumTitle": "Proposed Constitutional Amendment Question 3",
+      "referendumText": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Local Sales Tax Option",
+      "district": {
+        "name": "RICHMOND CITY",
+        "scope": "citywide"
+      },
+      "ballotPlacement": "31",
+      "referendumTitle": "Local Sales Tax Option",
+      "referendumText": "Shall the City of Richmond be authorized to levy a general retail sales tax at a rate not to exceed 1% to provide revenue solely for capital projects for the construction or major renovation of schools in the City? Should this referendum be approved authorizing the levy of such tax, the tax would expire no later than June 30, 2046.",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "state": [
+    {
+      "name": "Virginia",
+      "electionAdministrationBody": {
+        "name": "Virginia Deparment of Elections",
+        "electionInfoUrl": "https://elections.virginia.gov/",
+        "electionRegistrationUrl": "https://www.elections.virginia.gov/registration/",
+        "electionRegistrationConfirmationUrl": "https://vote.elections.virginia.gov/VoterInformation",
+        "absenteeVotingInfoUrl": "https://www.elections.virginia.gov/casting-a-ballot/absentee-voting/",
+        "electionRulesUrl": "https://elections.virginia.gov/",
+        "physicalAddress": {
+          "line1": "Washington Building First Floor",
+          "line2": "1100 Bank Street",
+          "line3": "Richmond, VA 23219",
+          "addressLine": [
+            "Washington Building First Floor",
+            "1100 Bank Street",
+            "Richmond, VA 23219"
+          ]
+        },
+        "electionOfficials": [
+          {
+            "officePhoneNumber": "800-552-9745",
+            "emailAddress": "info@elections.virginia.gov"
+          }
+        ]
+      },
+      "local_jurisdiction": {
+        "name": "RICHMOND CITY",
+        "electionAdministrationBody": {
+          "name": "RICHMOND CITY VOTER REGISTRATION",
+          "electionInfoUrl": "https://elections.virginia.gov/",
+          "electionRegistrationUrl": "https://www.elections.virginia.gov/registration/",
+          "electionRegistrationConfirmationUrl": "https://vote.elections.virginia.gov/VoterInformation",
+          "absenteeVotingInfoUrl": "https://www.elections.virginia.gov/casting-a-ballot/absentee-voting/",
+          "electionRulesUrl": "https://elections.virginia.gov/",
+          "physicalAddress": {
+            "line1": "2134 W Laburnum Ave",
+            "line2": "Richmond, VA 23227-4342",
+            "addressLine": [
+              "2134 W Laburnum Ave",
+              "Richmond, VA 23227-4342"
+            ]
+          },
+          "electionOfficials": [
+            {
+              "officePhoneNumber": "804-646-5950",
+              "faxNumber": "804-646-7848",
+              "emailAddress": "vote@rva.gov"
+            }
+          ]
+        },
+        "sources": [
+          {
+            "name": "Voting Information Project",
+            "official": true
+          }
+        ]
+      },
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

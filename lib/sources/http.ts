@@ -57,6 +57,8 @@ export class SourceHttpError extends Error {
 }
 
 export interface HttpOptions {
+  /** Public lookup APIs such as BoardDocs use form POSTs to read records. */
+  form?: Readonly<Record<string, string>>;
   /** Complete response bytes allowed for a binary source. */
   maxBytes?: number;
   /** Overridden in tests so the suite never sleeps or touches the network. */
@@ -87,6 +89,7 @@ export interface HttpOptions {
       url: string,
       headers: Record<string, string>,
       signal?: AbortSignal,
+      form?: Readonly<Record<string, string>>,
     ) => Promise<{
       status: number;
       contentType: string;
@@ -178,6 +181,7 @@ export async function curlGetText(
   headers: Record<string, string>,
   signal?: AbortSignal,
   runProcess: CurlProcessRunner = nativeCurlProcess,
+  form?: Readonly<Record<string, string>>,
 ): Promise<{
   status: number;
   contentType: string;
@@ -186,6 +190,7 @@ export async function curlGetText(
   finalUrl: string;
 }> {
   const args = ["-s", "-S", "-L", "--compressed", "-w", "\n%{http_code}\t%{content_type}\t%{url_effective}"];
+  if (form) args.push("--data", new URLSearchParams(form).toString());
   const remainingSeconds = sourceAcquisitionSecondsRemaining(signal);
   if (remainingSeconds !== null) args.push("--max-time", String(remainingSeconds));
   for (const [key, value] of Object.entries(headers)) {
@@ -295,10 +300,11 @@ async function curlRung(
   accept: string | undefined,
   signal: AbortSignal | undefined,
   expect: HttpOptions["expect"],
+  form?: Readonly<Record<string, string>>,
 ): Promise<{ status: number; contentType: string; text: string }> {
   let response: Awaited<ReturnType<typeof curl>>;
   try {
-    response = await curl(url, curlRequestHeaders(accept), signal);
+    response = await curl(url, curlRequestHeaders(accept), signal, form);
   } catch (error) {
     if (error instanceof SourceHttpError && error.status === 403) {
       throw new SourceHttpError(
@@ -328,14 +334,15 @@ export async function politeGetText(
   // Whether rung 4 is walked, decided once: true in production (nothing injected) and for a test that
   // supplies the `curl` double.
   const escalates = !options.fetchImpl || options.ladder !== undefined;
-  const curl = options.ladder?.curl ?? curlGetText;
+  const curl = options.ladder?.curl ?? ((url, headers, signal, form) => curlGetText(url, headers, signal, nativeCurlProcess, form));
   const headers = sourceRequestHeaders(options.accept);
   let lastStatus = 0;
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     const response = await impl(url, {
-      headers,
+      headers: options.form ? { ...headers, "Content-Type": "application/x-www-form-urlencoded" } : headers,
       signal: options.signal,
+      ...(options.form ? { method: "POST", body: new URLSearchParams(options.form).toString() } : {}),
     });
     lastStatus = response.status;
 
@@ -349,7 +356,7 @@ export async function politeGetText(
       };
       // A challenge served at 200 to Node's client: the same identity asks once through `curl`.
       if (challengeIn(text) !== null && escalates) {
-        return await curlRung(url, curl, options.accept, options.signal, options.expect);
+        return await curlRung(url, curl, options.accept, options.signal, options.expect, options.form);
       }
       // A-003: one finalizer. A challenge that is not re-asked is a WALL here.
       return readValidatedResponse(url, 2, here, options.expect);
@@ -367,7 +374,7 @@ export async function politeGetText(
 
     if (response.status === 403) {
       // The same identity, once, through another client. A refusal there is the wall.
-      if (escalates) return await curlRung(url, curl, options.accept, options.signal, options.expect);
+      if (escalates) return await curlRung(url, curl, options.accept, options.signal, options.expect, options.form);
       throw new SourceHttpError(
         `HTTP 403 for ${url} — an access control refused the identified client. A WALL, never bypassed with ` +
           "another identity.",
@@ -454,10 +461,10 @@ export function decodeEntities(value: string): string {
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
-    .replace(/&#0?39;/g, "'")
-    .replace(/&#x27;/gi, "'")
-    .replace(/&#x2019;/gi, "’")
-    .replace(/&#8217;/g, "’")
+    .replace(/&#(x[0-9a-f]+|\d+);/gi, (entity, digits: string) => {
+      const code = digits[0].toLowerCase() === "x" ? parseInt(digits.slice(1), 16) : parseInt(digits, 10);
+      return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff) ? String.fromCodePoint(code) : entity;
+    })
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&");
 }

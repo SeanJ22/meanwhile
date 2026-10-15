@@ -1,0 +1,230 @@
+{
+  "results" :
+    [
+      {
+        "resource" :
+          {
+            "name" : "Health Care Provider Credential Data",
+            "id" : "qxh8-f4bd",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "Summer 2026: Updates to the Provider Credential Search and Open Data Portal include updating the credential number format and removing the provider birth year results from the dataset.\n\nCredential numbers on this dataset reflect the most current format used by the Department, using a four-letter prefix, a two-letter profession prefix, and an eight-letter numerical identification - XXXX.XX.00000000 \n\nSome credential numbers include suffixes for clarity.\n\nThe provider birth year column results have been removed for information privacy.\n\nThe Washington State Department of Health presents this information as a service to the public. True and correct copies of legal disciplinary actions taken after July 1998 are available on our Provider Credential Search site. These records are considered certified by the Department of Health. \n\nThis includes information on health care providers.\n\nPlease contact our Customer Service Center at 360-236-4700 for information about actions before July 1998. \nThe information on this site comes directly from our database and is updated daily at 10:00 a.m.. This data is a primary source for verification of credentials and is extracted from the primary database at 2:00 a.m. daily.\n\nNews releases about disciplinary actions taken against Washington State healthcare providers, agencies or facilities are on the agency's Newsroom webpage.\n\nDisclaimer\nThe absence of information in the Provider Credential Search system doesn't imply any recommendation, endorsement or guarantee of competence of any healthcare professional. The presence of information in this system doesn't imply a provider isn't competent or qualified to practice. The reader is encouraged to carefully evaluate any information found in this data set.",
+            "attribution" : "Washington State Department of Health",
+            "attribution_link" : "https://wahelms.my.site.com/s/license-search",
+            "contact_email" : null,
+            "type" : "dataset",
+            "updatedAt" : "2026-10-12T11:17:50.000Z",
+            "createdAt" : "2016-01-20T23:20:45.000Z",
+            "metadata_updated_at" : "2026-09-02T14:04:25.000Z",
+            "data_updated_at" : "2026-10-12T11:17:50.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 3902,
+                "page_views_last_month" : 17496,
+                "page_views_total" : 4177845,
+                "page_views_last_week_log" : 11.930367747438952,
+                "page_views_last_month_log" : 14.09481996125598,
+                "page_views_total_log" : 21.994327883382844
+              },
+            "columns_name" :
+              [
+                "ActionTaken",
+                "BirthYear",
+                "CredentialType",
+                "CEDueDate",
+                "Status",
+                "LastIssueDate",
+                "FirstIssueDate",
+                "FirstName",
+                "ExpirationDate",
+                "LastName",
+                "MiddleName",
+                "CredentialNumber"
+              ],
+            "columns_field_name" :
+              [
+                "actiontaken",
+                "birthyear",
+                "credentialtype",
+                "ceduedate",
+                "status",
+                "lastissuedate",
+                "firstissuedate",
+                "firstname",
+                "expirationdate",
+                "lastname",
+                "middlename",
+                "credentialnumber"
+              ],
+            "columns_datatype" :
+              [
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text"
+              ],
+            "columns_description" :
+              [ "", "", "", "", "", "", "", "", "", "", "", "" ],
+            "columns_format" :
+              [ {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} ],
+            "download_count" : 244794,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "table",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2026-03-24T16:35:15.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [ "public safety", "economy", "health" ],
+            "tags" : [],
+            "domain_category" : "health",
+            "domain_tags" :
+              [
+                "department",
+                "health",
+                "public",
+                "credential",
+                "provider",
+                "washington",
+                "state",
+                "care"
+              ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Notes_3.-",
+                  "value" : "Profession-Specific Guidance: https://www.doh.wa.gov/LicensesPermitsandCertificates/ProfessionsNewReneworUpdate"
+                },
+                {
+                  "key" : "Notes_4.-",
+                  "value" : "The format of the data in the CredentialNumber column was changed during an update of the underlying data system in March 2026. The new format and a list of license prefixes and suffixes is now attached in the document titled \"DOH_HELMS_License Types_AlphaPrefixSuffixDictionary\" listed below."
+                },
+                {
+                  "key" : "Notes_5.-",
+                  "value" : "The provider birth year column results have been removed from this data set for information privacy. The column and column title are available to prevent interruptions in data validation."
+                },
+                {
+                  "key" : "Notes_2.-",
+                  "value" : "Contact Us: https://www.doh.wa.gov/AboutUs/ProgramsandServices/HealthSystemsQualityAssurance/ContactUs#heading28603"
+                },
+                {
+                  "key" : "Notes_1.-",
+                  "value" : "Application Status: A \"pending\" status means the review process is underway. We quickly update this status information from our licensing system, and it's a primary source for verifying your credentials.  https://www.doh.wa.gov/LicensesPermitsandCertificates/ProfessionsNewReneworUpdate/ApplicationStatus"
+                },
+                {
+                  "key" : "Temporal_Period-of-Time",
+                  "value" : "1/1/1907 to present"
+                },
+                { "key" : "Temporal_Posting-Frequency", "value" : "Daily" }
+              ]
+          },
+        "metadata" : { "domain" : "data.wa.gov", "license" : "Public Domain" },
+        "permalink" : "https://data.wa.gov/d/qxh8-f4bd",
+        "link" : "https://data.wa.gov/health/Health-Care-Provider-Credential-Data/qxh8-f4bd",
+        "owner" :
+          {
+            "id" : "ypwc-5ce7",
+            "user_type" : "interactive",
+            "display_name" : "Department of Health Open Data"
+          },
+        "creator" :
+          {
+            "id" : "ypwc-5ce7",
+            "user_type" : "interactive",
+            "display_name" : "Department of Health Open Data"
+          }
+      },
+      {
+        "resource" :
+          {
+            "name" : "Find a Health Provider Credential",
+            "id" : "k356-mc56",
+            "resource_name" : null,
+            "parent_fxf" : [ "qxh8-f4bd" ],
+            "description" : "<div>This \"data lens\" page allows you to search the Department of Health's provider credential database for a specific person's credential, or look at all the credentials that match certain conditions, such as \"Expired\" or \"Registered Nurse\".&nbsp; <b>To find a particular credential</b>: start typing a first or last name in the search boxes at the top. <b>To see all credentials </b>matching a common condition, click on one of the bars in the charts midway down the page.&nbsp; As you make these selections, the table of matching credentials at the bottom of the page will be slimmed down until you have a list that exactly matches your criteria.&nbsp; You can export that list in a variety of formats by clicking the \"Export\" button, query the dataset \"endpoint\" from your own software using the \"API\" button, or just print it from your browser.<br></div>",
+            "attribution" : null,
+            "attribution_link" : null,
+            "contact_email" : null,
+            "type" : "story",
+            "updatedAt" : "2026-07-23T22:04:06.094Z",
+            "createdAt" : "2023-07-19T19:01:38.000Z",
+            "metadata_updated_at" : "2026-07-23T22:04:06.000Z",
+            "data_updated_at" : "2026-07-23T22:04:06.094Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 3228,
+                "page_views_last_month" : 13741,
+                "page_views_total" : 767166,
+                "page_views_last_week_log" : 11.65687172561398,
+                "page_views_last_month_log" : 13.746304367701304,
+                "page_views_total_log" : 19.549181138014582
+              },
+            "columns_name" : [],
+            "columns_field_name" : [],
+            "columns_datatype" : [],
+            "columns_description" : [],
+            "columns_format" : [],
+            "download_count" : 15,
+            "provenance" : "official",
+            "lens_view_type" : "story",
+            "lens_display_type" : "story",
+            "locked" : false,
+            "backend" : "not_a_dataset",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2023-07-19T19:01:39.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "health",
+            "domain_tags" :
+              [
+                "public health",
+                "health",
+                "department of health",
+                "credential"
+              ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Temporal_Period-of-Time",
+                  "value" : "1907 to present"
+                },
+                { "key" : "Temporal_Posting-Frequency", "value" : "Daily" }
+              ]
+          },
+        "metadata" : { "domain" : "data.wa.gov" },
+        "permalink" : "https://data.wa.gov/stories/s/k356-mc56",
+        "link" : "https://data.wa.gov/stories/s/k356-mc56",
+        "owner" :
+          {
+            "id" : "cehx-vkx5",
+            "user_type" : "interactive",
+            "display_name" : "Francoise Pickart"
+          },
+        "creator" :
+          {
+            "id" : "cehx-vkx5",
+            "user_type" : "interactive",
+            "display_name" : "Francoise Pickart"
+          }
+      }
+    ],
+  "resultSetSize" : 2177,
+  "timings" : { "serviceMillis" : 17, "searchMillis" : [ 2, 5 ] },
+  "warnings" : []
+}

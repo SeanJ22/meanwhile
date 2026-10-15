@@ -33,10 +33,7 @@ function textKey(value: unknown, keys: readonly string[]): string | null {
 function keyed(prefix: string, values: readonly unknown[], keys: readonly string[]): CivicRecordMember[] {
   return values.map((record) => {
     const key = textKey(record, keys);
-    // A row position is not a durable civic identity: inserting an unrelated
-    // sibling would silently rename every later member. Leave the key invalid
-    // so the promotion validator refuses the candidate before computing a
-    // delta or moving the pointer.
+    // Row positions change when siblings are inserted; an empty identity makes validation refuse the candidate.
     return { key: key === null ? "" : `${prefix}:${key}`, record };
   });
 }
@@ -100,6 +97,32 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   if (recordClass === "FEDERAL_MONEY" && member.key.startsWith("federal-money:")) {
     return withoutProvenanceStamps(member.record, ["retrievedAt", "rawHash"]);
   }
+  if (recordClass === "CENSUS_REFERENCE") {
+    const row = object(member.record), attribution = object(row?.attribution);
+    if (row && attribution) {
+      const { retrievedAt: _retrievedAt, ...sourceFacts } = attribution;
+      return { ...row, attribution: sourceFacts };
+    }
+  }
+  if (recordClass === "MEETING_OUTCOME" && member.key.startsWith("sitting:")) {
+    const row = object(member.record), document = object(row?.minutesDocument);
+    if (row && document) {
+      const { readAt: _readAt, ...facts } = document;
+      return { ...row, minutesDocument: facts };
+    }
+  }
+  if (recordClass === "GOOGLE_CIVIC_VOTERINFO") {
+    const row = object(member.record);
+    if (row === null) return member.record;
+    const { checkedAt: _checkedAt, rows, ...facts } = row;
+    return { ...facts, rows: array(rows).map(value => {
+      const fact = object(value) ?? {};
+      return { ...fact, sources: array(fact.sources).map(source => {
+        const { collectedAt: _collectedAt, ...attribution } = object(source) ?? {};
+        return attribution;
+      }) };
+    }) };
+  }
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
@@ -126,6 +149,10 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   }
   if (recordClass === "CURATED_READER_RECORD") {
     const row = object(member.record);
+    if (row?.kind === "SOCRATA_DATASET" || row?.kind === "EPA_FACILITY") {
+      const { capturedAt: _capturedAt, ...facts } = row;
+      return facts;
+    }
     const value = object(row?.value);
     if (row?.kind === "ELECTION_FIELD" && value) {
       const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, ...facts } = value;
@@ -140,14 +167,22 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
   const provenance = object(row?.provenance);
   if (row === null || provenance === null) return record;
   const factualProvenance = Object.fromEntries(Object.entries(provenance).filter(([key]) => !stamps.includes(key)));
-  return { ...row, provenance: factualProvenance };
+  const fieldSources = object(row.fieldSources);
+  return { ...row, provenance: factualProvenance,
+    ...(fieldSources ? {fieldSources:Object.fromEntries(Object.entries(fieldSources).map(([field,source])=>[field,
+      object(source) ? Object.fromEntries(Object.entries(object(source)!).filter(([key])=>!stamps.includes(key))) : source]))} : {}) };
 }
 
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
   const root = object(payload) ?? {};
   switch (recordClass) {
+    case "STATE_BILL":
+      return [...keyed("bill", array(root.bills), ["id"]), ...keyed("dataset", array(root.datasets), ["session_id"])];
     case "FEC_FUNDING":
-      return keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]);
+      return [
+        ...keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]),
+        ...keyed("second-hop", array(root.secondHop), ["committeeId"]),
+      ];
     case "STATE_LEGISLATOR":
       return (array(root.members).length > 0
         ? array(root.members)
@@ -163,7 +198,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return root.state === "US"
         ? keyed("federal-money-state", array(root.states), ["state"])
         : [...keyed("federal-money", array(root.records), ["id"]),
-          ...(root.checkpoint ? [{ key: "federal-money-checkpoint", record: root.checkpoint }] : [])];
+          ...(root.checkpoint ? [{ key: "federal-money-checkpoint", record: { ...object(root.checkpoint), counts: root.counts } }] : []),
+          ...(root.partition ? [{ key: "federal-money-partition", record: { partition: root.partition, children: root.children ?? [] } }] : [])];
     case "STATE_ROLL_CALL":
       return [
         ...keyed("roll", array(root.rollCalls), ["id", "officialRollCallId", "rollCallId"]),
@@ -175,11 +211,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         }),
       ];
     case "STATE_LEGISLATOR_VOTES":
-      // One record class, one per-state fan-out contract, two payload shapes:
-      // a per-legislator record keys each of that member's positions (bounded
-      // by the member's tenure, never the chamber), and the per-state session
-      // marker the runner's clock reads keys its own watermark. Only the
-      // per-legislator record carries positions.
+      // A session marker holds the runner watermark; per-legislator payloads hold tenure-bounded positions.
       return typeof root.officeholderId === "string" && root.officeholderId
         ? array(root.positions).map((record, index) => {
             const row = object(record) ?? {};
@@ -281,6 +313,10 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...Object.entries(rosterPhotos).map(([key, record]) => ({ key: `roster-photo:${key}`, record })),
       ].sort((left, right) => left.key.localeCompare(right.key));
     }
+    case "GOOGLE_CIVIC_VOTERINFO": {
+      // Scoped snapshots preserve sources without claiming omitted contests or sites were deleted.
+      return [{ key: "google-civic:query-snapshot", record: root }];
+    }
     case "VOTING_SITE":
       return array(root.jurisdictions).flatMap((record, index) => {
         const jurisdiction = object(record) ?? {};
@@ -301,6 +337,10 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return [
         ...keyed("zcta", array(root.zcta), ["code"]),
         ...keyed("state", array(root.state), ["code"]),
+        ...array(root.geographies).map(record => {
+          const row = object(record);
+          return { key: `${row?.geography}:${row?.code}`, record };
+        }),
       ];
     case "CENSUS_GEOGRAPHY": {
       // One civic record per geography instance (a grouping), carrying its ZCTA
@@ -323,11 +363,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       return members.sort((left, right) => left.key.localeCompare(right.key));
     }
     case "REGISTRATION": {
-      // One civic record per Census division and per registered body. A
-      // division is keyed by its OCD id and Census GEOID together, because the
-      // committed geometry already gives one id to two school districts; a body
-      // by its id. The records carry the reference's build date, never the
-      // run's clock, so an unchanged month compares equal.
+      // OCD ids can collide for school districts, so a division's identity also includes its Census GEOID.
       const divisions = array(root.divisions).map((record) => {
         const row = object(record);
         const ocdId = row && typeof row.ocdId === "string" ? row.ocdId : "";
@@ -367,6 +403,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       const reconciliation = object(root.lineupReconciliation);
       return [
         ...keyed("contest", array(ballot.contests), ["id"]),
+        ...keyed("contest", array(ballot.heldContests), ["id"]),
         ...keyed("candidacy", array(ballot.candidacies), ["id"]),
         ...keyed("measure", array(ballot.measures), ["id", "contestId"]),
         ...keyed("measure-record", array(ballot.measureRecords), ["contestId"]),
@@ -446,8 +483,14 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           ...array(sitting.rollCalls).map((record, index) => ({ key: `roll-call:${meetingId}:${textKey(record, ["eventItemId"]) ?? `row-${index}`}`, record })),
         ];
       }).sort((left, right) => left.key.localeCompare(right.key));
+    case "FEDERAL_CIVIC_RECORD":
+      return [
+        { key: "projection:cursor", record: root.cursor ?? null },
+        { key: "projection:counts", record: root.counts ?? null },
+        ...keyed("federal", array(root.records), ["id"]),
+      ].sort((a, b) => a.key.localeCompare(b.key));
     case "CURATED_READER_RECORD":
-      return keyed("curated-reader", array(root.records), ["id"])
+      return keyed("curated-reader", [...array(root.records), ...(root.kind === "open-data" ? [...array(root.reports),...array(root.partitions)] : [])], ["id"])
         .sort((left, right) => left.key.localeCompare(right.key));
     case "STATE_CAMPAIGN_FINANCE":
       return array(root.records).map((record, index) => {
@@ -480,7 +523,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ].sort((a, b) => a.key.localeCompare(b.key));
     }
     case "DOTGOV_REFERENCE":
-      return keyed("domain", array(root.electionDomains), ["domain"]);
+      return keyed("domain", array(root.domains), ["domain"]);
     case "OPERATIONAL_REFERENCE": {
       const registries = object(root.registries) ?? {};
       return Object.values(registries).flatMap((value) => {
@@ -500,11 +543,6 @@ export function canonicalCivicDataJson(value: unknown): string {
     .join(",")}}`;
 }
 
-/**
- * The member projection and fact comparison a durable delta was derived under.
- * A delta is re-derived only to verify evidence, and evidence is verified
- * against the contract that wrote it.
- */
 export interface CivicChangeContract {
   readonly members: (recordClass: RoutineRecordClass, payload: unknown) => readonly CivicRecordMember[];
   readonly facts: (recordClass: RoutineRecordClass, member: CivicRecordMember) => unknown;
@@ -524,7 +562,6 @@ export function rowKeyedCivicRecordsFor(recordClass: RoutineRecordClass, payload
   ];
 }
 
-/** The earlier projection: one member per stored row, compared whole. Pointers written under it are re-proved against it, never against a later contract. */
 export const ROW_KEYED_CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
   members: rowKeyedCivicRecordsFor,
   facts: (_recordClass, member) => member.record,
@@ -535,9 +572,7 @@ export function candidateChangeSet(
   previousPayload: unknown | null,
   contract: CivicChangeContract = CIVIC_CHANGE_CONTRACT,
 ): RoutineChangeSet {
-  // A caller-supplied member list is evidence to validate, never authority for
-  // the durable delta. Derive Admin's exact changed/removed records from the
-  // same Reader projection that the canonical pointer will serve.
+  // Derive deltas from the Reader projection; caller-supplied members remain evidence to validate.
   const next = contract.members(candidate.recordClass, candidate.readModel);
   const prior = previousPayload === null ? [] : contract.members(candidate.recordClass, previousPayload);
   const priorByKey = new Map(prior.map((member) => [member.key, member]));

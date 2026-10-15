@@ -1,11 +1,3 @@
-/**
- * The door registry: one editable list of every way Meanwhile reads government
- * information (a meeting calendar, a roll-call feed, a money filing feed). A
- * door is a record, edited through one gateway action (`./actions.ts`), that
- * takes effect without a release. A door carries its division and body ids as
- * data. Pure: callers hand in the repository and the time.
- */
-
 import { canonicalJson, type AggregateRepository } from "../control-plane/repository/types.ts";
 
 /** Whether a door is read, shut because it stopped working, or deliberately set aside. */
@@ -15,10 +7,6 @@ export const DOOR_STATUSES = ["OPEN", "SHUT", "SUSPENDED"] as const;
 export const FEED_DOOR_KINDS: readonly string[] = ["source-feed", "derived-feed"];
 export const feedDoorId = (taskId: string): string => `feed:${taskId}`;
 
-/**
- * Whether a routine task reads this door on a clock: a meeting door or a feed. Other doors (found pages, route
- * hints, link sweeps) are read when work needs them, so they owe no scheduled read.
- */
 export function readOnSchedule(door: Pick<DoorRecord, "kind" | "meeting">): boolean {
   return door.meeting != null || FEED_DOOR_KINDS.includes(door.kind);
 }
@@ -30,10 +18,6 @@ export type DoorOrigin = "MANUAL" | "DERIVED";
 /** A config value: plain data only. Secrets are referenced by name, never held. */
 export type DoorConfigValue = string | number | boolean | readonly string[];
 
-/**
- * What a meeting door needs beyond the common fields so an adapter can read
- * it as it reads a wiring row. Absent on non-meeting doors.
- */
 export interface DoorMeeting {
   /** The adapter's agenda source type, as wiring names it (e.g. `ICAL`). */
   readonly agendaSourceType: string;
@@ -88,7 +72,7 @@ export interface DoorRecord {
   readonly status: DoorStatus;
   readonly lastSuccessAt: string | null;
   readonly lastFailureAt: string | null;
-  /** The source's actual failed read reason, including before a door goes shut. */
+  /** The source's actual outage reason, preserved on its existing operational record. */
   readonly lastFailureReason?: string | null;
   /** When the door last went SHUT. Null unless it is. */
   readonly shutSince: string | null;
@@ -194,7 +178,6 @@ function configOf(value: unknown): Checked<Readonly<Record<string, DoorConfigVal
       return { ok: false, why: `"${key}" looks like it would hold a secret; store the name of the key instead, under a name ending in Ref` };
     }
     if (typeof raw === "string") {
-      if (raw.length > 2000) return { ok: false, why: `"${key}" is too long` };
       out[key] = raw;
     } else if (typeof raw === "number") {
       if (!Number.isFinite(raw)) return { ok: false, why: `"${key}" is not a number` };
@@ -347,11 +330,6 @@ export function applyManualEdit(previous: DoorRecord | null, draft: Required<Doo
   };
 }
 
-/**
- * A derived row (from wiring or a crosswalk) offered to the registry. Upserts
- * by door id and never overwrites a manual edit newer than `deriveInputAt`.
- * Returns the record to store, or null when the stored record stands.
- */
 export function applyDerivedRow(
   previous: DoorRecord | null,
   draft: Required<DoorDraft>,
@@ -416,10 +394,6 @@ export async function listDoors(repo: DoorRepository): Promise<{ readonly doors:
   return { doors, unreadable };
 }
 
-/**
- * Upsert one derived row by door id. Returns what happened, for import scripts and
- * derive steps to count. A concurrent writer losing the race is retried once from the fresh read.
- */
 export async function upsertDerivedDoor(
   repo: DoorRepository,
   draft: DoorDraft,

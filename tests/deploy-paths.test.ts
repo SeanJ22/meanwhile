@@ -5,7 +5,7 @@
  * Next writes for each server bundle and fails if any traced file sits under a non-shipping prefix. It is skipped
  * with a named reason when `.next` has not been built, rather than silently passing.
  */
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve, dirname, sep } from "node:path";
@@ -79,7 +79,7 @@ test("the shipping directories are NOT on the allowlist", () => {
 test("the paperwork paths ARE on the allowlist", () => {
   for (const p of [
     "docs/DESIGN.md",
-    "docs/sources.md",
+    "docs/look-standard.md",
     "tests/deploy-paths.test.ts",
     "screenshots/phone-07866.png",
     ".github/workflows/build-check.yml",
@@ -92,7 +92,7 @@ test("the paperwork paths ARE on the allowlist", () => {
 
 test("a docs-only commit cancels; one shipping path anywhere in it builds", () => {
   assert.equal(classifyDeploy(["docs/DESIGN.md"]).verdict, "cancel");
-  assert.equal(classifyDeploy(["docs/DESIGN.md", "docs/sources.md"]).verdict, "cancel");
+  assert.equal(classifyDeploy(["docs/DESIGN.md", "docs/look-standard.md"]).verdict, "cancel");
   assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "build");
 
   // A commit that carries any code builds.

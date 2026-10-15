@@ -146,18 +146,11 @@ test("F01 6.1: no reader surface calls an absence a gap in our research or data"
   );
 });
 
-test("F01 6.2: an absence reads as the working-on-it sentence", async () => {
+test("missing vote positions contribute to the card gap without a field placeholder", async () => {
   const { readFileSync: read } = await import("node:fs");
-  const { join: j } = await import("node:path");
-  const surface = read(
-    j(process.cwd(), "components", "officials", "key-votes-section.tsx"),
-    "utf8",
-  );
-  assert.ok(
-    /<WorkingOnIt/.test(surface) &&
-      !/not a statement that no vote happened/.test(surface),
-    "the key-votes absence line is the working-on-it sentence (rulings §10), with no disclaimer",
-  );
+  const surface = read("components/officials/key-votes-section.tsx", "utf8");
+  assert.match(surface, /<CardGapContribution[^\n]*label="voting positions"/);
+  assert.doesNotMatch(surface, /<WorkingOnIt|not a statement that no vote happened/);
 });
 
 test("item 4: no reader surface refuses to describe a body or an office", async () => {
@@ -193,16 +186,4 @@ test("item 4: no reader surface refuses to describe a body or an office", async 
     [],
     `the refusal clause is back in ${offenders.length} place(s):\n${offenders.join("\n")}`,
   );
-});
-
-test("item 4: the office and body absence lines keep their whose-gap attribution", async () => {
-  const { readFileSync: read } = await import("node:fs");
-  const { join: j } = await import("node:path");
-
-  const sections = read(j(process.cwd(), "lib", "design", "card-sections.ts"), "utf8");
-  assert.match(sections, /id: "office"[^\n]+emptyLine: copy\("copy.working"\)/,
-    "the shared office section uses the approved Reader gap default");
-  const entity = read(j(process.cwd(), "components", "map", "popup", "entity-modal.tsx"), "utf8");
-  assert.match(entity, /<WorkingOnIt/,
-    "a missing body definition remains an open Reader hunt");
 });

@@ -18,6 +18,16 @@ test("the record half: minimum facts put a record live; other fields attach only
   assert.equal(needsSecondSource({ recordClass: "OFFICIAL_ROSTER", requiredFields: ["name", "photoUrl"] }), true, "a portrait is a judgment call");
 });
 
+test("an AI summary of a stance attaches with the quote it summarizes and needs no second source", () => {
+  const statement = page(`<p>On 2026-09-01 the sheriff said: "We will add two deputies in Bisbee."</p>`);
+  const fields = { quote: "We will add two deputies in Bisbee.", date: "2026-09-01", statementSummary: "Wants more deputies in Bisbee." };
+  const verdict = section3Record({ recordClass: "STANCE", fields, page: statement, now: NOW, minimums: ["quote", "date"] });
+  assert.deepEqual([verdict.live, verdict.verifiedFields], [true, ["date", "quote", "statementSummary"]]);
+  const unquoted = section3Record({ recordClass: "STANCE", fields: { ...fields, quote: "Words not on the page." }, page: statement, now: NOW, minimums: ["date"] });
+  assert.deepEqual(unquoted.openFields, ["quote", "statementSummary"]);
+  assert.equal(needsSecondSource({ recordClass: "STANCE", requiredFields: ["quote", "statementSummary"] }), false);
+});
+
 test("a contest goes live on its saved official list; each candidate attaches when named there", () => {
   const contest = { election: "2026 General Election", office: "Sheriff", candidates: ["Mark Dannels", "Jane Ortiz", "Pat Nobody"] };
   assert.deepEqual(section3Contest({ page: page(LIST), now: NOW, contest }),

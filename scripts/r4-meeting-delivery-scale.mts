@@ -221,7 +221,7 @@ async function main() {
       databaseAllocatedBytes: Number(allocation.bytes), fixtureDoorSeed, databaseIoBefore, databaseIoAfter, databaseIoDelta,
       databaseIoDescription: "PostgreSQL block reads may hit the operating-system cache; cached block visits are not transferred bytes. Cluster I/O includes background flushes, while the WAL insert delta measures generated WAL. Every connection flushes its statistics at each boundary. SQL/result traffic is separate; fixture setup is included in database counters.",
       stateWorkers: workers, stateTurns: publish ? 0 : total("stateTurns"), bodies: total("bodies"), hotBodies: total("hotBodies"), promoted: total("promoted"), visible: total("visible"),
-      runtimeMs: performance.now() - started, deliveryRuntimeMs, coldSeedRuntimeMs, peakCoordinatorRssBytes: process.resourceUsage().maxRSS * 1024, peakWorkerRssBytes: peak, peakConcurrentWorkerRssBytes, copiesAtMargin: Math.floor((8 * 1024 ** 3 - 768 * 1024 ** 2) / peak),
+      runtimeMs: performance.now() - started, deliveryRuntimeMs, coldSeedRuntimeMs, peakCoordinatorRssBytes: process.resourceUsage().maxRSS * 1024, peakWorkerRssBytes: peak, peakConcurrentWorkerRssBytes, copiesAtMargin: Math.floor((8_326_938_624 - 768 * 1024 ** 2) / peak),
       coordinatorCpuUserMicroseconds: process.resourceUsage().userCPUTime, coordinatorCpuSystemMicroseconds: process.resourceUsage().systemCPUTime,
       databaseBridgeCpuUserMicroseconds: databaseBridgeUsage.userCPUTime, databaseBridgeCpuSystemMicroseconds: databaseBridgeUsage.systemCPUTime,
       databaseBytesRead: total("databaseBytesRead"), databaseBytesWritten: total("databaseBytesWritten"), databaseRequests: total("databaseRequests"),

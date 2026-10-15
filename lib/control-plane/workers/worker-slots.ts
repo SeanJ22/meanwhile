@@ -99,7 +99,7 @@ function measuredPeakKey(entry: string): string | null {
   return /[.](?:mts|ts|mjs|js)$/.test(script) ? script : null;
 }
 /** The largest recent measured peak, 5% over and rounded up to a whole MiB. */
-export function measuredReservationBytes(peaks: readonly number[]): number {
+function measuredReservationBytes(peaks: readonly number[]): number {
   return Math.ceil(Math.max(...peaks) * 1.05 / MIB) * MIB;
 }
 /** Linux high-water RSS of a process and its live descendants; null once the process is gone. */

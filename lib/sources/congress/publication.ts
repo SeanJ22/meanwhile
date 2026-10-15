@@ -36,7 +36,7 @@ export async function readFederalSourceProjection(source: FederalSourceId, parti
 
 type VaultedCapture = FederalCapture & HeldFederalCapture;
 const RETAINED_READ_CONCURRENCY = 8;
-export async function holdFederalCapture(vault: EvidenceStore, capture: FederalCapture): Promise<VaultedCapture> {
+async function holdFederalCapture(vault: EvidenceStore, capture: FederalCapture): Promise<VaultedCapture> {
   return { ...capture, raw: await holdRawCapture(vault, capture.source, capture.body, capture.kind === "bill-text" ? "text/plain" : "application/json") };
 }
 

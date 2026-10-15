@@ -20,7 +20,7 @@ export async function holdRawCapture(vault: EvidenceStore, sourceId: string, bod
   return { vaultKey, rawHash, byteLength: bytes.byteLength };
 }
 
-export async function readRawCapture(vault: EvidenceStore, ref: RawCaptureRef): Promise<Uint8Array> {
+async function readRawCapture(vault: EvidenceStore, ref: RawCaptureRef): Promise<Uint8Array> {
   const object = await vault.get(ref.vaultKey);
   if (!object || object.bytes.byteLength !== ref.byteLength || sha256(object.bytes) !== ref.rawHash) {
     throw Error(`RAW_CAPTURE_MISSING_OR_CORRUPT:${ref.vaultKey}`);

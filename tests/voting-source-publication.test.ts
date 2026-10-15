@@ -4,7 +4,7 @@ import test from "node:test";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { readRawCapture, type RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -44,7 +44,7 @@ test("saved official tables reach the existing public read model with hours, loc
   assert.ok(!JSON.stringify(saved).includes(bytes.toString("base64")) && !JSON.stringify(saved).includes("rgMasterTable"),
     "the stored candidate holds refs, not the page bytes");
   const page = (saved.normalizedPayload as { acquisition: (RawCaptureRef & { url: string })[] }).acquisition.find(ref => ref.url === door.url)!;
-  assert.deepEqual(Buffer.from(await readRawCapture(vault, page)), bytes);
+  assert.deepEqual(Buffer.from((await vault.get(page.vaultKey))!.bytes), bytes);
 });
 
 test("a failed reread leaves all verified sites intact and keeps its attempted route as open work", async () => {

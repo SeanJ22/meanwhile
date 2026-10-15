@@ -17,7 +17,7 @@ export interface StateFactsIndex { readonly buckets: readonly (AuthorityArtifact
 
 const EMPTY: StateFacts = { bodies: {}, rosters: [], dispositions: [], comments: [] };
 const bucketCount = (bodies: number) => Math.max(1, Math.ceil(bodies / BODIES_PER_BUCKET));
-export const factBucket = (bodyId: string, count: number) =>
+const factBucket = (bodyId: string, count: number) =>
   count === 1 ? 0 : Number.parseInt(createHash("sha1").update(bodyId).digest("hex").slice(0, 8), 16) % count;
 
 /** Where the served buckets are read from and new ones written, one at a time. */

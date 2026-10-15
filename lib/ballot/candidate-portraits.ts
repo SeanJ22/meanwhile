@@ -5,7 +5,7 @@ import type { PortraitRuntime } from "../photos/store.ts";
 import { storeVerifiedPortrait } from "../photos/store.ts";
 import type { CandidateCardData } from "./candidate-cards.ts";
 import type { CampaignSiteIdentity, CampaignSiteSupportingRead } from "../candidates/campaign-site-verifier.ts";
-import { wikidataCandidacyPortraitIdentity } from "../photos/commons.ts";
+import { wikidataCandidacyPortraitIdentity, type CommonsCandidacyIdentity } from "../photos/commons.ts";
 import { acquireKnownRelease, type KnownRelease } from "../sources/known-release.ts";
 import { sourceUserAgent } from "../sources/http.ts";
 
@@ -75,13 +75,15 @@ SELECT DISTINCT ?person ?personLabel ?officeLabel ?districtLabel ?districtNumber
 }`;
 }
 
-export async function candidatePortraitFromCommons(subject: CampaignSiteIdentity, now: string, io?: CommonsPortraitRuntime):
-  Promise<{ readonly patch: CandidatePortraitPatch } | { readonly gap: string }> {
-  const capture = io?.capture ?? (async (url: string) => acquireKnownRelease({ sourceId: "candidate-wikimedia-portrait", releaseId: url,
+const commonsReader = (io?: CommonsPortraitRuntime) => io?.capture ?? (async (url: string) => acquireKnownRelease({ sourceId: "candidate-wikimedia-portrait", releaseId: url,
     url, allowedHosts: [new URL(url).hostname], parserVersion: "candidate-wikimedia-portrait/1", maxBytes: 2_000_000,
     checkAfterMs: 7 * 86_400_000, signal: AbortSignal.timeout(30_000),
     headers: { accept: "application/json", "user-agent": sourceUserAgent(), "api-user-agent": sourceUserAgent() },
     validate: bytes => { JSON.parse(new TextDecoder().decode(bytes)); } }));
+
+export async function candidatePortraitFromCommons(subject: CampaignSiteIdentity, now: string, io?: CommonsPortraitRuntime):
+  Promise<{ readonly patch: CandidatePortraitPatch } | { readonly gap: string }> {
+  const capture = commonsReader(io);
   const sourceUrl = `https://query.wikidata.org/sparql?${new URLSearchParams({ query: wikidataCandidatePortraitQuery(subject), format: "json" })}`;
   const identityCapture = commonsCapture(await capture(sourceUrl));
   const name = `${subject.givenName} ${subject.familyName}`.replace(/\s+/g, " ").trim();
@@ -95,16 +97,29 @@ export async function candidatePortraitFromCommons(subject: CampaignSiteIdentity
   }
   if (matches.size !== 1) return { gap: "COMMONS_CANDIDACY_IDENTITY_UNRESOLVED" };
   const matched = [...matches.values()][0];
-  const image = new URL(matched.image);
+  return commonsFilePortrait(subject, matched.image, matched.identity, [identityCapture], now, io);
+}
+
+/** A Commons file a hunter cited: it publishes on its own once the file's description names the candidate and its author and free license are on record. */
+export async function candidatePortraitFromCommonsFile(subject: CampaignSiteIdentity, fileUrl: string, now: string, io?: CommonsPortraitRuntime):
+  Promise<{ readonly patch: CandidatePortraitPatch } | { readonly gap: string }> {
+  return commonsFilePortrait(subject, fileUrl, { candidacyId: subject.candidacyId, wikidataId: "", officeTitle: subject.officeTitle,
+    ocdId: subject.ocdId, stateCode: subject.stateCode }, [], now, io);
+}
+
+async function commonsFilePortrait(subject: CampaignSiteIdentity, file: string, identity: CommonsCandidacyIdentity, captures: readonly PortraitCapture[],
+  now: string, io?: CommonsPortraitRuntime): Promise<{ readonly patch: CandidatePortraitPatch } | { readonly gap: string }> {
+  const image = new URL(file);
   if (!["commons.wikimedia.org", "upload.wikimedia.org"].includes(image.hostname)) return { gap: "COMMONS_IMAGE_NOT_HELD" };
-  const title = `File:${decodeURIComponent(image.pathname.split("/").at(-1) ?? "").replace(/_/g, " ")}`;
+  const name = `${subject.givenName} ${subject.familyName}`.replace(/\s+/g, " ").trim();
+  const title = `File:${decodeURIComponent(image.pathname.split("/").at(-1) ?? "").replace(/^File:/, "").replace(/_/g, " ")}`;
   const metadataUrl = `https://commons.wikimedia.org/w/api.php?${new URLSearchParams({ action: "query", titles: title, prop: "imageinfo", iiprop: "extmetadata|url", format: "json" })}`;
-  const metadataCapture = commonsCapture(await capture(metadataUrl));
+  const metadataCapture = commonsCapture(await commonsReader(io)(metadataUrl));
   const pages = Object.values(JSON.parse(metadataCapture.evidence.text).query?.pages ?? {}) as { title?: string; imageinfo?: { url?: string }[] }[];
   const imageUrl = pages.find(page => page.title === title)?.imageinfo?.[0]?.url;
   if (!imageUrl) return { gap: "COMMONS_IMAGE_NOT_HELD" };
   const photo = await storeVerifiedPortrait(subject.candidacyId, { subject: { personId: subject.candidacyId, name, profileUrls: [] },
-    imageUrl, commons: matched.identity, captures: [identityCapture, metadataCapture] }, now, io?.portrait, "candidates");
+    imageUrl, commons: identity, captures: [...captures, metadataCapture] }, now, io?.portrait, "candidates");
   if (photo.verification?.basis !== "COMMONS") return { gap: "COMMONS_LICENSE_NOT_VERIFIED" };
   return { patch: { personId: subject.candidacyId, photoUrl: photo.url,
     photoSource: `Wikimedia Commons: ${photo.verification.attribution!.author}, ${photo.verification.license!.value}`,

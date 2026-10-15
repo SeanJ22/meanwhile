@@ -1474,7 +1474,7 @@ function parsingOf(g: Gathered, clips: Clips): AssignmentParsing {
 }
 
 function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): AssignmentVerification {
-  const furthest: Record<PipelineStage, number> = { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 };
+  const furthest: Record<PipelineStage, number> = { SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 };
   const rejections: AssignmentRejection[] = [];
   let passed = 0;
   let rejected = 0;
@@ -1586,7 +1586,7 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
     const publication = item.publicationOutcome;
     if (!publication || publication.status === "HELD") return [];
     const witness = servedWitness(src.servedReader, item.id, publication.workerResultId, src.nowIso);
-    return witness?.versionId === publication.versionId ? [witness] : [];
+    return witness?.versionId === (publication.versionId ?? publication.workerResultId) ? [witness] : [];
   })];
   const witness = witnesses[0];
   const workerPublication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])

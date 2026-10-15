@@ -208,7 +208,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   counter.reset();
   const { projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection };
   const registry: ReaderAuthorityEdgeBundle = { promoted: new Map([[projection.key, manualEdgeEntry("registry-runtime-bindings", projection.payload, projection.versionId)]]) };
-  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: "1" } }));
+  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test" } }));
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
     counter.reset();

@@ -786,7 +786,8 @@ export const SOURCE_AUTHORITIES = {
     routePrefixes: [],
     jurisdictions: REGISTRATION_TARGETS.map((target) => target.jurisdiction),
     recordClasses: ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"],
-    competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page"],
+    competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page",
+      "freely licensed portrait"],
     expectedIdentifierKeys: ["candidate_key", "document_id"],
     expectedTemporalFields: ["retrieved_at", "source_through"],
     horizonSemantics: "Each reviewed receipt speaks only for its enumerated URLs and exact candidate keys. It never establishes that a candidate published nothing elsewhere.",
@@ -794,7 +795,7 @@ export const SOURCE_AUTHORITIES = {
     freshnessExpectation: "Explicit owner invocation after an equal-effort reviewed collection pass; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY"] },
+    manualReceiptPromotion: { allowedSourceClasses: ["CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY", "REFERENCE_PUBLISHER"] },
   },
   "officeholder-primary-publications": {
     id: "officeholder-primary-publications",

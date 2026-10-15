@@ -7,7 +7,7 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
-const { rosterHoldersForBody, BODY_ROSTERS } = await import("../lib/registry/body-rosters.ts");
+const { rosterHoldersForBody, currentBodyRosters } = await import("../lib/registry/body-rosters.ts");
 
 const words = (html: string) => pageWords(html);
 
@@ -29,7 +29,7 @@ test("a date is verified only when the saved page writes it", () => {
 });
 
 test("roster holders carry term dates when a roster member holds them, and null otherwise", () => {
-  const roster = BODY_ROSTERS[0];
+  const roster = currentBodyRosters()[0]!;
   const holders = rosterHoldersForBody(roster.bodyId);
   assert.ok(holders.length > 0);
   for (const holder of holders) assert.equal(holder.termEnd, null, "no curated roster states a term end as a date yet");

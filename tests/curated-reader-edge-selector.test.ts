@@ -8,6 +8,7 @@ import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
 import { currentRegistrationLinks } from "../lib/ballot/registration-links.ts";
 import { campaignSiteFor } from "../lib/officials/campaign-sites.ts";
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
+import { settleCommentAccessRead } from "../lib/registry/server.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
@@ -42,12 +43,15 @@ test("an edge-primed campaign-site projection names its campaign links in produc
   });
 });
 
-test("an edge-primed comment-access projection answers its rules in production", async () => {
-  await asProduction(() => {
-    primeCuratedReaderProjection("comment-access", {
-      kind: "comment-access",
-      records: [{ id: "comment-access:edge-test-body", bodyId: "edge-test-body", sourceUrl: "https://edge.example.test/comment", collectedAt: "2026-09-25" }],
-    } as unknown as CuratedReaderProjection, "edge-test:comment-access");
+test("edge-served comment rules answer in production, with no database", async () => {
+  const commentAccess = {
+    value: { kind: "comment-access" as const, records: [{ id: "comment-access:edge-test-body", bodyId: "edge-test-body", ocdId: null, commentPeriod: "YES" as const,
+      commentPeriodDetail: null, signup: null, writtenComment: null, attend: null, timeLimit: null,
+      sourceUrl: "https://edge.example.test/comment", collectedAt: "2026-09-25", verifiedAt: null }] },
+    versionId: "edge-test:comment-access",
+  };
+  await asProduction(async () => {
+    await withReaderAuthorityEdge({ commentAccess }, () => settleCommentAccessRead());
     assert.deepEqual(currentCommentAccess().map((rule) => rule.bodyId), ["edge-test-body"]);
   });
 });

@@ -4,7 +4,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 30;
+export const BOOTSTRAP_VERSION = 31;
 
 /**
  *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
@@ -38,6 +38,7 @@ export const AGGREGATE_KINDS = [
   "admin_evidence_copy_requests",
   /** The owner's research-lead uploads, one row per order. */
   "lead_orders",
+  "box_findings",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [

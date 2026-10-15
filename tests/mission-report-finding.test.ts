@@ -9,9 +9,7 @@ import { REPORT_FINDING_TOOL_SPEC, buildScoutToolkit, scoutToolSpecsFor } from "
 import type { ReportedFinding, ScoutToolContext } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { MISSION_BRIEF_LINE_CAP, SCOUT_BRIEF_LINE_BUDGET, missionBlanksFrom, missionBriefLines, missionRelation, type MissionBlank } from "../lib/control-plane/workers/mission-brief.ts";
-import { buildBoxFindings } from "../lib/control-plane/workers/scout-extraction.ts";
 import type { PlaceOwedItem } from "../lib/coverage/place-owed.ts";
-import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
 const NOW = "2026-10-06T17:00:00.000Z";
 const STATE = "ocd-division/country:us/state:zz";
@@ -124,11 +122,7 @@ test("a Scout drops a finding for another mission subject from a page it saved, 
   assert.match((await broken.call("report_finding", drop, null)).forModel, /REPORT_NOT_SAVED: store unavailable/);
 });
 
-const item = (subject: string): WorkItem => ({ id: "wi-county", subject, project: "freshness",
-  autonomousPlan: { publication: { contractId: "fixture" }, contract: { schemaVersion: 2, recordClass: "OFFICIAL_ROSTER", subjectId: subject, methodVersion: 3,
-    sourceScope: { routeIds: ["r"], canonicalUrls: [PAGE], observationArtifactIds: ["held-page"] } } } } as unknown as WorkItem);
-
-test("a dropped finding lands in the Box under the reporting work item; one for another subject waits for its own door", async () => {
+test("a dropped finding lands in the Box under the reporting work item, once", async () => {
   const repos = createMemoryRepositories();
   const finding = { subjectId: CITY, field: "name", value: "Lee Park", exactQuote: "The city of Beta's mayor is Lee Park.", sourceUrl: PAGE,
     artifactIds: ["held-page"], subjectHint: "Beta's mayor", index: 0 };
@@ -140,16 +134,6 @@ test("a dropped finding lands in the Box under the reporting work item; one for 
   assert.equal((await indexReportedFinding(repos.boxFindings, { workItemId: "wi-county", attemptId: "at-mission", missionPart: null, finding }, NOW)).id, row.id);
   assert.deepEqual((await boxCountsByWorkItem(repos.boxFindings))["wi-county"], { waiting: 1, taken: 0, built: 0, refused: 0 });
 
-  const report = await buildBoxFindings({ repos, items: [item(COUNTY)], now: () => NOW, leaseMs: 60_000,
-    readCapture: async () => { throw new Error("no capture is read for another subject's finding"); } });
-  assert.deepEqual(report, { built: [], waiting: [{ findingId: row.id, reason: "Dropped for another subject; it waits for that subject's own door." }] });
-
-  // A drop for the item's own subject is built from the fact it carries: the builder goes on to read the saved page.
-  const own = createMemoryRepositories();
-  await indexReportedFinding(own.boxFindings, { workItemId: "wi-county", attemptId: "at-mission", missionPart: null,
-    finding: { ...finding, subjectId: COUNTY, field: "name", value: "Dana Rivers", exactQuote: "Board chair: Dana Rivers." } }, NOW);
-  await assert.rejects(buildBoxFindings({ repos: own, items: [item(COUNTY)], now: () => NOW, leaseMs: 60_000,
-    readCapture: async () => { throw new Error("own-subject drop reached the saved page"); } }), /own-subject drop reached the saved page/);
 });
 
 test("the round hands its mission blanks to both Scout paths; the lease worker asks its parent as each task begins", () => {

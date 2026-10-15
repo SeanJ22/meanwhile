@@ -20,12 +20,12 @@ const MONTH = MONTHS.map(name => `${name.slice(0, 3)}(?:${name.slice(3)})?\\.?`)
 const writtenDate = new RegExp(`\\b(?:(?:${MONTH})\\s+\\d{1,2}(?:st|nd|rd|th)?(?:\\s*(?:[-–—&,]|to|through|until)\\s*\\d{1,2}(?:st|nd|rd|th)?)?(?:,?\\s+20\\d{2})?|\\d{1,2}(?:st|nd|rd|th)?[\\s-]+(?:${MONTH})(?:,?\\s+20\\d{2})?|\\d{1,2}/\\d{1,2}(?:/(?:20\\d{2}|\\d{2}))?)\\b`, "gi");
 
 /** Deadline revisions replace the same contextual field rather than accumulating old dates. */
-function fieldId(field: ElectionFieldInput): string {
+export function electionFieldId(field: ElectionFieldInput): string {
   const context = field.quote.replace(writtenDate, "<date>").replace(/\b\d{4}-\d{2}-\d{2}\b/g, "<date>").replace(/\s+/g, " ").trim().toLowerCase();
   return `election-field:${hash(JSON.stringify([field.divisionId, field.kind, field.sourceUrl, context, ...(field.electionDate ? [field.electionDate] : [])])).slice(0, 32)}`;
 }
 
-function datesInQuote(quote: string, electionDate?: string): Set<string> {
+export function datesInQuote(quote: string, electionDate?: string): Set<string> {
   const dates = new Set(quote.match(/\b\d{4}-\d{2}-\d{2}\b/g) ?? []);
   const year = /\b(20\d{2})\b/.exec(quote)?.[1] ?? electionDate?.slice(0, 4);
   const pattern = new RegExp(`\\b(${MONTH})\\s+(\\d{1,2})(?:st|nd|rd|th)?(?:,?\\s+(20\\d{2}))?\\b`, "gi");
@@ -118,7 +118,7 @@ export async function publishElectionFields(input: {
     }
     const publishedDates = field.dates.length || !["registration_deadline", "mail_ballot_request_deadline", "early_voting"].includes(field.kind)
       ? field.dates : [...dates].sort();
-    const id = fieldId(field);
+    const id = electionFieldId(field);
     const previous = records.get(id);
     const sourceKind = section3Page(page, "BALLOT_CONTEST", input.now).kind;
     if (previous && (previous.value.text !== field.value || JSON.stringify(previous.value.dates) !== JSON.stringify(publishedDates))) {

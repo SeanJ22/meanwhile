@@ -145,7 +145,7 @@ test("wrong source family, changed supplied copies and ambiguous identities refu
   const target = await processRegisteredManualCandidate(fixture.store, "ballot-navigation", manualProjectionCandidate(freshPackage(firstAt)), firstAt);
   assert.ok(target.promoted);
   const input = freshPackage(transferAt);
-  const wrong = { ...input, contractId: "comment-access" as const, payload: { kind: "comment-access", records: [] } as CuratedReaderProjection };
+  const wrong = { ...input, contractId: "official-filings" as const, payload: { kind: "official-filings", records: [] } as CuratedReaderProjection };
   await assert.rejects(prepareManualProjectionScopeTransfer(wrong, fixture.store, fixture.record.candidate.scope, transferAt), /TRANSFER_INVALID|TARGET_NOT_PROMOTED/);
   const changed = structuredClone(fixture.projection.payload.records[0]);
   (changed.value as Record<string, unknown>).verifiedAt = transferAt;

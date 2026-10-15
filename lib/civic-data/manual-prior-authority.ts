@@ -4,7 +4,7 @@ import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
-import { registryMemberCitedUrls, inheritedRosterSourceFacts } from "../registry/cited-urls.ts";
+import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
@@ -24,7 +24,6 @@ export interface ManualPriorAuthority {
   readonly versionId: string;
   readonly readModelSha256: string;
   readonly retainedMembers: readonly { readonly key: string; readonly sha256: string }[];
-  readonly retainedRosterSources?: readonly { readonly key: string; readonly url: string; readonly sha256: string }[];
   readonly additionalProjections?: readonly ManualScopeTransferAuthority[];
 }
 export type ManualScopeTransferAuthority = Omit<ManualPriorAuthority, "additionalProjections"> & { readonly scope: string };
@@ -63,13 +62,11 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
     .map(row => [memberIdentity(value.recordClass, row), row.record]));
   const after = members(candidate);
   const retained = new Set<string>();
-  const retainedSources = new Set<string>();
   const versions = new Set<string>();
   for (const authority of authorities) {
     const source = authority.scope === candidate.scope ? base : additionalBases.find(row => row.candidate.id === authority.versionId);
     const receipt = source ? parseValidationReceipt(source.receipt) : null;
     if (authority.kind !== "VALIDATED_PRIOR_PROJECTION" || !Array.isArray(authority.retainedMembers) ||
-        (authority.retainedRosterSources !== undefined && !Array.isArray(authority.retainedRosterSources)) ||
         versions.has(authority.versionId) || !source || source.state !== "PROMOTED" || !source.acquisitionSucceeded ||
         receipt?.decision !== "GOOD" || receipt.checks.some(check => check.verdict !== "PASS") ||
         source.promotedVersion !== authority.versionId || source.lastKnownGoodVersion !== authority.versionId ||
@@ -108,24 +105,14 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
       }
       retained.add(member.key);
     }
-    for (const sourceFact of authority.retainedRosterSources ?? []) {
-      if (!sourceFact || typeof sourceFact.key !== "string" || typeof sourceFact.url !== "string") return "Invalid inherited roster source.";
-      const identity = `${sourceFact.key}\n${sourceFact.url}`;
-      const facts = inheritedRosterSourceFacts(before.get(sourceFact.key), after.get(sourceFact.key));
-      if (candidate.recordClass !== "REGISTRY_RUNTIME_BINDING" || !sourceFact.key.startsWith("body-roster:") ||
-          retainedSources.has(identity) || !facts.has(sourceFact.url) || hash(facts.get(sourceFact.url)) !== sourceFact.sha256) {
-        return "An inherited roster source changed its exact person identity or facts, or lacks the named prior evidence.";
-      }
-      retainedSources.add(identity);
-    }
   }
-  if (retained.size === 0 && retainedSources.size === 0) return "Inherited authority names no unchanged facts.";
+  if (retained.size === 0) return "Inherited authority names no unchanged facts.";
   const sourceUrls = new Set(candidate.retrieval.manualSourceReceipt.sources
     .filter(source => source.reviewOutcome !== "BLOCKED").flatMap(source => [source.requestedUrl, source.finalUrl]));
   for (const [key, record] of after) {
     if (retained.has(key)) continue;
     for (const url of assertedSources(candidate.recordClass, key, record)) {
-      if (!sourceUrls.has(url) && !retainedSources.has(`${key}\n${url}`)) return `Changed or new member ${key} lacks an exact current source review for ${url}.`;
+      if (!sourceUrls.has(url)) return `Changed or new member ${key} lacks an exact current source review for ${url}.`;
     }
   }
   return null;

@@ -4187,30 +4187,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
-          "sourceHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
-          "retrievedAt": "2026-10-14T23:52:30.754412+00:00",
-          "publisher": "Nevada Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/washoecounty.gov/2026/10/14/ms-01-5c9a63962ed98ccb/sha256-9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0.pdf",
-            "byteLength": 532489,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.leg.state.nv.us/const/nvconst.html",
-          "sourceHash": "726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc",
-          "retrievedAt": "2026-10-15T00:00:43.713341+00:00",
-          "publisher": "Nevada Legislature",
-          "vault": {
-            "key": "project/freshness/source/www.leg.state.nv.us/2026/10/15/ms-01-cbc4cc50cebfc861/sha256-726067b645f47709f00c2cf23ee6a514f7fc64381fd6c1f6eb0b1f48b31c51cc.html",
-            "byteLength": 431607,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "NV",
+        "electionId": "nv-2026-11-03",
+        "sourceHash": "bf1dc0e7e03204c5940946e4b6ac665d5a778261bd709c83e9729fab752b3e24",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:40.032513+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-nv/2026/10/15/ms-01/sha256-bf1dc0e7e03204c5940946e4b6ac665d5a778261bd709c83e9729fab752b3e24.ndjson",
+          "byteLength": 2080,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

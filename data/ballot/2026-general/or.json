@@ -4696,19 +4696,20 @@
       ],
       "coverageNotes": [],
       "measureRecords": [],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
-          "sourceHash": "96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f",
-          "retrievedAt": "2026-10-14T05:06:40.467Z",
-          "publisher": "Oregon Secretary of State, Elections Division",
-          "vault": {
-            "key": "project/freshness/source/sos.oregon.gov/2026/10/14/ms-01-2621ff218e2958a1/sha256-96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f.pdf",
-            "byteLength": 1117942,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "OR",
+        "electionId": "or-2026-11-03",
+        "sourceHash": "bad39032b53a53952af71ad02074dbc0bcdf945ffca89cf29f8e07f5eb2685c4",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:39.894434+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-or/2026/10/15/ms-01/sha256-bad39032b53a53952af71ad02074dbc0bcdf945ffca89cf29f8e07f5eb2685c4.ndjson",
+          "byteLength": 1469,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

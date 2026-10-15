@@ -789,30 +789,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.dhs.wisconsin.gov/lh-depts/counties/green.htm",
-          "sourceHash": "46eda5497ae4fc7f1bdd31a86c01998c34b0d884a80ca95fd168928c0d58d391",
-          "retrievedAt": "2026-10-15T00:02:39.864830+00:00",
-          "publisher": "Wisconsin Department of Health Services",
-          "vault": {
-            "key": "project/freshness/source/www.dhs.wisconsin.gov/2026/10/15/ms-01-c8c2100926026098/sha256-46eda5497ae4fc7f1bdd31a86c01998c34b0d884a80ca95fd168928c0d58d391.html",
-            "byteLength": 158990,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4593/Type-C-Notice-for-Ref-for-November-2026-General-Election_Final-1",
-          "sourceHash": "bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf",
-          "retrievedAt": "2026-10-14T23:52:46.482097+00:00",
-          "publisher": "Green County Clerk, Wisconsin",
-          "vault": {
-            "key": "project/freshness/source/www.greencountywi.org/2026/10/14/ms-01-b2c113910923ed5e/sha256-bdd117c8abb003d4bda18fe513e5862f0350cffd8983c4538b6739d21f09ddcf.pdf",
-            "byteLength": 136710,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.dhs.wisconsin.gov/lh-depts/counties/green.htm",
@@ -825,7 +801,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "WI",
+        "electionId": "wi-2026-general",
+        "sourceHash": "ed6aa065013d0dcfc7e721e66e5cd4899a7b0205a6df96464949727b7a2090c7",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.926827+00:00",
+        "reviewedBy": "Codex MS-01 official source comparison",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-wi/2026/10/15/ms-01/sha256-ed6aa065013d0dcfc7e721e66e5cd4899a7b0205a6df96464949727b7a2090c7.ndjson",
+          "byteLength": 2583,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

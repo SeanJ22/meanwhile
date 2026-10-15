@@ -4098,30 +4098,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
-          "sourceHash": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
-          "retrievedAt": "2026-10-14T23:52:31.552337+00:00",
-          "publisher": "Wyoming Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sos.wyo.gov/2026/10/14/ms-01-f7f3277548c3c7c1/sha256-d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f.pdf",
-            "byteLength": 411937,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sos.wyo.gov/faqs.aspx?root=ELEC",
-          "sourceHash": "956b32f58a696a707c565a51681ff0da65b765b7fcd1f4f93c64f3390864684a",
-          "retrievedAt": "2026-10-15T00:00:17.817371+00:00",
-          "publisher": "Wyoming Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sos.wyo.gov/2026/10/15/ms-01-144f37fb36e97173/sha256-956b32f58a696a707c565a51681ff0da65b765b7fcd1f4f93c64f3390864684a.html",
-            "byteLength": 162059,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -4134,7 +4110,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "WY",
+        "electionId": "wy-2026-general",
+        "sourceHash": "d691c6c8fb82626214140ddcf1eaf054623d7091737ca6f4afff21276e0f61c8",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:40.012257+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-wy/2026/10/15/ms-01/sha256-d691c6c8fb82626214140ddcf1eaf054623d7091737ca6f4afff21276e0f61c8.ndjson",
+          "byteLength": 2067,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

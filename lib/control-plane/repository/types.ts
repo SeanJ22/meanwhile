@@ -3,7 +3,6 @@ import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts"
 import type { ActiveWorkClaimReader } from "./active-work-claims.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
-/** Provider-neutral persistence for state that must outlive the worker holding it. */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
@@ -24,7 +23,7 @@ import type {
 import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
 import type { FixMapRepository } from "../../method/fix-map.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import type { ModelChargeRepository } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -238,10 +237,7 @@ export interface AggregateRepository<T> {
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
   /** `listWhere`, each value narrowed to the projection by the store before it leaves. */
   listWhereNarrowed(path: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
-  /**
-   * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
-   * names at its current revision; `through` is the store's clock when the read began.
-   */
+
   listChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>>;
 }
 
@@ -260,10 +256,7 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
-  /**
-   * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
-   * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.
-   */
+
   retireInstructions?(): Promise<void>;
 }
 
@@ -298,10 +291,12 @@ export interface AppendOnlyRepository<T> {
   readRecentWhere(
     key: string,
     path: readonly string[],
-    value: string,
+    value: string | readonly string[],
     limit: number,
     projection: RecordProjection,
     recordedAtSince?: string,
+    equals?: Readonly<Record<string, string>>,
+    orderBy?: string,
   ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
@@ -418,9 +413,7 @@ export interface ArtifactRecord {
   /** True when the capture was interrupted: kept and labelled, never treated as complete. */
   readonly partial: boolean;
   readonly recordedAt: string;
-  /** A separately acquired candidate publication must retain the exact link
-   * on an approved campaign page that authorized walking this URL. Offsets
-   * address the captured UTF-16 HTML string, never a later reconstruction. */
+
   readonly publicationLink?: {
     readonly candidacyId: string;
     readonly approvalRecordId: string;
@@ -500,8 +493,7 @@ export interface ControlPlaneRepositories {
   /** What a decision button appended. */
   readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
   readonly researchState: AggregateRepository<ResearchState>;
-  /** The running spend counter (`spend-window.ts`). */
-  readonly spendWindow: AggregateRepository<SpendWindow>;
+  readonly modelCharges: ModelChargeRepository;
   /** Canonical live method-candidate lifecycle. Git holds historical evidence only. */
   readonly methodCandidates: AggregateRepository<CandidateStore>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
@@ -528,7 +520,7 @@ export interface ControlPlaneRepositories {
   readonly leadOrders: AggregateRepository<LeadOrder>;
   readonly budget: BudgetRepository;
   /** Absent in the file store, where holds stay on the budget ledger row. */
-  readonly spendHolds?: SpendHoldRepository;
+  readonly spendHolds: SpendHoldRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */
   readonly describe: () => string;

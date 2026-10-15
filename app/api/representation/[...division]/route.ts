@@ -1,21 +1,15 @@
+import { READER_MANIFEST_CACHE_TAG } from "@/lib/meetings/edge-blob-store";
 import { stageTimer } from "@/lib/api/server-timing";
 import {
   ensureReaderAuthorityEdge,
   readReaderManifest,
-  READER_MANIFEST_CACHE_TAG,
   READER_MAP_AUTHORITY_FAMILIES,
 } from "@/lib/meetings/edge-serving";
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
 
-/**
- * GET /api/representation/ocd-division/country:us/state:<st>/sldl:<n>
- *
- * Who holds a division's seats, keyed by the division, with its `label`, `divisionType` and `tier` (`null`
- * where the registry does not hold it). The division is the path, so every cache keys on it; the answer is
- * public and CDN-held on the same terms as `/api/meetings`, and the refused shape stays `no-store`.
- */
+
 
 export const runtime = "nodejs";
 

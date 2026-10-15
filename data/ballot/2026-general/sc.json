@@ -7471,30 +7471,20 @@
         "The November 3, 2026 referendum search returned 42 Local Questions and zero Statewide Constitutional Amendments when checked. No statewide measure was listed. Source: https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch?electionId=22596",
         "Governor and Lieutenant Governor are held as four joint tickets with each current running mate preserved from the official export. Incumbency and campaign websites are not stated in the export."
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-          "sourceHash": "32497c069988acf239f8ec381147d8561770623a9d4f5cdbe3c3e2c584d796c7",
-          "retrievedAt": "2026-10-15T00:06:59.726128+00:00",
-          "publisher": "South Carolina State Election Commission",
-          "vault": {
-            "key": "project/freshness/source/vrems.scvotes.sc.gov/2026/10/15/ms-01-96440fb2c5493c06/sha256-32497c069988acf239f8ec381147d8561770623a9d4f5cdbe3c3e2c584d796c7.html",
-            "byteLength": 15109,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-          "sourceHash": "275796e95c91482fa322a4b983e89cb3b0025109b7cf2512d5951923427a9b43",
-          "retrievedAt": "2026-10-15T00:04:44.610208+00:00",
-          "publisher": "South Carolina State Election Commission",
-          "vault": {
-            "key": "project/freshness/source/vrems.scvotes.sc.gov/2026/10/15/ms-01-96440fb2c5493c06/sha256-275796e95c91482fa322a4b983e89cb3b0025109b7cf2512d5951923427a9b43.html",
-            "byteLength": 2355,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "SC",
+        "electionId": "sc-2026-general",
+        "sourceHash": "48944cd1564ed61d8349560518b22a40d9b887c692ec42b8e0153c5a6adc85c3",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.904900+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-sc/2026/10/15/ms-01/sha256-48944cd1564ed61d8349560518b22a40d9b887c692ec42b8e0153c5a6adc85c3.ndjson",
+          "byteLength": 2303,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {
@@ -7573,26 +7563,6 @@
         "reviewedEvidence": "Official statewide election referendum search instruction says an unfiltered search lists all referendums; the StatewideConst filter is labeled Statewide Constitutional Amendments."
       },
       {
-        "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "publisher": "South Carolina State Election Commission",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:06:57.938Z",
-        "httpStatus": 200,
-        "rawHash": "497c444303afcff079bd795df8e718487652d38a3f66cd0c290e81caf35662d5",
-        "reviewedEvidence": "All-referendum public search: ElectionId=22596, ElectionDate=, SearchType=Default, SelectedGroup=All, SelectedPoliticalParty=All. All 42 returned referendum rows are Local Questions."
-      },
-      {
-        "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "publisher": "South Carolina State Election Commission",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T05:08:01.681Z",
-        "httpStatus": 200,
-        "rawHash": "54fd4810b0d9788dc166f34b46d79b93a217be4ed9508aaa810e94e43a14d8a1",
-        "reviewedEvidence": "Public referendum search: ElectionId=22596, ElectionDate=, SearchType=Default, SelectedGroup=StatewideConst, SelectedPoliticalParty=All. Returned zero statewide constitutional amendment rows."
-      },
-      {
         "requestedUrl": "https://scvotes.gov/placement-of-candidates-on-ballots-in-south-carolina/",
         "finalUrl": "https://scvotes.gov/placement-of-candidates-on-ballots-in-south-carolina/",
         "publisher": "South Carolina State Election Commission",
@@ -7641,28 +7611,6 @@
         "httpStatus": 200,
         "rawHash": "72d5b3d75ed936579eee0074cace14bc7e2281891533d0f454afd354fbc58fac",
         "reviewedEvidence": "Official CSV export for election 22758 State Senate District 15 Special Election on November 3, 2026; two Active ballot names and printed party labels are projected. The unfiltered official roster covers every selected contest's whole territory and contains every current Active candidate for it."
-      },
-      {
-        "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "httpStatus": 200,
-        "rawHash": "275796e95c91482fa322a4b983e89cb3b0025109b7cf2512d5951923427a9b43",
-        "retrievedAt": "2026-10-15T00:04:44.610208+00:00",
-        "publisher": "South Carolina State Election Commission",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 referendum search: ElectionId=22596, ElectionDate=, SearchType=Default, SelectedGroup=StatewideConst, SelectedPoliticalParty=All. Response contains zero rows under Statewide Constitutional Amendments.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
-        "httpStatus": 200,
-        "rawHash": "32497c069988acf239f8ec381147d8561770623a9d4f5cdbe3c3e2c584d796c7",
-        "retrievedAt": "2026-10-15T00:06:59.726128+00:00",
-        "publisher": "South Carolina State Election Commission",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official November 3, 2026 referendum search: ElectionId=22596, ElectionDate=, SearchType=Default, SelectedGroup=All, SelectedPoliticalParty=All. Response contains 42 rows, every one a Local Question; zero statewide measures.",
-        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

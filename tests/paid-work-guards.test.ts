@@ -1,15 +1,10 @@
-/**
- * The paid-work guards live in one module that the research round builds from the controllers it arms, so a
- * standing lease-worker lane builds the same ones. Each refusal is checked on the real holds, Fleet controller and
- * provider queue, with a fake model that counts what it was asked to send.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { DurableSpendHolds, SendBudgetRefusal, committedUsd, type BudgetLine } from "../lib/control-plane/expansion/spend-holds.ts";
-import { FleetPreSendRefusal, FleetSafetyController, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, FleetPreSendRefusal, FleetSafetyController, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { backgroundBatchTransport, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { paidWorkGuards, workerBatchRouting, type PaidWorkGuardDeps } from "../lib/control-plane/workers/paid-work-guards.ts";
@@ -44,8 +39,8 @@ async function harness(options: {
       usage: { input_tokens: 100, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } } as unknown as ModelResponse;
   };
   const conditions: string[] = [];
-  const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
-  const fleetSafety = new FleetSafetyController({ now: NOW, charges: (options.costs ?? []).flatMap(row => pricedModelCharge(row, row.attemptId) ?? []), modelHold: options.modelHold ?? null,
+  const spendHolds = new DurableSpendHolds({ store: repos.spendHolds, now: () => NOW });
+  const fleetSafety = new FleetSafetyController({ now: NOW, spend: fleetSpendAt((options.costs ?? []).flatMap(row => pricedModelCharge(row, row.attemptId) ?? []), NOW), modelHold: options.modelHold ?? null,
     rollingCeilingUsd: options.ceilingUsd ?? 50, clock: () => Date.parse(NOW) });
   const deps: PaidWorkGuardDeps = { batchEnv: { WTP_BACKGROUND_WORKER_BATCH: options.batch ? "1" : "0" }, repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
     assignmentBudget: { linesFor: () => options.sends ?? { lines: [] } } as unknown as AssignmentBudgetGate,

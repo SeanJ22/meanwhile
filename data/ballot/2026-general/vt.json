@@ -8607,41 +8607,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.plainfieldvt.gov/uploads/8/1/0/6/81063668/vermont_voter_guide_for_plainfield.pdf",
-          "sourceHash": "943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5",
-          "retrievedAt": "2026-10-15T00:20:29.223238+00:00",
-          "publisher": "Vermont Secretary of State voter guide published by Town of Plainfield",
-          "vault": {
-            "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-cec21259779c3aaf/sha256-943a8e2f23308307d0d395c7df8a4906802a583703159b95b8f20d08d68533a5.pdf",
-            "byteLength": 5964023,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.plainfieldvt.gov/2026113-general-election.html",
-          "sourceHash": "ee2e012cfa4b6d800f8188f7aaa1b7248ae210680d4fc104fffe9115e90b6e50",
-          "retrievedAt": "2026-10-15T00:20:08.690125+00:00",
-          "publisher": "Town of Plainfield, Vermont",
-          "vault": {
-            "key": "project/freshness/source/www.plainfieldvt.gov/2026/10/15/ms-01-eac962cf1476a6f2/sha256-ee2e012cfa4b6d800f8188f7aaa1b7248ae210680d4fc104fffe9115e90b6e50.html",
-            "byteLength": 71801,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
-          "sourceHash": "79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac",
-          "retrievedAt": "2026-10-14T23:52:38.167576+00:00",
-          "publisher": "Vermont Secretary of State ballot published by Town of Fair Haven",
-          "vault": {
-            "key": "project/freshness/source/fairhavenvt.gov/2026/10/14/ms-01-06c83461ccc22060/sha256-79796b0d49f82269a7119a9cc5f81513cf613fdbc4c7f8183a775ca353964fac.pdf",
-            "byteLength": 402628,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "VT",
+        "electionId": "vt-2026-11-03-general",
+        "sourceHash": "b3f32a068bf881b2762022f069abd5556d41ecd4d3223eeb710495ebeb0de8fb",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T04:14:39.918536+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-vt/2026/10/15/ms-01/sha256-b3f32a068bf881b2762022f069abd5556d41ecd4d3223eeb710495ebeb0de8fb.ndjson",
+          "byteLength": 3576,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {
@@ -8679,17 +8658,6 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Complete 2026 Vermont Secretary of State voter guide published by the Town of Plainfield; measure entries and constitutional passage process extracted from pages 8–9 and retained with the original HTTP 200 PDF bytes."
-      },
-      {
-        "requestedUrl": "https://www.plainfieldvt.gov/2026113-general-election.html",
-        "finalUrl": "https://www.plainfieldvt.gov/2026113-general-election.html",
-        "httpStatus": 200,
-        "rawHash": "ee2e012cfa4b6d800f8188f7aaa1b7248ae210680d4fc104fffe9115e90b6e50",
-        "retrievedAt": "2026-10-15T00:20:08.690125+00:00",
-        "publisher": "Town of Plainfield, Vermont",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "Official town election page identifies and links the Secretary of State’s district voter guide, establishing the state attribution of the saved publication."
       }
     ]
   }

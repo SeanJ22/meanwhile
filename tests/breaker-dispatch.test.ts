@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
 import { routeExecutor, type OpenOne } from "../lib/control-plane/scheduler/route-executor.ts";
 import type { RouteDescriptor } from "../lib/control-plane/scheduler/registry.ts";
 import { runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
@@ -36,12 +36,12 @@ const circuit = (eligibleAt: string) => ({ provider: sourceReliabilityKey(LEGIST
   firstObservedAt: NOW, workDeferred: [], eligibleAt, failureClass: "TRANSIENT" as const });
 
 test("a healthy provider's rows run in parallel up to the in-flight cap; half-open, one at a time; open, none are sent", async () => {
-  const healthy = await lane(new FleetSafetyController({ now: NOW, charges: [], clock: () => NOW_MS }), 8);
+  const healthy = await lane(new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), clock: () => NOW_MS }), 8);
   assert.equal(healthy.most, 8, "in parallel up to the Admin setting");
   assert.equal(healthy.dispatched, 50);
 
   let clock = NOW_MS;
-  const reopened = new FleetSafetyController({ now: NOW, charges: [], clock: () => clock, circuits: [circuit(new Date(NOW_MS + 60_000).toISOString())] });
+  const reopened = new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), clock: () => clock, circuits: [circuit(new Date(NOW_MS + 60_000).toISOString())] });
   const open = await lane(reopened, 8);
   assert.deepEqual([open.dispatched, open.held], [0, 50], "while the breaker is open nothing is dispatched; every row is held by name");
   assert.ok(reopened.snapshot(NOW).deferred.some(row => row.code === "PROVIDER_CIRCUIT_BROKEN"));
@@ -75,7 +75,7 @@ function simulatedTime(start: number) {
 async function congressHour(rowCount: number, answerMs: number, callers = 1) {
   const time = simulatedTime(NOW_MS);
   const pacing = memoryWebsitePacing();
-  const fleets = Array.from({ length: callers }, () => new FleetSafetyController({ now: NOW, charges: [], clock: time.clock, sleep: time.sleep,
+  const fleets = Array.from({ length: callers }, () => new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), clock: time.clock, sleep: time.sleep,
     websitePacing: pacing, hostConcurrency: () => 8 }));
   let inFlight = 0, most = 0;
   const sentAt: number[] = [];

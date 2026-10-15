@@ -33,7 +33,7 @@ test("R7: actual batch waiting outlasts the worker clock and its quiet clock, th
       return Response.json({ id: "fixture-batch", processing_status: "ended", request_counts: {}, results_url: "https://api.anthropic.com/fixture/results" });
     } });
     const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 300,
-      config: { root, postgres: false, taskIds: ["owed"], modelEnabled: true, searchEnabled: false, ceilingUsd: 1, fundedSubjects: [] },
+      config: { root, postgres: false, taskIds: ["owed"], modelEnabled: true, searchEnabled: false, ceilingUsd: 1 },
       standing: { quietMs: 300 }, capacity: () => 1, transportFor: () => transport });
     assert.equal(results.length, 1);
     assert.equal(results[0].outcome, "WORKED", results[0].detail);

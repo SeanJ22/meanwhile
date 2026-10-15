@@ -1,24 +1,3 @@
-/**
- * `pnpm db:apply` — apply the committed Drizzle migrations over the HTTP
- * driver (`drizzle-kit migrate`'s websocket driver does not connect through the
- * Neon pooler here).
- *
- * Each pending migration's statements and its journal row are applied in one
- * Postgres transaction: `hash` is sha256 of the file's raw bytes and
- * `created_at` is the journal's own `when`, so a later `drizzle-kit migrate`
- * sees the work as done. A failed statement rolls the whole migration back.
- *
- * `--target=production` resolves `WTP_PRODUCTION_DATABASE_URL_WRITE` through
- * `lib/db/write-handle.ts`, which refuses read-only credentials. Anything else
- * targets `DATABASE_URL` and refuses unless `WTP_DB_ROLE=local`, the same
- * reading `lib/db/write-guard.ts` applies at runtime.
- *
- * It prints the role and host, the pending list, each statement's result and
- * the journal count after. `--dry` prints the plan and touches nothing. A
- * migration that applies zero statements is reported as zero, never success.
- *
- * Run: `pnpm db:apply [--target=production] [--dry]`
- */
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -28,8 +7,23 @@ import { pathToFileURL } from "node:url";
 import { config as loadEnv } from "dotenv";
 import { neon } from "@neondatabase/serverless";
 
-import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
+import { resolveProductionWriteHandle, WriteHandleRefused, isReadonlyUser } from "../lib/db/write-handle.ts";
 import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
+
+export function controlPlaneMigrationConnection(env: Record<string, string | undefined>, production: boolean): string {
+  const connection = env.WTP_CONTROL_PLANE_DATABASE_URL;
+  if (!connection) throw new Error("db:apply: REFUSED — control-plane migrations require WTP_CONTROL_PLANE_DATABASE_URL");
+  let url: URL;
+  try { url = new URL(connection); } catch { throw new Error("db:apply: REFUSED — invalid control-plane migration connection"); }
+  if (!/^postgres(?:ql)?:$/.test(url.protocol) || isReadonlyUser(connection)) {
+    throw new Error("db:apply: REFUSED — control-plane migrations require a Postgres writer");
+  }
+  if (production && (url.hostname.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dark-night-aeo1ekz3" || !url.hostname.endsWith(".neon.tech"))) {
+    throw new Error("db:apply: REFUSED — control-plane migrations require the approved ep-dark-night endpoint");
+  }
+  if (!production && env.WTP_DB_ROLE !== "local") throw new Error("db:apply: REFUSED — local control-plane migration requires WTP_DB_ROLE=local");
+  return connection;
+}
 
 export async function applyMigrations(args: string[], options: { beforeContract?: () => Promise<void> } = {}): Promise<void> {
   const PRODUCTION_BUILD = args.includes("--production-build");
@@ -202,12 +196,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
   }
   const appliedWhen = new Set(applied.map((r) => Number(r.created_at)));
 
-  /*
-   * `--upto=<tag>` — stop after that migration, inclusive, so the two halves of
-   * a NOT NULL-without-default change can land on either side of a deploy
-   * without hand-editing the journal. An unknown tag REFUSES rather than
-   * applying everything.
-   */
+
   const uptoIndex = UPTO ? journal.entries.findIndex((e) => e.tag === UPTO) : -1;
   const boundedPending = (UPTO ? journal.entries.slice(0, uptoIndex + 1) : journal.entries)
     .filter(entry => !appliedWhen.has(entry.when));
@@ -227,9 +216,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
       `${applied.length} already applied here · ${pending.length} pending`,
   );
   for (const e of pending) console.log(`  pending: ${e.tag}`);
-  // Deliberately NOT process.exit() below: the Neon HTTP driver still holds a
-  // libuv handle, and exiting through it aborts with a failure exit code
-  // (3221226505 on Windows). Letting the event loop drain gives the true code.
+  // Let the Neon HTTP driver drain its handles so Windows preserves the successful exit code.
   const nothingPending = pending.length === 0;
   if (INSPECT_ONLY && !nothingPending) {
     throw new Error("db:apply: REFUSED — pending expand migrations require WTP_PRODUCTION_DATABASE_URL_WRITE; inspection writes=0");
@@ -243,6 +230,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
 
   if (!nothingPending && !DRY) {
     await beforeContract();
+    let controlPlaneSql: typeof sql | null = null;
     let statementsRun = 0;
     let migrationsApplied = 0;
     for (const entry of pending) {
@@ -264,6 +252,24 @@ export async function applyMigrations(args: string[], options: { beforeContract?
         process.exit(1);
       }
 
+      const controlPlane = declaredPhase(entry.tag)?.database === "control-plane";
+      let targetSql = sql;
+      const journalTable = controlPlane ? "drizzle.__control_plane_migrations" : "drizzle.__drizzle_migrations";
+      if (controlPlane) {
+        if (!controlPlaneSql) {
+          const connection = controlPlaneMigrationConnection(process.env, PRODUCTION);
+          controlPlaneSql = neon(connection);
+          console.log(`target: WTP_CONTROL_PLANE_DATABASE_URL host=${new URL(connection).hostname}`);
+          await controlPlaneSql.transaction(transaction => [
+            transaction`SELECT pg_advisory_xact_lock(1835360622, 2)`,
+            transaction`CREATE SCHEMA IF NOT EXISTS drizzle`,
+            transaction`CREATE TABLE IF NOT EXISTS drizzle.__control_plane_migrations (
+              id SERIAL PRIMARY KEY, hash text NOT NULL, created_at bigint
+            )`,
+          ]);
+        }
+        targetSql = controlPlaneSql;
+      }
       let appliedHere = false;
       try {
         // The existing journal is re-read under the same transaction lock as the DDL.
@@ -278,22 +284,45 @@ export async function applyMigrations(args: string[], options: { beforeContract?
             ${statements.map(statement => `EXECUTE ${quote(statement)};`).join("\n")}
             INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES (${quote(hash)}, ${entry.when});
           END IF;
-        END ${delimiter};`;
-        const results = await sql.transaction((transaction) => [
+        END ${delimiter};`.replaceAll("drizzle.__drizzle_migrations", journalTable);
+        const results = await targetSql.transaction((transaction) => [
           transaction`SELECT pg_advisory_xact_lock(1835360622, 1)`,
           transaction.query(apply),
-          transaction`SELECT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations
-            WHERE created_at = ${entry.when} AND hash = ${hash}
-            AND xmin = pg_current_xact_id()::xid) AS applied`,
+          transaction.query(`SELECT EXISTS (SELECT 1 FROM ${journalTable}
+            WHERE created_at = $1 AND hash = $2
+            AND xmin = pg_current_xact_id()::xid) AS applied`, [entry.when, hash]),
         ]);
         appliedHere = (results[2] as { applied: boolean }[])[0]?.applied === true;
+        if (controlPlane) {
+          if (declaredPhase(entry.tag)?.replay === "model-charges") {
+            const { backfillModelCharges } = await import("../lib/control-plane/repository/model-charges.ts");
+            const readAt = new Date().toISOString();
+            let replayed = 0, page: number;
+            do {
+              page = await backfillModelCharges(async (text, params) =>
+                await targetSql.query(text, params) as Record<string, unknown>[], readAt);
+              replayed += page;
+            } while (page === 100);
+            console.log(`  model prices replayed: ${replayed}`);
+          }
+          // Publish the completed control-plane receipt to the serving schema status only after its transaction commits.
+          const receipt = `DO ${delimiter} BEGIN
+            IF EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE created_at = ${entry.when} AND hash <> ${quote(hash)}) THEN
+              RAISE EXCEPTION 'MIGRATION_JOURNAL_HASH_MISMATCH';
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE created_at = ${entry.when}) THEN
+              INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES (${quote(hash)}, ${entry.when});
+            END IF;
+          END ${delimiter};`;
+          await sql.transaction(transaction => [transaction`SELECT pg_advisory_xact_lock(1835360622, 1)`, transaction.query(receipt)]);
+        }
       } catch (error) {
-        console.error(`  FAIL  transaction rolled back before the journal row was written`);
+        console.error(controlPlane ? "  FAIL  control-plane migration or serving receipt was not confirmed"
+          : "  FAIL  transaction rolled back before the journal row was written");
         console.error(`        ${(error as Error).message}`);
-        console.error(
-          `\n${entry.tag} applied no durable statements in this run. Nothing is being guessed at ` +
-            `or retried — read the error, fix the cause, and run again.`,
-        );
+        console.error(controlPlane
+          ? `${entry.tag}: retry reuses the exact control-plane journal hash before publishing its serving receipt.`
+          : `${entry.tag} applied no durable statements in this run.`);
         process.exit(1);
       }
       if (!appliedHere) {

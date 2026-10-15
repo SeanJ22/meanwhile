@@ -13741,41 +13741,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/senate-journal-document-library/2025-senate-journal.pdf?sfvrsn=d6f944b4_2",
-          "sourceHash": "500fe907789a703600ba59acda8982a585a3bda60d4e7f71ef0e804cf16bea21",
-          "retrievedAt": "2026-10-15T00:14:47.994254+00:00",
-          "publisher": "Georgia Department of Community Affairs, published in the Georgia Senate Journal",
-          "vault": {
-            "key": "project/freshness/source/www.legis.ga.gov/2026/10/15/ms-01-fd2ba70f8fc4435c/sha256-500fe907789a703600ba59acda8982a585a3bda60d4e7f71ef0e804cf16bea21.pdf",
-            "byteLength": 14217266,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf",
-          "sourceHash": "30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b",
-          "retrievedAt": "2026-10-14T23:52:27.136747+00:00",
-          "publisher": "Georgia Secretary of State, Elections Division",
-          "vault": {
-            "key": "project/freshness/source/sos.ga.gov/2026/10/14/ms-01-df2e2b43fb5511f8/sha256-30ea8d29d64f646aaf9dde202c62ce0a5c5474567aab27a5b4970a841df0af6b.pdf",
-            "byteLength": 152039,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sos.ga.gov/sites/default/files/forms/Georgia%20Constitution.pdf",
-          "sourceHash": "1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06",
-          "retrievedAt": "2026-10-15T00:00:08.005634+00:00",
-          "publisher": "Georgia Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sos.ga.gov/2026/10/15/ms-01-55c317083e2e0dc6/sha256-1876ad2901dfc39ae2c1c3e91dad83eb68b255e2a1e0c337547f2dc40517cc06.pdf",
-            "byteLength": 1780352,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -13788,7 +13753,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "GA",
+        "electionId": "ga-2026-11-03",
+        "sourceHash": "26a6e6b453a48f0ef8030bf03e6b9bc84ad93bf3af82e1cb36fbf26c48e70010",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T04:14:39.798951+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ga/2026/10/15/ms-01/sha256-26a6e6b453a48f0ef8030bf03e6b9bc84ad93bf3af82e1cb36fbf26c48e70010.ndjson",
+          "byteLength": 3783,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

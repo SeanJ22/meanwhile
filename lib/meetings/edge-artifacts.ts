@@ -121,7 +121,7 @@ export interface ReaderManifest {
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   /** Legislative people loaded separately for each requested jurisdiction. */
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
-  readonly translations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly place?: { readonly family: PlaceAuthorityFamily; readonly division: string; readonly artifact: AuthorityArtifactRef };
   readonly freshChecks?: Readonly<Record<string, string>>;
   readonly composition?: string;
 }
@@ -180,13 +180,15 @@ export function isPromotedAuthorityFamily(family: AuthorityFamily): family is Pr
   return (PROMOTED_AUTHORITY_FAMILIES as readonly string[]).includes(family);
 }
 
+export type PlaceAuthorityFamily = "plain-english-translations" | "ballot-measures";
+
 export type AuthorityFamily =
   | "census-districts"
   | "registry-runtime"
   | "federal-directory"
   | "campaign-sites"
   | "state-legislators"
-  | "plain-english-translations"
+  | PlaceAuthorityFamily
   | "meeting-outcomes"
   | "comment-access"
   | PromotedAuthorityFamily;
@@ -198,6 +200,7 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "campaign-sites",
   "state-legislators",
   "plain-english-translations",
+  "ballot-measures",
   "meeting-outcomes",
   "comment-access",
   ...PROMOTED_AUTHORITY_FAMILIES,

@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
-import { FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
@@ -28,7 +28,8 @@ let stopped = false;
 process.on("message", message => { if ((message as { kind?: string })?.kind === "RUNTIME_RELEASE_DRAIN") stopped = true; });
 const vault = cycleVault(join(root, ...VAULT_DIR));
 let sizeFor = websiteSizeFromHoldings([], root);
-const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
+const fleetStartedAt = now();
+const fleet = new FleetSafetyController({ now: fleetStartedAt, spend: fleetSpendAt([], fleetStartedAt), modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
   websiteSize: target => sizeFor(target) });
 const spaceOut = hostSpacer();
 let dotgov: Promise<Awaited<ReturnType<DiscoveryRuntime["open"]>>> | undefined;

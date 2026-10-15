@@ -12144,19 +12144,20 @@
         "The statewide measure list contains no records. Broome County Board of Elections marks its Statewide Ballot Proposal (General Election Notice) section NO FILING, and the state certification index lists no 2026 statewide proposal certification. County and city proposals are outside this statewide-measure scope."
       ],
       "measureRecords": [],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.broomevotes.com/candidates",
-          "sourceHash": "f42407c35e6f5211593b334d2edc95b6bdd041495ed8d58ee2aaf55096b721d8",
-          "retrievedAt": "2026-10-14T23:52:37.568130+00:00",
-          "publisher": "Broome County Board of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.broomevotes.com/2026/10/14/ms-01-1e546f1fc8534f96/sha256-f42407c35e6f5211593b334d2edc95b6bdd041495ed8d58ee2aaf55096b721d8.html",
-            "byteLength": 758388,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "NY",
+        "electionId": "ny-2026-11-03",
+        "sourceHash": "ae77f81a0d482035ecf427940a831931ac08677d8bd39173b649e59cac1bc4dd",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:39.880117+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ny/2026/10/15/ms-01/sha256-ae77f81a0d482035ecf427940a831931ac08677d8bd39173b649e59cac1bc4dd.ndjson",
+          "byteLength": 1013,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {
@@ -12203,16 +12204,6 @@
         "publisher": "Broome County Government",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Government page linking to the Broome County Board of Elections website."
-      },
-      {
-        "requestedUrl": "https://www.broomevotes.com/candidates",
-        "finalUrl": "https://www.broomevotes.com/candidates",
-        "httpStatus": 200,
-        "rawHash": "f42407c35e6f5211593b334d2edc95b6bdd041495ed8d58ee2aaf55096b721d8",
-        "retrievedAt": "2026-10-14T23:52:37.568130+00:00",
-        "publisher": "Broome County Board of Elections",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewedEvidence": "Official Statewide Ballot Proposal (General Election Notice) section states NO FILING. Saved HTML and extracted text confirm no statewide proposal notice for the 2026 general election."
       }
     ]
   }

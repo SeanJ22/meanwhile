@@ -1,35 +1,4 @@
-/**
- * Send and area budgets as hard caps. Every dollar paid work may spend on a
- * budgeted Send or area is held first, in one shared store of holds
- * (`cp_spend_holds`, admitted by one database call that locks the lines it
- * touches; or, behind `WTP_SPEND_HOLDS_TABLE=0`, the shared budget ledger row
- * under compare-and-set), so concurrent and overlapping work decides against
- * the same remaining budget.
- *
- * ```
- *   committed(line) = the line's rolling-window spend at cycle start (the
- *                     canonical cost ledger, read at `historyReadAt`)
- *                   + every unsettled hold on it in the window (whole worst case)
- *                   + every settled hold recorded after that read (measured spend)
- *   left(line)      = budget − committed(line)
- * ```
- *
- * - A job holds its worst case before it starts (`scoutJobWorstCaseUsd`).
- *   Every model request is checked against what the job holds
- *   (`budgetGuardedTransport`); a request past it must win a further hold or is
- *   refused before it is sent.
- * - Sends: admitted while any budgeted Send the work belongs to has room, and
- *   held against all of them. Areas: every binding area must have room.
- * - Settling books what was measured and releases the rest; an unmeasured job
- *   or failed settle leaves the whole hold. A round's end releases jobs it
- *   never settled (`releaseOpenJobs`). An unsettled hold older than
- *   `SPEND_HOLD_STALE_MS` stops counting and is deleted; a settled hold is
- *   deleted after `SETTLED_HOLD_RETENTION_MS`. Holds never accumulate.
- * - An unreadable ledger or refused write refuses the hold, by name.
- */
-
 import { createLedger, type BudgetLedger, type SpendHold } from "../budget.ts";
-import { ConcurrentModification, RepositoryLockHeld, UnknownAggregate, type BudgetRepository } from "../repository/types.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "../scheduler/scout-executor.ts";
 
 export const SPEND_HOLD_CODE_SEND = "ASSIGNMENT_BUDGET";
@@ -41,11 +10,6 @@ export const SPEND_HOLD_WINDOW_MS = 24 * 3_600_000;
 export const SPEND_HOLD_STALE_MS = 2 * 3_600_000;
 /** How long a settled hold is kept after its cost was recorded: longer than any round's history read is old. */
 export const SETTLED_HOLD_RETENTION_MS = 6 * 3_600_000;
-
-/** Contention on the one ledger (another Scout or cycle mid-decision) is retried this many times, waiting a little longer each time, then refused. */
-export const SPEND_HOLD_CONTENTION_TRIES = 20;
-export const SPEND_HOLD_CONTENTION_WAIT_MS = 10;
-const defaultSleep = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 
 /** One area's line key. */
 export const areaBudgetKey = (scopeKey: string): string => `area:${scopeKey}`;
@@ -166,12 +130,6 @@ export function newSpendHold(input: { readonly holdId: string; readonly jobId: s
   };
 }
 
-/**
- * The decision, pure: whether `usd` more fits every line it must, and the
- * ledger with the hold added when it does. Idempotent by `holdId`. The
- * database's `cp_admit_spend_hold` takes the same decision in the same order,
- * with refusals worded by the functions above.
- */
 export function decideHold(
   ledger: BudgetLedger,
   input: { readonly holdId: string; readonly jobId: string; readonly obligationId: string; readonly lines: BudgetLines; readonly usd: number; readonly what: string; readonly now: string },
@@ -192,11 +150,6 @@ export function decideHold(
   return { ledger: { ...ledger, spendHolds: { ...holds, [hold.holdId]: hold } }, result: { admit: true, hold } };
 }
 
-/**
- * Settle one job, PURE: book what it measured on its first hold, zero on the
- * rest, so the lines carry exactly its measured spend until the history does.
- * Unmeasured (`null`): every hold stays standing for its window.
- */
 export function settleHolds(ledger: BudgetLedger, input: { readonly jobId: string; readonly usd: number | null; readonly costRecordedAt: string; readonly now: string }): BudgetLedger {
   const holds = pruned(ledger, input.now);
   if (input.usd === null || !Number.isFinite(input.usd)) return { ...ledger, spendHolds: holds };
@@ -216,20 +169,6 @@ export function releaseHold(ledger: BudgetLedger, holdId: string, now: string): 
   return { ...ledger, spendHolds: holds };
 }
 
-/* ------------------------------------------------------------ where the holds live */
-
-/**
- * One row per hold in `cp_spend_holds`; an admission is one database call
- * (`cp_admit_spend_hold`) that locks only the lines it touches and deletes
- * holds on them that no longer count. `WTP_SPEND_HOLDS_TABLE=0` keeps the
- * holds on the ledger row instead.
- */
-export const SPEND_HOLDS_TABLE_VAR = "WTP_SPEND_HOLDS_TABLE";
-
-export function spendHoldsTableEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
-  return env[SPEND_HOLDS_TABLE_VAR]?.trim() !== "0";
-}
-
 /** What an admission asks for. */
 export interface SpendHoldAdmission {
   readonly holdId: string;
@@ -240,17 +179,12 @@ export interface SpendHoldAdmission {
   readonly what: string;
 }
 
-/**
- * The holds, wherever they are kept. Every method is atomic on its own; an
- * admission decides and writes in one exclusive step for the lines it names.
- * `liveFor` / `liveAll` return only holds that still count (`liveSpendHolds`).
- */
 export interface SpendHoldStore {
   admit(input: SpendHoldAdmission, now: string): Promise<HoldDecision>;
   /** Book a job's measured spend on its first unsettled hold, zero on the rest (`settleHolds`). Null leaves them standing. */
   settle(input: { readonly jobId: string; readonly usd: number | null; readonly costRecordedAt: string }, now: string): Promise<void>;
   release(holdId: string, now: string): Promise<void>;
-  liveFor(keys: readonly string[], now: string): Promise<Record<string, SpendHold>>;
+  left(lines: readonly BudgetLine[], now: string): Promise<readonly number[]>;
   liveAll(now: string): Promise<Record<string, SpendHold>>;
   /** Delete holds that no longer count, a bounded number at a time; returns how many went. */
   sweep(now: string): Promise<number>;
@@ -259,18 +193,6 @@ export interface SpendHoldStore {
 /** How many no-longer-live holds one sweep deletes; the next settle or round end takes the rest. */
 export const SPEND_HOLD_SWEEP_LIMIT = 1_000;
 
-const onKeys = (holds: Record<string, SpendHold>, keys: readonly string[]): Record<string, SpendHold> => {
-  const want = new Set(keys);
-  return Object.fromEntries(Object.entries(holds).filter(([, h]) => h.keys.some((k) => want.has(k))));
-};
-
-/**
- * The holds in this process (the memory store), by the same pure rules: the
- * decision is `decideHold`, a settle is `settleHolds`, a release
- * `releaseHold`, and each one drops every hold that no longer counts, so the
- * map never accumulates. JavaScript runs each call to completion between
- * awaits, so each one is atomic.
- */
 export interface InProcessSpendHoldStore extends SpendHoldStore {
   /** Every row the store still holds, live or not yet dropped: what a test asserts was deleted. */
   rows(): Record<string, SpendHold>;
@@ -287,7 +209,7 @@ export function inProcessSpendHoldStore(): InProcessSpendHoldStore {
     },
     settle: async (input, now) => { ledger = settleHolds(ledger, { ...input, now }); },
     release: async (holdId, now) => { ledger = releaseHold(ledger, holdId, now); },
-    liveFor: async (keys, now) => copy(onKeys(liveSpendHolds(ledger.spendHolds, now), keys)),
+    left: async (lines, now) => lines.map(line => leftUsd(liveSpendHolds(ledger.spendHolds, now), line, now)),
     liveAll: async (now) => copy(liveSpendHolds(ledger.spendHolds, now)),
     rows: () => copy({ ...(ledger.spendHolds ?? {}) }),
     sweep: async (now) => {
@@ -298,88 +220,16 @@ export function inProcessSpendHoldStore(): InProcessSpendHoldStore {
   };
 }
 
-/**
- * Holds on the shared budget ledger row (`WTP_SPEND_HOLDS_TABLE=0`, and the
- * file store). Every decision is one `BudgetRepository.mutate`. Contention is
- * retried on what the other writer left, up to `SPEND_HOLD_CONTENTION_TRIES`,
- * then refused.
- */
-export function ledgerSpendHoldStore(budget: Pick<BudgetRepository, "mutate" | "install" | "read">, sleep: (ms: number) => Promise<void> = defaultSleep): SpendHoldStore {
-  const mutate = async <R>(fn: (ledger: BudgetLedger) => { readonly ledger: BudgetLedger; readonly result: R }, now: string): Promise<R> => {
-    let installed = false;
-    for (let attempt = 1; ; attempt += 1) {
-      try {
-        return (await budget.mutate(fn, now)).result;
-      } catch (error) {
-        /* A ledger never installed is installed empty, once. */
-        if (!installed && error instanceof UnknownAggregate) {
-          installed = true;
-          await budget.install(createLedger({ hosts: [] }), now).catch(() => undefined);
-          continue;
-        }
-        const contention = error instanceof RepositoryLockHeld || error instanceof ConcurrentModification;
-        if (!contention || attempt >= SPEND_HOLD_CONTENTION_TRIES) throw error;
-        await sleep(SPEND_HOLD_CONTENTION_WAIT_MS * attempt);
-      }
-    }
-  };
-  const live = async (now: string): Promise<Record<string, SpendHold>> => {
-    try {
-      return liveSpendHolds((await budget.read()).value.spendHolds, now);
-    } catch (error) {
-      /* Never installed: no hold has ever been taken. */
-      if (error instanceof UnknownAggregate) return {};
-      throw error;
-    }
-  };
-  return {
-    admit: (input, now) => mutate((ledger) => decideHold(ledger, { ...input, now }), now),
-    settle: async (input, now) => { await mutate((ledger) => ({ ledger: settleHolds(ledger, { ...input, now }), result: null }), now); },
-    release: async (holdId, now) => { await mutate((ledger) => ({ ledger: releaseHold(ledger, holdId, now), result: null }), now); },
-    liveFor: async (keys, now) => onKeys(await live(now), keys),
-    liveAll: live,
-    /* Every write on the ledger already drops what no longer counts. */
-    sweep: async () => 0,
-  };
+export function readLiveSpendHolds(repos: { readonly spendHolds: SpendHoldStore }, now: string): Promise<Record<string, SpendHold>> {
+  return repos.spendHolds.liveAll(now);
 }
 
-/** The store a caller's repositories give: the table unless the switch says the ledger row, or the store has no table. */
-export function spendHoldStoreOf(
-  repos: { readonly budget: Pick<BudgetRepository, "mutate" | "install" | "read">; readonly spendHolds?: SpendHoldStore },
-  options: { readonly sleep?: (ms: number) => Promise<void>; readonly env?: Readonly<Record<string, string | undefined>> } = {},
-): SpendHoldStore {
-  return spendHoldsTableEnabled(options.env) && repos.spendHolds !== undefined ? repos.spendHolds : ledgerSpendHoldStore(repos.budget, options.sleep);
-}
-
-/** Every hold that counts now, for readers (Admin's Set aside, the round's Fleet window). Throws when it cannot be read. */
-export function readLiveSpendHolds(
-  repos: { readonly budget: Pick<BudgetRepository, "mutate" | "install" | "read">; readonly spendHolds?: SpendHoldStore },
-  now: string,
-  env?: Readonly<Record<string, string | undefined>>,
-): Promise<Record<string, SpendHold>> {
-  return spendHoldStoreOf(repos, { env }).liveAll(now);
-}
-
-/* ------------------------------------------------------------ the durable holds */
-
-/**
- * The holds paid work takes, on the store `spendHoldStoreOf` picks (the
- * `cp_spend_holds` table; the shared ledger row behind the switch). A store
- * failure refuses the hold, by name.
- */
 export class DurableSpendHolds {
   private readonly store: SpendHoldStore;
   private readonly now: () => string;
 
-  constructor(deps: {
-    readonly budget: Pick<BudgetRepository, "mutate" | "install" | "read">;
-    /** The repositories' `spendHolds` table; absent, the holds live on the ledger row. */
-    readonly table?: SpendHoldStore;
-    readonly now: () => string;
-    readonly sleep?: (ms: number) => Promise<void>;
-    readonly env?: Readonly<Record<string, string | undefined>>;
-  }) {
-    this.store = spendHoldStoreOf({ budget: deps.budget, ...(deps.table ? { spendHolds: deps.table } : {}) }, { sleep: deps.sleep, env: deps.env });
+  constructor(deps: { readonly store: SpendHoldStore; readonly now: () => string }) {
+    this.store = deps.store;
     this.now = deps.now;
   }
 
@@ -389,7 +239,7 @@ export class DurableSpendHolds {
       return await this.store.admit(input, this.now());
     } catch (error) {
       const code = input.lines.sends.length > 0 ? SPEND_HOLD_CODE_SEND : SPEND_HOLD_CODE_AREA;
-      return { admit: false, code, why: `the shared budget ledger could not be read or written (${error instanceof Error ? error.message : String(error)}), so ${input.what} cannot be held against its budget; it waits` };
+      return { admit: false, code, why: `the spend holds could not be read or written (${error instanceof Error ? error.message : String(error)}), so ${input.what} cannot be held against its budget; it waits` };
     }
   }
 
@@ -416,15 +266,13 @@ export class DurableSpendHolds {
   async left(lines: readonly BudgetLine[]): Promise<{ readonly line: BudgetLine; readonly leftUsd: number }[] | null> {
     try {
       const now = this.now();
-      const holds = await this.store.liveFor(lines.map((l) => l.key), now);
-      return lines.map((line) => ({ line, leftUsd: leftUsd(holds, line, now) }));
+      const remaining = await this.store.left(lines, now);
+      return lines.map((line, index) => ({ line, leftUsd: remaining[index] }));
     } catch {
       return null;
     }
   }
 }
-
-/* ------------------------------------------------------------ one job */
 
 export class SendBudgetRefusal extends Error {
   readonly code: string;
@@ -438,12 +286,6 @@ export class SendBudgetRefusal extends Error {
   }
 }
 
-/**
- * One paid job's holds: the worst case it was admitted on, and every further
- * hold it had to win (an escalation, a request past its hold). `committedUsd`
- * is what its requests have spent or have in flight — a failed request keeps
- * its worst case committed, since what it was billed is unknown.
- */
 export class JobSpend {
   heldUsd = 0;
   committedUsd = 0;
@@ -477,12 +319,6 @@ export class JobSpend {
   }
 }
 
-/**
- * A round ending (or failing where it can still act) settles every job it
- * never settled: what the job's requests committed (measured, or their worst
- * case when unpriced), so a job that never sent releases its whole hold.
- * Returns the jobs whose settle failed, by id.
- */
 export async function releaseOpenJobs(holds: DurableSpendHolds, jobs: Iterable<JobSpend>, now: string): Promise<readonly string[]> {
   const failed: string[] = [];
   for (const job of jobs) {
@@ -492,12 +328,6 @@ export async function releaseOpenJobs(holds: DurableSpendHolds, jobs: Iterable<J
   return failed;
 }
 
-/**
- * Every model request a job makes, checked against what the job holds before it
- * is sent. A request whose worst case would pass the hold must first win a
- * further hold for the difference; refused, it throws `SendBudgetRefusal` and
- * nothing is sent. `job()` null: no budget applies and the request passes.
- */
 export function budgetGuardedTransport(input: {
   readonly transport: ModelTransport;
   readonly job: () => JobSpend | null;
@@ -523,22 +353,12 @@ export function budgetGuardedTransport(input: {
   };
 }
 
-/* ------------------------------------------------------------ autonomous work */
-
 /** The jurisdiction one piece of autonomous work researches: its subject, and its state when the subject's id does not say it. */
 export interface AutonomousJurisdiction {
   readonly subjectId: string;
   readonly state: string | null;
 }
 
-/**
- * Autonomous work belongs to no Send, so only the Fleet ceiling and the area
- * budgets covering its jurisdiction (`ScopeBudgetGate.bindingScopes`) bind it.
- * Each request holds its own worst case before it is sent and settles to its
- * measured cost; a request that may have been sent and failed keeps its hold.
- * An unreadable area budget or ledger refuses the request. No covering area:
- * the request passes to the Fleet guard unchanged.
- */
 export function areaGuardedTransport(input: {
   readonly transport: ModelTransport;
   readonly holds: DurableSpendHolds;

@@ -3285,30 +3285,20 @@
         "York County’s complete official November 3, 2026 ballot corpus contains all 162 precincts, both sides of every ballot, and only the local Conewago Township supervisor referendum. It contains no statewide measure. The Department of State’s 2026 calendar requires every statewide constitutional amendment and question to be transmitted to every county for ballot placement; the complete official ballot corpus therefore establishes the statewide measure inventory. Philadelphia’s two charter questions are local.",
         "The statewide ticket names are preserved as the joint candidacies printed on the ballot. Incumbency and candidate websites are not stated in the saved list."
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://yorkcountypa.gov/DocumentCenter/View/9195",
-          "sourceHash": "c181147c903099a66a6b665be868a683acb57788c357e0975a453d8705002c9b",
-          "retrievedAt": "2026-10-15T00:02:46.800166+00:00",
-          "publisher": "York County Board of Elections",
-          "vault": {
-            "key": "project/freshness/source/yorkcountypa.gov/2026/10/15/ms-01-25bd93380a35d3d5/sha256-c181147c903099a66a6b665be868a683acb57788c357e0975a453d8705002c9b.pdf",
-            "byteLength": 1590108,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
-          "sourceHash": "338f1b949be336251ec9ebd5c9aace1d57a68fecb78185121ba2172d6e9b8b25",
-          "retrievedAt": "2026-10-15T00:06:51.528473+00:00",
-          "publisher": "Pennsylvania Department of State",
-          "vault": {
-            "key": "project/freshness/source/www.pa.gov/2026/10/15/ms-01-51139a1cd6ad6877/sha256-338f1b949be336251ec9ebd5c9aace1d57a68fecb78185121ba2172d6e9b8b25.pdf",
-            "byteLength": 385165,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "PA",
+        "electionId": "pa-2026-general",
+        "sourceHash": "145a26151b97bf5e86ad2c39805dd90bb0f6cb1a4947bc14aef7bf86cabb7db1",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.897577+00:00",
+        "reviewedBy": "Codex MS-01 official measure inventory review",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-pa/2026/10/15/ms-01/sha256-145a26151b97bf5e86ad2c39805dd90bb0f6cb1a4947bc14aef7bf86cabb7db1.ndjson",
+          "byteLength": 2891,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {
@@ -3436,17 +3426,6 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "York County’s complete official November 3, 2026 ballot corpus contains all 162 precincts, both sides of every ballot, and only the local Conewago Township supervisor referendum. It contains no statewide measure. The Department of State’s 2026 calendar requires every statewide constitutional amendment and question to be transmitted to every county for ballot placement; the complete official ballot corpus therefore establishes the statewide measure inventory. Philadelphia’s two charter questions are local."
-      },
-      {
-        "requestedUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
-        "finalUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/programs/voting-and-elections/running-for-office/2026/2026-general-election-calendar.pdf",
-        "httpStatus": 200,
-        "rawHash": "338f1b949be336251ec9ebd5c9aace1d57a68fecb78185121ba2172d6e9b8b25",
-        "retrievedAt": "2026-10-15T00:06:51.528473+00:00",
-        "publisher": "Pennsylvania Department of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "The August 25 calendar entry states that the Secretary transmits to each county all candidates and all constitutional amendments and other questions to be voted on at the November election, with their required form. This establishes why a complete official county ballot corpus covers statewide questions."
       }
     ]
   }

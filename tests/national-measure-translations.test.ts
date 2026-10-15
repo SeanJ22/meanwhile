@@ -11,19 +11,23 @@ import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { nationalMeasureInputs, readNationalBallotState, runNationalMeasureTranslations } from "../lib/translate/national.ts";
 import { translationHash, translationScope } from "../lib/translate/records.ts";
-import { readTranslations, withMeasureTranslations } from "../lib/translate/projection-reader.ts";
-import { publishRoutineReaderEdgeOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { readTranslationProjection, readTranslations, withMeasureTranslations } from "../lib/translate/projection-reader.ts";
+import { publishPlaceReaderEdgeOutcome } from "../lib/civic-data/place-edge-publication.ts";
 import { ensureReaderAuthorityEdge, READER_BALLOT_AUTHORITY_FAMILIES } from "../lib/meetings/edge-serving.ts";
+import { readerPlaceManifestKey } from "../lib/meetings/place-edge.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import { translationPackage } from "../lib/translate/publication.ts";
 import { runHeldMeasureTranslations } from "../lib/translate/standing.ts";
 import { armHunterLane, hunterLaneArmingPath, laneArmingOf, LaneOwnSpend } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming-writer.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
+import { scopeModelSpend } from "../lib/control-plane/expansion/membership.ts";
+import { SETTLED_HOLD_RETENTION_MS } from "../lib/control-plane/expansion/spend-holds.ts";
 import { defaultAdminConfig, withFleetSpendCeiling } from "../lib/control-plane/gateway/admin-config.ts";
 
 const at = "2026-10-14T18:00:00Z";
@@ -62,8 +66,8 @@ test("national translation binds its official question and uses the full legisla
   t.after(() => rm(directory, { recursive: true, force: true }));
   const vault = new MemoryEvidenceStore();
   let vaultGets = 0;
-  const get = vault.get.bind(vault);
-  vault.get = async key => { vaultGets++; return get(key); };
+  const stream = vault.stream.bind(vault);
+  vault.stream = async key => { vaultGets++; return stream(key); };
   await saveSource(vault, text, ballot.measures[0].officialText!);
   await saveSource(vault, authorityHtml, authority);
   let heldBallot = ballot;
@@ -72,9 +76,10 @@ test("national translation binds its official question and uses the full legisla
     number: String(index + 1), kind: "PROGRAM", label: `Section ${index + 1}`, what: record.whatItDoes }));
   await save({ ...ballot, measureRecords: [{ ...record, parts: rawSections }] });
   const repos = createMemoryRepositories(), store = new MemoryRoutineDataStore(), requests: ModelRequest[] = [], lines: string[] = [];
-  let now = at, rejects = false;
-  const input = { vault, repos, store, now: () => now, slots: { acquire: async () => () => {} }, capacity: () => 1,
-    readState: async (state: string) => state === "OH" ? [heldBallot] : [],
+  let now = at, rejects = false, recordedCosts = 0;
+  const input = { state: "OH", publishPlace: async () => {}, vault, repos, store, now: () => now, slots: { acquire: async () => () => {} }, capacity: () => 1,
+    onCostRecorded: () => { recordedCosts++; },
+    readPlaces: async function* (state: string) { if (state === "OH") yield { division, ballots: [heldBallot] }; },
     continueWork: () => true, report: (line: string) => { lines.push(line); }, transportFor: () => async (request: ModelRequest) => {
       requests.push(request);
       const payload = JSON.parse(request.messages[0].content as string) as { source?: string; sourceHash?: string; writtenAt?: string; proposal?: { sentences: { field: string; text: string }[] } };
@@ -88,6 +93,7 @@ test("national translation binds its official question and uses the full legisla
   const first = await runNationalMeasureTranslations(input);
   assert.equal(first[0].published, 1, lines.join("\n"));
   assert.equal(requests.length, 2);
+  assert.equal(recordedCosts, 2);
   assert.notEqual(requests[0].model, requests[1].model);
   assert.equal(JSON.parse(requests[0].messages[0].content as string).subject.prior, null,
     "unpublished source sections do not force ninety generated summaries; checked reaction parts remain authoritative on rewrites");
@@ -99,19 +105,19 @@ test("national translation binds its official question and uses the full legisla
   const translated = await readTranslations([division], { store, now, bypassCache: true });
   assert.equal(withMeasureTranslations(ballot, translated).measureRecords![0].yesMeans, record.yesMeans);
   const artifacts = new LocalFileArtifactStore(join(directory, "edge"));
-  const edgePublication = await publishRoutineReaderEdgeOutcome(store, now,
+  const edgePublication = await publishPlaceReaderEdgeOutcome(store, now,
     [{ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) }], { artifactStore: artifacts });
   assert.equal(edgePublication.readerEdge, "PUBLISHED", JSON.stringify(edgePublication));
-  const manifest = (await artifacts.readManifest())!.manifest;
-  assert.ok(manifest.translations?.[division]);
+  const manifest = (await artifacts.readManifest(readerPlaceManifestKey("plain-english-translations", division)))!.manifest;
+  assert.ok(manifest.place?.artifact);
   let edgeReads = 0;
   const counting = new Proxy(artifacts, { get(target, key) {
     if (key === "readBytes") return async (path: string) => { edgeReads++; return target.readBytes(path); };
     const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
   } });
-  assert.ok((await ensureReaderAuthorityEdge(manifest, counting, ["ballot-contests"])).translations,
+  assert.ok((await ensureReaderAuthorityEdge({}, counting, ["ballot-contests"])).translations,
     "Ask's ballot-only bundle carries the lazy translation loader too");
-  const bundle = await ensureReaderAuthorityEdge(manifest, counting, READER_BALLOT_AUTHORITY_FAMILIES);
+  const bundle = await ensureReaderAuthorityEdge({}, counting, READER_BALLOT_AUTHORITY_FAMILIES);
   assert.equal(edgeReads, 0, "request setup loads no state's translation source documents");
   const served = await withReaderAuthorityEdge({ ...bundle, edgeOnly: true }, () => readTranslations([division], { now }));
   assert.deepEqual(served, translated, "normal ballot request reads the checked publication from its state artifact");
@@ -126,7 +132,7 @@ test("national translation binds its official question and uses the full legisla
   save({ ...heldBallot, measures: [{ ...heldBallot.measures[0], officialText: { ...heldBallot.measures[0].officialText!, retrievedAt: now } }] });
   assert.equal((await runNationalMeasureTranslations(input))[0].reused, 1);
   assert.equal(requests.length, 2);
-  assert.equal(vaultGets, 0, "a later observation of identical held bytes does not start a new translation");
+  assert.ok(vaultGets > 0, "a changed source reference is verified without new model calls");
   now = "2026-10-15T18:01:00Z";
   const reobserved = reference(text, sourceUrl, now);
   await saveSource(vault, text, reobserved);
@@ -134,9 +140,15 @@ test("national translation binds its official question and uses the full legisla
   save({ ...heldBallot, measures: [{ ...heldBallot.measures[0], officialText: reobserved }] });
   assert.equal((await runNationalMeasureTranslations(input))[0].reused, 1);
   assert.equal(requests.length, 2);
-  assert.equal(vaultGets, 0, "a new dated vault key for unchanged text reuses the checked original copy");
-  assert.deepEqual(await readTranslations([division], { store, now, bypassCache: true }), translated);
-  now = "2026-10-14T18:01:00Z";
+  assert.ok(vaultGets > 0, "the newly held vault reference is verified before rebinding checked sentences");
+  const refreshed = await readTranslations([division], { store, now, bypassCache: true });
+  assert.deepEqual(refreshed[0].checked, translated[0].checked);
+  assert.equal(refreshed[0].writtenAt, translated[0].writtenAt);
+  if (refreshed[0].kind === "MEASURE") assert.deepEqual(refreshed[0].sourceReference, reobserved);
+  vaultGets = 0;
+  assert.equal((await runNationalMeasureTranslations(input))[0].reused, 1);
+  assert.equal(vaultGets, 0);
+  now = "2026-10-15T18:02:00Z";
   const changedText = `${text} This levy takes effect in 2027.`;
   const changed = { ...ballot, measureRecords: [{ ...record, sourceHash: translationHash(changedText), writtenAt: now }],
     measures: [{ ...ballot.measures[0], officialText: reference(changedText, sourceUrl, now) }] };
@@ -146,19 +158,20 @@ test("national translation binds its official question and uses the full legisla
   rejects = true;
   assert.equal((await runNationalMeasureTranslations(input))[0].held, 1);
   assert.equal(requests.length, 4);
-  now = "2026-10-14T18:02:00Z";
+  now = "2026-10-15T18:03:00Z";
   assert.equal((await runNationalMeasureTranslations(input))[0].deferred, 1);
   assert.equal(requests.length, 4, "the durable failed attempt preserves the retry clock across passes");
-  now = "2026-10-14T18:16:00Z"; rejects = false;
+  now = "2026-10-15T18:17:00Z"; rejects = false;
   assert.equal((await runNationalMeasureTranslations(input))[0].published, 1);
   assert.equal(requests.length, 6);
   const attempts = await repos.attempts.list();
   assert.equal(attempts.filter(row => row.value.translation?.status === "HELD").length, 1);
-  now = "2026-10-14T18:17:00Z";
+  now = "2026-10-15T18:18:00Z";
   save({ ...changed, measures: [{ ...changed.measures[0], questionText: "Shall the library levy take effect in 2027?" }] });
   vaultGets = 0;
   assert.equal((await runNationalMeasureTranslations(input))[0].published, 1);
   assert.equal(requests.length, 8, "changed ballot context rechecks the exact question within a shared legal source");
+  assert.equal(recordedCosts, 8, "each response is acknowledged after its charge is durably recorded");
   assert.ok(vaultGets > 0);
 });
 
@@ -191,17 +204,138 @@ test("national measures require complete vaulted text with matching source and s
   const vault = new MemoryEvidenceStore();
   await saveSource(vault, text, ballot.measures[0].officialText!);
   await saveSource(vault, authorityHtml, authority);
-  assert.equal((await nationalMeasureInputs(ballot, vault)).captures.length, 2);
+  assert.equal((await nationalMeasureInputs(ballot, vault, division)).captures.length, 2);
   for (const invalid of [
     { ...ballot, measures: [{ ...ballot.measures[0], officialText: undefined }] },
     { ...ballot, contests: [{ ...ballot.contests[0], ocdId: "ocd-division/country:us/state:ca" }] },
-  ]) assert.equal((await nationalMeasureInputs(invalid, vault)).captures.length, 0);
-  await assert.rejects(nationalMeasureInputs({ ...ballot, measureRecords: [{ ...record, sourceHash: "0".repeat(64) }] }, vault), /differs/);
-  await assert.rejects(nationalMeasureInputs(ballot, new MemoryEvidenceStore()), /missing/);
+  ]) assert.equal((await nationalMeasureInputs(invalid, vault, division)).captures.length, 0);
+  await assert.rejects(nationalMeasureInputs({ ...ballot, measureRecords: [{ ...record, sourceHash: "0".repeat(64) }] }, vault, division), /differs/);
+  await assert.rejects(nationalMeasureInputs(ballot, new MemoryEvidenceStore(), division), /missing/);
   const district = await nationalMeasureInputs({ ...ballot, election: { ...ballot.election, state: "DC" },
-    contests: [{ ...ballot.contests[0], ocdId: "ocd-division/country:us/district:dc" }] }, vault);
+    contests: [{ ...ballot.contests[0], ocdId: "ocd-division/country:us/district:dc" }] }, vault, "ocd-division/country:us/district:dc");
   assert.equal(district.captures.length, 2);
   assert.deepEqual(district.divisions, ["ocd-division/country:us/district:dc"]);
+});
+
+test("one state worker translates county, city and school measures one place at a time and skips current sources", async () => {
+  const vault = new MemoryEvidenceStore(), repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
+  await saveSource(vault, text, ballot.measures[0].officialText!);
+  await saveSource(vault, authorityHtml, authority);
+  const places = ["county:alder", "place:alder", "school_district:alder"].map(suffix => `${division}/${suffix}`);
+  let vaultReads = 0, requests = 0, yielded = 0, sourceVersion = "initial", clock = at;
+  let heldSource = ballot.measures[0].officialText!, missingFirst = false;
+  const streamed = vault.stream.bind(vault);
+  vault.stream = async key => { vaultReads++; return streamed(key); };
+  const published: string[] = [];
+  const input = { state: "OH", vault, repos, store, now: () => clock, capacity: () => 1,
+    slots: { acquire: async () => () => {} }, continueWork: () => true, report: () => {},
+    publishPlace: async (division: string) => { published.push(division); },
+    readPlaces: async function* () {
+      for (const place of places) {
+        yielded++;
+        const contestId = `ballot-measure:${encodeURIComponent(place)}:12`;
+        const contests = place === places[0] ? [contestId, `${contestId}-second`] : [contestId];
+        yield { division: place, sourceBallot: { scope: `US:ballot-measures:${place}`, versionId: `held:${sourceVersion}:${place}` }, ballots: [{ ...ballot,
+          contests: contests.map(id => ({ ...ballot.contests[0], id, ocdId: place })),
+          measures: contests.map((contestId, index) => ({ ...ballot.measures[0], id: `${contestId}#question`, contestId,
+            officialText: missingFirst && place === places[0] && index === 0
+              ? { ...heldSource, vault: { ...heldSource.vault, key: heldSource.vault.key.replace("/translation-test/", "/missing-law/") } } : heldSource })),
+          measureRecords: contests.map(contestId => ({ ...record, contestId })) }] };
+      }
+    },
+    transportFor: (subject: { subjectId: string; state: string; ocdId: string }) => async (request: ModelRequest) => {
+      requests++;
+      assert.equal(subject.ocdId, places[yielded - 1], "a later place cannot be read while this source is in use");
+      const payload = JSON.parse(request.messages[0].content as string);
+      const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: record[field as "whatItDoes"], quote: record[field as "whatItDoes"] }));
+      const value = request.tools[0].name === "write_measure_translation"
+        ? { measure: { ...record, contestId: subject.subjectId, writtenAt: payload.writtenAt }, sentences }
+        : { checked: payload.proposal.sentences.map((sentence: { field: string; text: string }) => ({ ...sentence, supported: true })) };
+      return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: value }], usage: { input_tokens: 100, output_tokens: 50 } };
+    } };
+  const firstPlaces = await runNationalMeasureTranslations(input);
+  assert.equal(firstPlaces[0].published, 4, JSON.stringify(firstPlaces));
+  assert.equal(requests, 8);
+  assert.deepEqual(published, places);
+  const costs = await repos.costs.readAll(), charges = await repos.modelCharges.readSince("1970-01-01T00:00:00.000Z");
+  assert.equal(charges.length, 8);
+  assert.ok(costs.every(cost => places.includes(cost.jurisdiction!) && cost.workItemId.startsWith("ballot-measure:")));
+  assert.ok((await repos.costs.keys()).every(key => key.startsWith("ballot-measure:")), "cost logs retain the contest identity");
+  const billedAt = Math.max(...charges.map(charge => Date.parse(charge.at)));
+  const budgetReadAt = new Date(billedAt + SETTLED_HOLD_RETENTION_MS + 1).toISOString();
+  const dayStart = new Date(Date.parse(budgetReadAt) - 24 * 3_600_000).toISOString();
+  for (const place of places) {
+    const daily = scopeModelSpend(charges, new Set([place]), dayStart, budgetReadAt);
+    const expected = costs.filter(cost => cost.jurisdiction === place).reduce((sum, cost) => sum + cost.cost.usd!, 0);
+    assert.ok(expected > 0); assert.ok(Math.abs(daily.usd! - expected) < 1e-12);
+    const area = { key: `area:${place}`, label: place, budgetUsd: expected + 1, historicalUsd: 0, historyReadAt: dayStart };
+    const heldAt = new Date(billedAt).toISOString();
+    assert.equal((await repos.spendHolds.admit({ holdId: place, jobId: place, obligationId: place,
+      lines: { sends: [], areas: [area] }, usd: expected, what: "translation" }, heldAt)).admit, true);
+    await repos.spendHolds.settle({ jobId: place, usd: expected, costRecordedAt: heldAt }, heldAt);
+    await repos.spendHolds.sweep(budgetReadAt);
+    assert.equal((await repos.spendHolds.admit({ holdId: `${place}:next`, jobId: `${place}:next`, obligationId: place,
+      lines: { sends: [], areas: [{ ...area, budgetUsd: daily.usd!, historicalUsd: daily.usd!, historyReadAt: budgetReadAt }] },
+      usd: 0.01, what: "next translation" }, budgetReadAt)).admit, false, "daily area spend still binds after the settled hold expires");
+  }
+  assert.deepEqual(await repos.spendHolds.liveAll(budgetReadAt), {});
+  assert.equal(scopeModelSpend(charges, new Set([`${division}/place:neighbor`]), dayStart, budgetReadAt).usd, 0);
+  for (const place of places) {
+    const held = await readTranslations([place], { store, now: at, bypassCache: true });
+    assert.equal(held.length, place === places[0] ? 2 : 1);
+    assert.equal(held[0].ocdId, place);
+    const checkedMeasure = held[0];
+    if (checkedMeasure.kind === "MEASURE") {
+      const reference = checkedMeasure.sourceReference;
+      const reordered = { ...Object.fromEntries(Object.entries(reference).reverse()),
+        vault: Object.fromEntries(Object.entries(reference.vault).reverse()) } as MeasureSourceReference;
+      assert.notEqual(JSON.stringify(reordered), JSON.stringify(reference));
+      const captures = await nationalMeasureInputs(ballot, vault, division);
+      assert.doesNotThrow(() => translationPackage({ record: { ...checkedMeasure, sourceReference: reordered }, captures: captures.captures, now: at }));
+      assert.throws(() => translationPackage({ record: { ...checkedMeasure, sourceReference: { ...reordered, publisher: "Another authority" } },
+        captures: captures.captures, now: at }), /differs from its verified capture/);
+    }
+    const projection = await readTranslationProjection({ scope: translationScope(place), store, now: at, bypassCache: true });
+    assert.equal(projection.kind, "PROMOTED");
+    if (projection.kind === "PROMOTED") assert.deepEqual(projection.value.sourceBallot, { scope: `US:ballot-measures:${place}`, versionId: `held:${sourceVersion}:${place}`, measureCount: place === places[0] ? 2 : 1 });
+  }
+  yielded = 0; vaultReads = 0; published.length = 0;
+  assert.equal((await runNationalMeasureTranslations(input))[0].reused, 4);
+  assert.equal(vaultReads, 0);
+  assert.equal(requests, 8);
+  assert.deepEqual(published, places, "current checked summaries still repair a missing place edge artifact");
+  sourceVersion = "advanced"; clock = "2026-10-15T19:00:00Z"; yielded = 0;
+  heldSource = reference(text, sourceUrl, clock);
+  await saveSource(vault, text, heldSource);
+  const originalChecks = await readTranslations(places, { store, now: at, bypassCache: true });
+  const refreshed = await runNationalMeasureTranslations(input);
+  assert.equal(refreshed[0].reused, 4, JSON.stringify(refreshed));
+  assert.equal(requests, 8, "a moved raw pointer with unchanged law and question never calls the models");
+  for (const place of places) {
+    const projection = await readTranslationProjection({ scope: translationScope(place), store, now: clock, bypassCache: true });
+    assert.equal(projection.kind, "PROMOTED");
+    if (projection.kind === "PROMOTED") {
+      assert.equal(projection.value.sourceBallot?.versionId, `held:advanced:${place}`);
+      for (const row of projection.value.records) {
+        assert.equal(row.writtenAt, at); assert.equal(row.retrievedAt, clock);
+        assert.deepEqual(row.checked, originalChecks.find(prior => prior.id === row.id)?.checked);
+        if (row.kind === "MEASURE") assert.deepEqual(row.sourceReference, heldSource);
+      }
+    }
+  }
+  vaultReads = 0; published.length = 0;
+  const narrow = await runNationalMeasureTranslations({ ...input, readPlaces: async function* () {
+    for (const place of places) yield { division: place, ballots: [], currentMeasureCount: place === places[0] ? 2 : 1 };
+  } });
+  assert.equal(narrow[0].reused, 4); assert.equal(requests, 8); assert.equal(vaultReads, 0);
+  assert.deepEqual(published, places);
+  missingFirst = true; sourceVersion = "source-gap"; clock = "2026-10-15T20:00:00Z"; yielded = 0;
+  places.push(`${division}/place:later`);
+  const isolated = await runNationalMeasureTranslations(input);
+  assert.equal(isolated[0].held, 1, JSON.stringify(isolated));
+  assert.equal(isolated[0].published, 1, JSON.stringify(isolated));
+  assert.equal(isolated[0].error, null); assert.equal(requests, 10);
+  assert.equal((await readTranslations([places[3]], { store, now: clock, bypassCache: true })).length, 1);
 });
 
 test("separate full laws in the same state pamphlet keep their exact capture identities", async () => {
@@ -209,7 +343,7 @@ test("separate full laws in the same state pamphlet keep their exact capture ide
   const vault = new MemoryEvidenceStore(), source = reference(text, url);
   await saveSource(vault, text, source);
   const input = await nationalMeasureInputs({ ...ballot, measureRecords: [{ ...record, sourceUrl: url }],
-    measures: [{ ...ballot.measures[0], officialText: source }] }, vault);
+    measures: [{ ...ballot.measures[0], officialText: source }] }, vault, division);
   const otherText = "SECTION 1. A separate measure changes a different law.";
   const other = { ...input.captures[0], evidence: { ...input.captures[0].evidence, text: otherText, contentHash: `sha256-${translationHash(otherText)}` } };
   let writes = 0;
@@ -236,25 +370,76 @@ test("the live runner pause closes national translation before state reads and m
   await repos.researchIntents.append("level-1", intent.intentId, intent, at);
   const armingPath = hunterLaneArmingPath(directory, {});
   writeLaneArming(armingPath, laneArmingOf({ readAt: at, specs: [], historical: new Map(), knownKeys: [], reached: new Map(),
-    areas: null, lifetimeHuntSubjects: [], placeOrder: [], circuits: [], worstCaseUsd: 1 }));
+    areas: null, lifetimeHuntSubjects: [], circuits: [], worstCaseUsd: 1 }));
   let sends = 0;
   const messages = async () => { sends++; throw new Error("Paused work sent a model request"); };
   const armed = await armHunterLane({ repos, now: () => at, armingPath, messages, batch: backgroundBatchTransport({ apiKey: "" }),
     credentialConfigured: true, credentialVar: "TEST_KEY", providerQueue: new ModelProviderQueue(), ownSpend: new LaneOwnSpend(),
     circuits: null, onCondition: () => {} });
   assert.match(armed.closed?.reason ?? "", /paused the runner/);
-  const result = await runNationalMeasureTranslations({ vault: new MemoryEvidenceStore(), repos, store: new MemoryRoutineDataStore(), now: () => at,
+  const result = await runNationalMeasureTranslations({ state: "OH", vault: new MemoryEvidenceStore(), repos, store: new MemoryRoutineDataStore(), now: () => at,
     capacity: () => armed.guards?.paidWorkerCapacity() ?? 0, continueWork: () => armed.closed === null,
-    readState: async () => { throw new Error("Paused work read a state"); }, slots: { acquire: async () => () => {} },
+    readPlaces: async function* () { throw new Error("Paused work read a state"); }, slots: { acquire: async () => () => {} },
     transportFor: () => messages, report: () => {} });
   assert.deepEqual(result, []);
   assert.equal(sends, 0);
 });
 
 test("a closed paid lane does not read source evidence or start model work", async () => {
-  const result = await runNationalMeasureTranslations({ vault: new MemoryEvidenceStore(),
+  const result = await runNationalMeasureTranslations({ state: "OH", vault: new MemoryEvidenceStore(),
     repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), now: () => at, capacity: () => 0,
     slots: { acquire: async () => { throw new Error("No worker should start."); } }, continueWork: () => true,
     transportFor: () => async () => { throw new Error("No model call should start."); }, report: () => {} });
   assert.deepEqual(result, []);
+});
+
+test("a state translation observes its admitted process before reading and releases memory on success or failure", async () => {
+  for (const fail of [false, true]) {
+    const events: string[] = [];
+    const result = await runNationalMeasureTranslations({ state: "OH", vault: new MemoryEvidenceStore(), repos: createMemoryRepositories(),
+      store: new MemoryRoutineDataStore(), now: () => at, capacity: () => 1, continueWork: () => true, report: () => {},
+      slots: { acquire: async entry => {
+        events.push(`acquire:${entry}`);
+        return Object.assign(() => { events.push("release"); }, { observe: (pid: number) => { assert.equal(pid, process.pid); events.push("observe"); } });
+      } },
+      readPlaces: async function* () {
+        assert.deepEqual(events, ["acquire:scripts/translate-national-measures.mts", "observe"]);
+        events.push("read");
+        if (fail) throw new Error("Source state is unavailable");
+        yield { division, ballots: [] };
+      }, transportFor: () => async () => { throw new Error("An empty state cannot send model work"); } });
+    assert.deepEqual(events, ["acquire:scripts/translate-national-measures.mts", "observe", "read", "release"]);
+    if (fail) assert.match(result[0].error!, /Source state is unavailable/);
+    else assert.deepEqual(result, []);
+  }
+});
+
+test("a failed durable charge write keeps spend reserved and completes the measure's accounting boundary", async () => {
+  const vault = new MemoryEvidenceStore(), repos = createMemoryRepositories();
+  await saveSource(vault, text, ballot.measures[0].officialText!);
+  await saveSource(vault, authorityHtml, authority);
+  repos.costs.append = async () => { throw new Error("Charge storage is unavailable"); };
+  let released = 0, completed = 0;
+  const reports: string[] = [];
+  const result = await runNationalMeasureTranslations({ state: "OH", vault, repos, store: new MemoryRoutineDataStore(), now: () => at,
+    capacity: () => 1, continueWork: () => true, slots: { acquire: async () => () => {} }, report: line => { reports.push(line); },
+    readPlaces: async function* () { yield { division, ballots: [ballot] }; },
+    onCostRecorded: () => { released++; }, onMeasureComplete: place => { assert.equal(place, division); completed++; },
+    transportFor: () => async request => ({ model: request.model, stop_reason: "tool_use", content: [], usage: { input_tokens: 100, output_tokens: 50 } }) });
+  assert.equal(result[0].held, 1);
+  assert.ok(reports.some(line => line.includes("Charge storage is unavailable")));
+  assert.equal(released, 0); assert.equal(completed, 1);
+});
+
+test("an unreadable checked place stops before source hydration or paid rewriting", async () => {
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore();
+  let reads = 0, sends = 0;
+  store.readPromotion = async () => { throw new Error("Checked place storage is unavailable"); };
+  vault.stream = async () => { reads++; throw new Error("Source bytes must remain unread"); };
+  const result = await runNationalMeasureTranslations({ state: "OH", vault, store, repos: createMemoryRepositories(), now: () => at,
+    capacity: () => 1, continueWork: () => true, slots: { acquire: async () => () => {} }, report: () => {},
+    readPlaces: async function* () { yield { division, ballots: [ballot] }; },
+    transportFor: () => async () => { sends++; throw new Error("No paid rewrite should start"); } });
+  assert.match(result[0].error!, /Checked measure input .*STORE_UNREACHABLE/);
+  assert.equal(reads, 0); assert.equal(sends, 0);
 });

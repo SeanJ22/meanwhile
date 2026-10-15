@@ -5626,63 +5626,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hres/HJR1024%20ENR.PDF",
-          "sourceHash": "83caa991dbdae5741990470056fdefb4c63370f3a35a0774979a7c2a2a402c1c",
-          "retrievedAt": "2026-10-14T23:57:11.719636+00:00",
-          "publisher": "Oklahoma Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-9636da40efa87579/sha256-83caa991dbdae5741990470056fdefb4c63370f3a35a0774979a7c2a2a402c1c.pdf",
-            "byteLength": 58207,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
-          "sourceHash": "7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2",
-          "retrievedAt": "2026-10-14T23:52:27.680218+00:00",
-          "publisher": "Oklahoma Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a4a840ff563f59fb/sha256-7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2.pdf",
-            "byteLength": 2716576,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
-          "sourceHash": "92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b",
-          "retrievedAt": "2026-10-14T23:52:27.656067+00:00",
-          "publisher": "Oklahoma Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.ok.gov/2026/10/14/ms-01-a1b39b9ee0aa9a9e/sha256-92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b.pdf",
-            "byteLength": 1069017,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/sres/SJR39%20ENR.PDF",
-          "sourceHash": "3ec86aa1c49941fe63fc8435cf8278796a1824a6fb5a82832034f1cd43040d7c",
-          "retrievedAt": "2026-10-14T23:57:11.749434+00:00",
-          "publisher": "Oklahoma Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.oklegislature.gov/2026/10/14/ms-01-cefa0942c547995a/sha256-3ec86aa1c49941fe63fc8435cf8278796a1824a6fb5a82832034f1cd43040d7c.pdf",
-            "byteLength": 75727,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.oklegislature.gov/OKStatutes/CompleteTitles/oc24.rtf",
-          "sourceHash": "e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e",
-          "retrievedAt": "2026-10-15T00:00:49.701456+00:00",
-          "publisher": "Oklahoma Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.oklegislature.gov/2026/10/15/ms-01-c62244365d88822f/sha256-e51c17fc6b5bbd99d58f50e4e467598d580a8d8af837bc9181a782ed35a4934e.bin",
-            "byteLength": 55253,
-            "contentType": "application/rtf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "OK",
+        "electionId": "2026-11-03-general",
+        "sourceHash": "680e1fd04e864f695fe418a348308b14a6b906f5c8098d4101f537e620602658",
+        "documentCount": 5,
+        "reviewedAt": "2026-10-15T04:14:39.889095+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ok/2026/10/15/ms-01/sha256-680e1fd04e864f695fe418a348308b14a6b906f5c8098d4101f537e620602658.ndjson",
+          "byteLength": 5620,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

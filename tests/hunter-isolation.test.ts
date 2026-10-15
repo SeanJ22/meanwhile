@@ -13,7 +13,7 @@ import { RUNTIME_NO_PROGRESS_MS } from "../scripts/pilot-runtime-child.mts";
 import { hostMemoryReading, memoryReading } from "../lib/control-plane/workers/worker-slots.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 
-const config = (root: string, taskIds: string[]) => ({ root, postgres: false, taskIds, modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] });
+const config = (root: string, taskIds: string[]) => ({ root, postgres: false, taskIds, modelEnabled: false, searchEnabled: false, ceilingUsd: 0 });
 const noModel = () => async () => { throw new Error("no model in this fixture"); };
 
 async function fixture(name: string, worker: string): Promise<string> {

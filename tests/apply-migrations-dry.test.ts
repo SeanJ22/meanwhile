@@ -6,6 +6,7 @@ import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { declaredPhase } from "../lib/db/migration-phases.ts";
 import { runDbApply } from "../scripts/db-apply.mts";
+import { controlPlaneMigrationConnection } from "../scripts/apply-migrations.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTER = join(ROOT, "tests", "fixtures", "apply-migrations-neon-register.mjs");
@@ -37,6 +38,7 @@ function run(args: string[], env: Record<string, string> = {}, beforeContract?: 
       env: {
         ...process.env,
         DATABASE_URL: "postgresql://local_writer:secret@example.invalid/wtp_test",
+        WTP_CONTROL_PLANE_DATABASE_URL: "",
         WTP_DB_ROLE: "local",
         NODE_OPTIONS: `--import ${pathToFileURL(REGISTER).href}`,
         ...env,
@@ -315,4 +317,61 @@ test("writerless production inspection still refuses the wrong endpoint and appl
     APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: journal().entries.map(entry => entry.when).join(",") }, "");
   assert.equal(drift.status, 1);
   assert.match(drift.output, /does not match the applied journal hash/);
+});
+
+
+test("control-plane retirement commits on its own target before publishing the serving receipt", () => {
+  const result = run(["--phase=contract"], { WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local_writer:secret@example.invalid/control_plane_test" });
+  assert.equal(result.status, 0, result.output);
+  const writes = (result.events as { kind: string; statement?: string; database?: string }[])
+    .filter(event => event.kind === "transaction-query");
+  const retirement = writes.findIndex(event => /DROP TABLE cp_spend_window/.test(event.statement ?? ""));
+  assert.ok(retirement >= 0);
+  assert.equal(writes[retirement].database, "control_plane_test");
+  assert.match(writes[retirement].statement!, /INSERT INTO drizzle\.__control_plane_migrations/);
+  assert.doesNotMatch(writes[retirement].statement!, /drizzle\.__drizzle_migrations/);
+  const receipt = writes.findIndex((event, index) => index > retirement && event.database === "wtp_test" &&
+    /INSERT INTO drizzle\.__drizzle_migrations/.test(event.statement ?? ""));
+  assert.ok(receipt > retirement);
+  assert.doesNotMatch(writes[receipt].statement!, /DROP TABLE/);
+});
+
+test("control-plane contracts require their approved writer without borrowing the reader connection", () => {
+  const valid = "postgresql://writer:private@ep-dark-night-aeo1ekz3-pooler.c-2.us-east-2.aws.neon.tech/control";
+  assert.equal(controlPlaneMigrationConnection({ WTP_CONTROL_PLANE_DATABASE_URL: valid }, true), valid);
+  for (const env of [
+    { WTP_PRODUCTION_DATABASE_URL_WRITE: valid },
+    { WTP_CONTROL_PLANE_DATABASE_URL: valid.replace("writer:", "readonly:") },
+    { WTP_CONTROL_PLANE_DATABASE_URL: valid.replace("ep-dark-night-aeo1ekz3", "ep-dry-river-axwtolzc") },
+  ]) assert.throws(() => controlPlaneMigrationConnection(env, true), /REFUSED/);
+});
+
+
+test("a failed control-plane contract never publishes a serving receipt", () => {
+  const previous = journal().entries.filter(entry => declaredPhase(entry.tag)?.database !== "control-plane");
+  const result = run(["--phase=contract"], {
+    WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local_writer:secret@example.invalid/control_plane_test",
+    APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: previous.map(entry => entry.when).join(","),
+    APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL_DATABASE: "control_plane_test",
+  });
+  assert.equal(result.status, 1, result.output);
+  const writes = (result.events as { kind: string; statement?: string; database?: string }[])
+    .filter(event => event.kind === "transaction-query");
+  assert.ok(writes.some(event => /DROP TABLE cp_spend_window/.test(event.statement ?? "")));
+  assert.ok(writes.every(event => event.database === "control_plane_test"));
+  assert.doesNotMatch(result.output, /applied no durable statements/);
+});
+
+test("retry after a committed control-plane contract repairs the serving receipt", () => {
+  const previous = journal().entries.filter(entry => declaredPhase(entry.tag)?.database !== "control-plane");
+  const result = run(["--phase=contract"], {
+    WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local_writer:secret@example.invalid/control_plane_test",
+    APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: previous.map(entry => entry.when).join(","),
+    APPLY_MIGRATIONS_FAKE_CONCURRENT: "1",
+  });
+  assert.equal(result.status, 0, result.output);
+  const writes = (result.events as { kind: string; statement?: string; database?: string }[])
+    .filter(event => event.kind === "transaction-query");
+  assert.ok(writes.some(event => event.database === "wtp_test" && /INSERT INTO drizzle\.__drizzle_migrations/.test(event.statement ?? "")));
+  assert.match(result.output, /Applied 0 migration\(s\), 0 statement\(s\)/);
 });

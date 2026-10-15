@@ -7820,85 +7820,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0001.pdf",
-          "sourceHash": "f9ba7bc7ca8b9dc729228590b5b777cdc46c76258bffb15ac189f818bf59e3f5",
-          "retrievedAt": "2026-10-15T00:10:15.273627+00:00",
-          "publisher": "Tennessee General Assembly, Fiscal Review Committee",
-          "vault": {
-            "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-f86b6d3cce53f36f/sha256-f9ba7bc7ca8b9dc729228590b5b777cdc46c76258bffb15ac189f818bf59e3f5.pdf",
-            "byteLength": 123495,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0009.pdf",
-          "sourceHash": "e8584e8e6ca1b3a509e8faa4d34aa5a79b2ff98d115478a6c64fe23b7721fb23",
-          "retrievedAt": "2026-10-15T00:10:15.253074+00:00",
-          "publisher": "Tennessee General Assembly, Fiscal Review Committee",
-          "vault": {
-            "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-2a5fa6932be31646/sha256-e8584e8e6ca1b3a509e8faa4d34aa5a79b2ff98d115478a6c64fe23b7721fb23.pdf",
-            "byteLength": 122658,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.capitol.tn.gov/Bills/114/Fiscal/SJR0025.pdf",
-          "sourceHash": "2186a52f9d34199b652abd3febfa64289215372d97152238ab3d2505fd77f331",
-          "retrievedAt": "2026-10-15T00:10:15.273997+00:00",
-          "publisher": "Tennessee General Assembly, Fiscal Review Committee",
-          "vault": {
-            "key": "project/freshness/source/www.capitol.tn.gov/2026/10/15/ms-01-83cd3658b04a0a3c/sha256-2186a52f9d34199b652abd3febfa64289215372d97152238ab3d2505fd77f331.pdf",
-            "byteLength": 126163,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
-          "sourceHash": "41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e",
-          "retrievedAt": "2026-10-14T23:53:06.463159+00:00",
-          "publisher": "Tennessee Secretary of State, Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/sos.tn.gov/2026/10/14/ms-01-59a3e8d4815be58e/sha256-41c36b5069b935d699faa372d675cf7d87330a41355b929755848919557b9e8e.html",
-            "byteLength": 53208,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0025.pdf",
-          "sourceHash": "0f02c4e91c24667de9bf268e9818bed41031f6ecf99381440d3741334a23e0a1",
-          "retrievedAt": "2026-10-14T23:52:27.958909+00:00",
-          "publisher": "Tennessee Secretary of State, Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-7bc1fbb4f81befea/sha256-0f02c4e91c24667de9bf268e9818bed41031f6ecf99381440d3741334a23e0a1.pdf",
-            "byteLength": 157201,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0001.pdf",
-          "sourceHash": "8d761237225a5a36d6c229ce2d35f3017f7715f9d1fa230f8fd6335f638ce2b2",
-          "retrievedAt": "2026-10-14T23:52:27.913718+00:00",
-          "publisher": "Tennessee Secretary of State, Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-254ee000bf1d4ea0/sha256-8d761237225a5a36d6c229ce2d35f3017f7715f9d1fa230f8fd6335f638ce2b2.pdf",
-            "byteLength": 155045,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
-          "sourceHash": "95cf370fc57a6749883fbd5d1d6f862d85045bf91e22a241e3a58205578f67d5",
-          "retrievedAt": "2026-10-14T23:52:27.983591+00:00",
-          "publisher": "Tennessee Secretary of State, Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/publications.tnsosfiles.com/2026/10/14/ms-01-2cf699dbdc9ed887/sha256-95cf370fc57a6749883fbd5d1d6f862d85045bf91e22a241e3a58205578f67d5.pdf",
-            "byteLength": 194305,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -7922,7 +7843,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "TN",
+        "electionId": "tn-2026-general",
+        "sourceHash": "c38e6675e848a192c1e0bf3abf39632c8028a9cd3f5ee9d0c4ae084385db61e5",
+        "documentCount": 7,
+        "reviewedAt": "2026-10-15T04:14:39.910598+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-tn/2026/10/15/ms-01/sha256-c38e6675e848a192c1e0bf3abf39632c8028a9cd3f5ee9d0c4ae084385db61e5.ndjson",
+          "byteLength": 8001,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

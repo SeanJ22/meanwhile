@@ -10944,30 +10944,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.sos.mn.gov/media/xa4b2h3i/ag-letter-to-simon-explaining-proposed-2026-constitutional-amendment.pdf",
-          "sourceHash": "9006a56f044a7edebbc649ae37f3572c2815a3ef664bbd12bd75f5477fb56565",
-          "retrievedAt": "2026-10-14T23:54:27.964554+00:00",
-          "publisher": "Minnesota Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.mn.gov/2026/10/14/ms-01-6046c5e607f483e4/sha256-9006a56f044a7edebbc649ae37f3572c2815a3ef664bbd12bd75f5477fb56565.pdf",
-            "byteLength": 212551,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
-          "sourceHash": "1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db",
-          "retrievedAt": "2026-10-15T03:59:32.527196+00:00",
-          "publisher": "Minnesota Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.mn.gov/2026/10/15/ms-01-39dff269ed55212f/sha256-1e711423dbbd3e4bb6d9afeb2322e1a221c6f821c33d7849c4a7f0c65a46c7db.html",
-            "byteLength": 47960,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "MN",
+        "electionId": "mn-2026-11-03",
+        "sourceHash": "1cf324aab452e5d6c605d087bb6d4ffb9db29009fb3689a6f675cd8f109b807e",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.850710+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-mn/2026/10/15/ms-01/sha256-1cf324aab452e5d6c605d087bb6d4ffb9db29009fb3689a6f675cd8f109b807e.ndjson",
+          "byteLength": 2231,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

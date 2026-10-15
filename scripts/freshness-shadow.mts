@@ -213,7 +213,7 @@ import {
   appendFreshnessCycleDigest,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
-import {
+import { fleetSpendAt,
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
   FleetPreSendRefusal,
@@ -401,7 +401,6 @@ if (canary && (IDS === null || IDS.size !== 1)) {
 }
 observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
 
-/* ------------------------------------------------------------- provider --- */
 
 let repos: ControlPlaneRepositories;
 if (wantsPostgres) {
@@ -473,7 +472,6 @@ try {
   throw error;
 }
 
-/* ----------------------------------------------------------- the registry --- */
 
 const trackedStates = trackedStatesFromOperationalReference();
 const meetingPartitions = createMeetingPartitionOwnership({ root: ROOT });
@@ -532,7 +530,6 @@ if (ONLY !== null || IDS !== null) {
   );
 }
 
-/* ------------------------------------- retire the superseded meetings clock --- */
 
 const LEGACY_MEETINGS_OBLIGATION_PREFIX = "freshness:meetings:";
 const LEGACY_MEETINGS_RETIREMENT_REASON =
@@ -595,7 +592,6 @@ if (sync.refreshed.length > 0) {
   if (sync.refreshed.length > 5) console.log(`      … and ${sync.refreshed.length - 5} more`);
 }
 
-/* ---------------------------------------------- the executor decision --- */
 
 const maturity = await methodMaturityFromManual(repos);
 const decisions = new Map<string, ExecutorDecision>();
@@ -611,7 +607,6 @@ const decisionDisagreements = units
   .map((u) => ({ obligationId: u.obligation.id, disagreement: decisions.get(u.obligation.id)?.disagreement ?? null }))
   .filter((d) => d.disagreement !== null);
 
-/* ------------------------------------------------------- the occurrences --- */
 
 const nowMs = Date.parse(NOW);
 /** Named runtime conditions, accumulated from here on; the research state carries them. */
@@ -825,7 +820,6 @@ if (continuedStandingLineages.length) console.log(`  standing source periods con
   }
 }
 
-/* ------------------------------------------------- the owner's intents --- */
 
 let intentLog: ResearchIntent[] = [];
 let intentLogUnreadable: string | null = null;
@@ -1153,7 +1147,6 @@ const openOccurrenceInStep = async (
 };
 finishPhase("open-occurrences");
 
-/* -------------------------------------------------- LEVEL 1 — RESEARCH --- */
 
 /* The credential, BY NAME. Its value goes into the transport and nowhere else. */
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
@@ -1302,7 +1295,7 @@ const fleetSafety = new FleetSafetyController({
   websiteSize: sizeForDiscovery,
   hostConcurrency: () => hostConcurrency,
   now: NOW,
-  charges: spendCharges,
+  spend: fleetSpendAt(spendCharges, NOW),
   costLedgerReadable: ledgerUnreadable === null,
   paused: intents.runnerPause.paused,
   /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
@@ -1602,7 +1595,7 @@ const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
 });
 const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
 
-const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: nowIso });
+const spendHolds = new DurableSpendHolds({ store: repos.spendHolds, now: nowIso });
 /* A round's end deletes the holds that no longer count (bounded; never accumulated). */
 releaseRoundHolds = async () => {
   await spendHolds.sweep();
@@ -1622,7 +1615,7 @@ const writeHunterLaneReading = (): void => {
     writeLaneArming(hunterLaneArmingPath(ROOT), laneArmingOf({ readAt: NOW, specs: sends.specs, historical: sends.historical,
       knownKeys: assignmentMembers.byKey.keys(), reached: sends.reached,
       areas: expansionBudget === null ? null : expansionBudget.gate.armedReading(),
-      lifetimeHuntSubjects: lifetimeHuntSubjects, placeOrder, circuits: fleetSafety.snapshot(nowIso()).providerCircuits,
+      lifetimeHuntSubjects: lifetimeHuntSubjects, circuits: fleetSafety.snapshot(nowIso()).providerCircuits,
       worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY }));
   } catch (error) {
     runtimeConditions.push(`the hunter lane's budget reading could not be written (${error instanceof Error ? error.message : String(error)}); the lane holds paid work until a round writes it`);
@@ -1707,7 +1700,6 @@ const assignmentsReading = (): AssignmentCycleReading | null =>
         completionFor: assignmentCompletion,
       });
 
-/* ------------------------------------------------- host supervision --- */
 
 /** The relaunch proof is host-local ignored evidence under this runtime checkout; no relaunch trigger is asked. */
 function measureHostSupervision(): HostSupervision {
@@ -1749,7 +1741,6 @@ console.log(
     `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} measured ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`}`,
 );
 
-/* ----------------------------------------------------- research state --- */
 
 const running: RunningScout[] = [];
 let laneCounts: { deterministicDispatched: number; modelDispatched: number; deferredBy: Record<string, number> } = {
@@ -1862,7 +1853,6 @@ const writeResearchState = cycleStateWriter(async (cycleFinishedAt) => {
 
 await writeResearchState(null);
 
-/* ----------------------------------------------------------- the executor --- */
 
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
 
@@ -1891,7 +1881,6 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
   };
 };
 
-/* --------------------------------------------------------------- the cycle --- */
 
 finishPhase("worker-context");
 
@@ -2040,7 +2029,6 @@ for (const row of cycle.deferred) {
   );
 }
 
-/* ------------------------------------------------- test the owner's research leads --- */
 
 if (!dry && !canary) {
   const leads = await pending.step("leads:test", () => runLeadsPass({ repos,
@@ -2057,7 +2045,6 @@ if (!dry && !canary) {
   }
 }
 
-/* ------------------------------------------------- spread what started working --- */
 
 if (!dry && !canary) {
   const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(),
@@ -2070,7 +2057,6 @@ if (!dry && !canary) {
   if (spread?.writeError) runtimeConditions.push(`the spread's results were not all recorded: ${spread.writeError}`);
 }
 
-/* ------------------------------------------------- close, and persist debt --- */
 
 // Scheduling projections and closure both CAS the standing obligation.
 await nextDuePersistence;
@@ -2189,9 +2175,10 @@ async function runAutonomousWave() {
     childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
-      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency, fundedSubjects: [...lifetimeHuntSubjects] },
+      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: guards.workerTransportFor,
+    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject),
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
     ...(searchBudget ? { searchBudget } : {}),
     orderPending: async ids => {
@@ -2450,7 +2437,6 @@ if (discoveryLaneRun !== null) {
   finishPhase("discovery-lanes");
 }
 
-/* ------------------------------------------------- research metrics --- */
 
 // These independent final reads share the existing repository transport limit.
 // Join failures too: neither finalization view retries an unchanged failed read.
@@ -2533,7 +2519,6 @@ if (canary) {
   metrics = await pending.step("metrics", () => computeMetrics());
 }
 
-/* -------------------------------------------- research state, heartbeat --- */
 
 const finishedAt = nowIso();
 if (!dry && !canary) {
@@ -2636,7 +2621,6 @@ try {
   runtimeConditions.push(`the runner heartbeat could not be written: ${failedStep("heartbeat", error)}`);
 }
 
-/* ------------------------------------------------------------- the digest --- */
 
 const deferredByLine = Object.entries(laneCounts.deferredBy)
   .map(([k, v]) => `${k} ${v}`)
@@ -2707,7 +2691,6 @@ const lines = [
 console.log();
 for (const line of lines) console.log(line);
 
-/* ------------------------------------------------------ canonical outcome --- */
 
 /* Every Scout job this round admitted and never settled releases its hold (a job that sent books what it committed). */
 {

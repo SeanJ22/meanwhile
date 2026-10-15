@@ -1,6 +1,7 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 
 const PREFIXES: Readonly<Record<string, string>> = {
+  "ballot-measures": "US:ballot-measures",
   "plain-english-translations": "US:plain-english-translations",
   "special-district-boundaries": "US:special-district-boundaries",
   "public-records": "US:public-records",
@@ -20,6 +21,13 @@ export function isScopedManualContractScope(id: string, scope: string): boolean 
 }
 export function manualPayloadScope(id: string, fallback: string, payload: unknown): string {
   if (!PREFIXES[id]) return fallback;
+  if (id === "ballot-measures") {
+    const value = payload as { ocdId?: string; ballots?: Record<string, { contests?: { ocdId: string }[] }> };
+    if (!value.ocdId || !value.ballots || Object.values(value.ballots).some(ballot => ballot.contests?.some(contest => contest.ocdId !== value.ocdId))) {
+      throw new Error("Local measure publication contains different jurisdictions.");
+    }
+    return scopedManualContractScope(id, value.ocdId);
+  }
   const records = (payload as { records?: readonly { ocdId?: string }[] })?.records;
   const division = records?.[0]?.ocdId;
   if (!division || records?.some(row => row.ocdId !== division)) throw new Error("Scoped publication contains different jurisdictions.");

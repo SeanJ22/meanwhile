@@ -11900,52 +11900,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://sfa.senate.michigan.gov/Publications/BallotProps/Proposal26-1.pdf",
-          "sourceHash": "c5a7ad4d6243efba696fc4f86d15c177253d0a84e3e7420f28d942b601e4e0a1",
-          "retrievedAt": "2026-10-14T23:59:13.377084+00:00",
-          "publisher": "Michigan Senate Fiscal Agency",
-          "vault": {
-            "key": "project/freshness/source/sfa.senate.michigan.gov/2026/10/14/ms-01-26529a58df56ce15/sha256-c5a7ad4d6243efba696fc4f86d15c177253d0a84e3e7420f28d942b601e4e0a1.pdf",
-            "byteLength": 197809,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
-          "sourceHash": "95c47e8a792802bbced0e8d6871d16994807805786c59afb2cd6f11c8cb363eb",
-          "retrievedAt": "2026-10-14T23:52:37.474856+00:00",
-          "publisher": "Michigan Department of State",
-          "vault": {
-            "key": "project/freshness/source/www.michigan.gov/2026/10/14/ms-01-696b09c84b4c321e/sha256-95c47e8a792802bbced0e8d6871d16994807805786c59afb2cd6f11c8cb363eb.pdf",
-            "byteLength": 746473,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sfa.senate.michigan.gov/Publications/BallotProps/Proposal26-2.pdf",
-          "sourceHash": "644881b7b20b713ae31d15c34b9959aec6aeaa2e601d4ba73505265f9478005a",
-          "retrievedAt": "2026-10-14T23:59:13.518580+00:00",
-          "publisher": "Michigan Senate Fiscal Agency",
-          "vault": {
-            "key": "project/freshness/source/sfa.senate.michigan.gov/2026/10/14/ms-01-9e6f7cf4c05f0a88/sha256-644881b7b20b713ae31d15c34b9959aec6aeaa2e601d4ba73505265f9478005a.pdf",
-            "byteLength": 206562,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
-          "sourceHash": "8c538fadd0050cbd66b9eec8cb48d28ebd15707bd0676e20367e2f3fdffada1a",
-          "retrievedAt": "2026-10-14T23:52:37.951518+00:00",
-          "publisher": "Michigan Legislature",
-          "vault": {
-            "key": "project/freshness/source/www.legislature.mi.gov/2026/10/14/ms-01-c7b143ac0aa43b79/sha256-8c538fadd0050cbd66b9eec8cb48d28ebd15707bd0676e20367e2f3fdffada1a.html",
-            "byteLength": 22028,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -11958,7 +11912,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "MI",
+        "electionId": "mi-2026-11-03",
+        "sourceHash": "037c63a7b007b26a24fb80d4fe85bc387907a7951938683321c2217ee6805b03",
+        "documentCount": 4,
+        "reviewedAt": "2026-10-15T04:14:39.843123+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-mi/2026/10/15/ms-01/sha256-037c63a7b007b26a24fb80d4fe85bc387907a7951938683321c2217ee6805b03.ndjson",
+          "byteLength": 4839,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

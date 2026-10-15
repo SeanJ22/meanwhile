@@ -84,7 +84,7 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
   return { outcomes, deferred, persistenceError: null };
 }
 
-export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "repos" | "store" | "transportFor" | "now"> & {
+export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "repos" | "store" | "transportFor" | "now" | "onCostRecorded"> & {
   readonly divisions: readonly string[];
   readonly ballots: readonly BallotSet[];
   readonly captures: readonly WorkerPublicationCapture[];

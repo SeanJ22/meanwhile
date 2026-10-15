@@ -5113,41 +5113,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
-          "sourceHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
-          "retrievedAt": "2026-10-14T23:52:29.720044+00:00",
-          "publisher": "New Mexico Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-1548bf61b4da1c51/sha256-eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c.pdf",
-            "byteLength": 379470,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
-          "sourceHash": "7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34",
-          "retrievedAt": "2026-10-14T23:52:29.917174+00:00",
-          "publisher": "New Mexico Legislature",
-          "vault": {
-            "key": "project/freshness/source/www.nmlegis.gov/2026/10/14/ms-01-ad80a112aa468406/sha256-7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34.pdf",
-            "byteLength": 92874,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
-          "sourceHash": "a38ab903e8f0c21bf4115a28f24bff764189cad322f1b9e19da954de3c133619",
-          "retrievedAt": "2026-10-14T05:03:48.355503Z",
-          "publisher": "New Mexico Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.nm.gov/2026/10/14/ms-01-9a68268e5ef3dc8c/sha256-a38ab903e8f0c21bf4115a28f24bff764189cad322f1b9e19da954de3c133619.pdf",
-            "byteLength": 236807,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "NM",
+        "electionId": "nm-2026-11-03",
+        "sourceHash": "c4d7ae107daad627f36c41ead22b5de62b95c3296f6a769bfc4c3d3f46855d1d",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T04:14:40.037049+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-nm/2026/10/15/ms-01/sha256-c4d7ae107daad627f36c41ead22b5de62b95c3296f6a769bfc4c3d3f46855d1d.ndjson",
+          "byteLength": 3544,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

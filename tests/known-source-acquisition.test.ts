@@ -42,7 +42,7 @@ test("independent source children reuse a first release that holds the shared lo
   // Separate store handles model separate processes sharing the same vault:
   // the in-process pending Promise cannot satisfy the waiting child.
   const peerStore: EvidenceStore = {
-    put: h.store.put.bind(h.store), get: h.store.get.bind(h.store),
+    put: h.store.put.bind(h.store), get: h.store.get.bind(h.store), stream: h.store.stream.bind(h.store),
     head: h.store.head.bind(h.store), list: h.store.list.bind(h.store),
   };
   const validating = Promise.withResolvers<void>(), finishValidation = Promise.withResolvers<void>();

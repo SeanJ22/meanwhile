@@ -50,9 +50,9 @@ export interface ReaderAuthorityEdgeBundle {
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;
   readonly translations?: {
-    readonly divisions: ReadonlySet<string>;
     readonly load: (division: string) => Promise<PromotedEdgeEntry | null>;
   };
+  readonly localMeasures?: { readonly load: (division: string) => Promise<PromotedEdgeEntry | null> };
   readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;

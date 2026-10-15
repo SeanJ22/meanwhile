@@ -9072,173 +9072,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
-          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
-          "retrievedAt": "2026-10-14T23:53:17.615815+00:00",
-          "publisher": "Colorado General Assembly, Legislative Council Staff",
-          "vault": {
-            "key": "project/freshness/source/content.leg.colorado.gov/2026/10/14/ms-01-e061026a8fd60a35/sha256-137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248.pdf",
-            "byteLength": 2278823,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/95Final.pdf",
-          "sourceHash": "49fa44d79a371a5f3c3c5fe15a49dfa29e09aec5bc94576d8c04a2f02d07c990",
-          "retrievedAt": "2026-10-14T23:52:50.399196+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-ca1eac0e40c430ab/sha256-49fa44d79a371a5f3c3c5fe15a49dfa29e09aec5bc94576d8c04a2f02d07c990.pdf",
-            "byteLength": 153842,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/177Final.pdf",
-          "sourceHash": "dfa40d070f09ef1d65b5eec2dbb6ee0765df3323442cb034030755ca7707f0c6",
-          "retrievedAt": "2026-10-14T23:52:50.364565+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-b1d3984434bc3862/sha256-dfa40d070f09ef1d65b5eec2dbb6ee0765df3323442cb034030755ca7707f0c6.pdf",
-            "byteLength": 146542,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/302Final.pdf",
-          "sourceHash": "ea268f5eba41364148784c1a1842bad88682fb5987dfc64b8cf363b74f626482",
-          "retrievedAt": "2026-10-14T23:52:50.467314+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-58366bd2f324508f/sha256-ea268f5eba41364148784c1a1842bad88682fb5987dfc64b8cf363b74f626482.pdf",
-            "byteLength": 127138,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/362Final.pdf",
-          "sourceHash": "a05890981bd1bd5e042f247a96e7248e45df861d31c47e18f32892d27e0665b3",
-          "retrievedAt": "2026-10-14T23:52:50.551592+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-d12004d6d295364a/sha256-a05890981bd1bd5e042f247a96e7248e45df861d31c47e18f32892d27e0665b3.pdf",
-            "byteLength": 153709,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/234Final.pdf",
-          "sourceHash": "d18aafad48162296046c8fee790043db4a0c8956117ef4c3b40c12186741b7a1",
-          "retrievedAt": "2026-10-14T23:52:50.595775+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-fe52a935579e63b7/sha256-d18aafad48162296046c8fee790043db4a0c8956117ef4c3b40c12186741b7a1.pdf",
-            "byteLength": 141370,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/256Final.pdf",
-          "sourceHash": "9294d88a3bfb55b2050538ff04f334d229555b667e74f8a9e18195eae21ec3c2",
-          "retrievedAt": "2026-10-14T23:52:50.720169+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-dba33c4d70f9564b/sha256-9294d88a3bfb55b2050538ff04f334d229555b667e74f8a9e18195eae21ec3c2.pdf",
-            "byteLength": 231463,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/195Final.pdf",
-          "sourceHash": "d08086dae40c7ba3ba70ae265a097976d42e7c0ab1235f0bf2940d10cdb36802",
-          "retrievedAt": "2026-10-14T23:52:50.583074+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-e37b29ce2d15e2ed/sha256-d08086dae40c7ba3ba70ae265a097976d42e7c0ab1235f0bf2940d10cdb36802.pdf",
-            "byteLength": 246911,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/85Final.pdf",
-          "sourceHash": "1ce1bcf73d0b24b8e2268e8dcaf33cdad34b56d48b7665a46aef55c70ed0f04b",
-          "retrievedAt": "2026-10-14T23:52:50.559918+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-61913933bfa4a06b/sha256-1ce1bcf73d0b24b8e2268e8dcaf33cdad34b56d48b7665a46aef55c70ed0f04b.pdf",
-            "byteLength": 201358,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/108Final.pdf",
-          "sourceHash": "bfe4cbdb98ce31ba7a2591cd50c1861995c2a0d2216212d26afcacf30cf45f9b",
-          "retrievedAt": "2026-10-14T23:52:50.698480+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-fafd3195f4c7bb9d/sha256-bfe4cbdb98ce31ba7a2591cd50c1861995c2a0d2216212d26afcacf30cf45f9b.pdf",
-            "byteLength": 129571,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/109Final.pdf",
-          "sourceHash": "c57bf9abd1c083ceb1e8a5ae55a292b5b4e52b33d5db1e67453a6a18c23a5854",
-          "retrievedAt": "2026-10-14T23:52:50.390196+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-72560f1882f737e4/sha256-c57bf9abd1c083ceb1e8a5ae55a292b5b4e52b33d5db1e67453a6a18c23a5854.pdf",
-            "byteLength": 150503,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/110Final.pdf",
-          "sourceHash": "ff5bcd7b3f5fb8c8afd2552ca18c3b9ddac2a2a195ebb322743b261978324a00",
-          "retrievedAt": "2026-10-14T23:52:50.382406+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-6362bf0f17f4e30d/sha256-ff5bcd7b3f5fb8c8afd2552ca18c3b9ddac2a2a195ebb322743b261978324a00.pdf",
-            "byteLength": 137312,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/232FinalCorrected.pdf",
-          "sourceHash": "cc34b9e3552dd37592615520bec359317c544ed357238cd3e6eb5301e0f6dbd0",
-          "retrievedAt": "2026-10-14T23:52:50.710590+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-7c66fe7425275163/sha256-cc34b9e3552dd37592615520bec359317c544ed357238cd3e6eb5301e0f6dbd0.pdf",
-            "byteLength": 152418,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/308Final.pdf",
-          "sourceHash": "59119cab112ab069e3f0d851428198b9e8dc030d67647623b4a8003ed96e1ea1",
-          "retrievedAt": "2026-10-14T23:52:50.734937+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.state.co.us/2026/10/14/ms-01-694f14d9886764f1/sha256-59119cab112ab069e3f0d851428198b9e8dc030d67647623b4a8003ed96e1ea1.pdf",
-            "byteLength": 209076,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://leg.colorado.gov/bill_files/116503/download",
-          "sourceHash": "e59f8fda91bcfd8903bc98aa566e92b75b7a653111ef7f2feab5a45021451ba1",
-          "retrievedAt": "2026-10-14T23:52:50.692884+00:00",
-          "publisher": "Colorado Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/leg.colorado.gov/2026/10/14/ms-01-547f160cbaa09a72/sha256-e59f8fda91bcfd8903bc98aa566e92b75b7a653111ef7f2feab5a45021451ba1.pdf",
-            "byteLength": 158431,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -9251,7 +9084,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "CO",
+        "electionId": "co-2026-general",
+        "sourceHash": "b116ef9c34fd2b7755a91371bab3c0fa9f63f7c1b72bba1fb166f4ebc301bbda",
+        "documentCount": 15,
+        "reviewedAt": "2026-10-15T04:14:39.981736+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-co/2026/10/15/ms-01/sha256-b116ef9c34fd2b7755a91371bab3c0fa9f63f7c1b72bba1fb166f4ebc301bbda.ndjson",
+          "byteLength": 18244,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

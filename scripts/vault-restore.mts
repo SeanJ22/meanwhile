@@ -1,12 +1,3 @@
-/**
- * Reads every artifact record the control plane holds back through the
- * runtime's own resolvers (`CycleVault.readHeld`, `workerVaultResolver`,
- * `researchVaultResolver`) against one vault, read only.
- *
- *   node --env-file=<.env.local> --experimental-strip-types --import ./scripts/register-test-loader.mjs \
- *     scripts/vault-restore.mts --target=<vault root> [--receipt-out=<file>]
- */
-
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { neon } from "@neondatabase/serverless";
@@ -57,6 +48,7 @@ function cachedReads(store: DurableEvidenceStore): EvidenceStore {
   return {
     put: () => Promise.reject(new Error("VAULT_RESTORE_VERIFY_IS_READ_ONLY")),
     get: (key) => store.get(key),
+    stream: (key) => store.stream(key),
     head: (key) => {
       if (!heads.has(key)) heads.set(key, store.head(key));
       return heads.get(key)!;

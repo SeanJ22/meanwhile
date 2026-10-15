@@ -1,12 +1,3 @@
-/**
- * The standing hunter lane's process. The runner
- * starts it only with WTP_CONTINUOUS_HUNTERS=1; the design note is in
- * lib/control-plane/workers/hunter-lane.ts. It is the one process that admits
- * paid model requests while the switch is on: the research round plans,
- * queues, and holds its own model lane closed.
- *
- *   node --experimental-strip-types scripts/hunter-lane.mts [--provider=postgres]
- */
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
@@ -86,7 +77,6 @@ const lane = hunterLane({
   runWave: async ({ queue, paidOpen, deadlineMs, absorb }) => {
     const armed = lane.current();
     const plain = new Set(queue.plainTaskIds);
-    const funded = new Set(armed.arming?.lifetimeHuntSubjects ?? []);
     /* Paid search, under the owner's switch and the same durable budget the round uses; admitted by the lane's current Fleet controller. */
     const search = (() => {
       if (!paidOpen || !armed.discoverySearchOn || armed.fleetSafety === null) return null;
@@ -124,18 +114,21 @@ const lane = hunterLane({
         onStuck: worker => { progress.stuck(); say(stuckWorkerLine(worker)); } },
       slots,
       config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidOpen, searchEnabled: search !== null,
-        get ceilingUsd() { return lane.current().ceilingUsd; }, fundedSubjects: [...funded] },
+        get ceilingUsd() { return lane.current().ceilingUsd; } },
       capacity: () => {
         const current = lane.current();
         const paid = current.guards === null ? 0 : current.guards.paidWorkerCapacity(taskIds.length);
         return Math.min(taskIds.length, taskIds.filter(id => plain.has(id)).length + paid);
       },
       transportFor: laneWorkerTransport(lane.current, ownSpend, nowIso),
-      ...(search === null ? {} : { searchFor: (subject: string) => funded.has(subject) ? search.lifetime : search.normal, searchBudget: search.budget }),
+      lifetimeHuntSubject: subject => lane.current().arming?.lifetimeSubject(subject) ?? false,
+      onCostRecorded: entry => ownSpend.recordedCost(entry),
+      ...(search === null ? {} : { searchFor: (subject: string) => lane.current().arming?.lifetimeSubject(subject) ? search.lifetime : search.normal, searchBudget: search.budget }),
       /* While paid work is held, only plain-code tasks are handed out; the round's order otherwise. */
       orderPending: async ids => !handingOut() ? [] : ids.filter(id => lane.current().closed === null || plain.has(id))
         .sort((a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER)),
       onDispatched: result => {
+        if (result.routeTaskId) ownSpend.finished(result.routeTaskId);
         progress.taskDone();
         if (result.worker?.role !== "SCOUT") { say(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }
         const outcome = result.disposition === "INGESTED" ? "CAPTURED"

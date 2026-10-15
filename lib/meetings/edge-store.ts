@@ -3,9 +3,7 @@ import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unl
 import { dirname, join } from "node:path";
 
 import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
-
-export const READER_ARTIFACT_STORE_NAME = "reader-artifacts";
-export const READER_MANIFEST_KEY = "reader/manifest.json";
+import { immutableKey, sameBytes, NetlifyBlobsArtifactStore, READER_MANIFEST_KEY, resolveReaderBlobWriteStore } from "./edge-blob-store.ts";
 
 export interface StoredManifest {
   readonly manifest: ReaderManifest;
@@ -15,7 +13,7 @@ export interface StoredManifest {
 
 export interface ReaderArtifactStore {
   readonly kind: "netlify-blobs" | "local-file";
-  readManifest(): Promise<StoredManifest | null>;
+  readManifest(key?: string): Promise<StoredManifest | null>;
   readArtifact(key: string): Promise<ReaderGeoArtifact | null>;
   /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
   putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
@@ -23,87 +21,9 @@ export interface ReaderArtifactStore {
   writeManifest(
     manifest: ReaderManifest,
     expectedEtag: string | null,
+    key?: string,
   ): Promise<{ modified: boolean; etag: string | null }>;
   readBytes(key: string): Promise<Uint8Array | null>;
-}
-
-function immutableKey(bytes: Uint8Array, suffix: "json" | "json.gz"): string {
-  return `reader/artifacts/${createHash("sha256").update(bytes).digest("hex")}.${suffix}`;
-}
-
-function sameBytes(actual: Uint8Array | null, expected: Uint8Array): void {
-  if (actual === null || !Buffer.from(actual).equals(Buffer.from(expected))) throw new Error("READER_IMMUTABLE_ARTIFACT_CONFLICT");
-}
-
-interface NetlifyBlobsOptions {
-  readonly siteID?: string;
-  readonly token?: string;
-}
-
-export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
-  readonly kind = "netlify-blobs" as const;
-  private readonly options: NetlifyBlobsOptions;
-
-  constructor(options: NetlifyBlobsOptions = {}) {
-    this.options = options;
-  }
-
-  private async store(consistency: "strong" | "eventual") {
-    // Imported lazily so the local/test path never loads the Netlify client.
-    const { getStore } = await import("@netlify/blobs");
-    const base = { name: READER_ARTIFACT_STORE_NAME, consistency } as const;
-    return this.options.siteID && this.options.token
-      ? getStore({ ...base, siteID: this.options.siteID, token: this.options.token })
-      : getStore(base);
-  }
-
-  async readManifest(): Promise<StoredManifest | null> {
-    // Eventual consistency is correct for the reader: the CDN layer, not this
-    // read, is the reader's hot path, and a <=60s-stale pointer is honest.
-    const store = await this.store("eventual");
-    const res = await store.getWithMetadata(READER_MANIFEST_KEY, { type: "json" });
-    if (!res || res.data == null) return null;
-    return { manifest: res.data as ReaderManifest, etag: res.etag ?? null };
-  }
-
-  async readArtifact(key: string): Promise<ReaderGeoArtifact | null> {
-    const store = await this.store("eventual");
-    const data = await store.get(key, { type: "json" });
-    return (data as ReaderGeoArtifact | null) ?? null;
-  }
-
-  async writeManifest(
-    manifest: ReaderManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
-    // Strong consistency so the read-before-write and the CAS see the truth.
-    const store = await this.store("strong");
-    const result = await store.setJSON(
-      READER_MANIFEST_KEY,
-      manifest,
-      expectedEtag === null ? { onlyIfNew: true } : { onlyIfMatch: expectedEtag },
-    );
-    return { modified: result.modified, etag: result.etag ?? null };
-  }
-
-  async readBytes(key: string): Promise<Uint8Array | null> {
-    const store = await this.store("eventual");
-    const buf = (await store.get(key, { type: "arrayBuffer" })) as ArrayBuffer | null;
-    return buf ? new Uint8Array(buf) : null;
-  }
-
-  async putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string> {
-    const key = immutableKey(bytes, suffix);
-    const store = await this.store("strong");
-    const buffer = new ArrayBuffer(bytes.byteLength);
-    new Uint8Array(buffer).set(bytes);
-    const result = await store.set(key, buffer, { onlyIfNew: true });
-    if (!result.modified) {
-      const held = await store.get(key, { type: "arrayBuffer" });
-      sameBytes(held === null ? null : new Uint8Array(held), bytes);
-    }
-    return key;
-  }
 }
 
 export class LocalFileArtifactStore implements ReaderArtifactStore {
@@ -122,8 +42,8 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     return createHash("sha256").update(readFileSync(path)).digest("hex").slice(0, 16);
   }
 
-  async readManifest(): Promise<StoredManifest | null> {
-    const path = this.path(READER_MANIFEST_KEY);
+  async readManifest(key: string = READER_MANIFEST_KEY): Promise<StoredManifest | null> {
+    const path = this.path(key);
     try {
       const bytes = readFileSync(path);
       const manifest = JSON.parse(bytes.toString("utf8")) as ReaderManifest;
@@ -145,8 +65,9 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
   async writeManifest(
     manifest: ReaderManifest,
     expectedEtag: string | null,
+    key: string = READER_MANIFEST_KEY,
   ): Promise<{ modified: boolean; etag: string | null }> {
-    const path = this.path(READER_MANIFEST_KEY);
+    const path = this.path(key);
     mkdirSync(dirname(path), { recursive: true });
     const lock = `${path}.lock`;
     let descriptor: number | undefined;
@@ -220,8 +141,5 @@ export function resolveReaderArtifactStore(): ReaderArtifactStore | null {
 export function resolveReaderArtifactWriteStore(): ReaderArtifactStore | null {
   const localDir = process.env.WTP_READER_EDGE_DIR?.trim();
   if (localDir) return new LocalFileArtifactStore(localDir);
-  const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim();
-  const token = process.env.NETLIFY_BLOBS_TOKEN?.trim() || process.env.NETLIFY_API_TOKEN?.trim();
-  if (siteID && token) return new NetlifyBlobsArtifactStore({ siteID, token });
-  return null;
+  return resolveReaderBlobWriteStore();
 }

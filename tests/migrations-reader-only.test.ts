@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import * as schema from "../lib/control-plane/repository/pg-schema.ts";
+import { declaredPhase } from "../lib/db/migration-phases.ts";
 
 const MIGRATIONS = join(import.meta.dirname, "..", "lib", "db", "migrations");
 
@@ -27,12 +28,10 @@ test("the control-plane bootstrap's tables are found, so the guard below cannot 
 });
 
 test("no reader-database migration names a control-plane table", () => {
-  // Netlify applies lib/db/migrations to the reader database. The cp_ tables exist only in the control-plane
-  // database, so a migration that touches one fails the production build (PB-01 did, and release 25 never deployed).
-  // Control-plane rows are seeded and changed through the control-plane repositories instead.
   const tables = controlPlaneTables();
   const offenders: string[] = [];
   for (const file of readdirSync(MIGRATIONS).filter(name => name.endsWith(".sql")).sort()) {
+    if (declaredPhase(file.slice(0, -4))?.database === "control-plane") continue;
     const sql = withoutComments(readFileSync(join(MIGRATIONS, file), "utf8"));
     for (const name of new Set([...sql.matchAll(/\bcp_[a-z0-9_]+/gi)].map(match => match[0].toLowerCase()))) {
       if (tables.has(name) || name.startsWith("cp_")) offenders.push(`${file} references ${name}`);

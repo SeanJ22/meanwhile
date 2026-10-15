@@ -5,7 +5,7 @@ import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansio
 import { createLedger } from "../lib/control-plane/budget.ts";
 import { decideHold } from "../lib/control-plane/expansion/spend-holds.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
-import { FleetSafetyController, FleetSafetyRefusal, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, FleetSafetyController, FleetSafetyRefusal, pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 
@@ -173,10 +173,10 @@ test("shared token charges are reported once but consume every exact beneficiary
 
 test("all work ignores blackout while every hunt obeys the Admin spend dial", () => {
   const blackout = "2026-09-27T02:00:00.000Z"; // Saturday 19:00 Arizona.
-  const controller = new FleetSafetyController({ now: blackout, charges: chargesOf([{
+  const controller = new FleetSafetyController({ now: blackout, spend: fleetSpendAt(chargesOf([{
     source: "api.anthropic.com", role: "SCOUT", recordedAt: "2026-09-27T01:00:00.000Z",
     cost: { usd: 105, inputTokens: 1, outputTokens: 1 },
-  }] as never), rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
+  }] as never), blackout), rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
   lifetimeHuntWork: work => work === member.id });
   assert.equal(controller.admitDispatch(member.id).admit, true);
   assert.deepEqual(controller.rollingCeilingReached(1, member.id).reached, true);

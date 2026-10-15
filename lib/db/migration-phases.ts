@@ -1,13 +1,3 @@
-/**
- * Which side of its deploy a migration belongs on.
- *   - expand: purely additive; apply BEFORE the code that uses it ships.
- *   - contract: narrows what the database accepts (dropped column or default,
- *     new constraint, NOT NULL with no fill); apply only AFTER the code that
- *     no longer needs the old shape is serving.
- * The phase is derived from the SQL and checked against MIGRATION_PHASES. A
- * migration with no entry there is a failure, never a default.
- */
-
 /** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
@@ -50,6 +40,8 @@ export interface ContractSignal {
 
 export interface PhaseDeclaration {
   readonly phase: MigrationPhase;
+  readonly database?: "control-plane";
+  readonly replay?: "model-charges";
   /** Why this migration sits on that side. Never a shrug. */
   readonly why: string;
 }
@@ -135,11 +127,7 @@ const CONTRACT_RULES: readonly {
   },
 ];
 
-/**
- * The statements in a migration file, with SQL comments removed so prose that
- * quotes SQL is not classified. The breakpoint marker is split off before
- * stripping, because it begins with `--`.
- */
+
 export function statementsIn(sql: string): string[] {
   return sql
     .split("--> statement-breakpoint")
@@ -382,6 +370,9 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",
   },
+  "MS-01_model_charge_storage": { phase: "expand", database: "control-plane", replay: "model-charges", why: "Creates charge storage and exact spend aggregates before deployed code reads them, preserving existing worker writes." },
+  "MS-01_model_charge_retirement": { phase: "contract", database: "control-plane", replay: "model-charges", why: "Retires the shared spend row only after deployed workers use independently priced model charges." },
+  "MS-01_measure_place_cursor": { phase: "expand", why: "Adds a collation-stable scope index for bounded place reads without changing existing data." },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

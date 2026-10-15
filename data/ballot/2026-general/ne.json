@@ -3215,52 +3215,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
-          "sourceHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
-          "retrievedAt": "2026-10-14T23:52:29.619895+00:00",
-          "publisher": "Nebraska Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sos.nebraska.gov/2026/10/14/ms-01-2c05aa21b2fba738/sha256-d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258.pdf",
-            "byteLength": 299141,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
-          "sourceHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
-          "retrievedAt": "2026-10-14T23:52:29.419870+00:00",
-          "publisher": "Nebraska Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/nebraskalegislature.gov/2026/10/14/ms-01-f30d2bebe4056342/sha256-1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306.pdf",
-            "byteLength": 51898,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/LR19CA_Approved_Ballot_Statement_Language.pdf",
-          "sourceHash": "d209c98b235bee8b9738ec4997620eeebefb033dd1b88fb98bb87817d22ac961",
-          "retrievedAt": "2026-10-15T00:14:45.542202+00:00",
-          "publisher": "Nebraska Legislative Council",
-          "vault": {
-            "key": "project/freshness/source/sos.nebraska.gov/2026/10/15/ms-01-53aabb73b6428269/sha256-d209c98b235bee8b9738ec4997620eeebefb033dd1b88fb98bb87817d22ac961.pdf",
-            "byteLength": 408964,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://nebraskalegislature.gov/laws/laws-index/full-const.html",
-          "sourceHash": "84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8",
-          "retrievedAt": "2026-10-15T00:00:18.014919+00:00",
-          "publisher": "Nebraska Legislature",
-          "vault": {
-            "key": "project/freshness/source/nebraskalegislature.gov/2026/10/15/ms-01-5ff32ec9122a3001/sha256-84675d11f402242936e15d23fd6527cbb5fd61a6071b7299f6b54eb18daed8b8.html",
-            "byteLength": 1054006,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -3273,7 +3227,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "NE",
+        "electionId": "ne-2026-11-03",
+        "sourceHash": "73df49dc8815c66587cdd449f57f10213f96c01b76e64dcc92cbfed3773bf690",
+        "documentCount": 4,
+        "reviewedAt": "2026-10-15T04:14:40.041588+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ne/2026/10/15/ms-01/sha256-73df49dc8815c66587cdd449f57f10213f96c01b76e64dcc92cbfed3773bf690.ndjson",
+          "byteLength": 4526,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

@@ -13,7 +13,7 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
-const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
+const ROUTINE_ENTRY_MEMORY_MIB: Readonly<Record<string, number | { readonly minimumMiB: number }>> = {
   // A complete 113 MiB Illinois session parsed and promoted in the fixture
   // store peaked at 3,013 MiB. Round up for these state-scoped bulk writers;
   // the existing host observer still accounts for their whole process trees.
@@ -30,6 +30,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "people-portraits-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "campaign-finance-az-pima-transactions.mts": 368,
   "build-nj-morris-ballot.mts": 345,
+  "translate-national-measures.mts": { minimumMiB: 1258 },
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
@@ -183,11 +184,16 @@ export interface WorkerProcessSlots {
 const rosterPublication = (entry: string): boolean => entry === "registry-runtime-bindings" ||
   entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
 
+function routineEntryPeakMiB(entry: string): number | undefined {
+  const profile = ROUTINE_ENTRY_MEMORY_MIB[entry.split(/[\\/]/).at(-1)!];
+  return typeof profile === "object" ? profile.minimumMiB : profile;
+}
+
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
       rosterPublication(entry) ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
-          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
+          ? WORKER_ENTRY_PEAK_MIB.national! : routineEntryPeakMiB(entry) ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
@@ -200,7 +206,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
   const host = memory.host ?? (memory.availableBytes ? workerMemoryHost({ processes: () => [] }) : sharedHost);
   const peakFor = memory.peakBytes ?? (entry => {
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
-    return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
+    return (routineEntryPeakMiB(entry) ?? WORKER_ENTRY_PEAK_MIB[kind]!) * MIB;
   });
   const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
   const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
@@ -263,7 +269,9 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
         const reserve = (entry: string): number => {
           const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
-          return measured?.length ? measuredReservationBytes(measured) : peakFor(entry);
+          const profile = ROUTINE_ENTRY_MEMORY_MIB[entry.split(/[\\/]/).at(-1)!];
+          const minimum = typeof profile === "object" ? profile.minimumMiB * MIB : 0;
+          return Math.max(minimum, measured?.length ? measuredReservationBytes(measured) : peakFor(entry));
         };
         while (active < maximum && waiting.length) {
           const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +

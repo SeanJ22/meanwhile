@@ -2,7 +2,7 @@ import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { RepositoryLockHeld } from "../repository/types.ts";
 import type { ModelResponse } from "../scheduler/scout-executor.ts";
-import { FleetSafetyController } from "../fleet-safety.ts";
+import { fleetSpendAt, FleetSafetyController } from "../fleet-safety.ts";
 import { websiteSizeForObligation, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 import { autonomousStandingRuntime } from "./standing-runtime.ts";
 import { observeCyclePhases } from "../scheduler/cycle-phases.ts";
@@ -28,14 +28,21 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
     : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
   // Each result carries the repository calls its task made, so the round can show them per task.
   const observer = observeCyclePhases(stores);
-  const repos = observer.repos;
+  const observed = observer.repos;
+  const repos: typeof observed = { ...observed, costs: { ...observed.costs, async append(key, id, entry, now) {
+    const saved = await observed.costs.append(key, id, entry, now);
+    await broker.call("cost-recorded", saved.record);
+    return saved;
+  } } };
   let websiteSize: WebsiteSizeForUrl = () => null;
-  const safety = new FleetSafetyController({ now: new Date().toISOString(), charges: [], rollingCeilingUsd: config.ceilingUsd,
+  const safetyStartedAt = new Date().toISOString();
+  const safety = new FleetSafetyController({ now: safetyStartedAt, spend: fleetSpendAt([], safetyStartedAt), rollingCeilingUsd: config.ceilingUsd,
     websiteSize: url => websiteSize(url), websitePacing: repos.websitePacing,
     ...(config.hostConcurrency === undefined ? {} : { hostConcurrency: () => config.hostConcurrency! }) });
   // The per-task guards read `current`, so one runtime built once per process serves every task it runs
   // (a process runs one lease at a time). `subject` is only set on the old per-task path.
   let current = "";
+  let fundedSubject: string | null = null;
   const perTask = process.env.WTP_LEASE_RUNTIME_PER_TASK === "1";
   // Each task reads only its own history by default; WTP_SCOPED_TASK_READS=0 restores the whole-table path.
   const scopedReads = process.env.WTP_SCOPED_TASK_READS !== "0";
@@ -47,7 +54,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
       transportFor: jurisdiction => { broker.assignment(current, jurisdiction); return request => broker.call<ModelResponse>("model", request); } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call<HuntSearchResult>("search", request),
       searchBudget: { take: host => broker.call<string | null>("search-take", host), done: async host => { await broker.call("search-done", host); } } } : {}),
-    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads,
+    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => subject === fundedSubject, scopedReads,
     endsAt, progress: () => broker.send("progress", "", null) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
@@ -69,6 +76,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         websiteSize = websiteSizeForObligation({ id: item.id, subjectId: item.subject, autonomousPlan: item.autonomousPlan }, config.root);
         broker.assignment(id, { subjectId: item.subject, state: item.autonomousPlan?.jurisdiction ?? null });
         current = id;
+        fundedSubject = await broker.call<boolean>("lifetime-hunt", null) ? item.subject : null;
         // The lane's per-job clock: which task this worker is on (process-pool.ts StandingPoolOptions).
         broker.send("task-start", "", id);
         // Old path (one runtime per task) stays behind WTP_LEASE_RUNTIME_PER_TASK=1 until the shared runtime is checked live.

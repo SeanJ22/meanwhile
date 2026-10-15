@@ -1,15 +1,3 @@
-/**
- * The spend holds are one row each in `cp_spend_holds`, never one jsonb
- * document on the budget ledger row.
- *
- * These tests pin: concurrent admissions on one line admit exactly what fits;
- * the database admission is called as one statement and its refusals are
- * worded exactly as `decideHold` words them; settled and stale holds are
- * deleted, so the table does not grow across many rounds; the one-time move
- * off the ledger row is guarded, locked and idempotent, and is skipped behind
- * the switch; `WTP_SPEND_HOLDS_TABLE=0` keeps the ledger row path; and the
- * readers read live holds from the table.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -24,7 +12,6 @@ import {
   decideHold,
   readLiveSpendHolds,
   releaseOpenJobs,
-  spendHoldsTableEnabled,
   type BudgetLine,
   type BudgetLines,
   type InProcessSpendHoldStore,
@@ -52,12 +39,11 @@ const send = (budgetUsd: number, extra: Partial<BudgetLine> = {}): BudgetLine =>
 const area = (budgetUsd: number, extra: Partial<BudgetLine> = {}): BudgetLine =>
   ({ key: "area:zip-85603", label: "ZIP 85603", budgetUsd, historicalUsd: 0, historyReadAt: NOW, ...extra });
 
-function table(now: () => string, env: Record<string, string> = {}) {
+function table(now: () => string) {
   const repos = createMemoryRepositories();
-  return { repos, spend: new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now, sleep: async () => undefined, env }) };
+  return { repos, spend: new DurableSpendHolds({ store: repos.spendHolds, now }) };
 }
 
-/* ------------------------------------------------------------ (a) atomic admission */
 
 test("concurrent admissions on one line admit exactly what fits, and every one lands in the table, not the ledger row", async () => {
   const { repos, spend } = table(() => NOW);
@@ -75,7 +61,8 @@ function fakeDb(decision: unknown) {
   const sql: Sql = {
     query: async (text, params = []) => {
       seen.push({ text, params });
-      return text.includes("cp_admit_spend_hold(") ? [{ decision }] : [];
+      return text.includes("cp_admit_spend_hold(") ? [{ decision }]
+        : text.includes(" AS left") ? JSON.parse(String(params[3])).map(() => ({ left: 3 })) : [];
     },
   };
   return { seen, store: pgSpendHoldRepository(sql) };
@@ -120,6 +107,24 @@ test("Postgres: the database's refusals are worded exactly as decideHold words t
   await assert.rejects(fakeDb({ admit: false, refusal: "SOMETHING" }).store.admit({ holdId: "q#0", jobId: "q", obligationId: "ob", lines: cases[0]!.lines, usd: 1, what: "w" }, NOW));
 });
 
+test("Postgres retries complete statements after deadlocks and preserves other refusals", async () => {
+  let attempts = 0;
+  const store = pgSpendHoldRepository({ query: async () => {
+    if (++attempts < 3) throw Object.assign(new Error("deadlock detected"), { code: "40P01" });
+    return [{ decision: { admit: true, hold: null } }];
+  } });
+  const input = { holdId: "retry#0", jobId: "retry", obligationId: "ob", lines: { sends: [send(5)], areas: [] }, usd: 0.1, what: "a job" };
+  assert.equal((await store.admit(input, NOW)).admit, true);
+  assert.equal(attempts, 3);
+  attempts = 0;
+  const refused = pgSpendHoldRepository({ query: async () => {
+    attempts++;
+    throw Object.assign(new Error("permission denied"), { code: "42501" });
+  } });
+  await assert.rejects(refused.admit(input, NOW), /permission denied/);
+  assert.equal(attempts, 1);
+});
+
 test("Postgres: settle is one UPDATE by job (first hold by time, the rest zero), release one DELETE, and live reads filter in the database", async () => {
   const { seen, store } = fakeDb(null);
   await store.settle({ jobId: "job", usd: 0.02, costRecordedAt: at(1_000) }, NOW);
@@ -127,7 +132,7 @@ test("Postgres: settle is one UPDATE by job (first hold by time, the rest zero),
   assert.match(seen[0]!.text, /WHERE h\.job_id = \$4 AND h\.cost_recorded_at IS NULL/);
   assert.match(seen[0]!.text, /CASE WHEN mine\.n = 1 THEN greatest\(0, \$5::numeric\) ELSE 0 END/);
   assert.deepEqual(seen[0]!.params.slice(3), ["job", 0.02, at(1_000)]);
-  assert.match(seen[1]!.text, /^DELETE FROM cp_spend_holds x WHERE x\.hold_id IN \(SELECT h\.hold_id FROM cp_spend_holds h[\s\S]*LIMIT \$4::integer\)/, "a settle sweeps, bounded");
+  assert.match(seen[1]!.text, /^DELETE FROM cp_spend_holds x WHERE x\.hold_id IN \([\s\S]*expired LIMIT \$4::integer\)/, "a settle sweeps a bounded expiry batch");
   seen.length = 0;
   await store.settle({ jobId: "job", usd: null, costRecordedAt: NOW }, NOW);
   assert.equal(seen.length, 1, "unmeasured: nothing is settled (the holds stand); only the sweep runs");
@@ -136,10 +141,11 @@ test("Postgres: settle is one UPDATE by job (first hold by time, the rest zero),
   await store.release("job#0", NOW);
   assert.deepEqual([seen[0]!.text, seen[0]!.params], ["DELETE FROM cp_spend_holds WHERE hold_id = $1 RETURNING hold_id", ["job#0"]]);
   seen.length = 0;
-  await store.liveFor(["send:one", "send:one", "area:z"], NOW);
-  assert.match(seen[0]!.text, /WHERE h\.keys && \$4::text\[\] AND \(\(cardinality/, "the GIN overlap on the lines asked for");
-  assert.deepEqual(seen[0]!.params, [at(-SPEND_HOLD_WINDOW_MS), at(-SPEND_HOLD_STALE_MS), at(-SETTLED_HOLD_RETENTION_MS), ["send:one", "area:z"]]);
-  assert.deepEqual(await store.liveFor([], NOW), {}, "no lines, no read");
+  assert.deepEqual(await store.left([send(5), area(5)], NOW), [3, 3]);
+  assert.match(seen[0]!.text, /^SELECT cp_spend_line_left\(/, "remaining budgets use the bounded per-line totals");
+  assert.deepEqual(seen[0]!.params.slice(0, 3), [at(-SPEND_HOLD_WINDOW_MS), at(-SPEND_HOLD_STALE_MS), at(-SETTLED_HOLD_RETENTION_MS)]);
+  assert.deepEqual(JSON.parse(String(seen[0]!.params[3])).map((line: BudgetLine) => line.key), ["send:one", "area:zip-85603"]);
+  assert.deepEqual(await store.left([], NOW), [], "no lines, no read");
 });
 
 test("the admission function: locks each line in one order, deletes what no longer counts on them, then decides as decideHold does", () => {
@@ -147,11 +153,9 @@ test("the admission function: locks each line in one order, deletes what no long
   assert.match(ddl, /array_agg\(DISTINCT e->>'key' ORDER BY e->>'key'\)/, "the lines, sorted, so two admissions never deadlock");
   assert.match(ddl, /pg_advisory_xact_lock\(hashtextextended\('cp_spend_holds:' \|\| k, 0\)\)/, "held to the end of the statement's transaction");
   assert.ok(ddl.indexOf("pg_advisory_xact_lock") < ddl.indexOf("DELETE FROM cp_spend_holds"), "locked before anything is read or deleted");
-  assert.match(ddl, /WHERE d\.keys && line_keys AND [\s\S]*? LIMIT prune_limit/, "the dead holds on its lines, bounded");
+  assert.equal((ddl.match(/LIMIT prune_limit/g) ?? []).length, 4, "each expiry index and the combined batch are bounded");
   assert.ok(ddl.indexOf("LIMIT prune_limit") < ddl.indexOf("Idempotent by hold id"), "an expired hold of the same id is gone before idempotence is judged");
-  assert.match(ddl, /round\(\(\(l->>'budgetUsd'\)::numeric - [\s\S]*?\* 1000000000\) \/ 1000000000/, "left normalized at nanodollar precision, as leftUsd");
-  assert.match(ddl, /h\.cost_recorded_at > \(l->>'historyReadAt'\)::timestamptz THEN h\.settled_usd/, "settled spend counts only after the line's history read");
-  assert.match(ddl, /coalesce\(\(l->>'lifetime'\)::boolean, false\) OR h\.held_at >= win/, "lifetime lines have no window");
+  assert.match(ddl, /line_left := cp_spend_line_left\(l,win,stale,kept\)/);
   assert.match(ddl, /IF line_left >= amount THEN fits := true; EXIT;/, "one Send with room suffices");
   assert.match(ddl, /IF line_left IS NULL OR line_left < amount THEN/, "every area and lifetime Send must have room");
   assert.match(ddl, /ORDER BY part, n/, "areas first, then lifetime Sends, as everyLineMustFit orders them");
@@ -165,7 +169,6 @@ test("the admission function: locks each line in one order, deletes what no long
     "((h.cost_recorded_at IS NULL AND h.held_at < s) OR (h.cost_recorded_at IS NOT NULL AND h.cost_recorded_at < k) OR (cardinality(h.lifetime_keys) = 0 AND h.held_at < w))");
 });
 
-/* ------------------------------------------------------------ (b) never accumulated */
 
 test("settled and stale holds are deleted: many rounds of admit and settle leave only what still counts", async () => {
   let now = NOW;
@@ -201,9 +204,8 @@ test("a round's end settles its open jobs and sweeps; nothing is read off or wri
   await assert.rejects(repos.budget.read(), /no shared budget has been installed/);
 });
 
-/* ------------------------------------------------------------ (c) the one-time move */
 
-test("the v24 move: the ledger row is locked, its holds copied (an id already moved is kept), emptied with the revision bumped, and a re-run finds nothing", () => {
+test("legacy holds move: the ledger row is locked, its holds copied (an id already moved is kept), emptied with the revision bumped, and a re-run finds nothing", () => {
   const ddl = SPEND_HOLDS_MOVE_DDL;
   assert.match(ddl, /SELECT value->'spendHolds' INTO held FROM cp_budget WHERE id = 'shared-budget-ledger' FOR UPDATE;/, "a writer mid compare-and-set waits, then retries on the emptied row");
   assert.match(ddl, /IF held IS NULL OR jsonb_typeof\(held\) <> 'object' OR held = '\{\}'::jsonb THEN RETURN; END IF;/, "nothing to move: no write, no revision");
@@ -224,50 +226,23 @@ function recordingSql() {
   return { sql, statements };
 }
 
-test("the bootstrap runs the move by default and skips it behind WTP_SPEND_HOLDS_TABLE=0", async () => {
-  const before = process.env.WTP_SPEND_HOLDS_TABLE;
-  try {
-    delete process.env.WTP_SPEND_HOLDS_TABLE;
-    const on = recordingSql();
-    await bootstrap(on.sql, NOW);
-    assert.ok(on.statements.includes(SPEND_HOLDS_MOVE_DDL));
-    assert.ok(on.statements.includes(ADMIT_SPEND_HOLD_FUNCTION_DDL));
-    assert.match(on.statements.at(-1)!, new RegExp(`VALUES \\(true, ${BOOTSTRAP_VERSION},`), "the version is recorded after every statement");
-    process.env.WTP_SPEND_HOLDS_TABLE = "0";
-    const off = recordingSql();
-    await bootstrap(off.sql, NOW);
-    assert.ok(!off.statements.includes(SPEND_HOLDS_MOVE_DDL), "the way back leaves the holds on the row");
-    assert.ok(off.statements.includes(SPEND_HOLDS_TABLE_DDL), "the table still exists, so switching on later needs no other step");
-  } finally {
-    if (before === undefined) delete process.env.WTP_SPEND_HOLDS_TABLE; else process.env.WTP_SPEND_HOLDS_TABLE = before;
-  }
-});
-
-/* ------------------------------------------------------------ (d) the switch */
-
-test("WTP_SPEND_HOLDS_TABLE=0 keeps the ledger row path; anything else is the table", async () => {
-  assert.equal(spendHoldsTableEnabled({}), true);
-  assert.equal(spendHoldsTableEnabled({ WTP_SPEND_HOLDS_TABLE: "1" }), true);
-  assert.equal(spendHoldsTableEnabled({ WTP_SPEND_HOLDS_TABLE: "0" }), false);
-  const { repos, spend } = table(() => NOW, { WTP_SPEND_HOLDS_TABLE: "0" });
-  const job = new JobSpend(spend, "job", "ob", { sends: [send(1)], areas: [] });
-  assert.equal((await job.admit(0.6, "a job")).admit, true);
-  assert.deepEqual(Object.keys((await repos.budget.read()).value.spendHolds ?? {}), ["job#0"], "held on the ledger row");
-  assert.deepEqual(heldRows(repos), {}, "the table is not touched");
-  assert.equal((await new JobSpend(spend, "job2", "ob", { sends: [send(1)], areas: [] }).admit(0.6, "a job")).admit, false, "and the ledger row still caps");
-  assert.deepEqual(Object.keys(await readLiveSpendHolds(repos, NOW, { WTP_SPEND_HOLDS_TABLE: "0" })), ["job#0"], "readers follow the switch");
+test("bootstrap always moves budget holds into the indexed store", async () => {
+  const recorded = recordingSql();
+  await bootstrap(recorded.sql, NOW);
+  assert.ok(recorded.statements.includes(SPEND_HOLDS_MOVE_DDL));
+  assert.ok(recorded.statements.includes(ADMIT_SPEND_HOLD_FUNCTION_DDL));
+  assert.match(recorded.statements.at(-1)!, new RegExp(`VALUES \\(true, ${BOOTSTRAP_VERSION},`));
 });
 
 test("a holds table the store cannot reach refuses the hold, by name: nothing runs unbudgeted", async () => {
   const repos = createMemoryRepositories();
-  const broken = { ...repos.spendHolds!, admit: async () => { throw new Error("connection refused"); } };
-  const spend = new DurableSpendHolds({ budget: repos.budget, table: broken, now: () => NOW });
+  const broken = { ...repos.spendHolds, admit: async () => { throw new Error("connection refused"); } };
+  const spend = new DurableSpendHolds({ store: broken, now: () => NOW });
   const verdict = await new JobSpend(spend, "job", "ob", { sends: [], areas: [area(100)] }).admit(0.1, "one Scout job");
   assert.equal(verdict.admit, false);
   assert.match(!verdict.admit ? `${verdict.code} ${verdict.why}` : "", /^SCOPE_BUDGET .*could not be read or written \(connection refused\)/);
 });
 
-/* ------------------------------------------------------------ (e) the readers */
 
 test("readers (Admin's Set aside, the round's Fleet window) read live holds from the table, never the ledger row", async () => {
   const { repos, spend } = table(() => NOW);
@@ -283,9 +258,8 @@ test("readers (Admin's Set aside, the round's Fleet window) read live holds from
   assert.deepEqual(await readLiveSpendHolds(repos, at(SETTLED_HOLD_RETENTION_MS + 1)), {});
 });
 
-/* ------------------------------------------------------------ the schema */
 
-test("schema version 24: cp_spend_holds, its indexes, the admission function and the move, after cp_budget exists", () => {
+test("the indexed hold schema includes admission and the legacy data move", () => {
   assert.ok(BOOTSTRAP_VERSION >= 24);
   assert.ok(DECLARED_TABLES.includes("cp_spend_holds"));
   for (const column of ["hold_id          text PRIMARY KEY", "job_id           text NOT NULL", "keys             text[] NOT NULL",
@@ -294,7 +268,7 @@ test("schema version 24: cp_spend_holds, its indexes, the admission function and
     assert.ok(SPEND_HOLDS_TABLE_DDL.includes(column), column);
   }
   assert.deepEqual(SPEND_HOLDS_INDEXES.map((i) => i.name),
-    ["cp_spend_holds_keys", "cp_spend_holds_job", "cp_spend_holds_unsettled", "cp_spend_holds_settled", "cp_spend_holds_held_at"]);
+    ["cp_spend_holds_keys", "cp_spend_holds_job", "cp_spend_holds_unsettled", "cp_spend_holds_settled", "cp_spend_holds_held_at", "cp_spend_holds_rolling_expiry"]);
   assert.match(SPEND_HOLDS_INDEXES_DDL, /IF to_regclass\('cp_spend_holds_keys'\) IS NULL THEN\s+CREATE INDEX IF NOT EXISTS cp_spend_holds_keys ON cp_spend_holds USING gin \(keys\);/, "a current database takes no lock");
   assert.match(SPEND_HOLDS_INDEXES_DDL, /cp_spend_holds \(held_at\) WHERE cost_recorded_at IS NULL/);
   const order = [SPEND_HOLDS_TABLE_DDL, SPEND_HOLDS_INDEXES_DDL, ADMIT_SPEND_HOLD_FUNCTION_DDL, SPEND_HOLDS_MOVE_DDL].map((s) => BOOTSTRAP_DDL.indexOf(s));

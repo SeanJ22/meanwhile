@@ -4397,63 +4397,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.elections.alaska.gov/election/2026/General/OEPbooks/2026%20Alaska%20General%20VP_Region%201_ENG_web.pdf",
-          "sourceHash": "7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f",
-          "retrievedAt": "2026-10-14T23:54:03.940264+00:00",
-          "publisher": "Alaska Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-97f08886ba1d34bb/sha256-7c50c5d0d07edee88be6cfa5d46689fc562de04caae35bedecc7ab8c3942eb7f.pdf",
-            "byteLength": 9427765,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.elections.alaska.gov/petitions/24ESEG/24ESEG-Bill.pdf",
-          "sourceHash": "e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf",
-          "retrievedAt": "2026-10-14T23:52:28.872172+00:00",
-          "publisher": "Alaska Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-fc23347025893e06/sha256-e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf.pdf",
-            "byteLength": 1780817,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
-          "sourceHash": "f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570",
-          "retrievedAt": "2026-10-14T23:52:28.212479+00:00",
-          "publisher": "Alaska Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.elections.alaska.gov/2026/10/14/ms-01-eff7be3316f2e2b8/sha256-f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570.pdf",
-            "byteLength": 75961,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://akleg.gov/docs/pdf/Alaska_Constitution.pdf",
-          "sourceHash": "5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438",
-          "retrievedAt": "2026-10-15T00:00:18.316167+00:00",
-          "publisher": "Alaska Legislature",
-          "vault": {
-            "key": "project/freshness/source/akleg.gov/2026/10/15/ms-01-dfc39a98f2bf72d3/sha256-5854f712a8e45f89a81f91c16d90c1746fddf786bf312cc2ebfb99afab35b438.pdf",
-            "byteLength": 689391,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
-          "sourceHash": "188710841f5b8d7c15cebbd6d2371ce9325465965891f5493b5bbf7726d4fa84",
-          "retrievedAt": "2026-10-14T05:03:07.845669Z",
-          "publisher": "Alaska Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/d1gqre4bkgnik3.cloudfront.net/2026/10/14/ms-01-bd0ec07652b2eb02/sha256-188710841f5b8d7c15cebbd6d2371ce9325465965891f5493b5bbf7726d4fa84.pdf",
-            "byteLength": 398339,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -4466,7 +4409,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "AK",
+        "electionId": "ak-2026-general",
+        "sourceHash": "6a43475ed8ab1b0e4ba1e999ecd38350689477ef853f09f2ae473fd440168511",
+        "documentCount": 5,
+        "reviewedAt": "2026-10-15T04:14:40.056197+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ak/2026/10/15/ms-01/sha256-6a43475ed8ab1b0e4ba1e999ecd38350689477ef853f09f2ae473fd440168511.ndjson",
+          "byteLength": 5913,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {
@@ -4513,28 +4470,6 @@
         "publisher": "Alaska Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
-      },
-      {
-        "requestedUrl": "https://www.elections.alaska.gov/petitions/24ESEG/24ESEG-Bill.pdf",
-        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/24ESEG/24ESEG-Bill.pdf",
-        "httpStatus": 200,
-        "rawHash": "e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf",
-        "retrievedAt": "2026-10-14T23:52:28.872172+00:00",
-        "publisher": "Alaska Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
-        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
-        "httpStatus": 200,
-        "rawHash": "f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570",
-        "retrievedAt": "2026-10-14T23:52:28.212479+00:00",
-        "publisher": "Alaska Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
-        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=25USCV#is81213",

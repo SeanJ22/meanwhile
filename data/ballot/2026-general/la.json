@@ -2565,228 +2565,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1474951",
-          "sourceHash": "7c89405e1e7c73f2ad8261d54a3ab54f7da05e35f1a343ebaa3c037a47599444",
-          "retrievedAt": "2026-10-15T00:10:35.643639+00:00",
-          "publisher": "Louisiana Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-6d0b68a8f4da28b4/sha256-7c89405e1e7c73f2ad8261d54a3ab54f7da05e35f1a343ebaa3c037a47599444.pdf",
-            "byteLength": 210288,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1478551",
-          "sourceHash": "e67dc36de74cf4ffe1c6bdb25d7bd0c02c0eff2dd45a31b000962dec7f56918f",
-          "retrievedAt": "2026-10-15T00:10:35.649783+00:00",
-          "publisher": "Louisiana Legislative Auditor and Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-b441557f8cbb0188/sha256-e67dc36de74cf4ffe1c6bdb25d7bd0c02c0eff2dd45a31b000962dec7f56918f.pdf",
-            "byteLength": 250413,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1423903",
-          "sourceHash": "e61b84d374032ad6d58439ec8364e3816c9d75599ec898aacb0821ea0c3748a3",
-          "retrievedAt": "2026-10-15T00:10:35.742983+00:00",
-          "publisher": "Louisiana Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-bc521ecc90d942af/sha256-e61b84d374032ad6d58439ec8364e3816c9d75599ec898aacb0821ea0c3748a3.pdf",
-            "byteLength": 212892,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1473181",
-          "sourceHash": "f12d9b91d456cf2fab0ecba2d2a8fd19eb75821b5decd7d39932ad193fe0116b",
-          "retrievedAt": "2026-10-15T00:10:35.655137+00:00",
-          "publisher": "Louisiana Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-946e13b540ad7c83/sha256-f12d9b91d456cf2fab0ecba2d2a8fd19eb75821b5decd7d39932ad193fe0116b.pdf",
-            "byteLength": 197627,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1475571",
-          "sourceHash": "4f92ba828a840c9f2a5c514244d6306397ae07e3d04c91889f51564cf82d0de6",
-          "retrievedAt": "2026-10-15T00:10:35.648571+00:00",
-          "publisher": "Louisiana Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-420f7d6bc946a29e/sha256-4f92ba828a840c9f2a5c514244d6306397ae07e3d04c91889f51564cf82d0de6.pdf",
-            "byteLength": 215832,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471612",
-          "sourceHash": "fe647e6711c40733a2ab6b1b812fe58f6e42b996ae7aac2a27561e0300c75595",
-          "retrievedAt": "2026-10-15T00:10:35.747950+00:00",
-          "publisher": "Louisiana Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-13284b0b8e148a2a/sha256-fe647e6711c40733a2ab6b1b812fe58f6e42b996ae7aac2a27561e0300c75595.pdf",
-            "byteLength": 229485,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1471476",
-          "sourceHash": "ada396c495677746f3efb2062edfc957aefccb455ed7357d51c4ea1a97267210",
-          "retrievedAt": "2026-10-15T00:10:35.743232+00:00",
-          "publisher": "Louisiana Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-aef10424cb3c854f/sha256-ada396c495677746f3efb2062edfc957aefccb455ed7357d51c4ea1a97267210.pdf",
-            "byteLength": 215071,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/ViewDocument.aspx?d=1479498",
-          "sourceHash": "9cca384fca0dfba5d472f3358cefba8ebd2696318459736e6d324a5dc24ae253",
-          "retrievedAt": "2026-10-15T00:10:35.574706+00:00",
-          "publisher": "Louisiana Legislative Fiscal Office",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/15/ms-01-7385738e92fcc952/sha256-9cca384fca0dfba5d472f3358cefba8ebd2696318459736e6d324a5dc24ae253.pdf",
-            "byteLength": 195801,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1474006",
-          "sourceHash": "40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d",
-          "retrievedAt": "2026-10-14T23:52:27.413146+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-0f15c54b626c9f4f/sha256-40d98f4f65511fbc3a0be311dcf1cd10983db18e9e5131091a116730d6288c9d.pdf",
-            "byteLength": 58068,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475810",
-          "sourceHash": "9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138",
-          "retrievedAt": "2026-10-14T23:52:27.496728+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-86ba7dd819d97c59/sha256-9caa8d173946366a11ee5bb6dd8f2cec8c0719b9e83d28a04f6c732168c8a138.pdf",
-            "byteLength": 44369,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475811",
-          "sourceHash": "8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb",
-          "retrievedAt": "2026-10-14T23:52:27.443910+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-748e4aac787c2fcb/sha256-8e40718c40cbd2b8457df11694c41a48020d93de12c2b34c07e616835bfb4fdb.pdf",
-            "byteLength": 46666,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1475809",
-          "sourceHash": "a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458",
-          "retrievedAt": "2026-10-14T23:52:27.439759+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a70e2dcbd0a4f883/sha256-a01b9a55fb20255d194281907cd6f430a955ec047c1d3bdb026f8b2b2707a458.pdf",
-            "byteLength": 42195,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1479667",
-          "sourceHash": "f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696",
-          "retrievedAt": "2026-10-14T23:52:27.442105+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-6752a659600beb31/sha256-f5c395efddc03dc4ee4f65cd51dc335b63e421e6a6ff0471d6dd2173141ee696.pdf",
-            "byteLength": 42403,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480365",
-          "sourceHash": "233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832",
-          "retrievedAt": "2026-10-14T23:52:27.476289+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-a2ad00ae3c196c5b/sha256-233d005b83a53f50084283789a8f571d542813aee5cdffc31dc54e836d132832.pdf",
-            "byteLength": 47083,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476071",
-          "sourceHash": "61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808",
-          "retrievedAt": "2026-10-14T23:52:27.447115+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-5b4c8dde43383654/sha256-61df6cea863b010309cfc4249671ba887123cb5c3bf3fc3f992a7eb4fc5d5808.pdf",
-            "byteLength": 49318,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1480189",
-          "sourceHash": "585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462",
-          "retrievedAt": "2026-10-14T23:52:27.517491+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-cdcdd170eb8dc49a/sha256-585b235c0e24795ca21f8be93697257c344aea39cc279f3b7967f862bb7e1462.pdf",
-            "byteLength": 62071,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1476539",
-          "sourceHash": "4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32",
-          "retrievedAt": "2026-10-14T23:52:27.474268+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-b2f321f7a80dffb3/sha256-4a4389541ba1542efc5c55cbba6a2d2d4a25da87e06abc73058f783681540d32.pdf",
-            "byteLength": 43485,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legis.la.gov/legis/ViewDocument.aspx?d=1425422",
-          "sourceHash": "1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f",
-          "retrievedAt": "2026-10-14T23:52:27.445236+00:00",
-          "publisher": "Louisiana Legislature",
-          "vault": {
-            "key": "project/freshness/source/legis.la.gov/2026/10/14/ms-01-94bf6f4e31c3cbe0/sha256-1d69b81cee2eea94ac52059e3b5680fa9062059a82955036f42cc1bf8fcbc82f.pdf",
-            "byteLength": 47156,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.la.gov/media/j2fjvpye/proposed-constitutional-amendments-2026-nov-summaries.pdf",
-          "sourceHash": "cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3",
-          "retrievedAt": "2026-10-14T23:56:41.226494+00:00",
-          "publisher": "Louisiana Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.la.gov/2026/10/14/ms-01-cce5b39eed1c4594/sha256-cd66318258bd1f740a1d547524a4c231d33ee957d099b2feb453a943be4253b3.pdf",
-            "byteLength": 554843,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.legis.la.gov/legis/law.aspx?d=206363",
-          "sourceHash": "b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e",
-          "retrievedAt": "2026-10-14T23:59:43.257645+00:00",
-          "publisher": "Louisiana Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.legis.la.gov/2026/10/14/ms-01-b2846ebe7fd36249/sha256-b41b2e21e075d63ee7f8d63a805a2f43c3d8027aa0e647e488ff22d02858e96e.html",
-            "byteLength": 32678,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -2799,7 +2577,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "LA",
+        "electionId": "la-2026-11-03",
+        "sourceHash": "b990928c35bbe2e3fca8486416c1aa8f0fe0274cef0b9ebcca06f0e03498703b",
+        "documentCount": 20,
+        "reviewedAt": "2026-10-15T04:14:39.834431+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-la/2026/10/15/ms-01/sha256-b990928c35bbe2e3fca8486416c1aa8f0fe0274cef0b9ebcca06f0e03498703b.ndjson",
+          "byteLength": 21491,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

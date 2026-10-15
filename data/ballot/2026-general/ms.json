@@ -570,19 +570,20 @@
         "The Secretary of State’s complete 12-page November 3, 2026 statewide SAMPLE Official Election Ballot contains candidate contests and no measure question through its END OF BALLOT marker. Statewide measure coverage is confirmed from the complete official ballot. The initiatives page lists proposals requiring certified signatures, not certified November measures.",
         "The qualifying-list page states that its entries reflect submitted papers and that the State Board of Election Commissioners determines qualifications before general-election ballot placement. Candidate completeness here is supported by the dated statewide official sample ballot."
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.sos.ms.gov/content/documents/Elections/2026/Sample%20Ballot%209-9-26.pdf",
-          "sourceHash": "36752cfc3c7b44da74a42e9d49571221f4f8d48381259ab2f6b7ebed723bd67f",
-          "retrievedAt": "2026-10-14T05:09:21.150Z",
-          "publisher": "Mississippi Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.ms.gov/2026/10/14/ms-01-9cb18b7b4a839b5a/sha256-36752cfc3c7b44da74a42e9d49571221f4f8d48381259ab2f6b7ebed723bd67f.pdf",
-            "byteLength": 87597,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "MS",
+        "electionId": "ms-2026-11-03",
+        "sourceHash": "1429fcf2bc9a60fe175ead0bc2853737ee5cff875fe3c3816254f680d8f9591a",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:39.964121+00:00",
+        "reviewedBy": "Codex MS-01 official measure inventory review",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ms/2026/10/15/ms-01/sha256-1429fcf2bc9a60fe175ead0bc2853737ee5cff875fe3c3816254f680d8f9591a.ndjson",
+          "byteLength": 1692,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

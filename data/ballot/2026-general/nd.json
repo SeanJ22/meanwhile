@@ -4164,74 +4164,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.sos.nd.gov/sites/www/files/documents/services/leg-bills/2025-69/house-res/3003.pdf",
-          "sourceHash": "0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca",
-          "retrievedAt": "2026-10-14T23:52:28.894714+00:00",
-          "publisher": "North Dakota Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-5d475bff818fccc3/sha256-0ef5f96be2fb0edf5bc73d0a5d44ffa73574b85e872cf115f777c9405a65bdca.pdf",
-            "byteLength": 135118,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://ndlegis.gov/constit/a03.pdf",
-          "sourceHash": "e522d9e2a02104b258228ea3bd1234bb078d60b8dfd57d3bf2d647a0fbffdd0c",
-          "retrievedAt": "2026-10-15T00:00:43.512269+00:00",
-          "publisher": "North Dakota Legislative Assembly",
-          "vault": {
-            "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-379468f6a77d396b/sha256-e522d9e2a02104b258228ea3bd1234bb078d60b8dfd57d3bf2d647a0fbffdd0c.pdf",
-            "byteLength": 52103,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://ndlegis.gov/constit/a04.pdf",
-          "sourceHash": "ba76a60dc8d8848398b3ee2d8182fc0043024779b842d8c0096882df81a0d8a0",
-          "retrievedAt": "2026-10-15T00:01:20.013886+00:00",
-          "publisher": "North Dakota Legislative Assembly",
-          "vault": {
-            "key": "project/freshness/source/ndlegis.gov/2026/10/15/ms-01-10b811d4a1581bbc/sha256-ba76a60dc8d8848398b3ee2d8182fc0043024779b842d8c0096882df81a0d8a0.pdf",
-            "byteLength": 62958,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
-          "sourceHash": "53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280",
-          "retrievedAt": "2026-10-14T23:52:28.723602+00:00",
-          "publisher": "North Dakota Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-1600ddd45d4d63e0/sha256-53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280.pdf",
-            "byteLength": 224435,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
-          "sourceHash": "00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b",
-          "retrievedAt": "2026-10-14T23:52:28.819259+00:00",
-          "publisher": "North Dakota Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-112d6654a9cb224c/sha256-00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b.pdf",
-            "byteLength": 213177,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/schoollunches-measure-full-text.pdf",
-          "sourceHash": "5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689",
-          "retrievedAt": "2026-10-14T23:52:29.105080+00:00",
-          "publisher": "North Dakota Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.nd.gov/2026/10/14/ms-01-b45bf383809935f9/sha256-5efd841fe0a0aaed163b9d3c33ca0eddc002e6735263b0d218f34332c029a689.pdf",
-            "byteLength": 177865,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "ND",
+        "electionId": "nd-2026-11-03",
+        "sourceHash": "3bd7ee07625d415b52ee16da76432f1b209dc298e2bc3427b18a83401b08a122",
+        "documentCount": 6,
+        "reviewedAt": "2026-10-15T04:14:40.044248+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-nd/2026/10/15/ms-01/sha256-3bd7ee07625d415b52ee16da76432f1b209dc298e2bc3427b18a83401b08a122.ndjson",
+          "byteLength": 6853,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

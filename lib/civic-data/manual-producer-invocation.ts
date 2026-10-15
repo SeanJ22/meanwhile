@@ -13,6 +13,7 @@ const RULES = {
   "public-records": { mode: "VERIFIED_WORKER_RESULT", reason: "Source-worded kind and title publish with their exact jurisdiction and saved source sentence." },
   "plain-english-translations": { mode: "VERIFIED_WORKER_RESULT", reason: "Every sentence is supported by the original official text and checked independently under the existing budget dial." },
   "ballot-contests": { mode: "VERIFIED_WORKER_RESULT", reason: "Each verified candidate on the saved official list publishes with its exact contest; incomplete listings retain other held candidates." },
+  "ballot-measures": { mode: "VERIFIED_WORKER_RESULT", reason: "Each local measure publishes from its saved official text into its own place, with checked summaries attached independently." },
   "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "National congressional directory acquired from its registered public source." },
   "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },
   "congress-rollcalls": { mode: "DIRECT_SOURCE", reason: "National recent roll calls acquired from their registered public source." },

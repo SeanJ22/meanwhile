@@ -24,7 +24,7 @@ import {
 } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming-writer.ts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
-import type { CostEntry } from "../lib/control-plane/cost.ts";
+import { modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS } from "../lib/models.ts";
 
 const NOW = "2026-10-06T03:00:00.000Z";
@@ -37,7 +37,7 @@ function reading(overrides: { readAt?: string; historicalUsd?: number | null; kn
     readAt: overrides.readAt ?? NOW,
     specs: [{ key: SEND, kind: "SCOPE", label: "Hillsborough County", ref: "receipt-1", budgetUsd: overrides.budgetUsd ?? 5, sentAt: "2026-10-05T00:00:00.000Z" }],
     historical: overrides.historicalUsd === null ? null : new Map([[SEND, { usd: overrides.historicalUsd ?? 0 } as never]]),
-    knownKeys: overrides.knownKeys ?? [SEND], reached: new Map(), areas: null, lifetimeHuntSubjects: [], placeOrder: ["receipt-1"],
+    knownKeys: overrides.knownKeys ?? [SEND], reached: new Map(), areas: null, lifetimeHuntSubjects: [],
     circuits: [], worstCaseUsd: 1,
   });
 }
@@ -55,7 +55,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
     const intent = buildResearchIntent("PAUSE_RUNNER", NOW, "test", null, "test");
     await repos.researchIntents.append("level-1", intent.intentId, intent, NOW);
   }
-  if (options.intentsUnreadable) (repos.researchIntents as { read: unknown }).read = async () => { throw new Error("socket closed"); };
+  if (options.intentsUnreadable) (repos.researchIntents as { readRecentWhere: unknown }).readRecentWhere = async () => { throw new Error("socket closed"); };
   for (const cost of options.costs ?? []) await repos.costs.append(cost.workItemId, cost.attemptId, cost, cost.recordedAt);
   const task = createRouteTask({ workItemId: "wi-1", routeId: "autonomous:scout:x", routeLabel: "Discover", target: "https://x.example.gov/", inherited: false, now: NOW });
   await repos.routeTasks.put(task.id, task, NOW);
@@ -84,12 +84,31 @@ const spent = (usd: number, routeTaskId: string | null = "other-task"): CostEntr
   source: "api.anthropic.com", jurisdiction: null, project: "test", role: "SCOUT", recordedAt: "2026-10-06T02:00:00.000Z",
   cost: { usd, inputTokens: 1, outputTokens: 1, requestCount: 1 } } as unknown as CostEntry);
 
+test("a failed request never hides a later recorded charge for the same place", async () => {
+  const h = await lane({ ceilingUsd: 50 });
+  const failed = h.ownSpend.begin(h.task.id, "2026-10-06T02:58:00.000Z", 3);
+  h.ownSpend.settle(failed, null);
+  const succeeded = h.ownSpend.begin(h.task.id, "2026-10-06T02:59:00.000Z", 4);
+  h.ownSpend.settle(succeeded, 2);
+  await recordCost(h.repos, { ...spent(2, h.task.id), attemptId: "later-success", recordedAt: NOW }, NOW);
+  h.ownSpend.recorded(succeeded);
+  const armed = await h.rearm();
+  assert.equal(armed.fleetSafety!.admissionSpendUsd(), 5);
+  assert.equal(h.ownSpend.usd(), 3);
+});
+
 test("CH-24 lane: the round's reading round-trips, and a missing, malformed or stale one holds paid work by name", () => {
   const dir = mkdtempSync(join(tmpdir(), "hunter-lane-read-"));
   const path = hunterLaneArmingPath(dir, {});
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /no research round has written its budget reading yet/);
   writeLaneArming(path, reading());
-  assert.deepEqual((readLaneArming(path, NOW) as { arming: unknown }).arming, reading());
+  const saved = readLaneArming(path, NOW);
+  assert.ok("arming" in saved);
+  assert.equal(saved.arming.readAt, NOW);
+  assert.deepEqual(saved.arming.assignment(SEND), { known: true, spec: reading().sends.specs[0], usd: 0 });
+  assert.deepEqual(saved.arming.reached("missing"), []);
+  assert.equal(saved.arming.lifetimeSubject(jurisdiction.subjectId), false);
+  assert.deepEqual(saved.arming.scopesFor(jurisdiction.subjectId), []);
   writeFileSync(path, JSON.stringify({ ...reading(), worstCaseUsd: null }));
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /not in the expected form/, "a Scout with no stated worst case is not armed");
   const old = new Date(Date.parse(NOW) - HUNTER_LANE_ARMING_MAX_AGE_MS - 60_000).toISOString();
@@ -103,7 +122,7 @@ test("CH-24 lane: open with room, a request is held on its Send from the task's 
   assert.equal(h.armed.closed, null);
   await h.send(request);
   assert.equal(h.sent.length, 1);
-  const holds = (await h.repos.budget.read()).value.spendHolds ?? {};
+  const holds = await h.repos.spendHolds.liveAll(NOW);
   const [hold] = Object.values(holds);
   assert.deepEqual(hold?.keys, [`send:${SEND}`], "held on the Send the obligation's own record names");
   assert.ok((hold?.settled?.usd ?? 0) > 0);
@@ -140,24 +159,28 @@ test("CH-24 lane: a Send spent at the round's reading refuses before sending; so
   assert.equal(newer.sent.length, 0);
 });
 
-test("CH-24 lane: the lane's own spend is counted once across refreshes, the ledger's row for the same task is not added again", async () => {
+test("CH-24 lane: the lane's own spend is counted once across refreshes, a durably acknowledged row replaces its reservation", async () => {
   const h = await lane({ ceilingUsd: 50, costs: [spent(40)] });
   await h.send(request);
   const own = h.ownSpend.usd();
   assert.ok(own > 0);
   /* The worker writes its cost row for the same task: the next controller must not count it twice. */
-  await recordCost(h.repos, { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW }, NOW);
+  const recorded = { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW };
+  await recordCost(h.repos, recorded, NOW);
+  h.ownSpend.recordedCost(recorded);
   const armed = await h.rearm();
   assert.equal(armed.closed, null);
   assert.equal(Math.round(armed.fleetSafety!.admissionSpendUsd() * 1e9), Math.round((40 + own) * 1e9));
 });
 
-test("CH-24 lane: a ledger row from earlier work on the same task keeps counting; only this lane's own rows are replaced by its book", async () => {
+test("CH-24 lane: a ledger row from earlier work on the same task keeps counting; acknowledging current requests preserves every older ledger row", async () => {
   const h = await lane({ ceilingUsd: 50, costs: [{ ...spent(7, "TASK"), recordedAt: "2026-10-06T01:00:00.000Z" }] });
   await recordCost(h.repos, { ...spent(7, h.task.id), attemptId: "earlier", recordedAt: "2026-10-06T01:00:00.000Z" }, NOW);
   await h.send(request);
   const own = h.ownSpend.usd();
-  await recordCost(h.repos, { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW }, NOW);
+  const recorded = { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW };
+  await recordCost(h.repos, recorded, NOW);
+  h.ownSpend.recordedCost(recorded);
   const armed = await h.rearm();
   assert.equal(Math.round(armed.fleetSafety!.admissionSpendUsd() * 1e9), Math.round((7 + 7 + own) * 1e9), "the earlier $7 on this task still counts");
 });
@@ -175,10 +198,10 @@ test("CH-24 lane: a sent request whose bill never came back keeps its hold until
   await h.send(request).catch(() => undefined);
   const open = h.armed.guards!.openJobs();
   assert.equal(open.length, 1, "the unmeasured request's job stays open");
-  const before = committedUsd((await h.repos.budget.read()).value.spendHolds ?? {}, { key: `send:${SEND}`, label: "x", budgetUsd: 5, historicalUsd: 0, historyReadAt: NOW }, NOW);
+  const before = committedUsd(await h.repos.spendHolds.liveAll(NOW), { key: `send:${SEND}`, label: "x", budgetUsd: 5, historicalUsd: 0, historyReadAt: NOW }, NOW);
   assert.ok(before > 0);
   assert.deepEqual(await releaseOpenJobs(h.armed.spendHolds, open, NOW), []);
-  const hold = Object.values((await h.repos.budget.read()).value.spendHolds ?? {})[0];
+  const hold = Object.values(await h.repos.spendHolds.liveAll(NOW))[0];
   assert.notEqual(hold?.settled, null, "released at what it held: it still counts, it is no longer open");
 });
 
@@ -188,4 +211,74 @@ test("CH-24 lane: the round writes its Send and area reading once its gates are 
   assert.match(round, /const writeHunterLaneReading = \(\): void => \{\n  if \(dry \|\| canary\) return;/);
   assert.ok(round.indexOf("writeHunterLaneReading();") > round.indexOf("const guards = paidWorkGuards({"), "written after the guards are armed");
   assert.match(round, /writeLaneArming\(hunterLaneArmingPath\(ROOT\), laneArmingOf\(\{ readAt: NOW,/);
+});
+
+test("arming reads only the latest owner controls and preserves timestamp and append ordering", async () => {
+  const h = await lane();
+  const append = async (action: "PAUSE" | "RESUME", at: string, suffix: string) => {
+    const intent = { ...buildResearchIntent(action, at, "test"), intentId: suffix };
+    await h.repos.researchIntents.append("level-1", suffix, intent, NOW);
+  };
+  await append("RESUME", NOW, "latest-resume");
+  await append("PAUSE", "2026-10-01T00:00:00.000Z", "late-old-pause");
+  await h.repos.researchIntents.append("level-1", "honored", { kind: "HONORED", action: "PAUSE", requestedAt: "2099-01-01T00:00:00.000Z" } as never, NOW);
+  h.repos.researchIntents.read = async () => { throw new Error("country log read"); };
+  h.repos.adminConfig.read = async () => { throw new Error("full Admin configuration read"); };
+  assert.equal((await h.rearm()).closed, null);
+  await append("PAUSE", NOW, "tied-new-pause");
+  assert.match((await h.rearm()).closed!.reason, /paused/);
+  await append("RESUME", NOW, "tied-new-resume");
+  assert.equal((await h.rearm()).closed, null);
+});
+
+test("the indexed reading holds only a subject's scopes and keeps prior snapshots usable during replacement", () => {
+  const dir = mkdtempSync(join(tmpdir(), "hunter-lane-index-")), path = hunterLaneArmingPath(dir, {});
+  const scope = (key: string, subject: string, state: string, resolved = true) => ({ key, label: key, budgetUsd: 5,
+    resolved, members: [subject], states: [state], historicalUsd: 0, lifetime: true });
+  const unrelated = Array.from({ length: 10_000 }, (_, n) => scope(`CA-${n}`, `ocd-division/country:us/state:ca/city:sample_${n}`, "CA"));
+  writeLaneArming(path, { ...reading(), lifetimeHuntSubjects: [jurisdiction.subjectId], areas: { malformedScopes: 0,
+    scopes: [...unrelated, scope("county", jurisdiction.subjectId, "NH"), scope("district", jurisdiction.subjectId, "NH"),
+      scope("unresolved-ca", "", "CA", false), scope("unresolved-nh", "", "NH", false)] } });
+  const read = readLaneArming(path, NOW);
+  assert.ok("arming" in read);
+  assert.equal(read.arming.lifetimeSubject(jurisdiction.subjectId), true);
+  assert.deepEqual(read.arming.scopesFor(jurisdiction.subjectId).map(row => row.key).sort(), ["county", "district", "unresolved-nh"]);
+  assert.deepEqual(read.arming.scopesFor("unplaced", "NH").map(row => row.key), ["unresolved-nh"]);
+  assert.deepEqual(read.arming.scopesFor("unplaced", "ocd-division/country:us/state:nh").map(row => row.key), ["unresolved-nh"]);
+  assert.throws(() => read.arming.scopesFor("unplaced"), /state is unknown/);
+  assert.ok(JSON.stringify(read.arming).length < 1_024);
+  writeLaneArming(path, reading({ historicalUsd: 4 }));
+  assert.equal(read.arming.assignment(SEND).usd, 0);
+  const replacement = readLaneArming(path, NOW);
+  assert.ok("arming" in replacement);
+  assert.equal(replacement.arming.assignment(SEND).usd, 4);
+});
+
+test("unanswered requests remain counted after completed tasks and exact acknowledgments are idempotent", () => {
+  const own = new LaneOwnSpend();
+  for (let n = 0; n < 10_000; n++) {
+    const request = own.begin(`place-${n}`, NOW, 0.25);
+    own.settle(request, null);
+    own.finished(`place-${n}`);
+  }
+  const recorded = own.begin("known", NOW, 1);
+  own.settle(recorded, 0.5);
+  own.recorded(recorded); own.recorded(recorded);
+  assert.equal(own.usd(), 2_500);
+  assert.deepEqual(own.totals("2026-10-05T03:00:00.000Z", NOW), { usd: 2_500, knownUsd: 0, measured: 0, unmeasured: 10_000, worstCaseCharges: 10_000 });
+  assert.equal(own.totals(NOW, "2026-10-07T03:00:01.000Z").usd, 0);
+});
+
+
+test("a durable bounded error charge acknowledges only its active task's exact reservation", () => {
+  const own = new LaneOwnSpend(), bound = modelRequestBoundFor(MODELS.haiku.model, 1_234, 1_024)!;
+  const request = own.begin("bounded-task", NOW, bound.usd);
+  own.settle(request, null);
+  const entry = { ...spent(0, "bounded-task"), recordedAt: NOW, requestedModel: bound.model, modelRequestBound: bound };
+  own.recordedCost({ ...entry, routeTaskId: "another-task" });
+  assert.equal(own.usd(), bound.usd);
+  own.recordedCost(entry);
+  assert.equal(own.usd(), 0);
+  own.recordedCost(entry);
+  assert.equal(own.usd(), 0);
 });

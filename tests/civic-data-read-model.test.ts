@@ -3,6 +3,7 @@ import { beforeEach, test } from "node:test";
 
 import {
   clearPromotedReadModelCache,
+  attestPromotedVersion,
   readPromotedCivicData,
   readPromotedCivicDataBatch,
   promotedEdgeEntryOf,
@@ -32,10 +33,23 @@ const failedStore: CivicDataReadStore = {
   readCandidate: async () => { throw new Error("database offline"); },
 };
 
+test("an uncached verified read carries its edge proof only with its result", async () => {
+  const store = promotedStore({ total: 17 });
+  const read = await readPromotedCivicData("FEC_FUNDING", "federal-supported", { store, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(attestPromotedVersion("FEC_FUNDING", "federal-supported", store), null);
+  const edge = promotedEdgeEntryOf(read, "FEC_FUNDING", "federal-supported");
+  assert.equal(edge?.kind, "PROMOTED");
+  assert.equal(promotedEdgeEntryOf({ ...read }, "FEC_FUNDING", "federal-supported"), null);
+  assert.equal(promotedEdgeEntryOf(read, "FEC_FUNDING", "another-place"), null);
+  const served = await readPromotedCivicData("FEC_FUNDING", "federal-supported", { edge: edge! });
+  assert.deepEqual(served.value, { total: 17 });
+});
+
 test("canonical scalar and batch reads use the request's edge copies without a database", async () => {
   const store = promotedStore({ total: 17 });
   const read = await readPromotedCivicData("FEC_FUNDING", "federal-supported", { store });
-  const edge = promotedEdgeEntryOf(read, "FEC_FUNDING", "federal-supported", store);
+  const edge = promotedEdgeEntryOf(read, "FEC_FUNDING", "federal-supported");
   assert.ok(edge);
   await withReaderAuthorityEdge({ promoted: new Map([["FEC_FUNDING:federal-supported", edge]]), edgeOnly: true }, async () => {
     const scalar = await readPromotedCivicData<{ total: number }>("FEC_FUNDING", "federal-supported");

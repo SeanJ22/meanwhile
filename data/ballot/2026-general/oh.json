@@ -741,19 +741,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
-          "sourceHash": "638d8582d14bec302d925cf042c8bfad765c0dabb534d9fc93af16d6eb269925",
-          "retrievedAt": "2026-10-14T23:52:37.521028+00:00",
-          "publisher": "Ohio Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.ohiosos.gov/2026/10/14/ms-01-6346513d756a57a5/sha256-638d8582d14bec302d925cf042c8bfad765c0dabb534d9fc93af16d6eb269925.pdf",
-            "byteLength": 986571,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "OH",
+        "electionId": "oh-2026-general",
+        "sourceHash": "c072beca3545d54784dddc802a04d2557abcc5eea63567c0e251d5d2ca3799f9",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:39.887703+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-oh/2026/10/15/ms-01/sha256-c072beca3545d54784dddc802a04d2557abcc5eea63567c0e251d5d2ca3799f9.ndjson",
+          "byteLength": 1020,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

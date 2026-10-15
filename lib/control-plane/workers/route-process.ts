@@ -25,7 +25,7 @@ export function routeProcessExecutor(input: {
     const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/route-worker.ts", config: {
       root: input.root, postgres: input.postgres, fileStoreRoot: input.fileStoreRoot,
       taskIds: [request.routeTaskId ?? request.obligation.obligation.id], modelEnabled: false,
-      searchEnabled: false, ceilingUsd: 0, fundedSubjects: [],
+      searchEnabled: false, ceilingUsd: 0,
       routeDispatch: { input: { ...data, liveClock: Boolean(clock), maturity: maturity(request.obligation.obligation.routeId) }, route: input.route },
     }, slots: input.slots, capacity: () => 1, onStarted: input.onStarted,
       transportFor: () => async () => { throw new Error("PLAIN_CODE_MODEL_CALL_REFUSED"); },

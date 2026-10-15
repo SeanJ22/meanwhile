@@ -188,6 +188,35 @@ test("all publication siblings and routine script families reserve their measure
   }
 });
 
+test("translation parents and standalone children reserve their own script above the lease-worker profile", async () => {
+  const mib = 1024 * 1024, available = () => (768 + WORKER_ENTRY_PEAK_MIB.lease!) * mib;
+  for (const slots of [routineProcessSlots({ availableBytes: available }), workerProcessSlots(() => 1, { availableBytes: available })]) {
+    await assert.rejects(slots.acquire("scripts/translate-national-measures.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  }
+  for (const slots of [routineProcessSlots({ availableBytes: () => (768 + WORKER_ENTRY_PEAK_MIB.national!) * mib }),
+    workerProcessSlots(() => 1, { availableBytes: () => (768 + WORKER_ENTRY_PEAK_MIB.national!) * mib })]) {
+    const release = await slots.acquire("scripts/translate-national-measures.mts");
+    await assert.rejects(slots.acquire("scripts/translate-national-measures.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+    release();
+  }
+});
+
+test("five small unchanged-state observations cannot lower the next changed state's translation memory floor", async () => {
+  const mib = 1024 * 1024, entry = "plain-english-translations:CA/translate-national-measures.mts";
+  for (const child of [false, true]) {
+    const host = workerMemoryHost({ processes: () => [] });
+    host.transact(state => { state.peaks = { "translate-national-measures.mts": Array(5).fill(180 * mib) }; }, false);
+    let available = (768 + 342) * mib;
+    const memory = { host, availableBytes: () => available };
+    const slots = child ? workerProcessSlots(() => 1, memory) : routineProcessSlots(memory);
+    await assert.rejects(slots.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+    available = (768 + 1258) * mib;
+    const release = await slots.acquire(entry);
+    host.transact(state => { assert.equal(state.reservations[0].peak, 1258 * mib); }, false);
+    release();
+  }
+});
+
 test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {
   // Roster publication runs alone on either host while keeping its measured peak.
   for (const [availableMiB, expected] of [[8192 - 1024, 1], [2 * 4012 + 768, 1]] as const) {

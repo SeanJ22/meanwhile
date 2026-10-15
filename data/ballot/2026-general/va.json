@@ -1312,19 +1312,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
-          "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
-          "retrievedAt": "2026-10-14T23:52:37.749304+00:00",
-          "publisher": "Virginia Department of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.elections.virginia.gov/2026/10/14/ms-01-5d738913a0f526a0/sha256-a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.pdf",
-            "byteLength": 1091676,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -1337,7 +1324,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "VA",
+        "electionId": "va-2026-11-03-general",
+        "sourceHash": "e865fa54695aa7c49bf22a77bc4299078afc9d1c5723bb154c8827f7c49a4b9e",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:39.916275+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-va/2026/10/15/ms-01/sha256-e865fa54695aa7c49bf22a77bc4299078afc9d1c5723bb154c8827f7c49a4b9e.ndjson",
+          "byteLength": 1431,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

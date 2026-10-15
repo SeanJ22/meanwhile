@@ -7761,107 +7761,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0140/part_0010/section_0090/0000-0140-0010-0090.html",
-          "sourceHash": "a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3",
-          "retrievedAt": "2026-10-15T00:04:25.214156+00:00",
-          "publisher": "Montana Legislature",
-          "vault": {
-            "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-2c6b31965a6f8930/sha256-a0d57fe8a3b338cfda1c9cbebeb676684e1a9ee21ede848ee3738bbf5300cee3.html",
-            "byteLength": 10780,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0270/part_0020/section_0380/0130-0270-0020-0380.html",
-          "sourceHash": "fbd641a486d557075b2d3fbe3770d4b2d5347447bcc3db8c361ba135fbf83be4",
-          "retrievedAt": "2026-10-15T00:07:19.161083+00:00",
-          "publisher": "Montana Legislature",
-          "vault": {
-            "key": "project/freshness/source/mca.legmt.gov/2026/10/15/ms-01-62568c3e01140e40/sha256-fbd641a486d557075b2d3fbe3770d4b2d5347447bcc3db8c361ba135fbf83be4.html",
-            "byteLength": 14709,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://scholarworks.umt.edu/cgi/viewcontent.cgi?article=1477&context=montanaconstitution",
-          "sourceHash": "f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb",
-          "retrievedAt": "2026-10-15T00:02:55.022095+00:00",
-          "publisher": "Montana Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/scholarworks.umt.edu/2026/10/15/ms-01-480ece9f3ec92cf2/sha256-f6d40fc060cf6b380c1f2ec6b8c9cd934c949460aa1485d515fc09ec022c59eb.pdf",
-            "byteLength": 3321336,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-132(3a70e31b2fe58baa619ffb1d9b23c8ff).pdf",
-          "sourceHash": "3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92",
-          "retrievedAt": "2026-10-14T05:05:21.256Z",
-          "publisher": "Montana Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sosmt.gov/2026/10/14/ms-01-9c355e7abae64912/sha256-3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92.pdf",
-            "byteLength": 119246,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8145/Ballot-Issue-CI-132",
-          "sourceHash": "3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92",
-          "retrievedAt": "2026-10-15T00:02:54.469703+00:00",
-          "publisher": "Montana Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-5977db60f1d004eb/sha256-3a0da0af08f6197d4f6224bed60ba97b2a46fe2a386e1f573052dff36b2c1f92.pdf",
-            "byteLength": 119246,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/CI-133(ba9d97da675a9f26f24b5f9e333b35b7).pdf",
-          "sourceHash": "fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169",
-          "retrievedAt": "2026-10-14T05:05:21.268Z",
-          "publisher": "Montana Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sosmt.gov/2026/10/14/ms-01-587597e93c9a5b48/sha256-fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169.pdf",
-            "byteLength": 88424,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8144/Ballot-Issue-CI-133",
-          "sourceHash": "fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169",
-          "retrievedAt": "2026-10-15T00:02:54.529449+00:00",
-          "publisher": "Montana Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-7af52dd0f74da9cc/sha256-fe9a5389f8370ce5d48eaf7aae602d3e7ed0132026e3dc3dd56ffc4f0b581169.pdf",
-            "byteLength": 88424,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://sosmt.gov/wp-content/uploads/wpfd/preview_files/I-194(d4249530242056d948420c5212f6f750).pdf",
-          "sourceHash": "ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197",
-          "retrievedAt": "2026-10-14T05:05:21.231Z",
-          "publisher": "Montana Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sosmt.gov/2026/10/14/ms-01-4600e2dbd291093f/sha256-ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197.pdf",
-            "byteLength": 146576,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.cascadecountymt.gov/DocumentCenter/View/8143/Ballot-Issue-I-194",
-          "sourceHash": "ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197",
-          "retrievedAt": "2026-10-15T00:02:54.474626+00:00",
-          "publisher": "Montana Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.cascadecountymt.gov/2026/10/15/ms-01-1bed27d3208786d2/sha256-ddc232c3ae1ca964a9ad328cbdec24ba6bd8e4b80fbc0a8d7f41fa97ed5bd197.pdf",
-            "byteLength": 146576,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "MT",
+        "electionId": "mt-2026-11-03",
+        "sourceHash": "b15aa238791eed0660117558ba40f797ddd3e11e04160a62628ad3bbf3341550",
+        "documentCount": 9,
+        "reviewedAt": "2026-10-15T04:14:39.865449+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-mt/2026/10/15/ms-01/sha256-b15aa238791eed0660117558ba40f797ddd3e11e04160a62628ad3bbf3341550.ndjson",
+          "byteLength": 10094,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

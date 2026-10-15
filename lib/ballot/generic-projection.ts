@@ -2,6 +2,7 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "./types.ts";
 import { measureSourceReferenceValid } from "./measure-source-contract.ts";
+import { sourceCorpusReferenceValid } from "./source-corpus-contract.ts";
 import { measureRecordIssue, type MeasureRecord } from "./measure-record-contract.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
@@ -12,7 +13,7 @@ export interface GenericBallotProjection {
 export const GENERIC_BALLOT_SCOPE = "US:state-election-ballots";
 export const ballotElectionKey = (ballot: BallotSet) => `${ballot.election.state.toUpperCase()}:${ballot.election.id}`;
 
-export function genericBallotProblems(value: GenericBallotProjection): string[] {
+export function genericBallotProblems(value: GenericBallotProjection, measureDivision?: string): string[] {
   if (!value || value.kind !== "ballot-contests" || !value.ballots || Array.isArray(value.ballots)) return ["Generic ballot records are missing."];
   const problems: string[] = [];
   for (const [key, ballot] of Object.entries(value.ballots)) {
@@ -22,6 +23,8 @@ export function genericBallotProblems(value: GenericBallotProjection): string[] 
       problems.push("A ballot lacks its exact state/election key or contests."); continue;
     }
     const ids = new Set(ballot.contests.map(row => row.id));
+    if (ballot.contests.some(contest => contest.type === "MEASURE" && (measureDivision
+      ? contest.ocdId !== measureDivision : typeof contest.ocdId !== "string" || contest.ocdId.split("/").length !== 3))) problems.push("A measure is stored outside its exact place projection.");
     if (ballot.heldContests !== undefined && (!Array.isArray(ballot.heldContests) ||
       new Set(ballot.heldContests.map(row => row.id)).size !== ballot.heldContests.length ||
       ballot.heldContests.some(row => !row.id || ids.has(row.id) || row.electionId !== ballot.election.id ||
@@ -39,8 +42,12 @@ export function genericBallotProblems(value: GenericBallotProjection): string[] 
     if (ballot.measureRecords !== undefined && (!Array.isArray(ballot.measureRecords) ||
         new Set(ballot.measureRecords.map(row => row.contestId)).size !== ballot.measureRecords.length ||
         ballot.measureRecords.some(row => measureRecordIssue(row) || !measures.some(measure => measure.contestId === row.contestId)))) problems.push("A measure record lacks its stable source-bound identity.");
-    if ([...(ballot.sourceAuthorities ?? []), ...(ballot.sourceDocuments ?? [])].some(source => !measureSourceReferenceValid(source))) {
+    if ((ballot.sourceAuthorities ?? []).some(source => !measureSourceReferenceValid(source))) {
       problems.push("A ballot source document lacks its saved vault identity.");
+    }
+    if (ballot.sourceCorpus && (!sourceCorpusReferenceValid(ballot.sourceCorpus) ||
+      ballot.sourceCorpus.state !== ballot.election.state || ballot.sourceCorpus.electionId !== ballot.election.id)) {
+      problems.push("A ballot corpus lacks its exact state, election or saved vault identity.");
     }
     for (const measure of measures) {
       const source = measure.officialText, guide = measure.voterGuide;

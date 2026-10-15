@@ -7667,30 +7667,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.sos.ks.gov/elections/26elec/2026-General-Election-Constitutional-Amendment-Citizen-Clarification.pdf",
-          "sourceHash": "80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f",
-          "retrievedAt": "2026-10-14T23:52:27.257689+00:00",
-          "publisher": "Kansas Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.ks.gov/2026/10/14/ms-01-32eb10fb71a38a98/sha256-80102f2dced8c7a382abb2e559d9435b23f541c2cab00133bb59e6aaaad3ad6f.pdf",
-            "byteLength": 76430,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://ksrevisor.gov/kanconst/093_014_0001.html",
-          "sourceHash": "6cd8ceeab8ee67e638034f2c0edc14a63c8b149663ec5cca8414184825d8a5bc",
-          "retrievedAt": "2026-10-14T23:59:43.432221+00:00",
-          "publisher": "Kansas Secretary of State and Office of Revisor of Statutes",
-          "vault": {
-            "key": "project/freshness/source/ksrevisor.gov/2026/10/14/ms-01-d7e9588b19664952/sha256-6cd8ceeab8ee67e638034f2c0edc14a63c8b149663ec5cca8414184825d8a5bc.html",
-            "byteLength": 17542,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -7703,7 +7679,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "KS",
+        "electionId": "ks-2026-11-03",
+        "sourceHash": "36abf8cf1223c595b547a7a6bd0305eff3ad4b44720de177ebdc49ce07e3ad73",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.823438+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ks/2026/10/15/ms-01/sha256-36abf8cf1223c595b547a7a6bd0305eff3ad4b44720de177ebdc49ce07e3ad73.ndjson",
+          "byteLength": 2364,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

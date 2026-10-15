@@ -10911,74 +10911,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119269",
-          "sourceHash": "401ebb837c6b7394866b44fbf4cb903fbf6e17614fa6b1c8c047bb89e95502f3",
-          "retrievedAt": "2026-10-15T00:12:40.661648+00:00",
-          "publisher": "North Carolina General Assembly, Fiscal Research Division",
-          "vault": {
-            "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-1818f793267ac0e2/sha256-401ebb837c6b7394866b44fbf4cb903fbf6e17614fa6b1c8c047bb89e95502f3.pdf",
-            "byteLength": 660663,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://webservices.ncleg.gov/ViewDocSiteFile/119135",
-          "sourceHash": "e475af02b2eb6e3e08cb3515df8843827e973df0eaa361a3c6dab293a23695e2",
-          "retrievedAt": "2026-10-15T00:10:36.156391+00:00",
-          "publisher": "North Carolina General Assembly, Fiscal Research Division",
-          "vault": {
-            "key": "project/freshness/source/webservices.ncleg.gov/2026/10/15/ms-01-68dee48f28d17703/sha256-e475af02b2eb6e3e08cb3515df8843827e973df0eaa361a3c6dab293a23695e2.pdf",
-            "byteLength": 972953,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-4.html",
-          "sourceHash": "f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf",
-          "retrievedAt": "2026-10-14T23:52:27.677833+00:00",
-          "publisher": "North Carolina General Assembly",
-          "vault": {
-            "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-1fbb694aad74574f/sha256-f14a21e70501453a3f82091bccaabfab4b745d85f013093dcfcdc08488ec7ccf.html",
-            "byteLength": 16860,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2025-2026/SL2026-5.html",
-          "sourceHash": "5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead",
-          "retrievedAt": "2026-10-14T23:52:27.629458+00:00",
-          "publisher": "North Carolina General Assembly",
-          "vault": {
-            "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-20baf586bb48344a/sha256-5ba892a9009d470672f8f811014dadc035b479fcbe21fee48e22e565ee75fead.html",
-            "byteLength": 16854,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://www.ncleg.gov/EnactedLegislation/SessionLaws/HTML/2023-2024/SL2024-58.html",
-          "sourceHash": "9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e",
-          "retrievedAt": "2026-10-14T23:52:27.588029+00:00",
-          "publisher": "North Carolina General Assembly",
-          "vault": {
-            "key": "project/freshness/source/www.ncleg.gov/2026/10/14/ms-01-6a4bd42886e32073/sha256-9e17fbdf4753fb9dde305a9832f4de5ef2cd51cd65cb0a11fd82b9e8d9d3754e.html",
-            "byteLength": 17418,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://forsyth.cc/elections/assets/documents/Summary_Explanation_of_2026_Constitutional_Amendments.pdf",
-          "sourceHash": "f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822",
-          "retrievedAt": "2026-10-14T23:56:40.848272+00:00",
-          "publisher": "North Carolina General Assembly and Forsyth County Board of Elections",
-          "vault": {
-            "key": "project/freshness/source/forsyth.cc/2026/10/14/ms-01-2c3d15e8a190f28c/sha256-f2041ebee231f1e8316563a967351f3b044c124e907a61e1d38b367223d5d822.pdf",
-            "byteLength": 213231,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "NC",
+        "electionId": "nc-2026-11-03",
+        "sourceHash": "fe35081077cbaeba511db83d22b0832dc2a599a71979fcac4651c48ff6909d9a",
+        "documentCount": 6,
+        "reviewedAt": "2026-10-15T04:14:39.872220+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-nc/2026/10/15/ms-01/sha256-fe35081077cbaeba511db83d22b0832dc2a599a71979fcac4651c48ff6909d9a.ndjson",
+          "byteLength": 6972,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

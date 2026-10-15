@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import type { RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
+import type { Division } from "../registry/types.ts";
+import { readPlacePointerSlice } from "./held-place-slices.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import type { BallotSet, Measure } from "../ballot/types.ts";
@@ -12,14 +14,24 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { captureIntact, requirePublication, verifiedWorkerRecords, section3SourceReceipt } from "./worker-publication-evidence.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { measureSourceReferenceValid } from "../ballot/measure-source-contract.ts";
+import { placeMeasureScope, type PlaceMeasureProjection } from "../ballot/place-measures.ts";
 
 const text = (value: unknown) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const idHash = (parts: readonly string[]) => createHash("sha256").update(canonicalCivicDataJson(parts)).digest("hex").slice(0, 24);
+type MeasureRegistry = { readonly payload: { readonly registry: { readonly divisions: readonly Division[] } } };
+
+export async function readMeasureRegistry(plan: AutonomousWorkPlan): Promise<MeasureRegistry | null> {
+  const bodyId = plan.publication?.bodyId;
+  const division = plan.directorySubject?.divisionId ?? bodyId?.split("#")[0];
+  requirePublication(division && jurisdictionFromOcdId(division), "MEASURE_PLACE_IDENTITY_MISSING");
+  const read = await readPlacePointerSlice<RegistryRuntimeCarton>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, [division], bodyId ? [bodyId] : []);
+  return read.kind === "PROMOTED" && read.value ? { payload: read.value } : null;
+}
 
 export function workerBallotMeasuresPackage(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[];
-  registry: RegistryRuntimePrior | null; now: string; results?: readonly WorkerResultRecord[];
+  registry: MeasureRegistry | null; now: string; results?: readonly WorkerResultRecord[];
 }): { package: ManualProjectionPackage; heldContests: readonly string[] } {
   requirePublication(input.plan.publication?.contractId === "ballot-contests" && input.plan.contract.schemaVersion === 2 &&
     input.plan.contract.recordClass === "BALLOT_MEASURE", "MEASURE_CONTRACT_UNRESOLVED");
@@ -46,7 +58,8 @@ export function workerBallotMeasuresPackage(input: {
     }
     identities.add(identity);
     const electionId = `${state.toLowerCase()}-${idHash([state, electionName])}`;
-    const contestId = `ballot-measure:${idHash([state, electionId, divisions[0].ocdId, designation])}`;
+    const placePrefix = divisions[0].ocdId.split("/").length > 3 ? `${encodeURIComponent(divisions[0].ocdId)}:` : "";
+    const contestId = `ballot-measure:${placePrefix}${idHash([state, electionId, divisions[0].ocdId, designation])}`;
     const provenance = { sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.primary.evidence.sourceId,
       collectedAt: checked.primary.observedAt, verifiedAt: input.now };
     const key = `${state}:${electionId}`;
@@ -85,12 +98,15 @@ export function workerBallotMeasuresPackage(input: {
     const linking = linkingPageFrom(document.evidence.canonicalUrl, pages.map(row => row.evidence));
     if (linking) pages.filter(row => row.evidence.canonicalUrl === linking.url).forEach(row => { acceptedCaptures.add(row); authorities.add(row); });
   }
-  const sourceDocuments = [...new Set([checked.primary, ...acceptedCaptures])]
-    .flatMap(capture => capture.sourceReference ? [capture.sourceReference] : []);
   const sourceAuthorities = [...authorities].flatMap(capture => capture.sourceReference ? [capture.sourceReference] : []);
-  for (const ballot of Object.values(ballots)) { ballot.sourceDocuments = sourceDocuments; ballot.sourceAuthorities = sourceAuthorities; }
-  return { heldContests, package: { contractId: "ballot-contests", version: `worker:${input.parser.id}`,
+  for (const ballot of Object.values(ballots)) ballot.sourceAuthorities = sourceAuthorities;
+  const divisions = [...new Set(Object.values(ballots).flatMap(ballot => ballot.contests.map(contest => contest.ocdId)))];
+  requirePublication(divisions.length === 1, "MEASURE_JOB_REQUIRES_ONE_PLACE");
+  const ocdId = divisions[0], local = ocdId.split("/").length > 3;
+  if (local) placeMeasureScope(ocdId);
+  const payload: GenericBallotProjection | PlaceMeasureProjection = local ? { kind: "ballot-measures", ocdId, ballots } : { kind: "ballot-contests", ballots };
+  return { heldContests, package: { contractId: local ? "ballot-measures" : "ballot-contests", version: `worker:${input.parser.id}`,
     sourceThrough: new Date(Math.max(...[checked.primary, ...acceptedCaptures].map(row => Date.parse(row.observedAt)))).toISOString(), sourceReceipt: section3SourceReceipt([...new Set([checked.primary, ...acceptedCaptures])], input.now,
       "Official ballot measure reader", "Code replayed the exact registered election/jurisdiction/number and held official full text; no paraphrase or inferred vote meaning."),
-    payload: { kind: "ballot-contests", ballots } satisfies GenericBallotProjection } };
+    payload } };
 }

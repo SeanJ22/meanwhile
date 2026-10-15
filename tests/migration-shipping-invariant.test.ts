@@ -1,9 +1,3 @@
-/**
- * A deploy may not cross its own migrations. The reasoning lives in `lib/db/shipping-invariant.ts` and
- * `lib/db/migration-phases.ts`. Fixture-driven and hermetic; the fixtures use real migration tags so they exercise
- * the real phase declaration.
- */
-
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -473,7 +467,7 @@ test("PDC terminal boundary: the schema/intake tripwire is not a GitHub routine 
 test("the production migration applier commits each migration and its journal row atomically", () => {
   const source = readFileSync(join(ROOT, "scripts", "apply-migrations.mts"), "utf8");
   const blockAt = source.indexOf("const apply = `DO ");
-  const transactionAt = source.indexOf("await sql.transaction", blockAt);
+  const transactionAt = source.indexOf("await targetSql.transaction", blockAt);
   const statementAt = source.indexOf("statements.map(", blockAt);
   // Keep the table token split so the detector above does not mistake this
   // assertion for another executable journal querier.

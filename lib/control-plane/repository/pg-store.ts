@@ -10,7 +10,6 @@ import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
-/** The Postgres control-plane provider, implementing the same `ControlPlaneRepositories` interfaces as the file store. */
 
 import { createHash } from "node:crypto";
 import { neon, Pool, neonConfig } from "@neondatabase/serverless";
@@ -35,7 +34,7 @@ import type { CandidateStore } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import { backfillModelCharges, costRepositoryWithCharges, pgModelCharges } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -57,9 +56,8 @@ import {
   BOOTSTRAP_DDL,
   BOOTSTRAP_VERSION,
   ONLINE_INDEXES,
-  SPEND_HOLDS_MOVE_DDL,
   recordVersionStatement,
-  spendHoldDeadSql,
+  spendHoldExpiredIdsSql,
   spendHoldJsonSql,
   spendHoldLiveSql,
   type OnlineIndex,
@@ -74,7 +72,6 @@ import {
   everyLineMustFit,
   invalidAmountRefusal,
   sendRefusal,
-  spendHoldsTableEnabled,
   type BudgetLine,
   type HoldDecision,
   type SpendHoldStore,
@@ -569,11 +566,7 @@ export function pgAppendOnlyRepository<T>(
 
   return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
-      /*
-       * The position is allocated by the position-allocator table, never computed as MAX+1 (which races under
-       * READ COMMITTED). The idempotency probe runs first, so a retry keeps its position. Positions may have
-       * gaps under contention: position is an order key, never a count.
-       */
+
       const already = (await run(
         "append:probe",
         recordClass,
@@ -699,22 +692,27 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    async readRecentWhere(key, path, value, limit, projection, recordedAtSince) {
+    async readRecentWhere(key, path, value, limit, projection, recordedAtSince, equals, orderBy) {
       /* `readWhere` newest first, stopped at `limit`; `limit` bounds the response, so no paging. */
       const jsonPath = jsonPathLiteral(table, path);
       const narrowed = recordProjectionSql(table, projection);
-      if (copies !== null && recordedAtSince === undefined) {
+      const whereValue = typeof value === "string" ? "= $2" : "= ANY($2::text[])";
+      const ordering = orderBy ? `record #>> '${jsonPathLiteral(table, [orderBy])}' DESC, position DESC` : "position DESC";
+      const match = equals === undefined ? "" : " AND record @> $4::jsonb";
+      const matchValues = equals === undefined ? [] : [JSON.stringify(equals)];
+      const clockParameter = 4 + matchValues.length;
+      if (copies !== null && recordedAtSince === undefined && orderBy === undefined) {
         /* On the runner the query's newest records are held, and only matches stamped since the copy's clock cross the wire. */
-        return copies.recentWhere(table, JSON.stringify([key, path, value, limit, projection]), limit, async (since) => {
+        return copies.recentWhere(table, JSON.stringify([key, path, value, limit, projection, equals]), limit, async (since) => {
           const clock = (await run("readRecentWhere:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
           const rows = (await run(
             "readRecentWhere",
             "PAGE",
             `SELECT position, ${narrowed} AS record FROM ${table}
-             WHERE log_key = $1 AND record #>> '${jsonPath}' = $2${since === null ? "" : " AND changed_at >= $4::timestamptz"}
-             ORDER BY position DESC
+             WHERE log_key = $1 AND record #>> '${jsonPath}' ${whereValue}${match}${since === null ? "" : ` AND changed_at >= $${clockParameter}::timestamptz`}
+             ORDER BY ${ordering}
              LIMIT $3`,
-            [key, value, Math.max(0, Math.trunc(limit)), ...(since === null ? [] : [since])],
+            [key, value, Math.max(0, Math.trunc(limit)), ...matchValues, ...(since === null ? [] : [since])],
           )) as Record<string, unknown>[];
           return { rows: rows.map((r) => ({ position: Number(r.position), record: parseValue<unknown>(r.record, `${table} ${key}`) })),
             through: new Date(clock[0]?.read_at as string).toISOString() };
@@ -724,10 +722,10 @@ export function pgAppendOnlyRepository<T>(
         "readRecentWhere",
         "PAGE",
         `SELECT ${narrowed} AS record FROM ${table}
-         WHERE log_key = $1 AND record #>> '${jsonPath}' = $2${recordedAtSince === undefined ? "" : " AND recorded_at >= $4::timestamptz"}
-         ORDER BY position DESC
+         WHERE log_key = $1 AND record #>> '${jsonPath}' ${whereValue}${match}${recordedAtSince === undefined ? "" : ` AND recorded_at >= $${clockParameter}::timestamptz`}
+         ORDER BY ${ordering}
          LIMIT $3`,
-        [key, value, Math.max(0, Math.trunc(limit)), ...(recordedAtSince === undefined ? [] : [recordedAtSince])],
+        [key, value, Math.max(0, Math.trunc(limit)), ...matchValues, ...(recordedAtSince === undefined ? [] : [recordedAtSince])],
       )) as Record<string, unknown>[];
       return rows.map((r) => parseValue<unknown>(r.record, `${table} ${key}`));
     },
@@ -959,11 +957,6 @@ export async function pgEnsureOnlineIndex(
   }
 }
 
-/**
- * Keep ordinary bootstrap on bounded HTTP and record the version only after
- * every statement succeeds. Online index creation/recovery alone needs a pinned
- * autocommit connection and a session lock, never a transaction.
- */
 export async function bootstrap(
   sql: Sql,
   nowIso: string,
@@ -971,8 +964,6 @@ export async function bootstrap(
 ): Promise<void> {
   const run = boundedRunner(sql, "cp_schema", bounds);
   for (const statement of BOOTSTRAP_DDL) {
-    /* The way back (`WTP_SPEND_HOLDS_TABLE=0`) keeps the holds on the ledger row, so they are not moved off it. */
-    if (statement === SPEND_HOLDS_MOVE_DDL && !spendHoldsTableEnabled()) continue;
     const online = ONLINE_INDEXES.get(statement);
     if (online) await pgEnsureOnlineIndex(sql, online, bounds);
     else await run("bootstrap", "POINT", statement);
@@ -1009,11 +1000,6 @@ export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
   ];
 }
 
-/**
- * The field manual's rows in `cp_field_manual_entries`. On the runner a slice is the held copy filtered by
- * `entryInSlice`, so a process pays only for rows changed since the copy's clock; without a copy (a page host or
- * a hand-run script) the slice crosses the wire one page at a time.
- */
 export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
   const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
   const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1057,9 +1043,12 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
   };
 }
 
-/** Every call is one statement, so one implicit transaction. Nothing reads the table whole; `liveAll` reads only holds that still count. */
 export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): SpendHoldStore {
-  const run = boundedRunner(sql, "cp_spend_holds", bounds);
+  const execute = boundedRunner(sql, "cp_spend_holds", bounds);
+  const run = (...args: Parameters<typeof execute>) => withControlPlaneConnectRetry(() => execute(...args), {
+    maxAttempts: 3, baseBackoffMs: 10, maxBackoffMs: 50,
+    isRetryable: error => !!error && typeof error === "object" && "code" in error && error.code === "40P01",
+  });
   const since = (now: string) => {
     const ms = Date.parse(now);
     if (!Number.isFinite(ms)) throw new Error(`cp_spend_holds: ${JSON.stringify(now)} is not an instant`);
@@ -1077,8 +1066,8 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
   const liveSelect = (where: string) =>
     `SELECT ${spendHoldJsonSql("h")} AS hold FROM cp_spend_holds h WHERE ${where}${where ? " AND " : ""}${spendHoldLiveSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")} ORDER BY h.hold_id`;
   const sweep = async (now: string): Promise<number> => {
-    const rows = await run("sweep", "POINT", `DELETE FROM cp_spend_holds x WHERE x.hold_id IN (SELECT h.hold_id FROM cp_spend_holds h
-      WHERE ${spendHoldDeadSql("h", "$1::timestamptz", "$2::timestamptz", "$3::timestamptz")} LIMIT $4::integer) RETURNING x.hold_id`,
+    const rows = await run("sweep", "POINT", `DELETE FROM cp_spend_holds x WHERE x.hold_id IN (
+      ${spendHoldExpiredIdsSql("$1::timestamptz", "$2::timestamptz", "$3::timestamptz", "$4::integer")}) RETURNING x.hold_id`,
       [...since(now), SPEND_HOLD_SWEEP_LIMIT]) as unknown[];
     return rows.length;
   };
@@ -1112,16 +1101,19 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
           FROM mine WHERE s.hold_id = mine.hold_id RETURNING s.hold_id`,
         [...since(now), input.jobId, input.usd, input.costRecordedAt]);
       }
-      /* Settled holds leave once their cost is in every reader's history; the sweep is bounded, the next one takes the rest. */
       await sweep(now);
     },
     async release(holdId, now) {
       since(now);
       await run("release", "POINT", "DELETE FROM cp_spend_holds WHERE hold_id = $1 RETURNING hold_id", [holdId]);
     },
-    async liveFor(keys, now) {
-      if (keys.length === 0) return {};
-      return holdsOf(await run("liveFor", "PAGE", liveSelect("h.keys && $4::text[]"), [...since(now), [...new Set(keys)]]), "cp_spend_holds live on lines");
+    async left(lines, now) {
+      if (!lines.length) return [];
+      const rows = await run("left", "PAGE", `SELECT cp_spend_line_left(l.line,$1::timestamptz,$2::timestamptz,$3::timestamptz) AS left
+        FROM jsonb_array_elements($4::jsonb) WITH ORDINALITY l(line,n) ORDER BY n`,
+        [...since(now), JSON.stringify(lines.map(lineOf))]) as Record<string, unknown>[];
+      if (rows.length !== lines.length || rows.some(row => !Number.isFinite(Number(row.left)))) throw new Error("The budget lines could not be read.");
+      return rows.map(row => Number(row.left));
     },
     async liveAll(now) {
       return holdsOf(await run("liveAll", "PAGE", liveSelect(""), [...since(now)]), "cp_spend_holds live");
@@ -1133,10 +1125,6 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
 /** The caller passes the connection string; `fromEnv` is the one place the variable is read. */
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
-/** Reconcile all subjects in one place against one indexed query, rather
- * than opening a serverless connection for every field's subject. The filter is
- * the exact expression of `cp_work_items_subject` (`#>> '{subject}'`): `->>`
- * does not match that index and scanned the whole table. */
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
   if (!subjects.length) return [];
   const ids = [...new Set(subjects)];
@@ -1182,10 +1170,7 @@ export async function createPgRepositories(
   options: {
     /** Pages never own the schema: skip the bootstrap, and a schema that is behind reads as STORE_UNREACHABLE. */
     readonly skipBootstrap?: boolean;
-    /**
-     * Override the per-class request bounds (request-bounds.ts). Tests shrink
-     * them; production uses the measured defaults. No call is ever unbounded.
-     */
+
     readonly requestBounds?: Partial<ControlPlaneRequestBounds>;
   } = {},
 ): Promise<ControlPlaneRepositories> {
@@ -1232,6 +1217,11 @@ export async function createPgRepositories(
         ),
     });
   }
+  const chargesRun = boundedRunner(sql, "cp_model_charges", bounds);
+  const chargesQuery = async (text: string, params?: unknown[]) =>
+    (await chargesRun("modelCharges", "PAGE", text, params)) as Record<string, unknown>[];
+  if (!options.skipBootstrap) await backfillModelCharges(chargesQuery, nowIso);
+  const modelCharges = pgModelCharges(chargesQuery);
   const locks = pgLockManager(connectionString);
   const sharedBudget = budgetRepositoryFrom(
     pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded), locks, "ATOMIC_COMPARE_AND_SET",
@@ -1293,7 +1283,7 @@ export async function createPgRepositories(
     artifactsByCanonicalUrl: (url, limit) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded),
     capturedCanonicalUrls: (urls) => pgCapturedCanonicalUrls(sql, urls, bounded),
     adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
-    costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
+    costs: costRepositoryWithCharges(pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded), modelCharges),
     ownerSnapshots: pgAggregateRepository<OwnerSnapshot>(
       sql,
       "OwnerSnapshot",
@@ -1320,7 +1310,7 @@ export async function createPgRepositories(
     ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests", bounded),
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions", bounded),
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
-    spendWindow: pgAggregateRepository<SpendWindow>(sql, "SpendWindow", "cp_spend_window", bounded),
+    modelCharges,
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
     boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),

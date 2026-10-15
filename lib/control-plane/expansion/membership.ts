@@ -1,35 +1,3 @@
-/**
- * Which work is in which scope, in what order, and whether its budget allows
- * one more paid Scout.
- *
- * A scope is a set of ZCTAs (`zctasForGrouping`, each with its area share).
- * Touching a common ZCTA is not enough (counties tile a state and share border
- * ZCTAs), so a government is in the scope only when the two must overlap:
- *
- * ```
- *   the government touches a ZCTA that lies wholly inside the scope, or
- *   inside one ZCTA, the government's share + the scope's share > 1 + margin
- *   (the margin absorbs the difference between sampled and exact area)
- * ```
- *
- * A government's territory is its Census of Governments unit's ZCTA set, with
- * source-established intersections and area shares. Registry rows join units by
- * state and native Census government ID. A subject the join cannot place is UNPLACED, never guessed.
- * ZCTAs are not USPS ZIP codes.
- *
- * Order: the owner's DISPATCH first, then due rows in a selected scope by
- * scope priority (a row in two scopes takes the better), each keeping its
- * existing order.
- *
- * Budget: a paid Scout is admitted only if, for every scope the subject is in,
- * attributed rolling-24h spend + this cycle's spend and reservations + one
- * worst case fits the scope's budget. An unresolved or unmeasured scope binds
- * every subject in its state (and unknown-state subjects). The budget only
- * restricts; the Fleet ceiling is checked elsewhere.
- *
- * Pure. Every input is handed in.
- */
-
 import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
@@ -367,6 +335,7 @@ export class ScopeBudgetGate {
   private readonly scopes: readonly BudgetScope[];
   private readonly worstCaseUsd: number;
   private readonly heldForMalformed: number;
+  private readonly hasSelectedHunts: boolean;
   private readonly cycleUsd = new Map<string, number>();
   private readonly cycleUnmeasured = new Set<string>();
   private readonly reserved = new Map<string, number>();
@@ -383,10 +352,12 @@ export class ScopeBudgetGate {
     readonly malformedScopes?: number;
     /** When the scopes' historical spend was read (the cycle's instant). */
     readonly historyReadAt?: string;
+    readonly hasSelectedHunts?: boolean;
   }) {
     this.scopes = input.scopes;
     this.worstCaseUsd = input.worstCaseUsd;
     this.heldForMalformed = input.malformedScopes ?? 0;
+    this.hasSelectedHunts = input.hasSelectedHunts ?? input.scopes.some(scope => scope.lifetime);
     this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
   }
 
@@ -413,7 +384,7 @@ export class ScopeBudgetGate {
    * members. Opening the model lane for that hunt must not start unrelated
    * geographic acquisition. Legacy rolling-only selections keep their rules. */
   private outsideSelectedHunts(binding: readonly BudgetScope[]): Extract<BudgetAdmission, { admit: false }> | null {
-    return this.scopes.some(scope => scope.lifetime) && !binding.some(scope => scope.lifetime)
+    return this.hasSelectedHunts && !binding.some(scope => scope.lifetime)
       ? { admit: false, code: SCOPE_BUDGET_CODE, why: "This work is outside the selected hunts. Paid model acquisition waits for an applicable hunt instruction; plain-code work is unchanged." }
       : null;
   }

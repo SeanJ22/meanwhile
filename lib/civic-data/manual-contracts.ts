@@ -85,6 +85,15 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     delegatedInvocation: { to: "REVIEWING_AGENT_SESSION", authorization: "CA-25: the translator publishes checked official-text translations through the standing Slide under the existing budget dial." },
   },
   {
+    id: "ballot-measures", execution: "EXPLICIT_OWNER_INVOCATION_ONLY", sourceId: "official-ballot-authorities",
+    recordClass: "BALLOT_CANDIDACY", scope: "US:ballot-measures",
+    command: ["scripts/promote-manual-civic-projection.mts", "--contract=ballot-measures"], parserNormalizerVersion: "ballot-contests/1",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "official-ballot-authorities" }, validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE, readerProjection: { id: "place-ballot-measures", consumers: ["Admin", "Ask", "/ballot"] },
+    classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+    lkgBehavior: "Each place retains its verified measure facts and source references independently when a later source cannot be read or checked.",
+  },
+  {
     id: "ballot-contests",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "official-ballot-authorities",

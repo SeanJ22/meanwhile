@@ -1,3 +1,4 @@
+import { READER_MANIFEST_CACHE_TAG } from "@/lib/meetings/edge-blob-store";
 import { readerMeetingScope } from "@/lib/meetings/reader-scope";
 import { haversineKm } from "@/lib/geo/distance";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
@@ -18,7 +19,6 @@ import {
   prefetchReaderEdgeStates,
   readReaderEdgeMeetings,
   readReaderManifest,
-  READER_MANIFEST_CACHE_TAG,
   READER_MAP_AUTHORITY_FAMILIES,
   servedWholeFromReaderEdge,
 } from "@/lib/meetings/edge-serving";
@@ -40,23 +40,12 @@ import {
 } from "@/lib/routing/everyday-data-plane";
 import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
-/**
- * GET /api/meetings?lat=&lng=&radiusKm=
- *
- * Normalized meetings plus which rung of the empty-state cascade produced them, and the coverage summary for the point.
- */
+
 
 // The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
 
-/**
- * Only a 200 built whole from the published edge is held by the CDN; anything else says `no-store`.
- *
- * - `s-maxage=300`, and the runner purges the `reader-manifest` tag when it publishes.
- * - `durable`: shared across Netlify's edge nodes.
- * - `Netlify-Vary: query` keys on every query parameter, because a request carrying an unknown one is refused.
- * - `max-age=0`: the browser revalidates every time, so a purge reaches it.
- */
+
 const CDN_HELD = {
   "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
   "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,

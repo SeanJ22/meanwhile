@@ -9,13 +9,12 @@ import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 import { inProcessSpendHoldStore } from "../expansion/spend-holds.ts";
-/** In-process double with the same rules as `file-store.ts`. Never durable. */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import { costRepositoryWithCharges, logModelCharges, type ModelChargeRecord } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -231,15 +230,19 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
     readRecentWhere: async (
       key: string,
       jsonPath: readonly string[],
-      value: string,
+      value: string | readonly string[],
       limit: number,
       projection: RecordProjection,
       recordedAtSince?: string,
+      equals?: Readonly<Record<string, string>>,
+      orderBy?: string,
     ): Promise<readonly unknown[]> => {
       const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
       const matches = (partitions.get(key) ?? [])
-        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value &&
+        .filter((entry) => (typeof value === "string" ? jsonTextAtPath(entry.record, jsonPath) === value : value.includes(jsonTextAtPath(entry.record, jsonPath) ?? "")) &&
+          Object.entries(equals ?? {}).every(([field, expected]) => jsonTextAtPath(entry.record, [field]) === expected) &&
           (since === null || Date.parse(entry.at) >= since));
+      if (orderBy) matches.sort((a, b) => String(jsonTextAtPath(a.record, [orderBy]) ?? "").localeCompare(String(jsonTextAtPath(b.record, [orderBy]) ?? "")));
       const bounded = Math.max(0, Math.trunc(limit));
       return matches
         .slice(Math.max(0, matches.length - bounded))
@@ -327,6 +330,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
   const artifacts = memoryAppendOnlyRepository<ArtifactRecord>("artifacts");
   const adminReceipts = memoryAppendOnlyRepository<ActionReceipt>("admin_receipts");
 
+  const modelCharges = logModelCharges(memoryAppendOnlyRepository<ModelChargeRecord>("model_charges"));
   return {
     async adminActionHistoryPage(query) {
       // Positions belong to the append log, so new rows do not shift an older cursor.
@@ -356,7 +360,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
       return new Set((await artifacts.readAll()).map(record => record.canonicalUrl).filter(url => wanted.has(url)));
     },
     adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
-    costs: memoryAppendOnlyRepository<CostEntry>("costs"),
+    costs: costRepositoryWithCharges(memoryAppendOnlyRepository<CostEntry>("costs"), modelCharges),
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
     fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry")),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),
@@ -366,7 +370,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),
     ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
-    spendWindow: memoryAggregateRepository<SpendWindow>("SpendWindow"),
+    modelCharges,
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),

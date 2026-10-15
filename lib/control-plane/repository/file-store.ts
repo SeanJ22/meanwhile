@@ -8,13 +8,14 @@ import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
-/** Durable filesystem store. Every write is an exclusive create, so compare-and-set and append are arbitrated by the filesystem. */
 
 import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import { costRepositoryWithCharges, logModelCharges, type ModelChargeRecord } from "./model-charges.ts";
+import { createFileSpendHoldRepository } from "./file-spend-holds.ts";
+import type { PricedCharge } from "../fleet-safety.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -92,11 +93,6 @@ function isEexist(error: unknown): boolean {
   return (error as NodeJS.ErrnoException)?.code === "EEXIST";
 }
 
-/**
- * All-or-nothing exclusive create: write a complete temp file, then `link` it into place (EEXIST when the
- * target exists). Where `link` is unavailable, an exclusive `open(path, "wx")` plus write lets a concurrent
- * reader briefly see an empty file, which reads as `CorruptPersistedState`, never a wrong answer.
- */
 async function exclusiveCreate(target: string, contents: string): Promise<boolean> {
   await mkdir(path.dirname(target), { recursive: true });
   const temp = tempPath(target);
@@ -462,16 +458,20 @@ export function fileAppendOnlyRepository<T>(
     readRecentWhere: async (
       key: string,
       jsonPath: readonly string[],
-      value: string,
+      value: string | readonly string[],
       limit: number,
       projection: RecordProjection,
       recordedAtSince?: string,
+      equals?: Readonly<Record<string, string>>,
+      orderBy?: string,
     ): Promise<readonly unknown[]> => {
       const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
       const matches = (await readLines(key))
         .filter(line => since === null || Date.parse(line.at) >= since)
         .map((line) => line.record)
-        .filter((record) => jsonTextAtPath(record, jsonPath) === value);
+        .filter((record) => (typeof value === "string" ? jsonTextAtPath(record, jsonPath) === value : value.includes(jsonTextAtPath(record, jsonPath) ?? "")) &&
+          Object.entries(equals ?? {}).every(([field, expected]) => jsonTextAtPath(record, [field]) === expected));
+      if (orderBy) matches.sort((a, b) => String(jsonTextAtPath(a, [orderBy]) ?? "").localeCompare(String(jsonTextAtPath(b, [orderBy]) ?? "")));
       const bounded = Math.max(0, Math.trunc(limit));
       return matches
         .slice(Math.max(0, matches.length - bounded))
@@ -576,7 +576,22 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   const resolved = path.resolve(root);
   await mkdir(resolved, { recursive: true });
   const locks = fileLockManager(resolved);
+  const budgetAggregate = fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget");
+  const spendHolds = await createFileSpendHoldRepository(resolved, budgetAggregate, locks);
   const artifacts = fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts");
+  const costLog = fileAppendOnlyRepository<CostEntry>(resolved, "costs");
+  const chargeLog = fileAppendOnlyRepository<ModelChargeRecord>(resolved, "model-charges");
+  const modelCharges = logModelCharges(chargeLog);
+  const previous = (await fileAggregateRepository<{ charges: readonly PricedCharge[] }>(resolved,
+    "SpendWindow", "spend-window").read("model-charges"))?.value.charges ?? [];
+  for (const charge of previous) {
+    if (!(await chargeLog.read(charge.id)).length) {
+      await chargeLog.append(charge.id, charge.id, { id: charge.id, at: charge.at, charge }, charge.at);
+    }
+  }
+  const since = new Date(Date.now() - 30 * 3_600_000).toISOString();
+  for (const entry of await costLog.readSince(since)) await modelCharges.record(entry);
+  await rm(path.join(resolved, "aggregates", "spend-window"), { recursive: true, force: true });
 
   return {
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
@@ -608,7 +623,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       return new Set((await artifacts.readAll()).map(record => record.canonicalUrl).filter(url => wanted.has(url)));
     },
     adminEvidenceCopyRequests: fileAggregateRepository<AdminEvidenceCopyRequest>(resolved, "AdminEvidenceCopyRequest", "admin-evidence-copy-requests"),
-    costs: fileAppendOnlyRepository<CostEntry>(resolved, "costs"),
+    costs: costRepositoryWithCharges(costLog, modelCharges),
     ownerSnapshots: fileAggregateRepository<OwnerSnapshot>(
       resolved,
       "OwnerSnapshot",
@@ -630,7 +645,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
-    spendWindow: fileAggregateRepository<SpendWindow>(resolved, "SpendWindow", "spend-window"),
+    modelCharges,
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
@@ -649,10 +664,8 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
     doors: fileAggregateRepository<DoorRecord>(resolved, "Door", "doors"),
     leadOrders: fileAggregateRepository<LeadOrder>(resolved, "LeadOrder", "lead-orders"),
-    budget: budgetRepositoryFrom(
-      fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
-      locks,
-    ),
+    budget: budgetRepositoryFrom(budgetAggregate, locks),
+    spendHolds,
     locks,
     describe: () => `durable control-plane repositories rooted at ${resolved}`,
     durable: true,

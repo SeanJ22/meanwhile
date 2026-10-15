@@ -6627,19 +6627,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
-          "sourceHash": "5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434",
-          "retrievedAt": "2026-10-14T23:52:32.721464+00:00",
-          "publisher": "Utah Office of the Lieutenant Governor",
-          "vault": {
-            "key": "project/freshness/source/vote.utah.gov/2026/10/14/ms-01-85615610005260b6/sha256-5869a5a4052a20a67d248a12aa35e9cacdfc7f61e9938907a89da76f4c78a434.pdf",
-            "byteLength": 30792889,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -6652,7 +6639,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "UT",
+        "electionId": "ut-2026-11-03-general",
+        "sourceHash": "fac527e14a89db97acdaafb8c8f202a71540b7f8a2370f2e97183daf61a29fa7",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:40.022534+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ut/2026/10/15/ms-01/sha256-fac527e14a89db97acdaafb8c8f202a71540b7f8a2370f2e97183daf61a29fa7.ndjson",
+          "byteLength": 1201,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

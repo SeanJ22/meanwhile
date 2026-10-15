@@ -102,7 +102,7 @@ test("a capture that fails after its Attempt opens closes the Attempt with the c
   const { repos, store, now } = harness(t);
   const failing: EvidenceStore = {
     put: async () => { throw new Error("VAULT_WRITE_REFUSED_FOR_TEST"); },
-    get: (key) => store.get(key), head: (key) => store.head(key), list: (prefix) => store.list(prefix),
+    get: (key) => store.get(key), stream: key => store.stream(key), head: (key) => store.head(key), list: (prefix) => store.list(prefix),
   };
   await assert.rejects(retainRoutineMeetingForWorkers({ repos, store: failing, subjectId, methodVersion, now,
     candidateVersionId: "cv-day-one", response: response(DAY_ONE, now()) }), /VAULT_WRITE_REFUSED_FOR_TEST/);

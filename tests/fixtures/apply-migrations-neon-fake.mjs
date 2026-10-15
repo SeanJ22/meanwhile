@@ -28,7 +28,8 @@ function appliedRows() {
   });
 }
 
-export function neon() {
+export function neon(connection) {
+  const database = new URL(connection).pathname.slice(1);
   const sql = async (strings) => {
     const statement = textOf(strings);
     record(SQL_PREFIX, statement);
@@ -42,6 +43,7 @@ export function neon() {
     return [];
   };
 
+  sql.query = async (text) => { record(SQL_PREFIX, text.replace(/\s+/g, " ").trim()); return []; };
   sql.transaction = async (build, options) => {
     let migration = false;
     const transaction = async (strings) => {
@@ -55,13 +57,15 @@ export function neon() {
     };
     transaction.query = async (statement) => {
       if (/^DO\b/.test(statement)) migration = true;
-      record(EVENT_PREFIX, { kind: "transaction-query", statement });
+      record(EVENT_PREFIX, { kind: "transaction-query", statement, database });
+      if (/AS applied$/i.test(statement)) return [{ applied: process.env.APPLY_MIGRATIONS_FAKE_CONCURRENT === "1" ? false : true }];
       return [];
     };
 
     const requests = build(transaction);
     record(EVENT_PREFIX, { kind: "transaction", requests: requests.length, ...(options?.readOnly ? { readOnly: true } : {}) });
-    if (migration && process.env.APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL === "1") {
+    if (migration && (process.env.APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL === "1" ||
+      process.env.APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL_DATABASE === database)) {
       throw new Error("planted transaction failure");
     }
     return Promise.all(requests);

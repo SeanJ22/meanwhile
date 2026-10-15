@@ -5821,30 +5821,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/VoterRef26.pdf",
-          "sourceHash": "dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499",
-          "retrievedAt": "2026-10-14T23:52:37.871446+00:00",
-          "publisher": "Rhode Island Department of State, Elections Division",
-          "vault": {
-            "key": "project/freshness/source/vote.sos.ri.gov/2026/10/14/ms-01-00e5a661e38fc6b7/sha256-dd0e6323965a2db1a694cf57a295a8764aa0092ab2366462a09214a299cab499.pdf",
-            "byteLength": 919700,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://webserver.rilegislature.gov/BillText26/HouseText26/H7127Aaa.pdf",
-          "sourceHash": "76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732",
-          "retrievedAt": "2026-10-14T23:52:38.499990+00:00",
-          "publisher": "Rhode Island General Assembly",
-          "vault": {
-            "key": "project/freshness/source/webserver.rilegislature.gov/2026/10/14/ms-01-03b22bacec81665e/sha256-76bcf531d6bdf6f9b98ed08233cdc11d839a57c7c5766844476250c0e01be732.pdf",
-            "byteLength": 3424834,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -5857,7 +5833,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "RI",
+        "electionId": "ri-2026-11-03-general",
+        "sourceHash": "901f8b42191ec078c989d2b86be957d8b09bcbc79d982400b523978aeb3f4ce7",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.900706+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ri/2026/10/15/ms-01/sha256-901f8b42191ec078c989d2b86be957d8b09bcbc79d982400b523978aeb3f4ce7.ndjson",
+          "byteLength": 2117,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

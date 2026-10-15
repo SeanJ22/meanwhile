@@ -1,5 +1,7 @@
 import test from "node:test";
-import { readFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import assert from "node:assert/strict";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { costEntryWorstCaseUsd, modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
@@ -7,9 +9,10 @@ import { aggregatePricedSpend, pricedModelCharge } from "../lib/control-plane/fl
 import { MODELS } from "../lib/models.ts";
 import { cacheHitRateByRole, scoutCapacity } from "../lib/control-plane/research-metrics.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
+import { createFileRepositories, fileAggregateRepository, fileAppendOnlyRepository } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
-import { costRecordId, readSpendWindow, SPEND_WINDOW_ID } from "../lib/control-plane/spend-window.ts";
+import { costRecordId, readSpendWindow } from "../lib/control-plane/spend-window.ts";
 
 const NOW = "2026-10-13T19:00:00.000Z";
 const haiku = MODELS.haiku.model;
@@ -35,7 +38,7 @@ test("the running counter holds each model charge once, priced as written, and s
   assert.equal(researchSpendInWindow(held, NOW).windowUsd, 1.75);
 });
 
-test("the counter is built from the ledger once, and charges past the window leave it", async () => {
+test("every ledger append records its price, and charges past the requested window are excluded", async () => {
   const repos = createMemoryRepositories();
   await repos.costs.append("wi-old", "old", charge("old", at(40), { usd: 9, requestCount: 1 }), at(40));
   await repos.costs.append("wi-in", "in", charge("in", at(5), { usd: 2, requestCount: 1 }), at(5));
@@ -45,7 +48,7 @@ test("the counter is built from the ledger once, and charges past the window lea
   assert.equal(researchSpendInWindow(await readSpendWindow(repos, NOW), NOW).windowUsd, 3);
   const later = new Date(Date.parse(NOW) + 31 * 3_600_000).toISOString();
   await recordCost(repos, charge("next-day", later, { usd: 0.5, requestCount: 1 }), later);
-  assert.deepEqual((await repos.spendWindow.mustRead(SPEND_WINDOW_ID)).value.charges.map(row => row.usd), [0.5]);
+  assert.deepEqual((await readSpendWindow(repos, later)).map(row => row.usd), [0.5]);
 });
 
 test("honest pricing: nothing sent costs zero, a lost request costs its send limit beside the measured turns", () => {
@@ -84,4 +87,24 @@ test("the cache and capacity readings come from the counter, matching the ledger
   assert.deepEqual(scoutCapacity({ ...capacity, costs: counted }), scoutCapacity({ ...capacity, costs: ledger }));
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.doesNotMatch(round, /costs\.readSince\(/);
+});
+
+
+test("file-store migration preserves held prices, replays recent costs and deletes the retired counter", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "ms01-charges-"));
+  try {
+    const now = new Date().toISOString();
+    const older = charge("held", now, { usd: 3, requestCount: 1 });
+    const missing = charge("missing", now, { usd: 0.5, requestCount: 1 });
+    const log = fileAppendOnlyRepository<CostEntry>(root, "costs");
+    await log.append(older.workItemId, costRecordId(older), older, now);
+    await log.append(missing.workItemId, costRecordId(missing), missing, now);
+    const held = { ...pricedModelCharge(older, costRecordId(older))!, usd: 0.125, knownUsd: 0.125 };
+    await fileAggregateRepository(root, "SpendWindow", "spend-window").put("model-charges", { charges: [held] }, now);
+    const repos = await createFileRepositories(root);
+    const query = { since: new Date(Date.parse(now) - 86_400_000).toISOString(), until: now };
+    assert.equal((await repos.modelCharges.totals(query)).usd, 0.625);
+    await assert.rejects(access(path.join(root, "aggregates", "spend-window")), { code: "ENOENT" });
+    assert.equal((await (await createFileRepositories(root)).modelCharges.totals(query)).usd, 0.625);
+  } finally { await rm(root, { recursive: true, force: true }); }
 });

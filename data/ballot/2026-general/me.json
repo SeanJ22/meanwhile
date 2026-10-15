@@ -9245,140 +9245,20 @@
         "The Secretary of State’s July 10, 2026 statement and Maine Supreme Judicial Court decision 2026 ME 59 confirm that An Act to Designate School Sports Participation and Facilities by Sex did not qualify for the ballot. The current official initiative inventory lists that petition and two other proposals approved for circulation; those proposals are not certified November measures.",
         "Maine has no statewide measures on the November 3, 2026 ballot. The complete official sample-ballot set published by Brunswick covers state ballot styles 70, 71 and 72 and every municipal district 1–7: all six documents, nine pages including both sides of every state ballot, contain only candidate contests. Title 21-A section 603 requires official samples to be substantially the same as regular ballots; section 906 permits state referendum questions on state or municipal ballots, and both complete sets were inspected."
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.brunswickme.gov/DocumentCenter/View/13036",
-          "sourceHash": "4fb89cee95cdee3a61d14e345015c09466a8fa03ad8eacc97713635a25da7ede",
-          "retrievedAt": "2026-10-15T00:13:32.909096+00:00",
-          "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-          "vault": {
-            "key": "project/freshness/source/www.brunswickme.gov/2026/10/15/ms-01-606b2f31e535cc93/sha256-4fb89cee95cdee3a61d14e345015c09466a8fa03ad8eacc97713635a25da7ede.pdf",
-            "byteLength": 759896,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.brunswickme.gov/DocumentCenter/View/13037",
-          "sourceHash": "9567da26204bdb8bc1d3668b7827e0b082f7eaa73f2d5d993d17bb1b868e42d7",
-          "retrievedAt": "2026-10-15T00:13:33.054664+00:00",
-          "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-          "vault": {
-            "key": "project/freshness/source/www.brunswickme.gov/2026/10/15/ms-01-e799c2e581447331/sha256-9567da26204bdb8bc1d3668b7827e0b082f7eaa73f2d5d993d17bb1b868e42d7.pdf",
-            "byteLength": 761645,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.brunswickme.gov/DocumentCenter/View/13035",
-          "sourceHash": "9124ead314254f246c86b7d76f85f2eabb9ddc3d91eef947dc054de5b0086ea6",
-          "retrievedAt": "2026-10-15T00:13:32.722953+00:00",
-          "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-          "vault": {
-            "key": "project/freshness/source/www.brunswickme.gov/2026/10/15/ms-01-34386a8a08f81513/sha256-9124ead314254f246c86b7d76f85f2eabb9ddc3d91eef947dc054de5b0086ea6.pdf",
-            "byteLength": 745901,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.brunswickme.gov/DocumentCenter/View/13055",
-          "sourceHash": "bca086532beef2d5ac8ad7541ef31b2d84ab116b04dbf042029253a8bbc87221",
-          "retrievedAt": "2026-10-15T00:13:33.234622+00:00",
-          "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-          "vault": {
-            "key": "project/freshness/source/www.brunswickme.gov/2026/10/15/ms-01-bd9fc467abda7740/sha256-bca086532beef2d5ac8ad7541ef31b2d84ab116b04dbf042029253a8bbc87221.pdf",
-            "byteLength": 242549,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.brunswickme.gov/DocumentCenter/View/13054",
-          "sourceHash": "0ea3fd2df99ca3dfcd60bcaab4516b5702d29b27fd5410ff95017b8fa2ff98ac",
-          "retrievedAt": "2026-10-15T00:13:33.396641+00:00",
-          "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-          "vault": {
-            "key": "project/freshness/source/www.brunswickme.gov/2026/10/15/ms-01-c17cb6a236d30ad0/sha256-0ea3fd2df99ca3dfcd60bcaab4516b5702d29b27fd5410ff95017b8fa2ff98ac.pdf",
-            "byteLength": 272821,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.brunswickme.gov/DocumentCenter/View/13053",
-          "sourceHash": "e0b9e4d2da334e2b87d05c6d5ad5082472410981722677d7685f30c7c4f62ff5",
-          "retrievedAt": "2026-10-15T00:13:33.541361+00:00",
-          "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-          "vault": {
-            "key": "project/freshness/source/www.brunswickme.gov/2026/10/15/ms-01-1050c2a252ef443c/sha256-e0b9e4d2da334e2b87d05c6d5ad5082472410981722677d7685f30c7c4f62ff5.pdf",
-            "byteLength": 269319,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.maine.gov/sos/elections-voting/peoples-veto-or-citizens-initiative-resources/current-citizen-initiatives-and-peoples-vetoes",
-          "sourceHash": "d75e62b3ccd3ae731faeea9c9ab50de196ecd48dde0288fb6d42fac92e449211",
-          "retrievedAt": "2026-10-14T23:54:51.030033+00:00",
-          "publisher": "Maine Secretary of State, Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.maine.gov/2026/10/14/ms-01-e9bc12aeb349868e/sha256-d75e62b3ccd3ae731faeea9c9ab50de196ecd48dde0288fb6d42fac92e449211.html",
-            "byteLength": 100727,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://www.brunswickme.gov/286/Elections",
-          "sourceHash": "bb368846416a6e60d27fa68a6d6b738667bfa1acc85f0c3510a66bc381a146f5",
-          "retrievedAt": "2026-10-15T00:10:37.044811+00:00",
-          "publisher": "Town of Brunswick Clerk",
-          "vault": {
-            "key": "project/freshness/source/www.brunswickme.gov/2026/10/15/ms-01-63dd728c477a4188/sha256-bb368846416a6e60d27fa68a6d6b738667bfa1acc85f0c3510a66bc381a146f5.html",
-            "byteLength": 214366,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://legislature.maine.gov/statutes/21-A/title21-Asec906.html",
-          "sourceHash": "3fe7e07aac3e2c701d19376011e9994423dd41973521d1f5d8a09390e9972c71",
-          "retrievedAt": "2026-10-15T00:11:39.087991+00:00",
-          "publisher": "Maine Legislature",
-          "vault": {
-            "key": "project/freshness/source/legislature.maine.gov/2026/10/15/ms-01-6b97e41259761e7d/sha256-3fe7e07aac3e2c701d19376011e9994423dd41973521d1f5d8a09390e9972c71.html",
-            "byteLength": 20560,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://legislature.maine.gov/statutes/21-A/title21-Asec603.html",
-          "sourceHash": "dafe609cd8f6b8ef33b653e5bc12bae0ccee61c357818c1b9e547c1a49a796fb",
-          "retrievedAt": "2026-10-15T00:11:40.087046+00:00",
-          "publisher": "Maine Legislature",
-          "vault": {
-            "key": "project/freshness/source/legislature.maine.gov/2026/10/15/ms-01-3233f925156356e4/sha256-dafe609cd8f6b8ef33b653e5bc12bae0ccee61c357818c1b9e547c1a49a796fb.html",
-            "byteLength": 15112,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://www.courts.maine.gov/courts/sjc/lawcourt/2026/26me059.pdf",
-          "sourceHash": "dc06a6b02c54df1a58879246b6f675725b2a1fa4b81252c627e59a07fbc935a3",
-          "retrievedAt": "2026-10-14T23:58:07.425950+00:00",
-          "publisher": "Maine Supreme Judicial Court",
-          "vault": {
-            "key": "project/freshness/source/www.courts.maine.gov/2026/10/14/ms-01-2dedb1c2ee26171d/sha256-dc06a6b02c54df1a58879246b6f675725b2a1fa4b81252c627e59a07fbc935a3.pdf",
-            "byteLength": 191929,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.maine.gov/sos/news/maine-supreme-court-affirms-secretary-states-decision-invalidate-petition-signatures-collected",
-          "sourceHash": "153cb1de3297f45673268cfe888d277359e6c5fd60fac641e84d4cdeb1dd8370",
-          "retrievedAt": "2026-10-14T23:56:57.991571+00:00",
-          "publisher": "Maine Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.maine.gov/2026/10/14/ms-01-0711d80f82850a4f/sha256-153cb1de3297f45673268cfe888d277359e6c5fd60fac641e84d4cdeb1dd8370.html",
-            "byteLength": 95808,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "ME",
+        "electionId": "me-2026-11-03",
+        "sourceHash": "aa1505d0f26a471c89ca7c7e91365de1a516265472c4adad8073a3e498aceb3d",
+        "documentCount": 12,
+        "reviewedAt": "2026-10-15T04:14:39.964726+00:00",
+        "reviewedBy": "Codex MS-01 complete official measure inventory review",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-me/2026/10/15/ms-01/sha256-aa1505d0f26a471c89ca7c7e91365de1a516265472c4adad8073a3e498aceb3d.ndjson",
+          "byteLength": 15733,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {
@@ -9437,39 +9317,6 @@
         "reviewedEvidence": "Official election publication converted from the captured response bytes."
       },
       {
-        "requestedUrl": "https://www.maine.gov/sos/elections-voting/peoples-veto-or-citizens-initiative-resources/current-citizen-initiatives-and-peoples-vetoes",
-        "finalUrl": "https://www.maine.gov/sos/elections-voting/peoples-veto-or-citizens-initiative-resources/current-citizen-initiatives-and-peoples-vetoes",
-        "httpStatus": 200,
-        "rawHash": "d75e62b3ccd3ae731faeea9c9ab50de196ecd48dde0288fb6d42fac92e449211",
-        "retrievedAt": "2026-10-14T23:54:51.030033+00:00",
-        "publisher": "Maine Secretary of State, Division of Elections",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official current initiative inventory lists the sports petition with its revised determination and two other petitions under Citizen Initiative Petitions Approved for Circulation. Neither a title nor approval to circulate establishes ballot qualification.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://www.maine.gov/sos/news/maine-supreme-court-affirms-secretary-states-decision-invalidate-petition-signatures-collected",
-        "finalUrl": "https://www.maine.gov/sos/news/maine-supreme-court-affirms-secretary-states-decision-invalidate-petition-signatures-collected",
-        "httpStatus": 200,
-        "rawHash": "153cb1de3297f45673268cfe888d277359e6c5fd60fac641e84d4cdeb1dd8370",
-        "retrievedAt": "2026-10-14T23:56:57.991571+00:00",
-        "publisher": "Maine Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "July 10, 2026 statement confirms the Supreme Judicial Court affirmed invalidation and says the sports petition did not qualify for the ballot. This supersedes the held May statement that described an appeal as pending.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://www.courts.maine.gov/courts/sjc/lawcourt/2026/26me059.pdf",
-        "finalUrl": "https://www.courts.maine.gov/courts/sjc/lawcourt/2026/26me059.pdf",
-        "httpStatus": 200,
-        "rawHash": "dc06a6b02c54df1a58879246b6f675725b2a1fa4b81252c627e59a07fbc935a3",
-        "retrievedAt": "2026-10-14T23:58:07.425950+00:00",
-        "publisher": "Maine Supreme Judicial Court",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewedEvidence": "Decision 2026 ME 59, July 10, 2026, affirms the judgment that the sports initiative petition falls below the constitutional signature threshold.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
         "requestedUrl": "https://www.brunswickme.gov/286/Elections",
         "finalUrl": "https://www.brunswickme.gov/286/Elections",
         "httpStatus": 200,
@@ -9479,94 +9326,6 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Maine has no statewide measures on the November 3, 2026 ballot. The complete official sample-ballot set published by Brunswick covers state ballot styles 70, 71 and 72 and every municipal district 1–7: all six documents, nine pages including both sides of every state ballot, contain only candidate contests. Title 21-A section 603 requires official samples to be substantially the same as regular ballots; section 906 permits state referendum questions on state or municipal ballots, and both complete sets were inspected."
-      },
-      {
-        "requestedUrl": "https://legislature.maine.gov/statutes/21-A/title21-Asec603.html",
-        "finalUrl": "https://legislature.maine.gov/statutes/21-A/title21-Asec603.html",
-        "httpStatus": 200,
-        "rawHash": "dafe609cd8f6b8ef33b653e5bc12bae0ccee61c357818c1b9e547c1a49a796fb",
-        "retrievedAt": "2026-10-15T00:11:40.087046+00:00",
-        "publisher": "Maine Legislature",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "Title 21-A section 603 requires the Secretary of State to prepare samples substantially the same as regular ballots and the municipal clerk to review them for accuracy."
-      },
-      {
-        "requestedUrl": "https://legislature.maine.gov/statutes/21-A/title21-Asec906.html",
-        "finalUrl": "https://legislature.maine.gov/statutes/21-A/title21-Asec906.html",
-        "httpStatus": 200,
-        "rawHash": "3fe7e07aac3e2c701d19376011e9994423dd41973521d1f5d8a09390e9972c71",
-        "retrievedAt": "2026-10-15T00:11:39.087991+00:00",
-        "publisher": "Maine Legislature",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "Title 21-A section 906 permits statewide referendum questions on either state-candidate or municipal ballots, requires an affirmative/negative choice, and requires every question to be numbered sequentially. The complete reviewed corpus includes both state and municipal ballots."
-      },
-      {
-        "requestedUrl": "https://www.brunswickme.gov/DocumentCenter/View/13035",
-        "finalUrl": "https://www.brunswickme.gov/DocumentCenter/View/13035/District-99-Sample-Ballot?bidId=",
-        "httpStatus": 200,
-        "rawHash": "9124ead314254f246c86b7d76f85f2eabb9ddc3d91eef947dc054de5b0086ea6",
-        "retrievedAt": "2026-10-15T00:13:32.722953+00:00",
-        "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "November 3, 2026 official sample ballot, part of the complete six-document Brunswick state and municipal ballot corpus. Every page was inspected and contains candidate contests only; there is no referendum question."
-      },
-      {
-        "requestedUrl": "https://www.brunswickme.gov/DocumentCenter/View/13036",
-        "finalUrl": "https://www.brunswickme.gov/DocumentCenter/View/13036/District-100-Sample-Ballot?bidId=",
-        "httpStatus": 200,
-        "rawHash": "4fb89cee95cdee3a61d14e345015c09466a8fa03ad8eacc97713635a25da7ede",
-        "retrievedAt": "2026-10-15T00:13:32.909096+00:00",
-        "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "November 3, 2026 official sample ballot, part of the complete six-document Brunswick state and municipal ballot corpus. Every page was inspected and contains candidate contests only; there is no referendum question."
-      },
-      {
-        "requestedUrl": "https://www.brunswickme.gov/DocumentCenter/View/13037",
-        "finalUrl": "https://www.brunswickme.gov/DocumentCenter/View/13037/District-101-Sample-Ballot?bidId=",
-        "httpStatus": 200,
-        "rawHash": "9567da26204bdb8bc1d3668b7827e0b082f7eaa73f2d5d993d17bb1b868e42d7",
-        "retrievedAt": "2026-10-15T00:13:33.054664+00:00",
-        "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "November 3, 2026 official sample ballot, part of the complete six-document Brunswick state and municipal ballot corpus. Every page was inspected and contains candidate contests only; there is no referendum question."
-      },
-      {
-        "requestedUrl": "https://www.brunswickme.gov/DocumentCenter/View/13055",
-        "finalUrl": "https://www.brunswickme.gov/DocumentCenter/View/13055/Town-Districts-1234--6?bidId=",
-        "httpStatus": 200,
-        "rawHash": "bca086532beef2d5ac8ad7541ef31b2d84ab116b04dbf042029253a8bbc87221",
-        "retrievedAt": "2026-10-15T00:13:33.234622+00:00",
-        "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "November 3, 2026 official sample ballot, part of the complete six-document Brunswick state and municipal ballot corpus. Every page was inspected and contains candidate contests only; there is no referendum question."
-      },
-      {
-        "requestedUrl": "https://www.brunswickme.gov/DocumentCenter/View/13054",
-        "finalUrl": "https://www.brunswickme.gov/DocumentCenter/View/13054/Town-District-5?bidId=",
-        "httpStatus": 200,
-        "rawHash": "0ea3fd2df99ca3dfcd60bcaab4516b5702d29b27fd5410ff95017b8fa2ff98ac",
-        "retrievedAt": "2026-10-15T00:13:33.396641+00:00",
-        "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "November 3, 2026 official sample ballot, part of the complete six-document Brunswick state and municipal ballot corpus. Every page was inspected and contains candidate contests only; there is no referendum question."
-      },
-      {
-        "requestedUrl": "https://www.brunswickme.gov/DocumentCenter/View/13053",
-        "finalUrl": "https://www.brunswickme.gov/DocumentCenter/View/13053/Town-District-7?bidId=",
-        "httpStatus": 200,
-        "rawHash": "e0b9e4d2da334e2b87d05c6d5ad5082472410981722677d7685f30c7c4f62ff5",
-        "retrievedAt": "2026-10-15T00:13:33.541361+00:00",
-        "publisher": "Maine Secretary of State; Town of Brunswick Clerk",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "November 3, 2026 official sample ballot, part of the complete six-document Brunswick state and municipal ballot corpus. Every page was inspected and contains candidate contests only; there is no referendum question."
       }
     ]
   }

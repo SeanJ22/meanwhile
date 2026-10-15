@@ -1,13 +1,3 @@
-/**
- * Atomic claim, lease and disposition over durable state. Domain rules live in attempt.ts, route-task.ts,
- * work-item.ts and completion.ts; this module adds only what a pure function cannot:
- *   1. Claims are a conditional write to the lease slot (one slot per RouteTask), lock-free on purpose.
- *   2. Lease renewal checks ownership here; `heartbeat()` can only check expiry.
- *   3. A disposition is committed as one append, and the two aggregate writes apply that commit;
- *      `reconcile()` finishes any commit whose writes did not land.
- * Nothing in the disposition path reads a budget or cost. Time is always a parameter.
- */
-
 import {
   AttemptContract,
   beginAttempt,
@@ -31,7 +21,7 @@ import {
 } from "../budget.ts";
 import type { CompletionSnapshot } from "../completion.ts";
 import { costEntryWithModel, type CostEntry } from "../cost.ts";
-import { costRecordId, countCharge } from "../spend-window.ts";
+import { costRecordId } from "../spend-window.ts";
 import { fingerprint } from "../ids.ts";
 import {
   disposeRoute,
@@ -156,10 +146,6 @@ export interface ClaimOutcome {
   readonly task: Persisted<RouteTask>;
 }
 
-/**
- * Lock-free: the race is one conditional write to the lease slot. Both storage refusals become
- * `LeaseConflict`. A disposed task is refused with `RouteTaskSettled` before the slot is touched.
- */
 export async function claimRouteTask(
   repos: ControlPlaneRepositories,
   input: {
@@ -326,10 +312,7 @@ export async function recordArtifactMetadata(
     return await repos.artifacts.append(record.workItemId, record.artifactId, record, now);
   } catch (error) {
     if (!(error instanceof AppendOnlyViolation)) throw error;
-    /*
-     * An artifact id is content-derived, so a byte-identical re-record under a new Attempt is an idempotent
-     * success and the first attribution stands. The same id with different content is re-thrown.
-     */
+
     const held = await repos.artifacts.read(record.workItemId);
     const position = held.findIndex((a) => a.artifactId === record.artifactId);
     const prior = position >= 0 ? held[position] : undefined;
@@ -362,11 +345,6 @@ export interface ReclaimOutcome {
   readonly settled: boolean;
 }
 
-/**
- * The only evidence of death is a lease that stopped being renewed. The abandoned Attempt closes as
- * LEASE_EXPIRED with a named reason, never COMPLETED and never with a disposition; its partial artifacts
- * stay attributed to it.
- */
 export async function reclaimRouteTask(
   repos: ControlPlaneRepositories,
   input: { routeTaskId: string; now: string; observedBy: string },
@@ -436,10 +414,6 @@ export async function reclaimRouteTask(
   return { task: persistedTask, closed, settled: false };
 }
 
-/**
- * A live worker that gave up: the Attempt closes under a non-disposition outcome, partial artifacts are
- * kept, the RouteTask returns to RECLAIMABLE and the lease is released now. The route stays owed.
- */
 export async function abandonAttempt(
   repos: ControlPlaneRepositories,
   input: {
@@ -522,15 +496,6 @@ export interface DisposeOutcome {
   readonly committed: boolean;
 }
 
-/**
- * Order matters:
- *   1. Read both aggregates.
- *   2. Compare-and-set precondition on the RouteTask revision the caller read (stale-writer refusal).
- *   3. Lease ownership, an independent guard.
- *   4. The domain computes both next values; every refusal fires before anything is written.
- *   5. One append commits the pair.
- *   6. The aggregate writes apply the commit and are replayable via `reconcile()`.
- */
 export async function disposeRouteTask(
   repos: ControlPlaneRepositories,
   input: {
@@ -762,7 +727,6 @@ export async function recordCost(
   const recorded = costEntryWithModel({ ...entry,
     ...(entry.cost.modelRequestCount === undefined ? {} : { costPolicy: "R7" as const }) }, entry.model ?? null);
   const appended = await repos.costs.append(entry.workItemId, costRecordId(entry), recorded, now);
-  await countCharge(repos, recorded, now);
   return appended;
 }
 
@@ -796,9 +760,7 @@ export async function loadCompletionSnapshot(
     contradictions: input.contradictions ?? [],
     upstreamStates: input.upstreamStates ?? new Map<string, WorkItemState>(),
     denominatorComplete: input.denominatorComplete ?? null,
-    /* Absent input is an EMPTY set, never a permissive one: a caller that did
-       not read the canonical run records has not proven a verdict, and the
-       contract clause refuses on exactly that. */
+
     instrumentGreens: input.instrumentGreens ?? new Set<string>(),
     now: input.now,
   };

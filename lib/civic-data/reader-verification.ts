@@ -89,6 +89,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
+    case "ballot-measures": return "lib/ballot/place-measures.ts#readPlaceMeasureProjection";
     case "plain-english-translations": return "lib/translate/projection-reader.ts#readTranslationProjection";
     case "special-district-boundaries": return "lib/registry/special-district-boundary-reader.ts#readSpecialDistrictBoundaries";
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
@@ -291,6 +292,12 @@ export async function verifyRoutineReaderProjection(
       case "ballot-contests": {
         const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
         return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
+      }
+      case "ballot-measures": {
+        const { readPlaceMeasureProjection, PLACE_MEASURE_SCOPE, isPlaceMeasureScope } = await import("../ballot/place-measures.ts");
+        if (!options.scope || !isPlaceMeasureScope(options.scope)) return fail(verifierId, "Local measure readback requires its exact place.");
+        return verifyExactVersion(verifierId, await readPlaceMeasureProjection(options.scope.slice(PLACE_MEASURE_SCOPE.length + 1), {
+          store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "place-ballot-measures");
       }
       case "plain-english-translations": {
         const { readTranslationProjection } = await import("../translate/projection-reader.ts");

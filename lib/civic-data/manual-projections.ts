@@ -10,6 +10,7 @@ import { publicRecordIssue } from "./public-record-contract.ts";
 import { governmentBudgetIssue } from "./government-budget-contract.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
+import { placeMeasureProblems, type PlaceMeasureProjection } from "../ballot/place-measures.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
 import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
@@ -59,6 +60,7 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "government-budgets",
   "campaign-finance",
   "ballot-contests",
+  "ballot-measures",
   "az-sos-ballot",
   "nh-curated-ballot",
   "candidate-profiles",
@@ -116,6 +118,7 @@ export interface CuratedReaderProjection {
 export type ManualProjectionPayload =
   | TranslationProjection
   | GenericBallotProjection
+  | PlaceMeasureProjection
   | AzBallotProjection
   | NhBallotProjection
   | CandidateProfilesProjection
@@ -184,7 +187,7 @@ function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetRecei
   const held = object(payload);
   const citations = held?.kind === "ballot-navigation"
     ? new Set(rows(held, "records").flatMap(row => manualRecordSourceUrls(row)))
-    : held?.kind === "ballot-contests" ? ballotProvenanceUrls(payload) : directPositiveSourceUrls(payload);
+    : held?.kind === "ballot-contests" || held?.kind === "ballot-measures" ? ballotProvenanceUrls(payload) : directPositiveSourceUrls(payload);
   const missing = [...citations].filter((url) => !receipted.has(url)).sort();
   return missing.map((url) => `The projection cites ${url} without exact-byte evidence in the reviewed source set.`);
 }
@@ -197,11 +200,11 @@ export function ballotProvenanceUrls(value: unknown): Set<string> {
   return new Set([...[url, documentUrl].filter(Boolean), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
 }
 
-export function mergeBallotSourceReferences(next: BallotSet, before?: BallotSet): Pick<BallotSet, "sourceAuthorities" | "sourceDocuments"> {
-  const merged: Pick<BallotSet, "sourceAuthorities" | "sourceDocuments"> = {};
-  for (const field of ["sourceAuthorities", "sourceDocuments"] as const) {
-    if (next[field] === undefined && before?.[field] === undefined) continue;
-    merged[field] = [...new Map([...before?.[field] ?? [], ...next[field] ?? []]
+export function mergeBallotSourceReferences(next: BallotSet, before?: BallotSet): Pick<BallotSet, "sourceAuthorities" | "sourceCorpus"> {
+  const merged: Pick<BallotSet, "sourceAuthorities" | "sourceCorpus"> = {};
+  if (next.sourceCorpus || before?.sourceCorpus) merged.sourceCorpus = next.sourceCorpus ?? before?.sourceCorpus;
+  if (next.sourceAuthorities !== undefined || before?.sourceAuthorities !== undefined) {
+    merged.sourceAuthorities = [...new Map([...before?.sourceAuthorities ?? [], ...next.sourceAuthorities ?? []]
       .sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt))
       .map(source => [source.vault.key, source])).values()];
   }
@@ -641,7 +644,8 @@ function plainEnglishProjection(payload: ManualProjectionPayload): BuiltProjecti
 }
 
 function genericBallotProjection(payload: ManualProjectionPayload): BuiltProjection {
-  const value = payload as GenericBallotProjection;
+  const value = payload as GenericBallotProjection | PlaceMeasureProjection;
+  const problems = value.kind === "ballot-measures" ? placeMeasureProblems(value) : genericBallotProblems(value);
   const ballots = Object.values(value?.ballots ?? {});
   const records = ballots.flatMap(ballot => [
     ...ballot.contests.map(record => ({ key: `contest:${record.id}`, record })),
@@ -660,8 +664,8 @@ function genericBallotProjection(payload: ManualProjectionPayload): BuiltProject
     ...(ballot.measureRecords ?? []).map(row => ({ subjectId: row.contestId, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
   ]), missingRequiredFields: records.length ? [] : ["ballots.contests/candidacies"],
-    violations: genericBallotProblems(value), schemaVersion: "ballot-contests:1",
-    consumerChecks: [{ consumer: "generic state/election ballot Reader", passed: records.length > 0 && genericBallotProblems(value).length === 0,
+    violations: problems, schemaVersion: "ballot-contests:1",
+    consumerChecks: [{ consumer: "scoped election ballot Reader", passed: records.length > 0 && problems.length === 0,
       detail: `${ballots.length} state/election ballot(s) with independently verified contests and candidates.` }],
     factKind: "sourced official ballot contests and candidates" };
 }
@@ -1019,7 +1023,7 @@ export function manualProjectionCandidate(
   // Ballot candidacies and their contest evidence must remain in one source version.
   const built = input.contractId === "plain-english-translations"
     ? plainEnglishProjection(payload)
-    : input.contractId === "ballot-contests"
+    : input.contractId === "ballot-contests" || input.contractId === "ballot-measures"
     ? genericBallotProjection(payload)
     : input.contractId === "az-sos-ballot" || input.contractId === "nh-curated-ballot"
     ? ballotProjection(input.contractId, payload)

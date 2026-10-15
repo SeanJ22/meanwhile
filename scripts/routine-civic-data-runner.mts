@@ -111,6 +111,7 @@ import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publicat
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
+import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
@@ -383,22 +384,29 @@ function safeFailure(value: string): string {
 async function runMeasureTranslationPass(): Promise<SupervisorFailure | null> {
   if (PUBLISH_NOW || ONLY !== null) return null;
   const contract = requiredManualProductionContract("plain-english-translations");
+  let failure: SupervisorFailure | null = null;
   try {
-    const [run] = await runBoundedChildPass([{
-      id: contract.id,
+    await runBoundedChildPass(US_JURISDICTIONS.filter(state => state.prefix !== "territory").map(state => ({
+      id: `${contract.id}:${state.usps}`,
       executable: process.execPath,
-      args: ["--experimental-strip-types", ...contract.command],
+      args: ["--experimental-strip-types", ...contract.command, `--state=${state.usps}`],
       env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT",
         contract: contract.id, parentPid: process.pid }),
-    }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
-      maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
-    if (!run) throw new Error("The measure translation process returned no result.");
-    if (run.stdout.trim()) console.log(run.stdout.trim());
-    if (run.stderr.trim()) console.warn(safeFailure(run.stderr));
-    const failure = boundedExecutionFailure(run);
-    if (failure) return failure;
-    return run.status === 0 ? null : { taskId: contract.id, code: "TRANSLATION_CHILD_EXIT_NONZERO",
-      detail: childFatalLine(run.stdout) ?? safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`) };
+    })), { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+      maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1, discardOutputAfterSettlement: true,
+      onStarting: acquireChildMemory,
+      onSettled: run => {
+        try {
+          if (run.stdout.trim()) console.log(run.stdout.trim());
+          if (run.stderr.trim()) console.warn(safeFailure(run.stderr));
+          const issue = boundedExecutionFailure(run) ?? (run.status === 0 ? null : {
+            taskId: run.id, code: "TRANSLATION_CHILD_EXIT_NONZERO",
+            detail: childFatalLine(run.stdout) ?? safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`),
+          });
+          if (issue) { failure ??= issue; console.error(`RCD_TASK ${run.id}: ${issue.code} — ${issue.detail}`); }
+        } finally { releaseChildMemory(run.id); }
+      } });
+    return failure;
   } catch (error) {
     return { taskId: contract.id, code: "TRANSLATION_PASS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) };
   }

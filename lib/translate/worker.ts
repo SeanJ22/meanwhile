@@ -15,8 +15,8 @@ import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-record
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { registeredKind } from "../registry/kinds.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { costRecordId, countCharge } from "../control-plane/spend-window.ts";
-type TranslationCostRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "costs" | "spendWindow">;
+import { costRecordId } from "../control-plane/spend-window.ts";
+type TranslationCostRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "costs">;
 export type MeasureTranslationRepos = TranslationCostRepos & Pick<ControlPlaneRepositories, "adminConfig">;
 import { translationHash, translationScope, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 
@@ -51,7 +51,8 @@ async function loadTranslationPlaybook(repos: FieldManualRepos) {
 }
 
 /** Preserve each writer/checker charge even when its proposed translation is rejected. */
-function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTransport, subjectId: string, routeTaskId: string | null = null): ModelTransport {
+function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTransport, subjectId: string, jurisdiction: string, routeTaskId: string | null = null,
+  onCostRecorded?: (response: ModelResponse) => void): ModelTransport {
   return async request => {
     const started = performance.now();
     const response = await send(request);
@@ -59,14 +60,14 @@ function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTra
     const at = new Date().toISOString(), id = `translation:${randomUUID()}`;
     const checker = request.tools[0]?.name.startsWith("check_") === true;
     const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId, routeId: "plain-english-translation",
-      source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
+      source: "api.anthropic.com", jurisdiction, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
       costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
       cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
         inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
         outputTokens: usage.outputTokens, usd: priceMeteredUsage(response.model, usage, "1h").usd,
         durationMs: Math.round(performance.now() - started) } }, response.model);
     await repos.costs.append(subjectId, costRecordId(entry), entry, at);
-    await countCharge(repos, entry, at);
+    onCostRecorded?.(response);
     return response;
   };
 }
@@ -138,7 +139,7 @@ export async function translateText(input: {
     input_schema: { type: "object", required: ["text", "sentences"], properties: {
       text: { type: "string" }, sentences: writerTool.input_schema.properties.sentences,
     } } };
-  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.subjectId, state: subject.state }), subject.subjectId);
+  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.subjectId, state: subject.state }), subject.subjectId, subject.ocdId);
   const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: (subject.kind === "AGENDA" || subject.kind === "MINUTES") && !input.batchPriority ? "LIVE_REFRESH" : "TRANSLATOR", priority: input.batchPriority },
     model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
@@ -171,7 +172,8 @@ export async function translateMeasure(input: {
   readonly sourceReference: MeasureSourceReference;
   readonly subject: { readonly contestId: string; readonly title: string; readonly ocdId: string; readonly state: string; readonly prior: MeasureRecord | null;
     readonly ballotQuestion?: { readonly text: string; readonly sourceUrl: string } };
-  readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
+  readonly transportFor: (subject: { subjectId: string; state: string; ocdId: string }) => ModelTransport;
+  readonly onCostRecorded?: (response: ModelResponse) => void;
   readonly now: string;
 }) {
   const { evidence, subject, now } = input;
@@ -181,7 +183,8 @@ export async function translateMeasure(input: {
       subject.prior !== null && subject.prior.sourceUrl !== evidence.canonicalUrl ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Translation source is incomplete or does not name this measure.");
   const playbook = await loadTranslationPlaybook(input.repos);
-  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId, translationScope(subject.ocdId));
+  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state, ocdId: subject.ocdId }),
+    subject.contestId, subject.ocdId, translationScope(subject.ocdId), input.onCostRecorded);
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: "TRANSLATOR", priority: input.batchPriority },
     model, max_tokens: 8192, ...scoutThinkingOptions("medium"),

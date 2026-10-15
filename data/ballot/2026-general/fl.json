@@ -11526,118 +11526,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/5019/Analyses/h5019z1.BUC.PDF",
-          "sourceHash": "ca53fe9a5bcad74f61f4344c63008addd81d0ec1eaa6befff97d77eecf9423d7",
-          "retrievedAt": "2026-10-15T00:00:09.466194+00:00",
-          "publisher": "Florida Legislature and Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-b6e2073e23d8b5a1/sha256-ca53fe9a5bcad74f61f4344c63008addd81d0ec1eaa6befff97d77eecf9423d7.pdf",
-            "byteLength": 517945,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/1215/Analyses/h1215z.WMC.PDF",
-          "sourceHash": "be6c20c3059d152f25677b2e4e4e8fbfe063eefc65b94fa84a97238f2c6df156",
-          "retrievedAt": "2026-10-15T00:00:09.132252+00:00",
-          "publisher": "Florida Legislature and Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-fef2b431dc2850e0/sha256-be6c20c3059d152f25677b2e4e4e8fbfe063eefc65b94fa84a97238f2c6df156.pdf",
-            "byteLength": 451941,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026F/1/Analyses/h0001z.SAC.PDF",
-          "sourceHash": "c64e45cca764cb8d1edd1b1072920f5dbde8eb5d626ddee7939e547f11d8c5b5",
-          "retrievedAt": "2026-10-15T00:00:50.907625+00:00",
-          "publisher": "Florida Legislature and Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.flsenate.gov/2026/10/15/ms-01-38d9222b23851aea/sha256-c64e45cca764cb8d1edd1b1072920f5dbde8eb5d626ddee7939e547f11d8c5b5.pdf",
-            "byteLength": 548255,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
-          "sourceHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
-          "retrievedAt": "2026-10-14T23:52:26.933108+00:00",
-          "publisher": "Florida Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-4ab5282e3af3f1b8/sha256-b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587.pdf",
-            "byteLength": 129617,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
-          "sourceHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
-          "retrievedAt": "2026-10-14T23:52:26.760742+00:00",
-          "publisher": "Florida Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-f86418b648890772/sha256-409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae.pdf",
-            "byteLength": 111435,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
-          "sourceHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
-          "retrievedAt": "2026-10-14T23:52:26.827581+00:00",
-          "publisher": "Florida Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/initiativepetitions.dos.fl.gov/2026/10/14/ms-01-070bd5167f3394db/sha256-b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6.pdf",
-            "byteLength": 158181,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
-          "sourceHash": "3d767ec1add6f557da61b581214b794abb5fb6c806e5ba2e3ff12b4d891d5c62",
-          "retrievedAt": "2026-10-14T23:53:06.228775+00:00",
-          "publisher": "Florida Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-461964f7716dc0ac/sha256-3d767ec1add6f557da61b581214b794abb5fb6c806e5ba2e3ff12b4d891d5c62.html",
-            "byteLength": 18392,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
-          "sourceHash": "4addbda0e4d806a05ee66c525089199da918ab66eb0ea1352d453c24a58bb649",
-          "retrievedAt": "2026-10-14T23:53:06.273706+00:00",
-          "publisher": "Florida Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-2433f20220be3ff7/sha256-4addbda0e4d806a05ee66c525089199da918ab66eb0ea1352d453c24a58bb649.html",
-            "byteLength": 18435,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
-          "sourceHash": "b27e9c689eafdf8a44064aaf9cdd4dd6f1dfc2b9345970f1481abbb102a1feaa",
-          "retrievedAt": "2026-10-14T23:53:06.104619+00:00",
-          "publisher": "Florida Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/constitutionalinitiatives.dos.fl.gov/2026/10/14/ms-01-640c0d8fb349f101/sha256-b27e9c689eafdf8a44064aaf9cdd4dd6f1dfc2b9345970f1481abbb102a1feaa.html",
-            "byteLength": 19873,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://dos.fl.gov/elections/laws-rules/constitutional-amendmentsinitiatives",
-          "sourceHash": "b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a",
-          "retrievedAt": "2026-10-14T23:59:43.023289+00:00",
-          "publisher": "Florida Legislature and Division of Elections",
-          "vault": {
-            "key": "project/freshness/source/dos.fl.gov/2026/10/14/ms-01-9d0461dbaedce3fc/sha256-b67af716178cde048e62b24e24005a6d4b6c0a315b24b2ad92b0a882c8d3122a.html",
-            "byteLength": 31881,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "FL",
+        "electionId": "fl-2026-11-03-general",
+        "sourceHash": "2d10eaa961b3830510bb725e8bbc64d2cd420ee19254ea5bdb62389f45591df5",
+        "documentCount": 10,
+        "reviewedAt": "2026-10-15T04:14:39.791182+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-fl/2026/10/15/ms-01/sha256-2d10eaa961b3830510bb725e8bbc64d2cd420ee19254ea5bdb62389f45591df5.ndjson",
+          "byteLength": 11715,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

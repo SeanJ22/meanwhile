@@ -9,14 +9,8 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 
 import {
-  ensureReaderAuthorityEdge,
-  publishReaderEdgeArtifacts,
-  readReaderManifest,
-  READER_MANIFEST_CACHE_TAG,
-  READER_MANIFEST_MEMO_MS,
-  READER_MAP_AUTHORITY_FAMILIES,
-  type PublishAuthority,
-} from "../lib/meetings/edge-serving.ts";
+  ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, readReaderManifest, READER_MANIFEST_MEMO_MS, READER_MAP_AUTHORITY_FAMILIES, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
+import { READER_MANIFEST_CACHE_TAG } from "../lib/meetings/edge-blob-store.ts";
 
 import { stateOfOcdId, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
 

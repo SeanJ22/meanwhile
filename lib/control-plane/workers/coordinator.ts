@@ -1,5 +1,5 @@
 import { BOX_PARSER_IMPLEMENTATION } from "./quoted-proof.ts";
-import { readSpendWindow } from "../spend-window.ts";
+import { readRollingModelSpend } from "../spend-window.ts";
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST, type Attempt } from "../attempt.ts";
@@ -8,7 +8,7 @@ import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from
 import { isControlPlaneRequestTimeout } from "../repository/request-bounds.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
 import { dispatchOne, hunterWallLimitMs, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
-import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { ceilingPermits } from "../scheduler/research-policy.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { LINEAGE_ARTIFACT_FIELDS, selectStandingLineages, type LineageArtifact } from "./standing-lineage.ts";
@@ -52,9 +52,6 @@ export function autonomousCycleAllowed(input: { readonly dry: boolean; readonly 
   return !input.dry && !input.canary && input.only === null && input.ids === null && !input.runnerPaused;
 }
 
-/** Exact immutable instruction lineage for an early technical slice. An old
- * occurrence can predate ownerInstructions on its WorkItem, but a later Send
- * on the same obligation cannot retroactively assign it to that instruction. */
 export function exactInstructionAutonomousWorkIds(input: {
   obligations: readonly FreshnessObligation[]; occurrences: readonly FreshnessOccurrence[];
   workItems: readonly WorkItem[]; assignmentKey: string; receiptId: string;
@@ -400,9 +397,9 @@ export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: Re
 export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRuntime, task: RouteTask): Promise<DispatchResult> {
   if (task.workerTask) return dispatchWorkerTask(runtime, task);
   const now = runtime.now ?? (() => new Date().toISOString());
-  const spend=researchSpendInWindow(await readSpendWindow(runtime.repos,now()),now());
+  const spend=await readRollingModelSpend(runtime.repos,now());
   const item=(await runtime.repos.workItems.mustRead(task.workItemId)).value; const plan=item.autonomousPlan!;
-  const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!ceilingPermits(spend.windowUsd,runtime.rollingCeilingUsd ?? 0).permits?"SCOUT_COST_CEILING":null;
+  const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!ceilingPermits(spend.usd,runtime.rollingCeilingUsd ?? 0).permits?"SCOUT_COST_CEILING":null;
   const executor:DeclaredExecutor=denial?{lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"unavailable",version:FLEET_POLICY_VERSION,instance:holder}),run:async()=>({kind:"ABORTED",ranAs:"BOUNDED_MODEL_WORKER",failureOutcome:"DENIED_BY_POLICY",endedAt:now(),cost:{...ZERO_COST,requestCount:0,inputTokens:0,outputTokens:0,usd:0},detail:`DENIED_BY_POLICY:${denial}`})}:await runtime.scoutFor!(item,task);
   // Charge the exact standing obligation that opened this WorkItem, with its Send marks.
   const owner = await owningObligation(runtime.repos, item.id, task.id);

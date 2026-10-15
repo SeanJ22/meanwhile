@@ -20,11 +20,14 @@ import { readManualProjectionPrior, manualProjectionCandidate, completeOfficialB
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
+import { readMeasureRegistry, workerBallotMeasuresPackage } from "./worker-ballot-measures.ts";
 import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
-import { validateBallotMeasureEvidence } from "../ballot/measure-evidence.ts";
 import { netlifyEvidenceStoreFromEnv } from "../control-plane/evidence/netlify-store.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { manualPayloadScope } from "./scoped-manual-contracts.ts";
+import { requiredManualProductionContract } from "./manual-contracts.ts";
+import type { PlaceMeasureProjection } from "../ballot/place-measures.ts";
+import { publishPlaceReaderEdgeOutcome } from "./place-edge-publication.ts";
 
 const words = (value: unknown) => String(value ?? "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const text = (value: unknown) => typeof value === "string" ? value : "";
@@ -96,10 +99,10 @@ export function workerBallotContestsPackage(input: {
 }
 
 export function mergeBallotContests(input: ManualProjectionPackage, prior: ManualProjectionPrior | null): ManualProjectionPackage {
-  const fresh = input.payload as GenericBallotProjection;
-  const previous = prior?.payload as GenericBallotProjection | undefined;
+  const fresh = input.payload as GenericBallotProjection | PlaceMeasureProjection;
+  const previous = prior?.payload as GenericBallotProjection | PlaceMeasureProjection | undefined;
   const ballots = { ...previous?.ballots };
-  const complete = new Set(completeOfficialBallotContests(fresh, input.sourceReceipt).map(row => row.contest.id));
+  const complete = new Set(completeOfficialBallotContests({ ...fresh, kind: "ballot-contests" }, input.sourceReceipt).map(row => row.contest.id));
   for (const ballot of Object.values(fresh.ballots)) {
     const key = ballotElectionKey(ballot), before = ballots[key];
     const ids = new Set(ballot.contests.map(row => row.id));
@@ -141,7 +144,7 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
   const urls = ballotProvenanceUrls({ ballots });
 
   const sources = [...input.sourceReceipt.sources, ...prior?.sourceReceipt.sources ?? []].filter(row => urls.has(row.finalUrl) || urls.has(row.requestedUrl));
-  return { ...input, payload: { kind: "ballot-contests", ballots }, sourceReceipt: { ...input.sourceReceipt,
+  return { ...input, payload: { ...fresh, ballots }, sourceReceipt: { ...input.sourceReceipt,
     sources: sources.filter((source, at) => sources.findIndex(row => row.finalUrl === source.finalUrl && row.rawHash === source.rawHash) === at) } };
 }
 
@@ -173,32 +176,33 @@ export async function publishWorkerBallotContestsResults(input: {
           .map(row => readCapture(row.artifactId, results).catch(() => null)));
         captures.push(...fetched.filter((capture): capture is WorkerPublicationCapture => capture !== null));
       }
-      const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results,
-        registry: await readRegistryRuntimePrior(input.store, input.now) });
-      const prior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
+      const checked = plan.contract.recordClass === "BALLOT_MEASURE"
+        ? workerBallotMeasuresPackage({ plan, parser, captures, now: input.now, results, registry: await readMeasureRegistry(plan) })
+        : workerBallotContestsPackage({ plan, parser, captures, now: input.now, results, registry: await readRegistryRuntimePrior(input.store, input.now) });
+      const contractId = checked.package.contractId;
+      const contract = requiredManualProductionContract(contractId);
+      const scope = manualPayloadScope(contractId, contract.scope, checked.package.payload);
+      const prior = await readManualProjectionPrior(contractId, input.store, input.now, scope);
       const merged = mergeBallotContests(checked.package, prior);
-      if (plan.contract.recordClass === "BALLOT_MEASURE") {
-        const evidenceStore = input.evidenceStore ?? netlifyEvidenceStoreFromEnv();
-        requirePublication(evidenceStore, "MEASURE_EVIDENCE_VAULT_UNAVAILABLE");
-        for (const key of Object.keys((checked.package.payload as GenericBallotProjection).ballots)) {
-          await validateBallotMeasureEvidence((merged.payload as GenericBallotProjection).ballots[key], evidenceStore,
-            (prior?.payload as GenericBallotProjection | undefined)?.ballots[key]);
-        }
-      }
       const candidate = manualProjectionCandidate(merged);
       candidateId = candidate.id; verified = true;
       const contests = Object.values((checked.package.payload as GenericBallotProjection).ballots).flatMap(ballot => ballot.contests);
       const before = Object.values((prior?.payload as GenericBallotProjection | undefined)?.ballots ?? {}).flatMap(ballot => ballot.contests);
       const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
         accepted: contests.map(contest => ({ recordId: contest.id, readerId: contest.id, value: contest, previous: before.find(old => old.id === contest.id) })) });
-      const published = await processRegisteredManualCandidate(input.store, "ballot-contests", candidate, input.now, prior?.versionId ?? null);
+      const published = await processRegisteredManualCandidate(input.store, contractId, candidate, input.now, prior?.versionId ?? null,
+        { vault: input.evidenceStore ?? netlifyEvidenceStoreFromEnv() ?? undefined });
       if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "CHECKED", records: contests.length, changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       requirePublication(published.promoted && published.readerReadback?.status === "PASS", `BALLOT_READER_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);
       versionId = published.promoted.versionId;
+      if (contractId === "ballot-measures") {
+        const edge = await publishPlaceReaderEdgeOutcome(input.store, input.now, [{ recordClass: "BALLOT_CANDIDACY", scope }]);
+        requirePublication(edge.ok, `MEASURE_READER_EDGE_HELD:${edge.detail}`);
+      }
       requirePublication(plan.contract.schemaVersion === 2, "BALLOT_CONTRACT_UNRESOLVED");
       const state = plan.contract.jurisdiction.state.toUpperCase();
-      await publishOfficialBallotCandidacies({ store: input.store, now: input.now, sourceReceipt: merged.sourceReceipt,
+      if (plan.contract.recordClass !== "BALLOT_MEASURE") await publishOfficialBallotCandidacies({ store: input.store, now: input.now, sourceReceipt: merged.sourceReceipt,
         ballots: Object.values((merged.payload as GenericBallotProjection).ballots).filter(ballot => ballot.election.state === state) });
       await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: contests.length, changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);

@@ -29,7 +29,8 @@ export async function runMeasureTranslation(input: {
   readonly subject: Parameters<typeof translateMeasure>[0]["subject"];
   readonly primary: WorkerPublicationCapture;
   readonly captures: readonly WorkerPublicationCapture[];
-  readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
+  readonly transportFor: (subject: { subjectId: string; state: string; ocdId: string }) => ModelTransport;
+  readonly onCostRecorded?: Parameters<typeof translateMeasure>[0]["onCostRecorded"];
   readonly now: string;
 }) {
   const usage: Awaited<ReturnType<typeof translateMeasure>>["usage"] = [];

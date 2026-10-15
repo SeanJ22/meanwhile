@@ -6301,52 +6301,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://apps.legislature.ky.gov/recorddocuments/note/26RS/sb10/LM.pdf",
-          "sourceHash": "a06c4b9b2caaec4daebf44038075b62783847e9743df828969814e990485c6ba",
-          "retrievedAt": "2026-10-15T00:13:09.961105+00:00",
-          "publisher": "Kentucky Legislative Research Commission",
-          "vault": {
-            "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/15/ms-01-d4e54623e2d3dd7b/sha256-a06c4b9b2caaec4daebf44038075b62783847e9743df828969814e990485c6ba.pdf",
-            "byteLength": 87100,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
-          "sourceHash": "6f92a581df88ec616d6ab1d4745471193202e2384c5d951df610c7755c90c2f8",
-          "retrievedAt": "2026-10-14T23:53:06.857729+00:00",
-          "publisher": "Kentucky Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.ky.gov/2026/10/14/ms-01-fc659bda06595557/sha256-6f92a581df88ec616d6ab1d4745471193202e2384c5d951df610c7755c90c2f8.html",
-            "byteLength": 67911,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
-          "sourceHash": "075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f",
-          "retrievedAt": "2026-10-14T23:52:28.017078+00:00",
-          "publisher": "Kentucky Legislative Research Commission",
-          "vault": {
-            "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-9234de83dadb11fe/sha256-075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f.pdf",
-            "byteLength": 22080,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://apps.legislature.ky.gov/Law/Constitution/Constitution/ViewConstitution?rsn=294",
-          "sourceHash": "43ce7c5e424dad753ec6ac4fec9be196ba2fbd314b069c03b15e44b11dadb7cf",
-          "retrievedAt": "2026-10-14T23:59:44.155018+00:00",
-          "publisher": "Kentucky Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/apps.legislature.ky.gov/2026/10/14/ms-01-beef9786da9473a2/sha256-43ce7c5e424dad753ec6ac4fec9be196ba2fbd314b069c03b15e44b11dadb7cf.pdf",
-            "byteLength": 6252,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -6359,7 +6313,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "KY",
+        "electionId": "ky-2026-11-03",
+        "sourceHash": "43df7bdbf8bf690e1c6f8beb5dc4be6c080e964090609545cdec3c141d177253",
+        "documentCount": 4,
+        "reviewedAt": "2026-10-15T04:14:39.828826+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ky/2026/10/15/ms-01/sha256-43df7bdbf8bf690e1c6f8beb5dc4be6c080e964090609545cdec3c141d177253.ndjson",
+          "byteLength": 4582,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

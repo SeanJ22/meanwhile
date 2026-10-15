@@ -385,7 +385,7 @@ export async function processRegisteredManualCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -428,16 +428,25 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
   return left.length === right.length && left.every((key, index) => key === right[index]);
 }
 
-/** A re-check whose read model cites a moved outside authority (a roll call's roster version) promotes. */
+/** A moved source authority must reach readers even when its derived facts are unchanged. */
 export function sameCitedAuthority(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
   const cited = (value: RoutineCandidate) => {
-    const readModel = value.readModel as { readonly officialIdentityAuthority?: unknown } | null;
-    return canonicalCivicDataJson(readModel && typeof readModel === "object" ? readModel.officialIdentityAuthority ?? null : null);
+    const readModel = value.readModel as { readonly officialIdentityAuthority?: unknown; readonly sourceBallot?: unknown } | null;
+    return canonicalCivicDataJson(readModel && typeof readModel === "object"
+      ? [readModel.officialIdentityAuthority ?? null, readModel.sourceBallot ?? null] : [null, null]);
   };
   return cited(candidate) === cited(pointed);
 }
 
 function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  if (candidate.recordClass === "BALLOT_CANDIDACY") {
+    const evidence = (value: RoutineCandidate) => {
+      const payload = value.readModel as { ballots?: Record<string, { sourceCorpus?: unknown; sourceAuthorities?: unknown }> };
+      return canonicalCivicDataJson(Object.entries(payload.ballots ?? {}).map(([key, ballot]) =>
+        [key, ballot.sourceCorpus ?? null, ballot.sourceAuthorities ?? null]).sort(([left], [right]) => String(left).localeCompare(String(right))));
+    };
+    return evidence(candidate) === evidence(pointed);
+  }
   if (candidate.recordClass === "MEETING_OUTCOME") {
     const checks = (value: RoutineCandidate) => canonicalCivicDataJson((value.readModel as {
       sittings?: { meetingId: string; minutesDocument?: { readAt?: string } }[]
@@ -528,6 +537,9 @@ export async function processRoutineCandidate(
   const nativeRetirementCheck=candidate.sourceId === "plural-openstates" && candidate.recordClass === "STATE_LEGISLATOR" &&
     (candidate.changeSet?.removed.length ?? 0)>0 && !candidate.horizon.claimsComplete
     ? await (await import("../sources/plural/retirement.ts")).statePeopleRetirementSourceCheck(candidate,validationLkg,transitionAt,options.vault) : null;
+  const ballotEvidenceCheck = candidate.recordClass === "BALLOT_CANDIDACY"
+    ? await (await import("./ballot-evidence-publication.ts")).ballotEvidencePublicationCheck(candidate, validationLkg?.candidate ?? null,
+      productionStore && !(process.env.WTP_RUNTIME_MODE === "staging" && process.env.WTP_DB_ROLE === "local") ? undefined : options.vault) : null;
   const validated = validateRoutineCandidate(
     candidate,
     validationLkg,
@@ -536,7 +548,7 @@ export async function processRoutineCandidate(
       consumer: `${sourceProjectionVerification.verifierId} (source-scoped pre-promotion)`,
       passed: sourceProjectionVerification.status === "PASS",
       detail: sourceProjectionVerification.detail,
-    }]),...(nativeRetirementCheck ? [nativeRetirementCheck] : [])],
+    }]), ...(nativeRetirementCheck ? [nativeRetirementCheck] : []), ...(ballotEvidenceCheck ? [ballotEvidenceCheck] : [])],
   );
     // A re-check whose read model is exactly the pointed one is a receipted no-change; any refusal falls through to
     // the ordinary candidate and promotion below.

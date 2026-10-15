@@ -11197,30 +11197,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
-          "sourceHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
-          "retrievedAt": "2026-10-14T23:52:51.098125+00:00",
-          "publisher": "Massachusetts Secretary of the Commonwealth, Information for Voters",
-          "vault": {
-            "key": "project/freshness/source/www.sec.state.ma.us/2026/10/14/ms-01-1df4d341d8dde7ae/sha256-ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0.pdf",
-            "byteLength": 1349833,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://malegislature.gov/Laws/Constitution",
-          "sourceHash": "60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec",
-          "retrievedAt": "2026-10-14T23:56:01.380498+00:00",
-          "publisher": "Massachusetts General Court, Constitution of the Commonwealth",
-          "vault": {
-            "key": "project/freshness/source/malegislature.gov/2026/10/14/ms-01-7c308bbb7206559f/sha256-60548e609f727100adf4aa648c3d261c18c76b03185b5631c044fb662ef0f5ec.html",
-            "byteLength": 458486,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -11233,7 +11209,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "MA",
+        "electionId": "ma-2026-11-03",
+        "sourceHash": "b6d6f48c5f5ab74f1a541bcb612c27aeffb2818d909fc7a84a3b1aaf4281a55e",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.781892+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ma/2026/10/15/ms-01/sha256-b6d6f48c5f5ab74f1a541bcb612c27aeffb2818d909fc7a84a3b1aaf4281a55e.ndjson",
+          "byteLength": 2746,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

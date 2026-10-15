@@ -1,10 +1,3 @@
-/**
- * No budget hold outlives the round that took it: a round that ends or fails
- * releases every job it never settled; an unsettled hold older than
- * SPEND_HOLD_STALE_MS (a killed round's) stops counting and leaves the row on
- * the next write; a settled hold leaves once its cost is older than any history
- * a reader starts from.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -30,7 +23,7 @@ const hunt = (budgetUsd: number): BudgetLine => ({
 
 function ledger(now: () => string) {
   const repos = createMemoryRepositories();
-  return { repos, spend: new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now, sleep: async () => undefined }) };
+  return { repos, spend: new DurableSpendHolds({ store: repos.spendHolds, now }) };
 }
 
 test("a round that fails mid-cycle leaves no hold behind: unsent jobs release, a job that sent books what it committed", async () => {
@@ -55,7 +48,7 @@ test("a round that fails mid-cycle leaves no hold behind: unsent jobs release, a
   assert.equal(left?.[0].leftUsd, 0.99, "only the spend that happened is counted against the hunt");
 });
 
-test("a killed round's holds stop counting after the stale window and leave the ledger row on the next write", async () => {
+test("a killed round's holds stop counting after the stale window and leave the store on the next write", async () => {
   let now = NOW;
   const { repos, spend } = ledger(() => now);
   const line = hunt(0.1);
@@ -75,7 +68,7 @@ test("a killed round's holds stop counting after the stale window and leave the 
   assert.deepEqual(ids, ["scout:next:1:ob-y#0"], "the killed round's holds are gone from the row");
 });
 
-test("a settled hold leaves the row once its cost is older than any history a reader starts from", async () => {
+test("a settled hold leaves the store once its cost is older than any history a reader starts from", async () => {
   let now = NOW;
   const { repos, spend } = ledger(() => now);
   const line = hunt(1);
@@ -93,7 +86,7 @@ test("the round wires the release (and the sweep) on its normal end and on its c
   const { readFileSync } = await import("node:fs");
   const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /releaseRoundHolds = async \(\) => \{[\s\S]*?await spendHolds\.sweep\(\);/);
-  assert.match(round, /new DurableSpendHolds\(\{ budget: repos\.budget, table: repos\.spendHolds,/, "the round's holds are the table's");
+  assert.match(round, /new DurableSpendHolds\(\{ store: repos\.spendHolds,/, "the round's holds are the table's");
   assert.match(round, /async function recordCrash[\s\S]*?releaseRoundHolds[\s\S]*?crash:record/);
   assert.match(round, /const notReleased = await releaseRoundHolds!\(\);[\s\S]*?const runRecord = \{/);
   assert.match(round, /readSpendWindow\(repos, NOW\)/, "the round's rolling spend is the running counter, never re-read ledger rows");

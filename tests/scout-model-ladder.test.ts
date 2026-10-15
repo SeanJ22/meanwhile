@@ -10,7 +10,7 @@ import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
 import { minimumCacheablePrefixTokensFor } from "../lib/control-plane/model-cost.ts";
 import {
   MODEL_CEILING,
@@ -161,7 +161,7 @@ test("a long hunt walks beyond the former turn, tool, token and wall limits unti
     const walks = Array.from({ length: 40 }, (_, i) => [fetchOf("u" + i, `https://source${i}.gov/meetings`)]);
     const script = [...walks, [finish("done")]];
     for (const ceiling of [100, 0.075]) {
-      const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: ceiling, clock: () => NOW_MS });
+      const controller = new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), rollingCeilingUsd: ceiling, clock: () => NOW_MS });
       const fake = perModelTransport({ [HAIKU]: script }, () => { elapsed += 60_000; return { input_tokens: 20_000, output_tokens: 100 }; });
       const { outcome, result } = await runHunt({ model: HAIKU, transport: controller.guardedModelTransport("anthropic", OBLIGATION.id, fake) });
       assert.ok(fake.requests.length > 18, "long work passes the old model turn cap");

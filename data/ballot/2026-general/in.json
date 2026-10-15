@@ -7981,41 +7981,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
-          "sourceHash": "babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52",
-          "retrievedAt": "2026-10-14T23:53:05.435222+00:00",
-          "publisher": "Indiana Election Division, Office of the Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.in.gov/2026/10/14/ms-01-231f181a659322a0/sha256-babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52.pdf",
-            "byteLength": 281917,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://iga.in.gov/pdf-documents/124/2026/senate/resolutions/SJ0001/SJ0001.04.ENRH.pdf",
-          "sourceHash": "4e01184dcce5554b05a20be7b6d29daf8aa4151531ce23aff6e8bef1e27e8083",
-          "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
-          "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
-          "vault": {
-            "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-a58920213c17f5af/sha256-4e01184dcce5554b05a20be7b6d29daf8aa4151531ce23aff6e8bef1e27e8083.pdf",
-            "byteLength": 79980,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://iga.in.gov/pdf-documents/124/2025/house/resolutions/HJ0001/HJ0001.04.ENRS.pdf",
-          "sourceHash": "152b0e4c41b3fb88055576d3213820ebd98b998a64a79c163d62567db201b224",
-          "retrievedAt": "2026-10-15T00:16:44.882794+00:00",
-          "publisher": "Indiana General Assembly; original official publication preserved by Internet Archive",
-          "vault": {
-            "key": "project/freshness/source/iga.in.gov/2026/10/15/ms-01-291291a1a9d488ce/sha256-152b0e4c41b3fb88055576d3213820ebd98b998a64a79c163d62567db201b224.pdf",
-            "byteLength": 80959,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -8028,7 +7993,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "IN",
+        "electionId": "in-2026-11-03",
+        "sourceHash": "7b7d59d7e794964bbf556d3e1a6ba8ca44c6b37d3c259f17ed7d6c49a3bf449d",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T04:14:39.817961+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-in/2026/10/15/ms-01/sha256-7b7d59d7e794964bbf556d3e1a6ba8ca44c6b37d3c259f17ed7d6c49a3bf449d.ndjson",
+          "byteLength": 4964,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

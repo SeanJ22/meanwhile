@@ -13766,41 +13766,20 @@
         "The official nomination list does not state incumbency or campaign websites.",
         "The Secretary of the State’s complete November 3, 2026 election-management ballot-question dataset, version 45337, contains 57 local questions in 23 municipalities and no statewide question. Statewide measure coverage is confirmed from that complete official question inventory."
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
-          "sourceHash": "cf136e66a0c3798170dd380b412909d8bd98f6c879a0945681f510085c6d7d06",
-          "retrievedAt": "2026-10-14T23:56:58.274104+00:00",
-          "publisher": "Connecticut Secretary of the State",
-          "vault": {
-            "key": "project/freshness/source/ctemspublic.tgstg.net/2026/10/14/ms-01-29e3ae6a7f3b3b57/sha256-cf136e66a0c3798170dd380b412909d8bd98f6c879a0945681f510085c6d7d06.json",
-            "byteLength": 23,
-            "contentType": "application/json"
-          }
-        },
-        {
-          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/ballotQuestion_Electiondata.json",
-          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
-          "retrievedAt": "2026-10-14T16:15:11.213638Z",
-          "publisher": "Connecticut Secretary of the State",
-          "vault": {
-            "key": "project/freshness/source/ctemspublic.pcctg.net/2026/10/14/ms-01-3b759850095987ec/sha256-ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.json",
-            "byteLength": 17682,
-            "contentType": "application/json"
-          }
-        },
-        {
-          "sourceUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45337/ballotQuestion_Electiondata.json",
-          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
-          "retrievedAt": "2026-10-14T23:57:20.087158+00:00",
-          "publisher": "Connecticut Secretary of the State",
-          "vault": {
-            "key": "project/freshness/source/ctemspublic.tgstg.net/2026/10/14/ms-01-9977db93b4be9c70/sha256-ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.json",
-            "byteLength": 17682,
-            "contentType": "application/json"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "CT",
+        "electionId": "ct-2026-general",
+        "sourceHash": "d7c2068539a0a999473714da22f04b90b03744b078d620f6926ed779a965316a",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T04:14:39.971599+00:00",
+        "reviewedBy": "Codex MS-01 official measure inventory review",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ct/2026/10/15/ms-01/sha256-d7c2068539a0a999473714da22f04b90b03744b078d620f6926ed779a965316a.ndjson",
+          "byteLength": 3449,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {
@@ -13839,16 +13818,6 @@
         "reviewedEvidence": "Official candidate publication converted programmatically from these exact saved source bytes."
       },
       {
-        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/Version.json",
-        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
-        "publisher": "Connecticut Secretary of the State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T16:14:58.147513Z",
-        "httpStatus": 200,
-        "rawHash": "0be3c0cb2c98e2add7ab7edbceeb60013abe349bb67fef159f987d13551202f1",
-        "reviewedEvidence": "Official candidate publication converted programmatically from these exact saved source bytes."
-      },
-      {
         "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/Lookupdata.json",
         "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45214/Lookupdata.json",
         "publisher": "Connecticut Secretary of the State",
@@ -13866,16 +13835,6 @@
         "retrievedAt": "2026-10-14T16:15:10.799042Z",
         "httpStatus": 200,
         "rawHash": "322f13619ffbea1ea02b48aff13346beecb5953e11e48466eac04c2ea430fe7d",
-        "reviewedEvidence": "Official candidate publication converted programmatically from these exact saved source bytes."
-      },
-      {
-        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/45214/ballotQuestion_Electiondata.json",
-        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45214/ballotQuestion_Electiondata.json",
-        "publisher": "Connecticut Secretary of the State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "retrievedAt": "2026-10-14T16:15:11.213638Z",
-        "httpStatus": 200,
-        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
         "reviewedEvidence": "Official candidate publication converted programmatically from these exact saved source bytes."
       },
       {
@@ -13897,17 +13856,6 @@
         "httpStatus": 200,
         "rawHash": "daf3f8ec984579faa4a5377f206abcf49a466c4e693d0e842cfdf0905536be99",
         "reviewedEvidence": "Official candidate publication converted programmatically from these exact saved source bytes."
-      },
-      {
-        "requestedUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
-        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
-        "httpStatus": 200,
-        "rawHash": "cf136e66a0c3798170dd380b412909d8bd98f6c879a0945681f510085c6d7d06",
-        "retrievedAt": "2026-10-14T23:56:58.274104+00:00",
-        "publisher": "Connecticut Secretary of the State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "The official Version.json identifies 45337 as the current data publication for election 108.",
-        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/45337/ballotQuestion_Electiondata.json",

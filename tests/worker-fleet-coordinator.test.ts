@@ -220,7 +220,7 @@ test("coordinator selection hands out canonical tasks without running tools or o
     let pulls = 0;
     const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
-        modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+        modelEnabled: false, searchEnabled: false, ceilingUsd: 0 },
       capacity: () => 2, onStarted: pid => pids.push(pid),
       orderPending: async ids => { pulls++; return [...ids].reverse(); },
       transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
@@ -252,7 +252,7 @@ test("memory wait rechecks the emptied wave before forking queued lease workers"
     let forks = 0;
     await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
       taskIds: Array.from({ length: 40 }, (_, i) => `task:${i}`), modelEnabled: false, searchEnabled: false,
-      ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 40,
+      ceilingUsd: 0 }, capacity: () => 40,
       slots: workerProcessSlots(() => 1, { availableBytes: () => 1000, headroomBytes: 0, peakBytes: () => 1 }),
       onStarted: () => { forks++; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
     assert.equal(forks, 1, "queued admissions release without spawning after the first child drains all tasks");
@@ -272,7 +272,7 @@ test("a worker kill timer defers unfinished work and ends only its owned process
         setTimeout(()=>{grandchild.kill();process.send({kind:'finished',body:config.taskIds});process.disconnect();},2500);
       });`);
     const input = { entry: "worker.mjs", childTimeoutMs: 1000, config: { root, postgres: false,
-      taskIds: ["owed"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      taskIds: ["owed"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0 },
       capacity: () => 1, transportFor: () => async () => { throw new Error("no model in this fixture"); } };
     const results = await runLeaseWorkerProcesses(input);
     assert.equal(results.length, 1);
@@ -356,7 +356,7 @@ test("pool returns a completed dispatch and records unfinished work when a child
       process.exitCode = 1; process.disconnect();
     });`);
     const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
-      taskIds: ["one", "two"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      taskIds: ["one", "two"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0 },
       capacity: () => 1, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
     assert.deepEqual(results.map(row => [row.routeTaskId, row.outcome]), [["one", "WORKED"], ["two", "FAILED"]]);
     assert.match(results[1]!.detail, /LEASE_WORKER_EXIT/);
@@ -379,7 +379,7 @@ test("one work-item read failure costs one task and the same lease child reaches
     let forks = 0;
     const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [unreadable.id, selected.task!.id],
-        modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+        modelEnabled: false, searchEnabled: false, ceilingUsd: 0 },
       capacity: () => 1, onStarted: () => { forks++; }, orderPending: async ids => ids,
       transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
     const failedRead = results.find(row => row.routeTaskId === unreadable.id)!;

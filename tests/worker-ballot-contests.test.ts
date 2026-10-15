@@ -143,9 +143,10 @@ test("a direct ballot request serves from its proven edge without unrelated sour
   const published = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(checked), now, null);
   assert.ok(published.promoted);
   const read = await readGenericBallotProjection({ store, now });
-  const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, store);
+  const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE);
   assert.ok(edge);
   const bundle = { promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, edge]]),
+    localMeasures: { load: async (division: string) => ({ kind: "NOT_RECORDED" as const, recordClass: "BALLOT_CANDIDACY" as const, scope: `US:ballot-measures:${division}` }) },
     promotedFamilies: new Set(["ballot-contests"]), edgeOnly: true as const };
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const response = await withReaderAuthorityEdge(bundle, () => POST(new Request("https://wtp.test/api/ask/grounded", {

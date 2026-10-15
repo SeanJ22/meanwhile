@@ -8185,140 +8185,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
-          "sourceHash": "31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17",
-          "retrievedAt": "2026-10-14T23:52:26.981790+00:00",
-          "publisher": "Alabama Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-f9632767de76faa0/sha256-31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17.pdf",
-            "byteLength": 146066,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
-          "sourceHash": "bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383",
-          "retrievedAt": "2026-10-14T23:52:27.109369+00:00",
-          "publisher": "Alabama Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-8af5d23085169891/sha256-bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383.pdf",
-            "byteLength": 137969,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
-          "sourceHash": "b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c",
-          "retrievedAt": "2026-10-14T23:52:27.162772+00:00",
-          "publisher": "Alabama Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-6d2a4682dcccbda3/sha256-b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c.pdf",
-            "byteLength": 89268,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
-          "sourceHash": "4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304",
-          "retrievedAt": "2026-10-14T23:52:26.884644+00:00",
-          "publisher": "Alabama Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/arc-sos.state.al.us/2026/10/14/ms-01-31677ea030c5f9a5/sha256-4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304.pdf",
-            "byteLength": 115012,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB380-enr.pdf",
-          "sourceHash": "875d37e5c7d9db56086f533741f8f185cec66d3ce430f401c0461dab9e0a4995",
-          "retrievedAt": "2026-10-14T23:57:11.919987+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-55a894706b161992/sha256-875d37e5c7d9db56086f533741f8f185cec66d3ce430f401c0461dab9e0a4995.pdf",
-            "byteLength": 88606,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB511-enr.pdf",
-          "sourceHash": "df97387cb8c466b8358042b03573dfc762654f40916994b47238f3374aed4a0b",
-          "retrievedAt": "2026-10-14T23:57:11.908668+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-431a9d5290c42fe0/sha256-df97387cb8c466b8358042b03573dfc762654f40916994b47238f3374aed4a0b.pdf",
-            "byteLength": 83229,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB271-enr.pdf",
-          "sourceHash": "6da243c5dce4625abcb7c484bc8b590dd163789ac0ca175e1ffef832f60eeb45",
-          "retrievedAt": "2026-10-14T23:57:11.824280+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-8b28efaded972f66/sha256-6da243c5dce4625abcb7c484bc8b590dd163789ac0ca175e1ffef832f60eeb45.pdf",
-            "byteLength": 86106,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB5-enr.pdf",
-          "sourceHash": "1fd88b3cbc195dbc42caba1297e6302eeb03d142cda7b1454b8fc9a1f4e536e2",
-          "retrievedAt": "2026-10-14T23:57:11.873666+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/alison.legislature.state.al.us/2026/10/14/ms-01-34ee9648e190a665/sha256-1fd88b3cbc195dbc42caba1297e6302eeb03d142cda7b1454b8fc9a1f4e536e2.pdf",
-            "byteLength": 82096,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-1.pdf",
-          "sourceHash": "e2bd5886c549f86266a2ade6c2ed766e90c691edf92c2886403502309dcc443e",
-          "retrievedAt": "2026-10-14T23:56:40.834122+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-54aabcbfb88ffaa2/sha256-e2bd5886c549f86266a2ade6c2ed766e90c691edf92c2886403502309dcc443e.pdf",
-            "byteLength": 149636,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
-          "sourceHash": "f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1",
-          "retrievedAt": "2026-10-14T23:56:40.918132+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-bdedd332027c0b08/sha256-f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1.pdf",
-            "byteLength": 151319,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
-          "sourceHash": "2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e",
-          "retrievedAt": "2026-10-14T23:56:40.752684+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-cbdbb5bbee5f6870/sha256-2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e.pdf",
-            "byteLength": 150843,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
-          "sourceHash": "f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277",
-          "retrievedAt": "2026-10-14T23:56:40.748299+00:00",
-          "publisher": "Alabama Legislature and Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.alabama.gov/2026/10/14/ms-01-7b243a78651eee4a/sha256-f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277.pdf",
-            "byteLength": 148049,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -8342,7 +8208,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "AL",
+        "electionId": "al-2026-11-03-general",
+        "sourceHash": "ff8c15acdac27dd8f966af0e01791701cdd6e817f40a26e7495030d38e2f2f61",
+        "documentCount": 12,
+        "reviewedAt": "2026-10-15T04:14:40.005137+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-al/2026/10/15/ms-01/sha256-ff8c15acdac27dd8f966af0e01791701cdd6e817f40a26e7495030d38e2f2f61.ndjson",
+          "byteLength": 13981,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {
@@ -8403,50 +8283,6 @@
         "publisher": "Alabama Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T23:52:26.981790+00:00",
-        "rawHash": "31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T23:52:27.109369+00:00",
-        "rawHash": "bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T23:52:27.162772+00:00",
-        "rawHash": "b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
-        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
-        "httpStatus": 200,
-        "retrievedAt": "2026-10-14T23:52:26.884644+00:00",
-        "rawHash": "4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304",
-        "publisher": "Alabama Secretary of State",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official legal text, voter explanation, fiscal analysis, or passage rule saved as source bytes; legal redlines preserve deleted words in <del> markup and text is bound to its SHA-256.",
         "reviewOutcome": "SUPPORTED"
       },
       {

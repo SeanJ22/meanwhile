@@ -6,7 +6,7 @@ import test from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { DurableSpendHolds, JobSpend, SendBudgetRefusal, budgetGuardedTransport } from "../lib/control-plane/expansion/spend-holds.ts";
-import { aggregateModelSpend, FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, aggregateModelSpend, FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
 import {
   attemptsForRouteTask,
   registerRouteTask,
@@ -265,7 +265,7 @@ async function dispatchHunt(exec: DeclaredExecutor) {
 test("the runner's exact hunt hold reaches disposed and aborted cost rows without changing unknown dollars", async () => {
   for (const mode of ["disposed", "aborted", "unmetered", "no-hold"] as const) {
     const { repos, task } = await registered();
-    const holds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW });
+    const holds = new DurableSpendHolds({ store: repos.spendHolds, now: () => NOW });
     const job = new JobSpend(holds, `actual-hunt-job:${mode}`, OBLIGATION.id, { sends: [], areas: [{
       key: "area:existing", label: "existing budget", budgetUsd: 20, historicalUsd: 0, historyReadAt: NOW,
     }] });
@@ -664,12 +664,12 @@ test("a request the worker never handed to the provider costs nothing and carrie
 test("proven pre-send refusals settle unused holds without erasing earlier measured turns", async () => {
   for (const mode of ["fleet-before-first", "budget-before-first", "fleet-after-metered", "unpriced-after-response"] as const) {
     const { repos, task } = await registered();
-    const holds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
+    const holds = new DurableSpendHolds({ store: repos.spendHolds, now: () => NOW });
     const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original", budgetUsd: 50, historicalUsd: 0, historyReadAt: new Date(NOW_MS - 1_000).toISOString() };
     const job = new JobSpend(holds, mode, OBLIGATION.id, { sends: [], areas: [line] });
     assert.equal((await job.admit(2, "Scout")).admit, true);
-    const heldFleet = new FleetSafetyController({ now: NOW, charges: [], modelHold: "lane closed", clock: () => NOW_MS });
-    const openFleet = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 50, clock: () => NOW_MS });
+    const heldFleet = new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), modelHold: "lane closed", clock: () => NOW_MS });
+    const openFleet = new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), rollingCeilingUsd: 50, clock: () => NOW_MS });
     let sent = 0;
     const provider: ModelTransport = async request => {
       sent++;
@@ -704,7 +704,7 @@ test("proven pre-send refusals settle unused holds without erasing earlier measu
 
 test("an unknown sent model request cannot settle away its original lifetime reservation", async () => {
   const { repos, task } = await registered();
-  const holds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
+  const holds = new DurableSpendHolds({ store: repos.spendHolds, now: () => NOW });
   const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original lifetime hunt", budgetUsd: 50, historicalUsd: 0, historyReadAt: NOW };
   const job = new JobSpend(holds, "unknown-response-job", OBLIGATION.id, { sends: [], areas: [line] });
   assert.equal((await job.admit(2, "Scout attempt")).admit, true);

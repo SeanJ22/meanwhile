@@ -1,4 +1,3 @@
-/** The paid-work guards in one place, so the round and the standing lane build the same guards from the same objects: Send and area budgets, the Fleet ceiling and provider circuits, provider rate limits, and paid worker capacity. Nothing here changes a limit or reads a setting. */
 import { randomUUID } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { attemptBatchJournal, batchEligibleForJob, batchEnabledForJob, batchRequestHash, type BatchJob, type BatchLane, type BatchPriority,
@@ -35,7 +34,7 @@ export interface PaidWorkGuardDeps {
   readonly assignmentBudget: Pick<AssignmentBudgetGate, "linesFor">;
   readonly expansionBudget: { readonly gate: Pick<ReturnType<typeof armExpansionBudget>["gate"], "linesFor"> } | null;
   /** Read what a lease worker's obligation needs before its lines are built (the standing lane reads each task's own Send marks). */
-  readonly beforeObligation?: (obligationId: string) => Promise<void>;
+  readonly beforeObligation?: (obligationId: string) => Promise<ReturnType<AssignmentBudgetGate["linesFor"]>>;
   /** The provider transport for one request at a time, and the background batch transport. */
   readonly messages: ModelTransport;
   readonly batch: ReturnType<typeof backgroundBatchTransport>;
@@ -61,8 +60,8 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
       electionAt: obligations.flatMap(row => /ballot|election|contest|measure/i.test(row.recordClass) && row.readerImpactAt ? [row.readerImpactAt] : []) };
   };
   /** The Send and area lines one obligation's paid work is held against, or why it cannot be checked. */
-  const budgetLinesFor = (obligationId: string, subjectId: string): { readonly lines: BudgetLines } | { readonly code: string; readonly why: string } => {
-    const sends = assignmentBudget.linesFor(obligationId);
+  const budgetLinesFor = (obligationId: string, subjectId: string, prepared?: ReturnType<AssignmentBudgetGate["linesFor"]>): { readonly lines: BudgetLines } | { readonly code: string; readonly why: string } => {
+    const sends = prepared ?? assignmentBudget.linesFor(obligationId);
     if ("refusal" in sends) return { code: sends.refusal.code, why: sends.refusal.why };
     const areas = expansionBudget === null ? { lines: [] as readonly BudgetLine[] } : expansionBudget.gate.linesFor(subjectId);
     if ("refusal" in areas) return { code: areas.refusal.code, why: areas.refusal.why };
@@ -166,8 +165,8 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
       return { ...response, batchEligible: true };
     }
     const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
-    await deps.beforeObligation?.(owner?.value.obligationId ?? task.id);
-    const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
+    const prepared = await deps.beforeObligation?.(owner?.value.obligationId ?? task.id);
+    const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId, prepared);
     if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
     const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
     openJobs.add(job);

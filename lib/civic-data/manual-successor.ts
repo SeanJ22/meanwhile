@@ -55,11 +55,12 @@ export async function prepareManualProjectionSuccessor(
   });
   const conflicts = resolved.flatMap(result => result.conflicts);
   if (conflicts.length) {
-    // The current review wins receipt deduplication for identical bytes; losing
-    // facts retain their actual earlier date in the conflict provenance.
+    // Re-reading identical bytes refreshes their receipt; losing facts keep
+    // their original observation dates in conflict provenance.
     const sources = [...priorReceipt.sources.filter(source => source.reviewOutcome !== "BLOCKED"), ...input.sourceReceipt.sources];
     const merged = { ...input, sourceReceipt: { ...input.sourceReceipt,
-      sources: sources.filter((source, index) => sources.findIndex(other => canonicalCivicDataJson(other) === canonicalCivicDataJson(source)) === index) },
+      sources: [...new Map(sources.sort((left, right) => Date.parse(left.retrievedAt) - Date.parse(right.retrievedAt))
+        .map(source => [`${new URL(source.finalUrl).href}\n${source.rawHash}`, source])).values()] },
       payload: { ...(input.payload as CuratedReaderProjection), records: resolved.map(result => result.record) } };
     fresh = manualProjectionCandidate(merged);
     fresh = { ...fresh, excludedFacts: [...(fresh.excludedFacts ?? []), ...conflicts] };

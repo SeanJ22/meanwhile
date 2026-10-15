@@ -53,6 +53,17 @@ export interface MeasureSourceReference {
   originals?: MeasureSourceReference[];
 }
 
+export interface BallotSourceCorpusReference {
+  format: "ballot-source-corpus@1";
+  state: string;
+  electionId: string;
+  sourceHash: string;
+  documentCount: number;
+  reviewedAt: string;
+  reviewedBy: string;
+  vault: { key: string; byteLength: number; contentType: "application/x-ndjson" };
+}
+
 export interface MeasureVoterGuide extends MeasureSourceReference {
   summary?: string;
   fiscalImpact?: string;
@@ -101,7 +112,7 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
-  sourceDocuments?: readonly MeasureSourceReference[];
+  sourceCorpus?: BallotSourceCorpusReference;
   sourceAuthorities?: readonly MeasureSourceReference[];
   heldContests?: readonly HeldBallotContest[];
   measureRecords?: readonly MeasureRecord[];

@@ -1,6 +1,6 @@
+import { promotedPointerVersion } from "./reader-edge-outcome.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
-import { createHash } from "node:crypto";
 
 import {
   promotedEdgeEntryOf,
@@ -9,7 +9,7 @@ import {
   type PromotedCivicDataReadOptions,
   type PromotedEdgeEntry,
 } from "./read-model.ts";
-import type { PromotedPointerIdentity, RoutineRecordClass } from "./types.ts";
+import type { RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { requiredRoutineContract } from "./contracts.ts";
 import {
@@ -40,11 +40,6 @@ import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue, ReaderManifest } from "../meetings/edge-artifacts.ts";
 import { servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue } from "../meetings/edge-serving.ts";
 import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
-
-/**
- * Each pointer is proved exactly as a database Reader proves it, then handed to its family's own Reader; a family
- * whose Reader rejects an update retains the previous entry. A family is read only when its pointers moved.
- */
 
 interface ReaderAnswer {
   readonly kind: string;
@@ -100,15 +95,7 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
   };
 }
 
-type PointerState = Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation"> | null;
 
-export function promotedPointerVersion(recordClass: RoutineRecordClass, scope: string, pointer: PointerState): string {
-  if (pointer === null) return `${recordClass}:${scope}=none`;
-  const confirmation = pointer.latestConfirmation
-    ? `~${createHash("sha256").update(JSON.stringify(pointer.latestConfirmation)).digest("hex").slice(0, 16)}`
-    : "";
-  return `${recordClass}:${scope}=${pointer.versionId}${confirmation}`;
-}
 
 export function promotedFamilyVersion(versions: readonly string[]): string {
   return [...versions].sort().join("|");
@@ -147,7 +134,7 @@ export async function readPromotedEdgeFamilies(input: {
         let entry: PromotedEdgeEntry | null = null;
         try {
           const read = await readPromotedCivicData(recordClass, scope, { store: input.store, now: input.now });
-          entry = promotedEdgeEntryOf(read, recordClass, scope, input.store);
+          entry = promotedEdgeEntryOf(read, recordClass, scope);
           if (entry === null) throw new Error(`${recordClass}:${scope} read ${read.kind}, not a proven or answered-absent pointer`);
           if (entry.kind === "PROMOTED") {
             const accepted = await reader({ edge: entry, now: input.now });

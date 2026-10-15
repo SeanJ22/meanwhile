@@ -18,7 +18,7 @@ import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { canonicalLeadUrl, isLeadOrder, LEADS_MAX_ROWS, OWNER_LEAD_SOURCE, placeFromNotes, type LeadOrder } from "../lib/control-plane/leads/order.ts";
 import { LINK_COLUMN, parseLeads } from "../lib/control-plane/leads/parse.ts";
 import { guardedLeadGet, insideSentPlace, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
-import { FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
 import { createWebsitePacing, WEBSITE_TAKE_SQL, websiteOf, type WebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
@@ -260,7 +260,7 @@ test("a link plain code is turned away from goes to paid work only inside a plac
 
 /** A round's guarded fetch, as the runner builds it: the controller paces every reader through the shared store. */
 function roundSafety(pacing: WebsitePacing, clock: () => number, small: (host: string) => boolean): FleetSafetyController {
-  return new FleetSafetyController({ now: new Date(clock()).toISOString(), charges: [], clock, websitePacing: pacing,
+  return new FleetSafetyController({ now: new Date(clock()).toISOString(), spend: fleetSpendAt([], new Date(clock()).toISOString()), clock, websitePacing: pacing,
     websiteSize: (url) => (small(new URL(url).hostname) ? { kind: "local-government", population: 4_000 } : { kind: "federal" }) });
 }
 /** A website answering from a table of pages, robots.txt allowing everything, and counting what it was asked. */

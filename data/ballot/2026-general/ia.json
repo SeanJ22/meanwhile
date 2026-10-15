@@ -6939,19 +6939,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
-          "sourceHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
-          "retrievedAt": "2026-10-14T23:52:37.394062+00:00",
-          "publisher": "Woodbury County Auditor and Commissioner of Elections",
-          "vault": {
-            "key": "project/freshness/source/elections.woodburycountyiowa.gov/2026/10/14/ms-01-4bb724c5037ac6cd/sha256-e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8.html",
-            "byteLength": 10444,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "IA",
+        "electionId": "ia-2026-11-03",
+        "sourceHash": "e9b13c7c4bdffcf88bd0411c75c6d18efeac77264f70a7328fc755ad643426be",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:39.807336+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ia/2026/10/15/ms-01/sha256-e9b13c7c4bdffcf88bd0411c75c6d18efeac77264f70a7328fc755ad643426be.ndjson",
+          "byteLength": 1211,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

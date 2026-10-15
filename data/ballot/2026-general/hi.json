@@ -3236,63 +3236,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution/",
-          "sourceHash": "b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50",
-          "retrievedAt": "2026-10-14T23:52:28.162262+00:00",
-          "publisher": "Hawaii Office of Elections",
-          "vault": {
-            "key": "project/freshness/source/elections.hawaii.gov/2026/10/14/ms-01-4646fe39893bba59/sha256-b7257fee9c531f44a2574e30dfe8ff7475508ce58b4267fb53cee41013c99f50.html",
-            "byteLength": 126736,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.htm",
-          "sourceHash": "6c951a033a893652ab2ec0a2a29eb9dad292a55b6e6b6d3ba8f37aad2ab8f7bf",
-          "retrievedAt": "2026-10-15T00:09:49.051203+00:00",
-          "publisher": "Hawaii Legislature",
-          "vault": {
-            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-afc2489d1c4bbff4/sha256-6c951a033a893652ab2ec0a2a29eb9dad292a55b6e6b6d3ba8f37aad2ab8f7bf.html",
-            "byteLength": 75096,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
-          "sourceHash": "b81e37db4ad97593497ab0a8b6cb26cd6cb45cefae6ba141bb43e349446df3ec",
-          "retrievedAt": "2026-10-14T23:52:28.446208+00:00",
-          "publisher": "Hawaii Legislature",
-          "vault": {
-            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/14/ms-01-a24751d71e9598ac/sha256-b81e37db4ad97593497ab0a8b6cb26cd6cb45cefae6ba141bb43e349446df3ec.pdf",
-            "byteLength": 128464,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.htm",
-          "sourceHash": "8ac2282da1b21a818207526076cba14178733bd652b42635a7fa77490c2c63d1",
-          "retrievedAt": "2026-10-15T00:09:49.404777+00:00",
-          "publisher": "Hawaii Legislature",
-          "vault": {
-            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/15/ms-01-4aa36708a6f54a9e/sha256-8ac2282da1b21a818207526076cba14178733bd652b42635a7fa77490c2c63d1.html",
-            "byteLength": 93472,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
-          "sourceHash": "2107c3ca9b5e88e2e66b9c0484eb2951bd079a6b185a6ed1fab062eaa68e3067",
-          "retrievedAt": "2026-10-14T23:52:28.983792+00:00",
-          "publisher": "Hawaii Legislature",
-          "vault": {
-            "key": "project/freshness/source/data.capitol.hawaii.gov/2026/10/14/ms-01-45c26c4d106ef886/sha256-2107c3ca9b5e88e2e66b9c0484eb2951bd079a6b185a6ed1fab062eaa68e3067.pdf",
-            "byteLength": 534298,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -3305,7 +3248,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "HI",
+        "electionId": "hi-2026-11-03",
+        "sourceHash": "e8d1a45fb1b368bdfc2f6e5554437e624eddcd1a03317c7a2cd08c2f92caeeee",
+        "documentCount": 5,
+        "reviewedAt": "2026-10-15T04:14:40.053356+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-hi/2026/10/15/ms-01/sha256-e8d1a45fb1b368bdfc2f6e5554437e624eddcd1a03317c7a2cd08c2f92caeeee.ndjson",
+          "byteLength": 5551,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {
@@ -3402,17 +3359,6 @@
         "reviewOutcome": "SUPPORTED"
       },
       {
-        "requestedUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
-        "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2025/bills/SB121_.pdf",
-        "httpStatus": 200,
-        "rawHash": "b81e37db4ad97593497ab0a8b6cb26cd6cb45cefae6ba141bb43e349446df3ec",
-        "retrievedAt": "2026-10-14T23:52:28.446208+00:00",
-        "publisher": "Hawaii Legislature",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
         "requestedUrl": "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=secondCross_unammend&title=Senate+bills+that+have+passed+Third+Reading+and+were+unamended+by+the+nonoriginating+chamber&year=2025",
         "finalUrl": "https://data.capitol.hawaii.gov/advreports/advreport.aspx?measuretype=SB&report=deadline&rpt_type=secondCross_unammend&title=Senate+bills+that+have+passed+Third+Reading+and+were+unamended+by+the+nonoriginating+chamber&year=2025",
         "httpStatus": 200,
@@ -3421,17 +3367,6 @@
         "publisher": "Hawaii State Legislature",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official Legislature report identifies the final measure label, links its full-text PDF, and records Enrolled to Governor: SB121 Justices and Judges; Appointment; Confirmation; Constitutional Amendment (ConAm) PROPOSING AN AMENDMENT TO ARTICLE VI, SECTION 3, OF THE HAWAII STATE CONSTITUTION TO ALLOW THE SENATE MORE TIME TO CONFIRM JUDICIAL APPOINTMENTS. Proposes an amendment to the Hawaii State Constitution to extend the amount of time allowed the Senate to consider and act on the appointments of justices and judges from thirty to sixty days for appointments made between April 1 and December 31 when the Senate is not in Regular Session or is about to adjourn the Regular Session. (S) 4/4/2025- Enrolled to Governor. RHOADS, KANUHA, KIDANI JHA, FIN",
-        "reviewOutcome": "SUPPORTED"
-      },
-      {
-        "requestedUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
-        "finalUrl": "https://data.capitol.hawaii.gov/sessions/session2026/bills/SB3219_CD1_.pdf",
-        "httpStatus": 200,
-        "rawHash": "2107c3ca9b5e88e2e66b9c0484eb2951bd079a6b185a6ed1fab062eaa68e3067",
-        "retrievedAt": "2026-10-14T23:52:28.983792+00:00",
-        "publisher": "Hawaii Legislature",
-        "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official measure text and voter guide downloaded, extracted by page and section, and retained with source-bound text hashes. Guide arguments are the state publication’s attributed statements.",
         "reviewOutcome": "SUPPORTED"
       },
       {

@@ -7827,30 +7827,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/SBE_Proposed_Constitutional_Amendment_Text.pdf",
-          "sourceHash": "246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3",
-          "retrievedAt": "2026-10-14T23:52:37.299799+00:00",
-          "publisher": "Maryland State Board of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-0e7e4f1fe7ef5171/sha256-246cb0e745a95fe3e0834e587d889428e394b1d78b05570ff1d90a4808edc3c3.pdf",
-            "byteLength": 76003,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/2026_Ballot_Question_SBE_Letter.pdf",
-          "sourceHash": "10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739",
-          "retrievedAt": "2026-10-14T23:54:10.869472+00:00",
-          "publisher": "Maryland State Board of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.elections.maryland.gov/2026/10/14/ms-01-1bd4c341574c3a71/sha256-10d5a8110b8525559dd7bfc11bd6c8eb40fde2de0b2f004539b4878645419739.pdf",
-            "byteLength": 330354,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -7863,7 +7839,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "MD",
+        "electionId": "md-2026-11-03",
+        "sourceHash": "60d51436b5a3916302d15873de25e0eae26f1d1573db9c5db010ac2a3b114c15",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.837232+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-md/2026/10/15/ms-01/sha256-60d51436b5a3916302d15873de25e0eae26f1d1573db9c5db010ac2a3b114c15.ndjson",
+          "byteLength": 2242,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

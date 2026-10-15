@@ -97,7 +97,7 @@ test("a worker process ended by its timer says so", async () => {
     await writeFile(join(root, "worker.mjs"), "process.once('message', () => { setInterval(() => {}, 1000); });");
     const ended: string[] = [];
     const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 300,
-      config: { root, postgres: false, taskIds: ["owed"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      config: { root, postgres: false, taskIds: ["owed"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0 },
       capacity: () => 1, transportFor: () => async () => { throw new Error("no model in this fixture"); },
       onExited: (pid, why) => ended.push(`${pid}: ${why}`) });
     assert.equal(results[0]!.outcome, "FAILED");

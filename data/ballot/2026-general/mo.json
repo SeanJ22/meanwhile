@@ -9929,74 +9929,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
-          "sourceHash": "cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261",
-          "retrievedAt": "2026-10-14T23:52:37.421796+00:00",
-          "publisher": "Missouri General Assembly",
-          "vault": {
-            "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-3add71ec9566bca3/sha256-cd9468cfff8e54020969f93c59fc6f42113a27b0cf35fe12e9e1e99da8232261.pdf",
-            "byteLength": 233139,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://auditor.mo.gov/FiscalNote/ViewFiscalNoteReceivedFile/1658",
-          "sourceHash": "2146882da7b764a71129d208064edb820ce52654e4b6fada3ed8cc4dade030d3",
-          "retrievedAt": "2026-10-14T23:56:08.534472+00:00",
-          "publisher": "Missouri Secretary of State, published by the Missouri State Auditor",
-          "vault": {
-            "key": "project/freshness/source/auditor.mo.gov/2026/10/14/ms-01-585719ab662c7aca/sha256-2146882da7b764a71129d208064edb820ce52654e4b6fada3ed8cc4dade030d3.pdf",
-            "byteLength": 1722459,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
-          "sourceHash": "7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf",
-          "retrievedAt": "2026-10-14T23:52:37.386323+00:00",
-          "publisher": "Missouri General Assembly",
-          "vault": {
-            "key": "project/freshness/source/www.senate.mo.gov/2026/10/14/ms-01-587bf156c9590985/sha256-7761193333ccefd7e596e172efbb68ebe4f34125b375e021a3f5806943b7d9cf.pdf",
-            "byteLength": 219114,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://documents.house.mo.gov/billtracking/bills254/hlrbillspdf/3344H.01T.pdf",
-          "sourceHash": "c9a293bc153ec9fb66292a3de18287623fe9574e650279e93249db93161aef68",
-          "retrievedAt": "2026-10-14T23:55:10.709738+00:00",
-          "publisher": "Missouri General Assembly",
-          "vault": {
-            "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-89ba10bec0629ba3/sha256-c9a293bc153ec9fb66292a3de18287623fe9574e650279e93249db93161aef68.pdf",
-            "byteLength": 195397,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
-          "sourceHash": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
-          "retrievedAt": "2026-10-14T23:52:37.233209+00:00",
-          "publisher": "Missouri General Assembly",
-          "vault": {
-            "key": "project/freshness/source/documents.house.mo.gov/2026/10/14/ms-01-e42a42a05ded416e/sha256-bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d.pdf",
-            "byteLength": 111311,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sccmo.org/2424/November-3-2026-General-Election-Voter-G",
-          "sourceHash": "29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2",
-          "retrievedAt": "2026-10-15T04:02:13.827960+00:00",
-          "publisher": "Missouri Secretary of State, republished by St. Charles County Election Authority",
-          "vault": {
-            "key": "project/freshness/source/www.sccmo.org/2026/10/15/ms-01-d691e6ca4541afa0/sha256-29e5451fbc177d8e977ab84f26e1ea142c69d73cc591d57ac59adf725df568f2.html",
-            "byteLength": 293258,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.stcharlescitymo.gov/359/Voting-Elections",
@@ -10009,7 +9941,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "MO",
+        "electionId": "mo-2026-11-03",
+        "sourceHash": "56b11e46c50fba95f60a0de80539d1912060bebf94a5d42ae7c306e0b58a1cc2",
+        "documentCount": 6,
+        "reviewedAt": "2026-10-15T04:14:39.858958+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-mo/2026/10/15/ms-01/sha256-56b11e46c50fba95f60a0de80539d1912060bebf94a5d42ae7c306e0b58a1cc2.ndjson",
+          "byteLength": 6411,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

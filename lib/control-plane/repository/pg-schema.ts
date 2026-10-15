@@ -1,16 +1,12 @@
-/** The control-plane schema, versioned in this module. */
-
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
+import { SPEND_LINE_TOTALS_DDL } from "./spend-line-totals.ts";
+import { MODEL_CHARGES_DDL } from "./model-charges.ts";
+import { MS_01_MODEL_CHARGES } from "./MS-01-model-charges.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 31;
+export const BOOTSTRAP_VERSION = 34;
 
-/**
- *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
- *   APPEND_ONLY   key, record_id, position, record  (unique on log and record_id)
- * Values are `jsonb`: the domain types own their fields.
- */
 export const AGGREGATE_KINDS = [
   "work_items",
   "route_tasks",
@@ -24,7 +20,6 @@ export const AGGREGATE_KINDS = [
   "runner_heartbeat",
   "cache_observations",
   "research_state",
-  "spend_window",
   /* Method-candidate lifecycle is runtime state, never a tracked Git file. */
   "method_candidates",
   "readiness_snapshots",
@@ -73,6 +68,10 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_checklist_scope_heads",
   "cp_checklist_instance_projections",
   "cp_spend_holds",
+  "cp_model_charges",
+  "cp_model_charge_pending",
+  "cp_model_spend_totals",
+  "cp_spend_line_totals",
   "cp_vital_signs",
   "cp_fix_map",
   "cp_website_pacing",
@@ -135,6 +134,9 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_artifacts_work_item", "cp_log_artifacts ((record #>> '{workItemId}'))"),
   onlineIndex("cp_log_artifacts_artifact_id", "cp_log_artifacts ((record #>> '{artifactId}'))"),
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
+  onlineIndex("cp_log_costs_charge_at", "cp_log_costs (cp_cost_recorded_at(record), log_key, position)"),
+  onlineIndex("cp_log_research_intents_action_time", "cp_log_research_intents (log_key,(record #>> '{action}'),(record #>> '{requestedAt}') DESC,position DESC) WHERE record @> '{\"kind\":\"INTENT\"}'::jsonb"),
+  onlineIndex("cp_log_research_intents_intent", "cp_log_research_intents (log_key,(record #>> '{intentId}'),position DESC) WHERE record @> '{\"kind\":\"INTENT\"}'::jsonb"),
 ];
 
 /** Every aggregate and log table this schema declares, each of which carries `changed_at`. */
@@ -249,6 +251,7 @@ export const SPEND_HOLDS_INDEXES: readonly { readonly name: string; readonly on:
   { name: "cp_spend_holds_unsettled", on: "cp_spend_holds (held_at) WHERE cost_recorded_at IS NULL" },
   { name: "cp_spend_holds_settled", on: "cp_spend_holds (cost_recorded_at) WHERE cost_recorded_at IS NOT NULL" },
   { name: "cp_spend_holds_held_at", on: "cp_spend_holds (held_at)" },
+  { name: "cp_spend_holds_rolling_expiry", on: "cp_spend_holds (held_at) WHERE cardinality(lifetime_keys) = 0" },
 ];
 
 export const SPEND_HOLDS_INDEXES_DDL = `DO $do$ BEGIN
@@ -266,11 +269,6 @@ export function spendHoldJsonSql(alias: string): string {
     `ELSE jsonb_build_object('usd', ${alias}.settled_usd, 'costRecordedAt', ${iso("cost_recorded_at")}) END)`;
 }
 
-/**
- * A hold that still counts (`liveSpendHolds`), as SQL over `alias`, given the
- * three instants it is measured from: the 24-hour window's start, the stale
- * line for unsettled holds, and the retention line for settled ones.
- */
 export function spendHoldLiveSql(alias: string, windowStart: string, staleBefore: string, keptSince: string): string {
   return `((cardinality(${alias}.lifetime_keys) > 0 OR ${alias}.held_at >= ${windowStart}) AND ` +
     `CASE WHEN ${alias}.cost_recorded_at IS NULL THEN ${alias}.held_at >= ${staleBefore} ELSE ${alias}.cost_recorded_at >= ${keptSince} END)`;
@@ -283,26 +281,19 @@ export function spendHoldDeadSql(alias: string, windowStart: string, staleBefore
     `(cardinality(${alias}.lifetime_keys) = 0 AND ${alias}.held_at < ${windowStart}))`;
 }
 
+export function spendHoldExpiredIdsSql(windowStart: string, staleBefore: string, keptSince: string, limit: string): string {
+  return `SELECT hold_id FROM (
+    (SELECT hold_id FROM cp_spend_holds WHERE cost_recorded_at IS NULL AND held_at < ${staleBefore} LIMIT ${limit})
+    UNION ALL (SELECT hold_id FROM cp_spend_holds WHERE cost_recorded_at IS NOT NULL AND cost_recorded_at < ${keptSince} LIMIT ${limit})
+    UNION ALL (SELECT hold_id FROM cp_spend_holds WHERE cardinality(lifetime_keys) = 0 AND held_at < ${windowStart} LIMIT ${limit})
+  ) expired LIMIT ${limit}`;
+}
+
 /** The marker the bootstrap looks for in the installed body; move it whenever the function's body moves. */
-export const ADMIT_SPEND_HOLD_MARKER = "cp_admit_spend_hold body v1";
+export const ADMIT_SPEND_HOLD_MARKER = "cp_admit_spend_hold body MS-01";
 
-/**
- * One line's left, as `leftUsd` computes it: budget − (history + every live
- * hold on it in its window unsettled + settled spend recorded after the
- * line's history read), normalized at nanodollar precision.
- */
-const LINE_LEFT_SQL = `(SELECT round(((l->>'budgetUsd')::numeric - ((l->>'historicalUsd')::numeric + coalesce(sum(
-        CASE WHEN h.cost_recorded_at IS NULL THEN h.usd
-             WHEN h.cost_recorded_at > (l->>'historyReadAt')::timestamptz THEN h.settled_usd
-             ELSE 0 END), 0))) * 1000000000) / 1000000000
-      FROM cp_spend_holds h
-      WHERE h.keys @> ARRAY[l->>'key'] AND ${spendHoldLiveSql("h", "win", "stale", "kept")}
-        AND (coalesce((l->>'lifetime')::boolean, false) OR h.held_at >= win))`;
+const LINE_LEFT_SQL = "cp_spend_line_left(l,win,stale,kept)";
 
-/**
- * `decideHold`, in the database. Returns `{admit: true, hold}` or `{admit: false, refusal, left, position}`.
- * Unlike `decideHold`, a line whose left cannot be computed refuses rather than comparing NaN.
- */
 export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'cp_admit_spend_hold'
       AND pronamespace = current_schema()::regnamespace AND prosrc LIKE '%${ADMIT_SPEND_HOLD_MARKER}%') THEN
@@ -334,12 +325,8 @@ export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
         FOREACH k IN ARRAY line_keys LOOP
           PERFORM pg_advisory_xact_lock(hashtextextended('cp_spend_holds:' || k, 0));
         END LOOP;
-        -- What no longer counts is deleted, never read again: this hold id, then the dead holds on these lines.
         DELETE FROM cp_spend_holds d WHERE d.hold_id = hid AND ${spendHoldDeadSql("d", "win", "stale", "kept")};
-        IF cardinality(line_keys) > 0 THEN
-          DELETE FROM cp_spend_holds x WHERE x.hold_id IN (SELECT d.hold_id FROM cp_spend_holds d
-            WHERE d.keys && line_keys AND ${spendHoldDeadSql("d", "win", "stale", "kept")} LIMIT prune_limit);
-        END IF;
+        DELETE FROM cp_spend_holds x WHERE x.hold_id IN (${spendHoldExpiredIdsSql("win", "stale", "kept", "prune_limit")});
         -- Idempotent by hold id.
         SELECT ${spendHoldJsonSql("h")} INTO found_hold FROM cp_spend_holds h WHERE h.hold_id = hid;
         IF found_hold IS NOT NULL THEN RETURN jsonb_build_object('admit', true, 'hold', found_hold); END IF;
@@ -418,10 +405,7 @@ export const BOOTSTRAP_DDL: readonly string[] = [
      version     integer NOT NULL,
      applied_at  timestamptz NOT NULL
    );`,
-  /*
-   * A position-allocator table rather than an advisory lock: the HTTP driver has no stable session.
-   * `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` row-locks the head row, so allocations serialize.
-   */
+
   `CREATE TABLE IF NOT EXISTS cp_log_heads (
      log_table     text NOT NULL,
      log_key       text NOT NULL,
@@ -452,6 +436,8 @@ export const BOOTSTRAP_DDL: readonly string[] = [
    );`,
   ...AGGREGATE_KINDS.flatMap(aggregateTable),
   ...APPEND_ONLY_LOGS.flatMap(appendOnlyTable),
+  ...MODEL_CHARGES_DDL,
+  MS_01_MODEL_CHARGES,
   `CREATE TABLE IF NOT EXISTS cp_admin_action_history_projection (
   gateway_receipt_id text PRIMARY KEY,
   gateway_log_key text NOT NULL DEFAULT 'admin-action' CHECK (gateway_log_key = 'admin-action'),
@@ -633,6 +619,7 @@ END $$;`,
   ...CHANGED_AT_INDEXES.map(index => index.ddl),
   ...ROUTE_TASK_INDEXES.map(index => index.ddl),
   SPEND_HOLDS_TABLE_DDL,
+  ...SPEND_LINE_TOTALS_DDL,
   SPEND_HOLDS_INDEXES_DDL,
   ADMIT_SPEND_HOLD_FUNCTION_DDL,
   SPEND_HOLDS_MOVE_DDL,
@@ -713,7 +700,7 @@ export function judgeSchema(input: {
   const missingTables = DECLARED_TABLES.filter((t) => !live.has(t));
   /* Only `cp_`-prefixed tables are judged. */
   const unexpectedTables = [...live].filter(
-    (t) => t.startsWith("cp_") && !DECLARED_TABLES.includes(t),
+    (t) => t.startsWith("cp_") && !DECLARED_TABLES.includes(t) && t !== "cp_spend_window",
   );
 
   if (missingTables.length > 0) {

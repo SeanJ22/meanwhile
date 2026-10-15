@@ -1333,41 +1333,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.dcboe.org/getmedia/05df694b-6e6a-44af-93d5-d7266bd6cd4c/Notice-of-Meeting-on-Bird-I86-formulations.pdf",
-          "sourceHash": "73a2aa1446f02eb6fbc33b413a051b560bb5fd0f3f8dda98488984149534e040",
-          "retrievedAt": "2026-10-14T23:52:27.164165+00:00",
-          "publisher": "District of Columbia Board of Elections",
-          "vault": {
-            "key": "project/freshness/source/www.dcboe.org/2026/10/14/ms-01-f6cb5ee75ed2c1bd/sha256-73a2aa1446f02eb6fbc33b413a051b560bb5fd0f3f8dda98488984149534e040.pdf",
-            "byteLength": 143136,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.dcboe.org/getmedia/8ed77952-835c-4a11-9fa2-2ad447d82643/Final-FIS-Initiative-Prohibiting-the-Force-Feeding-of-Birds-Act-of-2026.pdf",
-          "sourceHash": "4f7444bf9d13dfa04b61687629f073b5460d8761725b7400eefc4aabd54e1fb7",
-          "retrievedAt": "2026-10-14T23:54:10.337440+00:00",
-          "publisher": "District of Columbia government",
-          "vault": {
-            "key": "project/freshness/source/www.dcboe.org/2026/10/14/ms-01-4ba7a4a8bff4fc52/sha256-4f7444bf9d13dfa04b61687629f073b5460d8761725b7400eefc4aabd54e1fb7.pdf",
-            "byteLength": 170507,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://code.dccouncil.gov/us/dc/council/code/sections/1-204.105",
-          "sourceHash": "f94f279387a37bd2bd5a7bfc4891a561a8064644a272941a05e4cad5df66935f",
-          "retrievedAt": "2026-10-14T23:59:43.306735+00:00",
-          "publisher": "District of Columbia government",
-          "vault": {
-            "key": "project/freshness/source/code.dccouncil.gov/2026/10/14/ms-01-9cd2af3cf5e40b00/sha256-f94f279387a37bd2bd5a7bfc4891a561a8064644a272941a05e4cad5df66935f.html",
-            "byteLength": 12601,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -1380,7 +1345,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "DC",
+        "electionId": "dc-2026-11-03-general",
+        "sourceHash": "5fa7d4c47e28b5f2a4b36996238657da4181cfe82d564916bc34f628dfbebbd2",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T04:14:39.924989+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-dc/2026/10/15/ms-01/sha256-5fa7d4c47e28b5f2a4b36996238657da4181cfe82d564916bc34f628dfbebbd2.ndjson",
+          "byteLength": 3747,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

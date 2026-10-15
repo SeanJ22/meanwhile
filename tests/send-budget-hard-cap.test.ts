@@ -1,15 +1,3 @@
-/**
- * A Send's budget and an area's budget are HARD caps.
- *
- * Every case runs the real holds on the one shared budget ledger
- * (`BudgetRepository.mutate`, in memory) with fake model transports that
- * count what they were asked to send: a job that would exceed is refused
- * before any request; a follow-up (escalation, pre-warm, a request past the
- * hold) that would exceed is refused before it is sent; N jobs racing for a
- * budget that fits N−1 admit exactly N−1; a failed job keeps its hold, a
- * retry re-reserves, and a crash's hold counts until its window ends; a
- * missing or unreadable budget refuses; and nothing changes with no budget.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -32,7 +20,7 @@ import {
 } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { scoutJobWorstCaseUsd, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { RESEARCH_BOUNDS, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
-import { FleetPreSendRefusal, FleetSafetyController, FleetSafetyRefusal, modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
+import { fleetSpendAt, FleetPreSendRefusal, FleetSafetyController, FleetSafetyRefusal, modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
 import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansion/membership.ts";
 import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import type { IndependentAuditContext } from "../lib/control-plane/workers/types.ts";
@@ -49,7 +37,7 @@ const WORST = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch)!;
 
 function holds(now = () => NOW) {
   const repos = createMemoryRepositories();
-  return { repos, spend: new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now, sleep: async () => undefined }) };
+  return { repos, spend: new DurableSpendHolds({ store: repos.spendHolds, now }) };
 }
 
 const send = (budgetUsd: number, historicalUsd = 0, key = "send:dispatch:ri-1"): BudgetLine => ({ key, label: `assignment "Pima County" (${key.slice(5)})`, budgetUsd, historicalUsd, historyReadAt: NOW });
@@ -124,7 +112,7 @@ test("N jobs racing for a budget that fits N−1 admit exactly N−1, on one led
   assert.equal(Object.keys(ledger.spendHolds ?? {}).length, N - 1);
   assert.ok(committedUsd(ledger.spendHolds ?? {}, send(budget), NOW) <= budget, "never more held than the budget");
   /* A second cycle (a second ledger reader, same store) sees the first cycle's holds: no room for one more. */
-  const other = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
+  const other = new DurableSpendHolds({ store: repos.spendHolds, now: () => NOW });
   const late = await new JobSpend(other, "job-next-cycle", "ob-x", lines([send(budget)])).admit(WORST, "one Scout job");
   assert.equal(late.admit, false, "an overlapping cycle decides against the same remaining budget");
 });
@@ -217,19 +205,14 @@ test("a missing Send record or an unreadable budget refuses; with no Send budget
   assert.equal(sent.length, 1);
 });
 
-test("a ledger the store cannot read or write refuses the hold, by name: nothing runs unbudgeted", async () => {
-  const broken = {
-    read: async () => { throw new Error("connection refused"); },
-    install: async () => { throw new Error("connection refused"); },
-    mutate: async () => { throw new Error("connection refused"); },
-  };
-  const spend = new DurableSpendHolds({ budget: broken as never, now: () => NOW, sleep: async () => undefined });
+test("a hold store that cannot read or write refuses the hold, by name: nothing runs unbudgeted", async () => {
+  const broken = { ...createMemoryRepositories().spendHolds, admit: async () => { throw new Error("connection refused"); } };
+  const spend = new DurableSpendHolds({ store: broken, now: () => NOW });
   const verdict = await new JobSpend(spend, "job", "ob-1", lines([send(100)])).admit(WORST, "one Scout job");
   assert.equal(verdict.admit, false);
-  assert.match(!verdict.admit ? verdict.why : "", /shared budget ledger could not be read or written \(connection refused\)/);
+  assert.match(!verdict.admit ? verdict.why : "", /spend holds could not be read or written \(connection refused\)/);
 });
 
-/* ------------------------------------------------------------ autonomous work (no Send) */
 
 const PIMA = "az:county:county-of-pima";
 const MORRIS = "nj:county:county-of-morris";
@@ -296,9 +279,9 @@ test("autonomous work fails closed: an unreadable area budget or ledger refuses;
   /* The area's spend is unmeasured. */
   await assert.rejects(autonomous(spend, areaGate([azScope(50, null as unknown as number)]), { subjectId: PIMA, state: "AZ" }, transport)(request()), SendBudgetRefusal);
   /* The ledger cannot be read or written. */
-  const broken = { read: async () => { throw new Error("connection refused"); }, install: async () => { throw new Error("connection refused"); }, mutate: async () => { throw new Error("connection refused"); } };
-  const deadLedger = new DurableSpendHolds({ budget: broken as never, now: () => NOW, sleep: async () => undefined });
-  await assert.rejects(autonomous(deadLedger, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, transport)(request()), /shared budget ledger could not be read or written/);
+  const broken = { ...repos.spendHolds, admit: async () => { throw new Error("connection refused"); } };
+  const deadLedger = new DurableSpendHolds({ store: broken, now: () => NOW });
+  await assert.rejects(autonomous(deadLedger, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, transport)(request()), /spend holds could not be read or written/);
   assert.equal(sent.length, 0, "nothing was sent unbudgeted");
   /* The Fleet guard refuses before sending: the area hold is released, not left counting. */
   class Refused extends Error {}
@@ -322,7 +305,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
     return { id: "msg-unpriced", model: asked.model, role: "assistant", content: [{ type: "text", text: "done" }],
       stop_reason: "end_turn", usage: { input_tokens: 100 } } as unknown as ModelResponse;
   };
-  const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 100, clock: () => Date.parse(NOW) });
+  const controller = new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), rollingCeilingUsd: 100, clock: () => Date.parse(NOW) });
   const afterResponse = autonomous(spend, scope, { subjectId: PIMA, state: "AZ" },
     controller.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(afterResponse(request()), (error: unknown) =>
@@ -333,7 +316,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
   assert.equal(held[0].settled, null, "unknown-cost provider processing cannot release its durable area hold");
 
   const { repos: preRepos, spend: preSpend } = holds();
-  const preController = new FleetSafetyController({ now: NOW, charges: [], modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
+  const preController = new FleetSafetyController({ now: NOW, spend: fleetSpendAt([], NOW), modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
   const beforeRequest = autonomous(preSpend, scope, { subjectId: PIMA, state: "AZ" },
     preController.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(beforeRequest(request()), FleetPreSendRefusal);

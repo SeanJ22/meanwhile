@@ -7474,30 +7474,20 @@
         "All 17 U.S. House districts are acquired. State Senate districts 27 and State House districts 2, 17, 30, 37, 38, 44, 53, 54, 63, 80, 86, 97, 98, 99, 103, 104 remain unacquired after searches of public State Board and county nominee inventories.",
         "The Chicago Board candidate list is dated August 19, 2026 and lists whole district offices intersecting Chicago. Candidate rows are included; Removed and Withdrawn rows are excluded."
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
-          "sourceHash": "ffc5b022b726edce4c24bba746ba339de4d47bd798213b7f1b2666885c518e70",
-          "retrievedAt": "2026-10-14T16:55:31.306654+00:00",
-          "publisher": "Peoria County Board of Election Commissioners",
-          "vault": {
-            "key": "project/freshness/source/www.peoriaelections.gov/2026/10/14/ms-01-53ffa34beadd8248/sha256-ffc5b022b726edce4c24bba746ba339de4d47bd798213b7f1b2666885c518e70.pdf",
-            "byteLength": 614694,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
-          "sourceHash": "b7788f7de06ebda208a88670fa5d50d36d1371d96a30b4b28ef81d64ad456d47",
-          "retrievedAt": "2026-10-14T05:05:15Z",
-          "publisher": "City of Rockford Board of Election Commissioners",
-          "vault": {
-            "key": "project/freshness/source/www.voterockfordil.gov/2026/10/14/ms-01-ce5e22e0c1c6c9e3/sha256-b7788f7de06ebda208a88670fa5d50d36d1371d96a30b4b28ef81d64ad456d47.pdf",
-            "byteLength": 114772,
-            "contentType": "application/pdf"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "IL",
+        "electionId": "il-2026-11-03",
+        "sourceHash": "a17540534abbd60add2182857a159e01b403ef888997b65f46d0b5ac60393019",
+        "documentCount": 2,
+        "reviewedAt": "2026-10-15T04:14:39.811668+00:00",
+        "reviewedBy": "Codex MS-01 official measure inventory review",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-il/2026/10/15/ms-01/sha256-a17540534abbd60add2182857a159e01b403ef888997b65f46d0b5ac60393019.ndjson",
+          "byteLength": 3515,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

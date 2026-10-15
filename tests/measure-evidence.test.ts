@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { BallotSet, MeasureSourceReference } from "../lib/ballot/types.ts";
 import { measureSourceReferenceValid } from "../lib/ballot/measure-source-contract.ts";
-import { readMeasureSource, validateBallotMeasureEvidence, verifyMeasureSource } from "../lib/ballot/measure-evidence.ts";
+import { measureSourceReader, readMeasureSource, validateBallotMeasureEvidence, verifyMeasureSource } from "../lib/ballot/measure-evidence.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { extensionFor, MemoryEvidenceStore, type EvidenceStore, type StoredObject } from "../lib/control-plane/evidence/store.ts";
 
@@ -20,10 +20,15 @@ async function put(vault: EvidenceStore, body: string | Uint8Array, options: {
   return reference;
 }
 function countingStore(vault: EvidenceStore, reads: Map<string, number>, alter?: (object: StoredObject) => StoredObject): EvidenceStore {
-  return { put: vault.put.bind(vault), head: vault.head.bind(vault), list: vault.list.bind(vault), get: async key => {
+  return { put: vault.put.bind(vault), head: vault.head.bind(vault), list: vault.list.bind(vault), get: vault.get.bind(vault), stream: async key => {
     reads.set(key, (reads.get(key) ?? 0) + 1);
-    const object = await vault.get(key);
-    return object && alter ? alter(object) : object;
+    if (!alter) return vault.stream(key);
+    const stored = await vault.get(key);
+    if (!stored) return null;
+    const object = alter(stored);
+    return { key: object.key, meta: object.meta, body: new ReadableStream<Uint8Array>({
+      start(controller) { controller.enqueue(object.bytes); controller.close(); },
+    }) };
   } };
 }
 
@@ -40,7 +45,7 @@ test("state evidence validates exact legal and attributed guide excerpts while r
   const ballot = { measures: [{ contestId: "measure:1", officialText, voterGuide: { ...guide, summary: "Official analysis.",
     fiscalImpact: "Annual cost: $5.", passageThreshold: "Approval requires a majority of votes.", passageThresholdSource: threshold,
     argumentsFor: ["State-published support."], argumentsAgainst: ["State-published opposition."] } }],
-    measureRecords: [record], sourceDocuments: [original] } as unknown as BallotSet;
+    measureRecords: [record] } as unknown as BallotSet;
   const reads = new Map<string, number>();
   const tracked = countingStore(vault, reads);
   await validateBallotMeasureEvidence(ballot, tracked);
@@ -48,6 +53,11 @@ test("state evidence validates exact legal and attributed guide excerpts while r
   reads.clear();
   await validateBallotMeasureEvidence(structuredClone(ballot), tracked, ballot);
   assert.equal(reads.size, 0);
+  const reordered = JSON.parse(JSON.stringify(ballot), (_key, value) => value && typeof value === "object" && !Array.isArray(value)
+    ? Object.fromEntries(Object.entries(value).reverse()) : value) as BallotSet;
+  await validateBallotMeasureEvidence(reordered, tracked, ballot);
+  assert.equal(reads.size, 0);
+  assert.equal(await readMeasureSource(vault, reordered.measures[0].officialText!), text);
   await validateBallotMeasureEvidence({ ...ballot, measureRecords: [{ ...record, whatItDoes: "SECTION 1. Libraries receive funding." }] }, tracked, ballot);
   assert.deepEqual([...reads], [[officialText.vault.key, 1]]);
   reads.clear();
@@ -57,7 +67,7 @@ test("state evidence validates exact legal and attributed guide excerpts while r
   assert.deepEqual([...reads], [[revised.vault.key, 1]]);
   reads.clear();
   const collateral = await put(vault, "%PDF additional source", { type: "application/pdf" });
-  await validateBallotMeasureEvidence({ ...ballot, sourceDocuments: [original, collateral] }, tracked, ballot);
+  await validateBallotMeasureEvidence({ ...ballot, measures: [...ballot.measures, { contestId: "measure:2", officialText: collateral } as BallotSet["measures"][number]] }, tracked, ballot);
   assert.deepEqual([...reads], [[collateral.vault.key, 1]]);
   assert.equal(await readMeasureSource(vault, officialText), text);
   await verifyMeasureSource(vault, original);
@@ -96,6 +106,57 @@ test("vault reads refuse corrupt bodies, untrusted metadata and incomplete docum
   const original = await put(vault, "%PDF original", { type: "application/pdf" });
   const derived = await put(vault, "Transcribed source.", { originals: [original] });
   const missing = countingStore(vault, new Map());
-  missing.get = async key => key === original.vault.key ? null : vault.get(key);
+  missing.stream = async key => key === original.vault.key ? null : vault.stream(key);
   await assert.rejects(readMeasureSource(missing, derived), /missing/);
+});
+
+
+test("publication checks split UTF-8 excerpts through streams and source readers retain no document bodies", async () => {
+  const vault = new MemoryEvidenceStore();
+  const sourceText = "SECTION 1. Café libraries receive funding. " + "Official text. ".repeat(120_000);
+  const original = await put(vault, "%PDF archived source", { type: "application/pdf" });
+  const source = await put(vault, sourceText, { originals: [original] });
+  const counts = new Map<string, number>();
+  const streamed = countingStore(vault, counts);
+  streamed.get = async () => { throw new Error("Full-object reads are forbidden during measure verification."); };
+  const baseStream = streamed.stream.bind(streamed);
+  streamed.stream = async key => {
+    const object = await baseStream(key);
+    if (!object || key !== source.vault.key) return object;
+    let chunk = 0;
+    const reader = object.body.getReader();
+    return { ...object, body: new ReadableStream<Uint8Array>({
+      async pull(controller) {
+        const next = await reader.read();
+        if (next.done) { reader.releaseLock(); controller.close(); return; }
+        if (chunk++ === 0) {
+          controller.enqueue(next.value.subarray(0, 15));
+          controller.enqueue(next.value.subarray(15, 16));
+          controller.enqueue(next.value.subarray(16));
+        } else controller.enqueue(next.value);
+      },
+      async cancel() { await reader.cancel(); reader.releaseLock(); },
+    }, { highWaterMark: 0 }) };
+  };
+  const record = { contestId: "measure:stream", sourceUrl, sourceHash: source.sourceHash, writtenAt: retrievedAt,
+    whatItDoes: "Café libraries receive funding.", yesMeans: null, noMeans: null, parts: [] };
+  const ballot = { measures: [{ contestId: record.contestId, officialText: source }], measureRecords: [record] } as unknown as BallotSet;
+  await validateBallotMeasureEvidence(ballot, streamed);
+  assert.equal(counts.get(original.vault.key), 1);
+  const read = measureSourceReader(streamed);
+  assert.equal(await read(source), sourceText);
+  assert.equal(await read(source), sourceText);
+  assert.equal(counts.get(source.vault.key), 3, "each explicit text read streams again rather than retaining its bytes");
+  assert.equal(counts.get(original.vault.key), 2, "only verified original identities are reused within the source reader");
+});
+
+test("metadata refusal cancels an unread source stream", async () => {
+  const vault = new MemoryEvidenceStore(), source = await put(vault, "Official source.");
+  const object = (await vault.get(source.vault.key))!;
+  let cancelled = false, pulled = false;
+  vault.stream = async key => ({ key, meta: { ...object.meta, custom: { tier: "RESTRICTED_RAW", canonicalUrl: sourceUrl } },
+    body: new ReadableStream<Uint8Array>({ pull() { pulled = true; }, cancel() { cancelled = true; } }, { highWaterMark: 0 }) });
+  await assert.rejects(verifyMeasureSource(vault, source), /not readable/);
+  assert.equal(cancelled, true);
+  assert.equal(pulled, false);
 });

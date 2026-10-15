@@ -7,7 +7,7 @@ import { workerVaultResolver } from "../control-plane/workers/vault.ts";
 export function publicationVaultReaders(repos: ControlPlaneRepositories, store: EvidenceStore, project = "freshness") {
   let keys: Promise<string[]> | undefined;
   const evidenceStore: EvidenceStore = {
-    put: store.put.bind(store), get: store.get.bind(store), head: store.head.bind(store),
+    put: store.put.bind(store), get: store.get.bind(store), stream: store.stream.bind(store), head: store.head.bind(store),
     list: prefix => prefix === `project/${project}/`
       ? keys ??= store.list(prefix) : store.list(prefix),
   };

@@ -289,7 +289,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const answer = composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:f.body.id,name:f.body.name!},question:"What is this government's budget?",records:evidence});
   assert.equal(answer?.answer, facts.sourceSentence);
   const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
-  const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope, f.store);
+  const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope);
   assert.ok(edge);
   await withReaderAuthorityEdge({registryRuntime:{value:{...f.prior.payload,bodyRosters:[],rosterReaderDispositions:[]},versionId:f.prior.versionId},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {
     assert.deepEqual(await governmentFinanceEvidence(f.body.id, f.body.ocdId!), evidence);

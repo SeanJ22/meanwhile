@@ -1544,74 +1544,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
-          "sourceHash": "a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e",
-          "retrievedAt": "2026-10-14T23:52:26.882839+00:00",
-          "publisher": "Arkansas Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-f051c2ca5bbbea3a/sha256-a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e.pdf",
-            "byteLength": 127809,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
-          "sourceHash": "e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e",
-          "retrievedAt": "2026-10-14T23:52:27.047640+00:00",
-          "publisher": "Arkansas Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-26aff230c356252f/sha256-e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e.pdf",
-            "byteLength": 145418,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
-          "sourceHash": "77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f",
-          "retrievedAt": "2026-10-14T23:52:26.885123+00:00",
-          "publisher": "Arkansas Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/www.sos.arkansas.gov/2026/10/14/ms-01-0debaf037a4ddf40/sha256-77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f.pdf",
-            "byteLength": 162933,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2FACT578.pdf",
-          "sourceHash": "487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa",
-          "retrievedAt": "2026-10-14T23:52:28.317067+00:00",
-          "publisher": "Arkansas General Assembly",
-          "vault": {
-            "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/14/ms-01-875c43d3740f35c2/sha256-487560ef9d4a6785aba873189c1cdbcb19e90320b4d0e8e728645e1f74906daa.pdf",
-            "byteLength": 257420,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.arkleg.state.ar.us/Home/FTPDocument?path=%2FAssembly%2F2025%2F2025R%2FFiscal+Impacts%2FSJR15-DFA2.pdf",
-          "sourceHash": "74b55a76a924aa6ce01f0fe8b8168673ff32b46f6b095416985709d906dbf4eb",
-          "retrievedAt": "2026-10-15T00:13:36.648528+00:00",
-          "publisher": "Arkansas General Assembly",
-          "vault": {
-            "key": "project/freshness/source/www.arkleg.state.ar.us/2026/10/15/ms-01-45b85259717f7e21/sha256-74b55a76a924aa6ce01f0fe8b8168673ff32b46f6b095416985709d906dbf4eb.pdf",
-            "byteLength": 33770,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://www.uaex.uada.edu/business-communities/voter-education/docs/2026-Arkansas-Ballot-Issues-Voter-Guide.pdf",
-          "sourceHash": "bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22",
-          "retrievedAt": "2026-10-14T23:55:56.121439+00:00",
-          "publisher": "Arkansas Secretary of State and University of Arkansas System Division of Agriculture",
-          "vault": {
-            "key": "project/freshness/source/www.uaex.uada.edu/2026/10/14/ms-01-f2188961ea9ee459/sha256-bcbf1c743b734c2f7a9783e1ff2d6e7b27797e4b157b5ea58355e0b1efc18d22.pdf",
-            "byteLength": 2699601,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -1635,7 +1567,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "AR",
+        "electionId": "ar-2026-11-03-general",
+        "sourceHash": "722a31e88999a0914d07d5a964f8e212fb114637acfa62c94b602e0321855873",
+        "documentCount": 6,
+        "reviewedAt": "2026-10-15T04:14:40.002825+00:00",
+        "reviewedBy": "Codex MS-01 official-source acquisition",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-ar/2026/10/15/ms-01/sha256-722a31e88999a0914d07d5a964f8e212fb114637acfa62c94b602e0321855873.ndjson",
+          "byteLength": 7259,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

@@ -7,24 +7,17 @@ import { canonicalModelId } from "../../models.ts";
 import { assertStepMayInvokeModel, MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
-import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { ceilingPermits, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import { anthropicTransport, modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import type { FleetRuntime } from "./runtime.ts";
 import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, RecordExtractionShape } from "./types.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { inventoryRecordEvidence } from "./record-evidence.ts";
-import { readSpendWindow } from "../spend-window.ts";
+import { readRollingModelSpend } from "../spend-window.ts";
 
 export const AUDIT_RESPONSE_MAX_BYTES = 16_384;
 export const AUDIT_CONTEXT_MAX_BYTES = 32_000;
 
-
-
-/*
- * No forced tool choice (HTTP 400 on Opus 5.5): `auto`, the system prompt naming the tool, and `strict: true`. A
- * response without a tool call fails closed as `AUDIT_MODEL_NO_TOOL_CALL`. Strict mode accepts no array-length
- * constraints, so the 24-challenge limit is enforced by `validateAnswer`.
- */
 const RECORD_AUDIT = {
   name: "record_audit",
   description: "Return the bounded independent evidence audit. This records a proposal only and grants no acquisition or promotion authority.",
@@ -182,12 +175,7 @@ function validateAnswer(response: ModelResponse, expectedModel: string, context:
   if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) validationFailure("AUDIT_MODEL_IDENTITY_MISMATCH");
   if (!Array.isArray(response.content)) validationFailure("AUDIT_MODEL_CONTENT_INVALID");
   const tools = response.content.filter((block) => block.type === "tool_use");
-  /*
-   * Under `tool_choice: auto` the model may answer in text. That answer is not
-   * the audit's contract, so it is never read as a verdict — even valid JSON
-   * saying SURVIVED. The review fails closed, named with the stop reason
-   * (`end_turn`, `max_tokens`, `refusal`, …), and the record is not approved.
-   */
+
   if (tools.length === 0) validationFailure(`AUDIT_MODEL_NO_TOOL_CALL:${String(response.stop_reason).slice(0, 80)}`);
   if (tools.length !== 1) validationFailure("AUDIT_MODEL_MULTIPLE_TOOL_CALLS");
   if (tools[0].name !== "record_audit") validationFailure("AUDIT_MODEL_UNEXPECTED_TOOL");
@@ -225,9 +213,9 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
   if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("AUDIT_CEILING_INVALID");
   return { workerProvider: "anthropic", workerVersion: initial.model, review: async (context, attemptId, escalation) => {
     const started = performance.now();
-    const spend = researchSpendInWindow(await readSpendWindow(repos, now()), now());
+    const spend = await readRollingModelSpend(repos, now());
     if (!options.lifetimeHuntSubject?.(context.subjectId)) {
-      const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
+      const admission = ceilingPermits(spend.usd, ceilingUsd);
       if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);
     }
     const body = auditReasoningContext(context);

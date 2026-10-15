@@ -42,6 +42,7 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos; bro
   } };
 }
 import type { DeclaredExecutor, DispatchResult } from "../scheduler/dispatch.ts";
+import type { CostEntry } from "../cost.ts";
 import type { ModelRequest, ModelTransport } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import type { SearchBudget } from "../../hunt/search.ts";
@@ -68,7 +69,6 @@ export interface LeaseWorkerConfig {
   readonly ceilingUsd: number;
   /** Admin's requests in flight at once to one website; absent, the default. */
   readonly hostConcurrency?: number;
-  readonly fundedSubjects: readonly string[];
   /** How long the pool lets this worker process live; set by the pool, not the caller. */
   readonly wallMs?: number;
   /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
@@ -140,7 +140,7 @@ export async function runNationalPlaceWorkerProcesses(input: {
   };
   await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/national-worker.ts", config: { root: input.root, postgres: true,
     taskIds: [...new Set(input.zips)], nationalZips: [...new Set(input.zips)], modelEnabled: false,
-    searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: input.capacity,
+    searchEnabled: false, ceilingUsd: 0 }, capacity: input.capacity,
     transportFor: () => async () => { throw new Error("NATIONAL_SOURCE_MODEL_CALL_REFUSED"); },
     onStarted: input.onStarted, slots: input.slots, orderPending: input.orderPending,
     national: {
@@ -161,6 +161,8 @@ export async function runLeaseWorkerProcesses(input: {
   readonly capacity: () => number;
   readonly transportFor: (jurisdiction: AutonomousJurisdiction, taskId: string) => ModelTransport;
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
+  readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
+  readonly onCostRecorded?: (entry: CostEntry) => void;
   /** The paid-search budget the Exa agent lane takes a slot from in this process. */
   readonly searchBudget?: SearchBudget;
   readonly onStarted?: (pid: number) => void;
@@ -302,6 +304,11 @@ export async function runLeaseWorkerProcesses(input: {
           const requested = (message.body as readonly string[]).filter(id => pending.has(id) && !inFlight.has(id));
           if (standing?.retireAfterMs !== undefined && Date.now() - startedAt >= standing.retireAfterMs) { retired = true; body = []; }
           else body = input.orderPending ? await input.orderPending(requested) : requested;
+        } else if (message.kind === "cost-recorded") {
+          input.onCostRecorded?.(message.body as CostEntry);
+          body = null;
+        } else if (message.kind === "lifetime-hunt") {
+          body = input.lifetimeHuntSubject?.(message.jurisdiction.subjectId) ?? false;
         } else if (message.kind === "route-tool") {
           if (!input.route) throw new Error("ROUTE_PROCESS_BROKER_UNAVAILABLE");
           const request = message.body as { name: string; args: readonly unknown[] };

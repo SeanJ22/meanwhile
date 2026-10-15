@@ -6988,41 +6988,20 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
-          "sourceHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
-          "retrievedAt": "2026-10-14T23:52:30.578259+00:00",
-          "publisher": "Idaho Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/archive.voteidaho.gov/2026/10/14/ms-01-1eca9582da9e1f88/sha256-3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7.pdf",
-            "byteLength": 27494593,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtXX/Sect1/",
-          "sourceHash": "ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c",
-          "retrievedAt": "2026-10-15T00:00:18.950618+00:00",
-          "publisher": "Idaho Legislature",
-          "vault": {
-            "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-e3e0193460a4a265/sha256-ccf928c4775c8d9dd2115da18feb2e74576df98f428bf642fbeee07fa754d69c.html",
-            "byteLength": 90834,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH18/SECT34-1811/",
-          "sourceHash": "50c1217f3ea0e1f0982fcb3295aaed6c85b17fe195e6021af73c4c0c62e094d3",
-          "retrievedAt": "2026-10-15T00:00:44.289021+00:00",
-          "publisher": "Idaho Legislature",
-          "vault": {
-            "key": "project/freshness/source/legislature.idaho.gov/2026/10/15/ms-01-fe6cff558072ae83/sha256-50c1217f3ea0e1f0982fcb3295aaed6c85b17fe195e6021af73c4c0c62e094d3.html",
-            "byteLength": 91789,
-            "contentType": "text/html"
-          }
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "ID",
+        "electionId": "id-2026-11-03",
+        "sourceHash": "0622475618bd7a8734a5460bbaed8a5cab565108d3aef508d436ea29ce1fae40",
+        "documentCount": 3,
+        "reviewedAt": "2026-10-15T04:14:40.047736+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-id/2026/10/15/ms-01/sha256-0622475618bd7a8734a5460bbaed8a5cab565108d3aef508d436ea29ce1fae40.ndjson",
+          "byteLength": 5576,
+          "contentType": "application/x-ndjson"
         }
-      ]
+      }
     }
   },
   "sourceReceipt": {

@@ -4876,85 +4876,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://sdlegislature.gov/api/Statutes/0N-23-3.html",
-          "sourceHash": "91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0",
-          "retrievedAt": "2026-10-15T00:00:43.570960+00:00",
-          "publisher": "South Dakota Legislature",
-          "vault": {
-            "key": "project/freshness/source/sdlegislature.gov/2026/10/15/ms-01-83a4b307818a6869/sha256-91b7560e642a1349bcfb90a25fb63b3c1248aef6a8a639bdbbd9571cb12408b0.html",
-            "byteLength": 3039,
-            "contentType": "text/html"
-          }
-        },
-        {
-          "sourceUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Ballot%20Question%20Information/2026%20Ballot%20Question%20Files/2026%20BQ/2026GeneralBQPamphletFINAL.pdf",
-          "sourceHash": "25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c",
-          "retrievedAt": "2026-10-14T23:52:30.098339+00:00",
-          "publisher": "Charles Mix County Auditor",
-          "vault": {
-            "key": "project/freshness/source/sdsos.gov/2026/10/14/ms-01-ce65912d4c2d8e06/sha256-25b197a0dfae3218e668b3050483d0c7ed1d769e91e0efce5bb1a5e9f301549c.pdf",
-            "byteLength": 613690,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/283708.pdf",
-          "sourceHash": "45bf5d97f6c6035b287b3926e0ac9be718151210a84a04297261ad91c5136dec",
-          "retrievedAt": "2026-10-14T23:52:30.665569+00:00",
-          "publisher": "South Dakota Legislature",
-          "vault": {
-            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-812fd183a4b7545f/sha256-45bf5d97f6c6035b287b3926e0ac9be718151210a84a04297261ad91c5136dec.pdf",
-            "byteLength": 100105,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284191.pdf",
-          "sourceHash": "28f74802bf9fb5773623c61f15c1b8cb507dbc9b71cce615f8596938a18370a5",
-          "retrievedAt": "2026-10-14T23:52:30.870238+00:00",
-          "publisher": "South Dakota Legislature",
-          "vault": {
-            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-71a1ce0e902a1f13/sha256-28f74802bf9fb5773623c61f15c1b8cb507dbc9b71cce615f8596938a18370a5.pdf",
-            "byteLength": 96940,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284225.pdf",
-          "sourceHash": "7c69905d8cc0d6b4489cce7b4d830bfedfea7f6e396bf594b6d480c0d20d2f02",
-          "retrievedAt": "2026-10-14T23:52:30.511128+00:00",
-          "publisher": "South Dakota Legislature",
-          "vault": {
-            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d4a00d0485b906ab/sha256-7c69905d8cc0d6b4489cce7b4d830bfedfea7f6e396bf594b6d480c0d20d2f02.pdf",
-            "byteLength": 95761,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://mylrc.sdlegislature.gov/api/Documents/284377.pdf",
-          "sourceHash": "48ec7a7740ba92be22c64ac090f44eebc9bf7a57fba7ab9841ff43e2f85d1d07",
-          "retrievedAt": "2026-10-14T23:52:30.484995+00:00",
-          "publisher": "South Dakota Legislature",
-          "vault": {
-            "key": "project/freshness/source/mylrc.sdlegislature.gov/2026/10/14/ms-01-d7c83e26397b4152/sha256-48ec7a7740ba92be22c64ac090f44eebc9bf7a57fba7ab9841ff43e2f85d1d07.pdf",
-            "byteLength": 96143,
-            "contentType": "application/pdf"
-          }
-        },
-        {
-          "sourceUrl": "https://charlesmixcounty.gov/files/2026/10/GE-General.pdf",
-          "sourceHash": "303d94e8dc83a6d0f08de8639b6d94eacd2d9c10ba7b6430aad33ecfe0d21915",
-          "retrievedAt": "2026-10-14T05:24:31.208593+00:00",
-          "publisher": "Charles Mix County Auditor",
-          "vault": {
-            "key": "project/freshness/source/charlesmixcounty.gov/2026/10/14/ms-01-2f340164fc6d8372/sha256-303d94e8dc83a6d0f08de8639b6d94eacd2d9c10ba7b6430aad33ecfe0d21915.pdf",
-            "byteLength": 117056,
-            "contentType": "application/pdf"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -4967,7 +4888,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "SD",
+        "electionId": "sd-2026-11-03-general",
+        "sourceHash": "9967f752a1abe952c80752c8fb972032417e0c95e2b4e9f80af1bb0fac232515",
+        "documentCount": 7,
+        "reviewedAt": "2026-10-15T04:14:40.028290+00:00",
+        "reviewedBy": "Codex MS-01",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-sd/2026/10/15/ms-01/sha256-9967f752a1abe952c80752c8fb972032417e0c95e2b4e9f80af1bb0fac232515.ndjson",
+          "byteLength": 8055,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

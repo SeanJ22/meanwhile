@@ -12,7 +12,7 @@ import { readCompletedWorkerResult, reconcileWorkerCompletions, type Uncommitted
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 import { dispatchOne, hunterWallLimitMs, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
-import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { ceilingPermits } from "../scheduler/research-policy.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
@@ -23,7 +23,7 @@ import { auditLearningEntries } from "./audit-sampling.ts";
 import { writeFieldManual } from "../field-manual.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
   type FleetRole, type IndependentAuditContext, type ParserWorkerInput, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
-import { readSpendWindow } from "../spend-window.ts";
+import { readRollingModelSpend } from "../spend-window.ts";
 
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
@@ -99,10 +99,6 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
   return (await registerRouteTask(repos, task, input.now)).value;
 }
 
-/**
- * `modelAudit`: whether the model's adversarial review runs on this audit. The deterministic audit runs on every
- * validated record; the model review is sampled across strata (audit-sampling.ts), on the cheapest tier.
- */
 export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: string, modelAudit = true): DeclaredExecutor {
   const spec = task.workerTask;
   if (!spec) throw new Error("WORKER_TASK_SPEC_MISSING");
@@ -117,7 +113,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
   const lane = assisted ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC";
   const worker: WorkerRef = { role, provider: parseAssisted ? runtime.parseReasoner!.workerProvider : auditAssisted ? runtime.auditReasoner!.workerProvider : "we-the-people",
     version: parseAssisted ? runtime.parseReasoner!.workerVersion : auditAssisted ? spec.auditEscalation ? MODEL_FOR_CLASS[spec.auditEscalation.to] : runtime.auditReasoner!.workerVersion : FLEET_IMPLEMENTATION_VERSION, instance: holder };
-  return { lane, workerFor: () => worker, run: async ({ attemptId, workItemId, routeTaskId, bound }) => {
+  return { lane, workerFor: () => worker, run: async ({ attemptId, workItemId, routeTaskId }) => {
     const started = performance.now();
     const now = runtime.now ?? (() => new Date().toISOString());
     const attemptRow = await runtime.repos.attempts.mustRead(attemptId);
@@ -283,9 +279,9 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
   let reason: string | null = null;
   if (denial.reason.includes("AUDIT_MODEL_TRANSPORT_UNAVAILABLE") && runtime.auditReasoner) reason = "The configured model transport is now available; the current capability and rolling-cost policy will be evaluated again.";
   if (denial.reason.includes("AUDIT_ROLLING_COST_CEILING")) {
-    const spend = researchSpendInWindow(await readSpendWindow(runtime.repos, now), now);
+    const spend = await readRollingModelSpend(runtime.repos, now);
     if (runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) reason = "The selected lifetime hunt uses its durable reservation ledger; current policy will be checked again.";
-    else if (ceilingPermits(spend.windowUsd, (runtime.rollingCeilingUsd ?? 0)).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
+    else if (ceilingPermits(spend.usd, (runtime.rollingCeilingUsd ?? 0)).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
   }
   if (!reason) return null;
   const { policyDenial: _denial, ...rest } = task;

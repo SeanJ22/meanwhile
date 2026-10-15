@@ -852,6 +852,7 @@ export const civicDataPromotions = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_promotions_record_scope_idx").on(table.recordClass, table.scope),
+    index("civic_data_promotions_scope_cursor_idx").on(table.recordClass, sql`${table.scope} COLLATE "C"`),
     check(
       "civic_data_promotions_key_coherent",
       sql`${table.key} = ${table.recordClass} || ':' || ${table.scope}`,

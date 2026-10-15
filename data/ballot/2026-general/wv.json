@@ -6709,19 +6709,6 @@
           "citation": "measure-source"
         }
       ],
-      "sourceDocuments": [
-        {
-          "sourceUrl": "https://sos.wv.gov/article/secretary-warner-issues-public-notice-proposed-amendment-west-virginia-constitution-will",
-          "sourceHash": "113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f",
-          "retrievedAt": "2026-10-14T23:52:45.721852+00:00",
-          "publisher": "West Virginia Secretary of State",
-          "vault": {
-            "key": "project/freshness/source/sos.wv.gov/2026/10/14/ms-01-5c201f020fb84fe3/sha256-113c1ec775c2f9d98f4dbca9a43fd559860f50d94e779d3fd037f3be5902382f.html",
-            "byteLength": 100567,
-            "contentType": "text/html"
-          }
-        }
-      ],
       "sourceAuthorities": [
         {
           "sourceUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
@@ -6734,7 +6721,21 @@
             "contentType": "text/html"
           }
         }
-      ]
+      ],
+      "sourceCorpus": {
+        "format": "ballot-source-corpus@1",
+        "state": "WV",
+        "electionId": "wv-2026-general",
+        "sourceHash": "46cf6e014fef7264db081ea298e8c80776711901d3d08921504f06e90d0e8d19",
+        "documentCount": 1,
+        "reviewedAt": "2026-10-15T04:14:39.928228+00:00",
+        "reviewedBy": "Codex MS-01 official source comparison",
+        "vault": {
+          "key": "project/freshness/source/ballot-corpus-wv/2026/10/15/ms-01/sha256-46cf6e014fef7264db081ea298e8c80776711901d3d08921504f06e90d0e8d19.ndjson",
+          "byteLength": 1276,
+          "contentType": "application/x-ndjson"
+        }
+      }
     }
   },
   "sourceReceipt": {

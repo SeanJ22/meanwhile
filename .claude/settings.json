@@ -1,4 +1,7 @@
 {
+  "permissions": {
+    "allow": ["mcp__Neon", "mcp__claude_ai_Neon"]
+  },
   "hooks": {
     "PreToolUse": [
       {

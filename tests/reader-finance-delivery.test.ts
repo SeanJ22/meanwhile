@@ -204,11 +204,11 @@ test("a missing canonical ballot identity projection cannot become a display-key
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
   try {
-    assert.equal((await readGenericBallotProjection({ store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
+    assert.equal((await readGenericBallotProjection("AZ", { store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
     resetAzIdentityCache();
     assert.throws(
       () => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
-      /National ballot projection is STORE_UNREACHABLE|identity holding unavailable/,
+      /Ballot for AZ is STORE_UNREACHABLE|identity holding unavailable/,
     );
   } finally {
     if (previous === undefined) delete env.NODE_ENV;

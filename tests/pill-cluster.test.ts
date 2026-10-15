@@ -8,9 +8,6 @@ import {
   ASK_PILL_LABELS,
 } from "../lib/routing/ask-pill-labels.ts";
 
-// The DOM half (one rendered cluster per state) runs against a real browser in the walk harness; everything a
-// browser is not needed for is here.
-
 const ROOT = join(import.meta.dirname, "..");
 
 test("4e: location is decided by exactly two booleans, and WGH wins", async () => {
@@ -216,5 +213,5 @@ test("4h: the pointer is always visible, names its source, and opens in the app"
   // The summary names the source organisation.
   assert.match(page, /Candidates as filed with \$\{contest\.provenance\.sourceOrg\}/);
   assert.match(page, /General-election candidates per \$\{nomineeSourceOrgs\}/);
-  assert.match(page, /const nomineeSourceOrgs = lineup[\s\S]*?nomineeProvenance\(nominee, contest\)\.sourceOrg/);
+  assert.match(page, /const nomineeSourceOrgs = lineup[\s\S]*?nomineeProvenance\(nominee, contest, set!\.election\.state\)\.sourceOrg/);
 });

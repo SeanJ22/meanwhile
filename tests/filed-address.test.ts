@@ -22,11 +22,11 @@ await installBallots(njMorrisFiling([{
 ] }));
 
 test("filing email and its source survive while the filed address cannot reach Ask", () => {
-  const contacts = candidateContactCensus().contacts;
+  const contacts = candidateContactCensus("NJ").contacts;
   assert.equal(contacts.length, 2);
   for (const row of contacts) {
     assert.equal(Object.hasOwn(row, "filedAddress"), false, "the reader contact contract carries no address field at all");
-    const contact = contactForCandidate(row.candidacyId, "Candidate", "Office")!;
+    const contact = contactForCandidate("NJ", row.candidacyId, "Candidate", "Office")!;
     assert.ok(!("filedAddress" in contact) || contact.filedAddress === null);
     assert.equal(contact.email, row.email);
     assert.equal(contactRecord(contact).sourceUrl, row.sourceUrl);

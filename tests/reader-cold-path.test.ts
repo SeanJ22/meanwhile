@@ -18,10 +18,9 @@ import {
   type PublishAuthority,
 } from "../lib/meetings/edge-serving.ts";
 
-import { stateOfOcdId, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
+import { type ReaderManifest, type ReaderAuthorityManifest } from "../lib/meetings/edge-artifacts.ts";
 
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
-
 
 import { edgeValidationsRun } from "../lib/civic-data/validated-once.ts";
 
@@ -85,10 +84,6 @@ const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.ma
   roster: { scope: target.state.toLowerCase(), generatedAt: "2026-09-25", officeholders: [], divisions: [], unmatched: [] },
 }]));
 
-/**
- * The recorded 85701 meetings plus one synthetic sitting each for a New Jersey and a New Hampshire county
- * government, so the edge publishes meeting scopes for three states.
- */
 function multiStateSnapshot() {
   const recorded = recordedMeetingsSnapshot().meetings;
   const template = recorded.find((row) => row.id.startsWith("legistar:") && row.location)!;
@@ -105,7 +100,7 @@ function multiStateSnapshot() {
   return recordedMeetingsSnapshot([...recorded, elsewhere("nj", "morris", 40.7968, -74.4815), elsewhere("nh", "merrimack", 43.2081, -71.5376)]);
 }
 
-async function publishEdge(tag: string, options: { readonly legislators?: boolean } = {}): Promise<{ dir: string; manifest: ReaderManifest }> {
+async function publishEdge(tag: string, options: { readonly legislators?: boolean; readonly routing?: ReturnType<typeof currentEverydayRoutingProjection> | null } = {}): Promise<{ dir: string; manifest: ReaderAuthorityManifest; meetings: ReaderManifest }> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-c21-edge-"));
   dirs.push(dir);
   const snapshot = multiStateSnapshot();
@@ -115,6 +110,7 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
     "comment-access": { value: commentAccessProjection, versionId: `${tag}:comment-access` },
+    "everyday-routing": { value: { projection: options.routing === undefined ? currentEverydayRoutingProjection() : options.routing }, versionId: `${tag}:everyday-routing` },
   };
   const store = new LocalFileArtifactStore(dir);
   const result = await publishReaderEdgeArtifacts(snapshot, {
@@ -124,13 +120,12 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   }, {
     store,
     now: new Date().toISOString(),
-    extras: { commentAccess: COMMENT_ACCESS, everydayRouting: currentEverydayRoutingProjection() },
     authority,
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},
   });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
-  return { dir, manifest: (await store.readManifest())!.manifest };
+  return { dir, manifest: (await store.readAuthorityManifest())!.manifest, meetings: (await store.readManifest())!.manifest };
 }
 
 class RecordingStore extends LocalFileArtifactStore {
@@ -155,17 +150,17 @@ async function recordingBytes<T>(run: () => Promise<T>): Promise<{ value: T; key
   }
 }
 
-test("the map's routes fetch only the authority families they read, never Ask's outcomes or the comment-access artifact", async () => {
+test("the map authority bundle excludes meeting outcomes and comment rules", async () => {
   const { dir, manifest } = await publishEdge("c21-families");
   const store = new RecordingStore(dir);
   const bundle = await ensureReaderAuthorityEdge(manifest, store, READER_MAP_AUTHORITY_FAMILIES);
   assert.equal(bundle.registryRuntime?.versionId, "c21-families:registry");
   assert.equal(bundle.federalDirectory?.versionId, "c21-families:federal");
   assert.equal(bundle.meetingOutcomes, undefined, "the recorded outcomes are Ask's, not the map's");
-  assert.equal(bundle.commentAccess, undefined, "the meetings route takes comment access from the manifest");
+  assert.equal(bundle.commentAccess, undefined, "the meetings route reads comment access explicitly from its artifact");
   assert.deepEqual(store.keys.filter((key) => [manifest.authorityArtifacts?.["meeting-outcomes"]?.key, manifest.authorityArtifacts?.["comment-access"]?.key].includes(key)), [], "fetched and parsed for nothing");
   const everything = await ensureReaderAuthorityEdge(manifest, store);
-  assert.equal(everything.meetingOutcomes?.versionId, "c21-families:outcomes", "omitted, every family is fetched, as Ask needs");
+  assert.equal(everything.meetingOutcomes?.versionId, "c21-families:outcomes", "an unfiltered authority read includes outcomes");
   assert.equal(everything.commentAccess?.versionId, "c21-families:comment-access");
 });
 
@@ -243,10 +238,46 @@ test("a whole /api/meetings answer from the edge is held by the CDN, keyed on ev
     assert.match(timing, new RegExp(`(?:^|, )${stage};dur=\\d+`), `${stage} is not timed: ${timing}`);
   }
   assert.equal(registryRuntimeReadState().metadata.versionId, "c21-route:registry", "the registry was not read from the edge the route entered");
-  assert.deepEqual(keys.filter((key) => [manifest.authorityArtifacts?.["meeting-outcomes"]?.key, manifest.authorityArtifacts?.["comment-access"]?.key].includes(key)), [], "the route fetched families it never reads");
+  assert.equal(keys.includes(manifest.authorityArtifacts!["meeting-outcomes"]!.key), false, "the route does not read recorded outcomes");
+  assert.ok(keys.includes(manifest.authorityArtifacts!["comment-access"]!.key), "comment rules are read from their explicit artifact");
+  assert.ok(keys.includes(manifest.authorityArtifacts!["everyday-routing"]!.key), "routing is read from its explicit artifact");
   const body = await response.json();
   assert.ok(Array.isArray(body.governingOcdIds) && body.governingOcdIds.length > 0);
   assert.ok(body.coverage && body.coverage.bodies.length > 0);
+  assert.deepEqual(body.commentAccess, COMMENT_ACCESS);
+  assert.equal(body.commentAccessDataState, "PROMOTED");
+  assert.deepEqual(body.everydayRouting, currentEverydayRoutingProjection());
+  assert.equal(body.everydayRoutingDataState, "PROMOTED");
+  assert.equal("commentAccess" in manifest, false);
+  assert.equal("everydayRouting" in manifest, false);
+});
+
+test("a missing comment artifact leaves meetings and routing readable without holding the partial response", async () => {
+  const { dir, manifest } = await publishEdge("c21-comment-unavailable");
+  process.env.WTP_READER_EDGE_DIR = dir;
+  rmSync(join(dir, manifest.authorityArtifacts!["comment-access"]!.key));
+  const response = await meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}`));
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.ok(body.meetings.length > 0);
+  assert.deepEqual(body.commentAccess, []);
+  assert.equal(body.commentAccessDataState, "STORE_UNREACHABLE");
+  assert.deepEqual(body.everydayRouting, currentEverydayRoutingProjection());
+  assert.equal(body.everydayRoutingDataState, "PROMOTED");
+  assert.equal(response.headers.get("cache-control"), "no-store");
+  assert.equal(response.headers.get("netlify-cdn-cache-control"), null);
+});
+
+test("a published null routing artifact remains not recorded without reopening another source", async () => {
+  const { dir } = await publishEdge("c21-routing-absent", { routing: null });
+  process.env.WTP_READER_EDGE_DIR = dir;
+  const response = await meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}`));
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.everydayRouting, null);
+  assert.equal(body.everydayRoutingDataState, "NOT_RECORDED");
+  assert.deepEqual(body.commentAccess, COMMENT_ACCESS);
+  assert.equal(body.commentAccessDataState, "PROMOTED");
 });
 
 test("the held answer carries nothing about the visitor: other cookies, agents and addresses get the same bytes", async () => {
@@ -293,23 +324,24 @@ test("/api/representation reads the registry from the edge it entered, and the C
   assert.equal(body.ocdId, division.join("/"));
 });
 
-test("a warm call resolves one place per published state from the edge, and refuses what the edge does not carry", async () => {
-  const withoutLegislators = await publishEdge("c21-warm-partial");
-  process.env.WTP_READER_EDGE_DIR = withoutLegislators.dir;
-  const states = [...new Set(withoutLegislators.manifest.scopes.map((scope) =>
-    stateOfOcdId(scope.ocdId) ?? (/^[a-z]{2}$/.test(scope.scope) && scope.scope !== "us" ? scope.scope : null),
-  ).filter((state): state is string => state !== null))];
-  assert.ok(states.length >= 3, `the fixture publishes meetings for several states: ${states.join(", ")}`);
-  const partial = await primeReaderEdge();
-  assert.equal(partial.manifest, true);
-  assert.equal(partial.meetings, true);
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-warm-partial:registry", "the warm call read the registry from the database");
-  assert.equal(partial.places, 0, "a place whose legislators are not on the edge must not count as warmed");
-  assert.equal(partial.placesRefused, states.length, "every state-legislative read was refused instead of sent to the database");
-
-  const whole = await publishEdge("c21-warm-whole", { legislators: true });
+test("a warm call loads meetings and Ask sources without the country registry or any state's payload", async () => {
+  const whole = await publishEdge("c21-warm-lazy", { legislators: true });
   process.env.WTP_READER_EDGE_DIR = whole.dir;
-  const primed = await primeReaderEdge();
-  assert.deepEqual({ places: primed.places, placesRefused: primed.placesRefused }, { places: states.length, placesRefused: 0 });
-  assert.equal(registryRuntimeReadState().metadata.versionId, "c21-warm-whole:registry");
+  const opened: string[] = [];
+  const original = LocalFileArtifactStore.prototype.readBytes;
+  LocalFileArtifactStore.prototype.readBytes = async function (key) {
+    opened.push(key);
+    return original.call(this, key);
+  };
+  try {
+    const primed = await primeReaderEdge();
+    assert.equal(primed.manifest, true);
+    assert.equal(primed.meetings, true);
+    assert.ok(primed.ask && primed.ask.sources > 0, "useful Ask sources still warm from the edge");
+    assert.equal(opened.includes(whole.manifest.authorityArtifacts!["registry-runtime"]!.key), false);
+    for (const ref of Object.values(whole.manifest.stateLegislators ?? {})) assert.equal(opened.includes(ref.key), false);
+    assert.equal(Object.hasOwn(primed, "places"), false, "the retired country sweep has no success counter");
+  } finally {
+    LocalFileArtifactStore.prototype.readBytes = original;
+  }
 });

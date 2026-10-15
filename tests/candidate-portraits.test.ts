@@ -123,11 +123,11 @@ test("a Commons portrait publishes through the existing derived door without a c
   assert.equal(plan.records.length, 0);
   assert.equal(plan.portraits?.length, 1);
   assert.equal(published.length, 1);
-  const candidate = derivedCampaignSitesCandidate(plan, NOW);
+  const candidate = derivedCampaignSitesCandidate("OH", plan, NOW);
   assert.deepEqual(candidate.semantics.violations, []);
-  const outcome = await processRegisteredRoutineCandidate(new MemoryRoutineDataStore(), "candidate-campaign-sites-derived", candidate, NOW);
+  const outcome = await processRegisteredRoutineCandidate(new MemoryRoutineDataStore(), "candidate-campaign-sites-derived:OH", candidate, NOW);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
   assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
-  assert.notEqual(candidateProfilesReadState().kind, "PROMOTED");
-  assert.equal(cardForCandidacy("national-oh-house-3:jane-doe")?.photoUrl, plan.portraits![0].portrait.photoUrl);
+  assert.notEqual(candidateProfilesReadState("OH").kind, "PROMOTED");
+  assert.equal(cardForCandidacy("OH", "national-oh-house-3:jane-doe")?.photoUrl, plan.portraits![0].portrait.photoUrl);
 });

@@ -42,7 +42,8 @@ import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
 
-import { ballotElectionKey, GENERIC_BALLOT_SCOPE, readGenericBallotProjection, type GenericBallotProjection } from "../../lib/ballot/generic-projection.ts";
+import { ballotElectionKey, readGenericBallotProjection, type GenericBallotProjection } from "../../lib/ballot/generic-projection.ts";
+import { requireBallotState, stateBallotContractId, stateBallotScope } from "../../lib/ballot/state-scopes.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");
@@ -426,6 +427,18 @@ export function syntheticAzBallot(contests: readonly SyntheticContest[] = [{
     contestId: contest.id,
     nominees: contest.lineup!.map((nominee) => ({ name: nominee.name, partyLabel: nominee.partyLabel, note: null })),
   }));
+  const contestIdentities = new Map(identityContests.map(row => [row.canonicalContestIds[0], row]));
+  for (const contest of ballotContests) {
+    const identity = contestIdentities.get(contest.id)!;
+    contest.identity = { identityId: identity.identityId, level: identity.level, financeFilingAuthority: identity.financeFilingAuthority };
+    contest.candidateListComplete = true;
+  }
+  const candidateIdentities = new Map(identities.map(row => [row.canonicalCandidacyId, row]));
+  for (const candidate of candidacies) {
+    const { displayName: _display, givenName: _given, familyName: _family, partyLabel: _party,
+      canonicalCandidacyId: _canonical, contestIdentityId: _contest, ...identity } = candidateIdentities.get(candidate.id)!;
+    candidate.identity = identity;
+  }
   return {
     election: { id: AZ_ELECTION, date: "2026-11-03", name: "2026 General Election (test)", state: "AZ" }, contests: ballotContests, candidacies, measures: [], absences: [],
     generalLineup: {
@@ -435,16 +448,7 @@ export function syntheticAzBallot(contests: readonly SyntheticContest[] = [{
       contests: lineupContests,
     },
     measureAnalyses: { generatedAt: "2026-09-25", counts: { measures: 0, fetched: 0, extracted: 0, failed: 0 }, analyses: [] },
-    candidateFilings: {},
-    identityRegistry: {
-      formatVersion: 1, state: "AZ", cycle: 2026, generatedAt: "2026-09-25", generatedBy: "tests/helpers/promoted-fixtures.ts", sources,
-      denominators: {
-        contests: identityContests.length, candidates: identities.length, candidatesWithCanonicalCandidacyId: identities.length,
-        candidatesWithoutCanonicalCandidacyId: 0, candidatesWithCommitteeIdentity: 0, nonFederalCandidates: identities.length, federalCandidates: 0,
-      },
-      contests: identityContests,
-      candidates: identities,
-    },
+    filingCandidacies: [],
     lineupReconciliation: {
       formatVersion: 1, state: "AZ", cycle: 2026, generatedAt: "2026-09-25", generatedBy: "tests/helpers/promoted-fixtures.ts", sources,
       proof: {
@@ -463,19 +467,20 @@ export function syntheticAzBallot(contests: readonly SyntheticContest[] = [{
 }
 
 export async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
-  const previous = promoted.get(`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`);
-  const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
-  const value: GenericBallotProjection = {
-    kind: "ballot-contests",
-    ballots: {
-      ...(current?.ballots ?? {}),
-      ...Object.fromEntries((ballots.length ? ballots : [syntheticAzBallot()]).map(ballot => [ballotElectionKey(ballot), ballot])),
-    },
-  };
-  installManualValue("ballot-contests", value, "test:ballot-contests");
-  served(await readGenericBallotProjection(), "National ballot");
+  const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };
+  for (const ballot of ballots.length ? ballots : [syntheticAzBallot()]) {
+    const state = requireBallotState(ballot.election.state);
+    const previous = promoted.get(`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`);
+    const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
+    const value: GenericBallotProjection = { kind: "ballot-contests", ballots: {
+      ...(current?.ballots ?? {}), [ballotElectionKey(ballot)]: ballot,
+    } };
+    installManualValue(stateBallotContractId("ballot-contests", state), value, `test:ballot-contests:${state}`);
+    served(await readGenericBallotProjection(state), `${state} ballot`);
+    Object.assign(installed.ballots, value.ballots);
+  }
   resetAzIdentityCache();
-  return value;
+  return installed;
 }
 
 export function syntheticPimaLocalFinance(over: { readonly held?: Partial<AzPimaFinanceReadModel["held"]>; readonly transactions?: Partial<AzPimaFinanceReadModel["transactions"]> } = {}): AzPimaFinanceReadModel {
@@ -563,9 +568,9 @@ export function syntheticCandidateCorpus(candidates = 30): CandidateCorpus {
   return { formatVersion: 1, fetchedAt: "2026-09-20T00:00:00.000Z", attempted: candidates + 1, documents, failures: [] };
 }
 
-export async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus()): Promise<CandidateCorpus> {
-  installManualValue("candidate-corpus", value, "test:candidate-corpus");
-  served(await readCandidateCorpusProjection(), "Candidate publications");
+export async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
+  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
+  served(await readCandidateCorpusProjection(state), "Candidate publications");
   return value;
 }
 

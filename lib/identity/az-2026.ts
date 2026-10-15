@@ -1,23 +1,24 @@
 import { currentGenericBallotProjection } from "../ballot/generic-projection.ts";
 
 import type {
-  AzIdentityRegistry,
   LineupReconciliation,
   LineupReconciliationRow,
 } from "./types.ts";
 
-let registryCache: AzIdentityRegistry | null | undefined;
 let bridgeCache: LineupReconciliation | null | undefined;
 let rowIndex: Map<string, LineupReconciliationRow> | null = null;
 let coveredContests: Set<string> | null = null;
 
-export function azIdentityRegistry(): AzIdentityRegistry | null {
-  registryCache = Object.values(currentGenericBallotProjection().ballots).find(ballot => ballot.identityRegistry)?.identityRegistry ?? null;
-  return registryCache;
+export function azContestIdentity(contestId: string) {
+  for (const ballot of Object.values(currentGenericBallotProjection("AZ").ballots)) {
+    const contest = ballot.contests.find(row => row.id === contestId);
+    if (contest) return contest.identity ?? null;
+  }
+  return null;
 }
 
 export function azLineupReconciliation(): LineupReconciliation | null {
-  const next = Object.values(currentGenericBallotProjection().ballots).find(ballot => ballot.lineupReconciliation)?.lineupReconciliation ?? null;
+  const next = Object.values(currentGenericBallotProjection("AZ").ballots).find(ballot => ballot.lineupReconciliation)?.lineupReconciliation ?? null;
   if (next !== bridgeCache) {
     bridgeCache = next;
     rowIndex = null;
@@ -70,18 +71,19 @@ export interface PartyConflictFiling {
 export function partyConflictFilingForCard(cardKey: string): PartyConflictFiling | null {
   const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "PARTY_CONFLICT" || row.sourceValues.registryCandidateIds.length !== 1) return null;
-  const identity = azIdentityRegistry()?.candidates.find((candidate) => candidate.identityId === row.sourceValues.registryCandidateIds[0]);
-  if (!identity?.canonicalCandidacyId) return null;
+  const candidate = Object.values(currentGenericBallotProjection("AZ").ballots)
+    .flatMap(ballot => [...ballot.candidacies, ...(ballot.filingCandidacies ?? [])]).find(candidate => candidate.identity?.identityId === row.sourceValues.registryCandidateIds[0]);
+  if (!candidate) return null;
   const canvass = azLineupReconciliation()?.sources.find((source) => source.url && /canvass/i.test(source.name));
   return {
     cardKey,
     contestId: row.contestId,
-    filingCandidacyId: identity.canonicalCandidacyId,
+    filingCandidacyId: candidate.id,
     name: row.nomineeName,
     canvassParty: row.sourceValues.canvassParty,
     canvassSourceUrl: canvass?.url ?? null,
     filingParty: row.sourceValues.registryParty,
-    filingSourceUrl: identity.candidacySourceUrl,
+    filingSourceUrl: candidate.identity?.candidacySourceUrl ?? candidate.provenance.sourceUrl,
     readerGapSentence: row.readerGapSentence,
   };
 }
@@ -98,7 +100,6 @@ export function partyConflictCardForFiling(candidacyId: string): PartyConflictFi
 
 /** Test seam. Never called by a render path. */
 export function resetAzIdentityCache(): void {
-  registryCache = undefined;
   bridgeCache = undefined;
   rowIndex = null;
   coveredContests = null;

@@ -18,15 +18,15 @@ export interface AnalysesFile {
   readonly analyses: readonly MeasureAnalysis[];
 }
 
-export function getMeasureAnalyses(): AnalysesFile | null {
-  return Object.values(currentGenericBallotProjection().ballots).find(ballot => ballot.measureAnalyses)?.measureAnalyses ?? null;
+export function getMeasureAnalyses(state: string): AnalysesFile | null {
+  return Object.values(currentGenericBallotProjection(state).ballots).find(ballot => ballot.measureAnalyses)?.measureAnalyses ?? null;
 }
 
 /** Null when the ballot projection holding it cannot be read in this process. */
-export function analysisForContest(contestId: string): MeasureAnalysis | null {
+export function analysisForContest(state: string, contestId: string): MeasureAnalysis | null {
   let records: readonly MeasureAnalysis[] | undefined;
   try {
-    records = getMeasureAnalyses()?.analyses;
+    records = getMeasureAnalyses(state)?.analyses;
   } catch {
     return null;
   }

@@ -78,7 +78,7 @@ test("R2B candidates: only a newer complete official list removes a withdrawn ca
   const sourceUrl = "https://www.morriscountynj.gov/files/sharedassets/public/v/1/departments/county-clerk/2026-general-candidates.pdf";
   const make = (count: number, time: string, complete: boolean): ManualProjectionPackage => {
     const provenance = { sourceUrl, sourceOrg: "Morris County Clerk", collectedAt: time, verifiedAt: time };
-    return { contractId: "ballot-contests", version: time, sourceThrough: time,
+    return { contractId: "ballot-contests:NJ", version: time, sourceThrough: time,
       sourceReceipt: { contractVersion: 1, reviewedAt: time, reviewedBy: "fixture replay", sources: [{ requestedUrl: sourceUrl,
         finalUrl: sourceUrl, publisher: "Morris County Clerk", sourceClass: "ELECTION_AUTHORITY", httpStatus: 200,
         rawHash: sha(raw), retrievedAt: time, reviewedEvidence: "Candidate names retained from the saved clerk list in the national state ballot" }] },
@@ -92,17 +92,17 @@ test("R2B candidates: only a newer complete official list removes a withdrawn ca
         measures: [], absences: [] } } } };
   };
   const initial = make(4, at, true), store = new MemoryRoutineDataStore();
-  const first = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(initial), at);
+  const first = await processRegisteredManualCandidate(store, "ballot-contests:NJ", manualProjectionCandidate(initial), at);
   assert.ok(first.promoted);
   const prior = { versionId: first.promoted.versionId, payload: initial.payload, sourceReceipt: initial.sourceReceipt };
   const partial = mergeBallotContests(make(3, "2026-10-13T13:00:00.000Z", false), prior);
   assert.equal(Object.values((partial.payload as GenericBallotProjection).ballots)[0].candidacies.length, 4);
   const successor = mergeBallotContests(make(3, "2026-10-13T14:00:00.000Z", true), prior);
-  const published = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(successor), "2026-10-13T14:00:00.000Z");
+  const published = await processRegisteredManualCandidate(store, "ballot-contests:NJ", manualProjectionCandidate(successor), "2026-10-13T14:00:00.000Z");
   assert.ok(published.promoted, JSON.stringify(published.candidate.receipt));
   assert.equal(published.candidate.candidate.changeSet?.removed.length, 1);
   const unsafe = manualProjectionCandidate(make(2, "2026-10-13T15:00:00.000Z", false));
-  assert.equal((await processRegisteredManualCandidate(store, "ballot-contests", unsafe, "2026-10-13T15:00:00.000Z")).promoted, null);
+  assert.equal((await processRegisteredManualCandidate(store, "ballot-contests:NJ", unsafe, "2026-10-13T15:00:00.000Z")).promoted, null);
 });
 
 test("R2B address: three real redrawn-state addresses use their representation and election vintages", async () => {

@@ -1,3 +1,4 @@
+import { stateBallotContractId, stateBallotScope } from "../../../ballot/state-scopes.ts";
 import { readGenericBallotProjection, type GenericBallotProjection } from "../../../ballot/generic-projection.ts";
 import { currentExtraction, type CandidateCorpus } from "../../../candidates/corpus.ts";
 import {
@@ -76,11 +77,6 @@ function siteRoute(c: CanonicalCandidacy, url: string): RouteDescriptor {
   };
 }
 
-/**
- * Wikipedia via the Wikimedia REST API (`api.wikimedia.org`, robots-permitted), a discovery route only: a
- * result may point at a candidate's own page, and the record is proved at the origin. A 429 is a wall and
- * disposes BLOCKED_CURRENTLY.
- */
 export function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
   return {
     routeId: "candidate-wikipedia-api",
@@ -226,10 +222,6 @@ export interface CandidateEnrichmentAuthorityHoldings {
   readonly failures: readonly string[];
 }
 
-let loadedAuthorities: CandidateEnrichmentAuthorityHoldings | null = null;
-const PROFILES = requiredManualProductionContract("candidate-profiles");
-const PUBLICATIONS = requiredManualProductionContract("candidate-corpus");
-
 function requiredValue<T>(
   result: { readonly kind: string; readonly value: T | null },
   name: string,
@@ -240,14 +232,16 @@ function requiredValue<T>(
   throw new Error(`${name} canonical projection is ${result.kind}.`);
 }
 
-export async function preloadCandidateEnrichmentAuthorities(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<void> {
+export async function readCandidateEnrichmentAuthorities(
+  state: string, options: PromotedCivicDataReadOptions = {},
+): Promise<CandidateEnrichmentAuthorityHoldings> {
+  const profilesContract = requiredManualProductionContract(stateBallotContractId("candidate-profiles", state));
+  const publicationsContract = requiredManualProductionContract(stateBallotContractId("candidate-corpus", state));
   const results = await Promise.allSettled([
-    readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, options),
-    readPromotedCivicData<CandidateCorpus>(PUBLICATIONS.recordClass, PUBLICATIONS.scope, options),
-    readDerivedCampaignSites(options),
-    readGenericBallotProjection(options),
+    readPromotedCivicData<CandidateProfilesProjection>(profilesContract.recordClass, profilesContract.scope, options),
+    readPromotedCivicData<CandidateCorpus>(publicationsContract.recordClass, publicationsContract.scope, options),
+    readDerivedCampaignSites(state, options),
+    readGenericBallotProjection(state, options),
   ]);
   const failures: string[] = [];
   const held = <T>(result: PromiseSettledResult<{ readonly kind: string; readonly value: T | null }>, name: string): T | null => {
@@ -261,7 +255,7 @@ export async function preloadCandidateEnrichmentAuthorities(
       return null;
     }
   };
-  loadedAuthorities = {
+  let loadedAuthorities: CandidateEnrichmentAuthorityHoldings = {
     profiles: held(results[0]!, "Candidate profile"),
     corpus: held(results[1]!, "Candidate publication"),
     general: held(results[3]!, "National ballot"),
@@ -284,9 +278,6 @@ export async function preloadCandidateEnrichmentAuthorities(
     // Keep usable prior holdings; failed reconciliation cannot mean no sites.
     failures.push("Automatically published candidate evidence is unavailable; retained profile/corpus evidence remains usable and reconciliation is still owed.");
   }
-}
-
-export function candidateEnrichmentHoldings(): CandidateEnrichmentAuthorityHoldings | null {
   return loadedAuthorities;
 }
 
@@ -333,13 +324,10 @@ export function candidateEnrichmentUniversesFromHoldings(
     }
     if (Number(ballot.election.date.slice(0, 4)) !== CYCLE) continue;
     const state = ballot.election.state.toLowerCase();
-    const path = `civic-data:BALLOT_CANDIDACY:US:state-election-ballots:${key}`;
+    const path = `civic-data:BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}:${key}`;
     const retained = documents.get(state) ?? [];
     retained.push(ballotDocument(path, ballot));
-    const filings = ballot.candidateFilings as Partial<BallotDocument> | undefined;
-    if (Array.isArray(filings?.contests) && Array.isArray(filings?.candidacies)) {
-      retained.push({ path: `${path}:filings`, contests: filings.contests, candidacies: filings.candidacies });
-    }
+    if (ballot.filingCandidacies?.length) retained.push({ path: `${path}:filings`, contests: ballot.contests, candidacies: ballot.filingCandidacies });
     documents.set(state, retained);
   }
   for (const [state, held] of documents) {
@@ -355,6 +343,7 @@ export function candidateEnrichmentUniversesFromHoldings(
 }
 
 export interface CandidateEnrichmentInput {
+  readonly holdings?: CandidateEnrichmentAuthorityHoldings;
   /** Which states' candidate universes are enumerated. The coverage set, read as data; never a list in code. */
   readonly trackedStates?: TrackedStatesSource;
 }
@@ -376,8 +365,8 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
       const records: ProvidedObligation[] = [];
       const failures: string[] = [];
 
-      const settled = loadedAuthorities
-        ? candidateEnrichmentUniversesFromHoldings(loadedAuthorities, ctx.nowIso)
+      const settled = input.holdings
+        ? candidateEnrichmentUniversesFromHoldings(input.holdings, ctx.nowIso)
         : { universes: {}, failures: ["canonical ballot/profile projections were not preloaded"] };
       failures.push(...settled.failures);
 
@@ -453,4 +442,20 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
       };
     },
   };
+}
+
+export async function loadCandidateEnrichmentProvider(trackedStates: TrackedStatesSource, context: ProviderContext,
+  options: PromotedCivicDataReadOptions = {}): Promise<ObligationProvider> {
+  const tracked = trackedStates.read();
+  const obligations: ProvidedObligation[] = [];
+  const failures: string[] = [];
+  if ("unreadable" in tracked) failures.push(`Tracked states unavailable: ${tracked.unreadable}`);
+  else for (const state of tracked.states) {
+    const holdings = await readCandidateEnrichmentAuthorities(state, options);
+    const yielded = candidateEnrichmentProvider({ holdings, trackedStates: { read: () => ({ states: [state], source: tracked.source }) } }).enumerate(context);
+    obligations.push(...yielded.obligations);
+    if (yielded.readFailure) failures.push(yielded.readFailure);
+  }
+  const provider = candidateEnrichmentProvider();
+  return { ...provider, enumerate: () => ({ obligations, readFailure: failures.join("; ") || null, emptyReason: null }) };
 }

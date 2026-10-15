@@ -26,9 +26,8 @@ await installRegistryAuthority();
 
 import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { canonicalOfficialAliases } from "../lib/ask/official-identity.ts";
-import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
+import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
 import { ballotAskInventory, ballotRecordsFor } from "../lib/ask/ballot-inventory.ts";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
@@ -151,7 +150,11 @@ const controlPages = [
   page(POSITION_CONTROLS[2].key, "https://example.test/nh-governor/",
     "Protect our democracy. I will defend democracy, protect the right to vote, and keep our elections free and fair for every citizen. This is a synthetic test page written for a check."),
 ];
-await installCandidateCorpus({ ...corpus, attempted: corpus.attempted + controlPages.length, documents: [...corpus.documents, ...controlPages] });
+await installCandidateCorpus({ ...corpus, attempted: corpus.attempted + 1, documents: [...corpus.documents, controlPages[0]] }, "AZ");
+for (const [index, state] of ["AZ", "NJ", "NH"].entries()) {
+  if (state === "AZ") continue;
+  await installCandidateCorpus({ ...corpus, attempted: 1, documents: [controlPages[index]], failures: [] }, state);
+}
 installMeetings(recordedMeetings85701());
 
 delete process.env.ANTHROPIC_API_KEY;
@@ -306,7 +309,7 @@ test("a direct held federal official remains answerable without a ballot candida
 
 test("Ask retains Positions' exact page passages in AZ, NJ, and NH without inventing speaker attribution", async () => {
   for (const control of POSITION_CONTROLS) {
-    const expected = positionsFor(control.key, control.topic, unifiedCorpus());
+    const expected = positionsFor(control.key, control.topic, unifiedCorpus(["AZ", "NH", "NJ"]));
     assert.equal(expected.kind, "MATCHED", `${control.name}'s independent Positions surface knows the answer`);
     const body = await ask(`What does ${control.name} say about ${control.topic}?`, control.state);
     const quoted = body.records.filter((r) => r.kind === "SOURCE_PASSAGE" && r.canonicalSubjectId === control.key);
@@ -321,14 +324,14 @@ test("Ask retains Positions' exact page passages in AZ, NJ, and NH without inven
 });
 
 test("each readable canonical statement subject can be searched without a general-knowledge answer", () => {
-  const corpus = unifiedCorpus();
+  const corpus = unifiedCorpus(["AZ", "NH", "NJ"]);
   const bySubject = new Map(corpus.snapshots.filter((s) => s.extraction === "ok" && s.text).map((s) => [s.subjectId, s]));
   let tested = 0;
   for (const [key, snapshot] of bySubject) {
     const words = [...new Set(snapshot.text!.match(/\b[A-Za-z]{5,}\b/g) ?? [])];
     const topic = words.find((word) => positionsFor(key, word, corpus).kind === "MATCHED");
     if (!topic) continue; // Held navigation-only text is not a quotable position.
-    const result = statementEvidenceFor({ kind: "PERSON", id: key, name: "This person" }, `What is the position on ${topic}?`, [key]);
+    const result = statementEvidenceFor(["AZ", "NH", "NJ"], { kind: "PERSON", id: key, name: "This person" }, `What is the position on ${topic}?`, [key]);
     assert.ok(result.records.length, key);
     assert.ok(result.records.every((r) => readerPersonKeys(key).keys.includes(r.canonicalSubjectId!) && r.sourceUrl));
     assert.ok(result.records.every((r) => /Searching a held (campaign|official) page linked to/.test(r.text) &&
@@ -388,7 +391,7 @@ test("raw acquisition, extraction PASS, and unresolved finance never become a st
 });
 
 test("a failed corpus read has its own state, distinct from no held statement", () => {
-  const result = statementEvidenceFor({ kind: "PERSON", id: "held", name: "Held person" }, "What is their position on housing?", ["held"], () => { throw new Error("missing deployed file"); });
+  const result = statementEvidenceFor(["AZ", "NH", "NJ"], { kind: "PERSON", id: "held", name: "Held person" }, "What is their position on housing?", ["held"], () => { throw new Error("missing deployed file"); });
   assert.equal(result.records.length, 0);
   assert.equal(result.denominators.statementLoaderFailures, 1);
   assert.match(result.gaps[0].statement, /could not be read/);
@@ -405,13 +408,16 @@ test("one canonical Reader preload failure cannot reject or suppress an unrelate
   assert.equal(outcomes[1]?.status === "fulfilled" ? outcomes[1].value : null, "unrelated ballot authority remains readable");
 });
 
-test("an unreadable national ballot is a failed holding, never an empty civic population", async () => {
-  const failed = manualEdgeEntry("ballot-contests", { kind: "malformed-ballot-fixture", ballots: {} }, "test:failed-national-ballot");
-  await withReaderAuthorityEdge(promotedFixtureBundle({ promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, failed]]) }), async () => {
+test("unreadable state ballots are failed holdings, never empty civic populations", async () => {
+  const base = promotedFixtureBundle();
+  const states = ["AZ", "NJ"];
+  const edge = { ...base, promoted: new Map([...base.promoted!].filter(([key]) => !states.some(state => key === `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`))),
+    stateAuthorities: { states: { "ballot-contests": new Set(states) }, load: async () => { throw new Error("PLANTED_STATE_BALLOT_FAILURE"); } } };
+  await withReaderAuthorityEdge(edge, async () => {
     for (const state of ["NJ", "AZ"] as const) {
       const ballot = await loadBallotForDivisions(divisions[state]);
       assert.equal(ballot.set, null);
-      assert.deepEqual(ballot.loaderFailures, ["general ballot"]);
+      assert.deepEqual(ballot.loaderFailures, [state.toLowerCase()]);
     }
     const body = await ask("Who is running for U.S. House in the 11th District?", "NJ");
     assert.equal(body.denominators.ballotLoaderFailures, 1);
@@ -465,11 +471,11 @@ test("a congressional office's everyday name reaches the same canonical contest 
 });
 
 test("filed candidate email and source survive Ask projection while mailing addresses stay out", () => {
-  const census = candidateContactCensus();
+  const census = candidateContactCensus("NJ");
   assert.equal(census.contacts.length, morris.contacts!.length);
   assert.equal(census.withheld.length, 0);
   for (const row of census.contacts) {
-    const contact = contactForCandidate(row.candidacyId, "Filed candidate", "Filed office");
+    const contact = contactForCandidate("NJ", row.candidacyId, "Filed candidate", "Filed office");
     assert.ok(contact, row.candidacyId);
     assert.equal(contact.email, row.email);
     assert.equal(Object.hasOwn(contact, "filedAddress"), false);
@@ -479,8 +485,8 @@ test("filed candidate email and source survive Ask projection while mailing addr
     if (row.email) assert.ok(record.text.includes(row.email));
     assert.equal(Object.hasOwn(row, "filedAddress"), false, "the reader contact census carries no filed address");
   }
-  assert.equal(candidateContactForCandidacy("ballot-nj-morris:unknown:mejia"), null);
-  assert.equal(candidateContactForCandidacy("ballot-az-pima:governor:hobbs-katie"), null);
+  assert.equal(candidateContactForCandidacy("NJ", "ballot-nj-morris:unknown:mejia"), null);
+  assert.equal(candidateContactForCandidacy("NJ", "ballot-az-pima:governor:hobbs-katie"), null);
 });
 
 test("the real Ask route carries a candidate's published filing contact with its own provenance", async () => {

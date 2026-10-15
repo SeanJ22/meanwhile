@@ -1,3 +1,4 @@
+import { parseStateBallotContractId } from "../ballot/state-scopes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
@@ -124,7 +125,7 @@ export function workerPublicationTasksFor(owed: readonly OwedWorkerPublication[]
     .map(({ ids, key, requestedAt, contractId: id }) => {
       const contract = requiredManualProductionContract(id as Exclude<typeof id, typeof COMMENT_RULE_PUBLICATION>);
       const taskId = `worker-publication:${contract.id}:${key}`;
-      const command = id === "registry-runtime-bindings" || id === "voting-sites" ? contract.command
+      const command = id === "registry-runtime-bindings" || parseStateBallotContractId(id)?.family === "voting-sites" ? contract.command
         : ["scripts/promote-manual-civic-projection.mts", `--contract=${id}`];
       return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
         acquisitionFailureDomain: taskId, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",

@@ -125,11 +125,6 @@ const CONTRACT_RULES: readonly {
   },
 ];
 
-/**
- * The statements in a migration file, with SQL comments removed so prose that
- * quotes SQL is not classified. The breakpoint marker is split off before
- * stripping, because it begins with `--`.
- */
 export function statementsIn(sql: string): string[] {
   return sql
     .split("--> statement-breakpoint")
@@ -169,8 +164,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
-  "BL-30_candidate_scopes": { phase: "expand", why: "Copies preserved candidate profiles, publications and voting sites into national scopes before their readers switch." },
-  "BL-30_retire_candidate_scopes": { phase: "contract", why: "Retires the replaced ballot-related pointers after national readers are serving, retaining immutable source versions." },
+  "BL-30_candidate_scopes": { phase: "expand", why: "Partitions held ballots, candidate evidence and voting sites into state authorities before their readers switch." },
+  "BL-30_retire_candidate_scopes": { phase: "contract", why: "Retires aggregate ballot authorities only after all state replacements are serving, retaining immutable source versions." },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",

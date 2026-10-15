@@ -12,7 +12,6 @@ import {
 import { divisionsForCensusGeographies } from "@/lib/registry/server";
 import { censusVintageFor } from "@/lib/geo/census-geographies";
 import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
-import { contestsForDivisions } from "@/lib/ballot/contests";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
 import { lookupZcta } from "@/lib/geo/zcta";
@@ -31,15 +30,13 @@ function bad(): Response {
 /** Contest ids for a confirmed division set — the ballot page's narrowing. */
 async function contestIdsFor(ocdIds: readonly string[], selection: GeographySelection): Promise<string[]> {
   if (ocdIds.length === 0 || selection.purpose !== "election") return [];
+  const ids = new Set<string>();
   for (const { source } of await readerBallotSourcesForDivisions(ocdIds)) {
     const candidate = source.normalize(await source.fetch());
     if (candidate.election.date !== selection.electionDate) continue;
-    const hit = contestsForDivisions(candidate, [...ocdIds]);
-    if (hit.contests.length > 0 || hit.absences.length > 0 || hit.heldContests?.length) {
-      return [...hit.contests, ...hit.heldContests ?? []].map((c) => c.id);
-    }
+    for (const contest of [...candidate.contests, ...candidate.heldContests ?? []]) ids.add(contest.id);
   }
-  return [];
+  return [...ids];
 }
 
 export async function POST(request: Request) {
@@ -79,7 +76,6 @@ export async function POST(request: Request) {
   const queryStreet = omitZip && !street.includes(",") && area?.place && area.state
     ? `${street}, ${area.place}, ${area.state}` : street;
 
-
   const points: CensusPoint[] = [];
   const vintage = censusVintageFor(selection);
   if (houseNumber.length > 0) {
@@ -112,7 +108,6 @@ export async function POST(request: Request) {
   }
 
   const resolution = resolveAddress(samples);
-
 
   const confirmed =
     resolution.status === "FAILED"

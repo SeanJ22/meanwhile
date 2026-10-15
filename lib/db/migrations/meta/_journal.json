@@ -253,20 +253,6 @@
       "when": 1790889600001,
       "tag": "0035_r1_fact_store",
       "breakpoints": true
-    },
-    {
-      "idx": 36,
-      "version": "7",
-      "when": 1790889600002,
-      "tag": "BL-30_candidate_scopes",
-      "breakpoints": true
-    },
-    {
-      "idx": 37,
-      "version": "7",
-      "when": 1790889600003,
-      "tag": "BL-30_retire_candidate_scopes",
-      "breakpoints": true
     }
   ]
 }

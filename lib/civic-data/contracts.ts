@@ -1,3 +1,4 @@
+import { BALLOT_STATES, stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
@@ -56,11 +57,6 @@ export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   readerConsumers: ["/ballot", "body and office cards", "meeting cards", "Ask"],
 } as const;
 
-/**
- * Whether a body has a sitting within the window of `nowMs`, from its
- * partitions' sitting starts. `undefined` means it cannot be told: a sitting
- * list could not be read.
- */
 export function sittingWindowHot(
   schedule: SittingWindowSchedule,
   sittingLists: readonly (readonly string[] | undefined)[],
@@ -84,12 +80,6 @@ export function sittingWindowRereadMs(schedule: SittingWindowSchedule, hot: bool
   return hot === false ? schedule.baseEveryMs : schedule.hotEveryMs;
 }
 
-/**
- * The instant a succeeded sitting-window task falls due: one re-read interval
- * after its store-observed success, less one admission pass, so "hourly" is
- * at most an hour and never drifts later pass by pass. The runner admits on it
- * and Admin shows it, so the owner sees the instant the runner acts on.
- */
 export function sittingWindowDueAtMs(
   schedule: SittingWindowSchedule,
   succeededMs: number,
@@ -135,12 +125,7 @@ export interface RoutineSourceContract {
   readonly autoPromotable: boolean;
   /** Zero keeps finite standing work alive; its individual requests still have transport deadlines. */
   readonly childTimeoutMs?: number;
-  /**
-   * A fan-out contract owns a scope family: its clock marker at `scope`
-   * plus bounded member or session candidates under `<sourceId>:`. The
-   * runner still enumerates and clocks exactly this one contract; the family
-   * lives inside the acquisition child. Verification stays per-contract.
-   */
+
   readonly fanOut?: boolean;
   readonly classification: RoutineDataClassification;
   /** Bundled inputs are seed/test material only; never a store-error fallback. */
@@ -190,11 +175,6 @@ export const DERIVED_MEETING_FAMILY_POLICY = {
   readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
 } as const;
 
-/**
- * The single membership and lifecycle registry for every routine supported
- * production source. The runner and Admin derive from this array; workflows do
- * not schedule these contracts and no second cadence table may repeat them.
- */
 export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   {
     id: "fec-funding",
@@ -553,13 +533,13 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
-  {
-    id: "candidate-campaign-sites-derived",
+  ...BALLOT_STATES.map(state => ({
+    id: stateBallotContractId("candidate-campaign-sites-derived", state),
     sourceId: "candidate-campaign-site-chain",
     recordClass: "CURATED_READER_RECORD",
-    scope: "US:candidate-campaign-sites-derived",
-    acquisitionFailureDomain: "derived:candidate-campaign-sites",
-    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", "--promote"] },
+    scope: stateBallotScope("candidate-campaign-sites-derived", state),
+    acquisitionFailureDomain: `derived:candidate-campaign-sites:${state}`,
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", `--state=${state}`, "--promote"] },
     parserNormalizerVersion: "candidate-campaign-site-chain/1",
     cadence: { description: "hourly, the research cycle's own rhythm", defaultEveryMs: HOUR },
     retry: { afterMs: HOUR, description: "one hour after a failed attempt" },
@@ -571,7 +551,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
-  },
+  } as const)),
   {
     id: "legiscan-bulk", sourceId: "legiscan-bills", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },

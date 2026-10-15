@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
@@ -18,6 +19,20 @@ import { withFactRegistry } from "../facts/registry-overlay.ts";
 import type { BodyRoster } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE } from "./census-placeholders.ts";
 
+export interface RegistryPlaceRead {
+  readonly value: RegistryRuntimeReadModel;
+  readonly versionId: string;
+  readonly selectorKey: string;
+}
+const placeReads = new AsyncLocalStorage<RegistryPlaceRead | Error>();
+export const enterRegistryPlaceRead = (read: RegistryPlaceRead | Error): void => placeReads.enterWith(read);
+export const withRegistryPlaceRead = <T>(read: RegistryPlaceRead | Error, work: () => T): T => placeReads.run(read, work);
+export function currentRegistryPlaceRead(): RegistryPlaceRead | null {
+  const read = placeReads.getStore();
+  if (read instanceof Error) throw read;
+  return read ?? null;
+}
+
 let cache: RegistryRuntimeReadModel | null = null;
 let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotInitialized(
   "REGISTRY_RUNTIME_BINDING",
@@ -25,11 +40,6 @@ let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotI
   "The Reader registry runtime pointer has not been read for this process.",
 );
 
-/*
- * A read validates structure; a promotion validates everything. A body on a Census placeholder
- * division is refused at promotion (`registryRuntimeProjectionIssues` via `registryRuntimeCandidate`)
- * but does not fail a read, so a counting defect never becomes a reader outage.
- */
 function validate(value: RegistryRuntimeCarton, versionId: string): void {
   const issues = registryRuntimeProjectionIssues(value).filter((issue) => !issue.startsWith(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:`));
   if (issues.length) throw new Error(`Registry runtime projection ${versionId} is invalid: ${issues.join(", ")}.`);
@@ -53,23 +63,17 @@ export async function readRegistryRuntimeProjection(
 }
 
 export async function refreshRegistryRuntimeFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
+  const place = currentRegistryPlaceRead();
+  if (place && Object.keys(options).length === 0) return place.versionId;
   const result = await readRegistryRuntimeProjection(options);
   if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
-/**
- * Prime the registry-runtime cache from a validated edge serving artifact, with no database read: the
- * reader's normal path (request-scoped, see `lib/registry/runtime-edge.ts`). The database reader above
- * stays the authoritative path for the runner and workers. Validated once per edge object and version.
- */
 export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, versionId: string): void {
   validateOnce("registry-runtime", value, versionId, () => validate(value, versionId));
   cache = value;
-  // BOOTSTRAP, not PROMOTED: the serving copy carries the validated value and its
-  // version but not the promotion receipt. The version drives the registry
-  // authority cache key.
   readState = {
     kind: "BOOTSTRAP",
     value,
@@ -91,10 +95,16 @@ export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, v
 }
 
 export function registryRuntimeReadState(): CivicDataReadResult<RegistryRuntimeReadModel> {
+  const place = currentRegistryPlaceRead();
+  if (place) return { kind: "BOOTSTRAP", value: place.value, metadata: { recordClass: "REGISTRY_RUNTIME_BINDING", scope: REGISTRY_RUNTIME_SCOPE, sourceId: REGISTRY_RUNTIME_SOURCE_ID,
+    version: null, versionId: place.versionId, lastKnownGoodVersionId: place.versionId, sourceThrough: null,
+    retrievedAt: null, promotedAt: null, stale: "CURRENT", staleAt: null }, detail: "Selected divisions from the accepted registry version." };
   return readState;
 }
 
 export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
+  const place = currentRegistryPlaceRead();
+  if (place) return place.value;
   if (!cache) throw new Error(`Registry runtime bindings are ${readState.kind}; call readRegistryRuntimeProjection before using the synchronous projection.`);
   return cache;
 }

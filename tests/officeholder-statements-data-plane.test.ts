@@ -7,7 +7,7 @@ import { projectRoutineDataObservability } from "../lib/civic-data/observability
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
-import { candidateEnrichmentProvider, candidateEnrichmentUniversesFromHoldings, preloadCandidateEnrichmentAuthorities, type CandidateEnrichmentAuthorityHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import { candidateEnrichmentProvider, candidateEnrichmentUniversesFromHoldings, readCandidateEnrichmentAuthorities, type CandidateEnrichmentAuthorityHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { readOfficeholderStatementsProjection, refreshOfficeholderStatementsFromPromoted } from "../lib/corpus/data-plane.ts";
 import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
@@ -237,8 +237,8 @@ test("officeholder statement ownership is manual and visible in the existing Adm
 });
 
 test("standing candidate enrichment derives all three state denominators from promoted projections", async () => {
-  await preloadCandidateEnrichmentAuthorities({ store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
-  const unavailable = candidateEnrichmentProvider().enumerate({ root: ROOT, nowIso: T0 });
+  const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
+  const unavailable = candidateEnrichmentProvider({ holdings }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(unavailable.obligations.length, 0);
   assert.match(unavailable.readFailure ?? "", /canonical projection is NOT_RECORDED/,
     "an answered empty canonical store must be explicit and must not reopen tracked hunt or bootstrap files");

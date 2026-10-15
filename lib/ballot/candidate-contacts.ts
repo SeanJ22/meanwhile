@@ -16,8 +16,8 @@ export interface CandidateContactCensus {
 let cachedModel: object | null = null;
 let cache: CandidateContactCensus | null = null;
 
-export function candidateContactCensus(): CandidateContactCensus {
-  const projection = currentGenericBallotProjection();
+export function candidateContactCensus(state: string): CandidateContactCensus {
+  const projection = currentGenericBallotProjection(state);
   if (cache && cachedModel === projection) return cache;
   const ballots = Object.values(projection.ballots);
   const current = new Set(ballots.flatMap(ballot => ballot.candidacies.map(candidate => candidate.id)));
@@ -40,6 +40,6 @@ export function candidateContactCensus(): CandidateContactCensus {
   return cache;
 }
 
-export function candidateContactForCandidacy(candidacyId: string): CandidateContact | null {
-  return candidateContactCensus().contacts.find((contact) => contact.candidacyId === candidacyId) ?? null;
+export function candidateContactForCandidacy(state: string, candidacyId: string): CandidateContact | null {
+  return candidateContactCensus(state).contacts.find((contact) => contact.candidacyId === candidacyId) ?? null;
 }

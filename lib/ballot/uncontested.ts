@@ -1,5 +1,4 @@
 import { readerBallotSourceForTargetId, readerBallotSources, type RegisteredBallotSource } from "./reader-sources.ts";
-import { getGeneralLineup } from "./general-lineup.ts";
 
 interface Candidacy {
   id: string;
@@ -8,7 +7,7 @@ interface Candidacy {
 
 async function addSingleCandidateTargets(
   ids: Set<string>,
-  { state, source }: RegisteredBallotSource,
+  { source }: RegisteredBallotSource,
 ): Promise<void> {
   const data = source.normalize(await source.fetch());
   const byContest = new Map<string, Candidacy[]>();
@@ -17,22 +16,22 @@ async function addSingleCandidateTargets(
     list.push(candidate);
     byContest.set(candidate.contestId, list);
   }
-  for (const list of byContest.values()) {
-    if (list.length === 1) ids.add(list[0]!.id);
+  const complete = new Set(data.contests.filter(contest => contest.candidateListComplete).map(contest => contest.id));
+  for (const [contestId, list] of byContest) {
+    if (complete.has(contestId) && list.length === 1) ids.add(list[0]!.id);
   }
 
-  if (state !== "az") return;
-  for (const contest of getGeneralLineup()?.contests ?? []) {
+  for (const contest of data.generalLineup?.contests ?? []) {
     if (contest.nominees.length === 1) {
       ids.add(`${contest.contestId}|${contest.nominees[0]!.name}`);
     }
   }
 }
 
-export async function getSingleCandidateTargetIds(targetId?: string): Promise<Set<string>> {
+export async function getSingleCandidateTargetIds(divisions: readonly string[], targetId?: string): Promise<Set<string>> {
   const ids = new Set<string>();
-  const exact = targetId === undefined ? null : await readerBallotSourceForTargetId(targetId);
-  const sources = targetId === undefined ? await readerBallotSources() : exact ? [exact] : [];
+  const exact = targetId === undefined ? null : await readerBallotSourceForTargetId(targetId, divisions);
+  const sources = targetId === undefined ? await readerBallotSources(divisions) : exact ? [exact] : [];
   for (const source of sources) await addSingleCandidateTargets(ids, source);
 
   return ids;

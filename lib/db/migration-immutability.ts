@@ -98,7 +98,7 @@ export function parsePorcelain(raw: string): ChangedEntry[] {
 
 
 /** `lib/db/migrations/NNNN_tag.sql` — the executable half. */
-export const MIGRATION_SQL_PATH = /^lib\/db\/migrations\/((?:[0-9]{4}|[A-Z]{2,4}-[0-9]{1,3})_[A-Za-z0-9_]+)\.sql$/;
+export const MIGRATION_SQL_PATH = /^lib\/db\/migrations\/([0-9]{4}_[A-Za-z0-9_]+)\.sql$/;
 /** `lib/db/migrations/meta/NNNN_snapshot.json` — what the next diff is generated against. */
 export const MIGRATION_SNAPSHOT_PATH = /^lib\/db\/migrations\/meta\/([0-9]{4})_snapshot\.json$/;
 /** The journal itself. Appending to it is the ONLY sanctioned edit. */

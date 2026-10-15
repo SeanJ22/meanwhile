@@ -2,7 +2,7 @@ import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeDemandSignal } from "@/lib/db/demand-signal";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
-import { coverageAt } from "@/lib/registry/server";
+import { ballotPlaceDivisions } from "@/lib/ballot/reader-place";
 import { ripcordPulled } from "@/lib/ripcords";
 import { isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { intakeWindows } from "@/lib/db/intake-windows";
@@ -14,18 +14,6 @@ import {
 } from "@/lib/db/demand-signal";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { knownBodySubjectIds } from "@/lib/registry/server";
-
-/**
- * ```
- *   subjectType   BODY | CANDIDATE
- *   subjectId     must exist in its canonical production authority
- *   signal        WANT_THIS_SOONER
- *   lat / lng     optional, approximate location only
- * ```
- *
- * Anything else is a 400. There is no text field, no continuity key and no GET: results are never shown
- * to readers. Defended by same-origin and the per-IP window only.
- */
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -49,11 +37,6 @@ function isPlausibleSubjectId(value: unknown): value is string {
 }
 
 async function postWithSettings(request: Request) {
-  /*
-   * The demand pill rides the reaction intake ripcord. It is a reader write on
-   * a reader surface, and a ripcord that closed reaction capture while leaving
-   * another write path open would not be a ripcord.
-   */
   if (ripcordPulled("ripcord.reactionIntake")) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
@@ -76,6 +59,8 @@ async function postWithSettings(request: Request) {
     signal?: unknown;
     lat?: unknown;
     lng?: unknown;
+    divisions?: string[];
+    zip?: unknown;
   };
 
   if (!isSubjectType(submission.subjectType)) {
@@ -88,17 +73,13 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "malformed subjectId" }, { status: 400 });
   }
 
-  /*
-   * The subject must exist in its canonical production authority. A missing store
-   * fails CLOSED — better to refuse a signal than to store one against a
-   * subject nothing can render, which is a row no operational reader can act
-   * on and therefore a row that is worse than absent.
-   */
   let known: Set<string>;
+  let ocdIds: string[];
   try {
+    ocdIds = await ballotPlaceDivisions(submission);
     known =
       submission.subjectType === "CANDIDATE"
-        ? await getCandidateTargetIds(submission.subjectId)
+        ? await getCandidateTargetIds(ocdIds, submission.subjectId)
         : await knownBodySubjectIds(submission.subjectId);
   } catch {
     return Response.json({ error: "subject data unavailable" }, { status: 503 });
@@ -122,32 +103,6 @@ async function postWithSettings(request: Request) {
     }
   }
 
-  /*
-   * Where the reader was looking, resolved server-side from the map view, never an address. A `null` on the
-   * wire is absent, not the equator: `Number(null)` is 0.
-   */
-  const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
-  const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
-  let ocdIds: string[] = [];
-  if (
-    Number.isFinite(lat) &&
-    lat >= -90 &&
-    lat <= 90 &&
-    Number.isFinite(lng) &&
-    lng >= -180 &&
-    lng <= 180
-  ) {
-    try {
-      const coverage = await coverageAt(lat, lng, 0);
-      ocdIds = [
-        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
-        ...coverage.seats.map((s) => s.ocdId),
-      ];
-    } catch {
-      // A failed resolution is an empty list, never a fabricated one.
-    }
-  }
-
   try {
     const stored = await writeDemandSignal({
       subjectType: submission.subjectType,
@@ -156,11 +111,6 @@ async function postWithSettings(request: Request) {
       ocdIds,
       marker: markerFromRequest(request),
     });
-    /*
-     * 204 stored, 202 accepted-with-no-store. The client's confirmation says
-     * the same thing either way — it confirms the ASK, which is true in both
-     * cases — and it never reports a total, because there is no read path.
-     */
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {
     console.error("demand signal write failed", error);

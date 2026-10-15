@@ -1,3 +1,6 @@
+import { readRegistryPlace } from "@/lib/registry/reader-place";
+import { currentRegistryPlaceRead, withRegistryPlaceRead, type RegistryPlaceRead } from "@/lib/registry/runtime-read-model";
+import type { ReaderAuthorityManifest } from "@/lib/meetings/edge-artifacts";
 import { directFundingTargetPlan, stateFromContest, FEDERAL_CONTEST, type FundingTargetPlan } from "@/lib/funding/target-authorities";
 import { campaignMoneyApiAnswer, type CampaignMoneyApiAnswer } from "@/lib/funding/campaign-money";
 import { settleFundingSnapshotRead } from "@/lib/funding/snapshot";
@@ -6,13 +9,16 @@ import {
   stateMoneyForTarget,
 } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
-import { readGenericBallotProjection } from "@/lib/ballot/generic-projection";
-import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
+import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
+import { officeIdentity } from "@/lib/officials/office-identity";
+import { STATE_CAMPAIGN_FINANCE_SOURCES } from "@/lib/funding/data-plane";
+import { resolvedCandidacyForOfficial } from "@/lib/funding/campaign-money";
 import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
-import { ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES, readReaderManifest } from "@/lib/meetings/edge-serving";
-import type { AuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import { ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES, readReaderAuthorityManifest } from "@/lib/meetings/edge-serving";
+import type { GlobalAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { mayUseTestFixture, promotedVersionOrThrow, type CivicDataReadMetadata } from "@/lib/civic-data/read-model";
+import { mayUseTestFixture, type CivicDataReadMetadata } from "@/lib/civic-data/read-model";
 
 export { directFundingTargetPlan, type FundingTargetPlan } from "@/lib/funding/target-authorities";
 
@@ -51,38 +57,37 @@ function timedRead<T>(timings: ReadTimings | undefined, name: string, read: () =
   return running.finally(() => { timings[name] = Date.now() - started; });
 }
 
-async function currentFundingTargetPlan(target: string, timings?: ReadTimings): Promise<FundingTargetPlan> {
+async function currentFundingTargetPlan(target: string, divisions: readonly string[], timings?: ReadTimings): Promise<FundingTargetPlan> {
   const direct = directFundingTargetPlan(target);
   if ((direct.federal || direct.state !== null) && !target.startsWith("congress:") && !target.includes("|")) return direct;
-  // The registry and the federal directory are served from the reader authority
-  // edge when this request entered one (GET below), the database otherwise:
-  // the same readers Ask uses.
   await timedRead(timings, "registry", () => settleRegistryAuthorityReads("REGISTRY"));
-  const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
-    row.holder.id === target || row.candidacy?.candidacyId === target,
-  );
-  if (related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY")) {
-    await timedRead(timings, "federalDirectory", settleFederalDirectoryRead);
-  }
-  const candidacy = related.find((row) => row.candidacy !== null)?.candidacy ?? null;
+  if (target.startsWith("congress:")) await timedRead(timings, "federalDirectory", settleFederalDirectoryRead);
+  const candidacy = resolvedCandidacyForOfficial(target);
   const contestId = direct.contestId ?? candidacy?.contestId ?? null;
-  const state = direct.state ?? stateFromContest(candidacy?.contestId ?? null);
-  return {
-    contestId,
-    federal: direct.federal
-      || related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY")
-      || (candidacy !== null && FEDERAL_CONTEST.test(candidacy.contestId)),
-    state,
-    ballotIdentity: target.includes("|"),
-  };
+  for (const { source } of await readerBallotSourcesForDivisions(divisions)) {
+    const ballot = source.normalize(await source.fetch());
+    const filed = [...ballot.candidacies, ...ballot.filingCandidacies ?? []].find(row => row.id === target || row.id === candidacy?.candidacyId);
+    const contest = ballot.contests.find(row => row.id === (filed?.contestId ?? contestId));
+    if (!contest) continue;
+    const office = officeIdentity(contest.title);
+    const federal = office === "us_senator" || office === "us_representative";
+    const state = ballot.election.state as StateCampaignFinanceJurisdiction;
+    return { contestId: contest.id, federal, state: !federal && Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state) ? state : null,
+      ballotIdentity: target.includes("|") };
+  }
+  return { contestId, federal: direct.federal || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
+    state: direct.state ?? stateFromContest(contestId), ballotIdentity: target.includes("|") };
+
 }
 
-function defaultReadersFor(timings?: ReadTimings): FundingHoldingReaders {
+function defaultReadersFor(divisions: readonly string[], timings?: ReadTimings, manifest?: ReaderAuthorityManifest | null): FundingHoldingReaders {
+  let registry: RegistryPlaceRead | Error = new Error("Registry place has not been read");
   return {
-    identityPlan: (target) => currentFundingTargetPlan(target, timings),
-    // Each edge first: a request that entered the reader edge
-    // (this route's GET, a /ballot card, Ask) reads the proven copy through the
-    // same Reader; the database otherwise.
+    identityPlan: async target => {
+      try { registry = currentRegistryPlaceRead() ?? await readRegistryPlace(divisions, [target], manifest); }
+      catch (error) { registry = error instanceof Error ? error : new Error(String(error)); }
+      return withRegistryPlaceRead(registry, () => currentFundingTargetPlan(target, divisions, timings));
+    },
     federal: () => timedRead(timings, "fec", async () => {
       const result = await settleFundingSnapshotRead();
       if (result.kind !== "PROMOTED" && result.kind !== "BOOTSTRAP") throw new Error(result.detail);
@@ -91,21 +96,18 @@ function defaultReadersFor(timings?: ReadTimings): FundingHoldingReaders {
     state: (state) => timedRead(timings, `stateMoney_${state}`, async () => {
       const result = await settleStateMoneyRead(state);
       if (result.kind === "PROMOTED") return { kind: "PROMOTED" as const, metadata: result.metadata };
-      // Deterministic tests can install the explicit fixture behind the exact
-      // state cache. Touching a made-up key verifies that exact cache without
-      // manufacturing a record or opening a sibling state.
       if (mayUseTestFixture()) {
         stateMoneyForTarget(`ballot-${state.toLowerCase()}-fixture-probe:contest:candidate`);
         return { kind: "BOOTSTRAP" as const, metadata: null };
       }
       throw new Error(result.detail);
     }),
-    ballotIdentity: () => timedRead(timings, "ballots", async () => { promotedVersionOrThrow(await readGenericBallotProjection()); }),
-    answer: (target, contestId, selection) => campaignMoneyApiAnswer(target, contestId, selection),
+    ballotIdentity: () => timedRead(timings, "ballots", async () => {
+      for (const { source } of await readerBallotSourcesForDivisions(divisions)) source.normalize(await source.fetch());
+    }),
+    answer: (target, contestId, selection) => withRegistryPlaceRead(registry, () => campaignMoneyApiAnswer(target, contestId, selection)),
   };
 }
-
-const defaultReaders: FundingHoldingReaders = defaultReadersFor();
 
 /** Reads a target's own id already decides; none of them reads the authority edge. */
 export interface DirectFundingReads {
@@ -114,10 +116,6 @@ export interface DirectFundingReads {
   readonly ballotIdentity?: ReturnType<FundingHoldingReaders["ballotIdentity"]>;
 }
 
-/**
- * Start what the target's own id already decides beside the registry read that plans the rest. Each is
- * observed at once, so a failure before it is awaited is never an unhandled rejection.
- */
 export function startDirectFundingReads(direct: FundingTargetPlan, readers: FundingHoldingReaders): DirectFundingReads {
   const observed = <T,>(running: Promise<T>): Promise<T> => { running.catch(() => undefined); return running; };
   return {
@@ -130,9 +128,11 @@ export function startDirectFundingReads(direct: FundingTargetPlan, readers: Fund
 /** Read only the authorities applicable to this target and settle them independently. */
 export async function settleFundingHoldingAnswer(
   target: string,
-  readers: FundingHoldingReaders = defaultReaders,
+  readers?: FundingHoldingReaders,
   started?: DirectFundingReads,
+  divisions: readonly string[] = [],
 ): Promise<FundingHoldingSettlement> {
+  readers ??= defaultReadersFor(divisions);
   const direct = directFundingTargetPlan(target);
   const identityPromise = Promise.resolve().then(() => readers.identityPlan(target));
   const early = started ?? startDirectFundingReads(direct, readers);
@@ -204,7 +204,7 @@ export async function settleFundingHoldingAnswer(
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ target: string }> },
 ) {
   let target: string;
@@ -216,22 +216,19 @@ export async function GET(
 
   const timings: ReadTimings = {};
   const startedAt = Date.now();
-  const readers = defaultReadersFor(timings);
-  /*
-   * The edge is entered here, before any money is read, in this handler's own execution:
-   * `AsyncLocalStorage.enterWith` never reaches reads chained on a helper that entered it.
-   */
+  const divisions = await ballotPlaceFromRequest(request);
   const direct = directFundingTargetPlan(target);
-  const manifest = await timedRead(timings, "edgeManifest", () => readReaderManifest().catch(() => null));
-  const onEdge = (family: AuthorityFamily) => Boolean(manifest?.authorityArtifacts?.[family]);
+  const manifest = await timedRead(timings, "edgeManifest", () => readReaderAuthorityManifest().catch(() => null));
+  const readers = defaultReadersFor(divisions, timings, manifest);
+  const onEdge = (family: GlobalAuthorityFamily) => Boolean(manifest?.authorityArtifacts?.[family]);
   const fromDatabase = startDirectFundingReads({
     ...direct,
     federal: direct.federal && !onEdge("federal-funding"),
     state: onEdge("state-money") ? null : direct.state,
-    ballotIdentity: direct.ballotIdentity && !onEdge("ballot-contests"),
+    ballotIdentity: direct.ballotIdentity && !manifest?.stateAuthorities?.["ballot-contests"],
   }, readers);
   if (manifest?.authorityArtifacts) {
-    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest, undefined, READER_FUNDING_AUTHORITY_FAMILIES).catch(() => null));
+    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest, undefined, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")).catch(() => null));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   const fromEdge = startDirectFundingReads({

@@ -87,21 +87,22 @@ function ieReportSupporting(candidacyId: string, amount: number): IndependentExp
   };
 }
 
-test("FEDERAL CHAIN: the ballot's six AZ-06 candidacies resolve to the FEC and carry real held records", () => {
-  const ballot = azBallot as { candidacies: { id: string; contestId: string; familyName: string }[] };
-
-  // The DENOMINATOR comes from the ballot, never from what we found.
-  const universeIds = ballot.candidacies
-    .filter((c) => c.contestId === "ballot-az-pima:us-house-6")
-    .map((c) => c.id);
-  assert.deepEqual(universeIds.sort(), [
+test("FEDERAL CHAIN: current AZ-06 candidates and the earlier filing retain their FEC evidence", () => {
+  const current = azBallot.candidacies.filter(row => row.contestId === "ballot-az-pima:us-house-6");
+  const earlier = (azBallot.filingCandidacies ?? []).filter(row => row.contestId === "ballot-az-pima:us-house-6");
+  assert.deepEqual(current.map(row => row.id).sort(), [
     "az-2026-general-us-house-6:dorland-michael",
     "az-2026-general-us-house-6:swing-gary",
-    "ballot-az-pima:us-house-6:bah-iman",
     "ballot-az-pima:us-house-6:ciscomani-juan",
     "ballot-az-pima:us-house-6:mendoza-joanna",
     "ballot-az-pima:us-house-6:peters-jereme-lance",
-  ], "the held AZ-06 candidate universe includes official nominee and qualified write-in additions");
+  ]);
+  assert.deepEqual(earlier.map(row => row.id), ["ballot-az-pima:us-house-6:bah-iman"]);
+  assert.equal(new Set([...current, ...earlier].map(row => row.id)).size, 6);
+  const bah = federalHeldRecordsFor(earlier[0].id, `${earlier[0].givenName} ${earlier[0].familyName}`);
+  assert.equal(bah.committee?.id, "C00939009");
+  assert.equal(bah.aggregate?.reportedReceipts, 195);
+  assert.equal(bah.aggregate?.sourceUrl, "https://www.fec.gov/data/candidate/H0AZ02216/");
 
   const resolution = resolveFilingAuthority({
     jurisdiction: "US",

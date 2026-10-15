@@ -1,3 +1,4 @@
+import { installFactReader } from "../lib/facts/db.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
@@ -127,7 +128,10 @@ test("each board's own section gives its regular schedule in the page's words; a
   assert.equal(model.registry.bodies.find(body => body.name === "Tourism Commission")?.meetingCadence, null);
 });
 
-test("a board's schedule publishes through the registry door itself, not only into a candidate", async () => {
+test("a board's schedule publishes through the registry door itself, not only into a candidate", async t => {
+  const facts = await factDb();
+  installFactReader(facts.query);
+  t.after(async () => { installFactReader(undefined); await facts.pg.close(); });
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -137,7 +141,8 @@ test("a board's schedule publishes through the registry door itself, not only in
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
     sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
     payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
+  const correction = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId);
+  assert.ok(correction.promoted, correction.candidate.failureDetail ?? "registry correction held");
   const base = (await readRegistryRuntimePrior(store, NOW))!;
   const html = page("Commissions", section("Neighborhoods Commission").replace("<p>Members are appointed",
     "<p>The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.</p><p>Members are appointed"));

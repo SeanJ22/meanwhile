@@ -369,8 +369,6 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         const ballot = object(value) ?? {};
         const lineup = object(ballot.generalLineup);
         const analyses = object(ballot.measureAnalyses);
-        const filings = object(ballot.candidateFilings);
-        const identities = object(ballot.identityRegistry);
         const reconciliation = object(ballot.lineupReconciliation);
         return [
           ...keyed("contest", array(ballot.contests), ["id"]),
@@ -385,10 +383,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           }),
           ...keyed("certified-lineup", array(lineup?.contests), ["contestId"]),
           ...keyed("measure-analysis", array(analyses?.analyses), ["contestId"]),
-          ...keyed("filing-contest", array(filings?.contests), ["id"]),
-          ...keyed("filing-candidacy", array(filings?.candidacies), ["id"]),
-          ...keyed("identity-contest", array(identities?.contests), ["identityId"]),
-          ...keyed("identity-candidate", array(identities?.candidates), ["identityId"]),
+          ...keyed("filing-candidacy", array(ballot.filingCandidacies), ["id"]),
           ...keyed("lineup-reconciliation", array(reconciliation?.rows), ["cardKey", "canonicalCandidacyId"]),
           ...keyed("removal", array(ballot.removals), ["id"]),
           ...keyed("contact", array(ballot.contacts), ["candidacyId"]),

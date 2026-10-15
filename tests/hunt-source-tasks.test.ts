@@ -42,17 +42,18 @@ test("all registered manual contracts have an invocation disposition; PRL, votin
   assert.equal(new Set(matrix.map(row => row.id)).size, matrix.length);
   assert.equal(matrix.find(row => row.id === "az-pima-local-finance")?.commandReady, false,
     "state membership does not establish Pima applicability");
-  for (const id of ["candidate-profiles", "candidate-corpus", "officeholder-statements", "az-official-actions"]) {
+  for (const id of ["candidate-profiles:AZ", "candidate-corpus:AZ", "officeholder-statements", "az-official-actions"]) {
     assert.equal(matrix.find(row => row.id === id)?.mode, "SCOPED_ADAPTER_OWED", `${id} waits on owed plain code, never on a person's review`);
   }
   assert.equal(matrix.find(row => row.id === "campaign-sites")?.mode, "EXISTING_DERIVED");
   assert.equal(matrix.find(row => row.id === "meeting-body-crosswalk")?.mode, "EXISTING_DERIVED");
   const ids = (sends: ResolvedScope[]) => huntSourceTasks(sends, "2026-09-28T08:00:00.000Z").map(task => task.id);
-  /* Any Arizona Send, not the original receipt, gets the AZ reference, PRL and the voting-site pass. */
-  assert.deepEqual(ids([scope("AZ", "any-send")]).filter(id => ["prl", "voting-sites", "jurisdiction-operational-reference-az"].includes(id)).sort(),
-    ["jurisdiction-operational-reference-az", "prl", "voting-sites"]);
-  /* A Send in another state gets PRL and the voting-site pass, and not the Arizona-only reference. */
-  assert.deepEqual(ids([scope("OH", "ohio-send")]).filter(id => ["prl", "voting-sites", "jurisdiction-operational-reference-az"].includes(id)).sort(), ["prl", "voting-sites"]);
+  assert.deepEqual(matrix.find(row => row.id === "candidate-profiles:AZ")?.instructionIds, ["owner-send-1"]);
+  assert.deepEqual(matrix.find(row => row.id === "candidate-profiles:OH")?.instructionIds, []);
+  const selected = (id: string) => id === "prl" || id.startsWith("voting-sites:") || id === "jurisdiction-operational-reference-az";
+  assert.deepEqual(ids([scope("AZ", "any-send")]).filter(selected).sort(),
+    ["jurisdiction-operational-reference-az", "prl", "voting-sites:AZ"]);
+  assert.deepEqual(ids([scope("OH", "ohio-send")]).filter(selected).sort(), ["prl", "voting-sites:OH"]);
 });
 
 test("source admission resumes from durable failure/success clocks rather than rerunning each pass or restart", () => {
@@ -69,19 +70,26 @@ test("source admission resumes from durable failure/success clocks rather than r
   assert.equal(routineTaskDue(nextTask, { lastAttemptedAt: NOW, lastSucceededObservedAt: NOW }, now + 86400_000), true);
 });
 
-test("the voting-site task is the registered contract's one automatic pass: no county flag, no county URL, no special task id", () => {
-  const vote = huntSourceTasks([scope("OH", "ohio-send")], "2026-09-28T08:00:00.000Z").find(task => task.registeredContractId === "voting-sites");
+test("voting-site Sends invoke one registered child per state with exact state authority", () => {
+  const votes = huntSourceTasks([scope("OH", "ohio-send"), scope("AZ", "arizona-send")], "2026-09-28T08:00:00.000Z")
+    .filter(task => task.registeredContractId?.startsWith("voting-sites:"));
+  assert.deepEqual(votes.map(task => task.id).sort(), ["voting-sites:AZ", "voting-sites:OH"]);
+  const vote = votes.find(task => task.registeredContractId === "voting-sites:OH");
   assert.ok(vote);
-  assert.equal(vote.id, "voting-sites");
-  assert.deepEqual(vote.command.slice(-1), ["--promote"]);
+  assert.equal(vote.scope, "US-OH:voting-sites");
+  assert.deepEqual(vote.command, ["scripts/fetch-voting-sites.mts", "--state=OH", "--promote"]);
   assert.equal(vote.requestedUrl, "");
+  const arizona = votes.find(task => task.id === "voting-sites:AZ")!;
+  assert.deepEqual(arizona.ownerInvocation?.instructions, ["arizona-send"]);
+  assert.equal(arizona.scope, "US-AZ:voting-sites");
+  assert.ok(arizona.command.includes("--state=AZ"));
   const cwd = process.cwd();
   const envelope: RuntimeAuthorityEnvelope = { repo: cwd, sha: "a".repeat(40),
     capability: "MANUAL_CONTRACT", contract: vote.registeredContractId ?? null, parentPid: 42, nonce: "b".repeat(64) };
   const checkout = { repositoryRoot: cwd, headSha: envelope.sha, clean: true,
     detached: true, headOnOriginMain: true, readable: true };
   assert.equal(runtimeAuthorityIssue({ envelope, expectation: { capabilities: ["MANUAL_CONTRACT"],
-    contract: "voting-sites", immediateParentPid: 42 }, checkout, cwd }), null);
+    contract: "voting-sites:OH", immediateParentPid: 42 }, checkout, cwd }), null);
   assert.deepEqual(vote.ownerInvocation?.instructions, ["ohio-send"]);
 });
 
@@ -108,12 +116,12 @@ test("a voting-sites candidate outcome emits the one source-task receipt expecte
     promoted: { versionId: candidate.id }, confirmed: null } as unknown as PromotionOutcome;
   try {
     console.log = (...parts: unknown[]) => { captured.push(String(parts[0])); };
-    printSourceRunnerReceipt("voting-sites", candidate, outcome);
+    printSourceRunnerReceipt("voting-sites:OH", candidate, outcome);
   } finally { console.log = log; }
   const parsed = parseRoutineRunnerReceipt(captured.join("\n"));
   assert.equal(parsed.ok, true);
   if (parsed.ok) {
-    assert.equal(parsed.receipt.source, "voting-sites");
+    assert.equal(parsed.receipt.source, "voting-sites:OH");
     assert.equal(parsed.receipt.candidateId, candidate.id);
   }
 });

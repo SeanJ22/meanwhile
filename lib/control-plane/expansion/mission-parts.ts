@@ -50,7 +50,7 @@ export const DEFAULT_MISSION_PARTS: MissionPartsSetting = {
     BALLOT_CANDIDACY: PEOPLE, FEC_FUNDING: PEOPLE, STATE_CAMPAIGN_FINANCE: PEOPLE, LOCAL_CAMPAIGN_FINANCE: PEOPLE,
     OFFICEHOLDERS: PEOPLE, OFFICIAL_ROSTER: PEOPLE, CAMPAIGN_FINANCE: PEOPLE, CAMPAIGN_FINANCE_FILING: PEOPLE, CANDIDATE_FILING_DOCUMENT: PEOPLE,
     // Elections, the ballot itself (contests and measures) and where to vote.
-    VOTING_SITE: BALLOT, GOOGLE_CIVIC_VOTERINFO: BALLOT, BALLOT_AND_CANDIDATES: BALLOT, BALLOT_CONTEST: BALLOT, VOTER_ACCESS: BALLOT, VOTER_ACCESS_ROUTE: BALLOT,
+    VOTING_SITE: BALLOT, GOOGLE_CIVIC_VOTERINFO: BALLOT, BALLOT_AND_CANDIDATES: BALLOT, BALLOT_CONTEST: BALLOT, BALLOT_MEASURE: BALLOT, VOTER_ACCESS: BALLOT, VOTER_ACCESS_ROUTE: BALLOT,
   },
   weightByGovernmentClass: [GOVERNMENTS],
 };
@@ -107,11 +107,6 @@ export function missionPartOf(work: { readonly checklistId?: string | null; read
   return null;
 }
 
-/**
- * The part of a work plan. The plan's record class decides under the parts in
- * force, so a changed setting re-parts held work without rewriting it; the
- * stored `missionPart` is the fallback.
- */
 export function missionPartOfPlan(plan: { readonly missionPart?: string; readonly contract: { readonly recordClass: string } },
   parts: MissionPartsSetting = DEFAULT_MISSION_PARTS): string | null {
   return missionPartOf({ recordClass: plan.contract.recordClass }, parts) ?? plan.missionPart ?? null;

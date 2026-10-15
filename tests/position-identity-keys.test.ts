@@ -17,7 +17,7 @@ test("a registry that cannot be read resolves to the subject's own key", async (
   assert.deepEqual(keys, ["official-1"]);
 });
 
-test("the federal and Arizona projections refresh before identity resolves, only when the chain needs them", async () => {
+test("the federal and selected state ballot projections refresh before identity resolves, only when the chain needs them", async () => {
   const calls: string[] = [];
   const base = { refreshFederal: async () => { calls.push("federal"); }, refreshBallot: async () => { calls.push("ballot"); } };
   await positionIdentityKeys("congress:A1", readers(base));

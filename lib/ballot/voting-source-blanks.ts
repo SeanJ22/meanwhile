@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "./state-scopes.ts";
 import { fingerprint } from "../control-plane/ids.ts";
 import { openOccurrence, recordNextDue, resumeOpenOccurrence, syncObligations } from "../control-plane/scheduler/durable.ts";
 import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
@@ -141,7 +142,7 @@ function blankPlan(blank: VotingSourceBlank, electionDate: string): AutonomousWo
     version: 1, capability: "voting-source-blanks", jurisdiction: blank.scope.state.toUpperCase(), missionPart: "ballot",
     ...(population(blank.scope) >= 0 ? { subjectPopulation: population(blank.scope) } : {}),
     sourceRegistryReferences: [blank.doorId, blank.scope.ocdId], seedUrls, sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE",
-    publication: { contractId: "voting-sites", bodyId: blank.scope.ocdId }, ownerInstructions: ["VS-01"],
+    publication: { contractId: stateBallotContractId("voting-sites", blank.scope.state), bodyId: blank.scope.ocdId }, ownerInstructions: ["VS-01"],
     contract: { schemaVersion: 2, recordClass: "VOTING_SITE", subjectId: blank.scope.ocdId,
       requiredFields: ["jurisdictionName", "model", "name", "address", "kind"],
       identity: { namespace: blank.id, keyFields: ["name", "address", "kind"] },

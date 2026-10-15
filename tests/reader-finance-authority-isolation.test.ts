@@ -71,13 +71,13 @@ test("lineup and measure lookups answer null when the ballot projection is unrea
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
   try {
-    assert.equal((await readGenericBallotProjection({ store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
+    assert.equal((await readGenericBallotProjection("AZ", { store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
     for (const id of ["ballot-nh-merrimack:governor", "ballot-nj-morris:county-commissioner"]) {
-      assert.equal(lineupForContest(id), null, `${id}: the AZ canvass has no authority over this contest`);
-      assert.equal(analysisForContest(id), null, `${id}: AZ measure analyses have no authority over this contest`);
+      assert.equal(lineupForContest("AZ", id), null, `${id}: the AZ canvass has no authority over this contest`);
+      assert.equal(analysisForContest("AZ", id), null, `${id}: AZ measure analyses have no authority over this contest`);
     }
-    assert.equal(lineupForContest("ballot-az-pima:governor"), null);
-    assert.equal(analysisForContest("ballot-az-pima:prop-139"), null);
+    assert.equal(lineupForContest("AZ", "ballot-az-pima:governor"), null);
+    assert.equal(analysisForContest("AZ", "ballot-az-pima:prop-139"), null);
   } finally {
     if (previous === undefined) delete env.NODE_ENV;
     else env.NODE_ENV = previous;
@@ -89,14 +89,14 @@ test("foreign contest and card keys do not initialize the AZ identity bridge", a
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
   try {
-    await readGenericBallotProjection({ store: failedStore, bypassCache: true });
+    await readGenericBallotProjection("AZ", { store: failedStore, bypassCache: true });
     resetAzIdentityCache();
     for (const id of ["ballot-nh-merrimack:governor", "ballot-nj-morris:county-commissioner"]) {
       assert.equal(lineupBridgeCovers(id), false);
       assert.equal(lineupRowForCard(`${id}|Public test nominee`), null);
       assert.equal(reconciledCandidacyIdForCard(`${id}|Public test nominee`), null);
     }
-    assert.throws(() => lineupBridgeCovers("ballot-az-pima:governor"), /National ballot projection is STORE_UNREACHABLE/);
+    assert.throws(() => lineupBridgeCovers("ballot-az-pima:governor"), /Ballot for AZ is STORE_UNREACHABLE/);
   } finally {
     resetAzIdentityCache();
     if (previous === undefined) delete env.NODE_ENV;

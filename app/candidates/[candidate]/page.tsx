@@ -31,7 +31,7 @@ export default async function FecCandidateProfile({ params }: { params: Promise<
         contact={null}
         sources={[{ what: "FEC registration and campaign money", provenance: row.provenance }]}
         sections={{ money: money.kind === "funding" ? <FundingDisplay data={money.data} context={null} bare /> : null,
-          positions: <PositionsSection subjectId={personId} subjectName={name} contentOnly /> }}
+          positions: <PositionsSection divisionIds={[`ocd-division/country:us/state:${candidate.slice(2, 4).toLowerCase()}`]} subjectId={personId} subjectName={name} contentOnly /> }}
         afterSections={<PublicStatementsProfile subjectId={personId} />} />
     </div>
   </main>;

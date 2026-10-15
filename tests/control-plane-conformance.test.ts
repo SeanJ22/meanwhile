@@ -536,3 +536,31 @@ test("createPgRepositories refuses an empty connection string", async () => {
     /requires an explicit connection string/,
   );
 });
+
+test("BL-30 migrates existing voting doors to exact state and canonical URL queries without changing held evidence", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const { migrateVotingDoorScopes } = await import("../lib/control-plane/repository/pg-store.ts");
+  const db = new PGlite();
+  try {
+    await db.exec("CREATE TABLE cp_doors(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb)");
+    const source = { id: "joint-authority", url: "https://Example.gov/vote/?utm_source=test&kind=early#sites", scope: { state: "AZ" } };
+    const original = { kind: "official-voting-source", updatedAt: NOW, validators: { checkedAt: NOW },
+      config: { votingSource: JSON.stringify(source), votingMappings: JSON.stringify([{ ...source, scope: { state: "NH" } }]) } };
+    await db.query("INSERT INTO cp_doors VALUES('held',7,$1,$2)", [NOW, original]);
+    const sql = { query: async (text: string, params?: readonly unknown[]) => (await db.query(text, params ? [...params] : [])).rows };
+    await migrateVotingDoorScopes(sql, LATER);
+    const read = async () => (await db.query<{ revision: number; value: typeof original & { config: Record<string, unknown> } }>("SELECT revision,value FROM cp_doors WHERE id='held'")).rows[0]!;
+    const migrated = await read();
+    assert.equal(Number(migrated.revision), 8);
+    assert.equal(migrated.value.config.url, "https://example.gov/vote?kind=early");
+    assert.equal(migrated.value.config.votingState_AZ, true);
+    assert.equal(migrated.value.config.votingState_NH, true);
+    assert.deepEqual(migrated.value.validators, original.validators);
+    assert.equal(migrated.value.config.votingSource, original.config.votingSource);
+    assert.equal(migrated.value.config.votingMappings, original.config.votingMappings);
+    await migrateVotingDoorScopes(sql, LATER);
+    assert.deepEqual(await read(), migrated, "replayed bootstrap does not rewrite migrated rows");
+    assert.equal((await db.query("SELECT id FROM cp_doors WHERE value#>>'{config,votingState_NH}'='true'")).rows.length, 1);
+    assert.equal((await db.query("SELECT id FROM cp_doors WHERE value#>>'{config,votingState_NJ}'='true'")).rows.length, 0);
+  } finally { await db.close(); }
+});

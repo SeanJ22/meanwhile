@@ -1,3 +1,4 @@
+import { ocdStateCode } from "../ocd/state-of.ts";
 import { cache } from "react";
 
 import type { SeatHolder } from "../officials/lookup.ts";
@@ -83,10 +84,10 @@ export function enumeratedSeatHolders(contest: { title: string; ocdId: string })
   return nhLegislativeHolders(contest.title);
 }
 
-export function certifiedNomineesFor(contestId: string): { source: string; names: string[] } | null {
-  const entry = lineupForContest(contestId);
+export function certifiedNomineesFor(state: string, contestId: string): { source: string; names: string[] } | null {
+  const entry = lineupForContest(state, contestId);
   if (entry === null) return null;
-  const canvass = getGeneralLineup()?.canvass;
+  const canvass = getGeneralLineup(state)?.canvass;
   return {
     source: [...new Set(entry.nominees.map(nominee => nominee.provenance
       ? `${nominee.provenance.sourceOrg} (${nominee.provenance.sourceUrl}, read ${nominee.provenance.collectedAt})`
@@ -233,7 +234,7 @@ export async function contestIncumbency(
     seatsThisContestFills: contest.voteFor,
   });
   const certified = contest.candidateListComplete ? { source: "the state election authority’s complete candidate list",
-    names: contest.candidates.map(c => c.display) } : (universeSources.certifiedNominees ?? certifiedNomineesFor)(contest.id);
+    names: contest.candidates.map(c => c.display) } : (universeSources.certifiedNominees ? universeSources.certifiedNominees(contest.id) : certifiedNomineesFor(ocdStateCode(contest.ocdId) ?? "", contest.id));
   const candidatesUniverse = candidateUniverse({
     certified,
     rendered: contest.candidates.map((c) => c.display),

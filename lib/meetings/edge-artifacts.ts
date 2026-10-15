@@ -99,12 +99,6 @@ export function readerScopeApplies(
     [-360, 0, 360].some(shift => bounds.east + shift >= point.lng - lngDelta && bounds.west + shift <= point.lng + lngDelta);
 }
 
-/**
- * The tiny mutable pointer. The reader reads THIS (short-TTL, edge-cached) to
- * learn the current sequence and which immutable scope artifacts to fetch.
- * `sequence` is monotonic: a publish never lowers it, so an older composition
- * can never replace a newer one.
- */
 export interface ReaderManifest {
   /** Missing on the former state layout; the normal publisher replaces it once. */
   readonly meetingLayout?: "governing-area";
@@ -119,48 +113,33 @@ export interface ReaderManifest {
   /** National per-source accounting the footer reads (shared across scopes). */
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
-  /**
-   * The other ready-to-display reader families the /api/meetings response
-   * carries, embedded so the reader serves them from the edge instead of waking
-   * the database per visit. Typed loosely here to keep this module free of the
-   * comment-access / routing type graph; the reader casts them. Absent → the
-   * reader falls back to reading that family from the DB.
-   */
-  readonly commentAccess?: readonly unknown[];
-  readonly everydayRouting?: unknown;
-  /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
-  /**
-   * Families too large to embed in the manifest, which is read every request.
-   * The manifest points at one gzip-compressed immutable artifact per family;
-   * the reader fetches each once per version.
-   */
-  readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
-  /**
-   * Each state's promoted registration, one artifact per state. Present, it is
-   * complete: a state it does not name has no promoted registration. Absent,
-   * the reader reads registration from the database.
-   */
-  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
-  /** Legislative people loaded separately for each requested jurisdiction. */
-  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
-  /**
-   * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
-   * nothing new. The reader restamps that route's fresh rows with it, never
-   * carried rows.
-   */
+
   readonly freshChecks?: Readonly<Record<string, string>>;
-  /**
-   * The partition versions these scope artifacts were composed from
-   * (`meetingCompositionId`): how the runner tells a quiet re-check, which
-   * republishes this manifest alone, from new data, which republishes the
-   * scopes.
-   */
+
   readonly composition?: string;
+}
+
+export interface ReaderAuthorityManifest {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly sequence: number;
+  readonly generatedAt: string;
+  readonly authorityArtifacts?: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>>;
+  readonly stateAuthorities?: Partial<Record<StateAuthorityFamily, Readonly<Record<string, AuthorityArtifactRef>>>>;
+  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+}
+
+export const STATE_AUTHORITY_FAMILIES = ["ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
+export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily | "state-legislators">;
+export type GlobalPromotedAuthorityFamily = Exclude<PromotedAuthorityFamily, StateAuthorityFamily>;
+export function isStateAuthorityFamily(family: string): family is StateAuthorityFamily {
+  return (STATE_AUTHORITY_FAMILIES as readonly string[]).includes(family);
 }
 
 /** Each artifact carries one or more proven pointers whole, read through each pointer's own typed Reader. */
 export type PromotedAuthorityFamily =
+  | "candidate-campaign-sites-derived"
   | "ballot-contests"
   | "candidate-profiles"
   | "candidate-publications"
@@ -180,6 +159,7 @@ export type PromotedAuthorityFamily =
   | "government-domains";
 
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
+  "candidate-campaign-sites-derived",
   "ballot-contests",
   "candidate-profiles",
   "candidate-publications",
@@ -217,6 +197,7 @@ export type AuthorityFamily =
   | "state-legislators"
   | "meeting-outcomes"
   | "comment-access"
+  | "everyday-routing"
   | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
@@ -227,6 +208,7 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "state-legislators",
   "meeting-outcomes",
   "comment-access",
+  "everyday-routing",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 
@@ -245,13 +227,6 @@ function countsFor(meetings: readonly Meeting[]): ReaderArtifactCounts {
   return { fresh: base.fresh, carried: base.carried, total: base.total, duplicatesCollapsed: 0 };
 }
 
-/**
- * Split one composed national snapshot into per-scope artifacts, deterministic
- * and order-stable. A meeting's scope is its governing division; an agenda
- * stays in its meeting's area, even when its own geography differs. Agenda
- * text is separate so a calendar read never fetches it. Counts are for the
- * subset; the cross-source write-boundary invariant does not apply here.
- */
 export function partitionSnapshotByScope(
   snapshot: MeetingsSnapshot,
   now: string = new Date().toISOString(),
@@ -316,14 +291,6 @@ export function scopesForStates(states: Iterable<string>): string[] {
   return [...set].sort();
 }
 
-/**
- * Merge the fetched scope artifacts back into one `MeetingsSnapshot`, exactly
- * the shape `searchMeetings`/`snapshotClientMeta` consume. Meetings are
- * de-duplicated by id (a meeting can only be in one scope, but the merge is
- * defensive), agenda documents by id. The national `sources` accounting comes
- * from the manifest so the footer's failed-source attribution stays complete
- * even when only one state's meetings are loaded.
- */
 export function mergeScopeArtifacts(
   artifacts: readonly ReaderGeoArtifact[],
   manifest: Pick<ReaderManifest, "generatedAt" | "sources">,

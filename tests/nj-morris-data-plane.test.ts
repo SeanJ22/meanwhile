@@ -25,26 +25,26 @@ const ballot = njMorrisFiling([{
 const projection: GenericBallotProjection = { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } };
 
 test("a missing national ballot pointer is NOT_RECORDED", async () => {
-  const result = await readGenericBallotProjection({ store: noPointer, now: "2026-09-08T00:00:00.000Z" });
+  const result = await readGenericBallotProjection("NJ", { store: noPointer, now: "2026-09-08T00:00:00.000Z" });
   assert.equal(result.kind, "NOT_RECORDED");
 });
 
 test("Morris ballot and contacts share the national promoted projection", async () => {
-  const promoted = await readGenericBallotProjection({
+  const promoted = await readGenericBallotProjection("NJ", {
     now: "2026-09-08T02:00:00.000Z",
-    edge: manualEdgeEntry("ballot-contests", projection, "national-ballot-1"),
+    edge: manualEdgeEntry("ballot-contests:NJ", projection, "national-ballot-1"),
   });
   assert.equal(promoted.kind, "PROMOTED");
   if (promoted.kind !== "PROMOTED") return;
   assert.equal(promoted.metadata.versionId, "national-ballot-1");
   assert.equal(promoted.metadata.lastKnownGoodVersionId, "national-ballot-1");
   assert.deepEqual(promoted.value.ballots[ballotElectionKey(ballot)], ballot);
-  assert.deepEqual(candidateContactCensus().contacts, ballot.contacts);
+  assert.deepEqual(candidateContactCensus("NJ").contacts, ballot.contacts);
 });
 
 test("a national store failure stays explicit for ballot and contact readers", async () => {
-  const result = await readGenericBallotProjection({ store: failedStore, bypassCache: true });
+  const result = await readGenericBallotProjection("NJ", { store: failedStore, bypassCache: true });
   assert.equal(result.kind, "STORE_UNREACHABLE");
   if (result.kind === "STORE_UNREACHABLE") assert.equal(result.code, "STORE_READ_FAILED");
-  assert.throws(() => candidateContactCensus(), /projection is STORE_UNREACHABLE/);
+  assert.throws(() => candidateContactCensus("NJ"), /NJ is STORE_UNREACHABLE/);
 });

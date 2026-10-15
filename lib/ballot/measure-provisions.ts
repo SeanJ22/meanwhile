@@ -1,4 +1,4 @@
-import { currentMeasureRecords, type MeasureRecord, type ProvisionKind } from "./measure-records.ts";
+import { type MeasureRecord, type ProvisionKind } from "./measure-records.ts";
 export type { ProvisionKind } from "./measure-records.ts";
 
 export const PROVISION_KIND_LABEL: Readonly<Record<ProvisionKind, string>> = {
@@ -27,14 +27,14 @@ function provisions(records: readonly MeasureRecord[]): MeasureProvision[] {
   })));
 }
 
-export function provisionsForContest(contestId: string, records: readonly MeasureRecord[] = currentMeasureRecords()): MeasureProvision[] {
+export function provisionsForContest(contestId: string, records: readonly MeasureRecord[]): MeasureProvision[] {
   return provisions(records.filter(record => record.contestId === contestId));
 }
 
-export function provisionById(id: string, records: readonly MeasureRecord[] = currentMeasureRecords()): MeasureProvision | null {
+export function provisionById(id: string, records: readonly MeasureRecord[]): MeasureProvision | null {
   return provisions(records).find(part => part.id === id) ?? null;
 }
 
-export function getProvisionTargetIds(records: readonly MeasureRecord[] = currentMeasureRecords()): Set<string> {
+export function getProvisionTargetIds(records: readonly MeasureRecord[]): Set<string> {
   return new Set(provisions(records).map(part => part.id));
 }

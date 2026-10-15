@@ -37,10 +37,12 @@ for (const [kind, env, expectedOk] of [
     assert.deepEqual(JSON.parse(logs.at(-1)!), outcome);
     if (expectedOk) {
       assert.equal(outcome.readerEdge, "PUBLISHED");
-      assert.equal(outcome.sequence, (await local.readManifest())!.manifest.sequence);
+      assert.equal(outcome.sequence, (await local.readAuthorityManifest())!.manifest.sequence);
+      assert.equal(await local.readManifest(), null, "an authority-only selection does not create a meetings manifest");
       assert.equal(readerEdgeSupervisorFailure(outcome), null);
     } else {
       assert.equal(await local.readManifest(), null, "a refused local destination is never mutated");
+      assert.equal(await local.readAuthorityManifest(), null, "a refused authority destination is never mutated");
       const failure = readerEdgeSupervisorFailure(outcome)!;
       assert.equal(failure.code, "READER_EDGE_PUBLISH_FAILED");
       assert.match(failure.detail, /folder on the runner/);

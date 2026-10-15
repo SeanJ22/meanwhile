@@ -1,3 +1,4 @@
+import { BALLOT_STATES, stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 
@@ -22,10 +23,6 @@ export interface ManualProductionSourceContract {
   readonly classification: RoutineDataClassification;
   readonly bootstrapFixturePaths: readonly string[];
   readonly lkgBehavior: string;
-  /**
-   * Who besides the owner may invoke it, and on whose decision. Still explicit invocation, never a clock: the
-   * reviewing agent session runs the same verified door the owner does.
-   */
   readonly delegatedInvocation?: {
     readonly to: "REVIEWING_AGENT_SESSION";
     readonly authorization: string;
@@ -88,13 +85,13 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     lkgBehavior: "Each translated fact advances only with its original source passages and independent model checks; a failed rewrite retains the last verified translation and leaves the blank open.",
     delegatedInvocation: { to: "REVIEWING_AGENT_SESSION", authorization: "CA-25: the translator publishes checked official-text translations through the standing Slide under the existing budget dial." },
   },
-  {
-    id: "ballot-contests",
+  ...BALLOT_STATES.map(state => ({
+    id: stateBallotContractId("ballot-contests", state),
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "official-ballot-authorities",
     recordClass: "BALLOT_CANDIDACY",
-    scope: "US:state-election-ballots",
-    command: ["scripts/assemble-ballot-package.mts"],
+    scope: stateBallotScope("ballot-contests", state),
+    command: ["scripts/assemble-ballot-package.mts", `--state=${state}`],
     parserNormalizerVersion: "ballot-contests/1",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "official-ballot-authorities" },
     validationContract: VALIDATION_CHECKS,
@@ -102,8 +99,8 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     readerProjection: { id: "state-election-ballots", consumers: ["Admin", "Ask", "/ballot"] },
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
-    lkgBehavior: "Each verified candidate publishes with its sourced contest. Partial lists preserve prior candidates; only a complete successor from the same election authority can remove omitted candidacies.",
-  },
+    lkgBehavior: "Complete sourced contests publish; incomplete contests remain named. Prior complete lists remain until a newer complete list establishes any change.",
+  } as const)),
   {
     id: "congress-bulk-roster",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
@@ -169,13 +166,13 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     lkgBehavior: "Every selected official roll must validate as a set; a missing or malformed roll holds the prior GOOD question/position projection.",
   },
 
-  {
-    id: "candidate-profiles",
+  ...BALLOT_STATES.map(state => ({
+    id: stateBallotContractId("candidate-profiles", state),
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "candidate-primary-publications",
     recordClass: "CANDIDATE_PROFILE",
-    scope: "US:candidate-profiles",
-    command: ["scripts/promote-manual-civic-projection.mts", "--contract=candidate-profiles"],
+    scope: stateBallotScope("candidate-profiles", state),
+    command: ["scripts/promote-manual-civic-projection.mts", `--contract=${stateBallotContractId("candidate-profiles", state)}`],
     parserNormalizerVersion: "candidate-primary-manual/1",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "candidate-primary-publications" },
     validationContract: VALIDATION_CHECKS,
@@ -184,14 +181,14 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
     lkgBehavior: "A malformed, ambiguously keyed, or incompletely reviewed profile package is held while the prior GOOD card/link projection remains live.",
-  },
-  {
-    id: "candidate-corpus",
+  } as const)),
+  ...BALLOT_STATES.map(state => ({
+    id: stateBallotContractId("candidate-corpus", state),
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "candidate-primary-publications",
     recordClass: "CANDIDATE_PUBLICATION",
-    scope: "US:candidate-publications",
-    command: ["scripts/promote-manual-civic-projection.mts", "--contract=candidate-corpus"],
+    scope: stateBallotScope("candidate-corpus", state),
+    command: ["scripts/promote-manual-civic-projection.mts", `--contract=${stateBallotContractId("candidate-corpus", state)}`],
     parserNormalizerVersion: "candidate-primary-manual/1",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "candidate-primary-publications" },
     validationContract: VALIDATION_CHECKS,
@@ -200,7 +197,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
     lkgBehavior: "A failed or invalid reviewed collection records its refusal and leaves every previously promoted candidate publication available.",
-  },
+  } as const)),
   {
     id: "officeholder-statements",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
@@ -316,13 +313,13 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     bootstrapFixturePaths: [],
     lkgBehavior: "A failed filer/transaction acquisition, suspected cap, malformed record, or unknown identity records its outcome and leaves the prior GOOD Pima projection live.",
   },
-  {
-    id: "voting-sites",
+  ...BALLOT_STATES.map(state => ({
+    id: stateBallotContractId("voting-sites", state),
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "voting-sites",
     recordClass: "VOTING_SITE",
-    scope: "US:voting-sites",
-    command: ["scripts/fetch-voting-sites.mts", "--promote"],
+    scope: stateBallotScope("voting-sites", state),
+    command: ["scripts/fetch-voting-sites.mts", `--state=${state}`, "--promote"],
     parserNormalizerVersion: "official-voting-sites/4",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "voting-sites" },
     validationContract: VALIDATION_CHECKS,
@@ -331,7 +328,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
     lkgBehavior: "Each election authority is isolated. A failed or empty authority retains only its prior GOOD jurisdiction scope, and a globally empty candidate cannot move the pointer.",
-  },
+  } as const)),
   {
     id: "prl",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",

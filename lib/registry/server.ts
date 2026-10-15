@@ -34,7 +34,7 @@ import {
 } from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Body, Division, Registry } from "./types.ts";
-import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
+import { currentRegistryPlaceRead, getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
 import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { primeCommentAccess, readCommentAccessFacts } from "./comment-access.ts";
@@ -114,7 +114,7 @@ export function prefetchReaderGeography(): void {
 
 async function loadRegistry(): Promise<RegistryLoaded> {
   const runtimeRegistry = getRegistryRuntimeReadModel();
-  const features = await resolverGeometry();
+  const features = currentRegistryPlaceRead() ? [] : await resolverGeometry();
   const registry: Registry = runtimeRegistry.registry;
 
   return {
@@ -191,7 +191,8 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
   let territory: BodyTerritoryFile | null = null;
   try {
     // Read once per process (`bodyTerritories`), possibly already started by the route.
-    territory = await bodyTerritories();
+    const place = currentRegistryPlaceRead();
+    if (!place || place.value.registry.divisions.some(row => row.ocdId.includes("/state:az"))) territory = await bodyTerritories();
   } catch (error) {
     throw new RegistryHoldingReadError(BODY_TERRITORY_FILE, error);
   }
@@ -219,17 +220,13 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
-// Edge first, database second, each a binding of `settleEdgeFirst`. A reader request that entered the
-// reader authority edge primes the family from its edge value without reading the database; the runner
-// and workers read the authoritative database pointer; an edge-only context refuses.
-
 /** The federal directory, edge first. */
 export const settleFederalDirectoryRead = (): Promise<void> =>
   settleEdgeFirst(currentFederalDirectoryEdge, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted, "The federal directory");
 
 /** The registry runtime (divisions, bodies, rosters), edge first. */
 const settleRegistryRuntimeRead = (): Promise<void> =>
-  settleEdgeFirst(currentRegistryRuntimeEdge, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, "The registry runtime");
+  currentRegistryPlaceRead() ? Promise.resolve() : settleEdgeFirst(currentRegistryRuntimeEdge, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, "The registry runtime");
 
 /** Geometry/division reads never acquire the unrelated federal roster. */
 export async function settleRegistryAuthorityReads(
@@ -258,7 +255,7 @@ export function authorityVersionKey(state: { readonly kind: string; readonly met
 
 async function currentRegistryAuthorityKey(): Promise<string> {
   await settleRegistryAuthorityReads("REGISTRY");
-  return `registry:${authorityVersionKey(registryRuntimeReadState())}`;
+  return `registry:${authorityVersionKey(registryRuntimeReadState())}:${currentRegistryPlaceRead()?.selectorKey ?? "all"}`;
 }
 
 async function currentAuthorityKey(registryKey: string): Promise<{ key: string; federalAvailable: boolean }> {
@@ -299,10 +296,6 @@ async function registryLoaded(): Promise<RegistryLoaded> {
   return value;
 }
 
-// Registration, composed one state at a time. A request reads only the states its own divisions name
-// and composes each beside the reviewed registry (`composeRegistration`: reviewed wins). A state with no
-// promoted registration adds nothing. A registration the store could not read is thrown, never returned
-// as emptiness: "nobody governs here" never stands in for "we could not read who does".
 const REGISTRATION_STATES = new Set(REGISTRATION_TARGETS.map((t) => t.state.toLowerCase()));
 interface ComposedRegistration {
   readonly key: string;

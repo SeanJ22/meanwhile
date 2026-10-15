@@ -15,7 +15,7 @@
         },
         {
           "ocdId": "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
-          "statement": "Kearsarge Regional School District decisions are made at the district's annual meeting in March under New Hampshire's town-meeting system, not on the November ballot (Town Election day: March 10, 2026).",
+          "statement": "The Secretary of State’s political calendar lists Town Election day as March 10, 2026. November school-related ballot questions for Newbury have not yet been acquired.",
           "provenance": {
             "sourceOrg": "New Hampshire Secretary of State (2026–2027 political calendar)",
             "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/political-calendar-2026-2027-tops-pages-of-calendar-landscape_0.pdf",
@@ -32,16 +32,27 @@
           "ocdId": "ocd-division/country:us/state:nh",
           "title": "Governor",
           "voteFor": 1,
-          "scopeNote": "Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:governor",
+            "publishedTitle": "Governor",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:us-senate",
@@ -49,16 +60,27 @@
           "ocdId": "ocd-division/country:us/state:nh",
           "title": "United States Senator",
           "voteFor": 1,
-          "scopeNote": "An open seat: Senator Jeanne Shaheen announced she is not seeking reelection in 2026. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "An open seat: Senator Jeanne Shaheen announced she is not seeking reelection in 2026.  The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 6,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate",
+            "publishedTitle": "United States Senator",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:us-house-2",
@@ -66,16 +88,27 @@
           "ocdId": "ocd-division/country:us/state:nh/cd:2",
           "title": "Representative in Congress, District 2",
           "voteFor": 1,
-          "scopeNote": "Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:us-house-2",
+            "publishedTitle": "Representative in Congress, District 2",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:state-senate-7",
@@ -83,16 +116,27 @@
           "ocdId": "ocd-division/country:us/state:nh/sldu:7",
           "title": "State Senator, District 7",
           "voteFor": 1,
-          "scopeNote": "Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
+            "sourceOrg": "Boscawen Town Clerk",
+            "collectedAt": "2026-10-15T18:23:18.445324+00:00",
+            "verifiedAt": "2026-10-15T18:23:18.445324+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:state-senate-7",
+            "publishedTitle": "State Senator, District 7",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:state-house-merrimack-7",
@@ -100,16 +144,27 @@
           "ocdId": "ocd-division/country:us/state:nh/sldl:607",
           "title": "State Representative, Merrimack County District 7",
           "voteFor": 2,
-          "scopeNote": "This district elects two representatives. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "This district elects two representatives.  The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:state-house-merrimack-7",
+            "publishedTitle": "State Representative, Merrimack County District 7",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:executive-council-2",
@@ -117,16 +172,27 @@
           "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
           "title": "Executive Councilor, District 2",
           "voteFor": 1,
-          "scopeNote": "Newbury votes in Executive Council District 2 per the Secretary of State's 2022-2032 district assignment (the district spans 81 cities and towns across six counties; its Merrimack County portion includes Newbury and New London). The district's boundary lines are not on our map yet - only the town assignment is sourced. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "Newbury votes in Executive Council District 2 per the Secretary of State's 2022-2032 district assignment (the district spans 81 cities and towns across six counties; its Merrimack County portion includes Newbury and New London). The district's boundary lines are not on our map yet - only the town assignment is sourced.  The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-executive-council-districts.pdf",
-            "verifiedAt": "2026-08-13",
-            "collectedAt": "2026-08-13"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:executive-council-2",
+            "publishedTitle": "Executive Councilor, District 2",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-executive-council-districts.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:county-commissioner-2",
@@ -134,16 +200,27 @@
           "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
           "title": "Merrimack County Commissioner, Second District",
           "voteFor": 1,
-          "scopeNote": "Newbury votes in the county's Second Commissioner District per the Secretary of State's 2022-2032 assignment (Andover, Boscawen, Bradford, Canterbury, Chichester, Danbury, Franklin, Hill, Loudon, New London, Newbury, Northfield, Salisbury, Sutton, Warner, Webster, Wilmot), which elects in 2026 to a two-year term. The district's boundary lines are not on our map yet - only the town assignment is sourced. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "Newbury votes in the county's Second Commissioner District per the Secretary of State's 2022-2032 assignment (Andover, Boscawen, Bradford, Canterbury, Chichester, Danbury, Franklin, Hill, Loudon, New London, Newbury, Northfield, Salisbury, Sutton, Warner, Webster, Wilmot), which elects in 2026 to a two-year term. The district's boundary lines are not on our map yet - only the town assignment is sourced.  The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-county-commissioners-by-district_0.pdf",
-            "verifiedAt": "2026-08-13",
-            "collectedAt": "2026-08-13"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:county-commissioner-2",
+            "publishedTitle": "Merrimack County Commissioner, Second District",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-county-commissioners-by-district_0.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:county-sheriff",
@@ -151,16 +228,27 @@
           "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
           "title": "Merrimack County Sheriff",
           "voteFor": 1,
-          "scopeNote": "Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:county-sheriff",
+            "publishedTitle": "Merrimack County Sheriff",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:county-attorney",
@@ -168,16 +256,27 @@
           "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
           "title": "Merrimack County Attorney",
           "voteFor": 1,
-          "scopeNote": "Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:county-attorney",
+            "publishedTitle": "Merrimack County Attorney",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:county-treasurer",
@@ -185,16 +284,27 @@
           "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
           "title": "Merrimack County Treasurer",
           "voteFor": 1,
-          "scopeNote": "Only Democratic candidates filed for this office. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "Only Democratic candidates filed for this office.  The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:county-treasurer",
+            "publishedTitle": "Merrimack County Treasurer",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:register-of-deeds",
@@ -202,16 +312,27 @@
           "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
           "title": "Merrimack County Register of Deeds",
           "voteFor": 1,
-          "scopeNote": "Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:register-of-deeds",
+            "publishedTitle": "Merrimack County Register of Deeds",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:register-of-probate",
@@ -219,16 +340,27 @@
           "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
           "title": "Merrimack County Register of Probate",
           "voteFor": 1,
-          "scopeNote": "Only a Democratic candidate filed for this office. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.",
+          "scopeNote": "Only a Democratic candidate filed for this office.  The complete general-election candidate list is verified against the official November 3 sample ballot; primary filing records remain available as filing evidence.",
           "termYears": 2,
           "electionId": "nh-2026-11-03",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00"
           },
-          "divisionVintage": "TIGER_GENZ2025"
+          "divisionVintage": "TIGER_GENZ2025",
+          "filing": {
+            "id": "ballot-nh-merrimack:register-of-probate",
+            "publishedTitle": "Merrimack County Register of Probate",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          },
+          "candidateListComplete": true
         },
         {
           "id": "ballot-nh-merrimack:cacr-13",
@@ -278,12 +410,22 @@
           "familyName": "Warmington",
           "partyLabel": "Democratic",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Cinde Warmington"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:governor:warmington-cinde",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:governor:ayotte-kelly",
@@ -294,13 +436,635 @@
           "familyName": "Ayotte",
           "partyLabel": "Republican",
           "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Kelly Ayotte"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:governor:ayotte-kelly",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
+        {
+          "id": "nh-2026-general-governor:villee-stephen",
+          "contestId": "ballot-nh-merrimack:governor",
+          "givenName": "Stephen",
+          "familyName": "Villee",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Stephen Villee"
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:us-senate:pappas-chris",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:us-senate",
+          "givenName": "Chris",
+          "incumbent": null,
+          "familyName": "Pappas",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Chris Pappas"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:pappas-chris",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:us-senate",
+          "givenName": "John E.",
+          "incumbent": null,
+          "familyName": "Sununu",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "John E. Sununu"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "nh-2026-general-us-senate:laplante-edmond",
+          "contestId": "ballot-nh-merrimack:us-senate",
+          "givenName": "Edmond",
+          "familyName": "Laplante",
+          "partyLabel": "Constitution",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Edmond Laplante"
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:us-house-2",
+          "givenName": "Maggie",
+          "incumbent": null,
+          "familyName": "Goodlander",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Maggie Goodlander"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:us-house-2",
+          "givenName": "Lily",
+          "incumbent": null,
+          "familyName": "Tang Williams",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Lily Tang Williams"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "nh-2026-general-us-house-2:mahrou-robbie",
+          "contestId": "ballot-nh-merrimack:us-house-2",
+          "givenName": "Robbie",
+          "familyName": "Mahrou",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Robbie Mahrou"
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:state-senate-7",
+          "givenName": "Rebecca",
+          "incumbent": null,
+          "familyName": "Harned",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
+            "sourceOrg": "Boscawen Town Clerk",
+            "collectedAt": "2026-10-15T18:23:18.445324+00:00",
+            "verifiedAt": "2026-10-15T18:23:18.445324+00:00",
+            "quote": "Rebecca Harned"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:state-senate-7",
+          "givenName": "Daniel E.",
+          "incumbent": null,
+          "familyName": "Innis",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
+            "sourceOrg": "Boscawen Town Clerk",
+            "collectedAt": "2026-10-15T18:23:18.445324+00:00",
+            "verifiedAt": "2026-10-15T18:23:18.445324+00:00",
+            "quote": "Daniel E. Innis"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
+          "givenName": "Karen Elizabeth",
+          "incumbent": null,
+          "familyName": "Ebel",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Karen Elizabeth Ebel"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
+          "givenName": "Gregory M.",
+          "incumbent": null,
+          "familyName": "Sargent",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Gregory M. Sargent"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "nh-2026-general-state-house-merrimack-7:hitchmoth-dorothy-l",
+          "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
+          "givenName": "Dorothy L.",
+          "familyName": "Hitchmoth",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Dorothy L. Hitchmoth"
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:executive-council-2",
+          "givenName": "Karen",
+          "incumbent": null,
+          "familyName": "Liot Hill",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Karen Liot Hill"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:executive-council-2:menard-tobin",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:executive-council-2",
+          "givenName": "Tobin",
+          "incumbent": null,
+          "familyName": "Menard",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Tobin Menard"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:executive-council-2:menard-tobin",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:county-commissioner-2",
+          "givenName": "Vincent S.",
+          "incumbent": null,
+          "familyName": "Ribas",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Vincent S. Ribas"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:county-commissioner-2",
+          "givenName": "Harold F.",
+          "incumbent": null,
+          "familyName": "French",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Harold F. French"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:county-sheriff",
+          "givenName": "Peter",
+          "incumbent": null,
+          "familyName": "Shephard",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Peter Shephard"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:county-sheriff",
+          "givenName": "Frank T.",
+          "incumbent": null,
+          "familyName": "Cassidy",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Frank T. Cassidy"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:county-attorney:endres-steven",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:county-attorney",
+          "givenName": "Steven",
+          "incumbent": null,
+          "familyName": "Endres",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Steven Endres"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-attorney:endres-steven",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:county-attorney:hagaman-meg",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:county-attorney",
+          "givenName": "Meg",
+          "incumbent": null,
+          "familyName": "Hagaman",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Meg Hagaman"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-attorney:hagaman-meg",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:county-treasurer",
+          "givenName": "Kathleen",
+          "incumbent": null,
+          "familyName": "Donnelly",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Kathleen Donnelly"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:register-of-deeds",
+          "givenName": "Erica S.",
+          "incumbent": null,
+          "familyName": "Davis",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Erica S. Davis"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:register-of-deeds",
+          "givenName": "Samantha",
+          "incumbent": null,
+          "familyName": "Morse",
+          "partyLabel": "Republican",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Samantha Morse"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
+          "slogan": null,
+          "contestId": "ballot-nh-merrimack:register-of-probate",
+          "givenName": "Jane",
+          "incumbent": null,
+          "familyName": "Bradstreet",
+          "partyLabel": "Democratic",
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Jane Bradstreet"
+          },
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
+        },
+        {
+          "id": "nh-2026-general-register-of-probate:ehl-alyssa",
+          "contestId": "ballot-nh-merrimack:register-of-probate",
+          "givenName": "Alyssa",
+          "familyName": "Ehl",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+            "sourceOrg": "New London Town Clerk",
+            "collectedAt": "2026-10-15T18:19:03.940004+00:00",
+            "verifiedAt": "2026-10-15T18:19:03.940004+00:00",
+            "quote": "Alyssa Ehl"
+          }
+        }
+      ],
+      "coverageNotes": [
+        "Executive Council and county commissioner district boundary lines aren't on our map yet. Those contests are listed here because the Secretary of State's own district assignments place Newbury in Executive Council District 2 and the county's Second Commissioner District — the town assignment is sourced even though the lines can't be drawn.",
+        "Candidate lists come from the Secretary of State's July 16, 2026 primary filings. The September 8 primary results and nomination-paper candidates have not yet been reconciled into this ballot."
+      ],
+      "measureRecords": [],
+      "filingCandidacies": [
         {
           "id": "ballot-nh-merrimack:governor:fife-shaun",
           "slogan": null,
@@ -315,7 +1079,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:governor:fife-shaun",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
@@ -331,7 +1104,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:jarvis-david",
@@ -347,7 +1129,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:jarvis-david",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:manzur-karishma",
@@ -363,23 +1154,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:us-senate:pappas-chris",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:us-senate",
-          "givenName": "Chris",
-          "incumbent": null,
-          "familyName": "Pappas",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:manzur-karishma",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
@@ -395,7 +1179,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:vail-john",
@@ -411,7 +1204,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:vail-john",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:alciere-tom",
@@ -427,7 +1229,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:alciere-tom",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:brown-scott-p-",
@@ -443,7 +1254,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:brown-scott-p-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:danley-sky",
@@ -459,7 +1279,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:danley-sky",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:martin-andy",
@@ -475,7 +1304,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:martin-andy",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:maxwell-mary",
@@ -491,7 +1329,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:maxwell-mary",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
@@ -507,7 +1354,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
@@ -523,23 +1379,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:us-senate:sununu-john-e-",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:us-senate",
-          "givenName": "John E.",
-          "incumbent": null,
-          "familyName": "Sununu",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
@@ -555,23 +1404,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:us-house-2",
-          "givenName": "Maggie",
-          "incumbent": null,
-          "familyName": "Goodlander",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
@@ -587,7 +1429,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-house-2:nicholson-dan",
@@ -603,7 +1454,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:us-house-2:orlando-victor",
@@ -619,87 +1479,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:us-house-2",
-          "givenName": "Lily",
-          "incumbent": null,
-          "familyName": "Tang Williams",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:state-senate-7",
-          "givenName": "Rebecca",
-          "incumbent": null,
-          "familyName": "Harned",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:state-senate-7",
-          "givenName": "Daniel E.",
-          "incumbent": null,
-          "familyName": "Innis",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
-          "givenName": "Karen Elizabeth",
-          "incumbent": null,
-          "familyName": "Ebel",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
-          "givenName": "Gregory M.",
-          "incumbent": null,
-          "familyName": "Sargent",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:us-house-2:orlando-victor",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
@@ -715,39 +1504,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:executive-council-2",
-          "givenName": "Karen",
-          "incumbent": null,
-          "familyName": "Liot Hill",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-13",
-            "collectedAt": "2026-08-13"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:executive-council-2:menard-tobin",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:executive-council-2",
-          "givenName": "Tobin",
-          "incumbent": null,
-          "familyName": "Menard",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-13",
-            "collectedAt": "2026-08-13"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
@@ -763,23 +1529,16 @@
             "verifiedAt": "2026-08-13",
             "collectedAt": "2026-08-13"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:county-commissioner-2",
-          "givenName": "Vincent S.",
-          "incumbent": null,
-          "familyName": "Ribas",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-13",
-            "collectedAt": "2026-08-13"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
@@ -795,55 +1554,16 @@
             "verifiedAt": "2026-08-13",
             "collectedAt": "2026-08-13"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:county-commissioner-2",
-          "givenName": "Harold F.",
-          "incumbent": null,
-          "familyName": "French",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-13",
-            "collectedAt": "2026-08-13"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:county-sheriff:shephard-peter",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:county-sheriff",
-          "givenName": "Peter",
-          "incumbent": null,
-          "familyName": "Shephard",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:county-sheriff",
-          "givenName": "Frank T.",
-          "incumbent": null,
-          "familyName": "Cassidy",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-13",
+              "collectedAt": "2026-08-13"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:county-sheriff:gerhard-jason",
@@ -859,7 +1579,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-sheriff:gerhard-jason",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:county-sheriff:weir-ben",
@@ -875,39 +1604,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:county-attorney:endres-steven",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:county-attorney",
-          "givenName": "Steven",
-          "incumbent": null,
-          "familyName": "Endres",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:county-attorney:hagaman-meg",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:county-attorney",
-          "givenName": "Meg",
-          "incumbent": null,
-          "familyName": "Hagaman",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-sheriff:weir-ben",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:county-attorney:raiche-jon",
@@ -923,7 +1629,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-attorney:raiche-jon",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:county-attorney:rogers-sarah",
@@ -939,23 +1654,16 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:county-treasurer",
-          "givenName": "Kathleen",
-          "incumbent": null,
-          "familyName": "Donnelly",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-attorney:rogers-sarah",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         },
         {
           "id": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
@@ -971,62 +1679,18 @@
             "verifiedAt": "2026-08-14",
             "collectedAt": "2026-08-14"
           },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:register-of-deeds",
-          "givenName": "Erica S.",
-          "incumbent": null,
-          "familyName": "Davis",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:register-of-deeds",
-          "givenName": "Samantha",
-          "incumbent": null,
-          "familyName": "Morse",
-          "partyLabel": "Republican",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
-        },
-        {
-          "id": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
-          "slogan": null,
-          "contestId": "ballot-nh-merrimack:register-of-probate",
-          "givenName": "Jane",
-          "incumbent": null,
-          "familyName": "Bradstreet",
-          "partyLabel": "Democratic",
-          "provenance": {
-            "sourceOrg": "New Hampshire Secretary of State",
-            "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
-            "verifiedAt": "2026-08-14",
-            "collectedAt": "2026-08-14"
-          },
-          "websiteUrl": null
+          "websiteUrl": null,
+          "filing": {
+            "id": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
+            "provenance": {
+              "sourceOrg": "New Hampshire Secretary of State",
+              "sourceUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+              "verifiedAt": "2026-08-14",
+              "collectedAt": "2026-08-14"
+            }
+          }
         }
-      ],
-      "coverageNotes": [
-        "Executive Council and county commissioner district boundary lines aren't on our map yet. Those contests are listed here because the Secretary of State's own district assignments place Newbury in Executive Council District 2 and the county's Second Commissioner District — the town assignment is sourced even though the lines can't be drawn.",
-        "Candidate lists come from the Secretary of State's July 16, 2026 primary filings. The September 8 primary results and nomination-paper candidates have not yet been reconciled into this ballot."
-      ],
-      "measureRecords": []
+      ]
     }
   },
   "sourceReceipt": {
@@ -1090,9 +1754,29 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "requestedUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/political-calendar-2026-2027-tops-pages-of-calendar-landscape_0.pdf",
         "reviewedEvidence": "Codex PDC cutover acquired 277454 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "requestedUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+        "finalUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+        "httpStatus": 200,
+        "rawHash": "ab325c554105ae420bf2faf20669981ad9fe69f7ca5701cd80ccd9eef0dc9520",
+        "retrievedAt": "2026-10-15T18:19:03.940004+00:00",
+        "publisher": "New London Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot linked by New London at https://newlondon.nh.gov/voting. New London and Newbury share eleven state, congressional and Merrimack County contests held here, including House Merrimack District 7 with State Senate District 7 verified separately against Boscawen’s official ballot; the printed candidate inventory was checked in full."
+      },
+      {
+        "requestedUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
+        "httpStatus": 200,
+        "rawHash": "53fd910608c294cf92bc5db761ca0f3001d5aa9eb0a5c1feed354648d721f857",
+        "retrievedAt": "2026-10-15T18:23:18.445324+00:00",
+        "publisher": "Boscawen Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot linked by Boscawen at https://www.boscawennh.gov/m/newsflash/Home/Detail/132. The complete printed State Senate District 7 candidate inventory was checked against the held primary filing records."
       }
     ],
-    "reviewedAt": "2026-09-09T00:58:50.166Z",
+    "reviewedAt": "2026-10-15T18:23:18.445324+00:00",
     "reviewedBy": "codex-pdc-cutover",
     "contractVersion": 1
   }

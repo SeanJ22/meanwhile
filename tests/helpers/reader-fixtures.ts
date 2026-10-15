@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "../../lib/ballot/state-scopes.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -210,9 +211,9 @@ export function candidateProfilesFor(
   };
 }
 
-export async function installCandidateProfiles(value: CandidateProfilesProjection): Promise<CandidateProfilesProjection> {
-  installManualValue("candidate-profiles", value, "test:candidate-profiles");
-  const read = await readCandidateProfilesProjection();
+export async function installCandidateProfiles(value: CandidateProfilesProjection, state = "AZ"): Promise<CandidateProfilesProjection> {
+  installManualValue(stateBallotContractId("candidate-profiles", state), value, `test:candidate-profiles:${state}`);
+  const read = await readCandidateProfilesProjection(state);
   if (read.kind !== "PROMOTED") throw new Error(`Candidate profiles fixture did not install: ${read.kind}`);
   return value;
 }

@@ -90,11 +90,11 @@ test("a place's owed list is grouped by part, with counts, and its open blanks f
 
 test("CH-16: every plan built for a government's owed families carries its mission part", () => {
   const school: Jurisdiction = {
-    id: "xx:school:example-unified", stateCode: "XX", name: "Example Unified School District", govClass: "SCHOOL_DISTRICT",
-    countyName: "EXAMPLE", enumeratedFrom: "census-govt-units", ownWebAddress: "https://www.example.k12.xx.us/", sourceIds: [],
+    id: "az:school:example-unified", stateCode: "AZ", name: "Example Unified School District", govClass: "SCHOOL_DISTRICT",
+    countyName: "EXAMPLE", enumeratedFrom: "census-govt-units", ownWebAddress: "https://www.example.k12.az.us/", sourceIds: [],
   };
   const government = { ...school, bodyId: "fixture:registered-school-board" };
-  const families: JurisdictionRecordClass[] = ["OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS", "BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "PUBLIC_COMMENT"];
+  const families: JurisdictionRecordClass[] = ["OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS", "BALLOT_AND_CANDIDATES", "BALLOT_MEASURES", "POLLING_PLACES", "CAMPAIGN_FINANCE", "PUBLIC_COMMENT"];
   const plans = families.map((recordClass) => {
     const routeId = `coverage-discovery:${recordClass.toLowerCase()}`;
     return jurisdictionDiscoveryPlan(government, { recordClass, authority: government.name, authorityBasis: "fixture", scope: "THIS_JURISDICTION",
@@ -104,8 +104,11 @@ test("CH-16: every plan built for a government's owed families carries its missi
   const byClass = Object.fromEntries(plans.map((plan) => [plan.contract.recordClass, plan.missionPart]));
   assert.deepEqual(byClass, {
     OFFICIAL_ROSTER: "people-money", SERVICE_CONTACT: "governments-meetings",
-    VOTER_ACCESS_ROUTE: "ballot", BALLOT_CONTEST: "ballot", CAMPAIGN_FINANCE_FILING: "people-money", PUBLIC_COMMENT_RULE: "governments-meetings",
+    VOTER_ACCESS_ROUTE: "ballot", BALLOT_CONTEST: "ballot", BALLOT_MEASURE: "ballot", VOTING_SITE: "ballot", CAMPAIGN_FINANCE_FILING: "people-money", PUBLIC_COMMENT_RULE: "governments-meetings",
   });
+  for (const plan of plans.filter(row => ["BALLOT_CONTEST", "BALLOT_MEASURE", "VOTING_SITE"].includes(row.contract.recordClass))) {
+    assert.equal(plan.publication?.contractId, plan.contract.recordClass === "VOTING_SITE" ? "voting-sites:AZ" : "ballot-contests:AZ");
+  }
   const comment = publicCommentDiscoveryPlan(government, "fixture:body")!;
   assert.equal(comment.missionPart, "governments-meetings", "a comment plan built from a roster template is re-parted by its own class");
 });

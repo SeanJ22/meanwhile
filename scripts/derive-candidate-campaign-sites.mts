@@ -1,4 +1,6 @@
-import { readGenericBallotProjection, GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
+import { requireBallotState, stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { assignment } from "./cli-args.mts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { deriveCandidateUniverse } from "../lib/hunt/candidate-universe.ts";
 import { campaignSiteSubjects } from "../lib/candidates/campaign-site-subjects.ts";
 import { publishCandidateFindings } from "../lib/civic-data/candidate-profile-findings.ts";
@@ -14,7 +16,7 @@ import { join } from "node:path";
 import { neon } from "@neondatabase/serverless";
 
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
-import { DERIVED_CAMPAIGN_SITES_CONTRACT_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE,
+import { derivedCampaignSitesContractId, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope,
   readDerivedCampaignSites, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   derivedCampaignSitesFailedCandidate,
@@ -32,7 +34,7 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { indexVault, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { findHeldCapture, type HeldVaultArtifact, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
@@ -47,11 +49,12 @@ prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-const PROFILES = requiredManualProductionContract("candidate-profiles");
+const state = requireBallotState(assignment(process.argv, "state") ?? "");
+const PROFILES = requiredManualProductionContract(stateBallotContractId("candidate-profiles", state));
 
 /* An unchanged pass (the same approvals, the same bytes, the same profiles) is receipted on the pointed version, never re-promoted. */
 async function finish(candidate: RoutineCandidate): Promise<void> {
-  await promoteDerivedCandidate(store, DERIVED_CAMPAIGN_SITES_CONTRACT_ID, candidate, now);
+  await promoteDerivedCandidate(store, derivedCampaignSitesContractId(state), candidate, now);
 }
 
 /** Every APPROVED campaign-site record in the pipeline log, narrowed in the database to approvals only. */
@@ -61,8 +64,8 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
   try {
     const sql = neon(controlPlane);
     const rows = await sql.query(
-      "SELECT record FROM cp_log_promotion_pipeline WHERE record->>'stage' = 'APPROVED_FOR_PROMOTION' AND record->'campaignSite' IS NOT NULL ORDER BY log_key, position",
-      [],
+      "SELECT record FROM cp_log_promotion_pipeline WHERE record->>'stage' = 'APPROVED_FOR_PROMOTION' AND upper(record#>>'{campaignSite,identity,stateCode}')=$1 ORDER BY log_key, position",
+      [state],
     ) as { record: unknown }[];
     return rows.map((row) => (typeof row.record === "string" ? JSON.parse(row.record) as unknown : row.record)).filter(isPublishableCampaignSiteApproval);
   } catch (error) {
@@ -72,7 +75,7 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
 
 /** Distinct completed publication acquisitions. The child never infers
  * article authority from a URL in prose or from uncommitted vault bytes. */
-async function linkedPublicationReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[],
+async function linkedPublicationReads(vaultRoot: string, vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[],
   held: ReadonlyMap<string, HeldVerifyingRead>): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) return { unreadable: "the control plane's publication attempts are not configured" };
@@ -101,8 +104,13 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
       // One unreadable capture holds only its own publication (it stays unverified, owed work);
       // it never blocks every other approved campaign link from reaching readers.
       let capture;
-      try { capture = await heldCandidatePublicationRead(record, attempt, vault,
-        typeof workItem.subject === "string" ? workItem.subject : ""); }
+      try {
+        const exact = await findHeldCapture(vaultRoot, record);
+        capture = exact ? await heldCandidatePublicationRead(record, attempt, {
+          byId: new Map([[exact.id, exact]]), byHash: new Map([[exact.contentHash.slice(7), exact]]),
+          byWorkItem: new Map([[record.workItemId, [exact]]]),
+        }, typeof workItem.subject === "string" ? workItem.subject : "") : null;
+      }
       catch {
         process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: failed exact vault read\n`);
         continue;
@@ -116,9 +124,9 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
 
 async function main(): Promise<void> {
   const approvals = await readApprovals();
-  const priorRead = await readDerivedCampaignSites({ store, bypassCache: true, now });
+  const priorRead = await readDerivedCampaignSites(state, { store, bypassCache: true, now });
   const priorInput = priorRead.kind === "PROMOTED" ? promotedInputRef(DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
-    DERIVED_CAMPAIGN_SITES_SCOPE, priorRead.metadata.versionId, priorRead.value, priorRead.metadata.promotedAt) : null;
+    derivedCampaignSitesScope(state), priorRead.metadata.versionId, priorRead.value, priorRead.metadata.promotedAt) : null;
   const prior = priorRead.kind === "PROMOTED" && priorInput?.kind === "PROMOTED_VERSION"
     ? { input: priorInput, projection: priorRead.value } : priorRead.kind === "NOT_RECORDED" ? null
       : { unreadable: `${priorRead.kind}${"detail" in priorRead ? `: ${priorRead.detail}` : ": no exact promoted version reference"}` };
@@ -142,19 +150,29 @@ async function main(): Promise<void> {
         ...(row.campaignSite.evidence.cycleSource ? [row.campaignSite.evidence.cycleSource.artifactId] : [])]);
       const capture = await heldArtifactCaptures(vaultRoot, artifactIds, process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
       held = await heldCampaignSiteReads(capture, approvals);
-      const linked = await linkedPublicationReads(await indexVault(vaultRoot), approvals, held);
+      const priorPublications = prior && !("unreadable" in prior) ? prior.projection.records.flatMap(record =>
+        (record.publications ?? []).map(publication => publication.evidence.artifactId)) : [];
+      const priorCapture = await heldArtifactCaptures(vaultRoot, priorPublications, process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
+      const priorHeld = (await Promise.all([...new Set(priorPublications)].map(id => priorCapture(id)))).filter((row): row is HeldVaultArtifact => row !== null);
+      const priorByWorkItem = new Map<string, HeldVaultArtifact[]>();
+      for (const row of priorHeld) if (row.workItemId) {
+        const group = priorByWorkItem.get(row.workItemId) ?? []; group.push(row); priorByWorkItem.set(row.workItemId, group);
+      }
+      const priorVault: VaultIndex = { byId: new Map(priorHeld.map(row => [row.id, row])),
+        byHash: new Map(priorHeld.map(row => [row.contentHash.slice(7), row])), byWorkItem: priorByWorkItem };
+      const linked = await linkedPublicationReads(vaultRoot, priorVault, approvals, held);
       if ("unreadable" in linked) {
-        await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
+        await finish(derivedCampaignSitesFailedCandidate(state, now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
         return;
       }
       linkedPublications = linked;
     } catch (error) {
-      await finish(derivedCampaignSitesFailedCandidate(now, `The evidence vault could not be read: ${error instanceof Error ? error.message : String(error)}`));
+      await finish(derivedCampaignSitesFailedCandidate(state, now, `The evidence vault could not be read: ${error instanceof Error ? error.message : String(error)}`));
       return;
     }
   }
   const pass = derivedCampaignSitesPass({
-    approvals,
+    state, approvals,
     prior,
     held: (record) => held.get(record.recordId) ?? null,
     linkedPublications,
@@ -172,7 +190,7 @@ async function main(): Promise<void> {
   });
   let subjects: ReturnType<typeof campaignSiteSubjects> = new Map();
   try {
-    const national = await readGenericBallotProjection({ store, bypassCache: true, now });
+    const national = await readGenericBallotProjection(state, { store, bypassCache: true, now });
     if (national.kind === "PROMOTED") {
       const groups = new Map<string, BallotSet[]>();
       for (const ballot of Object.values(national.value.ballots)) {
@@ -184,14 +202,14 @@ async function main(): Promise<void> {
         generatedBy: "published national ballots", generatedOn: now.slice(0, 10),
         documents: ballots.map(ballot => ({ path: ballot.election.id, contests: ballot.contests, candidacies: ballot.candidacies })),
         stores: { huntState: {}, cards: {}, links: {}, linkHunts: [] } })) });
-      const reference = promotedInputRef("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, national.metadata.versionId,
+      const reference = promotedInputRef("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), national.metadata.versionId,
         national.value, national.metadata.promotedAt);
       if (reference && plan) plan = { ...plan, inputs: [...plan.inputs, reference] };
     }
   } catch (error) { console.error(`National candidate portrait subjects could not be read: ${error instanceof Error ? error.message : String(error)}`); }
   if (plan) await publishCampaignSitePortraits({
     plan, approvals: "unreadable" in approvals ? [] : approvals, subjects: [...subjects.values()], held: record => held.get(record.recordId) ?? null, now,
-    onPublished: published => finish(derivedCampaignSitesCandidate(published, now)),
+    onPublished: published => finish(derivedCampaignSitesCandidate(state, published, now)),
   });
   await publishHuntedCandidateFields([...subjects.values()], "unreadable" in approvals ? [] : approvals);
 }
@@ -201,7 +219,8 @@ async function publishHuntedCandidateFields(subjects: readonly CampaignSiteSubje
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane || !subjects.length) return;
   const repos = await createPgRepositories(controlPlane, now, { skipBootstrap: true });
-  const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).filter(row => row.value.waitingFor?.reason === CANDIDATE_PROFILE_LEAD);
+  const subjectIds = [...new Set(subjects.flatMap(subject => [subject.candidacyId, ...subject.readerKeys]))];
+  const waiting = (await Promise.all(subjectIds.map(id => repos.boxFindings.listWhere(["subjectId"], id)))).flat().filter(row => row.value.state === "waiting" && row.value.waitingFor?.reason === CANDIDATE_PROFILE_LEAD);
   if (!waiting.length) return;
   const held = await heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"),
     waiting.flatMap(row => row.value.origins.flatMap(origin => origin.artifactIds)), controlPlane);

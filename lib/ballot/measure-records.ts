@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto";
-import { currentGenericBallotProjection } from "./generic-projection.ts";
 import type { BallotSet } from "./types.ts";
 
 import { measureRecordIssue, type MeasureRecord } from "./measure-record-contract.ts";
@@ -35,8 +34,4 @@ export function measureRecordsForBallot(ballot: BallotSet): readonly MeasureReco
     const meanings = explicitVoteMeanings(measure.questionText);
     return { ...record, yesMeans: record.yesMeans ?? meanings.yesMeans, noMeans: record.noMeans ?? meanings.noMeans };
   });
-}
-
-export function currentMeasureRecords(): readonly MeasureRecord[] {
-  return Object.values(currentGenericBallotProjection().ballots).flatMap(measureRecordsForBallot);
 }

@@ -3,7 +3,6 @@ import { measureRecordsForBallot } from "../ballot/measure-records.ts";
 import { divisionIdsForZipArea } from "../ballot/zip-divisions.ts";
 
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
-import { contestsForDivisions } from "../ballot/contests.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { type MeasureAnalysis } from "../ballot/analyses.ts";
@@ -124,13 +123,11 @@ export async function loadBallotForDivisions(
   if (ocdIds.length === 0) return EMPTY;
   const loaderFailures: string[] = [];
   const stanceTopics = await readStanceTopics();
-  for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options)) {
+  for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options, zip && /^\d{5}$/.test(zip) ? election =>
+    divisionIdsForZipArea(zip, [...ocdIds], { purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate: election.date }) : undefined)) {
     try {
       const candidate = source.normalize(await source.fetch());
-      const electionIds = zip && /^\d{5}$/.test(zip) ? await divisionIdsForZipArea(zip, [...ocdIds], {
-        purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate: candidate.election.date,
-      }) : ocdIds;
-      const hit = contestsForDivisions(candidate, electionIds);
+      const hit = { contests: candidate.contests, absences: candidate.absences };
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
       const analyses = candidate.measureAnalyses;
       const lineup = candidate.generalLineup ?? null;
@@ -143,7 +140,7 @@ export async function loadBallotForDivisions(
         contests: hit.contests,
         absences: hit.absences,
         nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: nominee.provenance?.sourceUrl ?? lineup!.canvass.url, sourceOrg: nominee.provenance?.sourceOrg ?? lineup!.canvass.issuedBy, retrievedAt: nominee.provenance?.collectedAt ?? lineup!.canvass.readAt })),
-        positions: (targetKey: string) => sourcedPositions(targetKey, stanceTopics),
+        positions: (targetKey: string) => sourcedPositions(candidate.election.state, targetKey, stanceTopics),
         measureSummary: (contestId) => {
           const summary = summaryForContest(contestId, measureRecords);
           return summary
@@ -165,9 +162,9 @@ export async function loadBallotForDivisions(
   return { ...EMPTY, loaderFailures };
 }
 
-function sourcedPositions(targetKey: string, topics: readonly StanceTopic[]) {
+function sourcedPositions(state: string, targetKey: string, topics: readonly StanceTopic[]) {
   try {
-    return positionsFor(targetKey, null, topics).flatMap((position) =>
+    return positionsFor(state, targetKey, null, topics).flatMap((position) =>
       position.answer.kind === "MATCHED"
         ? position.answer.passages.map((passage) => ({
             issueLabel: position.issue.label,

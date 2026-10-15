@@ -15,3 +15,21 @@ export function contestsForDivisions(
     ...(set.heldContests !== undefined ? { heldContests: set.heldContests.filter(contest => present.has(contest.ocdId)) } : {}),
   };
 }
+
+export function ballotForDivisions(set: BallotSet, divisions: readonly string[]): BallotSet {
+  const matched = contestsForDivisions(set, divisions);
+  const contests = new Set(matched.contests.map(row => row.id));
+  const candidacies = set.candidacies.filter(row => contests.has(row.contestId));
+  const candidates = new Set(candidacies.map(row => row.id));
+  return {
+    ...set, ...matched, candidacies,
+    ...(set.filingCandidacies ? { filingCandidacies: set.filingCandidacies.filter(row => contests.has(row.contestId)) } : {}),
+    measures: set.measures.filter(row => contests.has(row.contestId)),
+    ...(set.contacts ? { contacts: set.contacts.filter(row => candidates.has(row.candidacyId)) } : {}),
+    ...(set.measureRecords ? { measureRecords: set.measureRecords.filter(row => contests.has(row.contestId)) } : {}),
+    ...(set.removals ? { removals: set.removals.filter(row => contests.has(row.contestId)) } : {}),
+    ...(set.generalLineup ? { generalLineup: { ...set.generalLineup, contests: set.generalLineup.contests.filter(row => contests.has(row.contestId)) } } : {}),
+    ...(set.measureAnalyses ? { measureAnalyses: { ...set.measureAnalyses, analyses: set.measureAnalyses.analyses.filter(row => contests.has(row.contestId)) } } : {}),
+    ...(set.lineupReconciliation ? { lineupReconciliation: { ...set.lineupReconciliation, rows: set.lineupReconciliation.rows.filter(row => contests.has(row.contestId)) } } : {}),
+  };
+}

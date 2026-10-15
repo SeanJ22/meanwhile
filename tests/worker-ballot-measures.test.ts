@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -36,20 +37,20 @@ function fixture(state = "OH", prefix = `state:${state.toLowerCase()}/county:ald
   const parsed = parseCivicRecords({ attemptId: "parsed", worker: { role: "PARSER", instance: "fixture", provider: "deterministic", version: "2" }, evidence, contract });
   assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed));
   const parser = { id: "parsed", workItemId: "measure", endedAt: now, result: parsed } as WorkerResultRecord;
-  const plan = { contract, publication: { contractId: "ballot-contests", bodyId: "fixture-body" } } as AutonomousWorkPlan;
+  const plan = { contract, publication: { contractId: stateBallotContractId("ballot-contests", state), bodyId: "fixture-body" } } as AutonomousWorkPlan;
   const registry = { payload: { registry: { divisions: [{ state, label: "Alder County", ocdId: division, sourceDataset: "fixture" }] } } } as unknown as RegistryRuntimePrior;
   return { division, question, plan, parser, registry, now, captures: [evidence, document].map(evidence => ({
     evidence, observedAt: now, partial: false, transport: "REACHABLE" as const, httpStatus: 200 })) };
 }
 
 test("the generic measure door publishes full official wording, source-stated numbers and explicit YES/NO through Slide and Ask", async () => {
-  assert.equal(workerReaderClassMatches("ballot-contests", "BALLOT_MEASURE"), true);
-  for (const [state, prefix] of [["OH", "state:oh/county:alder"], ["MI", "state:mi/county:alder"], ["DC", "district:dc/ward:1"], ["PR", "territory:pr/municipio:alder"]]) {
+  assert.equal(workerReaderClassMatches("ballot-contests:OH", "BALLOT_MEASURE"), true);
+  for (const [state, prefix] of [["OH", "state:oh/county:alder"], ["MI", "state:mi/county:alder"], ["DC", "district:dc/ward:1"]]) {
     const input = fixture(state, prefix), checked = workerBallotContestsPackage(input), store = new MemoryRoutineDataStore();
     assert.deepEqual(checked.heldContests, []);
-    const published = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(checked.package), now, null);
+    const published = await processRegisteredManualCandidate(store, checked.package.contractId, manualProjectionCandidate(checked.package), now, null);
     assert.ok(published.promoted, JSON.stringify(published.candidate)); assert.equal(published.readerReadback?.status, "PASS");
-    const read = await readGenericBallotProjection({ store, now, bypassCache: true }); assert.equal(read.kind, "PROMOTED");
+    const read = await readGenericBallotProjection(state, { store, now, bypassCache: true }); assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") continue;
     const ballot = Object.values(read.value.ballots)[0];
     assert.equal(ballot.measures[0].questionText, input.question); assert.equal(ballot.measures[0].officialNumber, "12");

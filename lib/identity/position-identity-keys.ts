@@ -23,7 +23,7 @@ export async function positionIdentityKeys(subject: string, readers: PositionIde
     return [subject];
   }
   const federal = subject.startsWith("congress:") || related.federal;
-  const ballot = subject.startsWith("ballot-az-") || subject.startsWith("statewide:az/") || related.ballot;
+  const ballot = related.ballot;
   const refreshes = await Promise.allSettled([
     federal ? readers.refreshFederal() : Promise.resolve(),
     ballot ? readers.refreshBallot() : Promise.resolve(),

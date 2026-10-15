@@ -8,21 +8,21 @@ import { durableRoutineRunnerReceiptIssue } from "../../../lib/civic-data/runner
 
 const authority = assertRoutineDataStoreMutationAuthority();
 assert.equal(authority.capability, "MANUAL_CONTRACT");
-assert.equal(authority.contract, "ballot-contests");
+assert.equal(authority.contract, "ballot-contests:TX");
 const store = new MemoryRoutineDataStore();
 const now = "2026-10-14T00:00:00.000Z";
-const result = await runBallotPublication({ store, directory: process.argv[2], now });
+const result = await runBallotPublication({ state: "TX", store, directory: process.argv[2], now });
 console.log("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(result.report));
 if (result.receipt) {
   assert.equal(await durableRoutineRunnerReceiptIssue(result.receipt,
-    AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests")!, store, "SUCCESS"), null);
+    AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:TX")!, store, "SUCCESS"), null);
   console.log("RCD_RECEIPT=" + JSON.stringify(result.receipt));
-  const read = await readGenericBallotProjection({ store, now, bypassCache: true });
+  const read = await readGenericBallotProjection("TX", { store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx"]).length, 1);
     const texas = read.value.ballots["TX:fixture-2026-general"];
-    assert.deepEqual(texas.contests.map(row => [row.id, row.candidateListComplete]), [["fixture-tx-senate", false]]);
+    assert.deepEqual(texas.contests.map(row => [row.id, row.candidateListComplete]), [["fixture-tx-senate", true]]);
     assert.deepEqual(texas.candidacies.map(row => [row.id, row.contestId, row.givenName, row.familyName]),
       [["fixture-tx-bob", "fixture-tx-senate", "Bob", "Baker"]]);
     assert.deepEqual(texas.heldContests?.map(row => row.id), ["fixture-tx-governor"]);

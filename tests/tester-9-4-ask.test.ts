@@ -1,4 +1,11 @@
 import assert from "node:assert/strict";
+import { neonConfig } from "@neondatabase/serverless";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { registryPlaceFixtureResult, type FixtureStatement } from "./helpers/registry-place-fetch.ts";
 import test from "./helpers/playbooks.ts";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -8,7 +15,7 @@ import { readAskAnswer, type AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
-import { installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installPromotedValue, installRegistryAuthority, registryTransferImport } from "./helpers/promoted-fixtures.ts";
 // The canonical native runner strips TypeScript but does not compile TSX.
 // Compile only these actual reader leaves through the existing tsx runtime.
 const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmation.tsx", import.meta.url) as typeof import("../components/ask/body-confirmation.tsx");
@@ -16,6 +23,7 @@ const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmat
 // Offline actual handler, with no model, database, acquisition or signal writes.
 for (const key of ["ANTHROPIC_API_KEY", "DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 await installRegistryAuthority();
+let vailSnapshot: MeetingsSnapshot;
 // Vail's promoted meeting partition: one scheduled sitting a week out whose
 // agenda is not yet held, as the Apptegy calendar publishes it.
 {
@@ -35,6 +43,7 @@ await installRegistryAuthority();
     agendaDocuments: [],
   };
   installPromotedValue({ recordClass: "MEETING", scope: partition.scope, sourceId: partition.sourceId, versionId: "test:vail-meetings", retrievedAt: now, value });
+  vailSnapshot = value;
 }
 const { POST } = await import("../app/api/ask/grounded/route.ts");
 const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
@@ -128,4 +137,52 @@ test("ASK-27 an unavailable agenda remains an OURS holding gap, never an empty d
   assert.ok(answer.gaps.some(gap => gap.whose === "OURS" && /agenda|publication/i.test(gap.statement)));
   assert.ok(!answer.gaps.some(gap => gap.whose === "THEIRS" && /no agenda|not published/i.test(gap.statement)));
   assert.ok(!answer.records.some(record => /nothing is on the agenda|no agenda items exist/i.test(record.text)));
+});
+
+test("named Vail lookup reads only its exact canonical body and requested divisions at the accepted registry version", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "vail-identity-"));
+  const originalFetch = globalThis.fetch;
+  const originalNeonFetch = neonConfig.fetchFunction;
+  const priorDirectory = process.env.WTP_READER_EDGE_DIR;
+  const priorDatabase = process.env.DATABASE_URL;
+  const registry = registryTransferImport().projection.payload;
+  const version = "test:vail-canonical-registry";
+  const queries: { divisions: string[]; targets: string[] }[] = [];
+  const array = (value: unknown): string[] => Array.isArray(value) ? value : JSON.parse(`[${String(value).slice(1, -1)}]`);
+  try {
+    const published = await publishReaderEdgeArtifacts(vailSnapshot, {
+      sourceThrough: vailSnapshot.generatedAt, retrievedAt: vailSnapshot.generatedAt, promotedThrough: vailSnapshot.generatedAt,
+    }, { store: new LocalFileArtifactStore(directory),
+      authority: { "registry-runtime": { value: registry, versionId: version } } });
+    assert.equal(published.status, "PUBLISHED");
+    process.env.WTP_READER_EDGE_DIR = directory;
+    process.env.DATABASE_URL = "postgresql://fixture:fixture@ep-vail-fixture.vail-fixture.invalid/test?sslmode=require";
+    globalThis.fetch = (async (input, init) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      assert.ok(url.includes("vail-fixture.invalid/"), `unexpected network read: ${url}`);
+      const request = JSON.parse(String(init?.body)) as FixtureStatement & { queries?: FixtureStatement[] };
+      const empty = { command: "SELECT", rowCount: 0, rows: [], fields: [] };
+      const results = (request.queries ?? [request]).map(statement => {
+        const selected = registryPlaceFixtureResult(statement, registry, version);
+        if (selected) queries.push({ divisions: array(statement.params?.[2]), targets: array(statement.params?.[4]) });
+        return selected ?? empty;
+      });
+      return Response.json(request.queries ? { results } : results[0]);
+    }) as typeof fetch;
+    neonConfig.fetchFunction = globalThis.fetch;
+    const answer = await ask("What's on the Vail school district agenda?");
+    assert.equal(answer.subject?.id, VAIL);
+    assert.deepEqual(queries, [
+      { divisions: ["ocd-division/country:us/state:az", nearby], targets: [] },
+      { divisions: ["ocd-division/country:us/state:az", nearby, VAIL.split("#")[0]], targets: [VAIL] },
+    ]);
+  } finally {
+    globalThis.fetch = originalFetch;
+    neonConfig.fetchFunction = originalNeonFetch;
+    if (priorDirectory === undefined) delete process.env.WTP_READER_EDGE_DIR;
+    else process.env.WTP_READER_EDGE_DIR = priorDirectory;
+    if (priorDatabase === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = priorDatabase;
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

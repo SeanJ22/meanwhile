@@ -22,7 +22,7 @@ test("missing source capabilities persist as idempotent, non-executable work und
     !row.autonomousPlan && row.manualSourceGap?.instructionReceipt === ORIGINAL_LIFETIME_HUNT.receiptId &&
     row.manualSourceGap.assignmentKey === ORIGINAL_LIFETIME_HUNT.key));
   assert.ok(rows.some(row => row.manualSourceGap?.contractId === "jurisdiction-operational-reference"));
-  assert.ok(!rows.some(row => row.manualSourceGap?.contractId === "voting-sites"), "the voting-site pass runs for the Send (CH-11); it is no owed capability");
+  assert.ok(!rows.some(row => row.manualSourceGap?.contractId.startsWith("voting-sites:")), "the voting-site pass runs for the Send (CH-11); it is no owed capability");
   assert.ok(rows.some(row => row.manualSourceGap?.contractId === "az-pima-local-finance" &&
     row.manualSourceGap.mode === "SCOPED_ADAPTER_OWED" && row.manualSourceGap.reason.includes("alone")),
     "A county adapter gap stays non-executable until its place is bound");

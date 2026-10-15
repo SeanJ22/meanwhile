@@ -21,7 +21,6 @@ import {
   publishReaderEdgeChecks,
   readReaderEdgeMeetings,
   type PublishAuthority,
-  type PublishReaderExtras,
   type PublishRegistrations,
 } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
@@ -232,7 +231,6 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.deepEqual(collectedOf(changed.value, PIMA), [checkedAt], "Pima keeps its receipt's check");
 });
 
-const EXTRAS: PublishReaderExtras = { commentAccess: [], everydayRouting: null };
 const VALUES: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { value: { family }, versionId: `${family}-v1` }]));
 const CARRIED: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { versionId: `${family}-v1`, carried: true as const }]));
 const REGISTRATIONS: PublishRegistrations = { az: { value: { state: "az" }, versionId: "reg-az-v1" } };
@@ -254,7 +252,7 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(served.kind, "PROMOTED");
   if (served.kind !== "PROMOTED") return;
   const full = await publishReaderEdgeArtifacts(served.value, { sourceThrough: null, retrievedAt: served.metadata.retrievedAt, promotedThrough: null }, {
-    store: edge, now: at(T1, 60_000), extras: EXTRAS, authority: VALUES, registrations: REGISTRATIONS,
+    store: edge, now: at(T1, 60_000), authority: VALUES, registrations: REGISTRATIONS,
     checks: { composition: first.composition, freshChecks: first.freshChecks },
   });
   assert.equal(full.status, "PUBLISHED");
@@ -336,7 +334,7 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(readBack.kind, "PROMOTED");
   if (readBack.kind !== "PROMOTED") return;
   const published = await publishReaderEdgeArtifacts(readBack.value, { sourceThrough: null, retrievedAt: readBack.metadata.retrievedAt, promotedThrough: null }, {
-    store: edge, now: at(T4, 60_000), extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED,
+    store: edge, now: at(T4, 60_000), authority: CARRIED, registrations: REGISTRATIONS_CARRIED,
     checks: { composition: changed.composition, freshChecks: changed.freshChecks },
   });
   assert.equal(published.status, "PUBLISHED");

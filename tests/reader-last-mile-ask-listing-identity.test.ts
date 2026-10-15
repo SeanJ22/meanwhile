@@ -17,6 +17,7 @@ import { readMeetingsProjection, requireMeetingsProjection } from "../lib/meetin
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
+delete process.env.DATABASE_URL;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 await installRegistryAuthority();
 // The recorded 85701 calendar, three of its Tucson Unified sittings each listed a second time, and three date-only listings.

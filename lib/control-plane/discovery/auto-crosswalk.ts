@@ -28,6 +28,7 @@ import { countyTimeZones, governmentTimeZone } from "../../time/county-time-zone
 import { parseOrganizationPage } from "../../sources/boardbook/index.ts";
 import { parseCalendarRows } from "../../sources/iqm2/index.ts";
 import { parseAgendaCenter, parseAgendaCenterCategories } from "../../sources/civicplus/index.ts";
+import { parseMunicodeMeetings } from "../../sources/municode/index.ts";
 import { parseEscribeMeetings } from "../../sources/escribe/index.ts";
 import { parseSwagitMeetings, swagitMatchesBody } from "../../sources/swagit/index.ts";
 import { parsePrimeGovCommittees, parsePrimeGovMeetings } from "../../sources/primegov/index.ts";
@@ -73,7 +74,7 @@ export interface AutoCrosswalkReviewInput {
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
-  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", granicus: "GRANICUS", swagit: "SWAGIT", primegov: "PRIMEGOV", escribe: "ESCRIBE",
+  boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", "municode-meetings": "MUNICODE", granicus: "GRANICUS", swagit: "SWAGIT", primegov: "PRIMEGOV", escribe: "ESCRIBE",
   novusagenda: "NOVUSAGENDA",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
@@ -701,7 +702,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "MUNICODE", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -790,6 +791,10 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       try { rows = parseSwagitMeetings(calendar.text, route); } catch { rows = []; }
       events = rows.filter(row => row.date).map(row => ({ title: flat(row.title), context: flat(row.category), categories: [],
         identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.url }));
+    } else if (kind === "MUNICODE") {
+      let rows: ReturnType<typeof parseMunicodeMeetings> = [];
+      try { rows = parseMunicodeMeetings(calendar.text, route); } catch { /* A changed table names no meetings. */ }
+      events = rows.map(row => ({ title: row.scopeName || row.title, context: "", categories: [], identity: `${row.id}|${row.date}`, tzid: stateZone, utc: false, floating: row.hour !== null, url: row.sourceUrl }));
     } else if (kind === "ESCRIBE") {
       let rows: ReturnType<typeof parseEscribeMeetings> = [];
       try { rows = parseEscribeMeetings(calendar.text); } catch { /* A changed response names no meetings. */ }

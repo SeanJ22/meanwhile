@@ -3,18 +3,18 @@
 lane: ballot-parity
 owner: ballot-parity
 writer: the ballot-parity lane
-check: at-scale
+check: fold-conflict
 ready: no step ids unknown
-river: be06573dcbd3a61b776ddab90e6f20519d3eefbf
-at: 2026-10-15T20:42:17Z
+river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
+at: 2026-10-15T23:04:34Z
 state: returned
-fix_subject: fix:b9dd589c
-fix: River · stream/ballot-parity — at-scale failed for ballot-parity: BL-20 (386c53463) merges clean with river 493311674 now, but the READY commit message has no AT SCALE numbers: peak memory per worker, database bytes read and written per run and per day, run time, copies that fit at the 0.75 GiB margin, an
+fix_subject: fix:4d5a349c
+fix: River · stream/ballot-parity — fold-conflict failed for ballot-parity: BL-20 (97b0b7a3b) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: lib/civic-data/curated-reader-read-model.ts, lib/civic-data/promoted-edge-publication.ts, lib/civic-data/reader-edge-publication.ts, lib/meeting
 
 ## Failure
 
 ```
-BL-20 (386c53463) merges clean with river 493311674 now, but the READY commit message has no AT SCALE numbers: peak memory per worker, database bytes read and written per run and per day, run time, copies that fit at the 0.75 GiB margin, and the largest input tested (name anything not tested at full size). The message says these follow in a second READY under Sean's two-READY order; River has no such order on record, and the rule in force (Sean, 18:00Z) is that a READY touching national data without them goes back. Put the numbers in this READY, or Sean can say in writing that this one is waived.
+BL-20 (97b0b7a3b) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: lib/civic-data/curated-reader-read-model.ts, lib/civic-data/promoted-edge-publication.ts, lib/civic-data/reader-edge-publication.ts, lib/meetings/edge-artifacts.ts, lib/meetings/edge-serving.ts. Merge origin/river into stream/ballot-parity, settle those files so both sides' behavior is kept (NE-01's reader-edge reads and request accounting, municode's bounded portal reads), run the focused tests, push a new READY with AT SCALE numbers in the message.
 ```
 
 ## Repair

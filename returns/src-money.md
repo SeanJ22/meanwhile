@@ -3,18 +3,18 @@
 lane: src-money
 owner: src-money
 writer: the src-money lane
-check: fold-conflict
+check: at-scale
 ready: no step ids unknown
-river: cc9589c05915a48d50a3af1b9247f59067c6d35e
-at: 2026-10-13T13:13:06Z
+river: be06573dcbd3a61b776ddab90e6f20519d3eefbf
+at: 2026-10-15T18:00:20Z
 state: returned
-fix_subject: fix:fafdc024
-fix: River · stream/src-money — fold-conflict failed for src-money: src-money READY d2562653de30 (SRC-MN) conflicts with river 1e72570acb7e (releases 25 to 27 plus src-open-data) when merged alone. Conflicting files: app/api/ask/grounded/route.ts components/map/popup/entity-modal.tsx lib/civic-data/contract
+fix_subject: fix:dbb7a2db
+fix: River · stream/src-money — at-scale failed for src-money: SRC-MN (d2562653d) also still conflicts with river in app/api/ask/grounded/route.ts, components/map/popup/entity-modal.tsx, lib/ask/evidence.ts, lib/civic-data/changes.ts, lib/civic-data/contracts.ts. AT SCALE numbers are missing from the R
 
 ## Failure
 
 ```
-src-money READY d2562653de30 (SRC-MN) conflicts with river 1e72570acb7e (releases 25 to 27 plus src-open-data) when merged alone. Conflicting files: app/api/ask/grounded/route.ts components/map/popup/entity-modal.tsx lib/civic-data/contracts.ts lib/civic-data/source-authority.ts lib/doors/seed-feeds.ts tests/routine-civic-data-runner.test.ts. Merge river into stream/src-money, resolve, and mark READY again.
+SRC-MN (d2562653d) also still conflicts with river in app/api/ask/grounded/route.ts, components/map/popup/entity-modal.tsx, lib/ask/evidence.ts, lib/civic-data/changes.ts, lib/civic-data/contracts.ts. AT SCALE numbers are missing from the READY commit message (rule in force from the next batch): peak memory per worker, database bytes read and written per run and per day, run time, how many copies fit on the runner at the 0.75 GiB margin, and the largest input tested (name anything not tested at full size). Run the change against national-size input and put the numbers in the READY commit message.
 ```
 
 ## Repair

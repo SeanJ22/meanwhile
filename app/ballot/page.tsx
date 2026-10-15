@@ -41,7 +41,7 @@ import {
 } from "@/lib/ballot/candidate-sites";
 import type { OfficeBlurb } from "@/lib/officials/office-blurbs";
 import { readCuratedContestOfficeBlurbs } from "@/lib/officials/curated-definition-reader";
-import { surnameDisplayCase } from "@/lib/ballot/name-case";
+import { ballotCandidateDisplayName } from "@/lib/ballot/name-case";
 import {
   cardForCandidacy,
   cardForNominee,
@@ -208,7 +208,7 @@ function pickOptionsFor(
   }
   return candidatesOf(set, contest).map((cand) => ({
     id: cand.id,
-    label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
+    label: ballotCandidateDisplayName(cand),
     reactionTargetId: cand.id,
   }));
 }
@@ -608,7 +608,7 @@ export default async function BallotPage({
     const lineup = lineupForContest(contest.id);
     const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
       display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
-      key: c.id, display: `${c.givenName} ${surnameDisplayCase(c.familyName)}`, targetKey: c.id,
+      key: c.id, display: ballotCandidateDisplayName(c), targetKey: c.id,
     }));
     const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest(contest) },
       incumbentHolderFor).catch(() => null);
@@ -1312,7 +1312,7 @@ export default async function BallotPage({
                         data-candidate-target={cand.id}
                       >
                         <CandidateCard
-                          name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                          name={ballotCandidateDisplayName(cand)}
                           partyLine={
                             <>
 
@@ -1337,10 +1337,11 @@ export default async function BallotPage({
                           links={availableLinksForCandidacy(cand.id)}
                           derivedBlurb={availableDerivedBlurbFor(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
+                          filingProvenance={cand.provenance}
                           nameSlot={
                             <IncumbentName
                               holder={resolvedHolder(contest.id, cand.id)}
-                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              name={ballotCandidateDisplayName(cand)}
                               context={
                                 centroid && zip
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }
@@ -1351,7 +1352,7 @@ export default async function BallotPage({
 
                           battlecardSlot={
                             <BallotBattlecard
-                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              name={ballotCandidateDisplayName(cand)}
                               partyLine={readerPartyLabel(cand.partyLabel)}
                               partyLabel={readerPartyLabel(cand.partyLabel)}
                               card={availableCardForCandidacy(cand.id)}

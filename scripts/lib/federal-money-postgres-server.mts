@@ -5,6 +5,12 @@ import { createInterface } from "node:readline";
 
 const directory = process.argv[2];
 if (!directory) throw new Error("A benchmark database directory is required.");
+const fixtureStart = Number(process.argv[3]), elapsedStart = performance.now();
+if (!Number.isFinite(fixtureStart)) throw new Error("The benchmark database must share its worker clock.");
+globalThis.Date = new Proxy(Date, {
+  construct(target, args) { return Reflect.construct(target, args.length ? args : [fixtureStart + performance.now() - elapsedStart]); },
+  get(target, name, receiver) { return name === "now" ? () => Math.floor(fixtureStart + performance.now() - elapsedStart) : Reflect.get(target, name, receiver); },
+});
 const db = new PGlite(directory);
 const exists = await db.query<{ relation: string | null }>("SELECT to_regclass('public.civic_data_candidates')::text AS relation");
 if (!exists.rows[0]?.relation) for (const migration of ["0025_typical_fixer", "0026_lame_sunset_bain", "0027_pdc_candidate_history_shape", "0028_wise_ikaris", "0029_unchanged_confirmation_receipts", "0031_civic_payload_parts", "SRC-MN_federal_money_lookup"]) {

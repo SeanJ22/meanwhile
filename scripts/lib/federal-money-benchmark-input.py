@@ -47,7 +47,7 @@ if args.source == "usaspending-national":
                             count = base + int(governments < remainder)
                             for index in range(count):
                                 identifier = "GENERATED-" + seed["uei"] + "-" + str(index)
-                                writer.writerow([identifier, identifier, ["04", "A", "07"][index % 3], seed["uei"], government["name"], "2026-01-01", "1234.56", state.upper(), county or "", geography.get("place", ""), geography.get("school_district", ""), "2026-10-14", "Generated national-volume award"])
+                                writer.writerow([identifier, identifier, ["04", "A", "07"][index % 3], seed["uei"], government["name"], "2026-01-01", "1234.56", state.upper(), county or "", geography.get("place", ""), government["nativeIds"].get("nces_leaid", ""), "2026-10-14", "Generated national-volume award"])
                             state_rows += count
                             state_governments += 1
                             governments += 1

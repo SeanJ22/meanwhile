@@ -267,6 +267,53 @@ test("a growing county splits into bounded leaves and an unchanged replay writes
   assert.deepEqual(new Map([...projections].map(([scope, held]) => [scope, held.versionId])), before);
 });
 
+test("existing partition children advance their counts and a crashed child update replays exactly once", async () => {
+  const store = new MemoryRoutineDataStore();
+  const template = JSON.parse(sourceBody).DisasterDeclarationsSummaries[0];
+  let acquisitions = 0, offset = 0, crash = false;
+  const input = { source: "openfema" as const, store, acquireOptions, states: ["AR"], maxRounds: 1,
+    identities: async () => identities,
+    acquire: async (): Promise<FederalMoneyPage> => {
+      const size = acquisitions++ < 2 ? 500 : 1;
+      const body = JSON.stringify({ DisasterDeclarationsSummaries: Array.from({ length: size }, (_, index) => ({ ...template, id: `synthetic-count-replay-${offset + index}` })) });
+      offset += size;
+      const saved = await saveFederalMoneyCapture({ ...capture, body }, evidenceStore);
+      return { facts: parseFederalMoney("openfema", saved, "AR", body), captures: [saved], complete: offset === 1002, declaredTotal: 1002,
+        ...(offset === 1002 ? {} : { continuation: { source: "openfema", phase: "declarations", offset } as const }) };
+    },
+    onPartition: async (change: FederalMoneyPartitionChange) => {
+      if (crash && change.projection.partition.shard) {
+        crash = false;
+        throw new Error("simulated crash after existing child promotion");
+      }
+    } };
+  for (const expected of [500, 1000, 1001]) {
+    const result = await refreshFederalMoney({ ...input, now: () => now });
+    assert.deepEqual(result.projection.counts, { loaded: expected, joined: expected, unjoined: 0 });
+    const root = (await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", leafScope))!.payload;
+    assert.equal(root.subtreeCounts?.loaded ?? root.counts.loaded, expected, "the promoted parent counters must advance even when its child keys are unchanged");
+  }
+  const before = (await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", leafScope))!.payload;
+  crash = true;
+  await assert.rejects(refreshFederalMoney({ ...input, now: () => now }), /simulated crash after existing child promotion/);
+  const pending = (await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", "openfema:AR"))!.payload;
+  assert.equal(pending.counts.loaded, 1001);
+  assert.ok(pending.checkpoint.pending);
+  const result = await refreshFederalMoney({ ...input, now: () => now });
+  assert.equal(acquisitions, 4, "recovery reads the pending capture instead of fetching another page");
+  assert.deepEqual(result.projection.counts, { loaded: 1002, joined: 1002, unjoined: 0 });
+  const root = (await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", leafScope))!.payload;
+  assert.deepEqual(root.children, before.children);
+  assert.equal(root.subtreeCounts?.loaded, 1002);
+  let loaded = 0;
+  for (const shard of root.children!) {
+    const child = (await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", federalMoneyPartitionScope("openfema", "AR", { ...root.partition, shard })))!.payload;
+    assert.deepEqual(root.childCounts![shard], child.counts);
+    loaded += child.records.length;
+  }
+  assert.equal(loaded, 1002);
+});
+
 test("corrupt vault bytes fail the native fact check and no partition is promoted", async () => {
   const records = joinFederalMoneyFacts(native, identities);
   const projection: FederalMoneyProjection = { formatVersion: 2, source: "openfema", state: "AR", partition: federalMoneyPartitionOf(records[0]), records,

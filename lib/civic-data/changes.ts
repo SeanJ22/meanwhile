@@ -199,7 +199,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ? keyed("federal-money-state", array(root.states), ["state"])
         : [...keyed("federal-money", array(root.records), ["id"]),
           ...(root.checkpoint ? [{ key: "federal-money-checkpoint", record: { ...object(root.checkpoint), counts: root.counts } }] : []),
-          ...(root.partition ? [{ key: "federal-money-partition", record: { partition: root.partition, children: root.children ?? [] } }] : [])];
+          ...(root.partition ? [{ key: "federal-money-partition", record: { partition: root.partition, children: root.children ?? [],
+            counts: root.counts, subtreeCounts: root.subtreeCounts ?? null, childCounts: root.childCounts ?? null } }] : [])];
     case "STATE_ROLL_CALL":
       return [
         ...keyed("roll", array(root.rollCalls), ["id", "officialRollCallId", "rollCallId"]),

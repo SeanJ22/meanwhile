@@ -34,7 +34,7 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
   static async open(directory: string, source: FederalMoneySource): Promise<FederalMoneyBenchmarkStore> {
     const original = { fetch: neonConfig.fetchFunction, url: process.env.DATABASE_URL, reporting: process.env.WTP_VITAL_SIGNS_REPORT, mode: process.env.WTP_RUNTIME_MODE, role: process.env.WTP_DB_ROLE, control: process.env.WTP_CONTROL_PLANE_DATABASE_URL };
     const bytes: BenchmarkStorageBytes = { read: 0, written: 0, requests: 0, statements: 0, largestRead: 0, largestWrite: 0, databasePeakRssBytes: 0, databaseElapsedMs: 0, largestLatencyMs: 0 };
-    const child: ChildProcessWithoutNullStreams = spawn(process.execPath, ["--experimental-strip-types", resolve("scripts/lib/federal-money-postgres-server.mts"), resolve(directory)], { stdio: ["pipe", "pipe", "pipe"] });
+    const child: ChildProcessWithoutNullStreams = spawn(process.execPath, ["--experimental-strip-types", resolve("scripts/lib/federal-money-postgres-server.mts"), resolve(directory), String(Date.now())], { stdio: ["pipe", "pipe", "pipe"] });
     child.stderr.pipe(process.stderr);
     let serial = 0;
     const pending = new Map<number, { resolve: (answer: Answer) => void; reject: (reason: Error) => void }>();

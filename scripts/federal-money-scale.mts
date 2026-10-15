@@ -219,6 +219,8 @@ async function run() {
     const vault = new DurableEvidenceStore(join(directory, "vault", source), { remote: null });
     const artifactStore = new LocalFileArtifactStore(join(temporaryDirectory, "reader", source));
     const positions = new Map<string, GeneratorPosition>();
+    const checkedStates = new Set<string>();
+    const providerRequests: Record<string, number> = {}, providerPhases: Record<string, number> = {};
     let inputRows = 0, inputBytes = 0, pages = 0, maxPageFacts = 0, completedStates = 0;
     let partitions = 0, readerBytesWritten = 0, slowestReaderMs = 0, largestPartitionRows = 0;
     const stateCounts: Record<string, unknown> = {};
@@ -250,7 +252,33 @@ async function run() {
         }
       },
       acquire: async (_source, state, options): Promise<FederalMoneyPage> => {
-        assert.ok(!unchanged || !options?.cursor, "An unchanged fixture cannot complete an unfinished source backfill.");
+        if (unchanged) {
+          if (!checkedStates.has(state)) assert.ok(!options?.cursor, "An unchanged fixture cannot complete an unfinished source backfill.");
+          checkedStates.add(state);
+          const cursor = options?.cursor;
+          const phase = source === "usaspending" ? `download:${cursor?.category ?? 0}:${cursor?.location ?? "performance"}`
+            : source === "sam-gov-entities" ? `extract:${cursor?.registered === false ? "unregistered" : "registered"}`
+              : source === "federal-audit-clearinghouse" ? cursor?.phase ?? "general" : "declarations";
+          providerPhases[phase] = (providerPhases[phase] ?? 0) + 1;
+          const page = await acquireFederalMoney(source, state, { ...options, cacheRoot: join(temporaryDirectory, "bulk-cache"),
+            dataGovApiKey: "generated-benchmark-key", samGovApiKey: "generated-benchmark-key", fetch: async input => {
+              const url = new URL(String(input));
+              providerRequests[url.pathname] = (providerRequests[url.pathname] ?? 0) + 1;
+              if (source === "usaspending") {
+                if (url.pathname.endsWith("/awards/")) return Response.json({ status_url: "https://api.usaspending.gov/status/benchmark-empty", file_url: "https://files.usaspending.gov/benchmark-empty.zip" });
+                if (url.pathname.includes("/status/")) return Response.json({ status: "finished" });
+                const inputPath = resolve(option("input", ""));
+                assert.ok(statSync(inputPath).isFile(), "USAspending unchanged checks require a header-only native ZIP via --input.");
+                return new Response(Readable.toWeb(createReadStream(inputPath)) as ReadableStream<Uint8Array>);
+              }
+              return source === "sam-gov-entities" ? Response.json({ totalRecords: 0, entityData: [] })
+                : source === "openfema" ? Response.json({ metadata: { count: 0 }, DisasterDeclarationsSummaries: [] })
+                  : Response.json([], { headers: { "Content-Range": "*/0" } });
+            } });
+          assert.equal(page.facts.length, 0);
+          inputBytes += page.captures.reduce((total, capture) => total + capture.byteLength, 0); pages++;
+          return page;
+        }
         if (useBulk) {
           const page = await acquireFederalMoney(source, state, { ...options, cacheRoot: join(temporaryDirectory, "bulk-cache"),
             cursor: options?.cursor ?? (source === "federal-audit-clearinghouse" ? { source, phase: "historic", year: 2015 }
@@ -269,8 +297,8 @@ async function run() {
             : { year: 2026 - years + 1, offset: 0, repetition: 0, table: 0 };
           positions.set(state, position);
         }
-        assert.ok(source !== "usaspending" || unchanged);
-        const generated = unchanged ? { rows: [], complete: true } : generatedRows(source as GeneratedPageSource, state, position);
+        assert.ok(source !== "usaspending");
+        const generated = generatedRows(source, state, position);
         const rows = generated.rows.map(row => row.row), complete = generated.complete;
         const captures: FederalMoneyPage["captures"][number][] = [], facts: FederalMoneyFact[] = [];
         const groups = source === "federal-audit-clearinghouse" ? [...new Set(generated.rows.map(row => row.table))] : [""];
@@ -278,7 +306,7 @@ async function run() {
           const groupRows = table ? generated.rows.filter(row => row.table === table).map(row => row.row) : rows;
           const body = JSON.stringify(source === "openfema" ? { DisasterDeclarationsSummaries: groupRows }
             : source === "sam-gov-entities" ? { entityData: groupRows } : groupRows);
-          const capture = await saveFederalMoneyCapture({ url: table ? `https://api.fac.gov/${table}` : source === "usaspending" ? "https://api.usaspending.gov/api/v2/bulk_download/status/" : urls[source], body, retrievedAt: now, publicationDate: now }, vault);
+          const capture = await saveFederalMoneyCapture({ url: table ? `https://api.fac.gov/${table}` : urls[source], body, retrievedAt: now, publicationDate: now }, vault);
           captures.push(capture); facts.push(...parseFederalMoney(source, capture, state, body)); inputBytes += Buffer.byteLength(body);
         }
         inputRows += rows.length; pages++; maxPageFacts = Math.max(maxPageFacts, facts.length);
@@ -303,12 +331,12 @@ async function run() {
     for (const row of result.projection.states) stateCounts[row.state] = row;
     assert.ok(maxPageFacts <= 500);
     await store.close();
-    reports.push({ source, inputRows, inputBytes, pages, complete: completedStates === states.length, states: completedStates, counts: result.projection.counts, stateCounts,
+    reports.push({ source, inputRows, inputBytes, pages, providerRequests, providerPhases, complete: completedStates === states.length, states: completedStates, counts: result.projection.counts, stateCounts,
       partitions, readerBytesWritten, slowestReaderMs, largestPartitionRows,
       elapsedMs: performance.now() - sourceStarted, databaseJsonBodyBytes: { ...store.bytes } });
   }
   const { peakRssBytes, sampledPeakScratchBytes } = memory();
-  const report = { generated: !useBulk || option("input-kind", "generated") !== "official", inputGovernmentCoverage: bulkManifest?.states.filter(row => states.includes(row.state.toLowerCase())).reduce((total, row) => total + row.governments, 0) ?? null, syntheticCountyAssignments: bulkManifest && states.length === bulkManifest.states.length ? bulkManifest.syntheticCountyAssignments ?? null : null, unchanged, checkedAt: now, maxRunMs, databaseMeasurement: "Actual Neon JSON bodies for native identity/location queries and partition/checkpoint promotion; isolated PostgreSQL engine, not production traffic or WAL.", worker: useBulk ? "actual sorted bulk acquisition through SQL joins, refresh, promotion and place reader" : "SQL joins, refresh, promotion and place reader with generated source pages", states: states.length, years, rowsPerGovernment: repetitions,
+  const report = { generated: !useBulk || option("input-kind", "generated") !== "official", inputGovernmentCoverage: bulkManifest?.states.filter(row => states.includes(row.state.toLowerCase())).reduce((total, row) => total + row.governments, 0) ?? null, syntheticCountyAssignments: bulkManifest && states.length === bulkManifest.states.length ? bulkManifest.syntheticCountyAssignments ?? null : null, unchanged, checkedAt: now, clock: unchanged ? "Controlled fixture wall clock; elapsed measurements use performance.now()." : "Real worker wall clock with explicit source publication timestamp.", maxRunMs, databaseMeasurement: "Actual Neon JSON bodies for native identity/location queries and partition/checkpoint promotion; isolated PostgreSQL engine, not production traffic or WAL.", worker: useBulk ? "actual sorted bulk acquisition through SQL joins, refresh, promotion and place reader" : "SQL joins, refresh, promotion and place reader with generated source pages", states: states.length, years, rowsPerGovernment: repetitions,
     elapsedMs: performance.now() - started, peakRssBytes, sampledPeakScratchBytes,
     runner8GiBWith075GiBMarginCopies: Math.floor((8 * 1024 ** 3 - 0.75 * 1024 ** 3) / peakRssBytes),
     runnerWithResearchParent2928MiBCopies: Math.max(0, Math.floor((8 * 1024 ** 3 - (768 + 2928) * 1024 ** 2) / peakRssBytes)),
@@ -388,18 +416,28 @@ else if (mode === "prepare-db") {
   }
 }
 else if (mode === "run" || mode === "bulk-run") {
-  const start = Date.parse(now), runs = [];
-  assert.ok(start + (checks - 1) * FEDERAL_MONEY_CONFIG[sources[0]!].everyMs <= Date.now(), "Use a past fixture clock for repeated source checks; production validation rejects future acquisition timestamps.");
+  const start = Date.parse(now);
+  const runs: Awaited<ReturnType<typeof run>>[] = [];
+  const wallClock = Date;
   for (let check = 0; check < checks; check++) {
     now = new Date(start + check * FEDERAL_MONEY_CONFIG[sources[0]!].everyMs).toISOString();
-    runs.push(await run());
+    const elapsedStart = performance.now(), fixtureStart = Math.max(Date.parse(now), wallClock.now());
+    if (unchanged) globalThis.Date = new Proxy(wallClock, {
+      construct(target, args) { return Reflect.construct(target, args.length ? args : [fixtureStart + performance.now() - elapsedStart]); },
+      get(target, name, receiver) { return name === "now" ? () => Math.floor(fixtureStart + performance.now() - elapsedStart) : Reflect.get(target, name, receiver); },
+    });
+    try { runs.push(await run()); }
+    finally { globalThis.Date = wallClock; }
   }
   if (checks > 1) {
     const report = { source: sources[0], generated: true, measuredChecks: checks, virtualClockStart: new Date(start).toISOString(), virtualClockEnd: now,
       elapsedMs: runs.reduce((total, run) => total + run.elapsedMs, 0), peakRssBytes: Math.max(...runs.map(run => run.peakRssBytes)),
       databaseJsonBodyBytes: runs.reduce((total, run) => ({ read: total.read + run.databaseJsonBodyBytes.read,
         written: total.written + run.databaseJsonBodyBytes.written }), { read: 0, written: 0 }),
-      partitionWrites: runs.reduce((total, run) => total + run.reports.reduce((sum, source) => sum + source.partitions, 0), 0) };
+      partitionWrites: runs.reduce((total, run) => total + run.reports.reduce((sum, source) => sum + source.partitions, 0), 0),
+      providerRequests: runs.reduce((total, run) => total + run.reports.reduce((sum, source) => sum + Object.values(source.providerRequests).reduce((a, b) => a + b, 0), 0), 0),
+      providerPhases: Object.fromEntries([...new Set(runs.flatMap(run => run.reports.flatMap(source => Object.keys(source.providerPhases))))].map(phase => [phase, runs.reduce((sum, run) => sum + run.reports.reduce((total, source) => total + (source.providerPhases[phase] ?? 0), 0), 0)])),
+      clock: "Controlled fixture wall clock; elapsed measurements use performance.now()." };
     writeFileSync(join(directory, `report-day-${Date.now()}.json`), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report));
   }

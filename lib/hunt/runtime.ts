@@ -34,15 +34,15 @@ import { foldAskGapObservations, readAskGapObservations, type AskedGap } from ".
 const NOTE_LIMIT = 12;
 
 /** The newest job on a packet, as the due rule and a detective's brief read it. */
-export async function lastPacketJob(repos: Pick<ControlPlaneRepositories, "scoutResults">, governmentId: string): Promise<ScoutResult | null> {
+async function lastPacketJob(repos: Pick<ControlPlaneRepositories, "scoutResults">, governmentId: string): Promise<ScoutResult | null> {
   return (await repos.scoutResults.readRecent(huntPacketObligationId(governmentId), 1))[0] ?? null;
 }
 
-export const lastJobOf = (result: ScoutResult | null): LastPacketJob | null =>
+const lastJobOf = (result: ScoutResult | null): LastPacketJob | null =>
   result?.blankFingerprint ? { recordedAt: result.recordedAt, blankFingerprint: result.blankFingerprint, blankDigests: result.blankDigests ?? [] } : null;
 
 /** When the newest order reached a packet; null when none is recorded. */
-export const orderedAtOf = (assignments: readonly { readonly at: string }[] | undefined): string | null =>
+const orderedAtOf = (assignments: readonly { readonly at: string }[] | undefined): string | null =>
   (assignments ?? []).reduce<string | null>((newest, mark) => newest === null || mark.at > newest ? mark.at : newest, null);
 
 /** A government's shut doors, with what each door's record says broke. */

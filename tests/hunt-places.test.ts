@@ -4,8 +4,11 @@ import test from "node:test";
 import { plainOrderType, parsePlainOrder } from "../lib/control-plane/operator-chat/orders.ts";
 import type { OperatorContext } from "../lib/control-plane/operator-chat/context.ts";
 import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
-import { readPlaceWords, type NamedPlace, type PlaceWordsDeps } from "../lib/hunt/place-words.ts";
+import { readPlaceWords } from "../lib/hunt/place-words.ts";
 import { huntCostView } from "../lib/hunt/cost-per-fact.ts";
+
+type PlaceWordsDeps = NonNullable<Parameters<typeof readPlaceWords>[1]>;
+type NamedPlace = Awaited<ReturnType<PlaceWordsDeps["named"]>> extends ReadonlyMap<string, readonly (infer P)[]> ? P : never;
 
 test("plain words send agents to a place", () => {
   for (const words of ["hunt AZ-01", "Hunt in Arizona", "find everything in AZ-01", "send agents to AZ-01"]) {

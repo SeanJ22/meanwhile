@@ -4,7 +4,7 @@ import { HUNT_PACKET_ROUTE, huntPacketPlan } from "../../../hunt/packet-plan.ts"
 import { NOTHING_MATERIALIZED, type MaterializedReading } from "../provider-inputs.ts";
 import type { ObligationProvider, ProvidedObligation, ProviderYield } from "../registry.ts";
 
-export const HUNT_PACKETS_PROVIDER_ID = "hunt-packets";
+const HUNT_PACKETS_PROVIDER_ID = "hunt-packets";
 
 export function huntPacketsProvider(input: { readonly materialized?: () => MaterializedReading } = {}): ObligationProvider {
   const readMaterialized = input.materialized ?? (() => NOTHING_MATERIALIZED);

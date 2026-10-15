@@ -257,7 +257,7 @@ const FINISH_SPEC: ScoutToolSpec = {
 };
 
 /** What a job is handed: the packet's brief and the tools bound to its government. */
-export interface HunterContext {
+interface HunterContext {
   readonly brief: string;
   readonly reason: string;
   /** How many blanks the packet holds. */
@@ -267,7 +267,7 @@ export interface HunterContext {
     | "readHeldArtifact" | "search" | "chargeSearch" | "sourceApi" | "reportFinding" | "held">;
 }
 
-export interface HunterExecutorDeps {
+interface HunterExecutorDeps {
   readonly role: HuntRole;
   readonly playbookFor: (role: HuntRole) => Promise<WorkerPlaybook>;
   readonly transport: ModelTransport;
@@ -286,7 +286,7 @@ export interface HunterExecutorDeps {
 }
 
 /** The most turns one job takes before it is asked to finish. */
-export const HUNTER_MAX_TURNS = 80;
+const HUNTER_MAX_TURNS = 80;
 
 /**
  * Initial response allowance at the model's dearest token rate, held against a Send or area budget before the job

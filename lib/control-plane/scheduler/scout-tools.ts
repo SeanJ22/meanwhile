@@ -1,10 +1,7 @@
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 import { readClientSource, type ClientTool } from './scout-clients.ts';
-/**
- * The hunter's research tools (implements `scout-contract.ts`): public URL guard, per-host request cap, robots.txt
- * read and recorded (never a refusal), spaced identified GET, vault first, then compact page text derived from the
- * vaulted body. An access control is a wall: vaulted as DIAGNOSTIC, never defeated. Failures are told to the model.
- */
+/** The hunter's research tools. robots.txt is read and recorded, never a refusal;
+ * an access control is a wall, saved as diagnostic and never defeated. */
 
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { runOcr } from "../../extract/ocr.ts";
@@ -169,7 +166,7 @@ export const REPORT_FINDING_TOOL_SPEC: ScoutToolSpec = {
 };
 
 /** One byte-identical tool list across jobs, so it caches as a prefix. */
-export const HUNTER_TOOL_SPECS: readonly ScoutToolSpec[] = [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, SEARCH_TOOL_SPEC, REPORT_FINDING_TOOL_SPEC];
+const HUNTER_TOOL_SPECS: readonly ScoutToolSpec[] = [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, SEARCH_TOOL_SPEC, REPORT_FINDING_TOOL_SPEC];
 
 /** The runtime's bytes opener. One request; text is decoded by the toolkit. */
 export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
@@ -380,7 +377,7 @@ function parseInput(input: unknown): ParsedInput {
 }
 
 /** The passages of `text` that contain any of the words looked for, each with a line of context; the start otherwise. */
-export function focusedText(text: string, lookFor: string | null, cap: number = TEXT_CAP_CHARS): { readonly text: string; readonly note: string } {
+function focusedText(text: string, lookFor: string | null, cap: number = TEXT_CAP_CHARS): { readonly text: string; readonly note: string } {
   const words = (lookFor ?? "").toLowerCase().split(/[^\p{L}\p{N}@.]+/u).filter(word => word.length >= 3);
   if (words.length === 0 || text.length <= cap) return capText(text, cap);
   const lines = text.split("\n");

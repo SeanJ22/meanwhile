@@ -8,7 +8,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export interface ZipShard {
+interface ZipShard {
   readonly divisions: readonly string[];
   readonly zips: Readonly<Record<string, readonly number[]>>;
 }

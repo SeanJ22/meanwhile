@@ -5,12 +5,12 @@ import { defaultPlaceOwedDeps, resolvePlaceKey, type PlaceOwedDeps } from "../co
 import { stateDivisionId, zipDivisionIds } from "../control-plane/admin-view/v6-national-geography.ts";
 import { US_STATES } from "../control-plane/readiness/catalog.ts";
 
-export type PlaceWords =
+type PlaceWords =
   | { readonly state: "PLACE"; readonly label: string; readonly divisionIds: readonly string[] }
   | { readonly state: "CHOICES"; readonly choices: readonly { readonly label: string; readonly words: string }[] }
   | { readonly state: "NONE"; readonly says: string };
 
-export interface NamedPlace {
+interface NamedPlace {
   readonly divisionId: string;
   readonly label: string;
   readonly state: string;
@@ -24,10 +24,10 @@ const PLACE_ID = /^ocd-division\/country:us\/state:([a-z]{2})(?:\/county:([a-z0-
 const KINDS = ["city", "town", "township", "borough", "village"] as const;
 
 const title = (slug: string) => slug.split("_").filter(Boolean).map(word => word[0]!.toUpperCase() + word.slice(1)).join(" ");
-export const nameSlug = (words: string) => words.toLowerCase().replace(/&/g, " and ").replace(/['’.]/g, "").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+const nameSlug = (words: string) => words.toLowerCase().replace(/&/g, " and ").replace(/['’.]/g, "").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 
 /** Every town and city in the national ZIP index, by its name and by its name without its kind. Census county divisions are left out. */
-export async function readNamedPlaces(): Promise<ReadonlyMap<string, readonly NamedPlace[]>> {
+async function readNamedPlaces(): Promise<ReadonlyMap<string, readonly NamedPlace[]>> {
   const zipsOf = new Map<string, string[]>();
   await visitZipShards(shard => {
     for (const [zip, refs] of Object.entries(shard.zips)) for (const i of refs) {
@@ -55,14 +55,14 @@ let named: Promise<ReadonlyMap<string, readonly NamedPlace[]>> | null = null;
 const namedPlaces = (): Promise<ReadonlyMap<string, readonly NamedPlace[]>> =>
   named ??= readNamedPlaces().catch(error => { named = null; throw error; });
 
-export interface PlaceWordsDeps {
+interface PlaceWordsDeps {
   readonly named: () => Promise<ReadonlyMap<string, readonly NamedPlace[]>>;
   readonly zipState: (zip: string) => Promise<string | null>;
   readonly zipDivisions: (zips: readonly string[]) => Promise<ReadonlyMap<string, readonly string[]>>;
   readonly resolveDivisions: PlaceOwedDeps["resolveDivisions"];
 }
 
-export const defaultPlaceWordsDeps: PlaceWordsDeps = {
+const defaultPlaceWordsDeps: PlaceWordsDeps = {
   named: namedPlaces, zipState: stateOfZip, zipDivisions: zips => zipDivisionIds(zips, divisionIdsOfZip),
   resolveDivisions: defaultPlaceOwedDeps.resolveDivisions,
 };

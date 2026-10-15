@@ -355,7 +355,7 @@ export function requirementsFor(
 }
 
 /** One hunt packet per division: the government's open blanks, hunted as one job. */
-export function packetRequirements(divisions: readonly string[]): RequirementInstance[] {
+function packetRequirements(divisions: readonly string[]): RequirementInstance[] {
   return [...new Set(divisions)].sort().map(id => ({ obligation: huntPacketObligation(id), kind: "HUNT_PACKET" as const,
     executor: "BOUNDED_MODEL_WORKER" as const, carriage: "OWED" as const }));
 }

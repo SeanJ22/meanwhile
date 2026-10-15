@@ -1,7 +1,5 @@
-/**
- * The Exa agent lane: the same hunt packet sent to Exa's research agent, whose structured findings go into the Box
- * beside our own hunter's. Exa's model does the research; Exa reports what each run cost.
- */
+/** The same hunt packet sent to Exa's research agent; its findings go into the Box
+ * beside our own hunter's, and Exa reports what each run cost. */
 import type { FetchLike } from "./search.ts";
 import type { HuntPacket } from "./packet.ts";
 import { huntBrief } from "./brief.ts";
@@ -13,7 +11,7 @@ const TERMINAL = new Set(["completed", "failed", "cancelled"]);
 const POLL_MS = 4_000;
 
 /** The same fields report_finding takes, so both lanes write the Box the same way. */
-export const EXA_AGENT_OUTPUT_SCHEMA = {
+const EXA_AGENT_OUTPUT_SCHEMA = {
   type: "object",
   properties: {
     findings: {
@@ -35,7 +33,7 @@ export const EXA_AGENT_OUTPUT_SCHEMA = {
   required: ["findings", "summary"],
 } as const;
 
-export interface ExaAgentFinding {
+interface ExaAgentFinding {
   readonly subjectId: string;
   readonly field: string;
   readonly value: string;
@@ -43,7 +41,7 @@ export interface ExaAgentFinding {
   readonly sentence: string;
 }
 
-export interface ExaAgentRun {
+interface ExaAgentRun {
   readonly runId: string | null;
   readonly status: string;
   readonly findings: readonly ExaAgentFinding[];

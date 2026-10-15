@@ -31,13 +31,10 @@ export function translationPackage(input: {
     payload: { kind: "plain-english-translations", records: [record], ...(input.sourceBallot ? { sourceBallot: input.sourceBallot } : {}) } };
 }
 
-/** One checked fact publishes through the existing Slide and typed readback. */
-export const measureTranslationPackage = translationPackage;
 export async function publishTranslation(store: RoutineDataStore, input: Parameters<typeof translationPackage>[0]) {
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(translationPackage(input), store, input.now);
   return processRegisteredManualCandidate(store, "plain-english-translations", candidate, input.now, expectedBaseVersionId);
 }
-export const publishMeasureTranslation = publishTranslation;
 
 export { translationProjectionProblems, type TranslationProjection } from "./projection-contract.ts";
 export { readTranslationProjection, readTranslations, withMeasureTranslations } from "./projection-reader.ts";

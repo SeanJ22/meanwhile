@@ -26,7 +26,7 @@ import { getProvisionTargetIds } from "../lib/ballot/measure-provisions.ts";
 import { measureRecordsForBallot } from "../lib/ballot/measure-records.ts";
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { translateMeasure } from "../lib/translate/worker.ts";
-import { publishMeasureTranslation } from "../lib/translate/publication.ts";
+import { publishTranslation } from "../lib/translate/publication.ts";
 import { translationScope } from "../lib/translate/records.ts";
 
 const now = "2026-10-05T18:00:00Z";
@@ -125,7 +125,7 @@ test("national measure reaction authority attaches checked parts absent from the
     transportFor: () => async request => ({ model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "result", name: request.tools[0].name,
       input: request.tools[0].name === "write_measure_translation" ? { measure, sentences: support }
         : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) } }], usage: { input_tokens: 100, output_tokens: 50 } }) });
-  const outcome = await publishMeasureTranslation(store, { record: translation.record, captures: input.captures, now });
+  const outcome = await publishTranslation(store, { record: translation.record, captures: input.captures, now });
   assert.ok(outcome.promoted, JSON.stringify(outcome.candidate));
   const scopes: string[] = [], read = store.readPromotion.bind(store);
   store.readPromotion = async (recordClass, scope) => { scopes.push(scope); return read(recordClass, scope); };
@@ -141,7 +141,7 @@ test("national measure reaction authority attaches checked parts absent from the
   const foreign = { ...translation.record, ocdId: elsewhere, measure: { ...measure, parts: [foreignPart] },
     sentences: translation.record.sentences.map(row => ({ ...row, field: row.field.replace(part.id, foreignPart.id) })),
     checked: translation.record.checked.map(row => ({ ...row, field: row.field.replace(part.id, foreignPart.id) })) };
-  assert.ok((await publishMeasureTranslation(store, { record: foreign, captures: input.captures, now })).promoted);
+  assert.ok((await publishTranslation(store, { record: foreign, captures: input.captures, now })).promoted);
   assert.equal(await readerBallotSourceForTargetId(foreignPart.id, [input.division], { store, now, bypassCache: true }), null);
 });
 

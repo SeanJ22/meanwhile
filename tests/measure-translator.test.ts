@@ -8,7 +8,7 @@ import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler
 import type { WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 import { translateMeasure, translationPlaybook } from "../lib/translate/worker.ts";
 import { translationHash, translationRecordIssue } from "../lib/translate/records.ts";
-import { publishMeasureTranslation, readTranslations, withMeasureTranslations } from "../lib/translate/publication.ts";
+import { publishTranslation, readTranslations, withMeasureTranslations } from "../lib/translate/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { MeasureRecord } from "../lib/ballot/measure-records.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -40,7 +40,7 @@ test("the guarded writer and independent checker publish exact source-supported 
   assert.ok(result.usage.every(row => typeof row.usd === "number"));
   assert.equal((await readSpendWindow(repos, new Date().toISOString())).length, 2, "both model calls count immediately against the shared spend window");
   const store = new MemoryRoutineDataStore();
-  const published = await publishMeasureTranslation(store, { record: result.record, now,
+  const published = await publishTranslation(store, { record: result.record, now,
     captures: [{ evidence, sourceReference: measureReference(evidence), observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }] });
   assert.ok(published.promoted, JSON.stringify(published.candidate));
   assert.equal(published.readerReadback?.status, "PASS");
@@ -120,13 +120,13 @@ test("a translation for another exact district remains separate and same-place p
     transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked }) });
   const { record } = await translate();
   const captures = [{ evidence, sourceReference: measureReference(evidence), observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" as const }];
-  await publishMeasureTranslation(store, { record, captures, now });
+  await publishTranslation(store, { record, captures, now });
   const other = { ...record, id: "translation:measure:13", subjectId: "measure:13", measure: { ...measure, contestId: "measure:13" } };
-  const published = await publishMeasureTranslation(store, { record: other, captures, now });
+  const published = await publishTranslation(store, { record: other, captures, now });
   assert.ok(published.promoted, JSON.stringify(published.candidate));
   assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
   const elsewhere = "ocd-division/country:us/state:mi/county:birch";
-  await publishMeasureTranslation(store, { record: { ...record, ocdId: elsewhere }, captures, now });
+  await publishTranslation(store, { record: { ...record, ocdId: elsewhere }, captures, now });
   assert.equal((await readTranslations([elsewhere], { store, now, bypassCache: true })).length, 1);
   assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
 });

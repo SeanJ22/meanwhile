@@ -6,9 +6,10 @@ import { tmpdir } from "node:os";
 import { parseCsv } from "../reference/csv.ts";
 import { sourceAcquisitionFailure, requestPublisher, readPublisherBody } from "../civic-data/source-acquisition-error.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
 import { FEDERAL_MONEY_STATES } from "./sources.ts";
 import { parseFederalMoney } from "./parse.ts";
-import { federalMoneyVault, readFederalMoneyCapture, saveFederalMoneyCapture } from "./vault.ts";
+import { readFederalMoneyCapture, saveFederalMoneyCapture } from "./vault.ts";
 import { buildFederalBulk, chunkFederalCsvFile, chunkFederalJson, federalBulkCapture, federalBulkId, federalBulkMetadata, saveFederalBulkBytes, stageFederalBulkBytes, vaultFederalBulkBytes, scanFederalJson, federalBulkRangeHeaders, spoolFederalBytes, completedFederalBulkPath, completeFederalBulkState, type FederalBulkContext } from "./bulk.ts";
 import { federalCsvRecords, federalZipBytes, federalZipEntries, FEDERAL_MONEY_CHUNK_ROWS, type FederalZipEntry } from "./streams.ts";
 import type { FederalMoneyCursor, FederalMoneyPage, FederalMoneySource } from "./model.ts";
@@ -238,10 +239,13 @@ async function sam(ctx: Context, state: string, cursor: FederalMoneyCursor): Pro
   });
   return bulkPage(ctx, state, { ...cursor, bulkId: id, chunkIndex: 0 }, next);
 }
+export function federalMoneyAcquisitionVault(): EvidenceStore {
+  return new DurableEvidenceStore(join(process.cwd(), "data", "control-plane", "vault"));
+}
 export async function acquireFederalMoney(source: FederalMoneySource, state: string, options: FederalMoneyAcquireOptions = {}): Promise<FederalMoneyPage> {
   state = state.toUpperCase(); if (!/^[A-Z]{2}$/.test(state)) throw new Error("Invalid federal money state.");
   if (options.cursor && options.cursor.source !== source) throw new Error("Federal money cursor belongs to another source.");
-  const ctx: Context = { ...options, fetch: options.fetch ?? fetch, now: options.now ?? (() => new Date().toISOString()), evidenceStore: options.evidenceStore ?? federalMoneyVault(), retries: options.retries ?? 4,
+  const ctx: Context = { ...options, fetch: options.fetch ?? fetch, now: options.now ?? (() => new Date().toISOString()), evidenceStore: options.evidenceStore ?? federalMoneyAcquisitionVault(), retries: options.retries ?? 4,
     sleep: options.sleep ?? ((milliseconds, signal) => new Promise((resolve, reject) => { signal?.throwIfAborted(); const timer = setTimeout(done, milliseconds); function done() { signal?.removeEventListener("abort", abort); resolve(); } function abort() { clearTimeout(timer); signal?.removeEventListener("abort", abort); reject(signal?.reason); } signal?.addEventListener("abort", abort, { once: true }); })) };
   const cursor: FederalMoneyCursor = options.cursor ?? { source, phase: source === "federal-audit-clearinghouse" ? "general" : source === "usaspending" ? "download" : source === "openfema" ? "declarations" : "extract", since: options.since };
   return (source === "openfema" ? fema : source === "federal-audit-clearinghouse" ? fac : source === "usaspending" ? spending : sam)(ctx, state, cursor);

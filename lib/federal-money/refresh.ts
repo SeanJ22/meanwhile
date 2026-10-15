@@ -1,4 +1,4 @@
-import { acquireFederalMoney, type FederalMoneyAcquireOptions } from "./acquire.ts";
+import { acquireFederalMoney, federalMoneyAcquisitionVault, type FederalMoneyAcquireOptions } from "./acquire.ts";
 import { federalMoneyCandidate, federalMoneyCounts, type FederalMoneyNationalProjection, type FederalMoneyStateProgress } from "./candidate.ts";
 import { joinFederalMoneyFacts, type FederalMoneyJoinInput } from "./join.ts";
 import { federalMoneyScope, type FederalMoneyCursor, type FederalMoneyPage, type FederalMoneyCheckpoint, type FederalMoneySource, type FederalMoneyPartition } from "./model.ts";
@@ -7,7 +7,7 @@ import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate, ty
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../civic-data/source-acquisition-failure.ts";
 import { writeFederalMoneyPartitions, federalMoneyPartitionBaselines, addFederalMoneyCounts, type FederalMoneyPartitionChange } from "./partitions.ts";
-import { withFederalMoneyVault, federalMoneyVault, readFederalMoneyCapture } from "./vault.ts";
+import { withFederalMoneyVault, readFederalMoneyCapture } from "./vault.ts";
 import { parseFederalMoney } from "./parse.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { withFederalMoneyVerificationCache } from "./verify.ts";
@@ -26,7 +26,8 @@ export interface FederalMoneyRefreshOptions {
 }
 
 export async function refreshFederalMoney(input: FederalMoneyRefreshOptions): Promise<{ projection: FederalMoneyNationalProjection; outcome: PromotionOutcome; candidate: ReturnType<typeof federalMoneyCandidate> | null }> {
-  return withFederalMoneyVault(input.acquireOptions?.evidenceStore ?? federalMoneyVault(), () => run(input));
+  const evidenceStore = input.acquireOptions?.evidenceStore ?? federalMoneyAcquisitionVault();
+  return withFederalMoneyVault(evidenceStore, () => run({ ...input, acquireOptions: { ...input.acquireOptions, evidenceStore } }));
 }
 async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: FederalMoneyNationalProjection; outcome: PromotionOutcome; candidate: ReturnType<typeof federalMoneyCandidate> | null }> {
   const now = input.now ?? (() => new Date().toISOString()), started = Date.now();

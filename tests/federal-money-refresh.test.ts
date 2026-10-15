@@ -13,7 +13,7 @@ import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts
 import { federalMoneyProjectionIssue, readFederalMoneyPartition, readFederalMoneyForPlace } from "../lib/federal-money/reader.ts";
 import { readFederalMoneyCheckpoint } from "../lib/federal-money/progress.ts";
 import { type FederalMoneyPartitionChange } from "../lib/federal-money/partitions.ts";
-import { saveFederalMoneyCapture, withFederalMoneyVault } from "../lib/federal-money/vault.ts";
+import { readFederalMoneyCapture, saveFederalMoneyCapture, withFederalMoneyVault } from "../lib/federal-money/vault.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { publishFederalMoneyPartition, publishFederalMoneyProgress } from "../lib/federal-money/edge-publication.ts";
@@ -35,6 +35,12 @@ const identities: FederalMoneyJoinInput = { divisions: [{ ocdId: county, geoid: 
 const fullPage: FederalMoneyPage = { facts: native, captures: [capture], complete: true, declaredTotal: 1 };
 const leafScope = federalMoneyPartitionScope("openfema", "AR", federalMoneyPartitionOf(native[0]));
 const acquireOptions = { evidenceStore };
+
+test("saved evidence reads require the acquisition vault and release its context after work", async () => {
+  await assert.rejects(readFederalMoneyCapture(capture), /acquisition vault context/);
+  assert.equal(await withFederalMoneyVault(evidenceStore, () => readFederalMoneyCapture(capture)), sourceBody);
+  await assert.rejects(readFederalMoneyCapture(capture), /acquisition vault context/);
+});
 
 test("an asynchronous initial USAspending page durably retains its cursor before any facts arrive", async () => {
   const store = new MemoryRoutineDataStore();

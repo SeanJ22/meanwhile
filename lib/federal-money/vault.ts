@@ -1,15 +1,14 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { createHash } from "node:crypto";
-import { join } from "node:path";
-import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
 import type { FederalMoneyCapture } from "./model.ts";
 
 const context = new AsyncLocalStorage<EvidenceStore>();
 export const FEDERAL_MONEY_CAPTURE_BYTES = 8 * 1024 * 1024;
 export function federalMoneyVault(): EvidenceStore {
-  return context.getStore() ?? new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
+  const vault = context.getStore();
+  if (!vault) throw new Error("Federal evidence requires an acquisition vault context.");
+  return vault;
 }
 export function withFederalMoneyVault<T>(vault: EvidenceStore, work: () => Promise<T>): Promise<T> {
   return context.run(vault, work);

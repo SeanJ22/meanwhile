@@ -125,7 +125,6 @@ export async function acquireStatePeople(input: SharedOptions & {
         acquisitions.push({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus,
           body, retrievedAt: release.retrievedAt, rawHash: release.sha256,
           sourceCheck,
-          ...(release.vaultKey ? { vaultKey: release.vaultKey } : {}),
           extractedFrom: { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, sha256: release.sha256, member } });
       }
     });

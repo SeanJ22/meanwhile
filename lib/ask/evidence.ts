@@ -16,11 +16,13 @@ export interface EvidenceRecord {
    * A page search hit alone may never populate this field. */
   verifiedStatement?: { speakerId: string; quote: string; date: string; attribution: string; nativeSourceId: string };
   governmentFinance?: GovernmentBudgetFact;
+  population?: import("../reference/population-facts.ts").PopulationFact;
   /** Native meeting/document identity survives the Ask path unchanged. */
   meetingId?: string;
   documentId?: string;
   agendaDocument?: { contentHash: string; title: string | null; publicationIndex: boolean };
   kind:
+    | "POPULATION"
     | "DATASET"
     | "REGULATED_FACILITY"
     | "GOVERNMENT_FINANCE"

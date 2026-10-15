@@ -11,6 +11,8 @@ import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } f
 import { readCivicProjection } from "../lib/sources/google-civic/reader.ts";
 import { refreshGoogleCivic } from "../lib/sources/google-civic/refresh.ts";
 import type { readRegistrationProjection } from "../lib/registration/reader.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { readRawCaptureText, type RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
 
 const AT = "2026-10-12T23:13:00.000Z";
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/google-civic/${name}.json`, import.meta.url), "utf8");
@@ -57,10 +59,15 @@ test("one national contract schedules every state and keeps its source distinct 
 });
 
 test("real source facts publish through the standing data plane, read back, confirm unchanged, and survive an outage", async () => {
-  const store = new MemoryRoutineDataStore(), scope = civicGovernmentScope("government:US-MI:cog:public-capitol-sample");
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), scope = civicGovernmentScope("government:US-MI:cog:public-capitol-sample");
   const first = civicLookupFromRaw(rawMi, "12000", AT, districtIds);
-  const candidate = civicCandidate(scope, first, [rawMi], "voterinfo");
-  assert.throws(() => civicCandidate(scope, { ...first, rows: first.rows.map((row, index) => index === 0 ? { ...row, value: { ...row.value, office: "Not on this saved source" } } : row) }, [rawMi], "voterinfo"), /differ from/);
+  const candidate = await civicCandidate(vault, scope, first, rawMi, "voterinfo");
+  await assert.rejects(civicCandidate(vault, scope, { ...first, rows: first.rows.map((row, index) => index === 0 ? { ...row, value: { ...row.value, office: "Not on this saved source" } } : row) }, rawMi, "voterinfo"), /differ from/);
+  const payload = candidate.normalizedPayload as { projection: unknown; rawCapture: RawCaptureRef };
+  assert.deepEqual(Object.keys(payload).sort(), ["projection", "rawCapture"]);
+  assert.equal(payload.rawCapture.byteLength, Buffer.byteLength(rawMi));
+  assert.ok(!JSON.stringify(candidate).includes(JSON.parse(rawMi).normalizedInput.line1), "the candidate holds a reference, never the response bytes");
+  assert.equal(await readRawCaptureText(vault, payload.rawCapture), rawMi);
   const published = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID, candidate, AT);
   assert.ok(published.promoted, JSON.stringify(published.candidate.receipt));
   assert.equal(published.readerReadback?.status, "PASS");
@@ -68,7 +75,7 @@ test("real source facts publish through the standing data plane, read back, conf
   assert.equal(read.kind, "PROMOTED");
   const later = "2026-10-12T23:14:00.000Z";
   const unchanged = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID,
-    civicCandidate(scope, civicLookupFromRaw(rawMi, "12000", later, districtIds), [rawMi], "voterinfo"), later);
+    await civicCandidate(vault, scope, civicLookupFromRaw(rawMi, "12000", later, districtIds), rawMi, "voterinfo"), later);
   assert.ok(unchanged.confirmed, "same rows on a later source check are successful unchanged work");
   assert.equal(unchanged.promoted?.versionId, published.promoted.versionId);
   const failed = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID, failureCandidate(scope, "Google Civic request failed (HTTP 503).", later), later);
@@ -107,25 +114,28 @@ test("provider Retry-After is honored on 429 and 5xx without small-government pa
 });
 
 test("national refresh visits every state, records missing inventories and publishes a catalog without dropping covered rows", async () => {
-  const store = new MemoryRoutineDataStore(), visited: string[] = [];
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), visited: string[] = [];
   const registration = (async (state: string) => { visited.push(state); return { kind: "NOT_RECORDED" }; }) as unknown as typeof readRegistrationProjection;
-  const result = await refreshGoogleCivic({ store, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
+  const result = await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
     fetchImpl: (async () => new Response(fixture("elections"))) as typeof fetch } });
   assert.deepEqual(visited, GOOGLE_CIVIC_STATES);
   assert.equal(result.coverage.length, GOOGLE_CIVIC_STATES.length);
   assert.ok(result.coverage.every(row => row.reason?.includes("inventory")));
   assert.ok(result.outcome.promoted, JSON.stringify(result.outcome.candidate.receipt));
-  const next = await processRegisteredRoutineCandidate(store, GOOGLE_CIVIC_CONTRACT_ID, civicCandidate(GOOGLE_CIVIC_SCOPE,
-    { formatVersion: 1, kind: "CATALOG", checkedAt: AT, rows: civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"])), coverage: result.coverage }, [fixture("elections")], "elections"), AT);
+  const { rawCapture } = result.candidate.normalizedPayload as { rawCapture: RawCaptureRef };
+  assert.deepEqual(await vault.list(""), [rawCapture.vaultKey], "one catalog response is stored once for every state marker");
+  assert.equal(await readRawCaptureText(vault, rawCapture), fixture("elections"));
+  const next = await processRegisteredRoutineCandidate(store, GOOGLE_CIVIC_CONTRACT_ID, await civicCandidate(vault, GOOGLE_CIVIC_SCOPE,
+    { formatVersion: 1, kind: "CATALOG", checkedAt: AT, rows: civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"])), coverage: result.coverage }, fixture("elections"), "elections"), AT);
   assert.ok(next.confirmed);
 });
 
 test("VS-01 background refresh sends no public or private addresses to Google", async () => {
-  const store = new MemoryRoutineDataStore(), requests: URL[] = [];
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), requests: URL[] = [];
   const registration = (async (state: string) => ({ kind: "PROMOTED", value: { divisions: [], governments: [
     { id: `government:US-${state}:cog:public-office-fixture`, officeAddress: `${state} public office fixture`, associations: [], bodyIds: [] },
   ] } })) as unknown as typeof readRegistrationProjection;
-  const result = await refreshGoogleCivic({ store, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
+  const result = await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
     fetchImpl: (async (url: URL) => { requests.push(url); return new Response(fixture("elections")); }) as unknown as typeof fetch } });
   assert.ok(result.outcome.promoted);
   assert.equal(requests.length, 1);
@@ -134,15 +144,15 @@ test("VS-01 background refresh sends no public or private addresses to Google", 
 });
 
 test("a changed query response advances its snapshot without turning omitted observations into an absence", async () => {
-  const store = new MemoryRoutineDataStore(), scope = civicGovernmentScope("government:US-MI:cog:changed-response-fixture");
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), scope = civicGovernmentScope("government:US-MI:cog:changed-response-fixture");
   const first = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID,
-    civicCandidate(scope, civicLookupFromRaw(rawMi, "12000", AT), [rawMi], "voterinfo"), AT);
+    await civicCandidate(vault, scope, civicLookupFromRaw(rawMi, "12000", AT), rawMi, "voterinfo"), AT);
   const changed = JSON.parse(rawMi);
   changed.pollingLocations[0].pollingHours = "Updated provider test hours";
   changed.contests = changed.contests.slice(1);
   const raw = JSON.stringify(changed), later = "2026-10-12T23:15:00.000Z";
   const next = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID,
-    civicCandidate(scope, civicLookupFromRaw(raw, "12000", later), [raw], "voterinfo"), later);
+    await civicCandidate(vault, scope, civicLookupFromRaw(raw, "12000", later), raw, "voterinfo"), later);
   assert.ok(next.promoted, JSON.stringify(next.candidate.receipt));
   assert.notEqual(next.promoted.versionId, first.promoted?.versionId);
   assert.equal(next.candidate.candidate.absence.claimsAbsence, false);
@@ -151,25 +161,28 @@ test("a changed query response advances its snapshot without turning omitted obs
 });
 
 test("a reached but unreadable source retains its public-office bytes and prior good facts", async () => {
-  const store = new MemoryRoutineDataStore(), scope = civicGovernmentScope("government:US-MI:cog:parse-failure-fixture");
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), scope = civicGovernmentScope("government:US-MI:cog:parse-failure-fixture");
   const first = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID,
-    civicCandidate(scope, civicLookupFromRaw(rawMi, "12000", AT), [rawMi], "voterinfo"), AT);
+    await civicCandidate(vault, scope, civicLookupFromRaw(rawMi, "12000", AT), rawMi, "voterinfo"), AT);
   const raw = "Unreadable public-office source response";
   const failed = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID,
-    parseFailureCandidate(scope, raw, "Google Civic response could not be parsed.", AT), AT);
+    await parseFailureCandidate(vault, scope, raw, "Google Civic response could not be parsed.", AT), AT);
   assert.equal(failed.candidate.state, "PARSE_INVALID");
   assert.equal(failed.candidate.acquisitionSucceeded, true);
-  assert.deepEqual(failed.candidate.candidate.normalizedPayload, { raw });
+  const { rawCapture } = failed.candidate.candidate.normalizedPayload as { rawCapture: RawCaptureRef };
+  assert.deepEqual(Object.keys(failed.candidate.candidate.normalizedPayload as object), ["rawCapture"]);
+  assert.equal(failed.candidate.candidate.retrieval.rawHash, rawCapture.rawHash);
+  assert.equal(await readRawCaptureText(vault, rawCapture), raw);
   assert.equal((await store.readPromotionIdentity(GOOGLE_CIVIC_RECORD_CLASS, scope))?.versionId, first.promoted?.versionId);
 });
 
 test("a resumed national pass starts with states that have no completed source check", async () => {
-  const store = new MemoryRoutineDataStore(), visited: string[] = [];
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), visited: string[] = [];
   const rows = civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"]));
   await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID,
-    civicCandidate(civicStateScope("AL"), { formatVersion: 1, kind: "STATE", checkedAt: AT, rows, coverage: [] }, [fixture("elections")], "elections"), AT);
+    await civicCandidate(vault, civicStateScope("AL"), { formatVersion: 1, kind: "STATE", checkedAt: AT, rows, coverage: [] }, fixture("elections"), "elections"), AT);
   const registration = (async (state: string) => { visited.push(state); return { kind: "NOT_RECORDED" }; }) as unknown as typeof readRegistrationProjection;
-  await refreshGoogleCivic({ store, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
+  await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
     fetchImpl: (async () => new Response(fixture("elections"))) as typeof fetch } });
   assert.equal(visited.at(-1), "AL");
   assert.deepEqual(visited.slice(0, -1), GOOGLE_CIVIC_STATES.filter(state => state !== "AL"));

@@ -1,0 +1,113 @@
+[
+  {
+    "tenant": "chandler",
+    "state": "AZ",
+    "sourceUrl": "https://chandleraz.new.swagit.com/views/155/",
+    "retrievedFrom": "https://web.archive.org/web/20201017051418id_/https://chandleraz.new.swagit.com/views/155/",
+    "sourceCapturedAt": "2020-10-17T05:14:18Z",
+    "fullSourceSha256": "9aa33c641396a5f182f64d5690c2e95cfe2dc7dd8e05ddcfb3b60e70e4e76a0a",
+    "fixtureSha256": "a947fb0e92586fe404ca4faefeb372e45dca72d1eed99ae9e7756bb1faa293f6",
+    "excerptCharacterRanges": [
+      [
+        2922,
+        4886
+      ],
+      [
+        4898,
+        4906
+      ],
+      [
+        5856,
+        12430
+      ],
+      [
+        15459,
+        16194
+      ],
+      [
+        16968,
+        17703
+      ],
+      [
+        22241,
+        22976
+      ],
+      [
+        25939,
+        26674
+      ],
+      [
+        36338,
+        36346
+      ],
+      [
+        83287,
+        89020
+      ],
+      [
+        89077,
+        89085
+      ]
+    ],
+    "fixture": "chandler.html",
+    "normalization": "Trailing whitespace removed from excerpt lines."
+  },
+  {
+    "tenant": "tamarac",
+    "state": "FL",
+    "sourceUrl": "https://tamaracfl.new.swagit.com/views/12",
+    "retrievedFrom": "https://web.archive.org/web/20191019120613id_/https://tamaracfl.new.swagit.com/views/12",
+    "sourceCapturedAt": "2019-10-19T12:06:13Z",
+    "fullSourceSha256": "a37c8d48bfe1e190d100b1d636e5e86fa1cd3f859187f951109306ac11e128fc",
+    "fixtureSha256": "13eaee32607d67dd11b26df0c8a74b586809f54c673f846877aa3865da598044",
+    "excerptCharacterRanges": [
+      [
+        3635,
+        10351
+      ],
+      [
+        19691,
+        19699
+      ],
+      [
+        118172,
+        124859
+      ],
+      [
+        131351,
+        131359
+      ]
+    ],
+    "fixture": "tamarac.html",
+    "normalization": "Trailing whitespace removed from excerpt lines."
+  },
+  {
+    "tenant": "houston",
+    "state": "TX",
+    "sourceUrl": "https://houstontx.new.swagit.com/views/408",
+    "retrievedFrom": "https://web.archive.org/web/20220518170418id_/https://houstontx.new.swagit.com/views/408",
+    "sourceCapturedAt": "2022-05-18T17:04:18Z",
+    "fullSourceSha256": "436ac4ae37226e4f395c208c82899ae0cdcdf75303f1ece3b11108c138ffb33c",
+    "fixtureSha256": "9b78876487fdf6c2db192e0bfb89bd8d13e30a59064a76cab4a8bed30ab1f2f7",
+    "excerptCharacterRanges": [
+      [
+        1387489,
+        1395974
+      ],
+      [
+        1406773,
+        1406781
+      ],
+      [
+        5689,
+        14234
+      ],
+      [
+        69773,
+        69781
+      ]
+    ],
+    "fixture": "houston.html",
+    "normalization": "Trailing whitespace removed from excerpt lines."
+  }
+]

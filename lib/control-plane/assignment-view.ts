@@ -1,4 +1,3 @@
-/** A value nobody measured is a named {@link Gap}, never zero; a shared cost is named as shared, never split by guesswork. PURE. */
 import { attemptFamilyOf, type AttemptFamily } from "../registry/attempt-families.ts";
 import { ASK_GAP_CODES, ASK_GAP_CODE_WORDS, type AskGapCode } from "../ask/gap-codes.ts";
 import { askGapNoteParts, askGapTitle, parseAskGapObligationId } from "./ask-gap-id.ts";
@@ -70,10 +69,6 @@ export type AssignmentKind = (typeof ASSIGNMENT_KINDS)[number];
 export const ASSIGNMENT_LANES = ["SCOUT", "ROUTINE", "CREATED", "UNASSIGNED", "PROOF"] as const;
 export type AssignmentLane = (typeof ASSIGNMENT_LANES)[number];
 
-/**
- * One state per assignment: the FIRST of these that applies, in this order.
- * Whether it is overdue is a separate fact (part 7), counted on its own.
- */
 export const ASSIGNMENT_STATES = ["WORKING", "BLOCKED", "FAILED", "WAITING", "SUCCEEDED", "RETIRED", "UNKNOWN"] as const;
 export type AssignmentState = (typeof ASSIGNMENT_STATES)[number];
 
@@ -295,11 +290,7 @@ export interface AssignmentCost {
   readonly plainAttemptsWithoutCostRow: number | null;
   readonly rounds: number | null;
   readonly attempts: number | null;
-  /**
-   * Attempts beyond the first on a round, plus rounds opened because the round
-   * before did not discharge the obligation. A scheduled re-reading after a
-   * discharged round is not a retry. Null when it cannot be told.
-   */
+
   readonly retries: number | null;
   readonly escalations: { readonly toOwner: number; readonly modelRouting: Gap | null };
   readonly nonDollar: { readonly requests: number; readonly bytes: number; readonly durationMs: number } | null;
@@ -697,7 +688,7 @@ function indexSources(src: AssignmentSources): Index {
     if (!scouted) continue;
     const source = scouted.source;
     if (source.kind === "FLEET_EXTRACTION") push(pipelineByWorkItem, source.workItemId, state);
-    else push(pipelineByAttempt, source.attemptId, state);
+    else if (source.kind !== "PROMOTED_CANDIDACY") push(pipelineByAttempt, source.attemptId, state);
   }
 
   return {
@@ -1483,7 +1474,7 @@ function parsingOf(g: Gathered, clips: Clips): AssignmentParsing {
 }
 
 function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): AssignmentVerification {
-  const furthest: Record<PipelineStage, number> = { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 };
+  const furthest: Record<PipelineStage, number> = { SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 };
   const rejections: AssignmentRejection[] = [];
   let passed = 0;
   let rejected = 0;
@@ -1595,7 +1586,7 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
     const publication = item.publicationOutcome;
     if (!publication || publication.status === "HELD") return [];
     const witness = servedWitness(src.servedReader, item.id, publication.workerResultId, src.nowIso);
-    return witness?.versionId === publication.versionId ? [witness] : [];
+    return witness?.versionId === (publication.versionId ?? publication.workerResultId) ? [witness] : [];
   })];
   const witness = witnesses[0];
   const workerPublication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
@@ -2559,7 +2550,7 @@ function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<
             const scouted = s.byStage.SCOUTED;
             if (!scouted) return false;
             const source = scouted.source;
-            return source.kind === "FLEET_EXTRACTION" ? idx.workItems.has(source.workItemId) || assigned.has(source.workItemId) : idx.attempts.has(source.attemptId);
+            return source.kind === "FLEET_EXTRACTION" ? idx.workItems.has(source.workItemId) || assigned.has(source.workItemId) : source.kind !== "PROMOTED_CANDIDACY" && idx.attempts.has(source.attemptId);
           }).length;
           return held({
             linked: measured(linkedCount, src.pipeline.length, "promotion-pipeline items whose source names an attempt or work item an assignment holds, of every pipeline item", "cp_log_promotion_pipeline"),

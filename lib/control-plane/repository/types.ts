@@ -236,6 +236,8 @@ export interface AggregateRepository<T> {
   listNarrowed(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /** Exactly `list()` filtered by the scalar `#>>` value at `path`. */
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
+  /** `listWhere`, each value narrowed to the projection by the store before it leaves. */
+  listWhereNarrowed(path: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /**
    * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
    * names at its current revision; `through` is the store's clock when the read began.
@@ -256,6 +258,8 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** The rows one job could use (`entryInSlice`); a store may return more, never fewer. */
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
+  /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
+  insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
   /**
    * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
    * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.

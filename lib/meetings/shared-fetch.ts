@@ -25,7 +25,8 @@ export function meetingFetchPass(options: {
     const url = input instanceof Request ? input.url : String(input);
     const signal = init?.signal ?? (input instanceof Request ? input.signal : undefined);
     signal?.throwIfAborted();
-    const key = `${init?.method ?? (input instanceof Request ? input.method : "GET")} ${url}`;
+    const body = init?.body instanceof URLSearchParams ? init.body.toString() : typeof init?.body === "string" ? init.body : input instanceof Request && input.method !== "GET" ? await input.clone().text() : "";
+    const key = `${init?.method ?? (input instanceof Request ? input.method : "GET")} ${url}\n${body}`;
     let pending = responses.get(key);
     if (!pending) {
       pending = (async () => {
@@ -51,7 +52,8 @@ export function meetingFetchPass(options: {
     if (saved.url !== response.url) Object.defineProperty(response, "url", { value: saved.url });
     signal?.throwIfAborted();
     if (response.ok) recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url,
-      httpStatus: response.status, bytes: new Uint8Array(await response.clone().arrayBuffer()) });
+      httpStatus: response.status, bytes: new Uint8Array(await response.clone().arrayBuffer()),
+      contentType: response.headers.get("content-type") ?? "" });
     return response;
   };
 }

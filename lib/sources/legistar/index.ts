@@ -71,8 +71,7 @@ export type {
 
 /**
  * Granicus Legistar meeting source. Reads the documented public Web API at `webapi.legistar.com`, which
- * returns only what a client has already marked public on its own InSite portal. See
- * `docs/vendor-review.md`.
+ * returns only what a client has already marked public on its own InSite portal.
  */
 
 const SOURCE_NAME = "legistar";

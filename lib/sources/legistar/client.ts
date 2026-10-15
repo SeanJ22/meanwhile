@@ -124,7 +124,8 @@ async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<
     if (response.ok) {
       const bytes = await readCompleteResponse(response, 32 * 1024 * 1024);
       options.signal?.throwIfAborted();
-      recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, bytes });
+      recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, bytes,
+        contentType: response.headers.get("content-type") ?? "" });
       const body = JSON.parse(new TextDecoder().decode(bytes)) as T;
       return body;
     }

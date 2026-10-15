@@ -32,7 +32,7 @@ interface StatewidePeopleRelease {
 function text(release:KnownRelease){return new TextDecoder("utf-8",{fatal:true}).decode(release.bytes);}
 function acquisition(release:KnownRelease):StatePeopleAcquisition{
   return {requestedUrl:release.requestedUrl,finalUrl:release.finalUrl,httpStatus:release.httpStatus,body:text(release),retrievedAt:release.retrievedAt,
-    rawHash:release.sha256,sourceCheck:knownReleaseSourceCheck(release),...(release.vaultKey?{vaultKey:release.vaultKey}:{})};
+    rawHash:release.sha256,sourceCheck:knownReleaseSourceCheck(release)};
 }
 function shared(options:SharedOptions){return {store:options.store,locks:options.locks,fetchImpl:options.fetchImpl,now:options.now,signal:options.signal};}
 function canonicalProfile(value:string):string|null{
@@ -141,7 +141,6 @@ function heldPeopleLeads(roster:OfficeholderSet|undefined,state:string):Statewid
 export async function acquireStatewidePeople(options:SharedOptions&{
   readonly state:string;readonly asOf?:string;readonly national?:NationalStatewideLeads;readonly leads?:readonly StatewideLead[];readonly heldPeople?:OfficeholderSet;
   readonly officialLinks?:readonly OfficialLinkingPage[];
-  readonly onPerson?:(release:StatewidePeopleRelease)=>Promise<void>;
 }):Promise<StatewidePeopleRelease>{
   const state=options.state.toLowerCase(),asOf=options.asOf??options.now?.()??new Date().toISOString();statewideJurisdiction(state);
   const national=options.national??await acquireNationalStatewideLeads({...options,state}),acquire=options.acquire??pacedPortraitAcquire;
@@ -190,7 +189,6 @@ export async function acquireStatewidePeople(options:SharedOptions&{
           }
         }catch(error){options.signal.throwIfAborted();gaps.push({sourceUrl:url,detail:`STATEWIDE_OFFICIAL_PAGE_READ_FAILED:${state}:${lead.name}:${error instanceof Error?error.message:String(error)}`});}
       }
-      if(verified)await options.onPerson?.(snapshot());
       if(!verified)gaps.push({sourceUrl:lead.sourceUrl,detail:`STATEWIDE_OFFICER_AWAITS_OWN_PAGE:${state}:${lead.name}:${lead.officeTitle}`});
     }
   }));

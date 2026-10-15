@@ -4,7 +4,8 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
-import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, projectReaderRoster, rosterHoldersForBody, rosterGapForBody, rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
+import { rosterHoldersForBody, rosterGapForBody, rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, projectReaderRoster } from "./fixtures/held-body-rosters.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { allSeatHolders, seatHolderById } from "../lib/registry/server.ts";
 

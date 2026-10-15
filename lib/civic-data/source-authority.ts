@@ -445,14 +445,14 @@ export const SOURCE_AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: ["https://api.census.gov/data/"],
+    routePrefixes: ["https://api.census.gov/data/", "https://www.census.gov/programs-surveys/acs/news/data-releases/"],
     jurisdictions: ["US"],
     recordClasses: ["CENSUS_REFERENCE"],
     competentFacts: ["named Census product values", "product vintage", "Census geography code"],
     expectedIdentifierKeys: ["product", "vintage", "geography"],
     expectedTemporalFields: ["vintage"],
     horizonSemantics: "A wildcard geography query is complete only when its returned geography identifiers are unique and reconcile to the product's declared/expected cardinality.",
-    parserVersion: "census-data-api/2",
+    parserVersion: "census-data-api/3",
     freshnessExpectation: "On publication of a newer supported product vintage; never silently substitute a different geography.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["product", "vintage", "geography", "wildcard"] },
     routineAutoPromotion: true,
@@ -609,10 +609,7 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-    /*
-     * Neither authority below has a route of its own; each is authentic only as the exact inputs its candidate names.
-     * The `authorization` strings are stored text, kept byte-identical.
-     */
+
   "meeting-source-wiring": {
     id: "meeting-source-wiring",
     publisher: "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and its vaulted evidence",
@@ -712,10 +709,11 @@ export const SOURCE_AUTHORITIES = {
     competentFacts: [
       "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
       "literal candidate-authored text from those same identity-verified captured pages, with distinct source-byte and transcription hashes; no inferred positions",
+      "portraits from the candidate’s own verified campaign site or freely licensed Wikimedia Commons images bound to the candidacy through Wikidata identity, office or district and state",
     ],
     expectedIdentifierKeys: ["record_id", "candidacy_id"],
     expectedTemporalFields: ["read_at", "approved_at"],
-    horizonSemantics: "Each row is one approved site for one canonical candidacy, keyed by the Reader's own key. It never says a candidate has no site, and a candidate the version does not name is simply not yet verified.",
+    horizonSemantics: "Each row carries a verified campaign site, publication or portrait for one canonical candidacy, keyed by the Reader’s own key. Missing records carry no absence claim.",
     parserVersion: "candidate-campaign-site-chain/1",
     freshnessExpectation: "Recomputed by the standing runner as the campaign-site chain approves sites; no tracked writer.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
@@ -807,7 +805,8 @@ export const SOURCE_AUTHORITIES = {
     routePrefixes: [],
     jurisdictions: REGISTRATION_TARGETS.map((target) => target.jurisdiction),
     recordClasses: ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"],
-    competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page"],
+    competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page",
+      "freely licensed portrait"],
     expectedIdentifierKeys: ["candidate_key", "document_id"],
     expectedTemporalFields: ["retrieved_at", "source_through"],
     horizonSemantics: "Each reviewed receipt speaks only for its enumerated URLs and exact candidate keys. It never establishes that a candidate published nothing elsewhere.",
@@ -815,7 +814,7 @@ export const SOURCE_AUTHORITIES = {
     freshnessExpectation: "Explicit owner invocation after an equal-effort reviewed collection pass; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY"] },
+    manualReceiptPromotion: { allowedSourceClasses: ["CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY", "REFERENCE_PUBLISHER"] },
   },
   "officeholder-primary-publications": {
     id: "officeholder-primary-publications",
@@ -1151,10 +1150,6 @@ export function authorityForManualReceipt(
   return { ok: true, contract };
 }
 
-/**
- * Null means only the contract's own routes are registered. A door's host admits any HTTPS path on that host, unless
- * the contract already names routes on that host: then only those routes are read there.
- */
 let doorHosts: ReadonlySet<string> | null = null;
 const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
 

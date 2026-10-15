@@ -17,6 +17,7 @@ interface AcquiredResponse {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly bytes: Uint8Array;
+  readonly contentType?: string;
 }
 
 const sourceContext = new AsyncLocalStorage<{ source: string; evidence: SourceAcquisitionEvidence[] }>();

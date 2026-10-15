@@ -5,7 +5,8 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
-import { BODY_ROSTERS, rosterGapForBody, rosterGapsForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { rosterGapForBody, rosterGapsForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 import { GET } from "../app/api/representation/[...division]/route.ts";
 function renderRepresentation(payload: { holders: ReturnType<typeof rosterHoldersForBody>; rosterGaps: ReturnType<typeof rosterGapsForDivision> }): string {
   const output = execFileSync(process.execPath, ["--import", "tsx", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `

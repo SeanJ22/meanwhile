@@ -3,7 +3,6 @@ import { createHash } from "node:crypto";
 import { stateOfPlace, type FixMapRow, type MethodWorks } from "../method/fix-map.ts";
 import { recordAttempts, type MethodAttempt } from "../method/fix-map-record.ts";
 import { methodPlaceOf } from "../method/method-places.ts";
-import { sortRung } from "./field-manual-rungs.ts";
 import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type PlaceResult } from "./field-manual-places.ts";
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
@@ -12,6 +11,7 @@ import { jobCostProfiles } from "./bank-job-cost.ts";
 
 /** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
 export const FIELD_MANUAL_ROLES = [
+  "HUNTER",
   "SCOUT",
   "ACQUIRER",
   "PARSER",
@@ -169,8 +169,7 @@ export function normalizeEntry(entry: FieldManualEntry): FieldManualEntry {
     platforms: lower(entry.platforms),
     summary: entry.summary.replace(/\s+/g, " ").trim().slice(0, 320),
   };
-  const sorted = sortRung(normalized)?.entry ?? normalized;
-  return { ...sorted, reach: unionReach(sorted.reach, reachOf(sorted)) };
+  return { ...normalized, reach: unionReach(normalized.reach, reachOf(normalized)) };
 }
 
 export function mergeEntry(prior: FieldManualEntry | null, raw: FieldManualEntry): FieldManualEntry {

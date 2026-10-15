@@ -33,7 +33,7 @@
       "federated": false,
       "filingJurisdictionCount": 1,
       "filingJurisdictionBreakdown": "1 federal filing officer",
-      "denominatorSource": "docs/sources.md — OpenFEC",
+      "denominatorSource": "field manual source registry — OpenFEC",
       "statutoryBasis": null,
       "statutorySourceUrl": null,
       "statutoryReadOn": null,
@@ -68,7 +68,7 @@
         "openQuestion": "Which federal provision names the FEC as the federal filing officer has NOT been read from source in this repository. The custodian is established by official administrative record (below); the STATUTE is owed.",
         "officialRecord": [
           "data/reference/fec_combined_federal_state_disclosure_directory.csv — the FEC's own Combined Federal/State Disclosure and Election Directory",
-          "docs/sources.md — OpenFEC, WIRED for committee TOTALS only",
+          "field manual source registry — OpenFEC, WIRED for committee TOTALS only",
           "lib/funding/snapshot.ts",
           "data/fec/fec-2026.json"
         ]
@@ -106,7 +106,7 @@
             "statutoryQuote": null,
             "statutoryOpenQuestion": "Which federal provision names the FEC as the filing officer has NOT been read from source in this repository. states/az/sources.md asks that question of every state and answers it for AZ, NH and NJ; the federal answer is owed and is not written down here as a guess.",
             "discoveredVia": [
-              "docs/sources.md — OpenFEC, WIRED for committee TOTALS only",
+              "field manual source registry — OpenFEC, WIRED for committee TOTALS only",
               "lib/funding/snapshot.ts",
               "data/fec/fec-2026.json",
               "data/reference/fec_combined_federal_state_disclosure_directory.csv"

@@ -96,6 +96,7 @@ export function huntLeftUsd(h: Hunt): number | null {
  * state, a ZIP at a district. Every figure is null when it is not known (never zero).
  */
 export interface StateRow {
+  readonly population?: import("@/lib/reference/population-facts.ts").PopulationFact | null;
   readonly placeKey: string;
   readonly code: string;
   readonly name: string;
@@ -525,6 +526,7 @@ export interface PublicationRow {
   readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
 }
 export interface PublicationView {
+  readonly ballotPublication?: import("@/lib/civic-data/ballot-publication").BallotPublicationResult | null;
   readonly total: number;
   readonly counts: readonly { readonly verdict: PublicationRow["verdict"]; readonly words: string; readonly count: number }[];
   readonly latestAttemptFailing: number;
@@ -566,6 +568,7 @@ export interface ReachedView {
 
 export interface SpendView {
   readonly modelSpend?: import("../../../../lib/control-plane/admin-view/model-spend.ts").ModelSpendView | null;
+  readonly huntCost?: import("../../../../lib/hunt/cost-per-fact.ts").HuntCostView | null;
   readonly windowDays: number;
   readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
   readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
@@ -767,6 +770,7 @@ export interface FixView {
 }
 
 export type ActionKind =
+  "ballot-publish" |
   "focus" |
   "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 

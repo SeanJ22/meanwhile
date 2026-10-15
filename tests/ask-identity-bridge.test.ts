@@ -5,6 +5,7 @@ import { officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../lib/fu
 import { partyConflictCardForFiling, partyConflictFilingForCard, reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
+import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
 import { bindNamedEntity, type BindableEntity } from "../lib/routing/named-entity.ts";
 import { AZ_TEST_CANVASS_URL, AZ_TEST_FILINGS_URL, installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 
@@ -19,9 +20,8 @@ function aliased(officials: readonly BindableEntity[], ballot: readonly { entity
   return [...officials.map((entity) => ({ ...entity, id: officialToBallot.get(entity.id) ?? entity.id })), ...ballot.map(({ entity }) => entity)];
 }
 
-/* A committed roster-to-candidacy row the held registry carries (the first RESOLVED body-roster row). */
 const committed = getRegistryRuntimeReadModel().officialCandidacies.rows
-  .find((row) => row.status === "RESOLVED" && row.holder.authority === "REGISTRY_BODY_ROSTER" && row.candidacy)!;
+  .find((row) => officialCandidacySeatMatches(row) && row.holder.authority === "REGISTRY_BODY_ROSTER" && row.candidacy)!;
 
 test("a body-roster row and its committed candidacy are one person: the reverse join, the person keys, and the binding", () => {
   assert.ok(committed, "the held registry carries a committed body-roster candidacy");

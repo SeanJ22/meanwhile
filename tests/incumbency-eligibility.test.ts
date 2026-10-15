@@ -1,8 +1,4 @@
-/**
- * Incumbency is a contest-level eligibility decision. `Challenger` is a sentence about a named person, so it
- * needs the officeholder universe complete; the load-bearing cases are built on a fixture so they cannot rot as
- * officeholders are acquired.
- */
+
 
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -36,10 +32,6 @@ assert.equal(
   "the deterministic test reads NH membership through the permanent promoted-or-first-seed authority",
 );
 
-/**
- * One contest, held fixed, so the only thing that ever varies between the two
- * halves of the control is WHAT THE OFFICEHOLDER SOURCE CAN ANSWER.
- */
 const CANDIDATES = [
   { key: "a", display: "Dana Okonkwo", targetKey: "a" },
   { key: "b", display: "Ruth Vasquez", targetKey: "b" },
@@ -55,7 +47,6 @@ const CONTEST = {
   candidates: CANDIDATES,
 };
 
-/** The sitting Mayor, and she is one of the three people on the ballot. */
 const SITTING_MAYOR: SeatHolder = {
   id: "roster:fixture-dana-okonkwo",
   name: "Dana Okonkwo",
@@ -77,7 +68,6 @@ const SITTING_MAYOR: SeatHolder = {
   },
 } as unknown as SeatHolder;
 
-/** A certified nominee list naming all three, so the candidate side is complete. */
 const CERTIFIED = () => ({
   source: "the Testville certified nominee list",
   names: ["Dana Okonkwo", "Ruth Vasquez", "Peter Lindqvist"],
@@ -87,18 +77,11 @@ const readerLabels = (decisions: ReadonlyMap<string, IncumbencyDecision>): strin
   [...decisions.values()].map((d) => incumbencyLabel(d.standing, d.gap) ?? "");
 
 test("a KNOWN incumbent renders the POSITIVE label; nobody is called a challenger", async () => {
-  /*
-   * INCUMBENT is a positive, per-person fact and asserts nothing about anyone else. CHALLENGER is an asserted
-   * absence about a named person and needs the officeholder universe complete, which a store assembled person
-   * by person never is. Every card that is not the sourced incumbent reads the same sentence.
-   */
+
   const result = await contestIncumbency(CONTEST, async () => null, async () => [SITTING_MAYOR], {
     certifiedNominees: CERTIFIED,
     enumeratedHolders: () => [],
   });
-
-  // The matching layer DID find her. Nothing about this gate is a failure to
-  // resolve — that would be a much weaker test.
   assert.equal(result.resolved.get("a")?.standing, "INCUMBENT", "the matcher names the sitting Mayor");
 
   assert.equal(result.states.get("a"), "INCUMBENT");
@@ -106,10 +89,7 @@ test("a KNOWN incumbent renders the POSITIVE label; nobody is called a challenge
   assert.equal(result.states.get("c"), "UNRESOLVED");
   assert.equal(result.eligibility.eligible, false);
   assert.equal(result.eligibility.notIncumbent, 0, "NOT_INCUMBENT was never produced here");
-
-  // The sourced positive fact reaches the reader.
   assert.equal(result.decisions.get("a")?.standing, "INCUMBENT");
-  // And the two we have NOT established stay quiet, in one shared sentence.
   for (const key of ["b", "c"]) {
     assert.equal(result.decisions.get(key)?.standing, "UNKNOWN", `${key} carries no label`);
   }
@@ -132,11 +112,8 @@ test("the sentence the quiet contest renders is about US, and it is true", async
     certifiedNominees: CERTIFIED,
     enumeratedHolders: () => [],
   });
-  /* "a" is the sourced incumbent, so the quiet sentence is read off a candidate who is genuinely quiet. */
-  const line = incumbencyLabel("UNKNOWN", result.decisions.get("b")?.gap) ?? "";
 
-  // We DO hold this seat's holder, so the original sentence would be false
-  // about our own sourcing. It says the other thing instead.
+  const line = incumbencyLabel("UNKNOWN", result.decisions.get("b")?.gap) ?? "";
   assert.equal(result.decisions.get("b")?.gap, "CONTEST_NOT_ESTABLISHED");
   assert.ok(!line.startsWith("We haven't sourced"), `"${line}" would be untrue about us here`);
   assert.match(line, /^We haven't/, "it still names whose gap it is");
@@ -147,11 +124,7 @@ test("the sentence the quiet contest renders is about US, and it is true", async
 });
 
 test("the SAME contest labels everybody once the officeholder universe enumerates the seat", async () => {
-  /*
-   * One input changed, and only one: the holders now come from a source that
-   * publishes the seat's whole membership, so absence from it is the body's
-   * statement rather than ours. Nothing about the candidates moved.
-   */
+
   const result = await contestIncumbency(CONTEST, async () => null, async () => [], {
     certifiedNominees: CERTIFIED,
     enumeratedHolders: () => [
@@ -173,7 +146,6 @@ test("the SAME contest labels everybody once the officeholder universe enumerate
 });
 
 test("NOT_INCUMBENT is unreachable when the officeholder universe is incomplete", () => {
-  // Exhaustive over every answer the matching layer can give.
   const standings: Incumbency[] = ["INCUMBENT", "CHALLENGER", "UNKNOWN"];
   for (const standing of standings) {
     const decisions = new Map<string, IncumbencyDecision>([
@@ -217,7 +189,6 @@ test("a filing list is never a complete candidate universe", () => {
 });
 
 test("a certified list that is not the list on the page is not a complete universe either", () => {
-  // Eight people filed, four were nominated.
   const finding = candidateUniverse({
     certified: {
       source: "the canvass",
@@ -237,13 +208,11 @@ test("a certified list that is not the list on the page is not a complete univer
   });
   assert.equal(finding.complete, false);
   assert.match(finding.reason, /renders 8/);
-  // The actionable half: WHO is on the page that the canvass does not certify.
   for (const extra of ["Hugh Lytle", "Ken Miceli", "Scott Neely", "David Schweikert"]) {
     assert.ok(finding.reason.includes(extra), `the reason names ${extra}`);
   }
 });
 
-/** A certified universe of [A, B] and a rendered universe of [A, C] share a count; completeness is identity, and a count is only a diagnostic. */
 test("certified [A,B] against rendered [A,C] is REFUSED even though the counts match", () => {
   const finding = candidateUniverse({
     certified: { source: "the canvass", names: ["Ada Nakamura", "Bruno Salcedo"] },
@@ -260,8 +229,6 @@ test("certified [A,B] against rendered [A,C] is REFUSED even though the counts m
     finding.reason.includes("Clara Devereaux"),
     "and it names the person on the page the canvass does not certify",
   );
-  // The count is still REPORTED — it tells a reader where to look — and it is
-  // visibly not the thing that decided anything.
   assert.match(finding.reason, /count that matches would still not make two lists the same people/);
 });
 
@@ -278,10 +245,7 @@ test("the same people in a different order reconcile — this is set membership,
 });
 
 test("the alias the record itself prints resolves, and does not read as a mismatch", () => {
-  /*
-   * A double-quoted nickname is a published alias the record prints, and a generational suffix is kept out of
-   * the surname, both by the existing name normaliser.
-   */
+
   const finding = candidateUniverse({
     certified: {
       source: "the Arizona SoS 2026 primary canvass",
@@ -307,9 +271,6 @@ test("the alias the record itself prints resolves, and does not read as a mismat
 });
 
 test("a name that could be two people on the other list is AMBIGUOUS, never chosen between", () => {
-  // Two brothers on one ballot is not a hypothetical shape, and the loose
-  // prefix rule would happily match `Robert` to both `Rob` and `Bob`-less
-  // `Robert`. One-to-one in both directions, or it is refused.
   const check = reconcileCandidateIdentities(
     ["Robert Ellery Vance", "Rob Vance"],
     ["Robert Vance", "Robert E. Vance"],
@@ -327,11 +288,7 @@ test("a blank certified name fails closed rather than matching anything", () => 
 });
 
 test("an UNRESOLVED identity silences EVERY candidate-level label in the contest", async () => {
-  /*
-   * End to end with the officeholder side complete on purpose, so the only thing between this contest and
-   * three labels is the candidate identity set. One unresolved identity (a hyphenated name the rules deliberately
-   * miss) takes the whole contest quiet, the sitting Mayor included.
-   */
+
   const result = await contestIncumbency(
     {
       ...CONTEST,
@@ -364,9 +321,6 @@ test("an UNRESOLVED identity silences EVERY candidate-level label in the contest
   assert.equal(result.eligibility.candidateUniverse.complete, false);
   assert.equal(result.eligibility.eligible, false);
   assert.equal(result.resolved.get("a")?.standing, "INCUMBENT", "the matcher still names the Mayor");
-
-  // ALL-OR-NOTHING, per contest. Nobody carries a label, including the two the
-  // reconciliation DID resolve and the one we positively matched.
   for (const key of ["a", "b", "c"]) {
     assert.equal(result.decisions.get(key)?.standing, "UNKNOWN", `${key} carries no label`);
   }
@@ -382,9 +336,6 @@ test("the mismatch sentence is plain language and names whose gap it is", () => 
     rendered: ["Ada Nakamura", "Clara Devereaux"],
     renderedSource: "the filed-candidate record",
   });
-  // "we are showing" / "we are not showing" — a fact about US, which is what a
-  // universe failure actually is. The government certified a list; we assembled
-  // a different one.
   assert.match(finding.reason, /we are showing/);
   assert.match(finding.reason, /we are not showing/);
   for (const banned of ["UNRESOLVED", "NOT_INCUMBENT", "NO_SOURCE_FOUND", "UNKNOWN", "ocd-division"]) {
@@ -404,7 +355,7 @@ test("a store assembled person by person is never a complete officeholder univer
 });
 
 test("the count coincidence cannot buy completeness on its own", () => {
-  /* Five members on staggered terms, two seats up, two holders held: the count reconciles and the universe is three short, so the source shape is the first gate. */
+
   const finding = officeholderUniverse({
     shape: "COLLECTED_PERSON_BY_PERSON",
     source: "the officeholder registry",
@@ -456,5 +407,5 @@ test("the ballot page renders the GATED map, never the raw resolution", () => {
     .join("\n");
   assert.ok(src.includes("resolvedStanding?.decisions.get(targetKey)"), "the chip reads the gated decisions");
   assert.ok(!src.includes("resolvedStanding?.resolved"), "and never reaches around the gate for the raw answer");
-  assert.ok(src.includes("voteFor: contestVoteFor"), "the seat count reaches the reconciliation");
+  assert.ok(src.includes("{ ...contest, candidates, federal:"), "the seat count reaches the reconciliation");
 });

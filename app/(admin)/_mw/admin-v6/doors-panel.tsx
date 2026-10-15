@@ -7,7 +7,7 @@ import { Card, cx, Empty, Loading, Pill } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 
-export interface ShutDoorGroup {
+interface ShutDoorGroup {
   readonly kind: string;
   readonly why: string | null;
   readonly doors: number;

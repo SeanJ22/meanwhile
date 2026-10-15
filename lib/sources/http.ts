@@ -273,6 +273,7 @@ export function readValidatedResponse(
       finalUrl: response.finalUrl || url,
       httpStatus: response.status,
       bytes: response.bytes,
+      contentType: response.contentType,
     });
   }
   return {
@@ -443,7 +444,7 @@ export async function politeGetBytes(
       2,
     );
   }
-  recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, bytes });
+  recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, bytes, contentType: response.headers.get("content-type") ?? "" });
   return {
     status: response.status,
     contentType: response.headers.get("content-type") ?? "",

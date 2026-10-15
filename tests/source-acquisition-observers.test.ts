@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import { captureSourceAcquisitions, recordAcquiredResponse } from "../lib/sources/acquisition-trace.ts";
-import { retainMeetingFetchBytes } from "../lib/civic-data/meeting-research-evidence.ts";
+import { retainMeetingFetchBytes } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { fetchEvent } from "../lib/sources/legistar/client.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 
@@ -15,7 +15,7 @@ test("Legistar reads retain exact source bytes and receipts without changing glo
       const response = new Response(bytes);
       Object.defineProperty(response, "url", { value: finalUrl });
       return response;
-    } }))), "legistar", url => url === finalUrl);
+    } }))));
   assert.equal(globalThis.fetch, originalFetch);
   assert.equal(retained.value.value.EventId, 42);
   assert.equal(retained.value.evidence.length, 1);
@@ -37,10 +37,12 @@ test("parallel and nested source scopes retain only their own completed reads", 
           bytes: new TextEncoder().encode("inner") });
       }));
       assert.deepEqual(nested.evidence.map(row => row.source), ["inner"]);
-    })), source, url => url === `https://${source}.gov`)));
+    })))));
   for (const [index, source] of ["alpha", "beta"].entries()) {
+    const other = source === "alpha" ? "beta" : "alpha";
     assert.deepEqual(results[index].value.evidence.map(row => row.source), [source]);
-    assert.deepEqual(results[index].responses.map(row => row.source), [source]);
+    assert.ok(results[index].responses.some(row => row.finalUrl === `https://${source}.gov`));
+    assert.ok(!results[index].responses.some(row => row.finalUrl === `https://${other}.gov`));
   }
   assert.equal(globalThis.fetch, originalFetch);
 });
@@ -52,7 +54,7 @@ test("shared calendar replays retain bytes once while each child keeps its own s
     for (const source of ["first", "second"]) await run(source, async () => {
       assert.equal(await (await read("https://council.gov/calendar")).text(), "calendar");
     });
-  }), "legistar", () => true);
+  }));
   assert.equal(fetched, 1);
   assert.equal(retained.responses.length, 1);
   assert.deepEqual(retained.value.evidence.map(row => row.source), ["first", "second"]);
@@ -64,7 +66,7 @@ test("incomplete source bodies produce no retained evidence and a failed scope d
     await assert.rejects(captureSourceAcquisitions(run => run("failed", () =>
       fetchEvent("incomplete", 1, { fetchImpl: async () => new Response("{}", { headers: { "content-length": "10" } }) }))),
     /content length mismatch/);
-  }, "legistar", () => true);
+  });
   assert.equal(result.responses.length, 0);
   assert.equal(globalThis.fetch, originalFetch);
 });

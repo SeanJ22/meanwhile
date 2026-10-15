@@ -24,7 +24,7 @@ export class PlaceSourceDeferred extends Error {
  * No timestamp is advanced by replaying a held document. */
 export async function placeSourceReader(input: {
   tools: ResearchRuntimeTools;
-  context: Omit<ScoutToolContext, "vault" | "spaceOut" | "inherited">;
+  context: Omit<ScoutToolContext, "vault" | "spaceOut" | "handed">;
   project: string;
   websiteSize?: WebsiteSizeForUrl;
   geographyFetch?: typeof fetch;
@@ -126,8 +126,7 @@ export async function placeSourceReader(input: {
       cost.bytesFetched += Buffer.byteLength(response.html);
       return response;
     } } : {}),
-    inherited: { artifactIds: inheritedIds, summary: "Fresh saved sources from every job, before network acquisition.",
-      provenance },
+    handed: { artifactIds: inheritedIds, provenance },
     readHeldArtifact: async id => {
       const held = inherited.get(id);
       if (!held) throw new Error("Held source needs refresh");

@@ -74,7 +74,7 @@ test("the Congress runner publishes saved files with a failed fresh discovery ch
     const path = String(url);
     return new Response(path.includes("api.github.com") ? JSON.stringify([{ sha: SHA }]) : JSON.stringify(files[path.split("/").at(-1)!.replace(".yaml", "")]));
   };
-  const run = () => refreshCongressDirectory({ store, now: () => now,
+  const run = () => refreshCongressDirectory({ store, vault: evidence, now: () => now,
     revision: () => acquireCongressSourceRevision({ store: reopened(evidence), locks, now: () => now, fetchImpl }),
     acquire: options => acquireKnownRelease({ ...options, store: reopened(evidence), locks, now: () => now, fetchImpl }) });
   await run(); assert.equal(requests, 6);

@@ -11,7 +11,7 @@ export type SettingValue = null | boolean | number | string | readonly SettingVa
 export type SettingControl = "number" | "boolean" | "text" | "json" | "choice";
 
 export interface SettingDefinition<T extends SettingValue = SettingValue> {
-  /** Stable machine key, e.g. `detective.shutThreshold`. Never shown in Admin. */
+  /** Stable machine key, e.g. `hunting.exaAgent`. Never shown in Admin. */
   readonly key: string;
   /** What Admin calls it, in plain words. */
   readonly label: string;
@@ -57,14 +57,6 @@ export function registerSetting<T extends SettingValue>(definition: SettingDefin
   definitions.set(definition.key, definition as unknown as SettingDefinition);
 }
 
-
-/** Consecutive failures before a door goes to a detective. The code default stays 3. */
-export const DETECTIVE_SHUT_THRESHOLD_SETTING = "detective.shutThreshold";
-registerSetting({
-  key: DETECTIVE_SHUT_THRESHOLD_SETTING, label: "Failures before a detective is sent", defaultValue: 3, unit: "failures in a row",
-  readerFacing: false, control: "number",
-  validate: (value): value is number => typeof value === "number" && Number.isSafeInteger(value) && value > 0 && value <= 100,
-});
 
 /** The checklist items a county's residents most need, whose arrival the Scoreboard times from a mission's start. Changing it changes what the "time to core information live" figure waits for. */
 export const CORE_ITEMS_SETTING = "scorecard.coreItems";

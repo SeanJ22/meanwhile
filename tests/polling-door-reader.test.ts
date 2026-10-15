@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { publishPollingDoor } from "../lib/civic-data/worker-polling-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
@@ -86,14 +87,14 @@ test("incomplete, empty, repeated, cross-jurisdiction or contradictory site capt
 
 
 test("registered polling doors publish through the normal Slide and typed ballot reader while retaining other jurisdictions", async () => {
-  const store = new MemoryRoutineDataStore();
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore();
   for (const [kind, ocdId] of [
     ["polling-places-csv", division], ["polling-places-json", "ocd-division/country:us/state:mi/place:alder"],
     ["polling-places-html", "ocd-division/country:us/district:dc/ward:2"],
     ["polling-places-pdf-text", "ocd-division/country:us/territory:pr/municipio:alder"],
   ] as const) {
     const input = fixture(kind, rows, ocdId);
-    const published = await publishPollingDoor({ ...input, store, now: at });
+    const published = await publishPollingDoor({ ...input, store, now: at, vault });
     assert.ok(published.promoted);
     const read = await readVotingSitesProjection({ store, now: at, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
@@ -102,7 +103,7 @@ test("registered polling doors publish through the normal Slide and typed ballot
     assert.equal(current.sites.length, 2); assert.equal(current.sites[0].lat, 0);
     assert.equal(current.sites[1].serves, null); assert.equal(current.sites[0].election, null);
     if (kind === "polling-places-pdf-text") assert.equal(current.sourceRawSha256, hash("%PDF-1.4 fixture bytes").slice(7));
-    await assert.rejects(publishPollingDoor({ ...input, capture: { ...input.capture, partial: true }, store, now: at }));
+    await assert.rejects(publishPollingDoor({ ...input, capture: { ...input.capture, partial: true }, store, now: at, vault }));
     assert.equal((await readVotingSitesProjection({ store, now: at, bypassCache: true })).metadata.versionId, published.promoted.versionId);
   }
   const final = await readVotingSitesProjection({ store, now: at, bypassCache: true });

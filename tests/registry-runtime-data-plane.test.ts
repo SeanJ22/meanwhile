@@ -13,6 +13,7 @@ import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate, Rout
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { getTableName } from "drizzle-orm";
 import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -34,8 +35,10 @@ import {
   registryRuntimeCandidate,
   registryRuntimeProjectionIssues,
   type RegistryRuntimePackage,
+  type RegistryRuntimeCarton,
   type RegistryRuntimeReadModel,
 } from "../lib/registry/runtime-data-plane.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision, withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { slotsFor } from "../lib/registry/derive.ts";
@@ -60,18 +63,17 @@ function federalAcquisitions(sourceSha: string, suffix: string): FederalDirector
   });
 }
 
-function registryUrls(value: RegistryRuntimeReadModel): string[] {
+function registryUrls(value: RegistryRuntimeCarton): string[] {
   return [...new Set([
     ...value.registry.divisions.map((division) => division.provenance?.sourceUrl ?? ""),
     ...value.registry.bodies.map((body) => body.provenance?.sourceUrl ?? ""),
-    ...value.bodyRosters.flatMap((roster) => [roster.sourceUrl, roster.partisanshipSourceUrl ?? "", ...roster.members.flatMap((member) => [member.websiteUrl ?? "", member.partySourceUrl ?? ""])]),
     ...value.statewideExecutives.flatMap((row) => [row.sourceUrl, row.partySourceUrl ?? ""]),
     ...value.officialCandidacies.rows.map((row) => row.candidacy?.sourceUrl ?? ""),
     ...value.officialPhotos.photos.map((photo) => photo.sourceUrl ?? ""),
   ].filter((url) => /^https:\/\//.test(url)))].sort();
 }
 
-function receipt(value: RegistryRuntimeReadModel, at: string, salt: string): ManualSourceSetReceipt {
+function receipt(value: RegistryRuntimeCarton, at: string, salt: string): ManualSourceSetReceipt {
   return {
     contractVersion: 1,
     reviewedAt: at,
@@ -93,8 +95,8 @@ function receipt(value: RegistryRuntimeReadModel, at: string, salt: string): Man
  * The registry a current package carries: the recorded transfer-time import (the bundled first seed is
  * gone) without the two boards once minted on Census placeholder divisions, which every promotion drops.
  */
-function servedRegistry(): RegistryRuntimeReadModel {
-  const imported = registryTransferImport().projection.payload;
+function servedRegistry(): RegistryRuntimeCarton {
+  const { bodyRosters: _rosters, rosterReaderDispositions: _dispositions, ...imported } = registryTransferImport().projection.payload;
   const placeholders = frozenPlaceholders().ids;
   return { ...imported, registry: { ...imported.registry, bodies: imported.registry.bodies.filter((body) => body.ocdId === null || !placeholders.has(body.ocdId)) } };
 }
@@ -107,21 +109,13 @@ async function registryPackage(at: string, salt: string): Promise<RegistryRuntim
 test("Ask reads native state people beside a partitioned registry without reviving superseded legislative seat rows", async () => {
   const memory = new MemoryRoutineDataStore();
   const pkg = await registryPackage(T0, "district-seats");
-  const model = structuredClone(registryRuntimeCandidate(pkg).readModel) as { -readonly [K in keyof RegistryRuntimeReadModel]: RegistryRuntimeReadModel[K] };
+  const model = structuredClone(registryRuntimeCandidate(pkg).readModel) as { -readonly [K in keyof RegistryRuntimeCarton]: RegistryRuntimeCarton[K] };
   const districts = ["ocd-division/country:us/state:oh/sldl:1", "ocd-division/country:us/state:oh/sldu:15"];
   for (const [index, division] of districts.entries()) {
     const id = `${division}#seat`;
     model.registry.divisions.push({ ...model.registry.divisions[0]!, ocdId: division });
     model.registry.bodies.push({ ...model.registry.bodies[0]!, id, ocdId: division, name: `Ohio legislative seat ${index}` });
     const memberId = `roster:${id}#held`;
-    model.bodyRosters = [...model.bodyRosters, { ...model.bodyRosters[0]!, bodyId: id, bodyName: `Ohio legislative seat ${index}`,
-      sourceUrl: `https://ohio.example.gov/seat/${index}`,
-      members: [{ id: memberId, name: `Superseded seat member ${index}`,
-        officeTitle: index ? "Senator" : "Representative", email: null, phone: null, termNote: null, websiteUrl: null }] }];
-    model.rosterReaderDispositions = [...model.rosterReaderDispositions, {
-      ...model.rosterReaderDispositions.find(row => row.state === "READER_ELIGIBLE")!,
-      sourceId: memberId, canonicalId: memberId,
-    }];
     model.officialCandidacies = { ...model.officialCandidacies, rows: [...model.officialCandidacies.rows, {
       holder: { id: memberId, name: `Superseded seat member ${index}`,
         officeTitle: index ? "Senator" : "Representative", divisions: [division], authority: "REGISTRY_BODY_ROSTER",
@@ -139,6 +133,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
   assert.ok(payload.parts.length > 0, "this must exercise a storage reference, not inline JSON");
   const originalUrl = process.env.DATABASE_URL;
   process.env.DATABASE_URL = "postgresql://local:local@ep-test.neon.tech/neondb";
+  installFactReader(null);
   try {
     const postgres = new PostgresRoutineDataStore();
     const queries: string[] = [];
@@ -165,7 +160,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
       assert.ok(held.seats.every(seat => !seat.name.startsWith("Superseded seat member")), "registry seat rows are no longer a competing legislative authority");
     });
     const sample = syntheticStateLegislators("US-NJ").roster.officeholders[0]!;
-    const people = districts.map((division, index) => ({
+    const people = districts.map((_division, index) => ({
       ...sample, id: `plural:oh:00000000-0000-4000-8000-00000000000${index + 1}`,
       personId: `plural:00000000-0000-4000-8000-00000000000${index + 1}`,
       name: index ? "Hearcel F. Craig" : "Dontavius L. Jarrells", state: "OH", chamber: index ? "upper" : "lower",
@@ -191,6 +186,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
     });
     assert.ok(stateReads.length > 0);
   } finally {
+    installFactReader(undefined);
     if (originalUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = originalUrl;
   }
@@ -199,7 +195,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
 test("federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer", async () => {
   const store = new MemoryRoutineDataStore();
   const projection = await federalSeed();
-  const good = federalDirectoryCandidate({ acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
+  const good = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
   const promoted = await processRegisteredManualCandidate(store, "congress-bulk-roster", good, T0);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
@@ -210,11 +206,11 @@ test("federal roster/directory promotes once and failed acquisition preserves it
 
   const alteredProjection = structuredClone(projection);
   alteredProjection.roster.officeholders[0]!.name = `${alteredProjection.roster.officeholders[0]!.name} Altered`;
-  const altered = federalDirectoryCandidate({ acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
+  const altered = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
   assert.notEqual(altered.id, good.id, "the federal candidate identity binds the exact normalized projection");
 
   const oneFile = federalAcquisitions(projection.sourceSha, "duplicate")[0]!;
-  const incomplete = federalDirectoryCandidate({ acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
+  const incomplete = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
   const incompleteOutcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", incomplete, T1);
   assert.equal(incompleteOutcome.candidate.state, "SOURCE_BLOCKED");
   assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE))?.versionId, good.id);
@@ -235,8 +231,9 @@ test("federal civic member ordering is independent of source-map insertion order
     Object.entries(reordered.directory.committees).reverse(),
   );
   const acquisitions = federalAcquisitions(projection.sourceSha, "stable-order");
-  const original = federalDirectoryCandidate({ acquisitions, retrievedAt: T0, projection });
-  const roundTripped = federalDirectoryCandidate({
+  const original = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions, retrievedAt: T0, projection });
+  const roundTripped = await federalDirectoryCandidate({
+    vault: new MemoryEvidenceStore(),
     acquisitions,
     retrievedAt: T0,
     projection: reordered,
@@ -271,9 +268,8 @@ test("two registry publications in one pass never reuse a clock before the scope
     const contract = requiredManualProductionContract("registry-runtime-bindings");
     await recordRoutineReaderProjectionReadback(store, contract, first.promoted!, T1);
     const secondPackage = await registryPackage(T0, "same-pass-second");
-    const payload = changed ? { ...secondPackage.payload, bodyRosters: secondPackage.payload.bodyRosters.map((roster, index) => index ? roster : {
-      ...roster, members: roster.members.map((member, index) => index ? member : { ...member, phone: "520-555-0100" }),
-    }) } : secondPackage.payload;
+    const payload = changed ? { ...secondPackage.payload, registry: { ...secondPackage.payload.registry,
+      bodies: secondPackage.payload.registry.bodies.map((body, index) => index ? body : { ...body, homepageUrl: "https://changed.example.gov/" }) } } : secondPackage.payload;
     const second = await processRegisteredManualCandidate(store, "registry-runtime-bindings", registryRuntimeCandidate({ ...secondPackage, payload }), T0);
     assert.equal(second.candidate.state, "PROMOTED", second.candidate.failureDetail ?? undefined);
     assert.equal(Boolean(second.confirmed), !changed);
@@ -293,8 +289,6 @@ test("registry relational bindings remain coherent while exact member deltas pro
   const promoted = await processRegisteredManualCandidate(store, "registry-runtime-bindings", first, T0);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
-  assert.ok(firstPackage.payload.bodyRosters.length > 0);
-  assert.ok(firstPackage.payload.rosterReaderDispositions.some((row) => row.state === "IDENTITY_UNRESOLVED"));
   assert.ok(firstPackage.payload.statewideExecutives.length > 0);
   assert.ok(firstPackage.payload.officialCandidacies.rows.some((row) => row.status === "RESOLVED"));
   assert.ok(firstPackage.payload.officialCandidacies.rows.every((row) => !("sourcePath" in row.holder) && !(row.candidacy && "sourcePath" in row.candidacy)));
@@ -303,13 +297,13 @@ test("registry relational bindings remain coherent while exact member deltas pro
   assert.equal(firstRead.metadata.versionId, first.id);
 
   const changedBase = await registryPackage(T1, "changed");
-  const changedRoster = changedBase.payload.bodyRosters[0];
+  const changedBody = changedBase.payload.registry.bodies[0];
   const changedBridgeRow = changedBase.payload.officialCandidacies.rows.find((row) => row.status === "NO_APPLICABLE_CANDIDACY");
-  assert.ok(changedRoster);
+  assert.ok(changedBody);
   assert.ok(changedBridgeRow);
-  const changedPayload: RegistryRuntimeReadModel = {
+  const changedPayload: RegistryRuntimeCarton = {
     ...changedBase.payload,
-    bodyRosters: [{ ...changedRoster, members: [{ ...changedRoster.members[0]!, phone: "555-0100" }, ...changedRoster.members.slice(1)] }, ...changedBase.payload.bodyRosters.slice(1)],
+    registry: { ...changedBase.payload.registry, bodies: [{ ...changedBody, homepageUrl: "https://changed.example.gov/" }, ...changedBase.payload.registry.bodies.slice(1)] },
     officialCandidacies: {
       ...changedBase.payload.officialCandidacies,
       rows: changedBase.payload.officialCandidacies.rows.map((row) => row.holder.id === changedBridgeRow.holder.id
@@ -321,14 +315,11 @@ test("registry relational bindings remain coherent while exact member deltas pro
   const changed = registryRuntimeCandidate(changedPackage);
   const changedOutcome = await processRegisteredManualCandidate(store, "registry-runtime-bindings", changed, T1);
   assert.equal(changedOutcome.candidate.state, "PROMOTED");
-  assert.ok(changedOutcome.candidate.candidate.changeSet?.changed.some((record) => record.key === `body-roster:${changedRoster.bodyId}`));
+  assert.ok(changedOutcome.candidate.candidate.changeSet?.changed.some((record) => record.key === `body:${changedBody.id}`));
   assert.ok(changedOutcome.candidate.candidate.changeSet?.changed.some((record) => record.key === `official-candidacy:${changedBridgeRow.holder.id}`));
   const changedRead = await readRegistryRuntimeProjection({ store, bypassCache: true, now: T1 });
   assert.equal(changedRead.kind, "PROMOTED");
-  assert.equal(
-    changedRead.value.bodyRosters.find((roster) => roster.bodyId === changedRoster.bodyId)?.members[0]?.phone,
-    "555-0100",
-  );
+  assert.equal(changedRead.value.registry.bodies.find((body) => body.id === changedBody.id)?.homepageUrl, "https://changed.example.gov/");
   assert.match(changedRead.value.officialCandidacies.rows.find((row) => row.holder.id === changedBridgeRow.holder.id)?.reason ?? "", /successor package/);
 
   const badPackage: RegistryRuntimePackage = {
@@ -339,7 +330,7 @@ test("registry relational bindings remain coherent while exact member deltas pro
       ...changedPackage.payload,
       officialCandidacies: {
         ...changedPackage.payload.officialCandidacies,
-        rows: changedPackage.payload.officialCandidacies.rows.map((row) => row.holder.authority === "REGISTRY_BODY_ROSTER"
+        rows: changedPackage.payload.officialCandidacies.rows.map((row) => row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE"
           ? { ...row, holder: { ...row.holder, name: `${row.holder.name} Wrong` } }
           : row),
       },
@@ -354,24 +345,26 @@ test("registry relational bindings remain coherent while exact member deltas pro
   assert.equal((await store.readPromotion("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE))?.versionId, changed.id);
 });
 
-test("one blocked registry publisher holds only its dependent members while an unrelated roster update promotes", async () => {
+test("one blocked registry publisher holds only its dependent members while an unrelated body update promotes", async () => {
   const store = new MemoryRoutineDataStore();
   const firstPackage = await registryPackage(T0, "isolation-first");
   const first = registryRuntimeCandidate(firstPackage);
   await processRegisteredManualCandidate(store, "registry-runtime-bindings", first, T0, null);
 
   const nextPackage = await registryPackage(T1, "isolation-next");
-  const [supportedRoster, blockedRoster] = nextPackage.payload.bodyRosters.filter((roster, index, rows) =>
-    rows.findIndex((candidate) => candidate.sourceUrl === roster.sourceUrl) === index
+  const sourced = nextPackage.payload.registry.bodies.filter((body) => body.provenance.sourceUrl);
+  const [supportedBody, blockedBody] = sourced.filter((body, index) =>
+    sourced.findIndex((candidate) => candidate.provenance.sourceUrl === body.provenance.sourceUrl) === index &&
+    nextPackage.payload.registry.divisions.every((division) => division.provenance?.sourceUrl !== body.provenance.sourceUrl)
   ).slice(0, 2);
-  assert.ok(supportedRoster && blockedRoster && supportedRoster.sourceUrl !== blockedRoster.sourceUrl);
+  assert.ok(supportedBody && blockedBody && supportedBody.provenance.sourceUrl !== blockedBody.provenance.sourceUrl);
   const changedPayload = structuredClone(nextPackage.payload);
-  const changedSupported = changedPayload.bodyRosters.find((roster) => roster.bodyId === supportedRoster.bodyId)!;
-  changedSupported.members[0] = { ...changedSupported.members[0]!, phone: "555-0199" };
+  const changedSupported = changedPayload.registry.bodies.find((body) => body.id === supportedBody.id)!;
+  changedSupported.homepageUrl = "https://supported.example.gov/";
   const currentReceipt = receipt(changedPayload, T1, "isolation-next");
   const partialReceipt: ManualSourceSetReceipt = {
     ...currentReceipt,
-    sources: currentReceipt.sources.map((source) => source.finalUrl === blockedRoster.sourceUrl
+    sources: currentReceipt.sources.map((source) => source.finalUrl === blockedBody.provenance.sourceUrl
       ? {
           ...source,
           httpStatus: 503,
@@ -402,19 +395,16 @@ test("one blocked registry publisher holds only its dependent members while an u
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.deepEqual(outcome.candidate.candidate.changeSet?.removed, []);
   assert.ok(outcome.candidate.candidate.changeSet?.changed.some((record) =>
-    record.key === `body-roster:${supportedRoster.bodyId}`
+    record.key === `body:${supportedBody.id}`
   ));
   assert.ok(outcome.candidate.candidate.changeSet?.held.some((fact) =>
-    fact.key === `body-roster:${blockedRoster.bodyId}` && fact.code === "MANUAL_MEMBER_HELD_LKG"
+    fact.key === `body:${blockedBody.id}` && fact.code === "MANUAL_MEMBER_HELD_LKG"
   ));
-  const promoted = outcome.promoted!.payload as RegistryRuntimeReadModel;
-  assert.equal(
-    promoted.bodyRosters.find((roster) => roster.bodyId === supportedRoster.bodyId)?.members[0]?.phone,
-    "555-0199",
-  );
+  const promoted = outcome.promoted!.payload as RegistryRuntimeCarton;
+  assert.equal(promoted.registry.bodies.find((body) => body.id === supportedBody.id)?.homepageUrl, "https://supported.example.gov/");
   assert.deepEqual(
-    promoted.bodyRosters.find((roster) => roster.bodyId === blockedRoster.bodyId),
-    firstPackage.payload.bodyRosters.find((roster) => roster.bodyId === blockedRoster.bodyId),
+    promoted.registry.bodies.find((body) => body.id === blockedBody.id),
+    firstPackage.payload.registry.bodies.find((body) => body.id === blockedBody.id),
   );
 });
 
@@ -454,7 +444,7 @@ test("a Census placeholder division is geography: no body is derived on it and n
   const kept = new Set(counted.bodies.map((body) => body.id));
   assert.deepEqual(frozen.bodies.filter((body) => !kept.has(body.id)).map((body) => body.id).sort(), placeholders.bodies.map((body) => body.id).sort());
   assert.equal(registryRuntimeProjectionIssues(seed).some((issue) => issue.startsWith(CENSUS_PLACEHOLDER_BODY_ISSUE)), false);
-  const carrying: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
+  const carrying: RegistryRuntimeCarton = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
   assert.deepEqual(
     registryRuntimeProjectionIssues(carrying).filter((issue) => issue.startsWith(CENSUS_PLACEHOLDER_BODY_ISSUE)),
     [`${CENSUS_PLACEHOLDER_BODY_ISSUE}:${placeholders.bodies.map((body) => body.id).sort().join(",")}`],
@@ -602,7 +592,10 @@ test("the owner door builds on the transfer-time import: untouched members keep 
   const next = registryRuntimeCandidate(placeholderCorrection(base, placeholders.ids, T1), { prior });
   assert.deepEqual(next.semantics.violations, []);
   const phantomKeys = placeholders.bodies.map((body) => `body:${body.id}`).sort();
-  assert.deepEqual((next.removalEvidence ?? []).map((row) => row.key), phantomKeys);
+  const rosterKeys = civicRecordsFor("REGISTRY_RUNTIME_BINDING", prior.payload).map((member) => member.key).filter((key) => /^(body-roster|roster-disposition):/.test(key));
+  assert.ok(rosterKeys.length > 0, "the import still carried rosters; they leave for the fact store");
+  const removedKeys = [...phantomKeys, ...rosterKeys].sort((left, right) => left.localeCompare(right));
+  assert.deepEqual((next.removalEvidence ?? []).map((row) => row.key), removedKeys);
   const inherited = new Set(next.manualPriorAuthority?.retainedMembers.map((member) => member.key));
   assert.ok(inherited.size > 1_000, `every untouched cited member carries the import's authority (${inherited.size})`);
   assert.equal([...placeholders.ids].some((id) => inherited.has(`division:${id}`)), false, "the reviewed divisions stand on the review");
@@ -611,7 +604,7 @@ test("the owner door builds on the transfer-time import: untouched members keep 
   assert.equal(outcome.candidate.state, "PROMOTED", JSON.stringify(outcome.candidate.receipt?.checks.filter((check) => check.verdict !== "PASS")));
   assert.equal(outcome.candidate.receipt?.checks.find((check) => check.check === "SOURCE_AUTHENTICITY")?.code, "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID");
   const changes = outcome.candidate.candidate.changeSet!;
-  assert.deepEqual(changes.removed.map((delta) => delta.key).sort(), phantomKeys);
+  assert.deepEqual(changes.removed.map((delta) => delta.key).sort((left, right) => left.localeCompare(right)), removedKeys);
   assert.deepEqual(changes.changed.map((delta) => delta.key), [`division:${placeholders.divisions.find((division) => division.state === "NH")!.ocdId}`]);
   assert.deepEqual(changes.added, []);
   const served = outcome.promoted!.payload as RegistryRuntimeReadModel;
@@ -681,7 +674,7 @@ test("the plane refuses what the registry door does not prove: a changed carried
 
 test("the version production serves keeps reading until its correction promotes; no other defect is tolerated", async () => {
   const placeholders = frozenPlaceholders();
-  const seed = servedRegistry();
+  const seed: RegistryRuntimeReadModel = { ...registryTransferImport().projection.payload, registry: servedRegistry().registry };
   const legacy: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
   try {
     primeRegistryRuntimeFromValue(legacy, "legacy-with-placeholder-bodies");
@@ -696,7 +689,7 @@ test("the version production serves keeps reading until its correction promotes;
 
 test("both Reader projections reject cross-source proof and never bootstrap on store failure", async () => {
   const projection = await federalSeed();
-  const candidate = federalDirectoryCandidate({ acquisitions: federalAcquisitions(projection.sourceSha, "proof"), retrievedAt: T0, projection });
+  const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "proof"), retrievedAt: T0, projection });
   const mismatched = { ...candidate, id: `${candidate.id}-bad-proof`, sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", "US:wrong-scope") };
   const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "congress-bulk-roster", mismatched, T0);
   assert.equal(outcome.candidate.state, "DEPENDENT_CONSUMER_INVALID");

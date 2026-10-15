@@ -26,7 +26,6 @@ test("VS-01 official HTML tables become in-page hours, return rules, clerk conta
   assert.match(markup, /north side of Courthouse entry available 24\/7/);
   assert.match(markup, /\(701\) 845-8500/);
   assert.match(markup, /Sources/);
-  assert.doesNotMatch(markup, /data-polling-lookup-fallback/);
   assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1, "all location gaps share one footer line");
   assert.doesNotMatch(markup.slice(0, markup.indexOf("data-card-footer")), /still being gathered|Still gathering|working on|voting-site-gap/i);
   const citations = votingSources(j);

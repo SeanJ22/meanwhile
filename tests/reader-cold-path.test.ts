@@ -25,12 +25,9 @@ import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meeting
 
 import { edgeValidationsRun } from "../lib/civic-data/validated-once.ts";
 
-import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
-
-
 import { getOutcomeSnapshot, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
 
-import { currentCommentAccess } from "../lib/registry/comment-access.ts";
+import type { CommentAccessProjection } from "../lib/registry/comment-access.ts";
 
 import { primeRegistryRuntimeFromValue, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 
@@ -47,6 +44,8 @@ import { primeReaderEdge } from "../app/api/warm/priming.ts";
 import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 
 import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+
+import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 
@@ -72,9 +71,9 @@ const outcomes = outcomeProjectionReadState();
 
 assert.ok(outcomes.kind === "BOOTSTRAP" || outcomes.kind === "PROMOTED", "the outcome fixture is readable");
 
-const commentAccessProjection: CuratedReaderProjection = {
+const commentAccessProjection: CommentAccessProjection = {
   kind: "comment-access",
-  records: currentCommentAccess().map((value) => ({ id: `comment-access:${value.bodyId}`, ...value }) as unknown as CuratedReaderProjection["records"][number]),
+  records: COMMENT_ACCESS.map((value) => ({ id: `comment-access:${value.bodyId}`, ...value })),
 };
 
 const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.map((target) => [target.jurisdiction, {
@@ -125,7 +124,7 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   }, {
     store,
     now: new Date().toISOString(),
-    extras: { commentAccess: currentCommentAccess(), everydayRouting: currentEverydayRoutingProjection() },
+    extras: { commentAccess: COMMENT_ACCESS, everydayRouting: currentEverydayRoutingProjection() },
     authority,
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},

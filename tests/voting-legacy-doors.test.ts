@@ -9,6 +9,7 @@ import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import type { RecordExtractionShape } from "../lib/control-plane/workers/types.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { votingChiefRoots, votingScopeResolvers, votingSourceEvidence, votingReadHasFacts } from "../scripts/fetch-voting-sites.mts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 
 const doors = JSON.parse(readFileSync("data/reference/voting-legacy-doors.json", "utf8")) as VotingSourceDoor[];
 const named = (id: string) => { const door = doors.find(row => row.id === id); assert.ok(door); return door; };
@@ -39,7 +40,7 @@ test("the actual Census registry fixes county and town identity without borrowin
   assert.equal(resolve.resolveScope?.("Chatham", "https://www.morriscountynj.gov/", morris), null, "the source must distinguish the borough from the township");
 });
 
-test("source publication needs acquired facts and keeps only its own source evidence", () => {
+test("source publication needs acquired facts and keeps only its own source evidence", async () => {
   const door = named("legacy:cochise:vote-center-pdf");
   const raw = { url: door.url, contentType: "application/pdf", bytes: readFileSync("tests/fixtures/cochise-2026-vote-centers.pdf") };
   const read = { doorId: door.id, sites: [], rules: [], sources: [], office: door.office, blanks: [], attempts: [], rawBodies: [] };
@@ -47,10 +48,13 @@ test("source publication needs acquired facts and keeps only its own source evid
   const captured = { ...read, sources: [{ publisher: door.publisher, url: door.url }], rawBodies: [raw] };
   assert.equal(votingReadHasFacts(door, captured), true);
   const other = named("cochise:ballot-box-table");
-  const evidence = votingSourceEvidence(door, captured, [{ url: other.url, contentType: "text/html",
+  const vault = new MemoryEvidenceStore();
+  const evidence = await votingSourceEvidence(vault, door, captured, [{ url: other.url, contentType: "text/html",
     bytes: readFileSync("tests/fixtures/voting-sources/cochise-voter-information-official-extract.html") }]);
   assert.equal(evidence.length, 1);
-  assert.deepEqual(Buffer.from(evidence[0]!.split("\n\n")[1]!, "base64"), raw.bytes);
+  assert.equal(evidence[0]!.url, door.url);
+  assert.deepEqual(Buffer.from((await vault.get(evidence[0]!.vaultKey))!.bytes), raw.bytes);
+  assert.equal((await vault.list("")).length, 1, "an unrelated capture is never held");
 });
 
 test("the prior official routes remain data, including mixed-election filters and the closed public state list", () => {

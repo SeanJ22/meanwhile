@@ -16,6 +16,7 @@ import type { FactoryLearning } from "./factory-learning.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
 import { doorRows, type DoorNumberReadings } from "./door-numbers.ts";
 import { flowRows, flowStages } from "./flow-rows.ts";
+import { factStoreRows, type FactStoreReading } from "../../facts/admin-read.ts";
 import type { FlowWeek } from "./flow-read.ts";
 import type { ScoreboardVitalHour } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
@@ -207,6 +208,7 @@ export interface ScoreboardReadings {
   readonly gates: readonly GateHealthRow[] | null;
   readonly doorNumbers?: Omit<DoorNumberReadings, "shutDoors"> | null;
   readonly flow?: FlowWeek | null;
+  readonly factStore?: FactStoreReading | null;
   readonly vital?: readonly ScoreboardVitalHour[] | null;
   readonly readiness: readonly ReadinessCount[];
   readonly audit?: AuditAccuracyReading | null;
@@ -567,11 +569,12 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Site speed and reliability", speedRow(r.speed, r.deadLinks, r.speedLimits)],
     ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, scheduled: r.doorNumbers?.scheduled ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
     ...flowRows(r.flow),
+    ...factStoreRows(r.factStore ?? null),
     ["Proven fixes", provenFixesRow(r.provenFixes)],
     ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
-  const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",
+  const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Facts live per hour (fact store)", "Stuck facts by reason", "Cost per fact", "Audit accuracy",
     "Freshness", "Shut doors", "Posted to live", "Overdue doors", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate", "Second-time coverage"];
   const rows = ORDER.map((id) => byId.get(id)!);
   const gateRows: ScoreboardGateRow[] | null = r.gates === null ? null : r.gates.map((g) => ({ name: g.name, state: g.state, sentence: g.sentence }));

@@ -194,7 +194,7 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
   };
   /** A changed ceiling may close capacity for a new reason; say it again. */
   const capacityNoticeReset = (): void => { paidCapacityHoldSaid = false; };
-  return { budgetLinesFor, guardedMessagesFor, guardedJobTransportFor, autonomousTransportFor, paidWorkerCapacity, workerTransportFor, capacityNoticeReset,
+  return { autonomousTransportFor, paidWorkerCapacity, workerTransportFor, capacityNoticeReset,
     openJobs: (): readonly JobSpend[] => [...openJobs] };
 }
 

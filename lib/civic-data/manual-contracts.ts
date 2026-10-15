@@ -1,13 +1,6 @@
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 
-/**
- * A production authority which is deliberately owner-invoked rather than
- * clock-driven. These records still use the same candidate/event/promotion
- * plane and GOOD receipt as routine sources. A resolved owner Send may invoke
- * the deterministic subset in hunt-source-tasks.ts through the supervisor;
- * these contracts are not part of its standing cadence portfolio.
- */
 export interface ManualProductionSourceContract {
   readonly id: string;
   readonly execution: "EXPLICIT_OWNER_INVOCATION_ONLY";
@@ -101,7 +94,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     sourceId: "official-ballot-authorities",
     recordClass: "BALLOT_CANDIDACY",
     scope: "US:state-election-ballots",
-    command: ["scripts/promote-manual-civic-projection.mts", "--contract=ballot-contests"],
+    command: ["scripts/assemble-ballot-package.mts"],
     parserNormalizerVersion: "ballot-contests/1",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "official-ballot-authorities" },
     validationContract: VALIDATION_CHECKS,
@@ -435,27 +428,11 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     lkgBehavior: "Missing independent evidence, ambiguous territory, unsupported amounts or reader failure retain the prior verified filing facts and return unresolved work to repair.",
   },
   {
-    id: "comment-access",
-    execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
-    sourceId: "curated-reader-primary-sources",
-    recordClass: "CURATED_READER_RECORD",
-    scope: "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
-    command: ["scripts/promote-manual-civic-projection.mts", "--contract=comment-access"],
-    parserNormalizerVersion: "curated-reader-records/2",
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },
-    validationContract: VALIDATION_CHECKS,
-    canonicalProductionStore: STORE,
-    readerProjection: { id: "public-comment-access", consumers: ["meetings", "map", "Ask"] },
-    classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: ["lib/registry/comment-access.ts"],
-    lkgBehavior: "A missing source byte, malformed body key, or invalid reviewed rule holds only the comment-access projection and leaves its prior GOOD version live.",
-  },
-  {
     id: "ballot-navigation",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "curated-reader-primary-sources",
     recordClass: "CURATED_READER_RECORD",
-    scope: "US-AZ+US-NH+US-NJ:official-ballot-navigation",
+    scope: "US:official-ballot-navigation",
     command: ["scripts/promote-manual-civic-projection.mts", "--contract=ballot-navigation"],
     parserNormalizerVersion: "curated-reader-records/2",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },

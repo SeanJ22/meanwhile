@@ -76,11 +76,11 @@ function bodyNameFor(e: CivicClerkEvent): string {
   );
 }
 
-export function civicClerkPublished(event: CivicClerkEvent): boolean {
+function civicClerkPublished(event: CivicClerkEvent): boolean {
   return event.isPublished === undefined || event.isPublished === true || event.isPublished === "Published";
 }
 
-export function civicClerkMatches(event: CivicClerkEvent, config: Readonly<Record<string, string>>): boolean {
+function civicClerkMatches(event: CivicClerkEvent, config: Readonly<Record<string, string>>): boolean {
   const words = (value: string) => value.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   return /^[1-9]\d*$/.test(config.categoryId ?? "") && Number(config.categoryId) === event.categoryId &&
     (!config.titleMatch || ` ${words(event.eventName ?? "")} `.includes(` ${words(config.titleMatch)} `));

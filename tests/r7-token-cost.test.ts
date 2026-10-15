@@ -3,8 +3,9 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
-import { scoutExecutor, cachedModelRequest, cacheTtlOrderProblems, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { SCOUT_TOOL_SPECS, visibleText } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { hunterExecutor, cachedModelRequest, cacheTtlOrderProblems, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { HUNTER_SPECS } from "./helpers/hunter-tool-specs.ts";
+import { visibleText } from "../lib/extract/visible-text.ts";
 import type { ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { batchEligibleForJob, batchEnabledForJob } from "../lib/control-plane/model-batch.ts";
 import { modelSpendView, type ModelSpendRaw } from "../lib/control-plane/admin-view/model-spend.ts";
@@ -23,16 +24,16 @@ test("R7: two jobs reuse the same hour-long prefix; the saved Newbury passage is
     const seen: ModelRequest[] = [];
     requests.push(seen);
     let calls = 0;
-    const toolkit: ScoutToolkit = { specs: SCOUT_TOOL_SPECS, vaultedArtifactIds: new Set(), requestCount: 0, bytesFetched: 0,
+    const toolkit: ScoutToolkit = { specs: HUNTER_SPECS, vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0,
       get toolCalls() { return calls; }, call: async () => {
         calls++;
-        return { ok: true, forModel: `Saved-page envelope ${calls}\n${page}`, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
+        return { ok: true, forModel: `Saved-page envelope\n${page}`, artifacts: [], provenance: [], step: null, requestCount: 0, bytesFetched: 0 };
       } };
-    const exec = scoutExecutor({ role: "DETECTIVE", model: MODELS.haiku.model, minRungs: 0, now: () => clock,
+    const exec = hunterExecutor({ role: "DETECTIVE", model: MODELS.haiku.model, now: () => clock,
       playbookFor: fixtureRolePlaybook, toolkitFor: () => toolkit,
-      contextFor: () => ({ route: null, providerId: null, reason: "Read held planning board evidence", inherited: {
-        artifactIds: ["saved-newbury"], summary: "Saved official Planning Board page", placeName: place,
-      }, tools: { vault: async () => ({ stored: true, where: "fixture", why: "committed source" }), spaceOut: async () => {} } }),
+      contextFor: async () => ({ brief: `${place}: saved official Planning Board page`, reason: "Read held planning board evidence", blanks: 1,
+        handed: { artifactIds: ["saved-newbury"] },
+        tools: { vault: async () => ({ stored: true, where: "fixture", why: "committed source" }), spaceOut: async () => {} } }),
       transport: async request => {
         seen.push(request);
         assert.deepEqual(cacheTtlOrderProblems(request), []);

@@ -5,6 +5,7 @@ import { personCardSources } from "../lib/officials/card-sources.ts";
 import {normalizeCongressDirectory} from "../lib/officials/congress-normalize.ts";
 import {federalDirectoryCandidate} from "../lib/officials/federal-directory-data-plane.ts";
 import {MemoryRoutineDataStore} from "../lib/civic-data/store.ts";
+import {MemoryEvidenceStore} from "../lib/control-plane/evidence/store.ts";
 import {processRegisteredManualCandidate} from "../lib/civic-data/promotion.ts";
 import {readFederalDirectoryProjection} from "../lib/officials/federal-directory-read-model.ts";
 const NOW="2026-10-01T12:00:00.000Z",SHA="a".repeat(40);
@@ -39,7 +40,7 @@ test("a malformed optional office array and a nameless core row leave valid sour
 });
 test("core-only source promotes through the normal federal pointer without optional files or cardinality floors",async()=>{
   const projection=normalizeCongressDirectory(raw,SHA,NOW),url=`https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}/legislators-current.yaml`;
-  const candidate=federalDirectoryCandidate({projection,retrievedAt:NOW,acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,body:JSON.stringify(raw["legislators-current"])}]});
+  const candidate=await federalDirectoryCandidate({vault:new MemoryEvidenceStore(),projection,retrievedAt:NOW,acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,body:JSON.stringify(raw["legislators-current"])}]});
   const store=new MemoryRoutineDataStore(),outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,NOW);
   assert.equal(outcome.candidate.state,"PROMOTED",outcome.candidate.failureDetail ?? "");
   const read=await readFederalDirectoryProjection({store,now:NOW,bypassCache:true});assert.equal(read.kind,"PROMOTED");

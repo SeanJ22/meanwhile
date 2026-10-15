@@ -107,8 +107,8 @@ test("a number is never the answer: the verdict carries every migration by name"
 test("a docs-only change is NOT gated", () => {
   const involvement = schemaInvolvement([
     "docs/DESIGN.md",
-    "docs/tracker-working.csv",
-    "docs/sources.md",
+    "docs/walk-checks.txt",
+    "docs/look-standard.md",
     "README.md",
   ]);
   assert.equal(involvement.involved, false, involvement.reason);

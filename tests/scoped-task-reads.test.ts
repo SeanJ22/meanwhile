@@ -1,16 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { keysWhere, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { dispatchAutonomousTask, nextAutonomousOperation, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
-import { readAuditHistory, readSubjectScoutHistoryScoped, readScoutResultsForSubjects } from "../lib/control-plane/workers/scoped-history.ts";
+import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
+import { readAuditHistory, readScoutResultsForSubjects } from "../lib/control-plane/workers/scoped-history.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { readSubjectScoutHistory } from "../lib/control-plane/workers/detective.ts";
 import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION, SCOPED_HISTORY_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
 import { pgEnsureOnlineIndex, type Sql } from "../lib/control-plane/repository/pg-store.ts";
-import type { CostEntry } from "../lib/control-plane/cost.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { readLineageHistory } from "../lib/control-plane/workers/scoped-history.ts";
@@ -57,59 +54,8 @@ function counted(repos: ControlPlaneRepositories) {
   return { repos: wrapped, calls, rows, whole, reset: () => { calls.clear(); rows.n = 0; } };
 }
 
-const cost = (id: string, at: string, usd: number): CostEntry => ({ attemptId: id, role: "SCOUT", source: "api.anthropic.com", recordedAt: at,
-  cost: { ...ZERO_COST, usd, inputTokens: 1, outputTokens: 1, requestCount: 1 } }) as unknown as CostEntry;
 const scout = (obligationId: string, subjectId: string, at: string): ScoutResult => ({ attemptId: `${obligationId}-a`, obligationId, subjectId,
   recordClass: "OFFICIAL_ROSTER", recordedAt: at, refusal: null, candidates: [], findings: [], rungs: [], nextRungs: [], artifactIds: [] }) as unknown as ScoutResult;
-
-/** Unrelated history: other governments' work, attempts, Scout results and old charges. */
-async function growUnrelatedHistory(repos: ControlPlaneRepositories, n: number, at: string) {
-  for (let i = 0; i < n; i++) {
-    await repos.scoutResults.append(`other-obligation-${i}`, `other-${i}`, scout(`other-obligation-${i}`, `other:subject:${i}`, at), at);
-    await repos.costs.append(`old-${i}`, `old-${i}`, cost(`old-${i}`, "2026-01-01T00:00:00.000Z", 1), "2026-01-01T00:00:00.000Z");
-  }
-}
-
-test("CH-26: a Scout task's reads stay flat as unrelated history grows, and none lists a whole table", async () => {
-  const counter = counted(createMemoryRepositories());
-  const h = await autonomousHarness({ repos: counter.repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
-  const refusingScout = (runtime: AutonomousCoordinatorRuntime): AutonomousCoordinatorRuntime => ({ ...runtime, rollingCeilingUsd: 5,
-    scoutFor: () => ({ lane: "BOUNDED_MODEL_WORKER",
-      workerFor: ({ holder }) => ({ role: "SCOUT", provider: "offline-bounded-control", version: "1", instance: holder }),
-      run: async () => ({ kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", failureOutcome: "DENIED_BY_POLICY", endedAt: h.now(),
-        cost: { ...ZERO_COST, requestCount: 0, inputTokens: 0, outputTokens: 0, usd: 0 },
-        detail: "SCOUT_RESULT_REFUSED: SCOUT_POLICY_DENIED — request refused before sending by the spending or execution policy" }) }) });
-  const scoped = refusingScout({ ...h.runtime, scopedReads: true });
-  const decision = await nextAutonomousOperation(scoped, h.item.id);
-  assert.equal(decision.action, "SCOUT");
-  const measure = async () => {
-    // Each measurement runs the same task from the same state.
-    const row = await h.repos.routeTasks.mustRead(decision.task!.id);
-    const { policyDenial: _denial, ...rest } = row.value;
-    await h.repos.routeTasks.compareAndSet(row.id, row.revision, { ...rest, state: "RECLAIMABLE" }, h.now());
-    counter.reset();
-    await dispatchAutonomousTask(scoped, (await h.repos.routeTasks.mustRead(decision.task!.id)).value);
-    return { whole: counter.whole(), total: [...counter.calls.values()].reduce((a, b) => a + b, 0), rows: counter.rows.n };
-  };
-  const first = await measure();
-  const small = await measure();
-  assert.deepEqual(small.whole, [], "no whole-table read on the task path");
-  await growUnrelatedHistory(h.repos, 200, h.now());
-  const large = await measure();
-  assert.deepEqual(large.whole, []);
-  assert.equal(large.total, small.total, "repository calls per task stay flat as history grows");
-  // Each run adds the task's own attempt to its history; 200 unrelated Scout results and charges add nothing.
-  assert.ok(large.rows - small.rows <= Math.max(2, small.rows - first.rows), `rows stay flat (${first.rows}, ${small.rows}, then ${large.rows})`);
-
-  // The same task on the old path reads every unrelated row.
-  const old = refusingScout({ ...h.runtime });
-  const row = await h.repos.routeTasks.mustRead(decision.task!.id);
-  const { policyDenial: _denial, ...rest } = row.value;
-  await h.repos.routeTasks.compareAndSet(row.id, row.revision, { ...rest, state: "RECLAIMABLE" }, h.now());
-  counter.reset();
-  await dispatchAutonomousTask(old, (await h.repos.routeTasks.mustRead(decision.task!.id)).value);
-  assert.ok(counter.rows.n >= large.rows + 200, `the old path returns the unrelated history (${counter.rows.n} rows against ${large.rows})`);
-});
 
 test("CH-26: with the switch off, the old whole-table reads still run", async () => {
   const counter = counted(createMemoryRepositories());
@@ -133,10 +79,6 @@ test("CH-26: scoped reads return what the whole-table reads returned, after the 
   const scoped = await readScoutResultsForSubjects(repos, ["s:1"], true);
   assert.deepEqual(scoped.filter(row => row.subjectId === "s:1"), all.filter(row => row.subjectId === "s:1"));
   assert.deepEqual(await keysWhere(repos.scoutResults, ["subjectId"], "s:1"), ["a", "c"]);
-  for (const subjects of [[{ subjectId: "s:1", recordClass: "OFFICIAL_ROSTER" }], [{ subjectId: "s:3", recordClass: "OFFICIAL_ROSTER" }]]) {
-    assert.deepEqual(await readSubjectScoutHistoryScoped(repos, subjects, true), await readSubjectScoutHistory(repos, subjects),
-      "the newest-record rule keeps the same logs");
-  }
   const { keysWhere: _drop, ...withoutFilter } = repos.scoutResults;
   const plain = { ...repos, scoutResults: withoutFilter as typeof repos.scoutResults };
   assert.equal(await keysWhere(plain.scoutResults, ["subjectId"], "s:1"), null, "a store without the filtered read says so");
@@ -208,7 +150,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   counter.reset();
   const { projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection };
   const registry: ReaderAuthorityEdgeBundle = { promoted: new Map([[projection.key, manualEdgeEntry("registry-runtime-bindings", projection.payload, projection.versionId)]]) };
-  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: "1" } }));
+  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test" } }));
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
     counter.reset();

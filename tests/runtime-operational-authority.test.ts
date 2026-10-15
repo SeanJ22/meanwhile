@@ -86,7 +86,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
     "scripts/freshness-shadow.mts",
     "scripts/pilot-runner.mts",
     "scripts/publish-owner-snapshot.mts",
-    "lib/control-plane/scheduler/promotion-tail.ts",
   ];
   for (const file of files) {
     const source = readFileSync(join(ROOT, file), "utf8");
@@ -110,18 +109,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
   assert.match(
     readFileSync(join(ROOT, "lib", "control-plane", "research-metrics.ts"), "utf8"),
     /readerImpactAt: row\.obligation\.readerImpactAt/,
-  );
-  assert.match(
-    executableFreshness,
-    /compareModelRows:\s*compareScoutRows/,
-    "the standing caller must carry its canonical reader-impact order into runCycle's actual Scout pool",
-  );
-  assert.match(executableFreshness, /compareReaderImpact/);
-  const shadowLoop = readFileSync(join(ROOT, "lib", "control-plane", "scheduler", "shadow-loop.ts"), "utf8");
-  assert.match(
-    shadowLoop,
-    /modelRows\.sort\(research\.compareModelRows\)/,
-    "runCycle must apply the supplied order after model-lane classification and before admission",
   );
 
   const publisher = readFileSync(join(ROOT, "scripts", "publish-owner-snapshot.mts"), "utf8");
@@ -185,6 +172,4 @@ test("the runner opens clocks without the retired method-adoption gate and invok
   const freshness = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   assert.doesNotMatch(freshness, /METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED|method-candidate-authority/,
     "the research cycle must not halt on a method-candidate adoption receipt");
-  assert.match(freshness, /candidateStoreUnreadable === null && \(\(result\.refusal/,
-    "an unreadable candidate store skips proposals for the round instead of stopping it");
 });

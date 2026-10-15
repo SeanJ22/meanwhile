@@ -1,24 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { newFieldManualEntry, readFieldManual, writeFieldManual } from '../lib/control-plane/field-manual.ts';
-import { scoutJobCostEntries } from '../lib/control-plane/bank-job-cost.ts';
 import { createMemoryRepositories } from '../lib/control-plane/repository/memory.ts';
-import type { ScoutResult } from '../lib/control-plane/scheduler/scout-result.ts';
 const observation = (attemptId: string, success: boolean, usd: number | null) => newFieldManualEntry('job-cost', attemptId, {
   role: 'SHARED', kind: 'JOB_COST', title: 'cost', summary: 'observation', outcome: 'REFERENCE', platforms: ['legistar'], recordClasses: ['meetings'],
   payload: { platform: 'legistar', recordClass: 'meetings', attemptId, success, usd, durationMs: 1000, requestCount: 2 },
 });
 const profileOf = async (repos: ReturnType<typeof createMemoryRepositories>) =>
   (await repos.fieldManual.list()).map(row => row.value).find(entry => entry.kind === 'COST_PROFILE')!;
-
-test('old discovery envelopes without measurements never fabricate attempt costs', () => {
-  const old = { candidates: [{ url: 'https://tenant.legistar.com/events' }], recordClass: 'meetings' } as unknown as ScoutResult;
-  assert.deepEqual(scoutJobCostEntries(old), []);
-  const measured = scoutJobCostEntries({ ...old, elapsedMs: 1000, refusal: null });
-  assert.equal(measured.length, 1);
-  assert.equal((measured[0]!.payload as { usd: number | null }).usd, null);
-  assert.equal((measured[0]!.payload as { requestCount: number | null }).requestCount, null);
-});
 
 test('cost per success includes failed attempts and is not doubled by a replay', async () => {
   const repos = createMemoryRepositories();

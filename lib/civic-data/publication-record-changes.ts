@@ -12,7 +12,7 @@ export interface PublicationRecordChange {
 
 // Evidence refresh and exact source aliases do not change the civic fact. The
 // accepted record and reader identities remain explicit on each change row.
-const PROVENANCE_FIELDS = new Set(["collectedAt", "verifiedAt", "fieldSources", "membershipSource", "retainedFieldSources",
+const PROVENANCE_FIELDS = new Set(["collectedAt", "verifiedAt", "fieldSources", "membershipSource",
   "nativeIds", "personId", "sourceRecordId"]);
 function facts(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(facts);

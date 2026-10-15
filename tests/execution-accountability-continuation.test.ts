@@ -4,8 +4,6 @@ import { ORIGINAL_LIFETIME_HUNT, originalLifetimeHuntContinuation } from "../lib
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import type { AssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
-import { eligibleHeldProtocolRecovery } from "../lib/control-plane/workers/scout-scheduling.ts";
-import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 
 const scope = { ...ORIGINAL_LIFETIME_HUNT, geography: { label: "ZIP 85635" } } as ExpansionScopeDecision;
 const expansion = (due: number, dispatched: number) => ({ scopes: [{ key: scope.key, work: { dueThisCycle: due, dispatchedThisCycle: dispatched } }] }) as unknown as ExpansionCycleReading;
@@ -38,18 +36,4 @@ test("downstream work keeps the exact hunt moving after standing due work is dis
   const completed = { ...assignments(12), assignments: [{ ...assignments(12).assignments[0],
     completion: { kind: "COMPLETE", assignmentKey: scope.key, members: 1, satisfied: [] } }] } as AssignmentCycleReading;
   assert.equal(originalLifetimeHuntContinuation([scope], expansion(0, 0), completed, 0), null);
-});
-
-test("one old Scout may retry saved evidence under the new held protocol, then normal debt resumes", () => {
-  const old = { attemptId: "old-receipt", outcome: "EVIDENCE_FOUND", artifactIds: ["ar-held"],
-    rungs: [{ observed: "another publisher returned HTTP 429" }] } as unknown as ScoutResult;
-  const input = { latest: old, heldArtifactIds: ["ar-held"], continuationAttempted: false };
-  assert.equal(eligibleHeldProtocolRecovery(input), true,
-    "a separate publisher wall does not erase the saved allowed representation");
-  assert.equal(eligibleHeldProtocolRecovery({ ...input, continuationAttempted: true }), false,
-    "a continuation already attempted does not bypass its own backoff");
-  assert.equal(eligibleHeldProtocolRecovery({ ...input, latest: { ...old,
-    recoveryCapabilityVersion: SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } }), false,
-    "once the new tool protocol was present, ordinary debt applies again");
-  assert.equal(eligibleHeldProtocolRecovery({ ...input, heldArtifactIds: [] }), false);
 });

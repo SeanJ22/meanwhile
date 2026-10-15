@@ -3,10 +3,6 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { parseGeneralizedRecords } from "../lib/control-plane/workers/generalized-parser.ts";
-import { classifyPriorRung } from "../lib/control-plane/scheduler/scout-result.ts";
-import { evaluatePlanRepair } from "../lib/control-plane/workers/plan-repair.ts";
-import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
-import type { ScoutCandidate } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { GeneralizedCivicExtractionContract, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 
 const sourceUrl = "https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council";
@@ -59,53 +55,6 @@ test("saved Sierra Vista roster replays from the original hash-verified bytes wh
   assert.equal(result.records.every(row => row.fields.phone === "(520) 439-2140"), true);
   assert.equal(result.records.every(row => typeof row.fields.websiteUrl === "string"), true);
   assert.equal(result.records.every(row => row.fields.email === undefined), true);
-  const evidence: WorkerEvidence = { artifactId: "ar-be10df3d3aa3c72f6076ae6b", contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}`,
-    text, acquiredByAttemptId: "at-fdaa3625d1b2bb95157bdf44", canonicalUrl: sourceUrl,
-    retrievedAt: "2026-09-28T06:27:49.882Z", sourceId: "www.sierravistaaz.gov", methodRouteId: "scout:fetch_public" };
-  const contract: GeneralizedCivicExtractionContract = { schemaVersion: 2, recordClass: "OFFICIAL_ROSTER", subjectId,
-    jurisdiction: { country: "US", state: "AZ", canonicalId: subjectId },
-    identity: { namespace: `${subjectId}:roster`, keyFields: ["name", "office"] },
-    sourceScope: { publisher: "City of Sierra Vista", sourceId: "unobserved:roster", canonicalUrls: [], routeIds: ["roster"], observationArtifactIds: [] },
-    methodVersion: 1, requiredFields: ["name", "office"], completenessScope: "Captured council contact rows only", expectedSourceDate: null,
-    extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Source mapping not yet repaired" },
-    verification: { required: true, authorities: [] } };
-  const plan: AutonomousWorkPlan = { version: 1, capability: "officials/offices", jurisdiction: "AZ", sourceRegistryReferences: [subjectId],
-    seedUrls: [], sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE", contract };
-  const candidate: ScoutCandidate = { routeId: "sierravista-council-roster", title: "Official council contact", url: sourceUrl,
-    procedure: "Read retained official HTML", relevance: "Sierra Vista council", permission: "ALLOWED", permissionReading: "Recorded public response",
-    evidenceArtifactIds: [evidence.artifactId], observedOn: "2026-09-28", recordClass: "OFFICIAL_ROSTER", deterministic: true,
-    unverified: ["Independent member checks remain owed"], contractRepair: { schemaVersion: 1, sourceArtifactId: evidence.artifactId,
-      extraction: { format: "HTML_TABLE", tableIndex: 0, headerRows: 1, fields: { name: { source: 0, type: "STRING" }, office: { source: 1, type: "STRING" },
-        phone: { source: 2, type: "STRING" }, websiteUrl: { source: 0, type: "STRING", attribute: "href" } } }, authorities: [] } };
-  const registeredPublisherAddress = "http://www.sierravistaaz.gov";
-  assert.throws(() => evaluatePlanRepair({ plan, candidate: { ...candidate, recordClass: "local-jurisdiction" },
-    evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress }),
-  /REPAIR_CANDIDATE_SCOPE_MISMATCH/, "the old generic Scout class cannot certify a roster contract");
-  const repaired = evaluatePlanRepair({ plan, candidate, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress });
-  assert.equal(repaired.profileRoutes.length, 7);
-  assert.deepEqual(repaired.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:7"]);
-  assert.equal(new Set(repaired.profileRoutes.map(route => route.url)).size, 7);
-  const repair = candidate.contractRepair as { schemaVersion: 1; sourceArtifactId: string; extraction: GeneralizedCivicExtractionContract["extraction"]; authorities: readonly unknown[] };
-  const extraction = repair.extraction as Extract<GeneralizedCivicExtractionContract["extraction"], { format: "HTML_TABLE" }>;
-  const optionalEmail = evaluatePlanRepair({ plan, candidate: { ...candidate, contractRepair: {
-    ...repair, extraction: { ...extraction, fields: { ...extraction.fields, email: { source: 3, type: "STRING" } } },
-  } }, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress });
-  assert.equal(optionalEmail.unresolved.filter(value => value.includes("OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS")).length, 7);
-  const withoutButtons = parseGeneralizedRecords({ attemptId: "at-optional-email", worker: {
-    role: "PARSER", instance: "test-parser", provider: "deterministic", version: "2" }, evidence,
-    contract: optionalEmail.contract }, optionalEmail.contract);
-  assert.equal(withoutButtons.verdict, "EXTRACTED");
-  assert.ok(withoutButtons.records.every(row => row.fields.email === undefined));
-  assert.throws(() => evaluatePlanRepair({ plan, candidate: { ...candidate, contractRepair: {
-    ...repair, extraction: { ...extraction, fields: { name: extraction.fields.name, office: extraction.fields.office } },
-  } }, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress }), /REPAIR_SUPPORTED_FIELDS_OMITTED:phone,websiteUrl/);
-});
-
-test("unvaulted successful reads are recoverable while actual access controls remain restricted", () => {
-  assert.equal(classifyPriorRung({ observed: "HTTP 200, 107106 bytes, NOT VAULTED", ok: false }), "TRANSIENT");
-  assert.equal(classifyPriorRung({ observed: "HTTP 200 (0 bytes)", ok: false }), "TRANSIENT");
-  assert.equal(classifyPriorRung({ observed: "HTTP 403 (wall)", ok: false }), "DURABLE");
-  assert.equal(classifyPriorRung({ observed: "HTTP 200 (CHALLENGE)", ok: false }), "DURABLE");
 });
 
 test("href extraction cannot be silently requested from non-HTML source shapes", () => {

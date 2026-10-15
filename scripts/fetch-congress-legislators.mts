@@ -8,6 +8,8 @@ import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
+import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { acquireCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";
 import { acquireKnownRelease } from "../lib/sources/known-release.ts";
@@ -15,11 +17,12 @@ import { acquireKnownRelease } from "../lib/sources/known-release.ts";
 const FILES = ["legislators-current", "legislators-social-media", "legislators-district-offices", "committees-current", "committee-membership-current"] as const;
 export async function refreshCongressDirectory(input: {
   store: RoutineDataStore;
+  vault: EvidenceStore;
   acquire?: typeof acquireKnownRelease;
   revision?: typeof acquireCongressSourceRevision;
   now?: () => string;
 }): Promise<void> {
-  const {store} = input, clock = input.now ?? (() => new Date().toISOString());
+  const {store,vault} = input, clock = input.now ?? (() => new Date().toISOString());
   const acquire = input.acquire ?? acquireKnownRelease;
   let finalReceipt: { candidate: RoutineCandidate; outcome: PromotionOutcome } | null = null;
   try {
@@ -45,7 +48,7 @@ export async function refreshCongressDirectory(input: {
         const held = await acquire({sourceId:"congress-directory-project",releaseId:`${sourceSha}/${name}`,url,parserVersion:FEDERAL_DIRECTORY_PARSER_VERSION,maxBytes:16*1024*1024,checkAfterMs:365*86400000,signal:AbortSignal.timeout(30000),headers:{accept:"text/plain"},validate:bytes=>{decode(bytes);}});
         const parsed = decode(held.bytes);
         raw[name] = parsed.value; dates[name] = held.retrievedAt;
-        acquisitions.push({requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:parsed.text,retrievedAt:held.retrievedAt,vaultKey:held.vaultKey,sourceCheck});
+        acquisitions.push({requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:parsed.text,retrievedAt:held.retrievedAt,sourceCheck});
       } catch (error) {
         if (name === "legislators-current") throw error;
         console.error(`${name}: optional facts retained from last good holding (${error instanceof Error ? error.message : String(error)})`);
@@ -53,7 +56,7 @@ export async function refreshCongressDirectory(input: {
       // The core becomes readable immediately; optional files each enrich that same pointer.
       if (!raw["legislators-current"]) continue;
       const projection = normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now);
-      const candidate = federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection,excludedFacts:sourceGaps});
+      const candidate = await federalDirectoryCandidate({acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection,excludedFacts:sourceGaps});
       const outcome = await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock());
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
@@ -76,7 +79,7 @@ export async function refreshCongressDirectory(input: {
 async function main() {
   if (!process.argv.includes("--promote")) throw Error("Run with --promote; tracked federal files are first-seed/test evidence only.");
   prepareProductionCivicDataWrite();
-  await refreshCongressDirectory({store:new PostgresRoutineDataStore()});
+  await refreshCongressDirectory({store:new PostgresRoutineDataStore(),vault:rawCaptureVault()});
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch((error:unknown)=>{
   console.error(error instanceof Error ? error.message : String(error)); process.exitCode=1;

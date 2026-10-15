@@ -90,6 +90,7 @@ function digest(input: {
   readonly failures?: readonly { readonly taskId: string; readonly code: string; readonly detail: string }[];
   readonly references?: readonly RoutineCivicDataTaskReceiptReference[];
   readonly readerReferences?: readonly RoutineCivicDataReaderReadbackReference[];
+  readonly crashedTasks?: readonly { readonly taskId: string; readonly detail: string }[];
   readonly structured?: boolean;
 }): OwnerDigestRecord {
   if (input.structured === false) {
@@ -114,10 +115,11 @@ function digest(input: {
     host: "test-host",
     provider: "memory",
     durable: true,
-    attemptedTasks: references.length,
+    attemptedTasks: references.length + (input.crashedTasks?.length ?? 0),
     verifiedSourceSuccesses: references.filter(({ classification }) => classification === "VERIFIED_SOURCE_SUCCESS").length,
     verifiedSourceFailures: references.filter(({ classification }) => classification === "VERIFIED_SOURCE_FAILURE").length,
     failures,
+    crashedTasks: input.crashedTasks,
     taskReceipts: references,
     readerReadback: {
       denominator: readerReferences.length,
@@ -164,6 +166,15 @@ test("the digest classification distinguishes a contained source hold from a suc
   );
   assert.match(words(ownerDigestAttention(contained)), /Routine source failure was contained/);
   assert.match(words(ownerDigestAttention(contained)), /1 exact source receipt\(s\) held their own LKG while 1 unaffected task\(s\) completed successfully/);
+
+  const crashed = digest({ references: [reference("source-unaffected", "VERIFIED_SOURCE_SUCCESS")],
+    crashedTasks: [{ taskId: "people-wikidata-people-ca", detail: "(national-people-refresh.mts): SIGABRT" }] });
+  assert.equal(crashed.cycleOk, true, "a crashed source child does not fail the cycle");
+  assert.deepEqual(
+    { level: ownerDigestAttention(crashed).level, needsYou: ownerDigestAttention(crashed).needsYou },
+    { level: "AMBER", needsYou: false },
+  );
+  assert.match(words(ownerDigestAttention(crashed)), /0 exact source receipt\(s\) held their own LKG and 1 source process\(es\) crashed while 1 unaffected/);
 
   const success = digest({ references: [reference("source-good", "VERIFIED_SOURCE_SUCCESS")] });
   assert.deepEqual(

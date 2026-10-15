@@ -61,7 +61,7 @@ export async function acquireCongressMembers(options: PeopleAcquisitionOptions):
           }, { name: "congress_api", path: `member/${bioguide}`, params: { format: "json" } });
           const parsed = normalizeCongressMember(json(detail), options, detailUrl, detail.retrievedAt);
           // Keep the national index, and each member's own document in its state shard.
-          if (parsed.officeholders.length) { acquisitions.push(acquisition(detail)); roster.officeholders.push(...parsed.officeholders); roster.divisions.push(...parsed.divisions); roster.unmatched.push(...parsed.unmatched); await options.onPerson?.(result(options,roster,acquisitions,gaps)); }
+          if (parsed.officeholders.length) { acquisitions.push(acquisition(detail)); roster.officeholders.push(...parsed.officeholders); roster.divisions.push(...parsed.divisions); roster.unmatched.push(...parsed.unmatched); }
         } catch (error) { gap(gaps, options, detailUrl, error); }
       }
       const next = url(pagination.next);

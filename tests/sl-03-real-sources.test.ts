@@ -20,6 +20,8 @@ import { portraitHash, type PortraitSources } from "../lib/photos/evidence.ts";
 import { storeVerifiedPortrait } from "../lib/photos/store.ts";
 import { portraitBindingMatches } from "../lib/photos/binding.ts";
 
+const vault = new MemoryEvidenceStore();
+
 const NOW = "2026-10-12T22:35:26.000Z";
 function fixture(name: string) {
   const metadata = manifest.captures.find(row => row.name === name)!;
@@ -83,7 +85,7 @@ for (const [state, count, name, phone, district] of [
       assert.equal(roster.officeholders.find(row => row.name === "Dora Drake")?.phone, "(608) 266-5810");
     }
     const store = new MemoryRoutineDataStore();
-    const publication = await publishPeopleSource({ store, state, sourceId: "official-state-people", roster,
+    const publication = await publishPeopleSource({ vault, store, state, sourceId: "official-state-people", roster,
       acquisitions: [page], releaseId: page.sha256, now: NOW });
     assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
     const read = await readPeopleSourceProjection(`US-${state.toUpperCase()}`, "official-state-people", { store, now: NOW, bypassCache: true });
@@ -126,7 +128,7 @@ test("real official secretary pages preserve unresolved selection rather than in
     const roster = statewideRoster(state, [verified.person], page.retrievedAt);
     assert.equal(roster.divisions.length, 0);
     assert.equal(roster.unmatched[0]?.reason, "STATEWIDE_SELECTION_METHOD_UNRESOLVED");
-    const publication = await publishPeopleSource({ store: new MemoryRoutineDataStore(), state, sourceId: "statewide-executive-sources",
+    const publication = await publishPeopleSource({ vault, store: new MemoryRoutineDataStore(), state, sourceId: "statewide-executive-sources",
       roster, acquisitions: [page], releaseId: page.sha256, now: NOW });
     assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
   }

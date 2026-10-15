@@ -78,6 +78,7 @@ import {
 import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
+import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
 import {
   appendIntakeRuntimeObservationDigest,
@@ -692,6 +693,9 @@ async function runRoutineCivicData(): Promise<void> {
       [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt,
     },
   );
+  // A routine pass between research cycles still checks in, so a long pass never reads as a silent runner.
+  const beat = boundedBeat(() => writeLiveCycleBeat(null), BEAT_BOUND_MS, lateBeat);
+  const beatTimer = setInterval(() => { if (!researchCycleActive) void beat(); }, 60_000);
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
@@ -704,7 +708,7 @@ async function runRoutineCivicData(): Promise<void> {
     maxBufferBytes: 64 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
-  });
+  }).finally(() => clearInterval(beatTimer));
   if (!run) throw new Error("ROUTINE_CIVIC_DATA_CHILD_RESULT_MISSING");
   if (ownerRefresh && refreshRepos) await finishRoutineRefresh(refreshRepos, ownerRefresh, new Date().toISOString(), run.status);
   const lines = `${run.stdout ?? ""}\n${run.stderr ?? ""}`.split("\n").filter((line) => /^(RCD_|RCD_RECEIPT=)/.test(line));
@@ -1071,7 +1075,8 @@ const vitalSignsTimer = setInterval(() => {
 }, 60_000);
 vitalSignsTimer.unref();
 
-async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | null; signal: string | null }): Promise<void> {
+/** A null start only advances the check-in: the routine lane is running while no research cycle is. */
+async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: number | null; signal: string | null }): Promise<void> {
   if (provider !== "postgres") return;
   /* A native abort's stack and its workers' disconnects follow the line that says why, so that line leads. */
   const abort = nativeAbortLine(currentCycleErrors);
@@ -1093,9 +1098,14 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
-      const next = liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
-        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
-        ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
+      if (startedAt === null && current === null) return;
+      // A beat left behind may land after its cycle's last beat; it must not reopen that cycle.
+      if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
+      const next = startedAt === null
+        ? { ...current!.value, beatAt: at, memory: memory ?? current!.value.memory ?? null, neonBytes: neonBytes ?? current!.value.neonBytes ?? null }
+        : liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
+          testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
+          ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
       try {
         if (current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, at);
         else await repos.runnerHeartbeat.put(RUNNER_ID, next, at);
@@ -1106,6 +1116,10 @@ async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | nul
     console.error(`  live cycle heartbeat could not be saved (${error instanceof Error ? error.name : "error"}); work continues`);
   }
 }
+
+/** Beats come each minute; one that has not answered in this long is left behind so the next can start. */
+const BEAT_BOUND_MS = 45_000;
+const lateBeat = () => console.error("  live cycle heartbeat did not answer in time; the next beat starts fresh");
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
@@ -1860,27 +1874,31 @@ while (cycle < CYCLES) {
   researchCycleActive = true;
   currentCycleErrors = "";
   currentCycleOutput = "";
-  await writeLiveCycleBeat(startedAt);
+  const beat = boundedBeat(() => writeLiveCycleBeat(startedAt), BEAT_BOUND_MS, lateBeat);
+  const lastBeat = (exit: { code: number | null; signal: string | null }) =>
+    boundedBeat(() => writeLiveCycleBeat(startedAt, exit), BEAT_BOUND_MS, lateBeat)();
+  await beat();
   let cycleBeat = Promise.resolve();
+  // The release inspection keeps its own turn, so a slow one never holds back a beat.
+  let releaseDrain: Promise<void> | null = null;
   const cycleBeatTimer = setInterval(() => {
-    cycleBeat = cycleBeat.then(async () => {
-      if (!researchCycleActive) return;
-      await writeLiveCycleBeat(startedAt);
-      try { await requestQueuedReleaseDrain(); }
-      catch (error) { console.error(`  runtime release inspection during work failed (${error instanceof Error ? error.name : "error"}); active work continues`); }
-    });
+    if (!researchCycleActive) return;
+    cycleBeat = beat();
+    releaseDrain ??= requestQueuedReleaseDrain().catch(error => {
+      console.error(`  runtime release inspection during work failed (${error instanceof Error ? error.name : "error"}); active work continues`);
+    }).finally(() => { releaseDrain = null; });
   }, 60_000);
   const result = await runOneCycle(owner).finally(async () => {
     researchCycleActive = false;
     researchCycleChild = null;
     clearInterval(cycleBeatTimer);
-    await cycleBeat;
+    await Promise.all([cycleBeat, releaseDrain]);
   }).catch(async error => {
     currentCycleErrors = error instanceof Error ? error.message : "research child launch failed";
-    await writeLiveCycleBeat(startedAt, { code: null, signal: null });
+    await lastBeat({ code: null, signal: null });
     throw error;
   });
-  await writeLiveCycleBeat(startedAt, { code: result.exitCode, signal: result.signal });
+  await lastBeat({ code: result.exitCode, signal: result.signal });
   await activeControlRead;
   if (result.circuit) {
     const c = result.circuit;

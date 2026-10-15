@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
@@ -455,7 +456,7 @@ test("completed polling workers publish every registered site through the existi
   await f.h.repos.doors.put(doorId, door, f.h.now());
   await f.h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value,
     autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
-  const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos) });
+  const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos), vault: new MemoryEvidenceStore() });
   assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
   const read = await readVotingSitesProjection({ store: f.store, now: f.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");

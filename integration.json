@@ -2919,5 +2919,39 @@
     "tested_sha": "d9107da58a23f9d38b60d300552af7e9d2509561",
     "gates": "pass",
     "at": "2026-10-15T04:42:15Z"
+  },
+  {
+    "lane": "fact-store",
+    "steps": [
+      "R1"
+    ],
+    "ready_sha": "b28a1c41ebac2626e1457f922bb8ed9190792f4d",
+    "merge_sha": "fafb6b117cb5dfee7965a266730359ccaf81da4f",
+    "river_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+    "tested_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+    "gates": "pass",
+    "at": "2026-10-15T14:30:33Z"
+  },
+  {
+    "lane": "hunter-v2",
+    "steps": [],
+    "ready_sha": "6d52165579c6abc7b0e19ab73bc73551e2519176",
+    "merge_sha": "e6313dc8cde12bdb6a5ef3de4e69605851918fc7",
+    "river_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+    "tested_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+    "gates": "pass",
+    "at": "2026-10-15T14:30:33Z"
+  },
+  {
+    "lane": "road",
+    "steps": [
+      "R0"
+    ],
+    "ready_sha": "374e58d57792f9181f0c5397581525311512cd7d",
+    "merge_sha": "6650811255bd69d9dec81be3474e2060299e194c",
+    "river_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+    "tested_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+    "gates": "pass",
+    "at": "2026-10-15T14:30:33Z"
   }
 ]

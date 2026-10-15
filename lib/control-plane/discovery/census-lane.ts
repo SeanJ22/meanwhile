@@ -13,12 +13,15 @@ import { searchCostEntry } from "./meetings-discovery-executor.ts";
 import { requestPrice } from "../../hunt/discovery-search.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { discoveryFieldManualEntries, walkMeetingsDiscoveryNeed, type DiscoveryOpen, type DiscoveryRuntime } from "./meetings-discovery-executor.ts";
+import { namesItself, routeHintsFor } from "../../hunt/meetings-route-hints.ts";
+import { readDiscoveryRouteHints } from "./route-hints.ts";
+import { printedNames } from "./auto-crosswalk.ts";
 
 export const CENSUS_LANE_INTERVAL_MS = 5 * 60_000;
 const CHECK_MS = 12 * 3_600_000;
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 type CensusPage = Awaited<ReturnType<DiscoveryOpen>> & { url: string; artifactId: string };
-type Repos = Pick<ControlPlaneRepositories, "fieldManual" | "discoveryAttempts">;
+type Repos = Pick<ControlPlaneRepositories, "fieldManual" | "discoveryAttempts" | "doors" | "boxFindings" | "scoutResults" | "workItems">;
 
 export function censusCheckEntry(need: MeetingsDiscoveryNeed, payload: unknown, now: string): FieldManualEntry {
   return newFieldManualEntry("census-check", need.jurisdictionId, { role: "SHARED", kind: "PLATFORM_CENSUS_CHECK",
@@ -119,6 +122,7 @@ async function saveHost(repos: Repos, need: MeetingsDiscoveryNeed, page: CensusP
 export async function resolveCensusWebsite(input: { repos: Repos; need: MeetingsDiscoveryNeed; runtime: DiscoveryRuntime;
   entries: readonly FieldManualEntry[]; reader: ReturnType<typeof censusReader> }): Promise<MeetingsDiscoveryNeed> {
   const { need, entries, runtime, reader, repos } = input;
+  const hintedSite = routeHintsFor(need.jurisdictionId, runtime.routeHints ?? [])?.officialSite;
   const saved = entries.find(entry => entry.kind === "ENTITY_HOST" && (entry.payload as { jurisdictionId?: string })?.jurisdictionId === need.jurisdictionId);
   const domain = exactDomainFor(need, entries.filter(entry => entry.kind === "PLATFORM_CENSUS_DOMAIN"));
   const directory = entries.filter(entry => ["NCES_WEBSITE", "GOVERNMENT_WEBSITE"].includes(entry.kind)).filter(entry => {
@@ -129,13 +133,15 @@ export async function resolveCensusWebsite(input: { repos: Repos; need: Meetings
     const row = entry.payload as { govClass?: string; countyFips?: string } | null;
     return entry.kind === "ENTITY_HOST" && row?.govClass === "COUNTY" && row.countyFips && row.countyFips === need.countyFips;
   }) : null;
-  const addresses = [domain?.url, directory.length === 1 ? directory[0].url : null, saved?.url, need.ownWebAddress, parent?.url];
+  const addresses = [hintedSite?.origin, domain?.url, directory.length === 1 ? directory[0].url : null, saved?.url, need.ownWebAddress, parent?.url];
   for (const address of [...new Set(addresses.filter((address): address is string => Boolean(address)))]) {
     for (const origin of siteOrigins(address)) {
       const page = await reader.get(`${origin}/`);
       if (!page) continue;
+      if (hintedSite?.origin === address && !namesItself(page.body, hintedSite.selfName)) continue;
       await saveStateDirectories(repos, need, page, runtime.now());
-      await saveHost(repos, need, page, domain?.url === address ? "CISA" : directory.some(entry => entry.url === address) ? "DIRECTORY" : "CENSUS", runtime.now());
+      await saveHost(repos, need, page, hintedSite?.origin === address ? "ROUTE_HINT" : domain?.url === address ? "CISA"
+        : directory.some(entry => entry.url === address) ? "DIRECTORY" : "CENSUS", runtime.now());
       return { ...need, ownWebAddress: new URL(page.url).origin, addressSource: { source: "WEBSITE_EVIDENCE", versionId: page.artifactId } };
     }
   }
@@ -174,35 +180,39 @@ export async function resolveCensusWebsite(input: { repos: Repos; need: Meetings
   return { ...need, ownWebAddress: null };
 }
 
-interface CensusStateReport { state: string; checked: number; walked: number; unchanged: number; notDue: number; platforms: Record<string, number>; failures: string[] }
+interface CensusStateReport { state: string; checked: number; walked: number; unchanged: number; notDue: number; platforms: Record<string, number>;
+  hintMeetings: { jurisdictionId: string; name: string; body: string; url: string; count: number }[]; failures: string[] }
 export async function runCensusState(input: { repos: Repos; state: string; needs: readonly MeetingsDiscoveryNeed[];
   runtime: DiscoveryRuntime; entries?: readonly FieldManualEntry[]; concurrency?: number; onProgress?: (report: CensusStateReport) => void }): Promise<CensusStateReport> {
-  const report: CensusStateReport = { state: input.state, checked: 0, walked: 0, unchanged: 0, notDue: 0, platforms: {}, failures: [] };
+  const report: CensusStateReport = { state: input.state, checked: 0, walked: 0, unchanged: 0, notDue: 0, platforms: {}, hintMeetings: [], failures: [] };
   const fingerprintHash = hash(input.runtime.fingerprints ?? []);
   let index = 0;
   const work = async () => {
     while (index < input.needs.length && !input.runtime.budget.spent()) {
       const original = input.needs[index++];
       try {
+        const routeHints = await readDiscoveryRouteHints(input.repos, original, input.entries ?? []);
+        const runtime = { ...input.runtime, routeHints };
         const marker = censusCheckEntry(original, null, input.runtime.now());
         const prior = (await input.repos.fieldManual.readMany([marker.id]))[0]?.value.payload as { nextCheck?: string; inputHash?: string; pagesHash?: string; urls?: string[] } | undefined;
-        const inputHash = hash([original, fingerprintHash]);
+        const inputHash = hash([original, fingerprintHash, routeHints]);
         if (prior?.inputHash === inputHash && Date.parse(prior.nextCheck ?? "") > Date.parse(input.runtime.now())) { report.notDue++; continue; }
-        const reader = censusReader(input.runtime, original.jurisdictionId);
-        const need = await resolveCensusWebsite({ repos: input.repos, need: original, runtime: input.runtime, entries: input.entries ?? [], reader });
+        const reader = censusReader(runtime, original.jurisdictionId);
+        for (const hint of routeHints.flatMap(row => row.routes)) await reader.get(hint.url);
+        const need = await resolveCensusWebsite({ repos: input.repos, need: original, runtime, entries: input.entries ?? [], reader });
         report.checked++;
         let pagesHash: string | null = null;
         let unfinished = false;
-        if (need.ownWebAddress) {
+        if (need.ownWebAddress || routeHints.some(row => row.routes.length)) {
           const priorWalks = await input.repos.discoveryAttempts.read(need.jurisdictionId);
-          for (const path of ["/", "/agendas", "/meetings", "/calendar", "/sitemap.xml"]) await reader.get(new URL(path, need.ownWebAddress).href);
+          if (need.ownWebAddress) for (const path of ["/", "/agendas", "/meetings", "/calendar", "/sitemap.xml"]) await reader.get(new URL(path, need.ownWebAddress).href);
           for (const url of prior?.urls ?? []) await reader.get(url);
           const pages = await Promise.all(reader.pages.values());
           pagesHash = hash(pages.filter(page => !page.url.endsWith("/robots.txt")).map(page => [page.url, page.status, page.transportError, hash(page.body)]).sort(([a], [b]) => String(a).localeCompare(String(b))));
           unfinished = Boolean(priorWalks.at(-1)?.steps.some(step => step.status === null && /bound|website reached/.test(step.note)));
           if (!unfinished && prior?.inputHash === inputHash && prior.pagesHash === pagesHash) report.unchanged++;
           else {
-            const attempt = await walkMeetingsDiscoveryNeed(need, { ...input.runtime, open: reader.open,
+            const attempt = await walkMeetingsDiscoveryNeed(need, { ...runtime, open: reader.open,
               maxRequestsPerWalk: Infinity, priorAttempts: priorWalks });
             await input.repos.discoveryAttempts.append(need.jurisdictionId, attempt.attemptId, attempt, attempt.finishedAt);
             const recipes = new Map((input.runtime.recipes ?? []).map(recipe => [recipe.recipeId, recipe]));
@@ -219,6 +229,16 @@ export async function runCensusState(input: { repos: Repos; state: string; needs
               ...[...touched].map(id => recipeEntry(recipes.get(id)!, attempt.finishedAt))], attempt.finishedAt);
             if (written.error) throw new Error(written.error);
             report.walked++;
+            const namedHints = new Set(attempt.found.filter(found => found.hintUrl && found.bodyName && (found.count ?? 0) > 0 &&
+              printedNames(found.bodyName, need.jurisdictionId).length === 1).map(found => found.hintUrl));
+            for (const found of attempt.found) {
+              if (found.bodyName && printedNames(found.bodyName, need.jurisdictionId).length !== 1) continue;
+              if (!found.bodyName && namedHints.has(found.hintUrl)) continue;
+              const hint = routeHints.flatMap(row => row.routes).find(row => row.url === found.hintUrl);
+              const site = found.hintUrl !== undefined && routeHints.some(row => row.officialSite?.origin === found.hintUrl);
+              if ((hint || site) && found.count !== null && found.count > 0) report.hintMeetings.push({ jurisdictionId: need.jurisdictionId,
+                name: need.name, body: found.bodyName ?? hint?.body ?? need.name, url: found.url, count: found.count });
+            }
             unfinished = attempt.steps.some(step => step.status === null && /bound|website reached/.test(step.note));
             for (const platform of new Set(attempt.platformCensus?.matches.map(match => match.platform))) report.platforms[platform] = (report.platforms[platform] ?? 0) + 1;
             if (attempt.outcome === "COULD_NOT_READ" || attempt.outcome === "BLOCKED") report.failures.push(`${need.jurisdictionId}: ${attempt.outcome}`);
@@ -241,7 +261,7 @@ export async function runCensusState(input: { repos: Repos; state: string; needs
 export async function censusBank(repos: Repos, state: string) {
   const [fingerprints, sites, recipes] = await Promise.all([
     readFieldManual(repos, { kinds: ["PLATFORM_FINGERPRINT"], everywhere: true }),
-    readFieldManual(repos, { kinds: ["ENTITY_HOST", "PLATFORM_CENSUS_DOMAIN", "NCES_WEBSITE", "GOVERNMENT_WEBSITE", "SOURCE_REGISTER"], state }),
+    readFieldManual(repos, { kinds: ["ENTITY_HOST", "PLATFORM_CENSUS_DOMAIN", "NCES_WEBSITE", "GOVERNMENT_WEBSITE", "SOURCE_REGISTER", "SCOUT_DISCOVERY", "ROUTE"], state }),
     readFieldManual(repos, { kinds: [RECIPE_KIND], state }),
   ]);
   if (fingerprints.error || sites.error || recipes.error) throw new Error(fingerprints.error ?? sites.error ?? recipes.error);

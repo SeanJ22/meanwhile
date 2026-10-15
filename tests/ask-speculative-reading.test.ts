@@ -27,9 +27,7 @@ test("the code's best reading: a guess from the reader's words, the page or the 
   assert.deepEqual(read("Who can I talk to at the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
   // A canonical CONTACT shape: the same guess, read off the shape.
   assert.deepEqual(read("How do I contact the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
-  // Pronoun follow-ups: the lexical reading refuses a pronoun in the name slot. "It" binds the earlier turn's
-  // body in the binders; "they" is read there as people, so the guess proposes that body as the referent — as a
-  // model does — and the model's own referent decides whether the guess is kept.
+  // Pronouns have no name slot; the model chooses whether the prior body is the referent.
   assert.deepEqual(read("When does it meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
   assert.deepEqual(read("When do they meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("How did they vote last time?", PRIOR_MESA), { intent: "PAST_MEETING", temporal: "LAST", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
@@ -80,7 +78,6 @@ test("an abandoned writer stops, and the ladder never escalates past it", async 
   assert.equal(result.escalation, null);
 });
 
-/** Measured warm times: the frontier model reading a question, the fast writer answering. */
 const READING_MS = 1_500;
 const WRITING_MS = 1_900;
 
@@ -94,11 +91,30 @@ const calls: Call[] = [];
 /** The model's reading of the next question, or a failed call. */
 let reading: Record<string, unknown> | "HTTP_500" = {};
 /** What each writer call answers, in call order; the default once the queue is empty. */
-let writerQueue: { answer: string; citedSources: unknown[] }[] = [];
+interface Reply { answer: string; citedSources: unknown[] }
+type Completion = (signal?: AbortSignal | null) => Promise<void>;
+let writerQueue: { reply: Reply; complete: Completion }[] = [];
 const PASSING = { answer: "The board's contacts are in the records below.", citedSources: [1] };
+
+function waitForAbort(signal?: AbortSignal | null): Promise<void> {
+  return new Promise((_, reject) => {
+    const stop = () => reject(Object.assign(new Error("aborted"), { name: "AbortError" }));
+    if (signal?.aborted) stop();
+    else signal?.addEventListener("abort", stop, { once: true });
+  });
+}
+
+const delay = (ms: number): Completion => signal => new Promise((resolve, reject) => {
+  const stop = () => { clearTimeout(timer); reject(Object.assign(new Error("aborted"), { name: "AbortError" })); };
+  const timer = setTimeout(() => { signal?.removeEventListener("abort", stop); resolve(); }, ms);
+  if (signal?.aborted) stop();
+  else signal?.addEventListener("abort", stop, { once: true });
+});
 
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
+// Hedging has separate tests; this transport counts one reading per speculation.
+process.env.WTP_ASK_HEDGE_MS = "off";
 delete process.env.WTP_ASK_SPECULATION;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
@@ -107,16 +123,15 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
   const call: Call = { kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, startedAt: performance.now() };
   calls.push(call);
-  const planned = synthesis ? writerQueue.shift() ?? PASSING : reading;
-  await new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(resolve, synthesis ? WRITING_MS : READING_MS);
-    init?.signal?.addEventListener("abort", () => {
-      clearTimeout(timer);
-      call.aborted = true;
-      call.endedAt = performance.now();
-      reject(Object.assign(new Error("aborted"), { name: "AbortError" }));
-    }, { once: true });
-  });
+  const queued = synthesis ? writerQueue.shift() : undefined;
+  const planned = synthesis ? queued?.reply ?? PASSING : reading;
+  try {
+    await (queued?.complete ?? delay(synthesis ? WRITING_MS : READING_MS))(init?.signal);
+  } catch (error) {
+    call.aborted = init?.signal?.aborted;
+    call.endedAt = performance.now();
+    throw error;
+  }
   call.endedAt = performance.now();
   if (planned === "HTTP_500") return new Response(JSON.stringify({ error: { type: "api_error" } }), { status: 500 });
   return new Response(JSON.stringify({ content: [{ type: "text", text: JSON.stringify(planned) }], usage: { input_tokens: 10, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } }), {
@@ -218,7 +233,7 @@ test("ROUTE: a model reading that disagrees discards the speculative answer — 
   reading = { ...CONTACT_READING, temporal: { kind: "LAST" } };
   const SPECULATIVE = { answer: "SPECULATIVE: the board's contacts are in the records below.", citedSources: [1] };
   const MODEL = { answer: "The board's members are in the records below.", citedSources: [1] };
-  writerQueue = [SPECULATIVE, MODEL];
+  writerQueue = [{ reply: SPECULATIVE, complete: waitForAbort }, { reply: MODEL, complete: delay(WRITING_MS) }];
   try {
     const result = await timedAsk(QUESTION);
     assert.deepEqual(result.calls.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE", "SYNTHESIZE"], "the speculative writer, then the writer on the model's reading — and no escalation of the stopped one");
@@ -235,10 +250,27 @@ test("ROUTE: a model reading that disagrees discards the speculative answer — 
   }
 });
 
+test("ROUTE: a completed speculative answer is discarded when the model disagrees", { concurrency: false }, async () => {
+  reading = { ...CONTACT_READING, temporal: { kind: "LAST" } };
+  const SPECULATIVE = { answer: "SPECULATIVE: the board's contacts are in the records below.", citedSources: [1] };
+  writerQueue = [{ reply: SPECULATIVE, complete: async () => {} }];
+  try {
+    const result = await timedAsk(QUESTION);
+    assert.deepEqual(result.calls.map(call => call.kind), ["INTERPRET", "SYNTHESIZE", "SYNTHESIZE"]);
+    assert.ok(result.calls[1].endedAt! <= result.calls[0].endedAt!);
+    assert.notEqual(result.payload.answer, SPECULATIVE.answer);
+    assert.equal(result.payload.trace.speculation?.delivered, "MODEL_READING");
+    assert.equal(result.payload.trace.speculation?.why, "different-question-kind");
+    assert.equal(result.payload.trace.speculation?.aborted, undefined);
+  } finally {
+    writerQueue = [];
+  }
+});
+
 test("ROUTE: a model reading that never comes discards the speculative answer too; the route falls back exactly as before", { concurrency: false }, async () => {
   reading = "HTTP_500";
   const SPECULATIVE = { answer: "SPECULATIVE: the board's contacts are in the records below.", citedSources: [1] };
-  writerQueue = [SPECULATIVE];
+  writerQueue = [{ reply: SPECULATIVE, complete: waitForAbort }];
   try {
     const result = await timedAsk(QUESTION);
     assert.equal(result.payload.trace.interpretation.ran, false, "the deterministic reading stood in");

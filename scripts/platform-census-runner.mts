@@ -1,4 +1,3 @@
-import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { neon } from "@neondatabase/serverless";
 import { join } from "node:path";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
@@ -33,7 +32,7 @@ const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "P
 const spaceOut = hostSpacer();
 let dotgov: Promise<Awaited<ReturnType<DiscoveryRuntime["open"]>>> | undefined;
 const runtime: DiscoveryRuntime = {
-  now, spaceOut, vault: vault.put, routeHints: ROUTE_HINTS, budget: { spent: () => stopped }, websiteSize: target => sizeFor(target),
+  now, spaceOut, vault: vault.put, budget: { spent: () => stopped }, websiteSize: target => sizeFor(target),
   open: input => {
     const read = async () => {
       const got = await fleet.guardedOpenBytes("discovery-web", "platform-census",

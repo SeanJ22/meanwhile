@@ -547,14 +547,16 @@ test("HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed 
 
   assert.deepEqual(seen, [
     "https://hilltop.gov/robots.txt", "https://hilltop.gov/",
-    ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://hilltop.gov/${path}`),
     "https://library.example.org/robots.txt", "https://library.example.org/feed/",
     "https://energy.example.org/robots.txt", "https://energy.example.org/meetings.ics",
     "https://schools.example.org/robots.txt", "https://schools.example.org/f/board_schedule.pdf",
     "https://video.example.com/robots.txt", "https://video.example.com/@HilltopCable/streams",
+    ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://hilltop.gov/${path}`),
     "https://hilltop.gov/m.ics",
   ], "every hint before the route the page itself links");
   assert.equal(attempt.outcome, "FOUND");
+  assert.equal(attempt.found[0].hintUrl, hints[0].routes[1].url);
+  assert.equal(attempt.found[1].hintUrl, undefined);
   assert.deepEqual(attempt.found.map((f) => [f.vendor, f.url, f.basis, f.count]), [["ical", "https://energy.example.org/meetings.ics", "HINT", 1], ["ical", "https://hilltop.gov/m.ics", "LINKED", 1]]);
   assert.match(attempt.found[0].evidence, /^route hint \(feed, observed 2026-09-24T18:00:00Z by test\): the committee's calendar$/);
   const leads = new Map(attempt.leads.map((l) => [l.url, l] as const));
@@ -600,10 +602,8 @@ test("A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FRO
   assert.ok(!namesItself("<title>This domain may be for sale</title>", "City of El Mirage"));
 });
 
-test("committed route hints stay valid and the independent census passes them to its walks", () => {
+test("committed route hints stay valid for the door seed", () => {
   assert.deepEqual(routeHintProblems(ROUTE_HINTS), []);
-  const runner = readFileSync("scripts/platform-census-runner.mts", "utf8");
-  assert.match(runner, /routeHints: ROUTE_HINTS/);
 });
 
 /* -------------------------------------------- what the vault will not hold */

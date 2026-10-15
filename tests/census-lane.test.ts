@@ -13,6 +13,10 @@ import { upsertDerivedDoor } from "../lib/doors/registry.ts";
 import { meetingEndpointCandidates } from "../lib/hunt/meetings-site-discovery.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
+import { routeHintsDoorId, seedRouteHintDoors } from "../lib/doors/route-hints.ts";
+import { indexReportedFinding, indexScoutFindings } from "../lib/control-plane/box.ts";
+import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
 const NOW = "2026-10-13T12:00:00.000Z";
@@ -24,6 +28,159 @@ const runtime = (over: Partial<DiscoveryRuntime> = {}): DiscoveryRuntime => ({ n
   open: recordedDiscoveryOpen({ [home]: { status: 200, body: `<a href="${source}">Governing Board meetings</a>` },
     [source]: { status: 200, body: fixture("boardbook-amphi-2065.html") },
     [`${home}robots.txt`]: { status: 200, body: "User-agent: *\nDisallow: /\n" } }), ...over });
+
+const hint = { url: source, body: "Amphitheater Governing Board", kind: "PAGE" as const, platform: "boardbook",
+  verifyAs: "boardbook" as const, evidence: "Recorded official board calendar", observed: { at: NOW, by: "hunter" } };
+const calendar = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nUID:amphi-board\nDTSTART:20261015T190000Z\nSUMMARY:Amphitheater Governing Board\nEND:VEVENT\nEND:VCALENDAR";
+const hiddenRuntime = (trail: string[], pages: Record<string, { status: number; body: string }> = {}) => {
+  const open = recordedDiscoveryOpen({ [home]: { status: 200, body: "<h1>Amphitheater Unified School District</h1>" },
+    [source]: { status: 200, body: fixture("boardbook-amphi-2065.html") }, ...pages });
+  return runtime({ open: async input => { trail.push(input.url); return open(input); },
+    search: async () => { trail.push("SEARCH"); return { hits: [], requests: [] }; } });
+};
+
+test("the production census reads a seeded hidden route before searches, reports its meetings, and observes a live door edit immediately", async () => {
+  const repos = createMemoryRepositories();
+  await seedRouteHintDoors({ repo: repos.doors, hints: [{ jurisdictionId: need.jurisdictionId, officialSite: null, routes: [hint] }], deriveInputAt: NOW, at: NOW });
+  const trail: string[] = [];
+  const run = hiddenRuntime(trail);
+  const report = await runCensusState({ repos, state: "AZ", needs: [need], runtime: run });
+  assert.equal(report.walked, 1, JSON.stringify(report));
+  assert.equal(report.hintMeetings.length, 1);
+  assert.equal(report.hintMeetings[0].body, hint.body);
+  assert.ok(report.hintMeetings[0].count > 0);
+  assert.ok(trail.indexOf(source) < trail.indexOf("SEARCH"), JSON.stringify(trail));
+  assert.equal(trail.filter(url => url === source).length, 1, "the evidence read is reused by the content check");
+  assert.deepEqual((await repos.discoveryAttempts.read(need.jurisdictionId))[0].routeHints?.routes, [source]);
+  assert.equal((await runCensusState({ repos, state: "AZ", needs: [need], runtime: run })).notDue, 1);
+  const row = await repos.doors.mustRead(routeHintsDoorId(need.jurisdictionId));
+  const revised = `${source}?current=1`;
+  await repos.doors.compareAndSet(row.id, row.revision, { ...row.value, config: { ...row.value.config,
+    "route:00": JSON.stringify({ ...hint, url: revised }) } }, NOW);
+  const changed = await runCensusState({ repos, state: "AZ", needs: [need], runtime: { ...hiddenRuntime([], { [revised]: { status: 200, body: fixture("boardbook-amphi-2065.html") } }),
+    now: () => "2026-10-13T12:00:00.001Z" } });
+  assert.equal(changed.walked, 1, JSON.stringify(changed));
+  assert.equal(changed.notDue, 0);
+  assert.equal(changed.hintMeetings[0].url, revised);
+});
+
+test("a current official-site hint supplies the homepage before searching and keeps its actual source", async () => {
+  const repos = createMemoryRepositories();
+  const current = "https://current-amphi.example.gov";
+  await seedRouteHintDoors({ repo: repos.doors, hints: [{ jurisdictionId: need.jurisdictionId, routes: [],
+    officialSite: { origin: current, selfName: need.name, replaces: home, recordedState: "retired address",
+      evidence: ["Recorded official domain registration"], observed: { at: NOW, by: "hunter" } } }], deriveInputAt: NOW, at: NOW });
+  const trail: string[] = [];
+  const report = await runCensusState({ repos, state: "AZ", needs: [need], runtime: hiddenRuntime(trail, {
+    [`${current}/`]: { status: 200, body: `<h1>${need.name}</h1><a href="/board.ics">Board meetings</a>` },
+    [`${current}/board.ics`]: { status: 200, body: calendar } }) });
+  assert.equal(report.hintMeetings.length, 1, JSON.stringify(report));
+  assert.equal(report.hintMeetings[0].url, `${current}/board.ics`);
+  assert.ok(trail.indexOf(`${current}/`) < trail.indexOf("SEARCH"));
+  assert.ok(!trail.includes(home));
+  const hosts = await repos.fieldManual.slice({ kinds: ["ENTITY_HOST"], state: "az" });
+  assert.equal((hosts[0].value.payload as { source: string }).source, "ROUTE_HINT");
+});
+
+test("MTG-01/02 hunter findings are reused only for their exact registered body, including cross-subject and mid-walk drops", async () => {
+  const repos = createMemoryRepositories();
+  const bodyId = "ocd-division/country:us/state:az/school_district:amphitheater#board";
+  await repos.workItems.put("directory-source", { id: "directory-source", subject: "directory-job",
+    autonomousPlan: { directorySubject: { jurisdiction: { id: need.jurisdictionId } } },
+    publicationOutcome: { status: "PUBLISHED", bodyIds: [bodyId], at: NOW } } as unknown as WorkItem, NOW);
+  const unverifiedBody = `${bodyId}-unverified`;
+  await repos.workItems.put("held-directory", { id: "held-directory", subject: need.jurisdictionId,
+    publicationOutcome: { status: "HELD", bodyIds: [unverifiedBody], at: NOW } } as unknown as WorkItem, NOW);
+  const urls = [source, `${source}?agenda=1`, `${source}?dropped=1`];
+  const result = { attemptId: "hunter-calendar", obligationId: "hunter-county", subjectId: "az:county:pima", workItemId: "wi-hunter", recordedAt: NOW,
+    findings: [
+      { kind: "POINTER", subjectId: bodyId, field: "MTG-01", value: urls[0], sourceUrl: home, summary: "Board calendar", artifactIds: ["ar-calendar"] },
+      { kind: "RECORD", subjectId: `${bodyId}#calendar`, missionPart: "MTG-02", sourceUrl: urls[1], exactQuote: "Published governing board agendas", summary: "Agendas", artifactIds: ["ar-agenda"] },
+      { kind: "POINTER", subjectId: "az:city:another-city", field: "MTG-01", value: "https://another-city.gov/calendar.ics", summary: "Other body", artifactIds: ["ar-other"] },
+      { kind: "RECORD", subjectId: bodyId, field: "meeting.agendaPosting", value: "Outside on the marquee", sourceUrl: "https://amphi.com/posting-rule", summary: "Posting rule", artifactIds: ["ar-rule"] },
+      { kind: "POINTER", subjectId: unverifiedBody, field: "MTG-01", value: "https://unverified-body.gov/calendar.ics", summary: "Unpublished body", artifactIds: ["ar-unverified"] },
+    ] } as unknown as ScoutResult;
+  await repos.scoutResults.append(result.obligationId, result.attemptId, result, NOW);
+  await indexScoutFindings(repos.boxFindings, result, NOW);
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-drop", attemptId: "hunter-drop", missionPart: "MTG-01",
+    finding: { subjectId: bodyId, field: "calendarSourceUrl", value: urls[2], exactQuote: "Governing Board meeting calendar", sourceUrl: home,
+      artifactIds: ["ar-drop"], subjectHint: null, index: 0 } }, NOW);
+  repos.scoutResults.readAll = async () => { throw new Error("countrywide hunter read"); };
+  repos.boxFindings.list = async () => { throw new Error("countrywide finding read"); };
+  repos.workItems.list = async () => { throw new Error("countrywide body-publication read"); };
+  const trail: string[] = [];
+  const report = await runCensusState({ repos, state: "AZ", needs: [need],
+    runtime: hiddenRuntime(trail, Object.fromEntries(urls.map(url => [url, { status: 200, body: fixture("boardbook-amphi-2065.html") }]))) });
+  assert.equal(report.walked, 1, JSON.stringify(report));
+  assert.deepEqual(new Set(report.hintMeetings.map(row => row.url)), new Set(urls));
+  for (const url of urls) assert.ok(trail.indexOf(url) < trail.indexOf("SEARCH"));
+  assert.ok(!trail.some(url => /another-city|posting-rule|unverified-body/.test(url)));
+  const attempt = (await repos.discoveryAttempts.read(need.jurisdictionId))[0];
+  assert.ok(attempt.found.every(row => row.hintUrl && urls.includes(row.hintUrl)));
+});
+
+test("saved meeting-discovery routes are inherited before a website search and remain usable without a recorded homepage", async () => {
+  const repos = createMemoryRepositories();
+  const url = "https://calendar.example.gov/council.ics";
+  const entry = newFieldManualEntry("hunter", "calendar", { kind: "SCOUT_DISCOVERY", role: "SCOUT", title: "Board calendar", summary: "Read the council calendar",
+    states: ["az"], recordClasses: ["meetings-discovery"], observedAt: NOW, outcome: "YIELDED", url,
+    payload: { obligationId: `freshness:meetings-discovery:${need.jurisdictionId}#own-site`, evidenceArtifactIds: ["ar-calendar"] } });
+  const trail: string[] = [];
+  const open = recordedDiscoveryOpen({ [url]: { status: 200, body: calendar } });
+  const report = await runCensusState({ repos, state: "AZ", needs: [{ ...need, ownWebAddress: null }], entries: [entry],
+    runtime: runtime({ open: async input => { trail.push(input.url); return open(input); }, search: async () => { trail.push("SEARCH"); return { hits: [], requests: [] }; } }) });
+  assert.equal(report.walked, 1, JSON.stringify(report));
+  assert.ok(trail.indexOf(url) < trail.indexOf("SEARCH"));
+  assert.equal(report.hintMeetings.length, 1);
+  assert.equal((await repos.discoveryAttempts.read(need.jurisdictionId))[0].outcome, "FOUND");
+});
+
+test("suspended hints, empty calendars, witnesses, and ordinary homepage finds never become hint-meeting wins", async () => {
+  for (const mode of ["SUSPENDED", "EMPTY", "WITNESS", "ORDINARY"] as const) {
+    const repos = createMemoryRepositories();
+    const url = mode === "EMPTY" ? "https://calendar.example.gov/empty.ics" : source;
+    await seedRouteHintDoors({ repo: repos.doors, hints: [{ jurisdictionId: need.jurisdictionId, officialSite: null,
+      routes: [{ ...hint, url, ...(mode === "EMPTY" ? { verifyAs: "ical" as const } : {}),
+        ...(mode === "WITNESS" ? { kind: "WITNESS" as const, verifyAs: null } : {}) }] }], deriveInputAt: NOW, at: NOW });
+    if (mode === "SUSPENDED") {
+      const row = await repos.doors.mustRead(routeHintsDoorId(need.jurisdictionId));
+      await repos.doors.compareAndSet(row.id, row.revision, { ...row.value, status: "SUSPENDED" }, NOW);
+    }
+    const trail: string[] = [];
+    const report = await runCensusState({ repos, state: "AZ", needs: [need], runtime: mode === "ORDINARY" ? runtime({
+      open: recordedDiscoveryOpen({ [home]: { status: 200, body: `<a href="${home}normal.ics">Meetings</a>` },
+        [source]: { status: 404, body: "missing" }, [`${home}normal.ics`]: { status: 200, body: calendar } }) })
+      : hiddenRuntime(trail, mode === "EMPTY" ? { [url]: { status: 200, body: "BEGIN:VCALENDAR\nEND:VCALENDAR" } } : {}) });
+    assert.equal(report.hintMeetings.length, 0, JSON.stringify({ mode, report }));
+    if (mode === "SUSPENDED") assert.ok(!trail.includes(url));
+    if (mode === "ORDINARY") assert.ok((await repos.discoveryAttempts.read(need.jurisdictionId))[0].found.some(row => (row.count ?? 0) > 0));
+  }
+});
+
+test("a hinted vendor inventory reports the named body with meetings, excluding notices and empty body calendars", async () => {
+  const repos = createMemoryRepositories();
+  const url = "https://aster.api.civicclerk.com/v1/Events?$top=20";
+  const city = { ...need, jurisdictionId: "az:city:city-of-aster", name: "City of Aster", govClass: "CITY_OR_TOWN" };
+  await seedRouteHintDoors({ repo: repos.doors, hints: [{ jurisdictionId: city.jurisdictionId, officialSite: null,
+    routes: [{ ...hint, url, body: "City Council", verifyAs: "civicclerk-api" }] }], deriveInputAt: NOW, at: NOW });
+  const open = recordedDiscoveryOpen({ [home]: { status: 200, body: "<h1>City of Aster</h1>" } });
+  const report = await runCensusState({ repos, state: "AZ", needs: [city], runtime: runtime({ open: async input => {
+    const target = new URL(input.url);
+    let value: unknown;
+    if (target.pathname === "/v1/EventCategories") value = [{ id: 1, categoryDesc: "City Council" }, { id: 2, categoryDesc: "Public Notice" },
+      { id: 3, categoryDesc: "Planning & Zoning Commission" }, { id: 4, categoryDesc: "Parks, Recreation and Library Advisory Board" }];
+    else if (target.pathname === "/v1/Events") {
+      const category = /categoryId eq (\d+)/.exec(target.searchParams.get("$filter") ?? "")?.[1];
+      value = category === "3" ? [] : category ? [{ id: Number(category), categoryId: Number(category) }] : [{ id: 1, categoryId: 1 }, { id: 2, categoryId: 2 }];
+    } else return open(input);
+    const body = JSON.stringify({ value });
+    return { status: 200, body, bytes: body.length, contentType: "application/json", location: null, transportError: null };
+  } }) });
+  assert.equal(report.walked, 1, JSON.stringify(report));
+  assert.deepEqual(report.hintMeetings.map(row => [row.body, row.count]), [["City Council", 1], ["Parks, Recreation and Library Advisory Board", 1]]);
+  const council = (await repos.discoveryAttempts.read(city.jurisdictionId))[0].found.find(row => row.bodyName === "City Council");
+  assert.equal(council?.hintUrl, url);
+});
 
 test("the census walks changed sources, keeps robots as evidence, and an unchanged later clock makes no second walk", async () => {
   const repos = createMemoryRepositories();

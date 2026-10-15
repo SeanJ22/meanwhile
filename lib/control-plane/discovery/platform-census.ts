@@ -174,7 +174,7 @@ export async function readPlatformCensusNeeds(state: string, registry: Jurisdict
   for (const row of registry?.jurisdictions ?? []) {
     const origin = siteOrigins(row.ownWebAddress)[0];
     if (origin) hosts.add(new URL(origin).hostname.replace(/^www\./, ""));
-    needs.push({ jurisdictionId: row.id, stateCode: row.stateCode, name: row.name, govClass: row.govClass, countyFips: row.countyFips, countyName: row.countyName,
+    needs.push({ jurisdictionId: row.id, ...(row.bodyId ? { bodyIds: [row.bodyId] } : {}), stateCode: row.stateCode, name: row.name, govClass: row.govClass, countyFips: row.countyFips, countyName: row.countyName,
       ownWebAddress: row.ownWebAddress, basis: "SOURCE_DISCOVERY_OWED", sources: [OWN_SITE_MEETINGS_SOURCE],
       addressSource: registry?.registration ? { source: "REGISTRATION", versionId: registry.registration.versionId } : { source: "OPERATIONAL_REFERENCE", versionId: input.reviewedVersionId ?? null } });
   }

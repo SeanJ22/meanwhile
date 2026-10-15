@@ -12,7 +12,15 @@ export interface BallotPublicationResult {
   readonly versionId: string | null;
   readonly merged: readonly string[];
   readonly skipped: readonly { readonly file: string; readonly reason: string }[];
+  readonly heldContests?: readonly BallotContestHold[];
   readonly reason: string | null;
+}
+
+export interface BallotContestHold {
+  readonly state: string;
+  readonly contestId: string;
+  readonly title: string;
+  readonly reason: string;
 }
 
 export async function ballotInputHash(directory: string): Promise<string> {
@@ -36,7 +44,10 @@ export function parseBallotPublicationResult(output: string): BallotPublicationR
       !["PUBLISHED", "HELD"].includes(row.status) || !(row.versionId === null || typeof row.versionId === "string") ||
       !(row.reason === null || typeof row.reason === "string") || !Array.isArray(row.merged) ||
       !row.merged.every(file => typeof file === "string" && /^[a-z]{2}\.json$/i.test(file)) || !Array.isArray(row.skipped) ||
-      !row.skipped.every(item => item && typeof item.file === "string" && typeof item.reason === "string" && item.reason.length > 0)) return null;
+      !row.skipped.every(item => item && typeof item.file === "string" && typeof item.reason === "string" && item.reason.length > 0) ||
+      row.heldContests !== undefined && (!Array.isArray(row.heldContests) || !row.heldContests.every(item => item &&
+        /^[A-Z]{2}$/.test(item.state) && typeof item.contestId === "string" && item.contestId.length > 0 &&
+        typeof item.title === "string" && item.title.length > 0 && typeof item.reason === "string" && item.reason.length > 0))) return null;
     return row;
   } catch { return null; }
 }

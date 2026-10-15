@@ -17,18 +17,8 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-/**
- * The persistence schema. camelCase in TypeScript, snake_case in Postgres,
- * translated only here with explicit column names.
- *
- * Every table that carries a division identifier carries the vintage of the
- * dataset it was resolved against: district identifiers are reused across
- * redistricting cycles with different geometry.
- *
- * The collection stores (search log, reactions, feedback) are identifier-free
- * and never join: no account key, device ID, retained IP, lasting session key
- * or foreign key.
- */
+// Division IDs can be reused after redistricting, so rows retain their geometry vintage.
+// Collection tables must not gain personal identifiers or cross-table reader join keys.
 
 /** One sitting of a public body, keyed by the source-namespaced id the adapters emit. */
 export const meetings = pgTable(
@@ -36,10 +26,7 @@ export const meetings = pgTable(
   {
     /** Source-namespaced: `<adapter>:<tenant>:<upstream id>`. */
     id: text("id").primaryKey(),
-    /**
-     * The division whose government is meeting. Nullable: a body the Census
-     * does not enumerate has no canonical division, and none is invented.
-     */
+    // Bodies without a canonical Census division retain null instead of an invented identifier.
     ocdId: text("ocd_id"),
     /** Dataset vintage `ocdId` was resolved against; null with it. */
     divisionVintage: text("division_vintage"),
@@ -48,21 +35,14 @@ export const meetings = pgTable(
     /** Instant of the meeting's start; wall-clock lives with timeZone. */
     startsAt: timestamp("starts_at", { withTimezone: true, mode: "string" }).notNull(),
     timeZone: text("time_zone").notNull(),
-    /**
-     * Where the meeting is held; all four null together for an online
-     * meeting, with `online_label` saying what there is instead.
-     */
+    // Online meetings leave all four location fields null and use onlineLabel instead.
     locationName: text("location_name"),
     locationAddress: text("location_address"),
     locationLat: doublePrecision("location_lat"),
     locationLng: doublePrecision("location_lng"),
     /** The published location string for an online meeting, verbatim. Present exactly when the location columns are null. */
     onlineLabel: text("online_label"),
-    /**
-     * The join link the body published, or null when it published none. A
-     * null is rendered as the named gap and never filled with the body's
-     * homepage or a portal URL.
-     */
+    // An unpublished join link stays null; a homepage or portal must not fill that gap.
     onlineJoinUrl: text("online_join_url"),
     agendaUrl: text("agenda_url"),
     /** Display only — join on ocdId, never on this. */
@@ -85,13 +65,7 @@ export const meetings = pgTable(
   ],
 );
 
-/**
- * Agenda documents, append-only — one row per distinct version, id
- * `<meetingId>@<contentHash>`. Revisions are appended beside their prior
- * versions, never overwritten: a silently revised agenda is itself news.
- * Transcribed from AgendaDocumentStore, which keeps the same contract in
- * memory.
- */
+// Append each distinct content hash so later agenda revisions cannot erase the evidence of a change.
 export const agendaDocuments = pgTable(
   "agenda_documents",
   {
@@ -117,16 +91,7 @@ export const agendaDocuments = pgTable(
   (table) => [index("agenda_documents_meeting_id_idx").on(table.meetingId)],
 );
 
-/**
- * The search log — what was asked and where, never who.
- *
- * Deliberately no relation to any other table: no foreign keys, no account
- * or device column, nothing that could resolve a row to a person. The zip
- * is `approximate_location` per the entry-experience rule — orientation,
- * never district truth. It is honest to sell aggregates of this table only
- * because it cannot be resolved to anyone; that property is load-bearing
- * and guarded in tests, not just described here.
- */
+// Keep search rows free of personal identifiers and cross-table joins; ZIP is approximate location, not district truth.
 export const searchLog = pgTable(
   "search_log",
   {
@@ -147,44 +112,22 @@ export const searchLog = pgTable(
     }).notNull(),
     /** Zip as entered. Orientation only — never resolved to a person. */
     approximateLocation: text("approximate_location"),
-    /**
-     * Divisions the event touched, as OCD-IDs. One event resolves against
-     * one geometry dataset, so the vintage is a row column, not per entry.
-     */
+    // One event uses one geometry vintage, shared by every division in the row.
     ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
     divisionVintage: text("division_vintage").notNull(),
-    /**
-     * Event-shaped facts with no identifier in them: the radius asked for,
-     * the cascade tier answered, the filter values, the body or meeting id
-     * opened. Never free text a person typed.
-     */
+    // Store bounded event facts only; never reader-entered free text or personal identifiers.
     detail: jsonb("detail").$type<Record<string, string | number | boolean>>(),
-    /**
-     * Whose traffic this row is. `ORGANIC` (a reader) is the only class any
-     * aggregate may count; `SYNTHETIC` is declared by the runner at write time;
-     * `UNKNOWN` and `AUTHOR` are excluded too. The column has no CHECK, so the
-     * enum is type-level; every sold query allowlists `ORGANIC`.
-     */
+    // Aggregates must allowlist ORGANIC: runClass is a TypeScript enum without a database CHECK.
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()
       .default("ORGANIC"),
     /** Which automated run wrote this row. Null on every `ORGANIC` row by construction. */
     runId: text("run_id"),
-    /**
-     * The coverage tier of the place when this row was written, stamped at
-     * write time, never inferred at read time. Not nullable and not defaulted:
-     * a write that cannot state a tier fails. `UNKNOWN` is never ordered
-     * against the four tiers. Identical for every reader in a place, so it
-     * singles nobody out.
-     */
+    // Stamp coverage at write time; never infer it later or order UNKNOWN against known tiers.
     coverageTier: text("coverage_tier", {
       enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
     }).notNull(),
-    /**
-     * The same stamped tiers counted rather than floored (`T0:24,T1:0,T2:3,T3:0`).
-     * Stored only; no reader-facing surface shows it. Not nullable and not
-     * defaulted; `UNKNOWN` where it cannot be recovered.
-     */
+    // Preserve the stamped tier counts for storage only; unrecoverable counts remain UNKNOWN.
     coverageTierDistribution: text("coverage_tier_distribution").notNull(),
   },
   (table) => [
@@ -194,13 +137,8 @@ export const searchLog = pgTable(
   ],
 );
 
-/**
- * Reactions: what a reader thought of a public record and roughly where they
- * were looking, never who they are. Identifier-free like the search log.
- * `reactionKeyHash` is the SHA-256 of a random browser key, relating a
- * browser's reactions to each other (so an answer can be changed) and to
- * nothing else. `verificationTier` is ANONYMOUS until verification exists.
- */
+// The random browser-key digest links only reactions so an answer can change; never join it to another store.
+// Verification remains ANONYMOUS until a verification mechanism exists.
 export const reactions = pgTable(
   "reactions",
   {
@@ -219,10 +157,7 @@ export const reactions = pgTable(
     }).notNull(),
     /** The roll-call key (`house:119-2:283`) — validated against the votes snapshot. */
     targetId: text("target_id").notNull(),
-    /**
-     * The one-tap answer; the only value an aggregate reads. SOMEONE_ELSE is
-     * accepted only on a candidate in a one-candidate contest.
-     */
+    // SOMEONE_ELSE is valid only for a candidate in a one-candidate contest.
     reaction: text("reaction", {
       enum: [
         "YES",
@@ -237,18 +172,9 @@ export const reactions = pgTable(
         "DONT_CARE",
       ],
     }).notNull(),
-    /**
-     * Which instrument produced this row: 1 = yes/no/unsure (+ SOMEONE_ELSE),
-     * 2 = the five-point funding scale. Rows on different scales are never
-     * combined. Server-derived from the target type; `SCALE_BREAKS` in
-     * lib/signal/reactions.ts dates the break.
-     */
+    // Derive the instrument from the target type; never combine different scales in an aggregate.
     scaleVersion: integer("scale_version").notNull().default(1),
-    /**
-     * Where the reader was looking, on the same approximate-location basis
-     * as the search log: divisions resolved from the map view, zip-level at
-     * finest. Never an address, never district truth.
-     */
+    // Use map-resolved divisions at ZIP resolution or coarser; never store an address or infer district residence.
     ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
     divisionVintage: text("division_vintage").notNull(),
     /** ANONYMOUS today; future tiers exist in the enum so no migration reshapes aggregates. */
@@ -257,32 +183,17 @@ export const reactions = pgTable(
     }).notNull(),
     /** Browser continuity, not identity. Stored only hashed. */
     reactionKeyHash: text("reaction_key_hash").notNull(),
-    /**
-     * Quarantine, not deletion: why a row that tripped an intake limit is
-     * excluded from every aggregate and export. Sticky on overwrite.
-     */
+    // Exclusion survives overwrites and keeps the row out of every aggregate and export.
     suspectReason: text("suspect_reason", {
       enum: ["VELOCITY", "LIMITER_UNAVAILABLE"],
     }),
-    /**
-     * The optional verbatim; null is the ordinary case. It never reaches an
-     * aggregate: `ReactionRowForAggregation` has no field for it. It leaves
-     * this table only through moderation.
-     */
+    // Verbatim text may leave storage only through moderation; aggregation types deliberately omit it.
     freeText: text("free_text"),
-    /**
-     * Whose traffic this row is, with the search log's meanings. Unlike the
-     * search log the write path requires the declaration; the `UNKNOWN`
-     * default exists only for backfilled rows.
-     */
+    // Writes must declare traffic class; UNKNOWN exists only for backfilled rows.
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()
       .default("UNKNOWN"),
-    /**
-     * Which automated run wrote this row, as `sha256("reaction-run:" + runId)`
-     * so it never shares a value space with `search_log.run_id`. Null on every
-     * `ORGANIC` row.
-     */
+    // Hash run IDs under reaction-run: to prevent joins to search_log.run_id; ORGANIC rows keep null.
     runId: text("run_id"),
     /** The coverage tier when written; see `search_log.coverage_tier`. */
     coverageTier: text("coverage_tier", {
@@ -304,11 +215,7 @@ export const reactions = pgTable(
   ],
 );
 
-/**
- * Reader feedback from the in-app form: what the reader typed and nothing
- * about the reader. No continuity key, zip, division, IP, email or foreign
- * key. The message is scrubbed before storage. Never sold, never aggregated.
- */
+// Store scrubbed feedback without identity, location or continuity keys; exclude it from sales and aggregates.
 export const feedback = pgTable(
   "feedback",
   {
@@ -323,11 +230,7 @@ export const feedback = pgTable(
     message: text("message").notNull(),
     /** Which entry point this came through: a closed enum, never a URL. */
     surface: text("surface", { enum: ["SIDEBAR", "TRANSPARENCY", "COVERAGE"] }).notNull(),
-    /**
-     * A random handle into `feedback_contact` when the reader left a reply
-     * address, else null. Minted, never derived from the address, so it is no
-     * join key.
-     */
+    // Mint contact handles randomly; deriving them from an address would create a join key.
     contactRef: text("contact_ref"),
     /** Same declaration and meanings as the search log's. */
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
@@ -343,11 +246,7 @@ export const feedback = pgTable(
   (table) => [index("feedback_received_at_idx").on(table.receivedAt)],
 );
 
-/**
- * The one place a reader-supplied reply address lives: the address, the random
- * handle it was filed under, and when it arrived. No message, zip, division,
- * surface, run class or foreign key. Enters no export and no aggregate.
- */
+// Keep reply addresses isolated from messages and location; never include them in exports or aggregates.
 export const feedbackContact = pgTable(
   "feedback_contact",
   {
@@ -360,13 +259,8 @@ export const feedbackContact = pgTable(
   (table) => [index("feedback_contact_received_at_idx").on(table.receivedAt)],
 );
 
-/**
- * Transient intake-limiter state, so the per-device rate limit and daily
- * ceiling count across serverless instances. Not a collection store.
- * `digest` is sha256("intake-limiter:" + raw key), a different space from
- * `reactions.reaction_key_hash`. Counters only. Rows untouched for 48 hours
- * are purged by the intake runtime child.
- */
+// Use a separate intake-limiter: hash namespace and store counters only.
+// The runtime purges rows untouched for 48 hours.
 export const intakeLimiter = pgTable("intake_limiter", {
   /** sha256("intake-limiter:" + raw key); joins nothing. */
   digest: text("digest").primaryKey(),
@@ -379,11 +273,7 @@ export const intakeLimiter = pgTable("intake_limiter", {
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull(),
 });
 
-/**
- * A failed write to a sold store, recorded on a path separate from the
- * reader-facing catch. Its own space: the store name, the Postgres error code
- * and the truncated message, and when. Nothing about who was writing.
- */
+// Record storage failures separately from reader-facing catches, without identifying the writer.
 export const writeAlarm = pgTable("write_alarm", {
   id: uuid("id").primaryKey().defaultRandom(),
   raisedAt: timestamp("raised_at", { withTimezone: true, mode: "string" }).notNull(),
@@ -398,17 +288,9 @@ export const writeAlarm = pgTable("write_alarm", {
   index("write_alarm_raised_at_idx").on(t.raisedAt),
 ]);
 
-/* ===================================================================== *
- * The candidate questionnaire: a content store, not a collection store.
- * A candidate's answers are published civic content keyed on a public
- * candidacy id. These tables must never be added to `COLLECTION_STORES`.
- * The token itself is never stored, only its digest.
- * ===================================================================== */
+// Questionnaire answers are public civic content; exclude these tables from COLLECTION_STORES and store token digests only.
 
-/**
- * One invitation, generated symmetrically per contest. `invited_on` stays
- * null until the send path stamps it.
- */
+// Leave invitedOn null until the send path records delivery.
 export const questionnaireInvitations = pgTable(
   "questionnaire_invitations",
   {
@@ -438,10 +320,7 @@ export const questionnaireInvitations = pgTable(
   ],
 );
 
-/**
- * One submitted version. Append-only; the highest `version` for a candidacy
- * renders. `answers` is verbatim; there is no summary, excerpt or preview column.
- */
+// Append versions and render the highest; retain verbatim answers without summary or preview columns.
 export const questionnaireResponses = pgTable(
   "questionnaire_responses",
   {
@@ -453,10 +332,7 @@ export const questionnaireResponses = pgTable(
     officeClass: text("office_class").notNull(),
     /** `[{ questionId, text }]`. **Verbatim. Never truncated, never summarised.** */
     answers: jsonb("answers").$type<Array<{ questionId: string; text: string }>>().notNull(),
-    /**
-     * Set when the candidate withdraws. **Internal only** — the card renders the
-     * neutral invited state and never says a withdrawal happened.
-     */
+    // Withdrawal stays internal; the card renders the neutral invited state.
     withdrawnAt: timestamp("withdrawn_at", { withTimezone: true, mode: "string" }),
   },
   (t) => [
@@ -464,10 +340,7 @@ export const questionnaireResponses = pgTable(
   ],
 );
 
-/**
- * One single-use link. **The token itself is never stored** — only
- * `sha256("questionnaire-token:" + token)`, minted in `lib/questionnaire/auth.ts`.
- */
+// Store only sha256("questionnaire-token:" + token), never the single-use token itself.
 export const questionnaireTokens = pgTable(
   "questionnaire_tokens",
   {
@@ -481,16 +354,8 @@ export const questionnaireTokens = pgTable(
   (t) => [uniqueIndex("questionnaire_tokens_digest_idx").on(t.tokenDigest)],
 );
 
-/* ==========================================================================
- * Speak Your Mind: verbatim constituent sentiment, a collection store that
- * joins nothing.
- *  - `speakKeyHash` is `sha256("speak-your-mind:" + key)` over a random
- *    browser key; the prefix keeps its digest space apart from the reaction
- *    and limiter hashes.
- *  - `ocdIds` is zip-resolved divisions, never an address.
- *  - `subjectId` identifies who was spoken about, never who spoke.
- * Not rendered publicly.
- * ========================================================================== */
+// Namespace browser-key hashes to prevent cross-store joins; store ZIP-resolved divisions, never addresses.
+// Subjects identify public officials; constituent sentiment remains private.
 export const speakYourMind = pgTable(
   "speak_your_mind",
   {
@@ -508,15 +373,9 @@ export const speakYourMind = pgTable(
     divisionVintage: text("division_vintage").notNull(),
     /** What the reader wrote, after the scrub and the self-disclosure pass. Capped at the write path. */
     text: text("text").notNull(),
-    /**
-     * Which kinds of self-identifying content the pass removed, never the
-     * content. Non-empty means the row may never export verbatim.
-     */
+    // Record removed content classes, never their text; any removal bars verbatim export.
     selfDisclosure: jsonb("self_disclosure").$type<string[]>().notNull(),
-    /**
-     * `HELD` rows wait for the author's review and are excluded from
-     * everything until then. Nothing typed here is ever auto-forwarded.
-     */
+    // HELD rows remain excluded until author review; submitted text is never auto-forwarded.
     reviewState: text("review_state", { enum: ["NONE", "HELD"] })
       .notNull()
       .default("NONE"),
@@ -549,12 +408,8 @@ export const speakYourMind = pgTable(
   ],
 );
 
-/**
- * One question and its answer, in one row. `askKeyHash` is digested under its
- * own `"ask-interaction:"` prefix. No email, account, address, phone or IP;
- * subjects are public civic ids. `questionScrubbed` is the scrubbed text only.
- * Writes stay off while `ripcord.askSignalCapture` is pulled.
- */
+// Use the ask-interaction: hash namespace and scrubbed question text; subjects identify public civic records.
+// Writes must honor the askSignalCapture ripcord.
 export const askInteractions = pgTable(
   "ask_interactions",
   {
@@ -588,10 +443,7 @@ export const askInteractions = pgTable(
     answerText: text("answer_text"),
     /** Which model wrote it, for audit. Null where none did. */
     answerModel: text("answer_model"),
-    /**
-     * The reasoning effort the answer was produced at. Null on deterministic
-     * paths, which make no model call.
-     */
+    // Deterministic answers make no model call and retain null effort.
     answerEffort: text("answer_effort"),
     /** Did structural validation pass? Null where it did not run. */
     validationPassed: boolean("validation_passed"),
@@ -599,10 +451,7 @@ export const askInteractions = pgTable(
     evidenceRecordCount: integer("evidence_record_count").notNull().default(0),
     evidenceSourceCount: integer("evidence_source_count").notNull().default(0),
     namedGapCount: integer("named_gap_count").notNull().default(0),
-    /**
-     * Which evidence stood behind the answer, as bounded references to public
-     * records, never documents (`lib/ask/evidence.ts` bounds count and length).
-     */
+    // Store bounded public-record references, never the evidence documents themselves.
     evidenceRecordRefs: jsonb("evidence_record_refs").$type<string[]>().notNull().default([]),
     evidenceSourceUrls: jsonb("evidence_source_urls").$type<string[]>().notNull().default([]),
     evidenceSourceOrgs: jsonb("evidence_source_orgs").$type<string[]>().notNull().default([]),
@@ -615,10 +464,7 @@ export const askInteractions = pgTable(
     approximateLocation: text("approximate_location"),
     ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
     divisionVintage: text("division_vintage").notNull(),
-    /**
-     * The two orthogonal location axes. See `lib/ask/residency.ts` for why one
-     * enum could not carry both without implying one from the other.
-     */
+    // Keep the two location axes independent; one must not imply the other (see lib/ask/residency.ts).
     residencyRelation: text("residency_relation", {
       enum: ["CURRENT_HOME", "PROSPECTIVE_HOME", "BROWSING", "UNKNOWN"],
     }).notNull(),
@@ -650,12 +496,7 @@ export const askInteractions = pgTable(
   ],
 );
 
-/**
- * A reader's "want this info sooner?" tap: a demand signal about our backlog,
- * kept apart from reactions so it never enters a civic-interest aggregate.
- * One fixed enum value, no free text, no identity column and no continuity
- * hash (two taps are two unrelatable rows). There is no read path for readers.
- */
+// Keep backlog-demand taps separate from civic-interest aggregates, with no free text or continuity key.
 export const demandSignals = pgTable(
   "demand_signals",
   {
@@ -667,16 +508,10 @@ export const demandSignals = pgTable(
     subjectId: text("subject_id").notNull(),
     /** One value: the pill asks one question. Text column with no CHECK. */
     signal: text("signal", { enum: ["WANT_THIS_SOONER"] }).notNull(),
-    /**
-     * Where the reader was looking: divisions resolved from the map view,
-     * zip-level at finest. Never an address.
-     */
+    // Resolve location from the map at ZIP resolution or coarser, never an address.
     ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
     divisionVintage: text("division_vintage").notNull(),
-    /**
-     * Whose traffic this row is, as on `reactions`: the write path requires the
-     * declaration, and the `UNKNOWN` default means an undeclared row is never a reader.
-     */
+    // Require traffic class on writes; UNKNOWN must never count as reader activity.
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()
       .default("UNKNOWN"),
@@ -689,11 +524,7 @@ export const demandSignals = pgTable(
   ],
 );
 
-/**
- * Routine authoritative civic-data candidate versions, as operational data. A
- * failed candidate remains evidence that acquisition happened, while the
- * promoted pointer stays on the last known good version.
- */
+// Retain failed acquisition candidates while the promoted pointer serves the last verified version.
 /** Immutable payload storage. A candidate names reused parts instead of
  * rewriting the national registry and its duplicate evidence copies. */
 export const civicDataPayloadParts = pgTable("civic_data_payload_parts", {
@@ -832,11 +663,7 @@ export const civicDataCandidateEvents = pgTable(
   ],
 );
 
-/**
- * One bounded Reader projection per record-class/scope. Promotion replaces
- * this row atomically; candidates and raw validation evidence are never read
- * by Reader requests.
- */
+// Replace each serving projection atomically; reader requests must not load candidates or validation evidence.
 export const civicDataPromotions = pgTable(
   "civic_data_promotions",
   {
@@ -897,14 +724,8 @@ export const civicDataPromotions = pgTable(
   ],
 );
 
-/**
- * Derived reader-serving projections: a serving copy, never an acquisition
- * source or promotion authority. Each row is a pure function of the promoted
- * partitions it names in `composed_from`, plus `fact_sha256`. `sequence` is
- * monotonic: a write lands only when it exceeds the stored sequence, so an
- * older composition never replaces a newer one, and the last valid row keeps
- * serving until replaced.
- */
+// Serving copies derive only from named promoted partitions and fact_sha256; they confer no acquisition authority.
+// Monotonic sequence checks prevent older compositions from replacing the last valid serving row.
 export const civicDataReaderProjections = pgTable(
   "civic_data_reader_projections",
   {

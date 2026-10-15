@@ -14,12 +14,10 @@ import { areaBudgetKey, type BudgetLine } from "./spend-holds.ts";
 import { stateOfSubject } from "./subjects.ts";
 import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 
-/* ------------------------------------------------------------ territory */
-
 /** One native Census inventory entry in the state reference. */
 export interface CensusUnitTerritory {
   readonly pid6: string;
-  /** Previously held durable registry IDs for this native government, never a name match. */
+  /** Durable registry aliases for this native government must never be inferred by name. */
   readonly aliases?: readonly string[];
   readonly name: string;
   readonly type: string;
@@ -43,10 +41,7 @@ export interface Territory {
 /* The certain-overlap rule itself lives in `overlap.ts` (so Admin's Send preview can apply it alone); re-exported here. */
 export { OVERLAP_CERTAINTY_MARGIN, certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 
-/**
- * The sampled-overlap key a unit's ZCTAs were derived from (`county:<geoid>`,
- * `place:<geoid>`, `unsd:…`), or null when its method names no single layer GEOID.
- */
+// Returns null unless the method identifies one sampled-overlap layer and GEOID.
 export function unitShareKey(unit: Pick<CensusUnitTerritory, "method">): string | null {
   const m = /^(county|place|cousub|unsd|elsd|scsd) GEOID (\d+)/.exec(unit.method ?? "");
   return m === null ? null : `${m[1]}:${m[2]}`;
@@ -63,26 +58,14 @@ export interface TerritoryIndex {
   readonly statewide: ReadonlySet<string>;
   /** Census units in states NO registry covers, for the "not registered" count. Keyed by state (upper). */
   readonly unregisteredUnitsByState: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
-  /**
-   * Census units in a covered state that no registry row joined: governments the
-   * registry does not carry, counted as blocked, never as work. Keyed by state
-   * (upper). Optional for older indexes.
-   */
+  // Unjoined Census governments count as blocked coverage, not scheduled work; keys are uppercase states.
   readonly unjoinedUnitsByState?: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
   /** A unit's share of each of its ZCTAs, where the sampled overlap was loaded for it. */
   readonly unitShares?: (unit: CensusUnitTerritory) => ReadonlyMap<string, number> | undefined;
 }
 
-/**
- * Join the covered-jurisdiction registries to the Census unit territories.
- * `units` covers every state, so a scope in an unregistered state can still say
- * which governments it holds. A unit without shares can only be placed by a
- * whole-inside ZCTA.
- *
- * A registration-read registry places each government by its sourced division
- * association (`divisionTerritory`) or a held statutory district rule.
- * Unassociated governments remain listed and geographically unresolved.
- */
+// Placement requires sourced division territory or a statutory district rule; unresolved governments remain listed.
+// Units without overlap shares can only be placed by a wholly contained ZCTA.
 export function buildTerritoryIndex(
   registries: readonly JurisdictionRegistry[],
   units: readonly CensusUnitTerritory[],
@@ -190,12 +173,7 @@ export function buildTerritoryIndex(
   return { bySubject, byDivision, unplaced, statewide, unregisteredUnitsByState, unjoinedUnitsByState, unitShares };
 }
 
-/**
- * The Census units (of those given) that certainly overlap the scope, by the
- * same rule as a registered government: a whole-inside ZCTA, or shares that
- * sum past the whole. A unit whose shares were not loaded can only be placed by
- * a whole-inside ZCTA, so the count is a floor and never a guess.
- */
+// Without overlap shares, only a wholly contained ZCTA proves membership, so this count is a lower bound.
 export function unitsCertainlyIn(
   scope: ScopeZctas,
   units: readonly CensusUnitTerritory[],
@@ -204,8 +182,6 @@ export function unitsCertainlyIn(
   const none = new Map<string, number>();
   return units.filter((unit) => certainlyOverlaps({ zctas: new Set(unit.zips), shares: sharesOf(unit) ?? none }, scope));
 }
-
-/* ------------------------------------------------------------ resolution */
 
 /** A selected scope with its ZCTAs resolved (or the named reason it is not). */
 export type ResolvedScope =
@@ -245,12 +221,7 @@ export function scopeMembers(
   return members;
 }
 
-/* ------------------------------------------------------------ order */
-
-/**
- * A subject's placement: the index (0 = first) of the best-priority resolved
- * scope it is in, or null when it is in none. Scopes arrive in run order.
- */
+// Scopes arrive in priority order; null means no resolved scope contains the subject.
 export function placementIndex(
   scopes: readonly { readonly members: ReadonlySet<string> }[],
 ): (subjectId: string) => number | null {
@@ -260,11 +231,7 @@ export function placementIndex(
   };
 }
 
-/**
- * Stable reorder: the owner's DISPATCH rows first, then rows in a scope by that
- * scope's run order, then everything else — each group keeping the order it
- * came in. Pure; never adds, drops or duplicates a row.
- */
+// Preserve input order within equal ranks and place unranked rows last.
 export function orderByPlacement<T>(
   rows: readonly T[],
   rankOf: (row: T) => number | null,
@@ -277,8 +244,6 @@ export function orderByPlacement<T>(
   });
   return ranked.map((r) => r.row);
 }
-
-/* ------------------------------------------------------------ spend */
 
 /** Attributed model spend for a scope's subjects in a window (the Fleet's own model-backed rule). */
 export function scopeModelSpend(
@@ -293,8 +258,6 @@ export function scopeModelSpend(
     until,
   );
 }
-
-/* ------------------------------------------------------------ budget */
 
 export const SCOPE_BUDGET_CODE = "SCOPE_BUDGET";
 
@@ -319,11 +282,6 @@ export type BudgetAdmission =
   | { readonly admit: true }
   | { readonly admit: false; readonly code: typeof SCOPE_BUDGET_CODE; readonly why: string };
 
-/**
- * The per-scope admission gate for paid Scouts. An admitted Scout holds its
- * worst case against every scope it is in until settled; an unsettled
- * admission keeps its reservation for the rest of the cycle.
- */
 /** A state hint as a state: a bare postal code (`AZ`) or any id `stateOfSubject` reads; null when it says none. */
 function stateOfHint(hint: string | null | undefined): string | null {
   if (typeof hint !== "string" || hint.trim() === "") return null;
@@ -331,6 +289,7 @@ function stateOfHint(hint: string | null | undefined): string | null {
   return /^[a-z]{2}$/i.test(h) ? stateOfSubject(`${h}:state`) : stateOfSubject(h);
 }
 
+// Reserve the worst case against every matching scope until settlement; unresolved charges stay reserved for the cycle.
 export class ScopeBudgetGate {
   private readonly scopes: readonly BudgetScope[];
   private readonly worstCaseUsd: number;
@@ -380,20 +339,14 @@ export class ScopeBudgetGate {
     return funded.length ? funded : binding;
   }
 
-  /** A selected hunt authorizes its own work, including explicitly shared
-   * members. Opening the model lane for that hunt must not start unrelated
-   * geographic acquisition. Legacy rolling-only selections keep their rules. */
+  // A funded hunt authorizes only its own work and explicitly shared members, even when the model lane is open.
   private outsideSelectedHunts(binding: readonly BudgetScope[]): Extract<BudgetAdmission, { admit: false }> | null {
     return this.hasSelectedHunts && !binding.some(scope => scope.lifetime)
       ? { admit: false, code: SCOPE_BUDGET_CODE, why: "This work is outside the selected hunts. Paid model acquisition waits for an applicable hunt instruction; plain-code work is unchanged." }
       : null;
   }
 
-  /**
-   * The area budget lines a paid job on this subject is held against
-   * (`spend-holds.ts`): every binding scope must have room, or the refusal when
-   * a scope's budget cannot be checked. No lines: no area budget applies.
-   */
+  // Every binding area must have room; an unreadable budget refuses the job, while no lines means no area budget applies.
   linesFor(subjectId: string, stateHint?: string | null): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
     if (this.heldForMalformed > 0) {
       return {
@@ -482,9 +435,6 @@ export class ScopeBudgetGate {
   }
 }
 
-
-/* ------------------------------------------------------------ the plan */
-
 export interface ExpansionPlanInput {
   readonly declaredMembers?: ReadonlyMap<string, ReadonlySet<string>>;
   readonly now: string;
@@ -520,11 +470,7 @@ function countBy<T>(items: Iterable<T>, keyOf: (item: T) => string): Record<stri
   return out;
 }
 
-/**
- * What the scope holds: the registered governments that certainly overlap it,
- * which carry standing work, the scope ZCTAs those touch, and the gap. Census
- * units in unregistered states are counted by the same rule.
- */
+// Count registered and unregistered governments with the same certain-overlap rule.
 function coverageOf(
   scope: ScopeZctas,
   states: readonly string[],
@@ -565,10 +511,7 @@ function unresolvedBudgetSays(budgetUsd: number, states: readonly string[]): str
   );
 }
 
-/**
- * Step one, at the top of the cycle: membership, order and coverage. Needs no
- * spend, so it runs before the dispatch order is decided.
- */
+// Resolve membership and coverage before spend is available so they can determine dispatch order.
 export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
   const subjectsWithWork = new Set(input.obligations.map((o) => o.subjectId));
   const obligationsBySubject = new Map<string, number>();
@@ -659,11 +602,7 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
   return { scopes, placementOf, placedSubjects, malformedScopes: input.malformedScopes, reading };
 }
 
-/**
- * Step two, once the cost ledger is read: each scope's attributed spend, the
- * budget verdict, and the gate the Scout admission consults. `charges` null means
- * the ledger could not be read — every budgeted scope then holds its paid work.
- */
+// An unreadable cost ledger holds paid work in every budgeted scope.
 export function armExpansionBudget(
   plan: ExpansionPlan,
   input: { readonly now: string; readonly charges: readonly PricedCharge[] | null; readonly worstCaseUsd: number },

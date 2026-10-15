@@ -1,4 +1,3 @@
-/** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
 export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";

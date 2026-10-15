@@ -2101,8 +2101,8 @@ async function runAutonomousWave() {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
-  /* The legacy held-evidence plan runs only when schema-1 held work is owed: a registered event
-     capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
+  // Schema-1 event captures run only while parser, validator or auditor work remains.
+  // Both reads use the round’s incremental copy.
   const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan),
@@ -2389,15 +2389,8 @@ if (DISCOVERY_SERIAL) {
   discoveryLaneIds = ["campaign-sites", "candidate-publications"];
 }
 
-// Registered autonomous plans use the same dispatcher, vault, host spacing and
-// rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
-// Leave a minute after the last worker for the Admin state/heartbeat.
-// A prior cycle's late worker ended at the dispatch deadline, then its final
-// research state and heartbeat could not start before the hard wall.
-// Selection can read several complete repositories before it admits a worker.
-// Its own store budget must end before finalization starts, while a worker
-// admitted earlier still has time to finish and settle. This is a technical
-// slice boundary, not a count or spend cap: undispatched work remains owed.
+// End selection before finalization, leaving admitted workers time to settle and Admin records time to persist.
+// Discovery shares the cycle’s Scout allowance; undispatched work remains owed.
 
 } finally {
 

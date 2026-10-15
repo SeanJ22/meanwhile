@@ -1257,9 +1257,8 @@ export async function createPgRepositories(
   const sharedBudget = budgetRepositoryFrom(
     pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded), locks, "ATOMIC_COMPARE_AND_SET",
   );
-  // One process need not contend with its own read/modify/write requests on
-  // this large aggregate. Other processes still contend through the same CAS.
-  // This queues accounting writes only; workers and their leases run in parallel.
+  // Serialize accounting writes within this process; cross-process updates still use CAS.
+  // Workers and leases remain parallel.
   let budgetWrite: Promise<unknown> = Promise.resolve();
   const budget: ControlPlaneRepositories["budget"] = { ...sharedBudget, mutate: (mutator, now) => {
     const write = budgetWrite.then(() => sharedBudget.mutate(mutator, now));

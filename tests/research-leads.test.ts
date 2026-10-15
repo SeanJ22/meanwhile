@@ -1,8 +1,3 @@
-/**
- * Research leads from Admin: pasted or uploaded links become one tracked
- * order, known links are marked held, new ones are tested by plain code, and
- * what works becomes a lesson with the owner as its source that spreads.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 

@@ -67,13 +67,8 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
     if ("refusal" in areas) return { code: areas.refusal.code, why: areas.refusal.why };
     return { lines: { sends: sends.lines, areas: areas.lines } };
   };
-  /*
-   * The autonomous Fleet's Scouts and auditor belong to no Send: each request
-   * must fit the Fleet ceiling (the wrapped guard) and the area budget(s)
-   * covering the jurisdiction the job researches, by the Scouts' own matching
-   * rule — never another Send's budget (`areaGuardedTransport`). An area that
-   * cannot be read, or the ledger, refuses.
-   */
+  // Autonomous requests use Fleet and matching area budgets, never a Send budget.
+  // Unreadable area or ledger state refuses the request.
   /** Request holds taken and not yet settled: a sent request whose bill did not come back keeps its hold, and shutdown releases it (releaseOpenJobs). */
   const openJobs = new Set<JobSpend>();
   let autonomousHoldSeq = 0;
@@ -135,11 +130,8 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
     }
     return capacity;
   };
-  /**
-   * A lease worker's paid request, served by the process that owns the guards: held on the Send and area
-   * lines of the obligation that opened its task, reserved against the Fleet ceiling, and settled at what it
-   * measured. A refusal before sending releases its hold.
-   */
+  // Use the originating obligation’s Send and area budgets plus the Fleet ceiling.
+  // A refusal before sending releases the hold; sent requests settle at measured cost.
   const workerTransportFor = (jurisdiction: AutonomousJurisdiction, taskId: string): ModelTransport => async request => {
     const task = (await repos.routeTasks.mustRead(taskId)).value;
     const routing = workerBatchRouting(task);

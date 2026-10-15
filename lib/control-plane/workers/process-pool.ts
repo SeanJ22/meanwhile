@@ -186,7 +186,7 @@ export async function runLeaseWorkerProcesses(input: {
   if (standing !== null && (!Number.isSafeInteger(standing.quietMs) || standing.quietMs <= 0)) throw new Error("WORKER_QUIET_LIMIT_INVALID");
   const results: DispatchResult[] = [];
   const pending = new Set(input.config.taskIds);
-  /* Standing: every id this pool has held, so a finished task never rejoins; and the task each live worker is on. */
+  // Remember completed IDs so newly queued work cannot reintroduce a finished task.
   const seen = new Set(input.config.taskIds);
   const inFlight = new Map<string, number>();
   const assigned = new Set<string>();
@@ -237,7 +237,7 @@ export async function runLeaseWorkerProcesses(input: {
     };
     const remainingWorkMs = () => Math.min(timeoutMs - (Date.now() - startedAt - batchWaitedMs), (input.deadlineMs ?? Infinity) - Date.now() + batchWaitedMs);
     armKill(remainingWorkMs());
-    /* Standing: this worker's own clock. Any message either way renews it; quiet past the limit ends this worker alone. */
+    // Any message renews this worker’s idle clock; expiry terminates only this worker.
     let lastMovedAt = startedAt;
     let current: string | null = null;
     let tasksDone = 0;
@@ -390,11 +390,10 @@ export async function runLeaseWorkerProcesses(input: {
     child.once("exit", code => {
       clearTimeout(killTimer);
       clearTimeout(quietTimer);
-      /* Standing: workers that keep failing before their first task close admission instead of restarting every second. */
+      // Repeated startup failures close admission to prevent a restart loop.
       if (standing !== null) startupFailures = code !== 0 && tasksDone === 0 && !terminationError ? startupFailures + 1 : 0;
-      /* Standing: the task a worker held when it was ended (stuck, its wall) or crashed gets its own deferral; its siblings' tasks are theirs.
-         `current` is cleared by the task's result, so it names a task with none. A sibling's "finished" list may already have
-         taken it off `pending` (it read the task before this worker announced it), so that membership is not the test. */
+      // Defer the worker’s unfinished current task even if a sibling already removed it from pending.
+      // Only a reported result clears current.
       if (standing !== null && current !== null && (terminationError || code !== 0)) {
         pending.delete(current);
         const failed = workerDispatchFailure(current, terminationError ?? new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
@@ -416,7 +415,7 @@ export async function runLeaseWorkerProcesses(input: {
   const joinQueued = (): void => {
     for (const id of standing?.moreTasks?.() ?? []) if (!seen.has(id)) { seen.add(id); pending.add(id); }
   };
-  /* Standing: another worker while tasks wait that no idle worker can take. A worker waiting on memory counts as idle. */
+  // Workers waiting for memory count as idle, preventing duplicate admission for the same queued work.
   const standingWants = (capacity: number): boolean => {
     const waiting = [...pending].filter(id => !inFlight.has(id)).length;
     return active.size < capacity && waiting > active.size - inFlight.size;
@@ -433,7 +432,7 @@ export async function runLeaseWorkerProcesses(input: {
       launched++;
       const ids = [...pending];
       const worker = launch().catch(error => {
-        /* Standing: a memory wait that ran out keeps the work queued for the next admission; a closed lane closes admission. */
+        // A memory timeout leaves work queued; a closed lane must stop new admission.
         const memoryWait = standing !== null && error instanceof WorkerAdmissionRefusal && /WORKER_MEMORY_DEADLINE/.test(error.message);
         if (error instanceof WorkerAdmissionRefusal && !memoryWait) admissionClosed = true;
         if (standing !== null && startupFailures >= STANDING_STARTUP_FAILURES) admissionClosed = true;

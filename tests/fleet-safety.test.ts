@@ -131,9 +131,7 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
   assert.equal(def.bounds.rolling24HourModelUsd, fallback);
   assert.equal(def.snapshot(NIGHT).bounds.rolling24HourModelUsd, fallback);
 
-  // An override of $300 governs. $200 already spent is OVER the $100 fallback but
-  // UNDER the override — the dial, not the constant, is what admits it, and the
-  // pre-admission read and the per-request reservation agree.
+  // With $200 spent, both admission and request reservation must use the $300 override rather than the $100 default.
   const raised = fundedController({ now: NIGHT, spend: fleetSpendAt(priced([cost(200, recent)]), NIGHT), rollingCeilingUsd: 300, clock: () => Date.parse(NIGHT) });
   assert.equal(raised.bounds.rolling24HourModelUsd, 300);
   assert.equal(raised.rollingCeilingReached(0.6).reached, false, "under the raised ceiling the lane is not paused");
@@ -838,9 +836,7 @@ test("an in-flight public read reserves only a bounded slice, so another source 
   });
   const firstPending = first({ url: "https://example.test/one", method: "GET", headers: {}, timeoutMs: 1_000 });
   await new Promise<void>((resolve) => setImmediate(resolve));
-  // While the first read is in flight it holds only its bounded reservation, not
-  // the whole remaining budget, so the second read is admitted and runs to 200
-  // instead of being refused PAYLOAD_BYTE_CEILING at turn 0.
+  // An in-flight read reserves only its bounded share, leaving room for a second concurrent read.
   const secondResult = await second({ url: "https://other.test/two", method: "GET", headers: {}, timeoutMs: 1_000 });
   assert.equal(secondResult.status, 200);
   assert.equal(secondResult.body, "two");
@@ -906,9 +902,7 @@ test("the largest recurring record's stream budget clears ~9.2 MiB while a full 
   const a = holdOpen("scout-read-a");
   const b = holdOpen("scout-read-b");
   await new Promise<void>((resolve) => setImmediate(resolve));
-  // Now the serial deterministic lane opens the largest recurring record. Its
-  // honest per-fetch stream budget must still clear the
-  // 9,396,218-byte record even with the whole Scout lane holding reservations.
+  // The 9,396,218-byte deterministic fetch must fit while the Scout lane holds all of its reservations.
   const big = controller.guardedOpenOne("public-web", "nh-cfs-filing-entity-details", async (_input, init) => {
     assert.equal(new Headers(init?.headers).get('range'), null);
     return new Response(new Uint8Array(9_396_218), { status: 200 });

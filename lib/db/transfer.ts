@@ -91,10 +91,7 @@ function accumulate(row: DatabaseTransfer): void {
     requestBytes: prior.requestBytes + row.requestBytes, responseBytes: prior.responseBytes + row.responseBytes } : row);
 }
 
-/**
- * A standing-runner process hands its counts to the runner in its hour reports, which reach the runner even when the
- * process exits at once or is ended; the runner alone writes their daily rows (`keepRunnerTransfer`).
- */
+// Only the runner writes daily transfer rows; hour reports preserve child counts even if a child exits immediately.
 function reportsToRunner(): boolean {
   return process.env[VITAL_SIGNS_REPORT_ENV] === "1";
 }
@@ -157,10 +154,7 @@ export function installDatabaseTransferCounter(): void {
 const runnerParts = new Map<string, { readonly hour: string; readonly bytes: NeonBytesHour["bytes"]; readonly sent: NonNullable<NeonBytesHour["sent"]> }>();
 const NOTHING_SENT: NonNullable<NeonBytesHour["sent"]> = { reader: { requests: 0, bytes: 0 }, "control-plane": { requests: 0, bytes: 0 } };
 
-/**
- * The standing runner's daily rows: each hour report (one process's whole hour so far, its own or a child's) adds
- * what that process read and sent since its previous report, written once a minute by this process.
- */
+// Apply only each process-hour report’s increment since its previous report, avoiding duplicate daily counts.
 export function keepRunnerTransfer(part: NeonBytesHour): void {
   if (!Number.isSafeInteger(part.pid)) return;
   installDatabaseTransferCounter();

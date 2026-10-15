@@ -128,9 +128,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   knownHistory?: { readonly attempts: readonly Attempt[]; readonly routeTasks: readonly RouteTask[];
     readonly completedRecords?: readonly WorkerResultRecord[] }): Promise<AutonomousDecision> {
   const repos = runtime.repos;
-  // The coordinator already took a consistent candidate snapshot. Re-reading
-  // each item is a costly point request for every owed subject and can consume
-  // the entire runner selection wall before a held continuation is admitted.
+  // Reuse the consistent candidate snapshot to avoid a point read for every owed subject.
   const item = knownItems?.find(row => row.id === workItemId) ?? (await repos.workItems.mustRead(workItemId)).value;
   const plan = item.autonomousPlan;
   const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,task,reason});
@@ -208,10 +206,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const schedule=scheduleAutonomousAcquisition(plan,latest.result,now);
       if(!isScheduled(schedule)) {unresolved=true;continue;}
       if(Date.parse(schedule.nextDueAt)<=Date.parse(now)) {
-        // Finish independent checking of retained bytes before refreshing them.
-        // Otherwise a source whose cadence is shorter than the runner interval
-        // consumes every turn with acquisition and never reaches a verifier.
-        // Freshness still prevents staging and the refresh uses a real fetch.
+        // Check retained bytes before refresh so short source cadences cannot starve verification.
+        // Freshness still gates staging, and refresh performs a real fetch.
         pendingRefreshes.push({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,
           acquisition:{...acquisition,held:[]},replayLabel:`refresh-after:${latest.id}`});
         unresolved=true;
@@ -438,10 +434,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   const candidates=allItems.filter(item=>item.autonomousPlan && (options.acceptsWorkItem?.(item) ?? true));
   const attemptRows=await runtime.repos.attempts.list();
   const attempts=attemptRows.map(row=>row.value);
-  // A cycle's candidate set is fixed before dispatch. Join immutable Scout
-  // results and existing route tasks once, then hand each item only its own
-  // history. Re-reading both entire logs for every owed item made selection
-  // quadratic and exhausted the original hunt's early worker wall.
+  // Join immutable Scout results and route history once per fixed candidate set to keep selection linear.
   const [routeTaskRows, workerRecords] = await Promise.all([
     runtime.repos.routeTasks.list(), runtime.repos.workerResults.readAll(),
   ]);
@@ -498,9 +491,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   const squadParts=options.squads?.parts;
   const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions,
     weights?{partOf:item=>partOfItem(item,squadParts),weightOf:(send,part)=>weights!.get(squadKey(send,part))?.weight??1}:undefined);
-  // Validate this invocation's already loaded history through the same shared
-  // completion path. Independent calls still read current repository state;
-  // leases, capabilities and budget admission are never frozen by this join.
+  // Reuse loaded history only within this invocation; independent calls, leases, capabilities and budgets stay current.
   const candidateIds=new Set(ids);
   const attemptById=new Map(attemptRows.map(row=>[row.id,row] as const));
   const completedRecords=await readCompletedWorkerResults({...runtime.repos,
@@ -521,9 +512,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
 
   let cursor=0; let admitted=0; let scoutsAdmitted=0; let scoutsLimitedAdmitted=0;
-  // Join every admitted lane even when another lane's selection fails. An
-  // early Promise.all rejection would let an already dispatched paid worker
-  // continue after the cycle began its final records.
+  // Join admitted lanes even if another selection fails, so paid workers cannot outlive cycle finalization.
   const lanes=await Promise.allSettled(Array.from({length:concurrency},async()=>{
     while(cursor<ids.length && admitted<maximum) {
       const id=ids[cursor++];
@@ -535,9 +524,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
           completedRecords:recordsByWork.get(id)??[],
         });
       } catch (error) {
-        // Only a bounded, pre-dispatch selection can be deferred as unpaid
-        // work. A timeout after dispatch may carry unknown provider exposure
-        // and must reach the ordinary durable attempt/hold failure path.
+        // Only pre-dispatch timeouts can defer unpaid work; post-dispatch timeouts require durable exposure accounting.
         if (error instanceof Error && /^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)) {
           d = {workItemId:id,action:"BLOCKED",task:null,reason:`${error.message}; source reference remains unresolved`};
           deferred.push({workItemId:id,reason:"WORKER_ARTIFACT_MISSING_OR_PARTIAL",detail:d.reason});
@@ -571,7 +558,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
         dispatches.push(await dispatchAutonomousTask(runtime,d.task!));
       };
       // The lifetime hunt's durable reservation ledger arbitrates concurrent model calls.
-      // Other work retains the legacy serialization until it has the same guarantee.
+      // Work without this isolation guarantee must remain serialized.
       await dispatchScout();
       } catch(error) {
         if(!(error instanceof RepositoryLockHeld)) throw error;

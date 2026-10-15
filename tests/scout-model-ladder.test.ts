@@ -1,11 +1,5 @@
 import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
-/**
- * The hunter's model: the cheapest suitable class, the request shape it sends, how long a job may run, and the
- * routing table's ceiling.
- *
- * Offline: a fake transport scripted per model stands in for the provider and a fake toolkit for the network.
- * Nothing here reaches a model or a host.
- */
+
 
 import assert from "node:assert/strict";
 import test from "node:test";

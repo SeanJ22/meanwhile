@@ -1,0 +1,223 @@
+{
+  "contractId": "ballot-measures",
+  "version": "2026-general:0079e21cf75f0213cb82c7c59064789465e1b2ea9a1fa86090575274721cf67f:d68c84da022d7e968006da914fd273cc9cd625a67facbdd1382aa463f9bc678f",
+  "sourceThrough": "2026-10-15T21:19:41.554388+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-15T21:19:41.554388+00:00",
+    "reviewedBy": "Codex MS-01",
+    "sources": [
+      {
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+        "retrievedAt": "2026-10-15T21:13:34.830944+00:00",
+        "httpStatus": 200,
+        "rawHash": "edd388f137cd77fc85e86ecc06fe9edfbc015b62775fadf10b4c02a9141a5f9f",
+        "publisher": "Pima County School Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 district voter-information pamphlet, full 32-page PDF held. Complete operative sample ballot on printed page 13; official explanation/fiscal table and all 10 published arguments for retained, with all signers. The publisher expressly states no arguments against were submitted. No arguments generated."
+      },
+      {
+        "requestedUrl": "https://www.schools.pima.gov/",
+        "finalUrl": "https://www.schools.pima.gov/",
+        "retrievedAt": "2026-10-15T21:12:56.481583+00:00",
+        "httpStatus": 200,
+        "rawHash": "67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013",
+        "publisher": "Pima County School Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county school superintendent homepage lists this 2026 proposition and links its voter-information pamphlet directly to the captured county CivicPlus PDF."
+      },
+      {
+        "requestedUrl": "https://www.azleg.gov/ars/15/00481.htm",
+        "finalUrl": "https://www.azleg.gov/ars/15/00481.htm",
+        "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+        "httpStatus": 200,
+        "rawHash": "012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1",
+        "publisher": "Arizona Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "A.R.S. 15-481(A) states that a majority of those voting shall affirm or reject the proposed school override budget; exact threshold bound to the complete official statute HTML."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-measures",
+    "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+    "ballots": {
+      "AZ:az-2026-11-03": {
+        "election": {
+          "id": "az-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 General Election",
+          "state": "AZ"
+        },
+        "contests": [
+          {
+            "id": "ballot-az-pima:prop-423",
+            "type": "MEASURE",
+            "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+            "title": "Proposition 423: Vail Unified School District budget override continuation",
+            "voteFor": 1,
+            "scopeNote": "Voters of Vail Unified School District No. 20.",
+            "termYears": null,
+            "electionId": "az-2026-11-03",
+            "provenance": {
+              "sourceOrg": "Pima County School Superintendent",
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+              "collectedAt": "2026-10-15T21:13:34.830944+00:00",
+              "verifiedAt": "2026-10-15T21:19:41.554388+00:00"
+            },
+            "divisionVintage": "TIGER_GENZ2025",
+            "measureTextUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/"
+          }
+        ],
+        "candidacies": [],
+        "measures": [
+          {
+            "id": "ballot-az-pima:prop-423:question",
+            "contestId": "ballot-az-pima:prop-423",
+            "officialNumber": "Proposition 423",
+            "questionText": "Shall the Governing Board of Vail Unified School District No. 20 of Pima County, Arizona (the “School\nDistrict”), adopt maintenance and operations budgets which allow the School District to continue to\nexceed the revenue control limit specified by law in the amount of not more than twelve and one-\nhalf percent (12.5%) per fiscal year for fiscal year 2027/2028 and the next subsequent six (6) fiscal years\nthereafter?\n\nThe 2027/2028 proposed continuation of the budget increase of the School District budget will\nexceed the alternate proposed School District budget by approximately $5,102,762. The amount of the\nproposed increase will be based on a percentage of the School District’s revenue control limit in future\nyears as provided in Section 15-481(P), Arizona Revised Statutes. Any budget increase continuation\nauthorized by this election shall be entirely funded by a levy of taxes on the taxable property in this\nSchool District for the year for which adopted and for six subsequent years, shall not be realized from\nmonies furnished by the state and shall not be subject to the limitation on taxes specified in article IX,\nsection 18, Constitution of Arizona. Based on the current net assessed valuation used for secondary\nproperty tax purposes, to fund the proposed continuation of the increase in the School District’s budget\nwould require an estimated continuation of a tax rate of $1.61 per $100 of assessed valuation used for\nsecondary property tax purposes and is in addition to the School District’s tax rate that will be levied to\nfund the School District’s revenue control limit allowed by law.",
+            "officialStatement": null,
+            "provenance": {
+              "sourceOrg": "Pima County School Superintendent",
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+              "collectedAt": "2026-10-15T21:13:34.830944+00:00",
+              "verifiedAt": "2026-10-15T21:19:41.554388+00:00"
+            },
+            "officialText": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+              "sourceHash": "0079e21cf75f0213cb82c7c59064789465e1b2ea9a1fa86090575274721cf67f",
+              "retrievedAt": "2026-10-15T21:13:34.830944+00:00",
+              "publisher": "Pima County School Superintendent",
+              "vault": {
+                "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-7cc18c5a9d7000c9/sha256-0079e21cf75f0213cb82c7c59064789465e1b2ea9a1fa86090575274721cf67f.txt",
+                "byteLength": 2402,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+                  "sourceHash": "edd388f137cd77fc85e86ecc06fe9edfbc015b62775fadf10b4c02a9141a5f9f",
+                  "retrievedAt": "2026-10-15T21:13:34.830944+00:00",
+                  "publisher": "Pima County School Superintendent",
+                  "vault": {
+                    "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-7cc18c5a9d7000c9/sha256-edd388f137cd77fc85e86ecc06fe9edfbc015b62775fadf10b4c02a9141a5f9f.pdf",
+                    "byteLength": 287818,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "voterGuide": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+              "sourceHash": "d68c84da022d7e968006da914fd273cc9cd625a67facbdd1382aa463f9bc678f",
+              "retrievedAt": "2026-10-15T21:13:34.830944+00:00",
+              "publisher": "Pima County School Superintendent",
+              "vault": {
+                "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-7cc18c5a9d7000c9/sha256-d68c84da022d7e968006da914fd273cc9cd625a67facbdd1382aa463f9bc678f.txt",
+                "byteLength": 19482,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+                  "sourceHash": "edd388f137cd77fc85e86ecc06fe9edfbc015b62775fadf10b4c02a9141a5f9f",
+                  "retrievedAt": "2026-10-15T21:13:34.830944+00:00",
+                  "publisher": "Pima County School Superintendent",
+                  "vault": {
+                    "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-7cc18c5a9d7000c9/sha256-edd388f137cd77fc85e86ecc06fe9edfbc015b62775fadf10b4c02a9141a5f9f.pdf",
+                    "byteLength": 287818,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ],
+              "summary": "VAIL UNIFIED SCHOOL DISTRICT NO. 20\nNOVEMBER 3, 2026\n\nSPECIAL OVERRIDE ELECTION\n\nOn June 2, 2026, the Governing Board of the District (the “Governing Board”) passed\nand adopted a resolution calling a special override election (the “Election”) to authorize\nthe Override. A copy of such resolution is available from the District by written request\nto the Superintendent, Vail Unified School District No. 20 of Pima County, Arizona,\n13801 East Benson Highway #B, Vail, Arizona 85641, Telephone (520) 879-2000.\nThe proposed continuation of the override in the budget of the District that exceeds\nthe amount allowed pursuant to Section 15-905, Arizona Revised Statutes, will be not\nto exceed the otherwise allowable revenue control limit by more than twelve and one-\nhalf percent.\nThe proposed twelve and one-half percent override authorization is a continuation of\nthe District’s current twelve and one-half percent override authorization approved by\nthe voters in the District on November 2, 2021. The District’s current twelve and one-\nhalf percent override authorization is required by law to be reduced by one-third in\neach of fiscal years 2027/28 and 2028/29.\nThe total amount of the current year’s budget, the total amount of the proposed budget\nand the total amount of the alternate budget are as follows:\nCurrent Year’s Maintenance and Operations\nBudget (2026/2027)\t\t\t\t                  $146,622,048\nProposed Maintenance and Operations\nBudget (2027/2028)\t\t\t\t                  $149,717,340\nAlternate Maintenance and Operations\nBudget (2027/2028)\t\t\t\t                  $144,614,578\nThe proposed continuation of the override in the budget would be in effect for seven\nyears and would allow the revenue control limit to be exceeded by not more than\ntwelve and one-half percent.\nThe proposed total amount of revenues that will fund the continuation of the override\nin the budget and the amount that will be obtained from a levy of taxes on the taxable\nproperty within the District for the first year for which the budget increase was adopted\nis $15,308,286.\nNone of the proposed amount of revenues that will fund the continuation of the\noverride in the budget will be obtained from other than a levy of taxes on the taxable\nproperty within the District.\nThe dollar amount for the first year for which the budget continuation was adopted is\n$15,308,286, and the purpose for which the proposed continuation of the increase in\nthe budget is to be expended for the first year for which the budget continuation was\nadopted are as follows:\n• Maintain approximately 173 teaching positions paid for by the existing budget\noverride authority\n• Provide dedicated specialty and elective area classes such as art, music, PE and\nSTEM\n• Continue funding programs that promote high academic performance, including\nprograms for advanced students\n• Reduce class size\n• Provide additional staff to address the social, behavioral, and emotional learning\nneeds of students\n\nThe alternate budget shall be adopted by the Governing Board of the District if the\nproposed budget is not adopted by the qualified electors of the District. In adopting\nsuch alternate budget, the Governing Board shall follow the procedures prescribed in\nSection 15-905, Arizona Revised Statutes, for adopting a budget that does not include\nthe proposed increase.\nPlease note: State statute requires that the District’s estimated fiscal year 2027/28\nmaintenance and operations override tax rate (shown as $1.61 per $100 of net limited\nassessed property value throughout this pamphlet) be calculated using the District’s\nfiscal year 2026/27 net limited assessed property value. Based on preliminary property\nvalues provided by Pima County, it is expected that the District’s fiscal year 2027/28\nnet limited assessed property value will be higher than the District’s fiscal year 2026/27\nnet limited assessed property value, resulting in a lower 2027/28 maintenance and\noperations override tax rate for the District than that presented in this pamphlet. The\nDistrict estimates that the actual fiscal year 2027/28 maintenance and operations\noverride tax rate will be approximately $1.55 per $100 of net limited assessed property\nvalue, though such amount is subject to change based on final 2027/28 property values.",
+              "fiscalImpact": "VAIL UNIFIED SCHOOL DISTRICT NO. 20\nNOVEMBER 3, 2026\n\n12.5% MAINTENANCE AND OPERATIONS BUDGET OVERRIDE ELECTION\nNET ASSESSED VALUATION, TAX RATE AND ESTIMATED AMOUNTS OF\nSECONDARY PROPERTY TAXES\n\nEstimated Revenues to fund 12.5% M&O Budget Override                                                               $15,308,286\nNet Assessed Valuation for Tax Purposes (a)                                                                       $948,032,134\nEstimated Tax Rate per $100 of Assessed Valuation to fund 12.5% M&O Budget Override                                         $1.61\n\n\nLimited                      Estimated Net     Estimated     Estimated\nProperty        Assessment     Assessed        Override      Annual Tax\nValue             Ratio      Valuation (b)   Tax Rate (c)    Amount\nA.R.S. § 15-481B-11\nThe current limited property value, the\nnet assessed valuation and the estimated\namount of the secondary property taxes if\nthe proposed budget is adopted for each of\nthe following:\nA.R.S. § 15-481B-11(a)\nAn owner-occupied residence whose assessed\nvaluation is the average assessed valuation of\nproperty classified as class three, as prescribed\nby A.R.S. § 42-12003 for the current year in the\nschool district.                                    $261,794          10.0%         $26,179          $1.61           $421\nA.R.S. § 15-481B-11(b)\nAn owner-occupied residence whose assessed\nvaluation is one-half of the assessed valuation\nof the residence in A.R.S. § 15-481B-11(a).         $130,897          10.0%         $13,090          $1.61           $211\nA.R.S. § 15-481B-11(c)\nAn owner-occupied residence whose assessed\nvaluation is twice the assessed valuation of the\nresidence in A.R.S. § 15-481B-11(a).                $523,588          10.0%         $52,359          $1.61           $843\nA.R.S. § 15-481B-11(d)\nA business whose assessed valuation is\nthe average of the assessed valuation of\nproperty classified as class one as prescribed\nby A.R.S. § 42-12001, paragraphs 12 and 13,\nfor the current year in the school district.        $1,795,345        15.5%        $278,279          $1.61          $4,480\n\nAn owner-occupied residence whose limited\nproperty value is $100,000.                         $100,000          10.0%         $10,000          $1.61           $161\n\n\n(a) Net assessed valuation is the 2026/2027 preliminary value provided by the Arizona Department of Revenue.\n(b) Estimated by Arizona Department of Revenue based on preliminary 2026/2027 assessed values.\n(c) Per $100 of assessed valuation.",
+              "passageThreshold": "A. If a proposed budget of a school district exceeds the aggregate budget limit for the budget year, at least ninety days before the proposed election the governing board shall order an override election to be held on the first Tuesday following the first Monday in November as prescribed by section 16-204, subsection F for the purpose of presenting the proposed budget to the qualified electors of the school district who by a majority of those voting either shall affirm or reject the budget.",
+              "passageThresholdSource": {
+                "sourceUrl": "https://www.azleg.gov/ars/15/00481.htm",
+                "sourceHash": "c2b74c69a835caff1cce031652e4c5391689d079db3c862a5543d1b77ff7b84c",
+                "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+                "publisher": "Arizona Legislature",
+                "vault": {
+                  "key": "project/freshness/source/www.azleg.gov/2026/10/15/ms-01-az-local-7600de78983fe7cf/sha256-c2b74c69a835caff1cce031652e4c5391689d079db3c862a5543d1b77ff7b84c.txt",
+                  "byteLength": 39533,
+                  "contentType": "text/plain"
+                },
+                "originals": [
+                  {
+                    "sourceUrl": "https://www.azleg.gov/ars/15/00481.htm",
+                    "sourceHash": "012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1",
+                    "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+                    "publisher": "Arizona Legislature",
+                    "vault": {
+                      "key": "project/freshness/source/www.azleg.gov/2026/10/15/ms-01-az-local-7600de78983fe7cf/sha256-012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1.html",
+                      "byteLength": 44023,
+                      "contentType": "text/html"
+                    }
+                  }
+                ]
+              },
+              "argumentsFor": [
+                "Since 1993, generations of Vail’s children have benefited from our community’s willingness to\ninvest in high quality additional programs like fine arts, P.E., advanced courses, gifted services,\nand lower class sizes. As a result, children have thrived, and VUSD is consistently rated a top\nperforming school district in Arizona.\nThe Vail community has benefited as well. The attractiveness of our community and the values\nof our homes has been enhanced.\nPlease vote YES so that this generation of Vail children is assured of those same opportunities\nas previous generations. Vote YES to keep our home values high and our community an\nattractive place for families to live.\nA “yes” vote will not increase the current tax rate because it is a continuation of an override\nthat is already in place.\nIf the override isn’t reauthorized, funding for more than 172 teaching positions will be lost.\nClass sizes will increase. Valuable programs including fine arts, P.E., advanced courses, and\ngifted services will be reduced.\nIf the override is successful, funding for those teaching positions and important programs will\nbe protected.\nPlease vote to continue support for Vail’s children. Vote YES to continue this override.\nThank you!\nVUSD Governing Board",
+                "The Greater Vail Area Chamber of Commerce proudly supports Proposition 423, the Vail\nUnified School District’s request to reauthorize its existing Maintenance and Operations\nBudget Override.\nA strong public education system is one of the foundations of a thriving community. Quality\nschools help prepare the future workforce, attract families and businesses, strengthen property\nvalues, and contribute to the long-term economic vitality of the Greater Vail area.\nAs our community continues to grow, maintaining the quality of Vail schools is increasingly\nimportant. Proposition 423 is a continuation of the district’s current override, allowing Vail\nUnified School District to maintain important educational programs, attract and retain\nexceptional teachers and staff, and continue providing students with the high-quality\neducational opportunities our community has come to expect.\nOur local businesses benefit when students graduate with the skills, knowledge, and\nexperiences needed to succeed in college, careers, and the workforce. Investing in education\nis an investment in the future of our community and local economy. Allowing this existing\nfunding to phase out would put teachers and programs at risk and weaken one of our\ncommunity’s greatest strengths.\nFor these reasons, the Greater Vail Area Chamber of Commerce encourages voters to support\nProposition 423.\nDr. Denise Bowls\nPresident & CEO, Greater Vail Chamber of Commerce\nVail, AZ",
+                "My name is JV Nyman and am the proud parent of two Mica Mountain High School students.\nI am writing in support of the upcoming override, Prop 423.\nVUSD is a top-performing district, year after year, with less per-pupil funding than the state\naverage ($8,023 vs. $11,297). Even with the override passing, per-student funding will still fall\nfar below.\nThis override will not raise taxes. It simply continues what is already in place, replacing an\nexpiring override. VUSD voters have approved overrides since the 1990’s to fund the programs\nthat make our kids want to go to school, and keep class sizes low enough that they get the\nsupport they need.\nMy family supports this override to maintain a high-quality education for our kids, keep the\ncommunity strong, and known across Arizona for its excellent schools.\nVote YES on Prop 423!\nJV Nyman\nParent\nVail, AZ",
+                "I am writing to encourage registered voters residing in the Vail School District to vote for a\nrenewal of an override election for the Vail School District.\nMy husband Howard and I moved to rural Vail 56 years ago. There was one school and 350\nhigh school students bussed to TUSD or Benson high schools. Today there are 15,000 students\nattending PreK to 12th grades in attendance at 29 schools in Vail.\nThe override must be reauthorized by voters every five years or the funding fades away. The\nmoney from the override is used to hire art, music, and physical education teachers as well as\nspecialized teachers in achievement, gifted, and advanced placement. Additional classroom\nteachers are hired with the funds to assist in maintaining smaller classroom size.\nThe override funding is one of the reasons the Vail School District has been ranked as a top\nperforming district past 20 years in the State of Arizona.\nThe continuation of these funds is necessary to continue the award-winning educational\nexperiences received by each Vail student. Your “yes” vote will make sure Vail’s exceptional\neducational experiences continue.\nWhittley Anne Gibson\nVail School District Governing Board 2000-2012\nVail, AZ",
+                "I have lived in the Vail School District for the last 17 years and retired for the last 15 years.\nThis Prop is a continuation of a current Prop so this is not a new tax. I recognize that my home\nvalue is a result of the success of the school district.\nI have 3 grandchildren who have attended and graduated from schools in the Vail School\nDistrict. Over the last 15 years I have volunteered in many areas of the Vail School District and\nworked as a Volunteer Coordinator and in the Counseling department in the high school. I\nhave also had the pleasure of being on the Governing Board from 2016 through 2020.\nI have seen firsthand how the District manages the resources they have been given. This\nDistrict understands the value of the Fine Arts and extracurricular activity as an integral part to\nlearning. When I was a child, MANY years ago, I am sure there were grandpas who voted yes\non school overrides which impacted me directly.\n\nIt is now my opportunity to pay it forward for the children in the Vail School District. A very\nwise investment. We need to continue to reward success.\nMark Tate\nVail, AZ",
+                "As a 24 year resident and mom of three in the VSD, I have watched our community grow into\na destination for families because of our commitment to educational excellence. People move\nhere for our top A-rated schools, and that reputation is one of our greatest assets.\nSome argue that state requirements will protect our fine arts, extracurricular programs, and\nspecialized teachers regardless of this vote, but that is very misleading. While state standards\nrequire arts exposure, there is a huge difference between having dedicated, certified fine arts\nteachers and simply checking a legal box. If funding for specialized programs & teachers\ndisappears, those responsibilities fall on classroom teachers already carrying rigorous\nacademic demands. Voting no may result in cutting well over 100 teachers, making retention\nharder and class sizes larger.\nMore importantly, losing fine arts specialists directly harms our children. These programs\naren’t just “checking a box.” They provide a needed mental break, foster creativity, and keep\nstudents excited about school.\nVoting YES on the override isn’t a new tax, it’s continuing the support we’ve had for years to\nmaintain educational excellence, a strong community, and property values.\nJoin me in voting YES!\nAndrea Black\nVSD parent/ volunteer/ resident since 2002\nTucson, AZ",
+                "Join us in voting YES for Prop 423. The Vail Unified School District delivers one of the highest\npercentages of A-Rated Schools in Arizona. Since 1993 Vail’s voter-approved override has\nsupported the exceptional educational experiences that we expect for our children. Our\ncommunity’s support of an override every five years makes this possible. A YES vote for Prop\n423 means YES to continued reduced class sizes, to art, music, PE, and enrichment classes. We\nsee first-hand the commitment of teachers and staff as Vail Preservation Society has worked\nwith many of them. A yes vote for Prop 423 means that children today will continue to receive\nthe same exceptional educational opportunities that VUSD students have received since\n1993. This is very important to us. Together, our yes votes are an investment in educational\nexperiences that prepare the next generation for life. Prop 423 will not raise property taxes. It\nsimply keeps the current override that VUSD uses efficiently in place. Your YES vote for Prop\n423 positively impacts the education of every VUSD student.\nJ.J. Lamb\nPresident & CEO, Vail Preservation Society\nVail, AZ\nJeanne Lumia\nSecretary, Executive Board, Vail Preservation Society\nVail, AZ",
+                "Reauthorizing the Override is not simply a budget decision-it is a decision about the future\nof Vail students. The District’s proven record of academic excellence, responsible financial\nmanagement, and strong student outcomes shows that override funds are being used wisely\nand effectively. Without this support, the programs, teachers, and classroom conditions that\n\nhelp students succeed would be at risk. Vail students deserve the same outstanding educational\nopportunities that have made this District one of the strongest in Arizona, and voting to\ncontinue the Override is a direct investment in their success, and classroom conditions that\nmake these achievements possible. Since its original passage, the Override has helped support\nexceptional student achievement across the District. The District is ranked #1 among Tucson-\narea districts in Arizona by Niche.com, reflecting its continued commitment to academic\nexcellence.\nThe District continues to demonstrate strong fiscal stewardship. It holds an A+ Standard\n& Poor’s financial rating. The district is among the top 5 percent of districts in Arizona. The\nDistrict maintains this rating with a “stable outlook,” underscoring its responsible financial\nmanagement and continued ability to invest override funds in programs and staffing that\ndirectly support student success. Vote YES on 423.\nStuart Katz\nVail, AZ",
+                "As Citizens of Vail for Education, we urge you to vote YES on Proposition 423.\nVail Unified School District consistently ranks among Arizona’s top 10 school districts,\ndelivering exceptional academic outcomes for our children. However, maintaining this level of\nexcellence requires adequate funding. Prop 423 reauthorizes Vail’s existing 12.5% Maintenance\nand Operations budget override, directly supporting 20% of our teaching staff. Without this\nvote, our schools face devastating cuts to competitive teacher pay, instructional programs,\nand small class sizes.\nWhat makes Prop 423 a responsible choice is its efficiency. Vail operates at a significantly lower\noverride rate than other top-performing Pima County districts. For comparison, neighboring\ndistricts like Tanque Verde Unified (Prop 429) and Sahuarita Unified (Prop 428) run full 15%\nbudget overrides. Vail continues to deliver top-tier education while maintaining a lower tax\nburden.\nProp 423 is a continuation, not a new tax. Voting YES protects our teachers, supports quality\neducation, and preserves strong property values across our community. Please join us in\ninvesting in Vail’s future by supporting Proposition 423.\nSincerely,\nCitizens of Vail for Education\nStefanie Stark, Chair\nVail, AZ\nTameika Symonds, Treasurer\nVail, AZ",
+                "At Diamond Ventures, we understand that creating a great place to live requires more than\nbuilding homes and businesses. It requires strong schools that families can trust and a\ncommunity where children have the opportunity to thrive.\nDiamond Ventures has long supported Vail schools and partnered with the district because we\nrecognize the important role it plays in the success of Southeast Tucson. Many families living\nin the communities we have helped develop choose Vail because of its exceptional schools.\nVUSD is educating children all the while preparing the future employees, business owners,\nand community leaders who will shape this region.\nAs the Rincon Valley area continues to grow, maintaining a robust, high-performing\neducational system is critical. Proposition 423 will help VUSD retain quality teachers and\ncontinue providing the programs and opportunities that have made the district one of the best\n\nin Arizona.\nSupporting Proposition 423 protects an essential part of what makes Vail a great place to live,\nraise a family, and invest in the future. Diamond Ventures encourages voters to vote YES on\nProposition 423.\nChad Kolodisner\nVice President, Diamond Ventures\nTucson, AZ"
+              ],
+              "argumentsAgainst": []
+            }
+          }
+        ],
+        "absences": [],
+        "measureRecords": [
+          {
+            "contestId": "ballot-az-pima:prop-423",
+            "whatItDoes": "Shall the Governing Board of Vail Unified School District No. 20 of Pima County, Arizona (the “School\nDistrict”), adopt maintenance and operations budgets which allow the School District to continue to\nexceed the revenue control limit specified by law in the amount of not more than twelve and one-\nhalf percent (12.5%) per fiscal year for fiscal year 2027/2028 and the next subsequent six (6) fiscal years\nthereafter?",
+            "yesMeans": "A “yes” vote shall authorize the Vail Unified School District Governing Board to continue/extend the existing\nmaintenance and operation budget override authority and the resulting tax.",
+            "noMeans": "A “no” vote shall not authorize the Vail Unified School District Governing Board to continue/extend the existing\nmaintenance and operation budget override authority and the resulting tax.",
+            "parts": [
+              {
+                "id": "ballot-az-pima:prop-423#provision-1",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Proposition 423",
+                "what": "Shall the Governing Board of Vail Unified School District No. 20 of Pima County, Arizona (the “School\nDistrict”), adopt maintenance and operations budgets which allow the School District to continue to\nexceed the revenue control limit specified by law in the amount of not more than twelve and one-\nhalf percent (12.5%) per fiscal year for fiscal year 2027/2028 and the next subsequent six (6) fiscal years\nthereafter?"
+              },
+              {
+                "id": "ballot-az-pima:prop-423#provision-2",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Proposition 423",
+                "what": "The 2027/2028 proposed continuation of the budget increase of the School District budget will\nexceed the alternate proposed School District budget by approximately $5,102,762. The amount of the\nproposed increase will be based on a percentage of the School District’s revenue control limit in future\nyears as provided in Section 15-481(P), Arizona Revised Statutes. Any budget increase continuation\nauthorized by this election shall be entirely funded by a levy of taxes on the taxable property in this\nSchool District for the year for which adopted and for six subsequent years, shall not be realized from\nmonies furnished by the state and shall not be subject to the limitation on taxes specified in article IX,\nsection 18, Constitution of Arizona. Based on the current net assessed valuation used for secondary\nproperty tax purposes, to fund the proposed continuation of the increase in the School District’s budget\nwould require an estimated continuation of a tax rate of $1.61 per $100 of assessed valuation used for\nsecondary property tax purposes and is in addition to the School District’s tax rate that will be levied to\nfund the School District’s revenue control limit allowed by law."
+              }
+            ],
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+            "sourceHash": "0079e21cf75f0213cb82c7c59064789465e1b2ea9a1fa86090575274721cf67f",
+            "sourceHashKind": "HELD_TEXT",
+            "writtenAt": "2026-10-15T21:19:41.554388+00:00",
+            "citation": "measure-source"
+          }
+        ],
+        "sourceAuthorities": [
+          {
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "sourceHash": "67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013",
+            "retrievedAt": "2026-10-15T21:12:56.481583+00:00",
+            "publisher": "Pima County School Superintendent",
+            "vault": {
+              "key": "project/freshness/source/www.schools.pima.gov/2026/10/15/ms-01-az-local-eeb963979e5e8a6a/sha256-67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013.html",
+              "byteLength": 23473,
+              "contentType": "text/html"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -128,8 +128,7 @@ export async function* readMeasurePlaces(state: string, input: {
   readonly readState?: (state: string) => Promise<MeasurePlaceInput>;
   readonly query?: ReadOnlyQuery | null;
 }): AsyncGenerator<MeasurePlaceInput> {
-  const jurisdiction = US_JURISDICTIONS.find(row => row.usps === state);
-  if (!jurisdiction) throw new Error("Measure input requires one state.");
+  const jurisdiction = US_JURISDICTIONS.find(row => row.usps === requireBallotState(state))!;
   const division = `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
   const query = input.query === undefined ? readerQuery() : input.query;
   yield await (input.readState ? input.readState(state) : readNationalBallotState(state, query));
@@ -201,8 +200,7 @@ export async function runNationalMeasureTranslations(input: {
   readonly state: string;
   readonly publishPlace?: (division: string) => Promise<void>;
 }) {
-  const state = input.state;
-  if (!US_JURISDICTIONS.some(row => row.usps === state)) throw new Error("Translation worker requires one registered state.");
+  const state = requireBallotState(input.state);
   const reports: { state: string; published: number; reused: number; held: number; deferred: number; error: string | null }[] = [];
   const capacity = input.capacity();
   if (!input.continueWork() || capacity < 1) return reports;

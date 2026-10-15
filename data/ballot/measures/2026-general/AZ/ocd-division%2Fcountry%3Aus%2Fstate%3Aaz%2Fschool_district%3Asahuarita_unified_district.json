@@ -1,0 +1,230 @@
+{
+  "contractId": "ballot-measures",
+  "version": "2026-general:9505136635a4c2aa645ac3b24a837fa55ce201c46d9a0ed396881ff0fd800766:1ae57da037ab5fcb0cac7de92cff84fff6d6f20818cf410d017282d24fd79b37",
+  "sourceThrough": "2026-10-15T21:19:41.554388+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-15T21:19:41.554388+00:00",
+    "reviewedBy": "Codex MS-01",
+    "sources": [
+      {
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+        "retrievedAt": "2026-10-15T21:13:34.797520+00:00",
+        "httpStatus": 200,
+        "rawHash": "66f40f500619353809d740a059fd67c479d56812b066e72755c0c88525d5848e",
+        "publisher": "Pima County School Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 district voter-information pamphlet, full 32-page PDF held. Complete operative sample ballot on printed page 11; official explanation/fiscal table and all 10 published arguments for retained, with all signers. The publisher expressly states no arguments against were submitted. No arguments generated."
+      },
+      {
+        "requestedUrl": "https://www.schools.pima.gov/",
+        "finalUrl": "https://www.schools.pima.gov/",
+        "retrievedAt": "2026-10-15T21:12:56.481583+00:00",
+        "httpStatus": 200,
+        "rawHash": "67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013",
+        "publisher": "Pima County School Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county school superintendent homepage lists this 2026 proposition and links its voter-information pamphlet directly to the captured county CivicPlus PDF."
+      },
+      {
+        "requestedUrl": "https://www.azleg.gov/ars/15/00481.htm",
+        "finalUrl": "https://www.azleg.gov/ars/15/00481.htm",
+        "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+        "httpStatus": 200,
+        "rawHash": "012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1",
+        "publisher": "Arizona Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "A.R.S. 15-481(A) states that a majority of those voting shall affirm or reject the proposed school override budget; exact threshold bound to the complete official statute HTML."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-measures",
+    "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+    "ballots": {
+      "AZ:az-2026-11-03": {
+        "election": {
+          "id": "az-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 General Election",
+          "state": "AZ"
+        },
+        "contests": [
+          {
+            "id": "ballot-az-pima:prop-428",
+            "type": "MEASURE",
+            "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+            "title": "Proposition 428: Sahuarita Unified School District 15% Maintenance and Operation Budget Override",
+            "voteFor": 1,
+            "scopeNote": "Voters of Sahuarita Unified School District No. 30.",
+            "termYears": null,
+            "electionId": "az-2026-11-03",
+            "provenance": {
+              "sourceOrg": "Pima County School Superintendent",
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+              "collectedAt": "2026-10-15T21:13:34.797520+00:00",
+              "verifiedAt": "2026-10-15T21:19:41.554388+00:00"
+            },
+            "divisionVintage": "TIGER_GENZ2025",
+            "measureTextUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/"
+          }
+        ],
+        "candidacies": [],
+        "measures": [
+          {
+            "id": "ballot-az-pima:prop-428:question",
+            "contestId": "ballot-az-pima:prop-428",
+            "officialNumber": "Proposition 428",
+            "questionText": "Shall the Governing Board of Sahuarita Unified School District No. 30 of Pima County, Arizona (the\n“District”), adopt a General Maintenance and Operation Budget that includes an amount that exceeds\nthe revenue control limit specified by statute by 15% for fiscal year 2027/2028 and for six (6) subsequent\nyears as described below? The fiscal year 2027/2028 budget override authority represents an extension\nand increase of the existing budget override authority which is scheduled to phase down by one-third\nfor fiscal year 2028/2029, by another one-third for fiscal year 2029/2030, and will terminate for fiscal\nyear 2030/2031 if the voters do not approve the override.\n\nThe amount of the proposed increase of the proposed budget over the alternate budget for fiscal year\n2027/2028 is estimated to be $427,959. In fiscal years 2027/2028 through 2031/2032 the amount of the\nproposed increase will be 15% of the District’s revenue control limit in each of such years, as provided in\nSection 15-481(P) of the Arizona Revised Statutes. In fiscal years 2032/2033 and 2033/2034, the amount\nof the proposed increase will be 10% and 5%, respectively, of the District’s revenue control limit in each\nof such years, as provided in Section 15-481(P) of the Arizona Revised Statutes.\n\nAny budget increase authorized by this election shall be entirely funded by a levy of taxes\non the taxable property in this school district for the year for which adopted and for six\n(6) subsequent years, shall not be realized from monies furnished by the state and shall\nnot be subject to the limitation on taxes specified in Article IX, Section 18, Constitution\nof Arizona. Based on the current net assessed valuation used for secondary property tax\npurposes, to fund the proposed increase in the school district’s budget would require\nan estimated tax rate of $1.31 per one hundred dollars of assessed valuation used for\nsecondary property tax purposes and is in addition to the school district’s tax rate that\nwill be levied to fund the school district’s revenue control limit allowed by law.",
+            "officialStatement": null,
+            "provenance": {
+              "sourceOrg": "Pima County School Superintendent",
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+              "collectedAt": "2026-10-15T21:13:34.797520+00:00",
+              "verifiedAt": "2026-10-15T21:19:41.554388+00:00"
+            },
+            "officialText": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+              "sourceHash": "9505136635a4c2aa645ac3b24a837fa55ce201c46d9a0ed396881ff0fd800766",
+              "retrievedAt": "2026-10-15T21:13:34.797520+00:00",
+              "publisher": "Pima County School Superintendent",
+              "vault": {
+                "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-f40d3ca9413c3b61/sha256-9505136635a4c2aa645ac3b24a837fa55ce201c46d9a0ed396881ff0fd800766.txt",
+                "byteLength": 2956,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+                  "sourceHash": "66f40f500619353809d740a059fd67c479d56812b066e72755c0c88525d5848e",
+                  "retrievedAt": "2026-10-15T21:13:34.797520+00:00",
+                  "publisher": "Pima County School Superintendent",
+                  "vault": {
+                    "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-f40d3ca9413c3b61/sha256-66f40f500619353809d740a059fd67c479d56812b066e72755c0c88525d5848e.pdf",
+                    "byteLength": 297670,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "voterGuide": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+              "sourceHash": "1ae57da037ab5fcb0cac7de92cff84fff6d6f20818cf410d017282d24fd79b37",
+              "retrievedAt": "2026-10-15T21:13:34.797520+00:00",
+              "publisher": "Pima County School Superintendent",
+              "vault": {
+                "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-f40d3ca9413c3b61/sha256-1ae57da037ab5fcb0cac7de92cff84fff6d6f20818cf410d017282d24fd79b37.txt",
+                "byteLength": 18211,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+                  "sourceHash": "66f40f500619353809d740a059fd67c479d56812b066e72755c0c88525d5848e",
+                  "retrievedAt": "2026-10-15T21:13:34.797520+00:00",
+                  "publisher": "Pima County School Superintendent",
+                  "vault": {
+                    "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-f40d3ca9413c3b61/sha256-66f40f500619353809d740a059fd67c479d56812b066e72755c0c88525d5848e.pdf",
+                    "byteLength": 297670,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ],
+              "summary": "SAHUARITA UNIFIED SCHOOL DISTRICT NO. 30\nNOVEMBER 3, 2026\n\n15% MAINTENANCE AND OPERATION BUDGET OVERRIDE INFORMATION\nA STATEMENT AS TO WHY THE 15% MAINTENANCE AND OPERATION\nBUDGET OVERRIDE ELECTION HAS BEEN CALLED\n\nThe Governing Board of the District has called a special budget override election to be\nheld on November 3, 2026 to request voter authorization to exceed the Maintenance\nand Operation Budget Limit by 15% of the revenue control limit to fund existing\nprograms, such budget override to be in effect for a period of seven (7) years. The\noverride authorized by this election shall be funded from a levy of taxes on the taxable\nproperty within the District. The proposed override is a continuation and increase of\nthe existing 14% override.\nWith voter approval to continue the override, it is estimated that the total amount\nof the 15% override for fiscal year 2027/2028 will be $6,419,388. If the override is not\napproved, the existing 14% override will phase out by reducing by one-third ($1,997,143)\nin 2028/2029 and another one-third in fiscal year 2029/2030. The estimated secondary\ntax rate needed to fund the full override is $1.31 per one hundred dollars of net\nassessed valuation for secondary tax purposes. The estimated secondary tax rate for\nthe proposed override is approximately equal to the existing secondary tax rate for the\ncurrent override, as this override will maintain and enhance programs that have been\nin place with prior year’s override approvals.\nThe estimated continuation and increase cost to an owner of a home with a limited\nproperty value of $210,790 (the average value of a home in the District) would be\napproximately $277 per year.\nThe 15% Maintenance and Operation budget override would continue and enhance\nfunding for programs currently serving District students. This override supports the\nDistrict’s efforts to help maintain present levels of service:\n•    Fine Arts (Choral, Band, Orchestra, Drama, Dance)\n•    Physical Education\n•    Instructional Support Staff\n•    Safety and Security Campus Monitor Staff\n•    Career and Technical Education (CTE)\n•    Athletic Programs\n•    NJROTC Leadership Program\n•    School Counselors\n•    Class Size Reduction\n•    Program Sponsors\n•    Facility Operations Maintenance",
+              "fiscalImpact": "SAHUARITA UNIFIED SCHOOL DISTRICT NO. 30\nNOVEMBER 3, 2026\n\n15% MAINTENANCE AND OPERATION BUDGET OVERRIDE INFORMATION\nASSESSED VALUATION AND ESTIMATED AMOUNTS OF\nSECONDARY TAXES PER A.R.S. § 15-481(B)\n\nTotal amount of the current year’s (2026/2027) M&O budget                                                       $59,916,154\nTotal amount of the proposed 2027/2028 M&O budget with voter approval of override (1)                           $61,542,437\nTotal amount of alternate 2027/2028 M&O budget without voter approval of override (1)                           $61,114,477\nEstimated revenues to fund 15% M&O budget override                                                               $6,419,388\nDistrict’s Current Net Assessed Valuation used for Secondary Property Tax Purposes (2)                         $488,956,421\nEstimated Tax Rate per $100 of Net Assessed Valuation used for Secondary Property Tax Purposes to fund 15%\nM&O budget override                                                                                                 $1.3129\n\n\nPursuant to A.R.S. § 15-481(B)(11): The net assessed valuation and the estimated amount of the secondary property\ntaxes to fund the increase, if the proposed 2027/2028 budget is adopted, for each of the following will be:\n\nLimited                      Estimated Net     Estimated     Estimated\nProperty       Assessment      Assessed        Override      Annual Tax\nValue            Ratio       Valuation (3)   Tax Rate (4)    Amount\n\n(a) An owner-occupied residence whose\nassessed valuation is the average assessed\nvaluation of property classified as class        $210,790          10%           $21,079          $1.3129        $277\nthree for the current year in the school\ndistrict.\n\n(b) An owner-occupied residence whose\nassessed valuation is one-half of the\n$105,395          10%           $10,540          $1.3129        $138\nassessed valuation of the residence set\nforth in paragraph (a) above.\n\n(c) An owner-occupied residence whose\nassessed valuation is twice the assessed\n$421,580          10%           $42,158          $1.3129        $553\nvaluation of the residence set forth in\nparagraph (a) above.\n\n(d) A business whose assessed valuation\nis the average of the assessed valuation\n$1,307,781        15.5%         $202,706          $1.3129       $2,661\nof property classified as class one for the\ncurrent year in the school district.\n\nHome Valued at $100,000 for Tax\n$100,000          10%           $10,000          $1.3129        $131\nPurposes:\n\n\n\n(1) The 15% maintenance and operation override authorization is a continuation and increase of the existing 14%\nmaintenance and operation override authorized by the voters on 11/8/2022. If the override is not approved, the\nexisting 14% maintenance and operation override will phase out by reducing one-third in fiscal year 2028/2029\nand another one-third in fiscal year 2029/2030. The proposed and alternate 2027/2028 budgets represent the\nDistrict’s best estimate based on various assumptions relating to student growth and other factors affecting\nrevenues and expenditures. In adopting such alternate budget, the Governing Board shall follow the procedures\nprescribed in A.R.S. Section 15-905 for adopting a budget that does not include any proposed increases not\napproved at an election, except for increases levied to meet a desegregation order, if applicable.\n(2) Current net assessed valuation for secondary property tax purposes is the 2026/2027 preliminary value provided\nby the Arizona Department of Revenue.\n(3) Estimated by Arizona Department of Revenue based on preliminary 2026/2027 net assessed valuation.\n(4) Per one hundred dollars of net assessed valuation used for secondary property tax purposes.",
+              "passageThreshold": "A. If a proposed budget of a school district exceeds the aggregate budget limit for the budget year, at least ninety days before the proposed election the governing board shall order an override election to be held on the first Tuesday following the first Monday in November as prescribed by section 16-204, subsection F for the purpose of presenting the proposed budget to the qualified electors of the school district who by a majority of those voting either shall affirm or reject the budget.",
+              "passageThresholdSource": {
+                "sourceUrl": "https://www.azleg.gov/ars/15/00481.htm",
+                "sourceHash": "c2b74c69a835caff1cce031652e4c5391689d079db3c862a5543d1b77ff7b84c",
+                "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+                "publisher": "Arizona Legislature",
+                "vault": {
+                  "key": "project/freshness/source/www.azleg.gov/2026/10/15/ms-01-az-local-7600de78983fe7cf/sha256-c2b74c69a835caff1cce031652e4c5391689d079db3c862a5543d1b77ff7b84c.txt",
+                  "byteLength": 39533,
+                  "contentType": "text/plain"
+                },
+                "originals": [
+                  {
+                    "sourceUrl": "https://www.azleg.gov/ars/15/00481.htm",
+                    "sourceHash": "012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1",
+                    "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+                    "publisher": "Arizona Legislature",
+                    "vault": {
+                      "key": "project/freshness/source/www.azleg.gov/2026/10/15/ms-01-az-local-7600de78983fe7cf/sha256-012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1.html",
+                      "byteLength": 44023,
+                      "contentType": "text/html"
+                    }
+                  }
+                ]
+              },
+              "argumentsFor": [
+                "This ballot measure is not a new tax. It is a continuation of a local contribution to our schools\nthat goes back to the 1980s. These dollars are targeted to support educational programs that are\npart of a high quality education. They include K-12 programs in music, physical education, and\ncounseling. This local investment supports middle and high school athletic programs, Career\nand Technical Education (CTE) programs, maintenance personnel, and security support staff.\nThis override funds over 100 jobs of highly skilled professionals who provide services to our\nstudents. Our students continue to be state and nationally recognized for achievement in\nmany of these programs. These programs have opened doors for college success, workforce\nopportunities, and beyond. Without these local dollars, these programs would not exist or\nbe largely diminished. These targeted investments elevate the opportunities for students,\nthe total value of our homes, and community prosperity. Great schools are an investment in\neducation, economic development, workforce investment and quality of life. It is a “win-win”\nproposition for all. We ask for your continuation of this investment, without adding a new tax\nor any anticipated increase in the current school tax rate.\nGoverning Board Sahuarita Unified School District No. 30",
+                "My wife Lynn and I chose Sahuarita in 2003, our final stop after 42 years of combined military\nservice. We chose this community and the quality of its schools was a significant part of why.\nI was elected to the SUSD Governing Board in 2004, serving 14 years, including two terms as\npresident. I know firsthand what this district delivers and what sustained investment makes\npossible. Now, as Mayor, I watch Sahuarita grow and know that growth is inseparable from the\nstrength of our schools. Strong schools are the backbone of a strong town!\nThis isn’t a new tax - it’s a continuation of a funding source that has been in place for years.\nProposition 428 protects more than 100 staff positions and $6.3 million in annual programs:\nFine Arts, Athletics, CTE, NJROTC, Counselors, and smaller class sizes that define SUSD.\nThrough Sahuarita’s growth and responsible financial stewardship, the total school tax rate is\nexpected to remain the same and voters can say YES without paying more.\nVote YES on Proposition 428 to renew the funding that already keeps more than 100 positions\nand the programs that serve our wonderful 6,000+ students in our school district.\nThomas Murphy\nMayor of Sahuarita\nSahuarita, AZ",
+                "Yes for Sahuarita Schools urges the community to support Proposition 428.\nWithout this override, Sahuarita Unified stands to lose more than 100 staff positions, including\nteachers, counselors, coaches, and instructional aides who directly support more than 6,000\nstudents. Class sizes would grow, and programs in fine arts, athletics, NJROTC, and career and\ntechnical education would be reduced or eliminated.\nProposition 428 is not a new tax. It continues the district’s existing tax rate, with no increase\nto homeowners. As Sahuarita’s population and tax base continue to grow, that same rate\ngenerates more total revenue for our schools, allowing the district to sustain these programs\nwithout asking any individual homeowner to pay more.\nThe cost of inaction is real. Communities with strong, well-supported schools see lower crime\n\nrates, higher property values, and a more skilled local workforce, benefits that extend to every\nresident, whether or not they have children in the district. Losing this override would put those\nbenefits at risk for everyone in Sahuarita.\nSahuarita has a long history of standing behind its schools. We urge voters to continue that\nsupport and protect what our community has built by voting YES on Proposition 428.\nFredrick Lewis\nTreasurer, Yes for Sahuarita Schools\nTucson, AZ",
+                "Great schools make great communities. It really is that simple.\nRancho Sahuarita was built on the belief that when a safe, engaging community is home to\ngreat schools, other key pieces fall into place: strong home values, economic investment,\nand the kind of growth that makes a town worth living in. Sahuarita Unified School District is\ncentral to that.\nProposition 428 continues the Maintenance and Operations Override that funds more than 100\nstaff positions, including teachers, counselors, athletics, fine arts, NJROTC, and instructional\naides. These roles serve more than 6,000 students across our district.\nThis is not a new tax. Proposition 428 continues the district’s existing tax rate, with no increase\nto homeowners. It simply allows Sahuarita Unified to keep the programs and people already in\nplace, without asking families to pay more.\nAs our community continues to grow, our schools remain one of the most important\ninvestments we can make together. A YES vote protects the programs and staff our students\ndepend on, and protects the quality of life that make Sahuarita a place families choose to call\nhome.\nVote YES on Proposition 428, and keep our community great!\nJeremy Sharpe\nManaging Partner, Rancho Sahuarita\nTucson, AZ",
+                "Dear Community Members,\nThe Kiwanis Club of Sahuarita supports the Sahuarita Unified School District Proposition 428\nand encourages you to vote YES for the children. This measure helps maintain the strong\neducational foundation our students rely on by sustaining classroom resources, supporting\nteachers, and protecting essential academic and extracurricular programs.\nProposition 428 is not about adding something new - it’s about preserving what already works.\nOur district has consistently focused on student success, safety, and opportunity. Renewing\nthis funding ensures students continue to benefit from quality instruction, arts and music\nprograms, career and technical pathways, and the individualized support that helps them\nthrive.\nA vote for Proposition 428 is a vote for stable, reliable investment in our children and our\ncommunity’s future.\nThank you for considering this important measure.\nSincerely,\nThe Kiwanis Club of Sahuarita\nSahuarita, AZ",
+                "Why is voting, “Yes,” on Prop. 428 vitally important?\nAs a retired educator from the Sahuarita Unified School District, I have witnessed first-hand\nthe importance of extending the Maintenance and Operational Budget. What did this mean\n\nfor me and my former students?\n•   Class sizes did not increase, meaning more time for individual instruction.\n•   School Counselors retained their crucial jobs, collaborating with teachers to identify\nand address students’ individual needs. Instructional Aides provided additional sets\nof hands, ears, and eyes to ensure each student is grasping skill-level concepts and\nappropriately navigating informational technology.\n• Security Staff and Monitors ensured that students were supervised and were learning in\na safe, respectful environment that supported students’ instructional focus.\n• Electives, vital to a well-rounded education, continued. Seeing students discover their\npassion for the arts—visual, performing, or fine art—is magical; a metamorphosis occurs.\n• Sports, NJROTC, and CTE were supported. SUSD#30 has a proud history of scholar-\nathletes who pursued professional sports careers. NJROTC gives interested students a\ncareer path, while the CTE programs give internships and jobs.\nLet us continue these praiseworthy achievements. Vote Yes on Prop 428.\nMary A. “Mac” Chernoski\nRetired Educator\nSahuarita, AZ",
+                "Vote YES for Proposition 428 - M&O Override\nAs parents, educators, and longtime Sahuarita residents, we are joining together to support the\nSahuarita Unified School District Maintenance and Operations Override.\nBetween us, we have watched our children grow through SUSD classrooms, athletic fields, and\nfine arts programs. We have seen firsthand how smaller class sizes, dedicated counselors, and\ncaring teachers shape a child’s confidence, and how the individualized support our children\nneeded was only possible because of positions this override funds.\nThis override is not a new tax. It simply continues funding our community already relies on,\nat the current tax rate, to keep counselors, security staff, coaches, and arts instructors in every\nschool.\nPlease join us in voting YES for Proposition 428 to keep more than 100 positions funded and\nour 6,000-plus students supported.\nEdward Navarrete III\nEducator, Father, Resident of Sahuarita\nSahuarita, AZ\nSuzanne Burt\nMother and Resident of Sahuarita\nSahuarita, AZ\nClaudia Ochoa\nMother and Resident of Sahuarita\nSahuarita, AZ",
+                "Yes for Sahuarita Schools - Yes on Proposition 428\nMy name is Kalaina Vasquez, and I am a proud graduate of Sahuarita High School, Class of\n2021.\nWhen I moved from Utah during my Junior year, differences in credit systems left me with far\nfewer credits than I needed, putting my on-time graduation in serious doubt. The teachers,\ncounselors, and administrators at Sahuarita High School, including Principal Kneup, refused\nto let that setback define my future. Through after-school tutoring and countless hours of\ndedicated support, they helped me close the gap and graduated on time with my class in 2021.\nThat achievement was possible because Sahuarita Unified School District had the staff,\nprograms, and resources to meet me where I was and help me catch up. Proposition 428\n\nrenews the funding that supports these same positions and programs, the ones that make\nindividualized support like mine possible for the next student who needs it.\nI am proud to be a Sahuarita High School graduate and part of the Sahuarita community. I urge\nvoters to say YES to Proposition 428 so every student has the same chance I did to succeed.\nKalaina Vasquez\nSUSD Alumna and Resident of Sahuarita\nSahuarita, AZ",
+                "Proposition 428 - Why It Matters\nWhen I chose to make Sahuarita my home, it was the diversity of homeownership options that\ndrew me in, a community built for families at every stage of life. That same diversity is what\nmakes our schools so special.\nAs a retired medical professional, I spent my career caring for people. Retirement gave me the\nchance to build something just as meaningful: relationships with the children and families of\nthis community. I see their enthusiasm every day, the pride they take in their programs, their\nclasses, and the teachers who show up for them.\nGood schools do not just shape good students. They shape good communities, and they\nprotect the home values every one of us has invested in.\nI am voting YES on Proposition 428, and I ask you to join me.\nMyron Baker\nRetired Medical Professional and Sahuarita Resident\nSahuarita, AZ",
+                "Proposition 428- The Future of Our Children\nI chose to make my home in Sahuarita because of the diversity, the strong youth focus, and\nthe humanitarian spirit of this community.\nMy grand babies attend Sahuarita Unified schools, and their education matters deeply to me.\nI value small classroom sizes because they allow teachers to give each child individualized\nfocus. In larger classrooms, the brilliance of a child can too easily be missed, and so can the\nneeds of children requiring special support.\nSmall classrooms let teachers see every student, including those with special needs, and\nsupport them well. The valued knowledge and experience of our educators is what makes this\npossible. In a smaller setting, that expertise goes further, allowing teachers to meet each child’s\nneeds in a way an overcrowded classroom never could.\nProposition 428 renews the funding that makes this possible. It supports the teachers and\ninstructional aides who provide the proper learning and guidance that keeps our classrooms\nstaffed and our kids supported.\nI am passionate about this community and about our children’s future. Proposition 428 is a\ngreat foundation for both. Please vote YES on Proposition 428 this November.\nCheryl Thompson\nSahuarita Resident\nSahuarita, AZ"
+              ],
+              "argumentsAgainst": []
+            }
+          }
+        ],
+        "absences": [],
+        "measureRecords": [
+          {
+            "contestId": "ballot-az-pima:prop-428",
+            "whatItDoes": "Shall the Governing Board of Sahuarita Unified School District No. 30 of Pima County, Arizona (the\n“District”), adopt a General Maintenance and Operation Budget that includes an amount that exceeds\nthe revenue control limit specified by statute by 15% for fiscal year 2027/2028 and for six (6) subsequent\nyears as described below? The fiscal year 2027/2028 budget override authority represents an extension\nand increase of the existing budget override authority which is scheduled to phase down by one-third\nfor fiscal year 2028/2029, by another one-third for fiscal year 2029/2030, and will terminate for fiscal\nyear 2030/2031 if the voters do not approve the override.",
+            "yesMeans": "A “yes” vote shall authorize the Sahuarita Unified School District School District Governing Board to continue and\nincrease the existing maintenance and operation budget override authority and resulting tax, which includes an\namount that exceeds the District’s revenue control limit.",
+            "noMeans": "A “no” vote shall not authorize the Sahuarita Unified School District School District Governing Board to extend and\nincrease the existing maintenance and operation budget override authority and resulting tax.",
+            "parts": [
+              {
+                "id": "ballot-az-pima:prop-428#provision-1",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Proposition 428",
+                "what": "Shall the Governing Board of Sahuarita Unified School District No. 30 of Pima County, Arizona (the\n“District”), adopt a General Maintenance and Operation Budget that includes an amount that exceeds\nthe revenue control limit specified by statute by 15% for fiscal year 2027/2028 and for six (6) subsequent\nyears as described below? The fiscal year 2027/2028 budget override authority represents an extension\nand increase of the existing budget override authority which is scheduled to phase down by one-third\nfor fiscal year 2028/2029, by another one-third for fiscal year 2029/2030, and will terminate for fiscal\nyear 2030/2031 if the voters do not approve the override."
+              },
+              {
+                "id": "ballot-az-pima:prop-428#provision-2",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Proposition 428",
+                "what": "The amount of the proposed increase of the proposed budget over the alternate budget for fiscal year\n2027/2028 is estimated to be $427,959. In fiscal years 2027/2028 through 2031/2032 the amount of the\nproposed increase will be 15% of the District’s revenue control limit in each of such years, as provided in\nSection 15-481(P) of the Arizona Revised Statutes. In fiscal years 2032/2033 and 2033/2034, the amount\nof the proposed increase will be 10% and 5%, respectively, of the District’s revenue control limit in each\nof such years, as provided in Section 15-481(P) of the Arizona Revised Statutes."
+              },
+              {
+                "id": "ballot-az-pima:prop-428#provision-3",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Proposition 428",
+                "what": "Any budget increase authorized by this election shall be entirely funded by a levy of taxes\non the taxable property in this school district for the year for which adopted and for six\n(6) subsequent years, shall not be realized from monies furnished by the state and shall\nnot be subject to the limitation on taxes specified in Article IX, Section 18, Constitution\nof Arizona. Based on the current net assessed valuation used for secondary property tax\npurposes, to fund the proposed increase in the school district’s budget would require\nan estimated tax rate of $1.31 per one hundred dollars of assessed valuation used for\nsecondary property tax purposes and is in addition to the school district’s tax rate that\nwill be levied to fund the school district’s revenue control limit allowed by law."
+              }
+            ],
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+            "sourceHash": "9505136635a4c2aa645ac3b24a837fa55ce201c46d9a0ed396881ff0fd800766",
+            "sourceHashKind": "HELD_TEXT",
+            "writtenAt": "2026-10-15T21:19:41.554388+00:00",
+            "citation": "measure-source"
+          }
+        ],
+        "sourceAuthorities": [
+          {
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "sourceHash": "67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013",
+            "retrievedAt": "2026-10-15T21:12:56.481583+00:00",
+            "publisher": "Pima County School Superintendent",
+            "vault": {
+              "key": "project/freshness/source/www.schools.pima.gov/2026/10/15/ms-01-az-local-eeb963979e5e8a6a/sha256-67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013.html",
+              "byteLength": 23473,
+              "contentType": "text/html"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

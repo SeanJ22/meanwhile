@@ -24,13 +24,6 @@ export function isPlaceMeasureScope(scope: string): boolean {
   catch { return false; }
 }
 
-export function placeDivisionForMeasureTarget(id: string): string | null {
-  const encoded = /^ballot-measure:(ocd-division%2F[^:]+):/.exec(id)?.[1];
-  if (!encoded) return null;
-  try { const division = decodeURIComponent(encoded); placeMeasureScope(division); return division; }
-  catch { return null; }
-}
-
 export function placeMeasureProblems(value: PlaceMeasureProjection): string[] {
   if (!value || value.kind !== "ballot-measures" || !isPlaceMeasureScope(`${PLACE_MEASURE_SCOPE}:${value.ocdId}`)) return ["Local measures lack their exact place."];
   const problems = genericBallotProblems({ kind: "ballot-contests", ballots: value.ballots }, jurisdictionFromOcdId(value.ocdId)?.usps, value.ocdId);

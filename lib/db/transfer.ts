@@ -18,7 +18,8 @@ let installed = false;
 let lastFlush = 0;
 let flushing: Promise<boolean> | null = null;
 
-const easternDay = (at: Date) => new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(at);
+const easternDateFormat = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" });
+const easternDay = (at: Date) => easternDateFormat.format(at);
 
 function runnerClient(): boolean {
   return Boolean(process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY) || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion";

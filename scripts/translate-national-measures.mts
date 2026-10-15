@@ -12,11 +12,11 @@ import { runNationalMeasureTranslations } from "../lib/translate/national.ts";
 import { assertRegisteredRuntimeContract } from "../lib/civic-data/runtime-authority.ts";
 import { FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
 import { SendBudgetRefusal } from "../lib/control-plane/expansion/spend-holds.ts";
-import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
+import { BALLOT_STATES } from "../lib/ballot/state-scopes.ts";
 import { translationScope } from "../lib/translate/records.ts";
 
 const state = process.argv.find(value => value.startsWith("--state="))?.slice(8).toUpperCase();
-if (!state || !US_JURISDICTIONS.some(row => row.usps === state)) throw new Error("Measure translation requires --state with one registered jurisdiction.");
+if (!state || !BALLOT_STATES.some(row => row === state)) throw new Error("Measure translation requires --state with one registered jurisdiction.");
 
 assertRegisteredRuntimeContract("plain-english-translations", "manual");
 prepareProductionCivicDataWrite();

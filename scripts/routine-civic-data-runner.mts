@@ -9,6 +9,7 @@ import { workerPublicationContext } from "../lib/civic-data/worker-publication-c
 import { readHeldBallotInputs } from "../lib/civic-data/worker-held-elections.ts";
 /* @freshness-reads-here */
 import { hostname } from "node:os";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
@@ -390,13 +391,17 @@ async function runMeasureTranslationPass(): Promise<SupervisorFailure | null> {
   const contract = requiredManualProductionContract("plain-english-translations");
   let failure: SupervisorFailure | null = null;
   try {
-    await runBoundedChildPass(US_JURISDICTIONS.filter(state => state.prefix !== "territory").map(state => ({
-      id: `${contract.id}:${state.usps}`,
-      executable: process.execPath,
-      args: ["--experimental-strip-types", ...contract.command, `--state=${state.usps}`],
-      env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT",
-        contract: contract.id, parentPid: process.pid }),
-    })), { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+    const states = US_JURISDICTIONS.filter(state => state.prefix !== "territory");
+    const commands = states.flatMap(state => {
+      const inputs = existsSync(resolve(ROOT, "data/ballot/measures/2026-general", state.usps))
+        ? [{ id: "ballot-measures", command: ["scripts/publish-held-measures.mts"] }, contract] : [contract];
+      return inputs.map(input => ({ id: `${input.id}:${state.usps}`, executable: process.execPath,
+        args: ["--experimental-strip-types", ...input.command, `--state=${state.usps}`],
+        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT",
+          contract: input.id, parentPid: process.pid }),
+      }));
+    });
+    await runBoundedChildPass(commands, { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
       maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1, discardOutputAfterSettlement: true,
       onStarting: acquireChildMemory,
       onSettled: run => {
@@ -404,7 +409,7 @@ async function runMeasureTranslationPass(): Promise<SupervisorFailure | null> {
           if (run.stdout.trim()) console.log(run.stdout.trim());
           if (run.stderr.trim()) console.warn(safeFailure(run.stderr));
           const issue = boundedExecutionFailure(run) ?? (run.status === 0 ? null : {
-            taskId: run.id, code: "TRANSLATION_CHILD_EXIT_NONZERO",
+            taskId: run.id, code: run.id.startsWith("ballot-measures:") ? "MEASURE_PUBLICATION_CHILD_EXIT_NONZERO" : "TRANSLATION_CHILD_EXIT_NONZERO",
             detail: childFatalLine(run.stdout) ?? safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`),
           });
           if (issue) { failure ??= issue; console.error(`RCD_TASK ${run.id}: ${issue.code} — ${issue.detail}`); }
@@ -417,7 +422,7 @@ async function runMeasureTranslationPass(): Promise<SupervisorFailure | null> {
 }
 
 function waitForBallotSources(runs: readonly PendingRun[]): { ready: Promise<void>; settle: (id: string) => void } {
-  const pending = new Set(runs.filter(run => (run.task.registeredContractId ?? run.task.id) === "ballot-contests").map(run => run.id));
+  const pending = new Set(runs.filter(run => parseStateBallotContractId(run.task.registeredContractId ?? run.task.id)?.family === "ballot-contests").map(run => run.id));
   let finished!: () => void;
   const ready = new Promise<void>(resolve => { finished = resolve; });
   if (pending.size === 0) finished();

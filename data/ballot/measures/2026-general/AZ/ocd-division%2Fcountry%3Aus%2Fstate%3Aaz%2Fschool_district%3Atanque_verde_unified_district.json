@@ -1,0 +1,223 @@
+{
+  "contractId": "ballot-measures",
+  "version": "2026-general:368891d44fdc2232fb92c7c9468054d3dcfa020274d0f63363df2647137cf01b:ac06c14c506faa7273011b896c3b55bf7029dd7fbe1229f40631cdab22986a05",
+  "sourceThrough": "2026-10-15T21:19:41.554388+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-15T21:19:41.554388+00:00",
+    "reviewedBy": "Codex MS-01",
+    "sources": [
+      {
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+        "retrievedAt": "2026-10-15T21:13:34.730995+00:00",
+        "httpStatus": 200,
+        "rawHash": "0e8a2d050848cfe422121dc4947c7921c7d8e2042cf141f2135b8633890f1641",
+        "publisher": "Pima County School Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 district voter-information pamphlet, full 32-page PDF held. Complete operative sample ballot on printed page 12; official explanation/fiscal table and all 10 published arguments for retained, with all signers. The publisher expressly states no arguments against were submitted. No arguments generated."
+      },
+      {
+        "requestedUrl": "https://www.schools.pima.gov/",
+        "finalUrl": "https://www.schools.pima.gov/",
+        "retrievedAt": "2026-10-15T21:12:56.481583+00:00",
+        "httpStatus": 200,
+        "rawHash": "67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013",
+        "publisher": "Pima County School Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county school superintendent homepage lists this 2026 proposition and links its voter-information pamphlet directly to the captured county CivicPlus PDF."
+      },
+      {
+        "requestedUrl": "https://www.azleg.gov/ars/15/00481.htm",
+        "finalUrl": "https://www.azleg.gov/ars/15/00481.htm",
+        "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+        "httpStatus": 200,
+        "rawHash": "012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1",
+        "publisher": "Arizona Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "A.R.S. 15-481(A) states that a majority of those voting shall affirm or reject the proposed school override budget; exact threshold bound to the complete official statute HTML."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "ballot-measures",
+    "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+    "ballots": {
+      "AZ:az-2026-11-03": {
+        "election": {
+          "id": "az-2026-11-03",
+          "date": "2026-11-03",
+          "name": "2026 General Election",
+          "state": "AZ"
+        },
+        "contests": [
+          {
+            "id": "ballot-az-pima:prop-429",
+            "type": "MEASURE",
+            "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+            "title": "Proposition 429: Tanque Verde Unified School District budget override continuation",
+            "voteFor": 1,
+            "scopeNote": "Voters of Tanque Verde Unified School District No. 13.",
+            "termYears": null,
+            "electionId": "az-2026-11-03",
+            "provenance": {
+              "sourceOrg": "Pima County School Superintendent",
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+              "collectedAt": "2026-10-15T21:13:34.730995+00:00",
+              "verifiedAt": "2026-10-15T21:19:41.554388+00:00"
+            },
+            "divisionVintage": "TIGER_GENZ2025",
+            "measureTextUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/"
+          }
+        ],
+        "candidacies": [],
+        "measures": [
+          {
+            "id": "ballot-az-pima:prop-429:question",
+            "contestId": "ballot-az-pima:prop-429",
+            "officialNumber": "Proposition 429",
+            "questionText": "Shall the Governing Board of Tanque Verde Unified School District No. 13 of Pima County, Arizona (the\n“District”), adopt a General Maintenance and Operation Budget that includes an amount that exceeds\nthe revenue control limit specified by statute by 15% for fiscal year 2027/2028 and for six (6) subsequent\nyears as described below? The fiscal year 2027/2028 budget override authority represents an extension\nof the existing budget override authority which is scheduled to phase down by one-third for fiscal year\n2028/2029 and another one-third in fiscal year 2029/2030 and will terminate for fiscal year 2030/2031 if\nthe voters do not approve the override.\n\nThe amount of the proposed continuation of the budget increase of the proposed budget over the\nalternate budget for fiscal year 2027/2028 is estimated to be $-0-. In fiscal years 2027/2028 through\n2031/2032 the amount of the proposed increase will be 15% of the District’s revenue control limit in each\nof such years, as provided in Section 15-481(P) of the Arizona Revised Statutes. In fiscal years 2032/2033\nand 2033/2034, the amount of the proposed increase will be 10% and 5%, respectively, of the District’s\nrevenue control limit in each of such years, as provided in Section 15-481(P) of the Arizona Revised\nStatutes.\nAny budget increase continuation authorized by this election shall be entirely funded\nby a levy of taxes on the taxable property in this school district for the year for which\nadopted and for six (6) subsequent years, shall not be realized from monies furnished\nby the state and shall not be subject to the limitation on taxes specified in Article IX,\nSection 18, Constitution of Arizona. Based on the current net assessed valuation used for\nsecondary property tax purposes, to fund the proposed continuation of the increase in\nthe school district’s budget would require an estimated continuation of a tax rate of $0.88\nper one hundred dollars of assessed valuation used for secondary property tax purposes\nand is in addition to the school district’s tax rate that will be levied to fund the school\ndistrict’s revenue control limit allowed by law.",
+            "officialStatement": null,
+            "provenance": {
+              "sourceOrg": "Pima County School Superintendent",
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+              "collectedAt": "2026-10-15T21:13:34.730995+00:00",
+              "verifiedAt": "2026-10-15T21:19:41.554388+00:00"
+            },
+            "officialText": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+              "sourceHash": "368891d44fdc2232fb92c7c9468054d3dcfa020274d0f63363df2647137cf01b",
+              "retrievedAt": "2026-10-15T21:13:34.730995+00:00",
+              "publisher": "Pima County School Superintendent",
+              "vault": {
+                "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-ab3dd85c9c6de4b2/sha256-368891d44fdc2232fb92c7c9468054d3dcfa020274d0f63363df2647137cf01b.txt",
+                "byteLength": 3040,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+                  "sourceHash": "0e8a2d050848cfe422121dc4947c7921c7d8e2042cf141f2135b8633890f1641",
+                  "retrievedAt": "2026-10-15T21:13:34.730995+00:00",
+                  "publisher": "Pima County School Superintendent",
+                  "vault": {
+                    "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-ab3dd85c9c6de4b2/sha256-0e8a2d050848cfe422121dc4947c7921c7d8e2042cf141f2135b8633890f1641.pdf",
+                    "byteLength": 288885,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ]
+            },
+            "voterGuide": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+              "sourceHash": "ac06c14c506faa7273011b896c3b55bf7029dd7fbe1229f40631cdab22986a05",
+              "retrievedAt": "2026-10-15T21:13:34.730995+00:00",
+              "publisher": "Pima County School Superintendent",
+              "vault": {
+                "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-ab3dd85c9c6de4b2/sha256-ac06c14c506faa7273011b896c3b55bf7029dd7fbe1229f40631cdab22986a05.txt",
+                "byteLength": 18962,
+                "contentType": "text/plain"
+              },
+              "originals": [
+                {
+                  "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+                  "sourceHash": "0e8a2d050848cfe422121dc4947c7921c7d8e2042cf141f2135b8633890f1641",
+                  "retrievedAt": "2026-10-15T21:13:34.730995+00:00",
+                  "publisher": "Pima County School Superintendent",
+                  "vault": {
+                    "key": "project/freshness/source/content.civicplus.com/2026/10/15/ms-01-az-local-ab3dd85c9c6de4b2/sha256-0e8a2d050848cfe422121dc4947c7921c7d8e2042cf141f2135b8633890f1641.pdf",
+                    "byteLength": 288885,
+                    "contentType": "application/pdf"
+                  }
+                }
+              ],
+              "summary": "TANQUE VERDE UNIFIED SCHOOL DISTRICT NO. 13\nNOVEMBER 3, 2026\n\n15% MAINTENANCE AND OPERATION BUDGET OVERRIDE INFORMATION\nA STATEMENT AS TO WHY THE 15% MAINTENANCE AND OPERATION\nBUDGET OVERRIDE ELECTION HAS BEEN CALLED\n\nThe Governing Board of the District has called a special budget override election to be\nheld on November 3, 2026 to request voter authorization to exceed the Maintenance\nand Operation Budget Limit by 15% of the revenue control limit to fund existing\nprograms, such budget override to be in effect for a period of seven (7) years. The\noverride authorized by this election shall be funded from a levy of taxes on the taxable\nproperty within the District. The proposed override is a continuation of the existing\n15% override.\nWith voter approval to continue the override, it is estimated that the total amount of\nthe override for fiscal year 2027/2028 will be $2,378,902. If the override is not approved,\nthe existing 15% override will phase out by reducing by one-third in 2028/2029 and\nanother one-third in fiscal year 2029/2030. The estimated secondary tax rate needed\nto fund the full override is $0.88 per one hundred dollars of net assessed valuation for\nsecondary tax purposes. The estimated secondary tax rate for the proposed override is\napproximately equal to the existing secondary tax rate for the current override, as this\noverride will maintain programs that have been in place with the prior year’s override\napprovals.\nThe estimated continuation cost to an owner of a home with a limited property value\nof $519,240 (the average value of a home in the District) would be approximately $459\nper year.\nThe 15% Maintenance and Operation budget override would continue funding for\nprograms currently serving District students. This override supports the District’s\nefforts to help maintain present levels of service:\n•   Career and technical education (CTE) classes\n•   Elementary STEAM (Science, Technology, Engineering, Arts, Mathematics)\n•   Elementary Physical Education (PE)\n•   Advanced placement / Dual enrollment classes\n•   Music and Art programs\n•   Libraries",
+              "fiscalImpact": "TANQUE VERDE UNIFIED SCHOOL DISTRICT NO. 13\nNOVEMBER 3, 2026\n\n15% MAINTENANCE AND OPERATION BUDGET OVERRIDE INFORMATION\nASSESSED VALUATION AND ESTIMATED AMOUNTS OF\nSECONDARY TAXES PER A.R.S. § 15-481(B)\n\nTotal amount of the current year’s (2026/2027) M&O budget                                                       $19,489,949\nTotal amount of the proposed 2027/2028 M&O budget with voter approval of override (1)                           $19,879,748\nTotal amount of alternate 2027/2028 M&O budget without voter approval of override (1)                           $19,879,748\nEstimated revenues to fund 15% M&O budget override                                                               $2,378,902\nDistrict’s Current Net Assessed Valuation used for Secondary Property Tax Purposes (2)                         $269,068,514\nEstimated Tax Rate per $100 of Net Assessed Valuation used for Secondary Property Tax Purposes to fund 15%\nM&O budget override                                                                                                $0.8841\n\n\nPursuant to A.R.S. § 15-481(B)(11): The net assessed valuation and the estimated amount of the secondary property\ntaxes to fund the increase, if the proposed 2027/2028 budget is adopted, for each of the following will be:\n\nLimited                      Estimated Net     Estimated     Estimated\nProperty       Assessment      Assessed        Override      Annual Tax\nValue            Ratio       Valuation (3)   Tax Rate (4)    Amount\n\n(a) An owner-occupied residence whose\nassessed valuation is the average assessed\nvaluation of property classified as class        $519,240          10%           $51,924         $0.8841         $459\nthree for the current year in the school\ndistrict.\n\n(b) An owner-occupied residence whose\nassessed valuation is one-half of the\n$259,620          10%           $25,962         $0.8841         $230\nassessed valuation of the residence set\nforth in paragraph (a) above.\n\n(c) An owner-occupied residence whose\nassessed valuation is twice the assessed\n$1,038,480         10%           $103,848        $0.8841         $918\nvaluation of the residence set forth in\nparagraph (a) above.\n\n(d) A business whose assessed valuation\nis the average of the assessed valuation\n$168,877         15.5%          $26,176         $0.8841         $231\nof property classified as class one for the\ncurrent year in the school district.\n\nHome Valued at $100,000 for Tax\n$100,000          10%           $10,000         $0.8841         $88\nPurposes:\n\n\n\n(1) The 15% maintenance and operation override authorization is a continuation of the existing 15% maintenance\nand operation override authorized by the voters on 11/8/2022. If the override is not approved, the existing 15%\nmaintenance and operation override will phase out by reducing one-third in fiscal year 2028/2029 and another\none-third in fiscal year 2029/2030. The proposed and alternate 2027/2028 budgets represent the District’s best\nestimate based on various assumptions relating to student growth and other factors affecting revenues and\nexpenditures. In adopting such alternate budget, the Governing Board shall follow the procedures prescribed\nin A.R.S. Section 15-905 for adopting a budget that does not include any proposed increases not approved at an\nelection, except for increases levied to meet a desegregation order, if applicable.\n(2) Current net assessed valuation for secondary property tax purposes is the 2026/2027 preliminary value provided\nby the Arizona Department of Revenue.\n(3) Estimated by Arizona Department of Revenue based on preliminary 2026/2027 net assessed valuation.\n(4) Per one hundred dollars of net assessed valuation used for secondary property tax purposes.",
+              "passageThreshold": "A. If a proposed budget of a school district exceeds the aggregate budget limit for the budget year, at least ninety days before the proposed election the governing board shall order an override election to be held on the first Tuesday following the first Monday in November as prescribed by section 16-204, subsection F for the purpose of presenting the proposed budget to the qualified electors of the school district who by a majority of those voting either shall affirm or reject the budget.",
+              "passageThresholdSource": {
+                "sourceUrl": "https://www.azleg.gov/ars/15/00481.htm",
+                "sourceHash": "c2b74c69a835caff1cce031652e4c5391689d079db3c862a5543d1b77ff7b84c",
+                "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+                "publisher": "Arizona Legislature",
+                "vault": {
+                  "key": "project/freshness/source/www.azleg.gov/2026/10/15/ms-01-az-local-7600de78983fe7cf/sha256-c2b74c69a835caff1cce031652e4c5391689d079db3c862a5543d1b77ff7b84c.txt",
+                  "byteLength": 39533,
+                  "contentType": "text/plain"
+                },
+                "originals": [
+                  {
+                    "sourceUrl": "https://www.azleg.gov/ars/15/00481.htm",
+                    "sourceHash": "012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1",
+                    "retrievedAt": "2026-10-15T21:14:09.914403+00:00",
+                    "publisher": "Arizona Legislature",
+                    "vault": {
+                      "key": "project/freshness/source/www.azleg.gov/2026/10/15/ms-01-az-local-7600de78983fe7cf/sha256-012eb7574bbd15c17f30626739fb75a0f1dfee4fc67d4b6b40db326259437ea1.html",
+                      "byteLength": 44023,
+                      "contentType": "text/html"
+                    }
+                  }
+                ]
+              },
+              "argumentsFor": [
+                "Tanque Verde Unified School District is recognized as one of the premier school districts\nin Arizona. The many accomplishments earned by our students and staff in academics,\nathletics, and extracurricular activities are a direct reflection of this community’s longstanding\ncommitment to education through continued voter support of past budget continuations.\nThe District’s success strengthens property values and helps ensure our graduates are civic-\nminded, capable, and prepared to contribute positively to society.\nYour YES vote on this budget continuation will NOT increase your property tax rate. This\nmeasure continues the current level of funding already in place. Continued funding is\nessential to maintaining the programs our community values most and that have contributed\nto our schools’ exceptional success.\nThis budget continuation supports Advanced Placement (AP), Career & Technical Education\n(CTE), STEAM programs, Performing and Visual Arts, Physical Education, Libraries, Nurses,\nand Gifted Programs.\nWithout sufficient voter support, these programs and services could face significant reductions\nor possible elimination.\nWe strongly encourage our community to vote YES to approve the budget continuation and\nhelp preserve the high level of educational excellence that benefits our students, schools, and\ncommunity.\nPlease vote YES on November 3rd.\n\nGoverning Board for Tanque Verde Unified School District",
+                "The quality of our school district and the efficient management of the district budget are\nimportant to me as a local business owner and job creator. By utilizing its resources wisely,\nthe Tanque Verde Unified School District demonstrates that it serves as a financial steward.\nNo matter their frugal practices, the allocated resources are limited. The district does not have\nthe benefit of a large commercial tax base nor does it qualify for many federal program dollars.\nAnd, at 48th in the nation, Arizona does not provide sufficient, consistent funding to our\npublic schools.\nOur schools need our continued community support. We can ensure our local schools remain\nhigh quality by continuing the current budget override. All funds from the TVUSD M&O\nOverride remain in our community, directly supporting our schools and our students, with\nthe benefit of supporting a dynamic community. I am confident that my tax dollars are being\nutilized efficiently and effectively, and I approve of the district budget override.\nI support our local schools because I believe they are excelling in the business of educating\nour students. I urge you to vote YES to continue the TVUSD M&O Budget Override.\nCarlos Ruiz, President\nCindy Ruiz, Vice President\n\nHT Metals\nTucson, AZ",
+                "As the proud principal of Tanque Verde High School: the highest-performing traditional public\nhigh school in Arizona, and as a proud neighbor who also calls this community home, I see\nevery day what your investment in our schools makes possible.\nI watch our students earn prestigious scholarships to universities across the country. I also\nwatch students leave our campus with industry certifications, technical skills, and high-\npaying job offers in the trades. Every one of those success stories begins with a community\nthat believes in its children.\nProposition 429 is not a new tax. It simply continues the local funding our community\nhas supported for years to protect the opportunities that help our students thrive: excellent\nteachers, smaller class sizes, career and technical education, advanced academics, the arts,\nand so much more.\nWhether our graduates become engineers, teachers, doctors, welders, electricians, business\nowners, or military leaders, they are the future of Tanque Verde. Investing in them strengthens\nour workforce, our economy, and the community we all love.\nAs both your principal and your neighbor, I respectfully ask you to join me in voting YES on\nProposition 429.\nAmy Cislak\nPrincipal, Tanque Verde High School\nTucson, AZ",
+                "This November, you are being asked to vote YES on Proposition 429, an override measure that\nwill continue to support the students in the Tanque Verde Unified School District (TVUSD).\nThe override is not a tax increase, it is a continuation of the local funding that has been in\nplace since 2014.\nAs a former TVUSD Governing Board member for almost eight years, I can attest to the\nimportance of the override funding. All four TVUSD schools offer art, music, physical\neducation, library and health services with the support of override dollars. And as a parent of\nthree children in the District, I know these programs help to provide a well rounded educational\nexperience for our students. In addition, these programs increase the property values within\nthe District, and make Tanque Verde a very desirable location in which to reside. Without the\ncontinuation of the override, TVUSD will be forced to phase out these programs.\nI cannot overstate the importance of the District’s override funds, and I ask for your support by\nvoting YES on Proposition 429, the continuation of the TVUSD override.\nSusan Fry\nDirector, SPF Consulting\nTucson, AZ",
+                "We love our Tanque Verde community! We love our Tanque Verde School District! We are so\ngrateful that we had the opportunity to raise our children in this wonderful place. Dedicated\ndistrict leadership and staff have helped propel countless students further down the road to\nbecoming productive and optimistic adults...Adults that make the world a better and brighter\nplace!!!\n\nWe believe in and have seen the value of a well rounded education and its impact on individuals,\nfamilies and communities. In fact, this is why we continue to volunteer in this great school\ndistrict. Excellence in education is part of the Tanque Verde tradition and history. Our schools\nare among the very best in the State of Arizona! And this in turn, makes our community a\nGREAT place to raise children and a GREAT place to enjoy retirement.\n\nWe have the opportunity to continue to be part of this excellence by voting YES for the TVUSD\nMaintenance & Operations Override. We invite you to vote with us, and many others, to help\nkeep our vibrant community moving forward on November 3rd, 2026.\n\nSteve and Carol Langford\nTucson, AZ",
+                "The Tanque Verde Education Alliance is a coalition of community leaders, long-time residents,\nbusiness owners, and parents formed to support our A-rated Tanque Verde Unified School\nDistrict.\nWe recognize that our community is one of the most unique and desirable places to live in\nthe entire state. One of the key reasons we enjoy such a special community is because of\nour commitment to our local schools. High-performing schools play an important role in\nprotecting our property values and reducing crime.\nThis November, voters will have a chance to support our schools by voting YES on the budget\ncontinuation. This funding is used to invest in smaller class sizes, teacher salaries, career and\ntechnical education, STEAM, physical education, school nurses, and much more. We ask you\nto join us in voting YES on the budget continuation to:\n•   Protect our quality of life\n•   Attract and retain our best teachers\n•   Invest in building our future workforce and student success\nThe override is not a tax increase – it is a continuation of the local funding that has been in\nplace since 2014. This is our opportunity to continue to invest in our schools and protect our\nquality of life. Learn more at www.tvedalliance.org.\nAnne Velosa, Chair\nTanque Verde Education Alliance\nTucson, AZ",
+                "We proudly support the Tanque Verde Unified School District override because we have\nexperienced firsthand the incredible opportunities this district provides. We have lived in the\ndistrict for 16 years, and three of our four children graduated from Tanque Verde High School.\nOur children benefited from outstanding teachers, rigorous Honors and AP courses, Career\nand Technical Education, athletics, and an exceptional Agricultural Education/FFA program\nthat prepared them for college, careers, and lifelong success. When one of our children needed\nlearning accommodations, the teachers and administrators partnered closely with our family\nto ensure they received the support needed to thrive.\nWhat makes Tanque Verde exceptional is its commitment to every student. Educators know\ntheir students, hold them to high expectations, and provide the support each child needs to\nsucceed. The district’s investment in STEM, Career and Technical Education, and rigorous\nacademic programs opens doors for students while preserving the close-knit, student-\ncentered community that makes Tanque Verde so special.\nContinuing this override will help retain outstanding teachers and sustain the high-quality\nprograms that have positively impacted our family and countless others. We encourage our\nneighbors to vote YES.\nRobert & Sara Torres\nCommunity Members\nTucson, AZ",
+                "I am a retired financial executive and farmer who supports the Tanque Verde Unified School\nDistrict override. I don’t have kids in our schools anymore, but I recognize the key role that\nquality education plays in supporting the community and the students who live here.\n\nSo frequently when speaking with people who are considering our community for employment\nor call it home, the question of the quality of schools is raised. The value of our homes and the\ndevelopment of business are linked directly to the quality of our schools.\n\nAs retirees, we need quality services, and we want to maintain the value of our homes. The\noverride will help us on both counts.\n\nThe override will support programs that are essential to the education of our community’s\nnext generation of leaders who will help boost our economy and development.\n\nTanque Verde has made great strides over the past several years with high student college\nenrollment and excellent placement in vocational colleges. For the health, long-term success,\nand future of our community, please vote yes on Proposition 429 to continue the override.\n\nRocky Ferrell\nRetired Financial Executive and Farmer\nTucson, AZ",
+                "Strong schools build strong communities, and the Tanque Verde Unified School District is an\nessential part of what makes our community such a desirable place to live, work, and raise a\nfamily.\n\nThe TVES Parent Teacher Group strongly supports the renewal of the Maintenance and\nOperations override. This funding helps the district attract and retain outstanding teachers\nand staff while supporting smaller class sizes, Career and Technical Education, elementary\nSTEAM and physical education, school nurses, librarians, music, art, gifted education, and\nother programs that give students a well-rounded, high-quality education.\n\nOur PTG, families, teachers, staff, and broader school community work tirelessly—often in\naddition to their own full-time jobs and family responsibilities—to raise funds that help offset\ndistrict funding shortages and supplement important student programs. We are proud of\nwhat our community accomplishes, but volunteer fundraising cannot replace stable, reliable\nfunding for essential staff and educational opportunities.\n\nThe override is a continuation of local funding that has been in place since 2014, not a new\ntax increase. We strongly encourage our community to vote Yes and continue investing in\nstudent success, excellent schools, and Tanque Verde’s future.\n\nTina Catalina\nTVES PTG President\nTucson, AZ\n\nAndrea Hafner\nTVES PTG Treasurer\nTucson, AZ",
+                "In 2009, our family moved so that our children could attend the schools in the Tanque Verde\nUnified School District due to their excellent reputation. Over the sixteen years our children\nwere students in Tanque Verde schools, they had the benefit of engaging in various classroom\nexperiences like\n•   Elementary Physical Education and Science, Technology, Engineering, Arts, and\nMathematics (STEAM)\n•   Marching, Concert, and Jazz bands\n•   Mock Trial and Sports Med\n•   Advanced Placement classes in Earth Science, US History, Government, Calculus,\nEnglish Literature, English Language, and Spanish\n•   Dual Enrollment classes in Writing and Chemistry\n\nOur children’s teachers not only supported our children’s learning through these courses, but\nthey also celebrated all their students’ growth in the classroom and during extra-curricular\nactivities.\nOur three children have now graduated from Tanque Verde schools, schools which prepared\nthem for their next educational and occupational opportunities.\nIn turn, I support TVUSD’s continued efforts to educate a quality, competitive workforce\nto support our area’s long-term success. By voting yes on Proposition 429, I support the\ncontinuation of local funding which supports the critical programs above. I invite you to join\nme in voting yes on Proposition 429.\nAlfonso Velosa III\nParent\nTucson, AZ"
+              ],
+              "argumentsAgainst": []
+            }
+          }
+        ],
+        "absences": [],
+        "measureRecords": [
+          {
+            "contestId": "ballot-az-pima:prop-429",
+            "whatItDoes": "Shall the Governing Board of Tanque Verde Unified School District No. 13 of Pima County, Arizona (the\n“District”), adopt a General Maintenance and Operation Budget that includes an amount that exceeds\nthe revenue control limit specified by statute by 15% for fiscal year 2027/2028 and for six (6) subsequent\nyears as described below? The fiscal year 2027/2028 budget override authority represents an extension\nof the existing budget override authority which is scheduled to phase down by one-third for fiscal year\n2028/2029 and another one-third in fiscal year 2029/2030 and will terminate for fiscal year 2030/2031 if\nthe voters do not approve the override.",
+            "yesMeans": "A “yes” vote shall authorize the Tanque Verde Unified School District No. 13 School District Governing Board to\ncontinue the existing maintenance and operation budget override authority and resulting tax, which includes an\namount that exceeds the District’s revenue control limit.",
+            "noMeans": "A “no” vote shall not authorize the Tanque Verde Unified School District No. 13 School District Governing Board to\nextend the existing maintenance and operation budget override authority and resulting tax.",
+            "parts": [
+              {
+                "id": "ballot-az-pima:prop-429#provision-1",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Proposition 429",
+                "what": "Shall the Governing Board of Tanque Verde Unified School District No. 13 of Pima County, Arizona (the\n“District”), adopt a General Maintenance and Operation Budget that includes an amount that exceeds\nthe revenue control limit specified by statute by 15% for fiscal year 2027/2028 and for six (6) subsequent\nyears as described below? The fiscal year 2027/2028 budget override authority represents an extension\nof the existing budget override authority which is scheduled to phase down by one-third for fiscal year\n2028/2029 and another one-third in fiscal year 2029/2030 and will terminate for fiscal year 2030/2031 if\nthe voters do not approve the override."
+              },
+              {
+                "id": "ballot-az-pima:prop-429#provision-2",
+                "number": null,
+                "kind": "PROGRAM",
+                "label": "Proposition 429",
+                "what": "The amount of the proposed continuation of the budget increase of the proposed budget over the\nalternate budget for fiscal year 2027/2028 is estimated to be $-0-. In fiscal years 2027/2028 through\n2031/2032 the amount of the proposed increase will be 15% of the District’s revenue control limit in each\nof such years, as provided in Section 15-481(P) of the Arizona Revised Statutes. In fiscal years 2032/2033\nand 2033/2034, the amount of the proposed increase will be 10% and 5%, respectively, of the District’s\nrevenue control limit in each of such years, as provided in Section 15-481(P) of the Arizona Revised\nStatutes.\nAny budget increase continuation authorized by this election shall be entirely funded\nby a levy of taxes on the taxable property in this school district for the year for which\nadopted and for six (6) subsequent years, shall not be realized from monies furnished\nby the state and shall not be subject to the limitation on taxes specified in Article IX,\nSection 18, Constitution of Arizona. Based on the current net assessed valuation used for\nsecondary property tax purposes, to fund the proposed continuation of the increase in\nthe school district’s budget would require an estimated continuation of a tax rate of $0.88\nper one hundred dollars of assessed valuation used for secondary property tax purposes\nand is in addition to the school district’s tax rate that will be levied to fund the school\ndistrict’s revenue control limit allowed by law."
+              }
+            ],
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+            "sourceHash": "368891d44fdc2232fb92c7c9468054d3dcfa020274d0f63363df2647137cf01b",
+            "sourceHashKind": "HELD_TEXT",
+            "writtenAt": "2026-10-15T21:19:41.554388+00:00",
+            "citation": "measure-source"
+          }
+        ],
+        "sourceAuthorities": [
+          {
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "sourceHash": "67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013",
+            "retrievedAt": "2026-10-15T21:12:56.481583+00:00",
+            "publisher": "Pima County School Superintendent",
+            "vault": {
+              "key": "project/freshness/source/www.schools.pima.gov/2026/10/15/ms-01-az-local-eeb963979e5e8a6a/sha256-67cd0e6361af35e7615b0b2dd97d740e28fbc161db19867eef3f77bc2bf35013.html",
+              "byteLength": 23473,
+              "contentType": "text/html"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

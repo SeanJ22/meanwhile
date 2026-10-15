@@ -1,6 +1,6 @@
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
-import { BALLOT_STATES } from "../lib/ballot/state-scopes.ts";
+import { BALLOT_STATES, parseStateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -241,12 +241,14 @@ test("normal supervisor passes run guarded translations beside source work and p
   let settleBallot: () => Promise<void> = async () => {};
   const context = {
     PUBLISH_NOW: false, ONLY: null as null | Set<string>, ROOT: "/repo", process: { execPath: "node", env: { admitted: "supervisor" }, pid: 12 },
-    requiredManualProductionContract, US_JURISDICTIONS, ROUTINE_CHILD_TIMEOUT_MS, ROUTINE_CHILD_MAX_BUFFER_BYTES: 1_000_000,
+    requiredManualProductionContract, US_JURISDICTIONS, parseStateBallotContractId,
+    existsSync: (path: string) => path.endsWith("/AZ"), resolve: (...parts: string[]) => parts.join("/"),
+    ROUTINE_CHILD_TIMEOUT_MS, ROUTINE_CHILD_MAX_BUFFER_BYTES: 1_000_000,
     ROUTINE_SAME_DOMAIN_CHILD_GAP_MS: 60_000, sourceConcurrency: 2,
-    pendingRuns: [{ id: sourceResult.id, task: { id: "ballot-contests" } }, { id: "unrelated", task: { id: "unrelated" } }],
+    pendingRuns: [{ id: sourceResult.id, task: { id: "ballot-contests:AL" } }, { id: "unrelated", task: { id: "unrelated" } }],
     settlePendingRunResult: async () => {},
     acquireChildMemory: async (command: { id: string }, index?: number) => {
-      assert.equal(index, memoryAdmissions.length % 51); assert.equal(memoryHeld.size, 0);
+      assert.equal(index, memoryAdmissions.length % 52); assert.equal(memoryHeld.size, 0);
       memoryAdmissions.push(command.id); memoryHeld.add(command.id);
     },
     releaseChildMemory: (id: string) => { memoryHeld.delete(id); },
@@ -266,11 +268,12 @@ test("normal supervisor passes run guarded translations beside source work and p
       assert.ok(memoryHeld.has(commands[0].id), "memory is reserved before a translation child starts");
       assert.equal(options.concurrency, 1);
       assert.equal(options.discardOutputAfterSettlement, true);
-      assert.equal(commands.length, 51);
-      assert.equal(new Set(commands.map(command => command.id)).size, 51);
+      assert.equal(commands.length, 52);
+      assert.equal(new Set(commands.map(command => command.id)).size, 52);
       for (const command of commands) {
         const state = command.id.split(":")[1];
-        assert.deepEqual(Array.from(command.args), ["--experimental-strip-types", "scripts/translate-national-measures.mts", `--state=${state}`]);
+        const script = command.id.startsWith("ballot-measures:") ? "scripts/publish-held-measures.mts" : "scripts/translate-national-measures.mts";
+        assert.deepEqual(Array.from(command.args), ["--experimental-strip-types", script, `--state=${state}`]);
         assert.equal((command.env as { authority: string }).authority, "manual");
       }
       return new Promise<unknown[]>(resolve => { finishTranslation = async rows => {
@@ -291,21 +294,26 @@ test("normal supervisor passes run guarded translations beside source work and p
   await settleBallot();
   await Promise.resolve();
   assert.deepEqual(launched, ["official-ballot", "plain-english-translations"]);
-  assert.equal(admissions.length, 51);
-  assert.ok(admissions.every(admission => JSON.stringify(admission) === JSON.stringify({ parentEnv: context.process.env,
-    capability: "MANUAL_CONTRACT", contract: "plain-english-translations", parentPid: 12 })));
+  assert.equal(admissions.length, 52);
+  assert.equal(admissions.filter(admission => (admission as { contract: string }).contract === "ballot-measures").length, 1);
+  assert.ok(admissions.every(admission => {
+    const contract = (admission as { contract: string }).contract;
+    return ["plain-english-translations", "ballot-measures"].includes(contract) && JSON.stringify(admission) ===
+      JSON.stringify({ parentEnv: context.process.env, capability: "MANUAL_CONTRACT", contract, parentPid: 12 });
+  }));
   finishTranslation([{ ...sourceResult, id: "plain-english-translations", status: 2, stdout: "State persistence failed" }]);
   finishSources([sourceResult]);
   assert.deepEqual(await pass.sourcePass, [sourceResult]);
   assert.equal(failures[0].code, "TRANSLATION_CHILD_EXIT_NONZERO");
-  assert.equal(memoryAdmissions.length, 51);
+  assert.equal(memoryAdmissions.length, 52);
+  assert.ok(memoryAdmissions.indexOf("ballot-measures:AZ") < memoryAdmissions.indexOf("plain-english-translations:AZ"));
   const next = pass.runMeasureTranslationPass();
   assert.equal(launched.filter(id => id === "plain-english-translations").length, 2,
     "each ordinary pass rechecks changed held sources without waiting for a daily source clock");
   await Promise.resolve();
   finishTranslation([{ ...sourceResult, id: "plain-english-translations", stdout: "Measure summaries deferred: paid work is paused" }]);
   assert.equal(await next, null, "a paid pause or a held translation does not fail unrelated publication");
-  assert.equal(memoryAdmissions.length, 102);
+  assert.equal(memoryAdmissions.length, 104);
   context.PUBLISH_NOW = true;
   assert.equal(await pass.runMeasureTranslationPass(), null);
   context.PUBLISH_NOW = false; context.ONLY = new Set([sourceResult.id]);

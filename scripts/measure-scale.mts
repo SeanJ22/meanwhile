@@ -249,7 +249,7 @@ async function writer() {
             const publication = await processRegisteredManualCandidate(rawStore, "ballot-measures", candidate, at, undefined, { vault: fileVault() });
             assert.ok(publication.promoted && publication.readerReadback?.status === "PASS", JSON.stringify(publication)); rawPlaces++;
             sourceBallot = { scope: publication.promoted.scope, versionId: publication.promoted.versionId };
-            assert.ok((await publishRoutineReaderEdgeOutcome(rawStore, new Date().toISOString(), [{ recordClass: "BALLOT_CANDIDACY", scope: sourceBallot.scope }], { artifactStore })).ok);
+            assert.ok((await publishRoutineReaderEdgeOutcome(rawStore, new Date().toISOString(), [{ recordClass: publication.promoted.recordClass, scope: sourceBallot.scope }], { artifactStore })).ok);
           } finally { process.env.WTP_RUNTIME_AUTHORITY_CONTRACT = "plain-english-translations"; }
         }
         yield { division, ballots: [ballot], sourceBallot };

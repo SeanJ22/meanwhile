@@ -576,8 +576,17 @@ test("a retracted tag with a different `when` is not the retracted migration", (
 });
 
 test("if a database reports applying a retracted migration, the retraction is refused", () => {
-  const violations = checksumViolations(established, [{ when: PB_SEED.when, hash: createHash("sha256").update("anything").digest("hex") }], () => null);
+  const retracted = RETRACTED_MIGRATIONS.find((r) => r.tag === PB_SEED.tag)!;
+  const violations = checksumViolations(established, [{ when: retracted.when, hash: retracted.sha256 }], () => null);
   assert.deepEqual(violations.map((v) => v.rule), ["retracted-migration-applied"]);
   assert.match(violations[0].what, /premise is false/);
   assert.deepEqual(checksumViolations(established, [], () => null), [], "an unapplied retracted migration is fine");
+});
+
+test("a later migration numbered into a retracted slot with the same `when` is not the retracted migration", () => {
+  for (const row of RETRACTED_MIGRATIONS) assert.match(row.sha256, /^[0-9a-f]{64}$/);
+  const retracted = RETRACTED_MIGRATIONS.find((r) => r.tag === PB_RETIRE.tag)!;
+  const successor = createHash("sha256").update("the next migration's own SQL").digest("hex");
+  assert.deepEqual(checksumViolations(established, [{ when: retracted.when, hash: successor }], () => null), [],
+    "the database's row at this `when` carries different bytes, so it is the successor, not the retracted file");
 });

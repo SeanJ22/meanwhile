@@ -277,3 +277,8 @@ One line per batch folded into river.
 - 2026-10-15T14:30:33Z · fact-store · R1 · ready b28a1c41ebac · river be06573dcbd3 · pnpm gates pass on be06573dcbd3
 - 2026-10-15T14:30:33Z · hunter-v2 ·  · ready 6d52165579c6 · river be06573dcbd3 · pnpm gates pass on be06573dcbd3
 - 2026-10-15T14:30:33Z · road · R0 · ready 374e58d57792 · river be06573dcbd3 · pnpm gates pass on be06573dcbd3
+- 2026-10-15T16:10:13Z · hunter-v2 ·  · ready d1cabd0c5c87 · river 493311674ed4 · pnpm gates pass on 493311674ed4
+- 2026-10-15T16:10:13Z · platform-novusagenda · R3-NOVUS · ready 66963a0f35ce · river 493311674ed4 · pnpm gates pass on 493311674ed4
+- 2026-10-15T16:10:13Z · platform-primegov · R3-PRIMEGOV · ready 7ed33b50d253 · river 493311674ed4 · pnpm gates pass on 493311674ed4
+- 2026-10-15T16:10:13Z · platform-swagit · R3-SWAGIT · ready 4c13bf7e9b01 · river 493311674ed4 · pnpm gates pass on 493311674ed4
+- 2026-10-15T16:10:13Z · road · R0 · ready 220805e423a0 · river 493311674ed4 · pnpm gates pass on 493311674ed4

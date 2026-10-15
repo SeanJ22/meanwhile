@@ -2953,5 +2953,63 @@
     "tested_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
     "gates": "pass",
     "at": "2026-10-15T14:30:33Z"
+  },
+  {
+    "lane": "hunter-v2",
+    "steps": [],
+    "ready_sha": "d1cabd0c5c87d8f068651620de17c8cb2bc624ff",
+    "merge_sha": "5fc2844c8832144276d01cd832dc2f33e67ab461",
+    "river_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "tested_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "gates": "pass",
+    "at": "2026-10-15T16:10:13Z"
+  },
+  {
+    "lane": "platform-novusagenda",
+    "steps": [
+      "R3-NOVUS"
+    ],
+    "ready_sha": "66963a0f35ce4356632e2b6f11e24b51885664f1",
+    "merge_sha": "efebed4fca9845baefe8bf32e2b7873ce531d1e6",
+    "river_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "tested_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "gates": "pass",
+    "at": "2026-10-15T16:10:13Z"
+  },
+  {
+    "lane": "platform-primegov",
+    "steps": [
+      "R3-PRIMEGOV"
+    ],
+    "ready_sha": "7ed33b50d2530350bbf8dabb7330160f68e80bb4",
+    "merge_sha": "ec460cd964e2dd61b6d25b4858d016bf87d15d6b",
+    "river_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "tested_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "gates": "pass",
+    "at": "2026-10-15T16:10:13Z"
+  },
+  {
+    "lane": "platform-swagit",
+    "steps": [
+      "R3-SWAGIT"
+    ],
+    "ready_sha": "4c13bf7e9b018150d50a220c0db1db313c856c9f",
+    "merge_sha": "bc308d81c5e1411448b01a3547d6d0ce4da0477d",
+    "river_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "tested_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "gates": "pass",
+    "at": "2026-10-15T16:10:13Z"
+  },
+  {
+    "lane": "road",
+    "steps": [
+      "R0"
+    ],
+    "ready_sha": "220805e423a02ec8a7840e5a8992560b97cbd208",
+    "merge_sha": "fab3b2902965ed10c2aa54e259c35b4622f17ba2",
+    "river_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "tested_sha": "493311674ed4c1f3d15c14f70e19e7be9b9f58aa",
+    "gates": "pass",
+    "at": "2026-10-15T16:10:13Z"
   }
 ]

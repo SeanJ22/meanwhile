@@ -1,5 +1,5 @@
-/** All-caps form → the bearer's actual capitalization. Extend as candidates
- *  with internal capitals appear on covered ballots. */
+import type { Candidacy } from "./types.ts";
+
 const EXCEPTIONS: Record<string, string> = {
   DECROCE: "DeCroce",
   DIMAIO: "DiMaio",
@@ -33,10 +33,7 @@ function caseWord(word: string): string {
   return word.charAt(0) + word.slice(1).toLowerCase();
 }
 
-/**
- * Render a filed surname for display. Fires only on all-caps input; anything
- * already mixed-case passes through byte-identical.
- */
+/** Mixed-case spelling stays as filed; only ledger capitals are cased. */
 export function surnameDisplayCase(surname: string): string {
   const trimmed = surname.trim();
   if (trimmed.length === 0) return surname;
@@ -46,6 +43,16 @@ export function surnameDisplayCase(surname: string): string {
     .split(/(\s+|-)/)
     .map((part) => (/^\s+$/.test(part) || part === "-" ? part : caseWord(part)))
     .join("");
+}
+
+export function ballotCandidateDisplayName(candidate: Pick<Candidacy, "givenName" | "familyName">): string {
+  if (candidate.givenName.trim()) return `${candidate.givenName} ${surnameDisplayCase(candidate.familyName)}`.trim();
+  return candidate.familyName.split(/\s*\/\s*/).map(person => {
+    const [family, given, ...suffixes] = person.split(",").map(part => part.trim());
+    if (!given || /^(?:jr\.?|sr\.?|[ivx]+)$/i.test(given)) return surnameDisplayCase(person.trim());
+    const name = `${surnameDisplayCase(given)} ${surnameDisplayCase(family)}`;
+    return suffixes.length ? `${name}, ${suffixes.map(surnameDisplayCase).join(", ")}` : name;
+  }).join(" / ");
 }
 
 export function searchableSurname(filed: string): string {
